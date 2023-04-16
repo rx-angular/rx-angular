@@ -4,7 +4,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./components/home.component'),
-    data: { revalidate: 5 },
+    data: { revalidate: 0 },
   },
   {
     path: 'docs',
