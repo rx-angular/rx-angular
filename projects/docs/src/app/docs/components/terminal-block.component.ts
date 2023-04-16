@@ -9,7 +9,9 @@ import {Clipboard} from '@angular/cdk/clipboard';
          $ {{ text }}
       </code>
 
-      <div class="absolute right-2" style="top: 50%; transform: translateY(-50%);">
+      <div 
+        (click)="clipboard.copy(text)"
+      class="absolute right-2" style="top: 50%; transform: translateY(-50%);">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -29,10 +31,7 @@ import {Clipboard} from '@angular/cdk/clipboard';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TerminalBlockComponent {
-  private clipboard = inject(Clipboard);
-  @Input() text!: string;
+  clipboard = inject(Clipboard);
 
-  copyToClipboard() {
-    this.clipboard.copy(this.text);
-  }
+  @Input() text!: string;
 }
