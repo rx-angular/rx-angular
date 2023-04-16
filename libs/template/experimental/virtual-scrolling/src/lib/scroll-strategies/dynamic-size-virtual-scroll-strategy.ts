@@ -2,8 +2,6 @@ import {
   Directive,
   inject,
   Input,
-  IterableDiffer,
-  IterableDiffers,
   NgIterable,
   OnChanges,
   OnDestroy,
@@ -93,7 +91,6 @@ export class DynamicSizeVirtualScrollStrategy<
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
 {
-  private readonly differs = inject(IterableDiffers);
   private readonly defaults? = inject(RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS, {
     optional: true,
   });
@@ -130,8 +127,6 @@ export class DynamicSizeVirtualScrollStrategy<
   private viewport: RxVirtualScrollViewport | null = null;
   /** @internal */
   private viewRepeater: RxVirtualViewRepeater<T, U> | null = null;
-  /** @internal */
-  private dataDiffer: IterableDiffer<T> | null = null;
 
   /** @internal */
   private readonly _contentSize$ = new ReplaySubject<number>(1);
@@ -422,17 +417,5 @@ export class DynamicSizeVirtualScrollStrategy<
   private positionElement(element: HTMLElement, scrollTop: number): void {
     element.style.position = 'absolute';
     element.style.transform = `translateY(${scrollTop}px)`;
-  }
-
-  /** @internal */
-  private getDiffer(values: U | null | undefined): IterableDiffer<T> | null {
-    if (this.dataDiffer) {
-      return this.dataDiffer;
-    }
-    return values
-      ? (this.dataDiffer = this.differs
-          .find(values)
-          .create(this.viewRepeater!._trackBy))
-      : null;
   }
 }
