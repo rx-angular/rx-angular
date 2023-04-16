@@ -27,6 +27,7 @@ import {
 import {
   distinctUntilChanged,
   map,
+  shareReplay,
   startWith,
   withLatestFrom,
 } from 'rxjs/operators';
@@ -399,7 +400,7 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
         )
       )
     )
-  );
+  ).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
 
   extractSize = (entries: ResizeObserverEntry) =>
     entries.borderBoxSize[0].blockSize;
