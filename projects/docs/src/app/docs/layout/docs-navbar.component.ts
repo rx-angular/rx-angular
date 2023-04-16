@@ -24,6 +24,7 @@ import { RouterLink } from '@angular/router';
       rounded-md
       text-gray-500
       hover:text-gray-900
+      md:hidden
       focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500
     "
               (click)="layout.toggleMobileMenu()">
@@ -43,7 +44,7 @@ import { RouterLink } from '@angular/router';
                   d="M4 6h16M4 12h16M4 18h16"></path>
               </svg>
             </button>
-            <a routerLink="/docs">
+            <a routerLink="/docs" class="md:hidden">
               <img src="assets/logo.svg" alt="logo" class="w-8 h-8" />
             </a>
             <button

@@ -12,7 +12,7 @@ import { PAGE_IDS, configurePage } from '../services/docs-layout.service';
     <app-alert-warning>
       <span title>Warning</span>
       <span description>
-        To get started, first we need an application to have Angular Universal installed and
+        To get started, first you need an application to have Angular Universal installed and
         configured.
       </span>
     </app-alert-warning>
@@ -34,7 +34,7 @@ import { PAGE_IDS, configurePage } from '../services/docs-layout.service';
 
     <br />
 
-    <docs-page-section title="Confige providers">
+    <docs-page-section title="Configure providers">
       <p>
         To use it in your application, you need to register the providers in your
         <b>app.server.module.ts</b> file.
