@@ -13,6 +13,9 @@ export const injectAnalyticsScript = (config: AnalyticsConfig) => {
     const script = document.createElement('script') as HTMLScriptElement;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${config.gaTrackId}`;
     script.async = true;
+    script.type = 'text/partytown'; // to make it work with https://partytown.builder.io
+    script.defer = true;
+    script.setAttribute('fetchpriority', 'low');
     document.head.appendChild(script);
 
     const scriptInit = document.createElement('script') as HTMLScriptElement;
