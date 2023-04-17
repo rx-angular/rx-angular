@@ -1,8 +1,5 @@
-import { isPlatformServer } from "@angular/common";
-import { PLATFORM_ID, inject } from "@angular/core";
+import { inject } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
-
-declare let gtag: any;
 
 export interface AnalyticsConfig {
     gaTrackId: string;
@@ -11,10 +8,6 @@ export interface AnalyticsConfig {
 export const ANALYTICS_TRACK_ID = 'G-WC8S6X2ZPT';
 
 export const injectAnalyticsScript = (config: AnalyticsConfig) => {
-    const isServer = isPlatformServer(inject(PLATFORM_ID));
-    // we don't want to inject the script on the server side
-    if (isServer) return;
-
     const script = document.createElement('script') as HTMLScriptElement;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${config.gaTrackId}`;
     script.async = true;
@@ -51,26 +44,13 @@ export const trackRouterEvents = () => {
 }
 
 export const trackPageView = (url: string) => {
-    gtag('config', ANALYTICS_TRACK_ID, { 'page_path': url });
+    (window as any).dataLayer.push({ 'event': 'page_path', 'page_path': url });
 }
 
 export const trackInstallEvent = () => {
-    trackEvent({
-        name: 'go_to_npm',
+    (window as any).dataLayer.push({
+        event: 'install',
         category: 'install',
-        label: 'install',
-        action: 'click_install',
-        value: ''
-    });
-}
-
-export const trackEvent = (config: {name: string; category: string; label: string; action: string; value: string}) => {
-   const { name, category, label, action, value } = config;
-
-    gtag('event', name, { 
-        eventCategory: category, 
-        eventLabel: label, 
-        eventAction: action, 
-        eventValue: value
+        label: 'go_to_npm',
     });
 }

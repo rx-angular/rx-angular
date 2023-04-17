@@ -1,13 +1,14 @@
 import { routes } from './routes';
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, PLATFORM_ID, inject } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, TitleStrategy } from '@angular/router';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { AppComponent } from './app.component';
 import { CustomTitleStrategy } from './custom-title-strategy';
 import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
-import { ANALYTICS_TRACK_ID, injectAnalyticsScript } from './analytics/inject-analytics-script';
+import { ANALYTICS_TRACK_ID, injectAnalyticsScript, trackRouterEvents } from './analytics/inject-analytics-script';
+import { isPlatformServer } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +35,11 @@ import { ANALYTICS_TRACK_ID, injectAnalyticsScript } from './analytics/inject-an
 })
 export class AppModule {
   constructor() {
-    injectAnalyticsScript({ gaTrackId: ANALYTICS_TRACK_ID })
+    const isServer = isPlatformServer(inject(PLATFORM_ID));
+    // we don't want to inject the script on the server side
+    if (!isServer) {
+      injectAnalyticsScript({ gaTrackId: ANALYTICS_TRACK_ID });
+      trackRouterEvents();
+    }
   }
 }
