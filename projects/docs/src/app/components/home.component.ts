@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HighlightModule } from 'ngx-highlightjs';
+import { trackInstallEvent } from '../analytics/inject-analytics-script';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,7 @@ import { HighlightModule } from 'ngx-highlightjs';
   imports: [CommonModule, HighlightModule, RouterLink],
 })
 export default class HomeComponent {
+
   tabs: string[] = ['server.ts', 'app.server.module.ts', 'routes.ts'];
   activeTab = 'server.ts';
 
@@ -102,4 +104,8 @@ export default class HomeComponent {
     }
   ]
   `;
+
+  trackInstall() {
+    trackInstallEvent();
+  }
 }

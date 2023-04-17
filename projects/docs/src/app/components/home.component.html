@@ -312,7 +312,9 @@
       Ready to dive in?<br>Install ngx-isr now.
     </h2>
     <div class="mt-10 flex items-center gap-x-6 lg:mt-0 lg:flex-shrink-0">
-      <a href="https://www.npmjs.com/package/ngx-isr?source=docs" target="_blank" class="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-main-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+      <a href="https://www.npmjs.com/package/ngx-isr?source=docs" 
+        (click)="trackInstall()"
+        target="_blank" class="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-main-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
         Install now
       </a>
       <a routerLink="/docs" class="text-sm font-semibold leading-6 text-gray-900">
