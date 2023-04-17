@@ -16,7 +16,15 @@
         "polyfills": ["zone.js"],
         "inlineStyleLanguage": "scss",
         "tsConfig": "projects/docs/tsconfig.app.json",
-        "assets": ["projects/docs/src/favicon.ico", "projects/docs/src/assets"],
+        "assets": [
+          "projects/docs/src/favicon.ico", 
+          "projects/docs/src/assets",
+          {
+            "glob": "**/*",
+            "input": "node_modules/@builder.io/partytown/lib",
+            "output": "/~partytown"
+          }
+        ],
         "styles": ["projects/docs/src/styles.scss"],
         "scripts": [],
         "allowedCommonJsDependencies": [

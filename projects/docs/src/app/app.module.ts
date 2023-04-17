@@ -7,6 +7,7 @@ import { TransferHttpCacheModule } from '@nguniversal/common';
 import { AppComponent } from './app.component';
 import { CustomTitleStrategy } from './custom-title-strategy';
 import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highlightjs';
+import { injectAnalyticsScript } from './analytics/inject-analytics-script';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,4 +32,8 @@ import { HIGHLIGHT_OPTIONS, HighlightModule, HighlightOptions } from 'ngx-highli
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    injectAnalyticsScript({ gaTrackId: 'G-WC8S6X2ZPT' })
+  }
+}
