@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ChildActivationEnd, Router } from '@angular/router';
 import { filter, map, take } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export interface NgxIsrState {
@@ -13,54 +12,76 @@ export interface NgxIsrState {
 const initialState: NgxIsrState = {
   revalidate: null,
   errors: [],
-  extra: {}
-}
+  extra: {},
+};
 
 @Injectable({ providedIn: 'root' })
 export class NgxIsrService {
-  protected state = new BehaviorSubject<NgxIsrState>(initialState);
+  private readonly router = inject(Router);
+  private state: NgxIsrState = initialState;
 
   getState(): NgxIsrState {
-    return this.state.getValue();
+    return this.state;
+  }
+
+  patchState(partialState: Partial<NgxIsrState>): void {
+    this.state = { ...this.state, ...partialState };
   }
 
   getExtra(): Record<string, any> {
-    return this.state.getValue().extra;
+    return this.state.extra;
   }
 
-  constructor(private router: Router) {}
-
+  /**
+   * Activate the service and listen to router events
+   * @returns void
+   */
   activate(): void {
     this.router.events
       .pipe(
         filter((e) => e instanceof ChildActivationEnd),
         map((event) => {
           let snapshot = (event as ChildActivationEnd).snapshot;
+          // get the last child route
           while (snapshot.firstChild !== null) {
             snapshot = snapshot.firstChild;
           }
+          // get the data from the last child route
           return snapshot.data;
         }),
         take(1)
       )
       .subscribe((data: any) => {
+        // if revalidate is defined, set it
         if (data?.['revalidate'] !== undefined) {
-          this.setRevalidate(data['revalidate']);
+          this.patchState({ revalidate: data['revalidate'] });
         }
       });
   }
 
-  addError(err: HttpErrorResponse): void {
-    const currentErrors = this.getState().errors;
-    this.state.next({ ...this.getState(), errors: [ ...currentErrors, err ] });
+  /**
+   * Add error to the state
+   * @param error HttpErrorResponse
+   * @returns void
+   * @example
+   * ```typescript
+   * this.isrService.addError(err);
+   * ```
+   */
+  addError(error: HttpErrorResponse): void {
+    this.patchState({ errors: [...this.getState().errors, error] });
   }
 
+  /**
+   * Add extra data to the state
+   * @param extra Record<string, any>
+   * @returns void
+   * @example
+   * ```typescript
+   * this.isrService.addExtra({ foo: 'bar' });
+   * ```
+   */
   addExtra(extra: Record<string, any> = {}): void {
-    this.state.next({ ...this.getState(), extra: { ...this.getExtra(), ...extra } });
+    this.patchState({ extra: { ...this.getExtra(), ...extra } });
   }
-  
-  setRevalidate = (revalidate: number | null): void => {
-    this.state.next({ ...this.getState(), revalidate });
-  }
-
 }
