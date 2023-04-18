@@ -70,7 +70,8 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
         contain: strict;
       }
 
-      :host:not([autosize]) .rx-virtual-scroll__viewport {
+      :host:not(.rx-virtual-scroll-viewport--withSyncScrollbar)
+        .rx-virtual-scroll__viewport {
         transform: translateZ(0);
         will-change: scroll-position;
       }

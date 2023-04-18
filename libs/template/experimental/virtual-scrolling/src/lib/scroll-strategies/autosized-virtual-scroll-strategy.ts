@@ -139,6 +139,24 @@ export class AutosizeVirtualScrollStrategy<
     extractSize?: (entry: ResizeObserverEntry) => number;
   };
 
+  /**
+   * @description
+   * When enabled, the autosized scroll strategy removes css styles that
+   * prevent the scrollbar from being in sync with the input device.
+   * Use with caution, as this can lead to extremely weird scroll behavior
+   * on chromium based browsers when the rendered views differ
+   * in dimensions too much or change dimensions heavily.
+   */
+  @HostBinding('class.rx-virtual-scroll-viewport--withSyncScrollbar')
+  @Input()
+  set withSyncScrollbar(input: boolean) {
+    this._withSyncScrollbar = input != null && `${input}` !== 'false';
+  }
+  get withSyncScrollbar(): boolean {
+    return this._withSyncScrollbar;
+  }
+  private _withSyncScrollbar = false;
+
   /** @internal */
   private viewport: RxVirtualScrollViewport | null = null;
   /** @internal */
