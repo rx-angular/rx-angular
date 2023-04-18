@@ -3,8 +3,6 @@ import {
   EmbeddedViewRef,
   inject,
   Input,
-  IterableDiffer,
-  IterableDiffers,
   NgIterable,
   OnChanges,
   OnDestroy,
@@ -46,6 +44,7 @@ import {
 /** @internal */
 type VirtualViewItem = {
   size: number;
+  cached?: boolean;
 };
 
 /** @internal */
@@ -53,16 +52,6 @@ type AnchorItem = {
   index: number;
   offset: number;
 };
-
-/** @internal */
-function removeFromArray(arr: any[], index: number): any {
-  // perf: array.pop is faster than array.splice!
-  if (index >= arr.length - 1) {
-    return arr.pop();
-  } else {
-    return arr.splice(index, 1)[0];
-  }
-}
 
 const defaultSizeExtract = (entry: ResizeObserverEntry) =>
   entry.borderBoxSize[0].blockSize;
@@ -109,7 +98,6 @@ export class AutosizeVirtualScrollStrategy<
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
 {
-  private readonly differs = inject(IterableDiffers);
   private readonly defaults? = inject(RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS, {
     optional: true,
   });
@@ -155,8 +143,6 @@ export class AutosizeVirtualScrollStrategy<
   private viewport: RxVirtualScrollViewport | null = null;
   /** @internal */
   private viewRepeater: RxVirtualViewRepeater<T, U> | null = null;
-  /** @internal */
-  private dataDiffer: IterableDiffer<T> | null = null;
 
   /** @internal */
   private readonly _contentSize$ = new ReplaySubject<number>(1);
@@ -177,9 +163,6 @@ export class AutosizeVirtualScrollStrategy<
   readonly renderedRange$ = this._renderedRange$.asObservable();
   /** @internal */
   private _renderedRange: ListRange = { start: 0, end: 0 };
-  // range of items where size is known and doesn't need to be re-calculated
-  /** @internal */
-  private _cachedSet = new Set<number>();
 
   /** @internal */
   private set renderedRange(range: ListRange) {
@@ -252,9 +235,7 @@ export class AutosizeVirtualScrollStrategy<
   /** @internal */
   private readonly viewsResized$ = new Subject<ResizeObserverEntry[]>();
   /** @internal */
-  private readonly afterViewResized$ = new Subject<void>();
-  /** @internal */
-  private readonly runwayStateChanged$ = new Subject<void>();
+  private readonly recalculateRange$ = new Subject<void>();
 
   /** @internal */
   private until$<A>(): MonoTypeOperatorFunction<A> {
@@ -273,7 +254,7 @@ export class AutosizeVirtualScrollStrategy<
         !changes['runwayItemsOpposite'].firstChange) ||
       (changes['runwayItems'] && !changes['runwayItems'].firstChange)
     ) {
-      this.runwayStateChanged$.next();
+      this.recalculateRange$.next();
     }
   }
 
@@ -334,72 +315,109 @@ export class AutosizeVirtualScrollStrategy<
     // changes, as we have to expect dimension changes for all items when this
     // happens. This could also be configurable as it maybe costs performance
     this.viewport!.containerRect$.pipe(
-      filter(() => this._virtualItems.length > 0),
       map(({ width }) => width),
       distinctUntilChanged(),
+      filter(() => this._virtualItems.length > 0),
       this.until$()
     ).subscribe(() => {
       // reset because we have no idea how items will behave
       let i = 0;
       let size = 0;
-      this._cachedSet.clear();
       while (i < this.renderedRange.start) {
-        this._virtualItems[i].size = 0;
+        this._virtualItems[i].cached = false;
         i++;
         size += this.tombstoneSize;
       }
       while (i >= this.renderedRange.start && i < this.renderedRange.end) {
         size += this._virtualItems[i].size;
-        this._cachedSet.add(i);
         i++;
       }
       while (i < this.contentLength - 1) {
-        this._virtualItems[i].size = 0;
+        this._virtualItems[i].cached = false;
         i++;
         size += this.tombstoneSize;
       }
       this.contentSize = size;
     });
-    this.viewRepeater!.values$.pipe(this.until$()).subscribe((items) => {
-      const changes = this.getDiffer(items)?.diff(items);
-      if (changes) {
-        // reset cache on update
-        changes.forEachOperation(
-          (item, adjustedPreviousIndex, currentIndex) => {
-            if (item.previousIndex == null) {
-              const entry = {
-                size: 0,
-              };
+
+    // synchronises the values with the virtual viewport we've built up
+    // it might get costy when having > 100k elements, it's still faster than
+    // the IterableDiffer approach, especially on move operations
+    const itemCache = new Map<any, number>();
+    const trackBy = this.viewRepeater!._trackBy ?? ((i, item) => item);
+    this.viewRepeater!.values$.pipe(
+      this.until$(),
+      tap({
+        next: (values) => {
+          // somewhat
+          const dataArr = Array.isArray(values)
+            ? values
+            : Array.from(values) ?? [];
+          const existingIds = new Set<any>();
+          const moveCache = new Map<number, VirtualViewItem>();
+          let size = 0;
+          const dataLength = dataArr.length;
+          for (let i = 0; i < dataLength; i++) {
+            const item = dataArr[i];
+            const id = trackBy(i, item);
+            const cachedItem = itemCache.get(id);
+            if (!cachedItem) {
+              // add
+              this._virtualItems[i] = { size: 0 };
+              itemCache.set(id, i);
+            } else if (cachedItem !== i) {
+              const cachedMove = moveCache.get(cachedItem);
+              // move
               if (
-                currentIndex !== null &&
-                currentIndex < this._virtualItems.length
+                (!this._virtualItems[cachedItem].cached && !cachedMove) ||
+                (cachedMove && !cachedMove.cached)
               ) {
-                this._virtualItems.splice(currentIndex, 0, entry);
+                this._virtualItems[i].cached = false;
               } else {
-                this._virtualItems.push(entry);
+                // move operation is only of interest when the item was cached before
+                // otherwise we don't need to bother about it
+                const cachedMove = moveCache.get(cachedItem);
+                moveCache.set(i, {
+                  size: this._virtualItems[i].size,
+                  cached: this._virtualItems[i].cached,
+                });
+                this._virtualItems[cachedItem].cached = false;
+                this._virtualItems[i].cached = true;
+                // move
+                if (!cachedMove) {
+                  this._virtualItems[i].size =
+                    this._virtualItems[cachedItem].size;
+                } else {
+                  this._virtualItems[i].size = cachedMove.size;
+                }
               }
-            } else if (currentIndex === null) {
-              const removeIdx =
-                adjustedPreviousIndex === null
-                  ? this._virtualItems.length - 1
-                  : adjustedPreviousIndex;
-              removeFromArray(this._virtualItems, removeIdx);
-              this._cachedSet.delete(removeIdx);
-            } else if (adjustedPreviousIndex !== null) {
-              this._virtualItems[currentIndex] =
-                this._virtualItems[adjustedPreviousIndex];
+              itemCache.set(id, i);
+            } else {
+              // update
+              if (i < this.renderedRange.start || i >= this.renderedRange.end) {
+                this._virtualItems[i].cached = false;
+              }
+              itemCache.set(id, i);
             }
+            existingIds.add(id);
+            size += this._virtualItems[i].size || this.tombstoneSize;
           }
-        );
-        changes.forEachIdentityChange(
-          ({ currentIndex }) =>
-            currentIndex && this._cachedSet.delete(currentIndex)
-        );
-      }
-      if (!this._contentSize && this._virtualItems.length > 0) {
-        this.contentSize = this._virtualItems.length * this.tombstoneSize;
-      }
-    });
+          // sync delete operations
+          if (itemCache.size > dataLength) {
+            this._virtualItems.length = dataLength;
+            itemCache.forEach((v, k) => {
+              if (!existingIds.has(k)) {
+                itemCache.delete(k);
+              }
+            });
+          }
+          moveCache.clear();
+          existingIds.clear();
+          this.contentSize = size;
+        },
+        unsubscribe: () => itemCache.clear(),
+      })
+    ).subscribe();
   }
 
   /** @internal */
@@ -436,8 +454,7 @@ export class AutosizeVirtualScrollStrategy<
         distinctUntilChanged()
       ),
       onScroll$,
-      this.afterViewResized$.pipe(startWith(void 0)),
-      this.runwayStateChanged$.pipe(startWith(void 0)),
+      this.recalculateRange$.pipe(startWith(void 0)),
     ])
       .pipe(
         map(([length, containerSize]) => {
@@ -530,13 +547,8 @@ export class AutosizeVirtualScrollStrategy<
                 item,
               });
             }),
-            // coalescing the layout to the next microtask
-            // -> layout happens in the same tick as the scheduler. it will
-            // be executed at the end and causes a forced reflow
-            // to not have a reflow, we would need to let the browser stabilize the
-            // current layout before reading `offsetHeight` of the nodes.
-            // while the flames get smoother, other issues arise with that approach.
-            // but here is def. room for improvement
+            // coalescing the positioning of items into the next available microTask
+            // the layout should be stable as we forced it before
             coalesceWith(unpatchedMicroTask()),
             map(() => {
               if (position === 0) {
@@ -585,7 +597,7 @@ export class AutosizeVirtualScrollStrategy<
                     Math.ceil(this.scrollTop) >= maxScrollTo
                   ) {
                     // just trigger re-calculation of the renderedRange in case this happens
-                    this.afterViewResized$.next();
+                    this.recalculateRange$.next();
                   } else {
                     this.viewport!.scrollTo(scrollTo);
                   }
@@ -593,7 +605,7 @@ export class AutosizeVirtualScrollStrategy<
                   position < this.containerSize &&
                   lastIndex < this.contentLength
                 ) {
-                  this.afterViewResized$.next();
+                  this.recalculateRange$.next();
                 }
               }
             })
@@ -617,7 +629,7 @@ export class AutosizeVirtualScrollStrategy<
                   }
                   this.contentSize =
                     position + this.getRemainingSizeFrom(index + 1);
-                  this.afterViewResized$.next();
+                  this.recalculateRange$.next();
                 })
               )
             )
@@ -703,12 +715,12 @@ export class AutosizeVirtualScrollStrategy<
   /** @internal */
   private updateElementSize(view: EmbeddedViewRef<any>, index: number): number {
     const oldSize = this._virtualItems[index].size;
-    const isCached = this._cachedSet.has(index) && oldSize > 0;
+    const isCached = this._virtualItems[index].cached && oldSize > 0;
     const size = isCached
       ? oldSize
       : this.getElementSize(this.getElement(view));
-    this._virtualItems[index] = { size };
-    this._cachedSet.add(index);
+    this._virtualItems[index].size = size;
+    this._virtualItems[index].cached = true;
     return size;
   }
 
@@ -784,16 +796,5 @@ export class AutosizeVirtualScrollStrategy<
   private positionElement(element: HTMLElement, scrollTop: number): void {
     element.style.position = 'absolute';
     element.style.transform = `translateY(${scrollTop}px)`;
-  }
-  /** @internal */
-  private getDiffer(values: U | null | undefined): IterableDiffer<T> | null {
-    if (this.dataDiffer) {
-      return this.dataDiffer;
-    }
-    return values
-      ? (this.dataDiffer = this.differs
-          .find(values)
-          .create(this.viewRepeater!._trackBy))
-      : null;
   }
 }
