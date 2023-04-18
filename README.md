@@ -166,6 +166,13 @@ When registering the providers, `NgxIsrService` will be initialized and will sta
 
 # Changelog
 
+## Version 0.5.4
+
+### Features
+
+- feat: refactor FileSystem cache handler from scratch (fixes: #35)
+- fix: buildId can be null but also undefined, added a check for it
+
 ## Version 0.5.3
 
 ### Features
