@@ -8,7 +8,7 @@ import { join } from 'path';
 import { AppServerModule } from './src/main.server';
 import { existsSync } from 'fs';
 
-import { ISRHandler } from 'ngx-isr';
+import { FileSystemCacheHandler, ISRHandler } from 'ngx-isr';
 import { RedisCacheHandler } from './redis-cache-handler';
 
 // The Express app is exported so that it can be used by serverless Functions.
@@ -19,26 +19,28 @@ export function app(): express.Express {
     ? 'index.original.html'
     : 'index';
 
-  const REDIS_CONNECTION_STRING = process.env['REDIS_CONNECTION_STRING'] || '';
   const INVALIDATE_TOKEN = process.env['INVALIDATE_TOKEN'] || '';
 
   // Step 0 (optional): Create FileSystemCacheHandler with required options.
-  // const fsCacheHandler = new FileSystemCacheHandler({
-  //   cacheFolderPath: join(distFolder, '/cache'),
-  //   prerenderedPagesPath: distFolder,
-  //   addPrerenderedPagesToCache: true,
-  // });
+  const fsCacheHandler = new FileSystemCacheHandler({
+    cacheFolderPath: join(distFolder, '/cache'),
+    prerenderedPagesPath: distFolder,
+    addPrerenderedPagesToCache: true,
+  });
 
-  const redisCacheHandler = REDIS_CONNECTION_STRING
-    ? new RedisCacheHandler({ connectionString: REDIS_CONNECTION_STRING })
-    : undefined;
+  // const REDIS_CONNECTION_STRING = process.env['REDIS_CONNECTION_STRING'] || '';
+  // const redisCacheHandler = REDIS_CONNECTION_STRING
+  //   ? new RedisCacheHandler({ connectionString: REDIS_CONNECTION_STRING })
+  //   : undefined;
 
   // Step 1: Initialize ISRHandler
   const isr = new ISRHandler({
     indexHtml,
-    cache: redisCacheHandler, // we can remove this field if we want to use the default InMemoryCacheHandler
+    cache: fsCacheHandler,
     invalidateSecretToken: INVALIDATE_TOKEN || 'MY_TOKEN',
-    enableLogging: !environment.production,
+    // enableLogging: !environment.production,
+    enableLogging: true,
+    buildId: '123',
   });
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
@@ -68,7 +70,8 @@ export function app(): express.Express {
   server.get('*.*', express.static(distFolder, { maxAge: '1y' }));
 
   // Step 3: handle rendering and serving using ISR handler
-  server.get('*',
+  server.get(
+    '*',
     // Serve page if it exists in cache
     async (req, res, next) => await isr.serveFromCache(req, res, next),
     // Server side render the page and add to cache if needed

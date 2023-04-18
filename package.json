@@ -8,8 +8,10 @@
     "test": "nx test",
     "dev:ssr": "nx run docs:serve-ssr",
     "serve:ssr": "node dist/docs/server/main.js",
+    "serve-demo:ssr": "PORT=4001 node dist/ngx-isr-demo/server/main.js",
     "build:ssr": "nx build docs && nx run docs:server",
     "prerender": "nx run docs:prerender",
+    "prerender-demo": "nx run ngx-isr-demo:prerender",
     "build-vercel": "nx build ngx-isr && yarn run build:ssr",
     "build-publish": "nx build ngx-isr && cd dist/ngx-isr && npm publish"
   },
