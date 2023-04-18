@@ -147,21 +147,21 @@ export class ISRHandler {
   ): Promise<any> {
     try {
       const cacheData = await this.cache.get(req.url);
-      const { html, options, createdAt } = cacheData;
+      const { html, options: cacheConfig, createdAt } = cacheData;
 
-      if (options.buildId !== null && options.buildId !== this.config.buildId) {
+      const cacheHasBuildId = cacheConfig.buildId !== null && cacheConfig.buildId !== undefined;
+
+      if (cacheHasBuildId && cacheConfig.buildId !== this.config.buildId) {
         // Cache is from a different build. Serve user using SSR
         next();
-
-        // TODO: We can extend this to serve a page from old build if we want to support that
         return;
       }
 
       // if the cache is expired, we will regenerate it
-      if (options.revalidate && options.revalidate > 0) {
+      if (cacheConfig.revalidate && cacheConfig.revalidate > 0) {
         const lastCacheDateDiff = (Date.now() - createdAt) / 1000; // in seconds
 
-        if (lastCacheDateDiff > options.revalidate) {
+        if (lastCacheDateDiff > cacheConfig.revalidate) {
           await this.cacheRegeneration.regenerate(
             req,
             res,
@@ -178,7 +178,7 @@ export class ISRHandler {
         const timeStart = performance.now();
         finalHtml = config.modifyCachedHtml(req, html);
         const totalTime = (performance.now() - timeStart).toFixed(2);
-        finalHtml += `<!--\nℹ️ NgxISR: This cachedHtml has been modified with modifyCachedHtml()\n❗️ 
+        finalHtml += `<!--\nℹ️ NgxISR: This cachedHtml has been modified with modifyCachedHtml()\n❗️
         This resulted into more ${totalTime}ms of processing time.\n-->`;
       }
 
