@@ -15,7 +15,7 @@ import {
 } from '@rx-angular/template/experimental/virtual-scrolling';
 import { RxFor } from '@rx-angular/template/for';
 import { RxIf } from '@rx-angular/template/if';
-import { LetModule } from '@rx-angular/template/let';
+import { LetDirective } from '@rx-angular/template/let';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
 import { VirtualForTestComponent } from './virtual-for-test.component';
@@ -29,7 +29,7 @@ import { VirtualForTestComponent } from './virtual-for-test.component';
       },
     ]),
     ValueProvidersModule,
-    LetModule,
+    LetDirective,
     AutosizedScrollingModule,
     ScrollingModule,
     AutosizeVirtualScrollStrategy,

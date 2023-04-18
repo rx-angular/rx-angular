@@ -10,7 +10,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { defer, Observable, ReplaySubject, Subject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 import {
@@ -70,7 +70,8 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
         contain: strict;
       }
 
-      :host:not([autosize]) .rx-virtual-scroll__viewport {
+      :host:not(.rx-virtual-scroll-viewport--withSyncScrollbar)
+        .rx-virtual-scroll__viewport {
         transform: translateZ(0);
         will-change: scroll-position;
       }
@@ -115,9 +116,6 @@ export class RxVirtualScrollViewportComponent
   /** @internal */
   @ContentChild(RxVirtualViewRepeater)
   viewRepeater!: RxVirtualViewRepeater<unknown>;
-
-  /** @internal */
-  readonly rendered$ = defer(() => this.viewRepeater.rendered$);
 
   /** @internal */
   private _elementScrolled = new Subject<Event>();

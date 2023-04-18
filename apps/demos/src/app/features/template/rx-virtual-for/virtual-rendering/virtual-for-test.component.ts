@@ -27,6 +27,7 @@ import {
 import {
   distinctUntilChanged,
   map,
+  shareReplay,
   startWith,
   withLatestFrom,
 } from 'rxjs/operators';
@@ -188,6 +189,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
               *ngIf="state.scrollStrategy === 'auto'"
               (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
               autosize
+              withSyncScrollbar
               [resizeObserverConfig]="{
                 extractSize: extractSize
               }"
@@ -207,6 +209,24 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
                 #div
               >
                 <div class="content">{{ i }} {{ item.content }}</div>
+                <!--<div *rxLet="[]" class="content">
+                  {{ i }} {{ item.content }}
+                </div>
+                <div *rxLet="[]" class="content">
+                  {{ i }} {{ item.content }}
+                </div>
+                <div *rxLet="[]" class="content">
+                  {{ i }} {{ item.content }}
+                </div>
+                <div *rxLet="[]" class="content">
+                  {{ i }} {{ item.content }}
+                </div>
+                <div *rxLet="[]" class="content">
+                  {{ i }} {{ item.content }}
+                </div>
+                <div *rxLet="[]" class="content">
+                  {{ i }} {{ item.content }}
+                </div>-->
                 <!--<button (click)="div.style.height = '170px'">
                   change size
                 </button>-->
@@ -399,7 +419,7 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
         )
       )
     )
-  );
+  ).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
 
   extractSize = (entries: ResizeObserverEntry) =>
     entries.borderBoxSize[0].blockSize;

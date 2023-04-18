@@ -533,8 +533,6 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /** @internal */
-  readonly rendered$ = new Subject<any>();
-  /** @internal */
   readonly viewsRendered$ = new Subject<
     EmbeddedViewRef<RxVirtualForViewContext<T, U, RxListViewComputedContext>>[]
   >();
@@ -612,7 +610,6 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     this.render()
       .pipe(takeUntil(this._destroy$))
       .subscribe((v) => {
-        this.rendered$.next(v);
         this._renderCallback?.next(v as U);
       });
   }
