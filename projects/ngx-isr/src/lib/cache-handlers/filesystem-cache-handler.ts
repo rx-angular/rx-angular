@@ -1,7 +1,7 @@
-import { CacheData, CacheHandler, ISROptions } from '../models';
+import { CacheData, CacheHandler, CacheISRConfig } from '../models';
 import * as fs from 'fs';
 import { join } from 'path';
-import { getISROptions } from '../utils/get-isr-options';
+import { getRouteISRDataFromHTML } from '../utils/get-isr-options';
 
 export interface FileSystemCacheOptions {
   cacheFolderPath: string;
@@ -31,7 +31,11 @@ export class FileSystemCacheHandler implements CacheHandler {
     this.populateCacheFromFilesystem();
   }
 
-  async add(route: string, html: string, options?: ISROptions): Promise<void> {
+  async add(
+    route: string,
+    html: string,
+    config?: CacheISRConfig
+  ): Promise<void> {
     return new Promise((resolve, reject) => {
       route = route.charAt(0) === '/' ? route.slice(1) : route;
       const fileName = convertRouteToFileName(route);
@@ -44,7 +48,7 @@ export class FileSystemCacheHandler implements CacheHandler {
 
         this.cache.set(route, {
           html: filePath,
-          options: options || { revalidate: null },
+          options: config || { revalidate: null },
           createdAt: Date.now(),
         });
 
@@ -150,7 +154,7 @@ export class FileSystemCacheHandler implements CacheHandler {
 
     for (const { path, html } of pathsToCache) {
       const routePath = path.substring(0).replace('/index.html', '');
-      const { revalidate, errors } = getISROptions(html);
+      const { revalidate, errors } = getRouteISRDataFromHTML(html);
       this.add(routePath, html, { revalidate, errors });
     }
 

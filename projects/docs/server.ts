@@ -39,6 +39,7 @@ export function app(): express.Express {
     cache: redisCacheHandler, // we can remove this field if we want to use the default InMemoryCacheHandler
     invalidateSecretToken: INVALIDATE_TOKEN || 'MY_TOKEN',
     enableLogging: !environment.production,
+    buildId: environment.buildTimestamp + '',
   });
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
@@ -59,16 +60,14 @@ export function app(): express.Express {
   // server.get('/api/**', (req, res) => { });
 
   // Step 2: Add invalidation url handler
-  server.post(
-    '/api/invalidate',
-    async (req, res) => await isr.invalidate(req, res)
-  );
+  server.post('/api/invalidate', async (req, res) => await isr.invalidate(req, res));
 
   // Serve static files from /browser
   server.get('*.*', express.static(distFolder, { maxAge: '1y' }));
 
   // Step 3: handle rendering and serving using ISR handler
-  server.get('*',
+  server.get(
+    '*',
     // Serve page if it exists in cache
     async (req, res, next) => await isr.serveFromCache(req, res, next),
     // Server side render the page and add to cache if needed

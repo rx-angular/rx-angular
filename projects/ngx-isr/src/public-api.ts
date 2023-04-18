@@ -5,7 +5,10 @@
 export * from './lib/ngx-isr.service';
 export * from './lib/isr-handler';
 
-export { InMemoryCacheHandler, FileSystemCacheHandler } from './lib/cache-handlers';
+export {
+  InMemoryCacheHandler,
+  FileSystemCacheHandler,
+} from './lib/cache-handlers';
 
 export { NgxIsrModule } from './lib/ngx-isr.module';
 
@@ -14,9 +17,14 @@ export {
   InvalidateConfig,
   RenderConfig,
   ServeFromCacheConfig,
+  RouteISRConfig,
 } from './lib/models/isr-handler-config';
 
-
-export { CacheHandler, ISROptions, CacheData } from './lib/models/cache-handler';
+export {
+  CacheHandler,
+  CacheISRConfig,
+  CacheISRConfig as ISROptions,
+  CacheData,
+} from './lib/models/cache-handler';
 
 export { provideISR } from './lib/provide-isr';
