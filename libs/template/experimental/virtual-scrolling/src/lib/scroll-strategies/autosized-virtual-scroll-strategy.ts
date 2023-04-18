@@ -1,6 +1,8 @@
 import {
   Directive,
+  ElementRef,
   EmbeddedViewRef,
+  HostBinding,
   inject,
   Input,
   NgIterable,
@@ -18,6 +20,7 @@ import {
   Subject,
 } from 'rxjs';
 import {
+  mergeMap,
   distinctUntilChanged,
   filter,
   map,
@@ -533,6 +536,7 @@ export class AutosizeVirtualScrollStrategy<
 
   /** @internal */
   private positionElements(): void {
+    const viewsToObserve$ = new Subject<EmbeddedViewRef<any>[]>();
     this.viewRepeater!.renderingStart$.pipe(
       switchMap(() => {
         const renderedRange = this.renderedRange;
@@ -576,8 +580,10 @@ export class AutosizeVirtualScrollStrategy<
               let scrollTo = this.anchorScrollTop;
               // update DOM happens here
               // layout should be stable by now, we are thrashing it again, though
+              const viewsRendered: EmbeddedViewRef<any>[] = [];
               for (let i = 0; i < renderedViews.length; i++) {
                 const { view, index, item } = renderedViews[i];
+                viewsRendered.push(view);
                 const element = this.getElement(view);
                 this.positionElement(element, position);
                 if (index === this._scrollToEdgeIndex) {
@@ -596,6 +602,8 @@ export class AutosizeVirtualScrollStrategy<
                 });
               }
               renderedViews = [];
+              // immediately activate the ResizeObserver after initial positioning
+              viewsToObserve$.next(viewsRendered);
               // this condition only covers the edge case when we scroll to the
               // lower edge of the viewport and we have to wait until the whole
               // renderedRange actually got rendered
@@ -628,8 +636,8 @@ export class AutosizeVirtualScrollStrategy<
               }
             })
           ),
-          this.viewRepeater!.viewsRendered$.pipe(
-            switchMap((views) =>
+          viewsToObserve$.pipe(
+            mergeMap((views) =>
               this.observeViewSizes$(adjustIndexWith, views).pipe(
                 tap((lowestId) => {
                   let i = lowestId;
