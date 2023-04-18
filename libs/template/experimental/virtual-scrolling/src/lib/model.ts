@@ -111,7 +111,6 @@ export abstract class RxVirtualScrollStrategy<
 /** @internal */
 @Directive()
 export abstract class RxVirtualScrollViewport {
-  abstract viewRange: Observable<ListRange>;
   abstract elementScrolled$: Observable<void>;
   abstract containerRect$: Observable<{ height: number; width: number }>;
   abstract getScrollTop(): number;
