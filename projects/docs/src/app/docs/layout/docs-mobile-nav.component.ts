@@ -13,7 +13,7 @@ import { DocsLayoutService } from '../services/docs-layout.service';
         aria-hidden="true"></div>
 
       <div class="relative flex flex-col flex-1 w-full max-w-xs bg-white dark:bg-pearl">
-        <div  *ngIf="open$ | async" class="absolute top-0 right-0 pt-2 -mr-12">
+        <div *ngIf="open$ | async" class="absolute top-0 right-0 pt-2 -mr-12">
           <button
             type="button"
             class="flex items-center justify-center w-10 h-10 ml-1 rounded-full  focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -43,13 +43,19 @@ import { DocsLayoutService } from '../services/docs-layout.service';
             </a>
           </div>
           <nav class="px-2 mt-5 space-y-1">
-            <app-docs-sidebar-links 
-              (itemClicked)="layout.toggleMobileMenu(false)">
+            <app-docs-sidebar-links (itemClicked)="layout.toggleMobileMenu(false)">
             </app-docs-sidebar-links>
           </nav>
         </div>
         <div class="flex flex-shrink-0 p-4 pl-12 border-t  border-smoke dark:border-tuna">
-          <!------ CTA buttons goes here-->
+          <a href="https://ko-fi.com/A0A5KJQS4" target="_blank"
+            ><img
+              height="36"
+              style="border:0px;height:36px;"
+              src="https://storage.ko-fi.com/cdn/kofi1.png?v=3"
+              border="0"
+              alt="Buy Me a Coffee at ko-fi.com"
+          /></a>
         </div>
       </div>
 
