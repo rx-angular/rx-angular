@@ -346,9 +346,7 @@ export class AutosizeVirtualScrollStrategy<
         this._virtualItems[i].cached = false;
         i++;
       }
-      while (i >= this.renderedRange.start && i < this.renderedRange.end) {
-        i++;
-      }
+      i = this.renderedRange.end;
       while (i < this.contentLength - 1) {
         this._virtualItems[i].cached = false;
         i++;
