@@ -1,3 +1,4 @@
+export { InjectRxStateParams, injectRxState } from './lib/inject';
 export {
   ProjectStateFn,
   ProjectStateReducer,
