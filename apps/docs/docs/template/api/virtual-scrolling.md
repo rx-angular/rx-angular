@@ -22,8 +22,7 @@ elements with transforms." (@DasSurma)
 > **⚠ Notice:**
 > This package is currently experimental, the public API can potentially change
 
-The `@rx-angular/template/experimental/virtual-scrolling` package can be seen as a high performant competitor of the
-official `@angular/cdk/scrolling`.
+The `@rx-angular/template/experimental/virtual-scrolling` package is a high performant alternative of the official `@angular/cdk/scrolling`.
 The API is heavily inspired by `@angular/cdk/scrolling` and is divided into multiple
 core components which have to be glued together:
 
@@ -202,7 +201,7 @@ export class AnyComponent {
 }
 ```
 
-### Save code with the `trackBy` shortcut
+### Using `trackBy` shortcut to reduce boilerplate
 
 The `trackBy` input either takes a `keyof T` or the regular `TrackByFunction` (`(index: number, item: T) => any`) as a value.
 
