@@ -92,6 +92,8 @@ describe('viewport', () => {
       const runway = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__run-way')
       );
+      fixture.detectChanges();
+      cy.get('@renderCallback').should('have.been.called');
       expect((runway.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${defaultItemLength * itemSize}px)`
       );
@@ -223,6 +225,7 @@ describe('rendering, scrolling & positioning', () => {
       let { runwayItemsOpposite, runwayItems } = defaultMountConfig;
       const { containerHeight } = defaultMountConfig;
       const itemsOnViewport = containerHeight / itemSize;
+      fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
 
       // scroll to somewhere
@@ -288,6 +291,7 @@ describe('rendering, scrolling & positioning', () => {
     mountFixedSize().then(({ fixture }) => {
       const { runwayItems, runwayItemsOpposite, itemSize, containerHeight } =
         defaultMountConfig;
+      fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
       viewportComponent.scrollToIndex(340);
       cy.get('@scrolledIndex').should('have.been.calledWith', 340);

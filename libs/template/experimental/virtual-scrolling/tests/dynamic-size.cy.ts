@@ -130,6 +130,7 @@ describe('viewport', () => {
       const runway = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__run-way')
       );
+      fixture.detectChanges();
       const items = fixture.componentInstance.items as Item[];
       expect((runway.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${totalItemHeight(items)}px)`
@@ -236,6 +237,7 @@ describe('rendering, scrolling & positioning', () => {
   it('reacts to scroll events & runwayItems configuration', () => {
     mountDynamicSize().then(({ fixture, component }) => {
       const items = component.items as Item[];
+      fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
       const scrolledIndex = 20;
       const scrollTo = totalItemHeight(
@@ -288,6 +290,7 @@ describe('rendering, scrolling & positioning', () => {
 
   it('scrolls to an index', () => {
     mountDynamicSize().then(({ fixture, component }) => {
+      fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
       viewportComponent.scrollToIndex(340);
       const items = component.items as Item[];
@@ -340,7 +343,6 @@ describe('data mutations', () => {
             items.sort((a, b) => b.id - a.id);
             fixture.detectChanges();
             const range = expectedRange(component, items, 0);
-            console.log(range);
             cy.get('@viewRange').should('have.been.calledWith', range);
             cy.get('@renderCallback').should(
               'have.been.calledWith',

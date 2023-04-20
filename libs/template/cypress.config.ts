@@ -5,6 +5,7 @@ export default defineConfig({
   component: {
     ...nxComponentTestingPreset(__filename),
     specPattern: ['**/*.cy.ts'],
+    viewportHeight: 600,
   },
-  viewportHeight: 800,
+  viewportHeight: 600,
 });

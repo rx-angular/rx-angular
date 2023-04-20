@@ -1,9 +1,9 @@
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
   ListRange,
-  DynamicSizeVirtualScrollStrategy,
   AutosizeVirtualScrollStrategy,
 } from '../src/index';
 import { createOutputSpy, mount } from 'cypress/angular';
@@ -153,26 +153,38 @@ describe('viewport', () => {
       const runway = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__run-way')
       );
+      fixture.detectChanges();
       const items = component.items as Item[];
-      const initialHeight = items.length * component.tombstoneSize;
       const initialRange = expectedRange(
         { ...component, dynamicSize: () => component.tombstoneSize },
         items
       );
+      const initialHeight = items.length * component.tombstoneSize;
       expect((runway.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${initialHeight}px)`
       );
+      const viewportComponent = getViewportComponent(fixture);
+      const renderedViews = new Set<number>();
+      viewportComponent.viewRepeater.viewRendered$
+        .pipe(takeUntil(viewportComponent.viewRepeater.viewsRendered$))
+        .subscribe((event) => {
+          renderedViews.add(event.index);
+        });
       cy.get('@viewRange').should('have.been.calledWith', initialRange);
       cy.get('@renderCallback')
         .should('have.been.called')
         .then(() => {
+          const knownElements = renderedViews.size;
           const range = expectedRange(component, items);
-          const end = Math.max(initialRange.end, range.end);
           const runwayHeight =
-            totalItemHeight(items.slice(range.start, end)) +
-            (items.length - end) * component.tombstoneSize;
-          cy.get('@viewRange')
-            .should('have.been.calledWith', range)
+            totalItemHeight(items.slice(range.start, knownElements)) +
+            (items.length - knownElements) * component.tombstoneSize;
+          cy.get('@viewRange').should('have.been.calledWith', range);
+          cy.get('@renderCallback')
+            .should(
+              'have.been.calledWith',
+              items.filter((item, i) => i < range.end)
+            )
             .then(() => {
               expect((runway.nativeElement as HTMLElement).style.transform).eq(
                 `translate(0px, ${runwayHeight}px)`
@@ -187,24 +199,24 @@ describe('viewport', () => {
         By.css('.rx-virtual-scroll__run-way')
       );
       const items = component.items as Item[];
-      const initialHeight = items.length * component.tombstoneSize;
-      const initialRange = expectedRange(
-        { ...component, dynamicSize: () => component.tombstoneSize },
-        items
-      );
-      expect((runway.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${initialHeight}px)`
-      );
-      const range = expectedRange(component, items);
-      const end = Math.max(initialRange.end, range.end);
-      const runwayHeight =
-        totalItemHeight(items.slice(range.start, end)) +
-        (items.length - end) * component.tombstoneSize;
+      fixture.detectChanges();
 
-      cy.get('@viewRange').should('have.been.calledWith', range);
+      const viewportComponent = getViewportComponent(fixture);
+      const renderedViews = new Set<number>();
+      viewportComponent.viewRepeater.viewRendered$
+        .pipe(takeUntil(viewportComponent.viewRepeater.viewsRendered$))
+        .subscribe((event) => {
+          renderedViews.add(event.index);
+        });
+
       cy.get('@renderCallback')
         .should('have.been.called')
         .then(() => {
+          const knownElements = renderedViews.size;
+          const range = expectedRange(component, items);
+          const runwayHeight =
+            totalItemHeight(items.slice(range.start, knownElements)) +
+            (items.length - knownElements) * component.tombstoneSize;
           items.push(...generateItems(1));
           fixture.detectChanges();
           expect((runway.nativeElement as HTMLElement).style.transform).eq(
@@ -331,11 +343,49 @@ describe('rendering, scrolling & positioning', () => {
     });
   });
 
+  it('reacts to runwayItems change', () => {
+    mountAutoSize().then(({ component, fixture }) => {
+      const items = component.items as Item[];
+      const range = expectedRange(component, items, 0);
+      cy.get('[data-cy=item]').should('have.length', range.end);
+      let position = 0;
+      cy.get('[data-cy=item]')
+        .each((element, i) => {
+          expect(element.css('position')).to.be.eq('absolute');
+          expect(element.attr('style')).to.contain(`translateY(${position}px)`);
+          position += component.dynamicSize(items[i]);
+        })
+        .then(() => {
+          let { runwayItems, runwayItemsOpposite } = component;
+          // react to runwayItems config changes
+          runwayItems = runwayItems + 5;
+          runwayItemsOpposite = runwayItemsOpposite + 5;
+          component.runwayItems = runwayItems;
+          component.runwayItemsOpposite = runwayItemsOpposite;
+          fixture.detectChanges();
+          const newRange = { start: 0, end: range.end + 5 };
+          cy.get('@viewRange').should('have.been.calledWith', newRange);
+          cy.get('[data-cy=item]').should(
+            'have.length',
+            newRange.end - newRange.start
+          );
+          position = 0;
+          cy.get('[data-cy=item]').each((element, i) => {
+            expect(element.css('position')).to.be.eq('absolute');
+            expect(element.attr('style')).to.contain(
+              `translateY(${position}px)`
+            );
+            position += component.dynamicSize(items[i]);
+          });
+        });
+    });
+  });
+
   it('reacts to scroll events & runwayItems configuration', () => {
     mountAutoSize({}, `{{ item.id }}`).then(({ fixture, component }) => {
       const items = component.items as Item[];
+      fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
-      let { runwayItems, runwayItemsOpposite } = component;
       const initialRange = expectedRange(component, items, 0, 'up');
       const renderedInitialItems = items.filter((v, i) => i < initialRange.end);
       cy.get('@renderCallback')
@@ -345,47 +395,21 @@ describe('rendering, scrolling & positioning', () => {
             (items.length / 2) * component.tombstoneSize;
           viewportComponent.scrollTo(scrollToSomeWhere);
           cy.wait(200);
-          let start = 0;
-          let end = 0;
           cy.get('@renderCallback')
             .should('have.been.called')
             .then(() => {
               let position = 0;
-              cy.get('[data-cy=item]')
-                .each((element) => {
-                  const id = parseInt(element.text().trim());
-                  if (!start) {
-                    start = id;
-                  }
-                  if (id > end) {
-                    end = id;
-                  }
-                  if (!position) {
-                    position = extractTranslateYValue(element.attr('style'));
-                  }
-                  const item = items[id];
-                  expect(element.attr('style')).contains(
-                    `translateY(${position}px)`
-                  );
-                  position += component.dynamicSize(item);
-                })
-                .then(() => {
-                  // react to runwayItems config changes
-                  runwayItems = runwayItems + 5;
-                  runwayItemsOpposite = runwayItemsOpposite + 5;
-                  component.runwayItems = runwayItems;
-                  component.runwayItemsOpposite = runwayItemsOpposite;
-                  fixture.detectChanges();
-                  const expectedRange = { start: start - 5, end: end + 6 };
-                  cy.get('@viewRange').should(
-                    'have.been.calledWith',
-                    expectedRange
-                  );
-                  cy.get('[data-cy=item]').should(
-                    'have.length',
-                    expectedRange.end - expectedRange.start
-                  );
-                });
+              cy.get('[data-cy=item]').each((element) => {
+                const id = parseInt(element.text().trim());
+                if (!position) {
+                  position = extractTranslateYValue(element.attr('style'));
+                }
+                const item = items[id];
+                expect(element.attr('style')).contains(
+                  `translateY(${position}px)`
+                );
+                position += component.dynamicSize(item);
+              });
             });
         });
     });
@@ -413,10 +437,16 @@ describe('rendering, scrolling & positioning', () => {
 
   it('scrolls to an index', () => {
     mountAutoSize().then(({ fixture, component }) => {
+      fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
       viewportComponent.scrollToIndex(340);
       const items = component.items as Item[];
-      const range = expectedRange(component, items, 340, 'down');
+      const range = expectedRange(
+        { ...component, dynamicSize: () => component.tombstoneSize },
+        items,
+        340,
+        'down'
+      );
       cy.get('@scrolledIndex').should('have.been.calledWith', 340);
       cy.get('@viewRange').should('have.been.calledWith', range);
     });
