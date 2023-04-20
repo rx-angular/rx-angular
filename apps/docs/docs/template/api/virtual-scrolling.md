@@ -17,7 +17,7 @@ explained in great detail by @DasSurma in his blog post about the
 
 "Each recycling of a DOM element would normally relayout the entire runway which would bring us well below our target
 of 60 frames per second. To avoid this, we are taking the burden of layout onto ourselves and use absolutely positioned
-elements with transforms." (@DasSurma)
+elements with transforms." [(@DasSurma)](https://twitter.com/dassurma)
 
 > **⚠ Notice:**
 > This package is currently experimental, the public API can potentially change
@@ -174,6 +174,8 @@ export class AnyComponent {
 }
 ```
 
+> 💡 See examples for other scroll strategies [here](#rxvirtualscrollstrategy)
+
 ### Fixed size virtual-scroll using `*rxVirtualFor` with static values
 
 ```html
@@ -201,6 +203,8 @@ export class AnyComponent {
 }
 ```
 
+> 💡 See examples for other scroll strategies [here](#rxvirtualscrollstrategy)
+
 ### Using `trackBy` shortcut to reduce boilerplate
 
 The `trackBy` input either takes a `keyof T` or the regular `TrackByFunction` (`(index: number, item: T) => any`) as a value.
@@ -220,6 +224,8 @@ The `trackBy` input either takes a `keyof T` or the regular `TrackByFunction` (`
   </div>
 </rx-virtual-scroll-viewport>
 ```
+
+> 💡 See examples for other scroll strategies [here](#rxvirtualscrollstrategy)
 
 ### Using the static context variables
 
