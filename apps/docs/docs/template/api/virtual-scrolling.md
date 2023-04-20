@@ -95,9 +95,9 @@ all pre-packaged ScrollStrategies as well as control the majority of inputs.
 - Zone-agnostic, opt-out of `NgZone` with `patchZone`
 - 3 Configurable `RxVirtualScrollStrategy` providing the core logic to calculate the viewRange and position DOM
   Nodes
-  - `FixedSizeVirtualScrollStrategy`
-  - `AutosizeVirtualScrollStrategy`
-  - `DynamicSizeVirtualScrollStrategy`
+  - [`FixedSizeVirtualScrollStrategy`](#fixedsizevirtualscrollstrategy)
+  - [`DynamicSizeVirtualScrollStrategy`](#dynamicsizevirtualscrollstrategy)
+  - [`AutoSizeVirtualScrollStrategy`](#autosizevirtualscrollstrategy)
 
 ## Usage Examples
 
@@ -523,9 +523,9 @@ export class MyComponent {
 
 #### DynamicSizeVirtualScrollStrategy
 
-The `DynamicSizeVirtualScrollStrategy` is very similar to the `AutosizeVirtualScrollStrategy`. Instead of hitting the DOM, it calculates the size
+The `DynamicSizeVirtualScrollStrategy` is very similar to the `AutoSizeVirtualScrollStrategy`. Instead of hitting the DOM, it calculates the size
 based on a user provided function of type `(item: T) => number`. Because it doesn't have to interact with the DOM in order to position views,
-the `DynamicSizeVirtualScrollStrategy` has a better runtime performance compared to the `AutosizeVirtualScrollStrategy`.
+the `DynamicSizeVirtualScrollStrategy` has a better runtime performance compared to the `AutoSizeVirtualScrollStrategy`.
 
 This strategy is very useful for scenarios where you display different kind of templates, but already know the dimensions of
 them.
@@ -567,18 +567,18 @@ export class MyComponent {
 </rx-virtual-scroll-viewport>
 ```
 
-#### AutosizeVirtualScrollStrategy
+#### AutoSizeVirtualScrollStrategy
 
-The `AutosizeVirtualScrollStrategy` is able to render and position
-items based on their individual size. It is comparable to `@angular/cdk/experimental` `AutosizeVirtualScrollStrategy`, but with
+The `AutoSizeVirtualScrollStrategy` is able to render and position
+items based on their individual size. It is comparable to `@angular/cdk/experimental` `AutoSizeVirtualScrollStrategy`, but with
 a high performant layout technique, better visual stability and added features.
-Furthermore, the `AutosizeVirtualScrollStrategy` is leveraging the `ResizeObserver` in order to detect size changes for each individual
+Furthermore, the `AutoSizeVirtualScrollStrategy` is leveraging the `ResizeObserver` in order to detect size changes for each individual
 view rendered to the DOM and properly re-position accordingly.
 
-For views it doesn't know yet, the `AutosizeVirtualScrollStrategy` anticipates a certain size in order to properly size the runway.
+For views it doesn't know yet, the `AutoSizeVirtualScrollStrategy` anticipates a certain size in order to properly size the runway.
 The size is determined by the `@Input('tombstoneSize')` and defaults to `50`.
 
-In order to provide top runtime performance the `AutosizeVirtualScrollStrategy` builds up caches that
+In order to provide top runtime performance the `AutoSizeVirtualScrollStrategy` builds up caches that
 prevent DOM interactions whenever possible. Once a view was visited, its properties will be stored instead of re-read from the DOM
 again as this can potentially lead to unwanted forced reflows.
 
@@ -589,14 +589,14 @@ again as this can potentially lead to unwanted forced reflows.
 ```ts
 // my.component.ts
 import {
-  AutosizeVirtualScrollStrategy,
+  AutoSizeVirtualScrollStrategy,
   RxVirtualScrollViewportComponent,
 } from '@rx-angular/template/experimental/virtual-scrolling';
 
 @Component({
   /**/,
   standalone: true,
-  imports: [AutosizeVirtualScrollStrategy, RxVirtualScrollViewportComponent]
+  imports: [AutoSizeVirtualScrollStrategy, RxVirtualScrollViewportComponent]
 })
 export class MyComponent {
   items$ = inject(DataService).getItems();
@@ -791,14 +791,14 @@ recalculations and layouting phases are increasing, though. This will also depen
 
 ### Autosize Strategy
 
-Comparison between [RxAngular AutosizeVirtualScrollStrategy](#autosizevirtualscrollstrategy) and [CDK AutoSizeVirtualScrollStrategy](https://github.com/angular/components/blob/main/src/cdk-experimental/scrolling/auto-size-virtual-scroll.ts).
+Comparison between [RxAngular AutoSizeVirtualScrollStrategy](#autosizevirtualscrollstrategy) and [CDK AutoSizeVirtualScrollStrategy](https://github.com/angular/components/blob/main/src/cdk-experimental/scrolling/auto-size-virtual-scroll.ts).
 
-[AutosizeVirtualScrollStrategy comparison Demo](https://hoebbelsb.github.io/rxa-virtual-scroll/#/demos/autosize-cdk-compare)
+[AutoSizeVirtualScrollStrategy comparison Demo](https://hoebbelsb.github.io/rxa-virtual-scroll/#/demos/autosize-cdk-compare)
 
 #### Features
 
 As an experimental package, the `CDK AutoSizeVirtualScrollStrategy` does not emit the current scrollIndex, nor has it a working `scrollToIndex` method implemented.
-The `RxAngular AutosizeVirtualScrollStrategy` is able to do both! It emits the current valid scrolledIndex and is able to properly scroll to the
+The `RxAngular AutoSizeVirtualScrollStrategy` is able to do both! It emits the current valid scrolledIndex and is able to properly scroll to the
 correct position based on an index.
 
 | Feature           | `@rx-angular/template/experimental/virtual-scrolling` | `@angular/cdk/scrolling` |

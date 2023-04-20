@@ -4,7 +4,7 @@ export {
   RxVirtualScrollStrategy,
   RxVirtualViewRepeater,
 } from './model';
-export * from './scroll-strategies/autosized-virtual-scroll-strategy';
+export * from './scroll-strategies/autosize-virtual-scroll-strategy';
 export * from './scroll-strategies/dynamic-size-virtual-scroll-strategy';
 export * from './scroll-strategies/fixed-size-virtual-scroll-strategy';
 export * from './virtual-for.directive';

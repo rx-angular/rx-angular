@@ -4,7 +4,7 @@ import {
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
   ListRange,
-  AutosizeVirtualScrollStrategy,
+  AutoSizeVirtualScrollStrategy,
 } from '../src/index';
 import { createOutputSpy, mount } from 'cypress/angular';
 import { By } from '@angular/platform-browser';
@@ -94,7 +94,7 @@ function mountAutoSize(
       imports: [
         RxVirtualScrollViewportComponent,
         RxVirtualFor,
-        AutosizeVirtualScrollStrategy,
+        AutoSizeVirtualScrollStrategy,
       ],
     }
   );

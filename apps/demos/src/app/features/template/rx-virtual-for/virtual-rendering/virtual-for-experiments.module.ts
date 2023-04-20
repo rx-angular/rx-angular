@@ -7,7 +7,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import {
-  AutosizeVirtualScrollStrategy,
+  AutoSizeVirtualScrollStrategy,
   DynamicSizeVirtualScrollStrategy,
   FixedSizeVirtualScrollStrategy,
   RxVirtualScrollViewportComponent,
@@ -32,7 +32,7 @@ import { VirtualForTestComponent } from './virtual-for-test.component';
     LetDirective,
     AutosizedScrollingModule,
     ScrollingModule,
-    AutosizeVirtualScrollStrategy,
+    AutoSizeVirtualScrollStrategy,
     MatButtonModule,
     MatInputModule,
     FixedSizeVirtualScrollStrategy,
