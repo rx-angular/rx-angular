@@ -4,7 +4,7 @@ inputs:
   node-version:
     description: Node.js version
     required: false
-    default: 'lts/Hydrogen' # this is 18.12
+    default: '18.15.0' # latest working version for our CI
 runs:
   using: composite
   steps:
