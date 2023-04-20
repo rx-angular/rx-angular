@@ -10,7 +10,8 @@
           "build",
           "lint",
           "test",
-          "e2e"
+          "e2e",
+          "component-test"
         ],
         "accessToken": "OTg2OGFkNmMtNzA5Zi00MjBiLWFhMmQtOGYwNTQ1MjM1ZjQ3fHJlYWQtd3JpdGU=",
         "canTrackAnalytics": false,
@@ -55,7 +56,10 @@
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/.eslintrc.json"
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/cypress/**/*",
+      "!{projectRoot}/**/*.cy.[jt]s?(x)",
+      "!{projectRoot}/cypress.config.[jt]s"
     ],
     "projectSpecificFiles": []
   },
@@ -71,6 +75,9 @@
     },
     "lint": {
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+    },
+    "component-test": {
+      "inputs": ["default", "^production"]
     }
   }
 }
