@@ -25,21 +25,21 @@ This repository holds a set of helpers that are aiming to provide:
 
 ### Using `@rx-angular/template`
 
-Here's an example of how to use the `*rxLet` directive to bind an Observable value to the template. The `timer` Observable emits a value every second, and the `value$` property is bound to the template using the `*rxLet` directive.
+This is an example of how to use the `*rxLet` directive to bind an Observable value to the template. In this example, the `TimeComponent` defines a property `time$`, which is an Observable that emits a value every second using the `timer` operator. The emitted values are mapped to the current time string using the `map` operator which is then displayed in the template using `*rxLet`.
 
 ```ts
 @Component({
-  selector: 'app-timer',
+  selector: 'app-time',
   standalone: true,
   imports: [LetDirective],
   template: `
-    <ng-container *rxLet="value$; let value">
+    <ng-container *rxLet="time$; let value">
       {{ value }}
     </ng-container>
   `,
 })
-export class AppTimer {
-  value$ = timer(0, 1000);
+export class TimeComponent {
+  time$ = timer(0, 1000).pipe(map(() => new Date().toTimeString()));
 }
 ```
 
