@@ -6,7 +6,7 @@
 
 ## Packages
 
-RxAngular is made up of different packages that work together or standalone:
+RxAngular is made up of different packages that work together or standalone.
 
 | Package                                                               | Description                                                                                                          | Version                                                                                                                               |
 | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -16,7 +16,11 @@ RxAngular is made up of different packages that work together or standalone:
 | [@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin) | A set of ESLint rules for building reactive, performant, and zone-less Angular applications.                         | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Feslint-plugin.svg)](https://www.npmjs.com/package/%40rx-angular%2Feslint-plugin) |
 |                                                                       |
 
-This repository holds a set of helpers to create **fully reactive** as well as **fully zone-less** applications.
+This repository holds a set of helpers that are aiming to provide:
+
+- fully reactive applications
+- fully or partially zone-less applications
+- high-performance and non-blocking rendering
 
 ## Getting Started
 
