@@ -14,7 +14,6 @@ RxAngular is made up of different packages that work together or standalone.
 | [@rx-angular/template](https://rx-angular.io/docs/template)           | A set of directives and pipes designed for high-performance and non-blocking rendering for large-scale applications. | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)           |
 | [@rx-angular/cdk](https://rx-angular.io/docs/cdk)                     | A Component Development Kit for high-performance and ergonomic Angular UI libs and large-scale applications.         | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)                     |
 | [@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin) | A set of ESLint rules for building reactive, performant, and zone-less Angular applications.                         | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Feslint-plugin.svg)](https://www.npmjs.com/package/%40rx-angular%2Feslint-plugin) |
-|                                                                       |
 
 This repository holds a set of helpers that are aiming to provide:
 
