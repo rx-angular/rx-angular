@@ -71,7 +71,7 @@ interface CounterActions {
   providers: [RxState, RxActionFactory],
 })
 export class CounterComponent {
-  readonly count$: Observable<number> = this.state.select('count');
+  readonly count$ = this.state.select('count');
   readonly actions = this.actionFactory.create();
 
   constructor(
