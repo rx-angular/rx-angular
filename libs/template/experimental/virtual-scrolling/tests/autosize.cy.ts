@@ -154,6 +154,16 @@ describe('viewport', () => {
         By.css('.rx-virtual-scroll__run-way')
       );
       fixture.detectChanges();
+      const viewportComponent = getViewportComponent(fixture);
+      let endIndex = 0;
+      const checkingKnownElements$ = new Subject<void>();
+      viewportComponent.viewRepeater.viewRendered$
+        .pipe(takeUntil(checkingKnownElements$))
+        .subscribe((event) => {
+          if (event.index > endIndex) {
+            endIndex = event.index;
+          }
+        });
       const items = component.items as Item[];
       const initialRange = expectedRange(
         { ...component, dynamicSize: () => component.tombstoneSize },
@@ -163,22 +173,16 @@ describe('viewport', () => {
       expect((runway.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${initialHeight}px)`
       );
-      const viewportComponent = getViewportComponent(fixture);
-      const renderedViews = new Set<number>();
-      viewportComponent.viewRepeater.viewRendered$
-        .pipe(takeUntil(viewportComponent.viewRepeater.viewsRendered$))
-        .subscribe((event) => {
-          renderedViews.add(event.index);
-        });
       cy.get('@viewRange').should('have.been.calledWith', initialRange);
       cy.get('@renderCallback')
         .should('have.been.called')
         .then(() => {
-          const knownElements = renderedViews.size;
+          checkingKnownElements$.next();
+          const knownEndRange = endIndex + 1;
           const range = expectedRange(component, items);
           const runwayHeight =
-            totalItemHeight(items.slice(range.start, knownElements)) +
-            (items.length - knownElements) * component.tombstoneSize;
+            totalItemHeight(items.slice(range.start, knownEndRange)) +
+            (items.length - knownEndRange) * component.tombstoneSize;
           cy.get('@viewRange').should('have.been.calledWith', range);
           cy.get('@renderCallback')
             .should(
