@@ -16,11 +16,12 @@
 - [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
 - [RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/rx-if-directive)
 - [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/api/unpatch-directive)
-- [PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe)
+- [PushPipe (push)](https://rx-angular.io/docs/template/api/push-pipe)
 
 **Experimental features**
 
-- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio-directive)
+- [🧪 Virtual Scrolling (virtual-scrolling)](https://www.rx-angular.io/docs/template/api/virtual-scrolling)
+- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/viewport-prio-directive)
 
 All experimental features are very stable and already tested in production apps for multiple months. The reason to have them in experimental is so we can make small typing changes without breaking changes.
 
