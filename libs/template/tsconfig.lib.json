@@ -7,12 +7,13 @@
     "importHelpers": true,
     "lib": ["dom", "es2018"],
     "paths": {
-      "@rx-angular/cdk/zone-less": ["dist/libs/cdk/zone-less"],
+      "@rx-angular/cdk/zone-less/browser": ["dist/libs/cdk/zone-less/browser"],
       "@rx-angular/cdk/zone-configurations": [
         "dist/libs/cdk/zone-configurations"
       ],
       "@rx-angular/cdk/render-strategies": ["dist/libs/cdk/render-strategies"],
       "@rx-angular/cdk/template": ["dist/libs/cdk/template"],
+      "@rx-angular/cdk/coalescing": ["dist/libs/cdk/coalescing"],
       "@rx-angular/cdk/coercing": ["dist/libs/cdk/coercing"],
       "@rx-angular/cdk/notifications": ["dist/libs/cdk/notifications"],
       "@rx-angular/cdk/internals/core": ["dist/libs/cdk/internals/core"]
@@ -32,6 +33,13 @@
     "src/test-setup.ts",
     "**/*.spec.ts",
     "**/*.test.ts",
-    "jest.config.ts"
+    "jest.config.ts",
+    "cypress/**/*",
+    "cypress.config.ts",
+    "**/*.cy.ts",
+    "**/*.cy.js",
+    "**/*.cy.tsx",
+    "**/*.cy.jsx",
+    "**/tests/*.ts"
   ]
 }
