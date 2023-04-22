@@ -1,4 +1,4 @@
-import { CacheData, CacheHandler, CacheISRConfig } from '../models';
+import { CacheData, CacheHandler, CacheISRConfig } from 'ngx-isr/models';
 
 const defaultCacheISRConfig: CacheISRConfig = {
   revalidate: null,

@@ -2,12 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { ChildActivationEnd, Router } from '@angular/router';
 import { filter, map, take } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-
-export interface NgxIsrState {
-  revalidate: number | null;
-  errors: Error[];
-  extra: Record<string, any>;
-}
+import { INgxIsrService, NgxIsrState } from 'ngx-isr/models';
 
 const initialState: NgxIsrState = {
   revalidate: null,
@@ -16,7 +11,7 @@ const initialState: NgxIsrState = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class NgxIsrService {
+export class NgxIsrServerService implements INgxIsrService {
   private readonly router = inject(Router);
   private state: NgxIsrState = initialState;
 
@@ -68,7 +63,7 @@ export class NgxIsrService {
    * this.isrService.addError(err);
    * ```
    */
-  addError(error: HttpErrorResponse): void {
+  addError(error: HttpErrorResponse | Error): void {
     this.patchState({ errors: [...this.getState().errors, error] });
   }
 

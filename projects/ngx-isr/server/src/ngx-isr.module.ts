@@ -4,11 +4,12 @@ import {
   NgModule,
   PLATFORM_ID,
 } from '@angular/core';
-import { NgxIsrService } from './ngx-isr.service';
 import { HTTP_ERROR_PROVIDER_ISR } from './http-errors.interceptor';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
 import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serialized';
 import { DOCUMENT, isPlatformServer } from '@angular/common';
+import { NgxIsrService } from 'ngx-isr/browser';
+import { NgxIsrServerService } from './ngx-isr-server.service';
 
 @NgModule({ providers: [NgxIsrService] })
 export class NgxIsrModule {
@@ -26,8 +27,12 @@ export class NgxIsrModule {
     return {
       ngModule: NgxIsrModule,
       providers: [
-        NgxIsrService,
+        NgxIsrServerService,
         HTTP_ERROR_PROVIDER_ISR,
+        {
+          provide: NgxIsrService,
+          useExisting: NgxIsrServerService,
+        },
         {
           provide: BEFORE_APP_SERIALIZED,
           useFactory: addIsrDataBeforeSerialized,

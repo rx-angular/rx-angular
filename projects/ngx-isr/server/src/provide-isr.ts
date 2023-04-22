@@ -1,11 +1,12 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { NgxIsrService } from './ngx-isr.service';
+import { NgxIsrServerService } from './ngx-isr-server.service';
 import { HTTP_ERROR_PROVIDER_ISR } from './http-errors.interceptor';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
 import { DOCUMENT, isPlatformServer } from '@angular/common';
 import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serialized';
 import { ENVIRONMENT_INITIALIZER } from '@angular/core';
 import { PLATFORM_ID } from '@angular/core';
+import { NgxIsrService } from 'ngx-isr/browser';
 
 /**
  * @description
@@ -36,13 +37,17 @@ import { PLATFORM_ID } from '@angular/core';
  */
 export const provideISR = (): EnvironmentProviders => {
   return makeEnvironmentProviders([
-    NgxIsrService,
+    NgxIsrServerService,
     HTTP_ERROR_PROVIDER_ISR,
+    {
+      provide: NgxIsrService,
+      useExisting: NgxIsrServerService,
+    },
     {
       provide: BEFORE_APP_SERIALIZED,
       useFactory: addIsrDataBeforeSerialized,
       multi: true,
-      deps: [NgxIsrService, DOCUMENT],
+      deps: [NgxIsrServerService, DOCUMENT],
     },
     {
       provide: ENVIRONMENT_INITIALIZER,

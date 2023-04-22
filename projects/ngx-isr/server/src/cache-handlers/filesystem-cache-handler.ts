@@ -1,6 +1,7 @@
-import { CacheData, CacheHandler, CacheISRConfig } from '../models';
 import * as fs from 'fs';
 import { join } from 'path';
+
+import { CacheData, CacheHandler, CacheISRConfig } from 'ngx-isr/models';
 import { getRouteISRDataFromHTML } from '../utils/get-isr-options';
 
 export interface FileSystemCacheOptions {
@@ -9,7 +10,7 @@ export interface FileSystemCacheOptions {
   addPrerenderedPagesToCache?: boolean;
 }
 
-export interface FileSystemCacheData {
+interface FileSystemCacheData {
   htmlFilePath: string; // full path to file
   options: CacheISRConfig;
   createdAt: number;

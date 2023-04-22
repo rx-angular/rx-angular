@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { InMemoryCacheHandler } from './cache-handlers';
+import { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
 import { CacheRegeneration } from './cache-regeneration';
 import { ISRLogger } from './isr-logger';
 import {
@@ -9,7 +9,7 @@ import {
   ISRHandlerConfig,
   RenderConfig,
   ServeFromCacheConfig,
-} from './models';
+} from 'ngx-isr/models';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
 import { renderUrl, RenderUrlConfig } from './utils/render-url';
 
@@ -149,7 +149,8 @@ export class ISRHandler {
       const cacheData = await this.cache.get(req.url);
       const { html, options: cacheConfig, createdAt } = cacheData;
 
-      const cacheHasBuildId = cacheConfig.buildId !== null && cacheConfig.buildId !== undefined;
+      const cacheHasBuildId =
+        cacheConfig.buildId !== null && cacheConfig.buildId !== undefined;
 
       if (cacheHasBuildId && cacheConfig.buildId !== this.config.buildId) {
         // Cache is from a different build. Serve user using SSR

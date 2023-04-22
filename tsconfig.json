@@ -12,10 +12,10 @@
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "paths": {
-      "ngx-isr": [
-        "dist/ngx-isr/ngx-isr",
-        "dist/ngx-isr"
-      ]
+      "ngx-isr": ["dist/ngx-isr/ngx-isr", "dist/ngx-isr"],
+      "ngx-isr/models": ["projects/ngx-isr/models/src/index.ts"],
+      "ngx-isr/browser": ["projects/ngx-isr/browser/src/index.ts"],
+      "ngx-isr/server": ["projects/ngx-isr/server/src/index.ts"]
     },
     "declaration": false,
     "downlevelIteration": true,
@@ -24,10 +24,7 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
