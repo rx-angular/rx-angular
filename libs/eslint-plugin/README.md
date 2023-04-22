@@ -1,5 +1,7 @@
 # @rx-angular/eslint-plugin
 
+[![npm](https://img.shields.io/npm/v/%40rx-angular%2Feslint-plugin.svg)](https://www.npmjs.com/package/%40rx-angular%2Feslint-plugin)
+
 > A set of ESLint rules for building reactive, performant and Zone-less Angular applications.
 
 ## Installation
