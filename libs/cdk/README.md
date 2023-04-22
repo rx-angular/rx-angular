@@ -47,12 +47,11 @@ nx migrate @rx-angular/cdk
 
 ## Version Compatibility
 
-| Angular                | RxJS                 | @rx-angular/cdk     |
-| ---------------------- | -------------------- | ------------------- |
-| `14`                   | `^7.4.0`             | `> 1.0.0-alpha.10`  |
-| `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-alpha.10`  |
-| `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-alpha.10` |
+| RxAngular | Angular    |
+| --------- | ---------- |
+| `^1.0.0`  | `>=12.0.0` |
+| `^2.0.0`  | `>=13.0.0` |
+| `^14.0.0` | `^14.0.0`  |
+| `^15.0.0` | `^15.0.0`  |
 
-Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
-All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
+Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see this [matrix](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
