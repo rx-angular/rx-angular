@@ -1,4 +1,12 @@
-export { InjectRxStateParams, injectRxState } from './lib/inject';
+export {
+  RxStateFeature,
+  RxStateFeatures,
+  accumulator,
+  connect,
+  hold,
+  initialState,
+  rxState,
+} from './lib/inject';
 export {
   ProjectStateFn,
   ProjectStateReducer,
