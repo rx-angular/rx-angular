@@ -14,23 +14,28 @@ import {
 import { RxState } from './rx-state.service';
 
 describe(rxState, () => {
-  it('should create', () => {
-    const { component } = setupTestComponent();
+  it('should create RxState instance', () => {
+    const { component } = setupStatefulComponent();
     expect(component.state).toBeInstanceOf(RxState);
   });
 
-  it('should create state with correct type', () => {
-    const { component } = setupTestComponent<{ count: number }>();
+  it('should infer state from initial state', () => {
+    const { component } = setupStatefulComponent(initialState({ count: 0 }));
+    expectType<RxState<{ count: number }>>(component.state);
+  });
+
+  it('should infer state from generic type', () => {
+    const { component } = setupStatefulComponent<{ count: number }>();
     expectType<RxState<{ count: number }>>(component.state);
   });
 
   it('should compose state with initial state', () => {
-    const { component } = setupTestComponent(initialState({ count: 0 }));
+    const { component } = setupStatefulComponent(initialState({ count: 0 }));
     expect(component.state.get()).toEqual({ count: 0 });
   });
 
   it('should compose state with accumulator', () => {
-    const { component } = setupTestComponent<{ count: number }>(
+    const { component } = setupStatefulComponent<{ count: number }>(
       initialState({ count: 0 }),
       accumulator((state, slice) => {
         return {
@@ -46,19 +51,19 @@ describe(rxState, () => {
 
   it('should compose state with hold', () => {
     const spy = jest.fn();
-    setupTestComponent<{ count: number }>(hold(of('src'), spy));
+    setupStatefulComponent<{ count: number }>(hold(of('src'), spy));
     expect(spy).toHaveBeenCalledWith('src');
   });
 
   it('should compose state with connect', () => {
-    const { component } = setupTestComponent<{ count: number }>(
+    const { component } = setupStatefulComponent<{ count: number }>(
       connect(of({ count: 10 }))
     );
     expect(component.state.get()).toEqual({ count: 10 });
   });
 
   it('should call ngOnDestroy', () => {
-    const { fixture, component } = setupTestComponent();
+    const { fixture, component } = setupStatefulComponent();
     const spy = jest.spyOn(component.state, 'ngOnDestroy');
     expect(spy).not.toHaveBeenCalled();
     fixture.destroy();
@@ -66,19 +71,19 @@ describe(rxState, () => {
   });
 });
 
-function setupTestComponent<State extends object>(
+function setupStatefulComponent<State extends object>(
   ...params: RxStateFeatures<State>
 ) {
   @Component({})
-  class TestComponent {
+  class StatefulComponent {
     state = rxState<State>(...params);
   }
 
   TestBed.configureTestingModule({
-    declarations: [TestComponent],
+    declarations: [StatefulComponent],
   });
 
-  const fixture = TestBed.createComponent(TestComponent);
+  const fixture = TestBed.createComponent(StatefulComponent);
 
   return {
     fixture,
