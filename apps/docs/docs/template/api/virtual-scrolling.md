@@ -51,8 +51,8 @@ export class MyComponent {}
 ```
 
 ```html
-<rx-virtual-scroll-viewport>
-  <div [itemSize]="50" *rxVirtualFor="let hero of heroes$;">
+<rx-virtual-scroll-viewport [itemSize]="50">
+  <div *rxVirtualFor="let hero of heroes$;">
     <div>
       <div><strong>{{ hero.name }}</strong></div>
       <div>{{ hero.id }}</div>
@@ -150,8 +150,8 @@ export class MyComponent {}
 ### Fixed size virtual-scroll using `*rxVirtualFor` with `Observable` values
 
 ```html
-<rx-virtual-scroll-viewport>
-  <div class="hero" [itemSize]="50" *rxVirtualFor="let hero of heroes$;">
+<rx-virtual-scroll-viewport [itemSize]="50">
+  <div class="hero" *rxVirtualFor="let hero of heroes$;">
     <div>
       <div><strong>{{ hero.name }}</strong></div>
       <div>{{ hero.id }}</div>
@@ -179,8 +179,8 @@ export class AnyComponent {
 ### Fixed size virtual-scroll using `*rxVirtualFor` with static values
 
 ```html
-<rx-virtual-scroll-viewport>
-  <div class="hero" [itemSize]="50" *rxVirtualFor="let hero of heroes">
+<rx-virtual-scroll-viewport [itemSize]="50">
+  <div class="hero" *rxVirtualFor="let hero of heroes">
     <div>
       <div><strong>{{ hero.name }}</strong></div>
       <div>{{ hero.id }}</div>
@@ -210,12 +210,8 @@ export class AnyComponent {
 The `trackBy` input either takes a `keyof T` or the regular `TrackByFunction` (`(index: number, item: T) => any`) as a value.
 
 ```html
-<rx-virtual-scroll-viewport>
-  <div
-    class="hero"
-    [itemSize]="50"
-    *rxVirtualFor="let hero of heroes; trackBy: 'id'"
-  >
+<rx-virtual-scroll-viewport [itemSize]="50">
+  <div class="hero" *rxVirtualFor="let hero of heroes; trackBy: 'id'">
     <div>
       <div><strong>{{ hero.name }}</strong></div>
       <div>{{ hero.id }}</div>
