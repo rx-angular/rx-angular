@@ -1,5 +1,5 @@
 export { RxActionFactory } from './lib/actions.factory';
-export { injectRxActionFactory } from './lib/inject';
+export { rxActions } from './lib/inject';
 export * from './lib/transforms';
 export {
   ActionDispatchFn,
