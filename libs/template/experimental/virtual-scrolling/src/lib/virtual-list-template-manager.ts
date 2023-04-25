@@ -33,6 +33,7 @@ export interface RxVirtualListTemplateManager<T, C> {
  * @internal
  *
  * Factory that returns a `ListTemplateManager` for the passed params.
+ * Similar to https://github.com/angular/components/blob/main/src/cdk/collections/recycle-view-repeater-strategy.ts
  *
  * @param templateSettings
  */
