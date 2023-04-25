@@ -94,4 +94,4 @@ export class MyModule {}
 | `^14.0.0` | `^14.0.0`  |
 | `^15.0.0` | `^15.0.0`  |
 
-Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see this [matrix](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
+Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see the [official guide](https://angular.io/guide/versions).
