@@ -4,12 +4,12 @@ import { expectType } from 'tsd';
 
 import { of } from 'rxjs';
 import {
-  RxStateFeatures,
-  accumulator,
-  connect,
-  hold,
-  initialState,
+  RxStateFeature,
   rxState,
+  withAccumulator,
+  withConnect,
+  withHold,
+  withInitialState,
 } from './inject';
 import { RxState } from './rx-state.service';
 
@@ -20,7 +20,9 @@ describe(rxState, () => {
   });
 
   it('should infer state from initial state', () => {
-    const { component } = setupStatefulComponent(initialState({ count: 0 }));
+    const { component } = setupStatefulComponent(
+      withInitialState({ count: 0 })
+    );
     expectType<RxState<{ count: number }>>(component.state);
   });
 
@@ -30,14 +32,16 @@ describe(rxState, () => {
   });
 
   it('should compose state with initial state', () => {
-    const { component } = setupStatefulComponent(initialState({ count: 0 }));
+    const { component } = setupStatefulComponent(
+      withInitialState({ count: 0 })
+    );
     expect(component.state.get()).toEqual({ count: 0 });
   });
 
   it('should compose state with accumulator', () => {
     const { component } = setupStatefulComponent<{ count: number }>(
-      initialState({ count: 0 }),
-      accumulator((state, slice) => {
+      withInitialState({ count: 0 }),
+      withAccumulator((state, slice) => {
         return {
           ...state,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,13 +55,13 @@ describe(rxState, () => {
 
   it('should compose state with hold', () => {
     const spy = jest.fn();
-    setupStatefulComponent<{ count: number }>(hold(of('src'), spy));
+    setupStatefulComponent<{ count: number }>(withHold(of('src'), spy));
     expect(spy).toHaveBeenCalledWith('src');
   });
 
   it('should compose state with connect', () => {
     const { component } = setupStatefulComponent<{ count: number }>(
-      connect(of({ count: 10 }))
+      withConnect(of({ count: 10 }))
     );
     expect(component.state.get()).toEqual({ count: 10 });
   });
@@ -72,7 +76,7 @@ describe(rxState, () => {
 });
 
 function setupStatefulComponent<State extends object>(
-  ...params: RxStateFeatures<State>
+  ...params: RxStateFeature<State>[]
 ) {
   @Component({})
   class StatefulComponent {

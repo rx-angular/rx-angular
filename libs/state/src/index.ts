@@ -1,11 +1,10 @@
 export {
   RxStateFeature,
-  RxStateFeatures,
-  accumulator,
-  connect,
-  hold,
-  initialState,
   rxState,
+  withAccumulator,
+  withConnect,
+  withHold,
+  withInitialState,
 } from './lib/inject';
 export {
   ProjectStateFn,
