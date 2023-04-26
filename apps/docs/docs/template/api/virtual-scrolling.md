@@ -129,7 +129,6 @@ import {
 Module based setup:
 
 ```
-import { ForModule } from "@rx-angular/template/for";
 
 @NgModule({
   imports: [RxVirtualFor, RxVirtualScrollViewportComponent, FixedSizeVirtualScrollStrategy],
@@ -307,7 +306,7 @@ The following reactive context variables are available for each template:
 
 ### Use render strategies (`strategy`)
 
-You can change the used `RenderStrategy` by using the `strategy` input of the `*rxFor`. It accepts
+You can change the used `RenderStrategy` by using the `strategy` input of the `*rxVirtualFor`. It accepts
 an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/src/lib/model.ts#L43).
 
 The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
@@ -690,10 +689,146 @@ import { RxVirtualScrollStrategy } from '@rx-angular/template/experimental/virtu
 export class CustomScrollStrategy extends RxVirtualScrollStrategy {}
 ```
 
-## Performance Benchmarks & CDK comparison
+## Comparison with Angular CDK
 
-As this library is a direct competitor of [`@angular/cdk/scrolling`](https://material.angular.io/cdk/scrolling/overview),
-this section discusses not only performance differences, but also feature availability.
+As this package solves the same problem as the [`Angular CDK Scrolling package`](https://material.angular.io/cdk/scrolling/overview),
+this section covers a brief feature comparison between both implementations and a performance comparison.
+
+### Feature Overview
+
+|                                         | RxAngular                                                                                     | Angular CDK                                             |
+| --------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| NgZone agnostic                         | ✅                                                                                            | ❌                                                      |
+| layout containment                      | ✅                                                                                            | ✅                                                      |
+| layout technique                        | absolutely position each view                                                                 | transform a container within the viewport               |
+| scheduling technique                    | [`RenderStrategies`](../../cdk/render-strategies/strategies/concurrent-strategies.md)         | `requestAnimationFrame`                                 |
+| renderCallback                          | ✅                                                                                            | ❌                                                      |
+| SSR                                     | ⚠ - to be tested                                                                              | ✅                                                      |
+| Define visible view buffer              | configurable amount of views displayed in scroll direction,<br/>and opposite scroll direction | configurable buffer in px                               |
+| trackBy                                 | ✅                                                                                            | ✅                                                      |
+| View recycling                          | ✅                                                                                            | ✅                                                      |
+| Support scrollToIndex                   | ✅                                                                                            | ✅                                                      |
+| FixedSizeStrategy                       | ✅                                                                                            | ✅                                                      |
+| AutosizeStrategy                        | ✅                                                                                            | ✅ - ⚠️ scrollToIndex & scrolledIndex are not supported |
+| DynamicSizeStrategy                     | ✅                                                                                            | ❌                                                      |
+| Viewport orientation                    | ❌ - planned                                                                                  | ✅                                                      |
+| Separate viewport and scrolling element | ❌ - planned                                                                                  | ✅                                                      |
+| Tombstone / placeholder views           | ❌ - planned                                                                                  | ❌                                                      |
+
+For more information about the planned features for this package, see the [roadmap section](#missing-features-roadmap).
+
+### Layout Technique
+
+The biggest difference between the two implementations lies within the applied layouting technique.
+
+Two main tasks have to be considered when layouting a virtual viewport. The sizing of the scrollable area (runway) and
+keeping the viewport (visible part to the user) in sync with the user defined scroll position.
+
+![viewport and runway](../../../static/img/template/virtual-scrolling/viewport-and-runway.png)
+
+_screenshot taken from https://developer.chrome.com/blog/infinite-scroller/_
+
+#### Runway sizing
+
+A minor, but still notable difference is by how the two implementations size their runway.
+The angular cdk implementation sizes its viewport by adjusting the `height` style of a `spacer` div.
+This results in one extremely large layer that puts pressure on the devices memory by storing a
+texture on the graphics card that potentially has a height of a couple of hundred thousand pixels.
+
+![cdk-container-size](../../../static/img/template/virtual-scrolling/cdk-container-size.png)
+
+In this example, the layers tool estimates a memory footprint of ~5GB for a runway with 30.000 items.
+This number is only an estimate, and we couldn't see such high memory consumption on the actual device, but it
+stresses the point.
+
+![layer-memory-estimate](../../../static/img/template/virtual-scrolling/layer-memory-estimate.png)
+
+> 💡 You can counter this issue by making sure this layer is completely empty. It will be empty if it has no own paint area (e.g. background-color)
+> and all items are forced into their own layers (e.g. using `will-change: transform`)
+
+Another minor, but notable point is that changing an elements `height` property always forces the browser to perform a layout operation.
+In certain situations this can lead to more work than actually needed.
+
+![css-triggers height](../../../static/img/template/virtual-scrolling/css-triggers-height.png)
+
+_screenshot taken from https://www.lmame-geek.com/_
+
+The RxAngular implementation uses a 1px by 1px element with a transform to simulate the desired height for the runway. The actual
+DOM element won't grow beyond its boundaries.
+While this alone is already an improvement, in best case still all items within the runway are enforced on their own layer (e.g. using `will-change: transform`) to make sure
+the runway layer is completely empty.
+
+![rxa-scroll-sentinel](../../../static/img/template/virtual-scrolling/rxa-scroll-sentinel.png)
+
+As the runway is sized using the `transform` css property, we also don't run into the situation where resizing the runway would cause any layout
+work for the browser.
+
+![css-triggers transform](../../../static/img/template/virtual-scrolling/css-triggers-transform.png)
+
+_screenshot taken from https://www.lmame-geek.com/_
+
+#### Maintaining the viewport
+
+The angular cdk implementation positions its list-items relative, letting the browser do all the layout work. The items are layouted naturally within
+a separate container element which is only as large as the items it contains. It is absolutely positioned to the viewport. To keep the visible items
+with the viewport in sync, the whole container is moved by the css `transform` on scroll events.
+
+![cdk-container-transform](../../../static/img/template/virtual-scrolling/cdk-container-transform.png)
+
+As a user scrolls the viewport, the cdk virtual scroller calculates the range of items to be displayed. The transform value for the container is derived
+from the range and the actual view sizes.
+
+```ts
+// fixed-size-virtual-scroll.ts
+// https://github.com/angular/components/blob/main/src/cdk/scrolling/fixed-size-virtual-scroll.ts#L177
+
+this._viewport.setRenderedContentOffset(this._itemSize * newRange.start);
+```
+
+The RxAngular implementation calculates the position for each list item within the runway and absolutely positions each item individually with transforms.
+
+![rxa-item-transform](../../../static/img/template/virtual-scrolling/rxa-item-transform.png)
+
+As the layout is done entirely manually, it essentially removes the need for the browser to layout any item within the viewport. This is especially true
+for updates, moves and insertions from cache.
+"Ideally, items would only get repainted once when they get attached to the DOM and be unfazed by additions or removals of other items in the runway."
+
+(Surma - https://developer.chrome.com/blog/infinite-scroller/#layout)
+
+Furthermore, it allows to implement advanced features such as `scrollToIndex` or emitting a `scrolledIndex` for the [AutosizeVirtualScrollStrategy](#autosizevirtualscrollstrategy).
+"Since we are doing layout ourselves, we can cache the positions where each item ends up and we can immediately load the correct element from cache when the user scrolls backwards."
+
+(Surma - https://developer.chrome.com/blog/infinite-scroller/#layout)
+
+### Scheduling
+
+Another major difference is the applied scheduling technique to run "change detection" - applying updates to the DOM.
+The angular cdk package uses the `requestAnimationFrame` to debounce the calculation of the new view range and to run change detection.
+
+All calculated changes will be evaluated synchronously within the very same animationFrameCallback. This can put a lot of javascript & layout work
+into a single task. Especially when using a weak device or rendering heavy components as list items, this technique will inevitably result in
+long tasks and can result in scroll stuttering. See the [Performance Comparison section](#performance-comparison) for more information about the
+actual runtime performance.
+
+![cdk-fixed-size--throttled](../../../static/img/template/virtual-scrolling/cdk-fixed-size--throttled.png)
+
+RxAngulars virtual scrolling implementation also uses the `requestAnimationFrame` scheduler, but not for change detection.
+It is used for coalescing scroll events and calculation of changes to the view range.
+
+The scheduling being used for running change detection is configurable, by default it uses the [`normal Concurrent Strategy`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
+In short, the concurrent strategies batch work into pieces to match a certain frame budget (60fps by default).
+Changes to the view range get translated into individual work packages to insert, move, update, delete and position views. The work packages
+are then processed individually by keeping the frame budget in mind.
+
+![rxa-fixed-size--throttled](../../../static/img/template/virtual-scrolling/rxa-fixed-size--throttled.png)
+
+This technique excels in keeping long tasks at a minimum and is especially helpful to render hefty components and/or supporting
+weak devices. It helps keeping the scrolling and bootstrap behavior buttery smooth.
+
+See the [Performance Comparison section](#performance-comparison) for more information about the
+actual runtime performance.
+
+### Performance Comparison
 
 Performance recordings are taken from the [Demo Application](https://hoebbelsb.github.io/rxa-virtual-scroll/).
 The demo application by default displays lists of `30 000` items.
@@ -843,6 +978,15 @@ The following section describes features that are currently not implemented, but
 
 Right now, the `@rx-angular/template/experimental/virtual-scrolling` package only supports vertical scrolling. In the future, it should also
 be able to support horizontal scrolling.
+
+This is currently supported by [`@angular/cdk/scrolling`](https://material.angular.io/cdk/scrolling/overview#viewport-orientation).
+
+### Support viewport and scrolling element separation
+
+Right now, the `@rx-angular/template/experimental/virtual-scrolling` package only supports the `RxVirtualScrollViewportComponent` to be the
+scrolling element. However, there are cases where you want to define a separate scrolling element, e.g. to support window scrolling.
+
+This is currently supported by [`@angular/cdk/scrolling`](https://material.angular.io/cdk/scrolling/overview#separate-viewport-and-scrolling-element) and is planned for RxAngular as well.
 
 ### Tombstones
 
