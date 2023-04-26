@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { ErrorHandler, inject, Injectable, OnDestroy } from '@angular/core';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {
   AccumulationFn,
@@ -53,8 +53,10 @@ export type ProjectValueReducer<T, K extends keyof T, V> = (
 @Injectable()
 export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   private subscription = new Subscription();
-
-  private accumulator = createAccumulationObservable<T>();
+  private handleError = inject(ErrorHandler).handleError;
+  private accumulator = createAccumulationObservable<T>({
+    handleError: this.handleError,
+  });
   private effectObservable = createSideEffectObservable();
 
   /**

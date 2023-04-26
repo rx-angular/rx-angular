@@ -1,10 +1,16 @@
+import {
+  Component,
+  ErrorHandler,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Input, Output, ViewChild } from '@angular/core';
-import { PrimitiveState } from '@test-helpers';
-import { createStateChecker } from './fixtures';
-import { Observable, Subject } from 'rxjs';
 import { RxState } from '@rx-angular/state';
 import { select } from '@rx-angular/state/selections';
+import { PrimitiveState } from '@test-helpers';
+import { Observable, Subject, throwError } from 'rxjs';
+import { createStateChecker } from './fixtures';
 
 const initialChildState = { str: 'initialChildState' };
 
@@ -100,33 +106,51 @@ export class RxStateGlueContainerComponent extends RxState<PrimitiveState> {
 describe('LocalProviderTestComponent', () => {
   let component: RxStateInjectionComponent;
   let fixture: ComponentFixture<RxStateInjectionComponent>;
+  let errorHandlerSpy: any;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
+    const testBed = TestBed.configureTestingModule({
       declarations: [RxStateInjectionComponent],
+      providers: [
+        { provide: ErrorHandler, useValue: { handleError: jest.fn() } },
+      ],
       teardown: { destroyAfterEach: true },
     });
     fixture = TestBed.createComponent(RxStateInjectionComponent);
     component = fixture.componentInstance;
+    errorHandlerSpy = testBed.inject(ErrorHandler).handleError;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     stateChecker.checkSubscriptions(component.state, 1);
   });
+
+  describe('state.connect', () => {
+    it('should handle error through global ErrorHandler', () => {
+      const error$ = throwError(() => new Error('whoops'));
+      component.state.connect(error$);
+      expect(errorHandlerSpy).toHaveBeenCalledWith(new Error('whoops'));
+    });
+  });
 });
 
 describe('InheritanceTestComponent', () => {
   let component: RxStateInheritanceComponent;
   let fixture: ComponentFixture<RxStateInheritanceComponent>;
+  let errorHandlerSpy: any;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
+    const testBed = TestBed.configureTestingModule({
       declarations: [RxStateInheritanceComponent],
       teardown: { destroyAfterEach: true },
+      providers: [
+        { provide: ErrorHandler, useValue: { handleError: jest.fn() } },
+      ],
     });
     fixture = TestBed.createComponent(RxStateInheritanceComponent);
     component = fixture.componentInstance;
+    errorHandlerSpy = testBed.inject(ErrorHandler).handleError;
     fixture.detectChanges();
   });
 
@@ -134,5 +158,13 @@ describe('InheritanceTestComponent', () => {
     stateChecker.checkSubscriptions(component, 1);
     component.ngOnDestroy();
     stateChecker.checkSubscriptions(component, 0);
+  });
+
+  describe('state.connect', () => {
+    it('should handle error through global ErrorHandler', () => {
+      const error$ = throwError(() => new Error('whoops'));
+      component.connect(error$);
+      expect(errorHandlerSpy).toHaveBeenCalledWith(new Error('whoops'));
+    });
   });
 });

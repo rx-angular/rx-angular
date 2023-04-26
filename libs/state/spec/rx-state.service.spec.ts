@@ -13,8 +13,11 @@ import { TestScheduler } from 'rxjs/testing';
 import { createStateChecker } from './fixtures';
 
 function setupState<T extends object>(cfg: { initialState?: T }) {
+  const testBed = TestBed.configureTestingModule({
+    providers: [RxState],
+  });
+  const state = testBed.inject(RxState<T>);
   const { initialState } = { ...cfg };
-  const state = new RxState<T>();
   if (initialState) {
     state.set(initialState);
   }
@@ -36,56 +39,56 @@ beforeEach(() => {
 });
 
 describe('RxStateService', () => {
-  let service: RxState<PrimitiveState>;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      teardown: { destroyAfterEach: true },
-    });
-    service = setupState({});
-  });
+  let state: RxState<PrimitiveState>;
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    state = setupState({});
+    expect(state).toBeTruthy();
   });
 
   it('should be hot on instantiation', () => {
-    stateChecker.checkSubscriptions(service, 1);
+    state = setupState({});
+    stateChecker.checkSubscriptions(state, 1);
   });
 
   it('should unsubscribe on ngOnDestroy call', () => {
-    stateChecker.checkSubscriptions(service, 1);
-    service.ngOnDestroy();
-    stateChecker.checkSubscriptions(service, 0);
+    state = setupState({});
+
+    stateChecker.checkSubscriptions(state, 1);
+    state.ngOnDestroy();
+    stateChecker.checkSubscriptions(state, 0);
   });
 
   describe('State', () => {
+    beforeEach(() => {
+      state = setupState({});
+    });
+
     it('should create new instance', () => {
-      const state = new RxState<PrimitiveState>();
-      expect(state).toBeDefined();
+      expect(state).toBeInstanceOf(RxState);
     });
   });
 
   describe('$', () => {
+    beforeEach(() => {
+      state = setupState({});
+    });
+
     it('should return NO empty state after init when subscribing late', () => {
       testScheduler.run(({ expectObservable }) => {
-        const state = setupState({});
         expectObservable(state.$).toBe('');
       });
     });
 
     it('should return No changes when subscribing late', () => {
       testScheduler.run(({ expectObservable }) => {
-        const state = new RxState<PrimitiveState>();
         state.subscribe();
-
         state.set({ num: 42 });
         expectObservable(state.$.pipe(pluck('num'))).toBe('');
       });
     });
 
     it('should return new changes', () => {
-      const state = new RxState<PrimitiveState>();
       state.subscribe();
       state.set({ num: 42 });
       const slice$ = state.$.pipe(select('num'));
@@ -97,26 +100,26 @@ describe('RxStateService', () => {
   });
 
   describe('stateful with select', () => {
+    beforeEach(() => {
+      state = setupState({});
+    });
+
     it('should return empty state after init when subscribing late', () => {
       testScheduler.run(({ expectObservable }) => {
-        const state = setupState({});
         expectObservable(state.select()).toBe('');
       });
     });
 
     it('should return changes when subscribing late', () => {
       testScheduler.run(({ expectObservable }) => {
-        const state = new RxState<PrimitiveState>();
         state.subscribe();
-
         state.set({ num: 42 });
         expectObservable(state.select('num')).toBe('n', { n: 42 });
       });
     });
 
     it('should return new changes', () => {
-      testScheduler.run(({ expectObservable }) => {
-        const state = new RxState<PrimitiveState>();
+      testScheduler.run(() => {
         state.subscribe();
         state.set({ num: 42 });
         const slice$ = state.select('num');
@@ -189,7 +192,7 @@ describe('RxStateService', () => {
 
       it('should return initial state', () => {
         testScheduler.run(({ expectObservable }) => {
-          const state = new RxState<PrimitiveState>();
+          const state = setupState({});
           state.subscribe();
 
           state.set({ num: 42 });
@@ -282,6 +285,7 @@ describe('RxStateService', () => {
         state.set(initialPrimitiveState);
         state.select().subscribe((s) => expect(s).toBe(initialPrimitiveState));
       });
+
       it('should override previous state slices', () => {
         const state = setupState({ initialState: initialPrimitiveState });
         state.select().subscribe((s) => {
@@ -301,6 +305,7 @@ describe('RxStateService', () => {
         ).toThrowError('wrong param');
       });
     });
+
     describe('with state project partial', () => {
       it('should add new slices', () => {
         const state = setupState({});
@@ -319,6 +324,7 @@ describe('RxStateService', () => {
         state.select().subscribe((s) => expect(state).toBe({ num: 43 }));
       });
     });
+
     describe('with state key and value partial', () => {
       it('should add new slices', () => {
         const state = setupState<PrimitiveState>({});

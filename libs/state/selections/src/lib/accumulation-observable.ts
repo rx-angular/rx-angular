@@ -25,11 +25,12 @@ const defaultAccumulator: AccumulationFn = <T>(st: T, sl: Partial<T>): T => {
   return { ...st, ...sl };
 };
 
-export function createAccumulationObservable<T extends object>(
+export function createAccumulationObservable<T extends object>({
   stateObservables = new Subject<Observable<Partial<T>>>(),
   stateSlices = new Subject<Partial<T>>(),
-  accumulatorObservable = new BehaviorSubject(defaultAccumulator)
-): Accumulator<T> {
+  accumulatorObservable = new BehaviorSubject(defaultAccumulator),
+  handleError = (e: any) => console.error(e),
+} = {}): Accumulator<T> {
   const signal$ = merge(
     stateObservables.pipe(
       distinctUntilChanged(),
@@ -45,7 +46,7 @@ export function createAccumulationObservable<T extends object>(
     ),
     tap(
       (newState) => (compositionObservable.state = newState),
-      (error) => console.error(error)
+      (error) => handleError(error)
     ),
     // @Notice We catch the error here as it get lost in between `publish` and `publishReplay`. We return empty to
     catchError((e) => EMPTY),
