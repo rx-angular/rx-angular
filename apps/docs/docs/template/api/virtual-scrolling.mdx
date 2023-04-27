@@ -715,7 +715,7 @@ this section covers a brief feature comparison between both implementations and 
 | Separate viewport and scrolling element | ❌ - planned                                                                                  | ✅                                                      |
 | Tombstone / placeholder views           | ❌ - planned                                                                                  | ❌                                                      |
 
-For more information about the planned features for this package, see the [roadmap section](#missing-features-roadmap).
+For more information about the planned features for this package, see the [further improvements section](#further-improvements).
 
 ### Layout Technique
 
@@ -731,7 +731,7 @@ _screenshot taken from https://developer.chrome.com/blog/infinite-scroller/_
 #### Runway sizing
 
 A minor, but still notable difference is by how the two implementations size their runway.
-The angular cdk implementation sizes its viewport by adjusting the `height` style of a `spacer` div.
+The Angular CDK implementation sizes its viewport by adjusting the `height` style of a `spacer` div.
 This results in one extremely large layer that puts pressure on the devices memory by storing a
 texture on the graphics card that potentially has a height of a couple of hundred thousand pixels.
 
@@ -769,7 +769,7 @@ _screenshot taken from https://www.lmame-geek.com/_
 
 #### Maintaining the viewport
 
-The angular cdk implementation positions its list-items relative, letting the browser do all the layout work. The items are layouted naturally within
+The Angular CDK implementation positions its list-items relative, letting the browser do all the layout work. The items are layouted naturally within
 a separate container element which is only as large as the items it contains. It is absolutely positioned to the viewport. To keep the visible items
 with the viewport in sync, the whole container is moved by the css `transform` on scroll events.
 
@@ -803,7 +803,7 @@ Furthermore, it allows to implement advanced features such as `scrollToIndex` or
 ### Scheduling
 
 Another major difference is the applied scheduling technique to run "change detection" - applying updates to the DOM.
-The angular cdk package uses the `requestAnimationFrame` to debounce the calculation of the new view range and to run change detection.
+The Angular CDK package uses the `requestAnimationFrame` to debounce the calculation of the new view range and to run change detection.
 
 All calculated changes will be evaluated synchronously within the very same animationFrameCallback. This can put a lot of javascript & layout work
 into a single task. Especially when using a weak device or rendering heavy components as list items, this technique will inevitably result in
@@ -974,7 +974,7 @@ Thanks to the concurrent strategies, users will never encounter long tasks while
 | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | ![rxa-autosize--throttled.png](../../../static/img/template/virtual-scrolling/rxa-autosize--throttled.png) | ![cdk-autosize--throttled.png](../../../static/img/template/virtual-scrolling/cdk-autosize--throttled.png) |
 
-## Missing Features (Roadmap)
+## Further Improvements
 
 The following section describes features that are currently not implemented, but planned.
 
@@ -985,12 +985,22 @@ be able to support horizontal scrolling.
 
 This is currently supported by [`@angular/cdk/scrolling`](https://material.angular.io/cdk/scrolling/overview#viewport-orientation).
 
+Issue link: https://github.com/rx-angular/rx-angular/issues/1554
+
+### Support grid virtual scrolling
+
+Displaying items in a list or a grid is a common feature when viewing huge result sets, this is particularly useful for supporting responsive screen sizes, and taking advantage of available real-estate.
+
+Issue link: https://github.com/rx-angular/rx-angular/issues/1550
+
 ### Support viewport and scrolling element separation
 
 Right now, the `@rx-angular/template/experimental/virtual-scrolling` package only supports the `RxVirtualScrollViewportComponent` to be the
 scrolling element. However, there are cases where you want to define a separate scrolling element, e.g. to support window scrolling.
 
 This is currently supported by [`@angular/cdk/scrolling`](https://material.angular.io/cdk/scrolling/overview#separate-viewport-and-scrolling-element) and is planned for RxAngular as well.
+
+Issue link: https://github.com/rx-angular/rx-angular/issues/1555
 
 ### Tombstones
 
@@ -999,6 +1009,8 @@ are heavy and take a long time to create. Especially for the autosized strategy 
 
 The concept is described in the article [Complexities of an infinite scroller](https://developer.chrome.com/blog/infinite-scroller/#tombstones)
 and visible in the corresponding [demo](http://googlechromelabs.github.io/ui-element-samples/infinite-scroller/).
+
+Issue link: https://github.com/rx-angular/rx-angular/issues/1556
 
 ## Resources
 
