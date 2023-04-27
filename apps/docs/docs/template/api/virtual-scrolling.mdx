@@ -4,9 +4,9 @@ sidebar_position: 6
 title: '🧪 Virtual Scrolling'
 ---
 
-A **high performance** alternative to [`@angular/cdk/scrolling`](https://material.angular.io/cdk/scrolling/) virtual scrolling implementation.
+import ReactPlayer from 'react-player';
 
-![rxa-vs-cdk](../../../static/img/template/virtual-scrolling/rxa-vs-cdk.png)
+A high performance virtual scrolling implementation for Angular.
 
 Instead of rendering every item provided, `rxVirtualFor` only renders what is currently visible to the user, thus providing
 excellent runtime performance for huge sets of data.
@@ -22,13 +22,15 @@ elements with transforms." [(@DasSurma)](https://twitter.com/dassurma)
 > **⚠ Notice:**
 > This package is currently experimental, the public API can potentially change
 
-The `@rx-angular/template/experimental/virtual-scrolling` package is a high performant alternative of the official `@angular/cdk/scrolling`.
-The API is heavily inspired by `@angular/cdk/scrolling` and is divided into multiple
-core components which have to be glued together:
+The `@rx-angular/template/experimental/virtual-scrolling` package is a performance focused alternative to the official `@angular/cdk/scrolling`.
+
+The API is heavily inspired by the CDK implementation and is divided into multiple core components which have to be glued together:
 
 - `RxVirtualViewRepeater`, implemented by `RxVirtualFor`
 - `RxVirtualScrollViewport`, implemented by `RxVirtualScrollViewportComponent`
 - `RxVirtualScrollStrategy`, implemented by `AutosizeVirtualScrollStrategy`, `FixedSizeVirtualScrollStrategy` & `DynamicSizeVirtualScrollStrategy`
+
+See the [comparison section](#comparison-with-angular-cdk) for an in-depth comparison to the Angular CDK implementation.
 
 ## Usage
 
@@ -100,15 +102,6 @@ all pre-packaged ScrollStrategies as well as control the majority of inputs.
   - [`AutoSizeVirtualScrollStrategy`](#autosizevirtualscrollstrategy)
 
 ## Usage Examples
-
-> **⚠ Notice:**
-> By default `*rxVirtualFor` is optimized for performance out of the box.
->
-> This includes:
->
-> - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
->   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies#Default-configuration) if you want to change it.
-> - Creates templates lazy and manages multiple template instances
 
 ### Setup
 
@@ -478,7 +471,11 @@ They also share two inputs to define the amount of views to actually render on t
 
 See the layouting technique in action in the following video. It compares `@rx-angular/template` vs. `@angular/cdk/scrolling`
 
-https://user-images.githubusercontent.com/4904455/231340169-f65efe6c-863d-49e8-9f4f-183bb38e1b2a.mp4
+<ReactPlayer
+  playing
+  controls
+  url="https://user-images.githubusercontent.com/4904455/231340169-f65efe6c-863d-49e8-9f4f-183bb38e1b2a.mp4"
+/>
 
 #### FixedSizeVirtualScrollStrategy
 
@@ -496,12 +493,13 @@ The default size can be configured directly as `@Input('itemSize')`.
 import {
   FixedSizeVirtualScrollStrategyModule,
   RxVirtualScrollViewportComponent,
+  RxVirtualFor,
 } from '@rx-angular/template/experimental/virtual-scrolling';
 
 @Component({
   /**/,
   standalone: true,
-  imports: [FixedSizeVirtualScrollStrategyModule, RxVirtualScrollViewportComponent]
+  imports: [RxVirtualFor, FixedSizeVirtualScrollStrategyModule, RxVirtualScrollViewportComponent]
 })
 export class MyComponent {
   // all items have the height of 50px
@@ -540,12 +538,13 @@ them.
 import {
   DynamicSizeVirtualScrollStrategy,
   RxVirtualScrollViewportComponent,
+  RxVirtualFor,
 } from '@rx-angular/template/experimental/virtual-scrolling';
 
 @Component({
   /**/,
   standalone: true,
-  imports: [DynamicSizeVirtualScrollStrategy, RxVirtualScrollViewportComponent]
+  imports: [RxVirtualFor, DynamicSizeVirtualScrollStrategy, RxVirtualScrollViewportComponent]
 })
 export class MyComponent {
   // items with a description have 120px height, others only 50px
@@ -592,12 +591,13 @@ again as this can potentially lead to unwanted forced reflows.
 import {
   AutoSizeVirtualScrollStrategy,
   RxVirtualScrollViewportComponent,
+  RxVirtualFor,
 } from '@rx-angular/template/experimental/virtual-scrolling';
 
 @Component({
   /**/,
   standalone: true,
-  imports: [AutoSizeVirtualScrollStrategy, RxVirtualScrollViewportComponent]
+  imports: [RxVirtualFor, AutoSizeVirtualScrollStrategy, RxVirtualScrollViewportComponent]
 })
 export class MyComponent {
   items$ = inject(DataService).getItems();
@@ -849,7 +849,11 @@ puts the most pressure on the virtual scrollers.
 The RxVirtualScrolling approach to layout items is to absolutely position every view inside the viewport. Therefore, it sets the `transform` property for each managed item.
 The CDK approach instead transforms the viewport. The following video showcases the difference.
 
-https://user-images.githubusercontent.com/4904455/231340169-f65efe6c-863d-49e8-9f4f-183bb38e1b2a.mp4
+<ReactPlayer
+  playing
+  controls
+  url="https://user-images.githubusercontent.com/4904455/231340169-f65efe6c-863d-49e8-9f4f-183bb38e1b2a.mp4"
+/>
 
 ### Fixed Size Strategy
 
