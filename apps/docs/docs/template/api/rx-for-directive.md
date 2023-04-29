@@ -107,28 +107,14 @@ The following context variables are available for each template:
 
 ## Setup
 
-The `ForModule` can be imported as following:
-
-Module based setup:
+The `RxFor` can be imported as following:
 
 ```
-import { ForModule } from "@rx-angular/template/for";
-
-@NgModule({
-  imports: [ForModule],
-  // ...
-})
-export class AnyModule {}
-```
-
-Standalone component setup:
-
-```
-import { ForModule } from "@rx-angular/template/for";
+import { RxFor } from "@rx-angular/template/for";
 
 @Component({
     standalone: true,
-    imports: [ForModule],
+    imports: [RxFor],
     template: `...`
 })
 export class AnyComponent {}

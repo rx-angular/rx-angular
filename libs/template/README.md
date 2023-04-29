@@ -70,34 +70,18 @@ nx migrate @rx-angular/template
 
 ## Basic setup
 
-You can import each feature module individually.
-
-Module based setup:
+You can import each feature individually.
 
 ```typescript
-import { LetModule } from '@rx-angular/template/let';
-import { ForModule } from '@rx-angular/template/for';
-import { PushModule } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
-
-@NgModule({
-  declarations: [...],
-  imports: [ForModule, LetModule, PushModule, UnpatchModule],
-})
-export class AnyModule {}
-```
-
-Standalone component setup:
-
-```typescript
-import { LetModule } from '@rx-angular/template/let';
-import { ForModule } from '@rx-angular/template/for';
-import { PushModule } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { LetDirective } from '@rx-angular/template/let';
+import { RxFor } from '@rx-angular/template/for';
+import { RxIf } from '@rx-angular/template/if';
+import { PushPipe } from '@rx-angular/template/push';
+import { UnpatchDirective } from '@rx-angular/template/unpatch';
 
 @Component({
   standalone: true,
-  imports: [ForModule, LetModule, PushModule, UnpatchModule],
+  imports: [LetDirective, RxFor, RxIf, PushPipe, UnpatchDirective],
   template: `...`,
 })
 export class AnyComponent {}

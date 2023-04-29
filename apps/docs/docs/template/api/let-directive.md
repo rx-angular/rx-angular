@@ -115,28 +115,14 @@ n/a
 
 ## Setup
 
-The `LetModule` can be imported as following:
-
-Module based setup:
+The `LetDirective` can be imported as following:
 
 ```ts
-import { LetModule } from '@rx-angular/template/let';
-
-@NgModule({
-  imports: [LetModule],
-  // ...
-})
-export class AnyModule {}
-```
-
-Standalone component setup:
-
-```ts
-import { LetModule } from '@rx-angular/template/let';
+import { LetDirective } from '@rx-angular/template/let';
 
 @Component({
   standalone: true,
-  imports: [LetModule],
+  imports: [LetDirective],
   template: `...`,
 })
 export class AnyComponent {}
@@ -237,7 +223,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <button (click)="nextTrigger$.next()">show value</button>
     <ng-container
@@ -263,7 +249,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <ng-container *rxLet="num$; let n; error: error; errorTrg: errorTrigger$">
       {{ n }}
@@ -286,7 +272,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <ng-container
       *rxLet="num$; let n; complete: complete; completeTrg: completeTrigger$"
@@ -311,7 +297,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container
@@ -348,7 +334,7 @@ in a convenient way.
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container
