@@ -392,7 +392,9 @@ The default value for strategy is [`normal`](../../cdk/render-strategies/strateg
 ```
 
 ```ts
-@Component()
+@Component({
+  /**/
+})
 export class AppComponent {
   strategy = 'low';
   strategy$ = of('immediate');
@@ -447,9 +449,9 @@ The result of the `renderCallback` will contain the currently rendered value of 
  @Component({
    selector: 'app-root',
    template: `
-   <ng-container *rxLet="num$; let n; renderCallback: valueRendered;">
-      {{ n }}
-   </ng-container>
+    <ng-container *rxLet="num$; let n; renderCallback: valueRendered;">
+        {{ n }}
+    </ng-container>
    `
  })
  export class AppComponent {
@@ -477,7 +479,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 
 ```ts
 @Component({
-  selector: 'any-component>',
+  selector: 'app-root',
   template: `
     <div
       *rxLet="bgColor$; let bgColor; patchZone: false"

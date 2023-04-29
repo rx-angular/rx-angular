@@ -287,7 +287,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <button (click)="nextTrigger$.next()">show value</button>
     <ng-container *rxIf="show; complete: complete; nextTrg: nextTrigger$">
@@ -309,7 +309,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <ng-container *rxIf="show$; let n; error: error; errorTrg: errorTrigger$">
       <item></item>
@@ -330,7 +330,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <ng-container
       *rxIf="show$; complete: complete; completeTrg: completeTrigger$"
@@ -353,7 +353,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container
@@ -384,7 +384,7 @@ in a convenient way.
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container *rxIf="show$; suspense: suspense; contextTrg: contextTrg$">
@@ -504,7 +504,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 
 ```ts
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <div *rxIf="enabled$; patchZone: false" (drag)="itemDrag($event)"></div>
   `,
