@@ -7,7 +7,11 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    // added this two to allow importing json files like package.json
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
   },
   "files": [],
   "include": [],

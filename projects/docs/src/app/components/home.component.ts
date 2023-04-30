@@ -4,6 +4,11 @@ import { RouterLink } from '@angular/router';
 import { HighlightModule } from 'ngx-highlightjs';
 import { trackInstallEvent } from '../analytics/inject-analytics-script';
 
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import packageJson from '../../../../ngx-isr/package.json';
+
+const LATEST_VERSION = packageJson.version;
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -11,6 +16,7 @@ import { trackInstallEvent } from '../analytics/inject-analytics-script';
   imports: [CommonModule, HighlightModule, RouterLink],
 })
 export default class HomeComponent {
+  latestPackageVersion = 'v' + LATEST_VERSION;
 
   tabs: string[] = ['server.ts', 'app.server.module.ts', 'routes.ts'];
   activeTab = 'server.ts';

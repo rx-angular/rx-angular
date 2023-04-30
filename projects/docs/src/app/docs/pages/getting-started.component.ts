@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { HighlightModule } from 'ngx-highlightjs';
 import { AlerSuccessComponent } from '../components/alert-success.component';
-import { AlerWarningComponent } from '../components/alert-warning.component';
+import { AlertWarningComponent } from '../components/alert-warning.component';
 import { TerminalBlockComponent } from '../components/terminal-block.component';
 import { DocsPageSectionComponent } from '../layout/docs-page-section.component';
 import { PAGE_IDS, configurePage } from '../services/docs-layout.service';
@@ -133,7 +133,7 @@ import { PAGE_IDS, configurePage } from '../services/docs-layout.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DocsPageSectionComponent,
-    AlerWarningComponent,
+    AlertWarningComponent,
     TerminalBlockComponent,
     CommonModule,
     HighlightModule,

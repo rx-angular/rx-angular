@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-    selector: 'app-alert-warning',
-    template: `
-        <div
+  selector: 'app-alert-warning',
+  template: `
+    <div
       class="
               rounded-xl
               border-pumpikin
@@ -42,14 +42,14 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           </h3>
           <div class="text-santa mt-2 text-sm">
             <p>
-                <ng-content select="[description]"></ng-content>
+              <ng-content select="[description]"></ng-content>
             </p>
           </div>
         </div>
       </div>
     </div>
-    `,
-    standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  `,
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AlerWarningComponent { }
+export class AlertWarningComponent {}
