@@ -27,7 +27,7 @@ const routes: Routes = [
   {
     path: 'error-handling',
     loadComponent: () => import('./pages/error-handling.component'),
-    data: { revalidate: 5 },
+    data: { revalidate: 0 },
     title: 'Error Handling',
   },
   {

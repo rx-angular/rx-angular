@@ -6,9 +6,12 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
   selector: 'docs-page-section',
   template: `
     <div [attr.id]="title">
-      <h2 class="text-2xl font-normal text-comet dark:text-manatee hover:text-main group mt-4">
+      <h2
+        *ngIf="title"
+        class="text-2xl font-normal text-comet dark:text-manatee hover:text-main group mt-4">
         <!-- <a href="#{{ title }}"> -->
-        <a class="inline-flex items-center gap-2 text-comet dark:text-manatee dark:hover:text-main-100;">
+        <a
+          class="inline-flex items-center gap-2 text-comet dark:text-manatee dark:hover:text-main-100;">
           {{ title }}
           <!-- <svg
             class="hidden w-6 h-6 group-hover:block"
