@@ -43,7 +43,7 @@ would be hidden. This issue is a big problem and leads to many production bugs a
 **Conclusion - Structural directives**
 
 In contrast to global change detection, structural directives allow fine-grained control of change detection on a per directive basis.
-The `LetDirective` comes with its own way to handle change detection in templates in a very efficient way.
+The `RxLet` comes with its own way to handle change detection in templates in a very efficient way.
 However, the change detection behavior is configurable on a per directive or global basis.
 This makes it possible to implement your own strategies, and also provides a migration path from large existing apps running with Angulars default change detection.
 
@@ -102,12 +102,12 @@ It mostly is used in combination with state management libs to handle user inter
 
 **Rendering**
 
-| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                             |
-| ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
-| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                                    |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
+| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
+| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
+| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                             |
+| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `RxLet` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
 
 ### Outputs
 
@@ -511,7 +511,7 @@ import {
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { LetDirective } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 
 @Component({
   template: `
@@ -526,7 +526,7 @@ class TestComponent {
 
 const setupTestComponent = (): void => {
   TestBed.configureTestingModule({
-    declarations: [LetDirective, LetDirectiveTestComponent],
+    declarations: [RxLet, TestComponent],
     providers: [
       {
         // don't forget to configure the primary strategy to 'native'
@@ -555,7 +555,7 @@ requires more effort when writing the tests, as updates will be processed asynch
 
 ```ts
 TestBed.configureTestingModule({
-  declarations: [LetDirective, LetDirectiveTestComponent],
+  declarations: [RxLet, TestComponent],
   providers: [
     {
       // don't forget to configure the primary strategy to 'native'
@@ -578,7 +578,7 @@ class TestComponent {
   value$: Observable<number> = of(42);
 }
 
-describe('LetDirective', () => {
+describe('RxLet', () => {
   beforeEach(setupLetDirectiveTestComponent);
 
   it('should be instantiable', () => {

@@ -23,7 +23,7 @@ import {
   throwError,
 } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
-import { LetDirective } from '../let.directive';
+import { RxLet } from '../rx-let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
@@ -66,7 +66,7 @@ const contentElement = (): HTMLElement => nativeElement.querySelector('.value');
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
     declarations: [LetDirectiveTestComponent],
-    imports: [LetDirective],
+    imports: [RxLet],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

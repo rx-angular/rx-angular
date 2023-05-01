@@ -24,7 +24,7 @@ import {
   throwError,
 } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
-import { LetDirective } from '../let.directive';
+import { RxLet } from '../rx-let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
@@ -72,7 +72,7 @@ let nativeElement: HTMLElement;
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
     declarations: [LetDirectiveAllTemplatesTestComponent],
-    imports: [LetDirective],
+    imports: [RxLet],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
@@ -162,10 +162,8 @@ describe('LetDirective reactive context templates', () => {
   });
 
   it('should have `ngTemplateContextGuard` defined', () => {
-    expect(LetDirective.ngTemplateContextGuard).toBeDefined();
-    expect(
-      LetDirective.ngTemplateContextGuard({} as LetDirective<any>, {})
-    ).toBe(true);
+    expect(RxLet.ngTemplateContextGuard).toBeDefined();
+    expect(RxLet.ngTemplateContextGuard({} as RxLet<any>, {})).toBe(true);
   });
 
   describe('triggers', () => {

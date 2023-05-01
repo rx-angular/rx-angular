@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { Observable, of, Subject } from 'rxjs';
-import { LetDirective } from '../let.directive';
+import { RxLet } from '../rx-let.directive';
 
 @Component({
   template: `
@@ -33,7 +33,7 @@ let nativeElement: HTMLElement;
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
     declarations: [LetDirectiveNoSuspenseTemplateTestComponent],
-    imports: [LetDirective],
+    imports: [RxLet],
     providers: [
       {
         provide: RX_RENDER_STRATEGIES_CONFIG,
