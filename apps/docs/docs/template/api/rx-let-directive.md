@@ -115,15 +115,15 @@ n/a
 
 ## Setup
 
-The `LetModule` can be imported as following:
+The `RxLet` can be imported as following:
 
 Module based setup:
 
 ```ts
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 
 @NgModule({
-  imports: [LetModule],
+  imports: [RxLet],
   // ...
 })
 export class AnyModule {}
@@ -132,11 +132,11 @@ export class AnyModule {}
 Standalone component setup:
 
 ```ts
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 
 @Component({
   standalone: true,
-  imports: [LetModule],
+  imports: [RxLet],
   template: `...`,
 })
 export class AnyComponent {}

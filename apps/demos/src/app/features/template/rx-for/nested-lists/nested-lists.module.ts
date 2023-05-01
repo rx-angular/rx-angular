@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ForModule } from '@rx-angular/template/for';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { PushModule } from '@rx-angular/template/push';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
@@ -38,7 +38,7 @@ const DECLARATIONS = [
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    LetModule,
+    RxLet,
     ForModule,
     StrategySelectModule,
     PushModule,

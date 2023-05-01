@@ -3,7 +3,7 @@ import { TriggerProviderComponent } from './trigger-provider.component';
 import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon.module';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     ZonePatchedIconModule,
     MatButtonModule,
-    LetModule,
+    RxLet,
     PushModule,
     UnpatchModule,
     MatIconModule,

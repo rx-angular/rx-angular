@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { RouterModule } from '@angular/router';
 import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { ForModule } from '@rx-angular/template/for';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
@@ -40,7 +40,7 @@ const DECLARATIONS = [ListActionsComponent];
     ValueProvidersModule,
     MatIconModule,
     StrategySelectModule,
-    LetModule,
+    RxLet,
     ForModule,
     IfModule,
   ],

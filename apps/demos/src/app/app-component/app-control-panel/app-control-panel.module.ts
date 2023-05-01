@@ -9,7 +9,7 @@ import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/materia
 import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { StrategySelectModule } from '../../shared/debug-helper/strategy-select';
 import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
@@ -25,7 +25,7 @@ import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/mat
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
-    LetModule,
+    RxLet,
     MatListModule,
     MatCheckboxModule,
     StrategySelectModule,

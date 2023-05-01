@@ -10,7 +10,7 @@ import { MatLegacySelectModule as MatSelectModule } from '@angular/material/lega
 import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { RouterModule } from '@angular/router';
 import { ROUTES as RX_STATE_ROUTES } from './rx-state.routes';
 
@@ -45,7 +45,7 @@ import { RxStateSelectSliceComponent } from './selectslice/select-slice.componen
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    LetModule,
+    RxLet,
     PushModule,
     FormsModule,
     ReactiveFormsModule,

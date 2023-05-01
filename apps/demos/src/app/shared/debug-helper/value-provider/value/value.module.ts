@@ -4,7 +4,7 @@ import { ValueComponent } from './value.component';
 import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
 import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { UtilsModule } from '../../../utils/utils.module';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -17,7 +17,7 @@ const DEPRECATIONS = [ValueComponent];
     MatRippleModule,
     PushModule,
     UtilsModule,
-    LetModule,
+    RxLet,
     MatIconModule,
     DirtyChecksModule,
   ],

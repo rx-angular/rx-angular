@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ROUTES } from './preloading-images.routes';
 import { PreloadingImagesComponent } from './preloading-images.component';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,7 +20,7 @@ const DECLARATIONS = [PreloadingImagesComponent];
     CommonModule,
     RouterModule.forChild(ROUTES),
     DirtyChecksModule,
-    LetModule,
+    RxLet,
     UnpatchModule,
     NgxSkeletonLoaderModule,
     MatIconModule,

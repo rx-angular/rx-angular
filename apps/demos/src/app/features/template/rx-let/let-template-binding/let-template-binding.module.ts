@@ -10,7 +10,7 @@ import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/lega
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ToStringPipe } from './to-string.pipe';
@@ -34,7 +34,7 @@ const DECLARATIONS = [
     UnpatchModule,
     PushModule,
     MatBadgeModule,
-    LetModule,
+    RxLet,
   ],
 })
 export class LetTemplateBindingModule {}

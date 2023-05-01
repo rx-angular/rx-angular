@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 import { RouterModule, Routes } from '@angular/router';
 import { ForModule } from '@rx-angular/template/for';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { RouteChangeComponent } from './route-change.component';
 import { RoutedNgForComponent } from './routed-ng-for.component';
 import { RoutedRxForComponent } from './routed-rx-for.component';
@@ -43,7 +43,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MatTabsModule,
     ForModule,
-    LetModule,
+    RxLet,
     FormsModule,
     MatButtonModule,
     MatIconModule,

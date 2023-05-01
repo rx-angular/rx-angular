@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ROUTES } from './basic-example.routes';
 import { BasicExampleComponent } from './basic-example.component';
 import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
@@ -23,7 +23,7 @@ const DECLARATIONS = [BasicExampleComponent];
     RouterModule.forChild(ROUTES),
     MatButtonModule,
     PushModule,
-    LetModule,
+    RxLet,
     VisualizerModule,
     ValueProvidersModule,
     RenderingsModule,

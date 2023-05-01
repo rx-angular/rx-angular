@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ComparisonComponent } from './comparison.component';
 
@@ -33,7 +33,7 @@ import { IfModule } from '@rx-angular/template/if';
     MatInputModule,
     PushModule,
     ImageArrayModule,
-    LetModule,
+    RxLet,
     RxForModule,
     IfModule,
     PipeModule,

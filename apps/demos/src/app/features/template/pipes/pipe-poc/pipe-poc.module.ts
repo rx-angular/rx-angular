@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RouterModule } from '@angular/router';
 import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { PipeModule } from '../../../../rx-angular-pocs/template/pipes/pipe/pipe.module';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
@@ -22,7 +22,7 @@ const DECLARATIONS = [PipePocComponent];
     MatButtonModule,
     UnpatchModule,
     PushModule,
-    LetModule,
+    RxLet,
   ],
   exports: [DECLARATIONS],
 })
