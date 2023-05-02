@@ -15,7 +15,7 @@
 - [LetDirective (\*rxLet)](https://rx-angular.io/docs/template/api/let-directive)
 - [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
 - [RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/rx-if-directive)
-- [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/api/unpatch-directive)
+- [RxUnpatch (unpatch)](https://rx-angular.io/docs/template/api/unpatch-directive)
 - [PushPipe (push)](https://rx-angular.io/docs/template/api/push-pipe)
 
 **Experimental features**

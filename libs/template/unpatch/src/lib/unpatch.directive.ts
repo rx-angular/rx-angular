@@ -77,9 +77,8 @@ export function unpatchEventListener(
   return listeners;
 }
 
-/* eslint-disable @angular-eslint/directive-selector */
 /**
- * @Directive UnpatchEventsDirective
+ * @Directive RxUnpatch
  *
  * @description
  *
@@ -117,11 +116,13 @@ export function unpatchEventListener(
  *
  * @publicApi
  */
+// eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: '[unpatch]', standalone: true })
 /**
  * @todo: add prefix [rxUnpatch]
  */
-export class UnpatchDirective implements OnChanges, AfterViewInit, OnDestroy {
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
+export class RxUnpatch implements OnChanges, AfterViewInit, OnDestroy {
   /**
    * @description
    * List of events that the element should be unpatched from. When input is empty or undefined,
