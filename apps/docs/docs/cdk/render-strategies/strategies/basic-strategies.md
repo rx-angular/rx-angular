@@ -160,10 +160,10 @@ class Component {
 ```ts
 import { RxLet } from '@rx-angular/template/let';
 import { RxFor } from '@rx-angular/template/for';
-import { PushModule } from '@rx-angular/template/push';
+import { PushPipe } from '@rx-angular/template/push';
 
 @Module({
-  imports: [RxLet, RxFor, PushModule],
+  imports: [RxLet, RxFor, PushPipe],
 })
 class Module {}
 ```

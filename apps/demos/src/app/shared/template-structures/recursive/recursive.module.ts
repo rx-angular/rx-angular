@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { PushModule } from '@rx-angular/template/push';
+import { PushPipe } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
@@ -35,12 +35,11 @@ const DECLARATIONS = [
     MatButtonModule,
     DirtyChecksModule,
     UnpatchModule,
-    PushModule,
+    PushPipe,
     VisualizerModule,
     ValueProvidersModule,
     RenderingsModule,
     RxLet,
-    PushModule,
   ],
   exports: DECLARATIONS,
 })

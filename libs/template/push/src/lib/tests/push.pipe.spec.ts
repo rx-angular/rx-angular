@@ -5,7 +5,6 @@ import {
 } from '@rx-angular/cdk/render-strategies';
 import { map, tap } from 'rxjs/operators';
 import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
-import { PushModule } from '../push.module';
 import { PushPipe } from '../push.pipe';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';

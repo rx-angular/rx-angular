@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ROUTES } from './ng-if-hack.routes';
 import { NgIfHackComponent } from './ng-if-hack.component';
-import { PushModule } from '@rx-angular/template/push';
+import { PushPipe } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -39,7 +39,7 @@ const DECLARATIONS = [
     MatIconModule,
     ValueProvidersModule,
     VisualizerModule,
-    PushModule,
+    PushPipe,
     MatButtonToggleModule,
     GhostElementsModule,
     MatButtonModule,

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { PushModule } from '@rx-angular/template/push';
+import { PushPipe } from '@rx-angular/template/push';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 
 import { ROUTES } from './coalescing.routes';
@@ -21,7 +21,7 @@ const DECLARATIONS = [CoalescingComponent];
     StrategySelectModule,
     UnpatchModule,
     MatButtonModule,
-    PushModule,
+    PushPipe,
   ],
   providers: [],
   exports: [DECLARATIONS],

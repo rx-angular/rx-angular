@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { PushModule } from '@rx-angular/template/push';
+import { PushPipe } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ComparisonComponent } from './comparison.component';
@@ -31,7 +31,7 @@ import { RxIf } from '@rx-angular/template/if';
     MatFormFieldModule,
     FormsModule,
     MatInputModule,
-    PushModule,
+    PushPipe,
     ImageArrayModule,
     RxLet,
     RxForModule,

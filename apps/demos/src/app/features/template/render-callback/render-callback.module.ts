@@ -7,7 +7,7 @@ import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks/ind
 import { RenderCallbackComponent } from './render-callback.component';
 import { RENDER_CALLBACK_ROUTES } from './render-callback.routes';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { PushModule } from '@rx-angular/template/push';
+import { PushPipe } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 
@@ -21,7 +21,7 @@ import { UnpatchModule } from '@rx-angular/template/unpatch';
     DirtyChecksModule,
     MatButtonModule,
     UnpatchModule,
-    PushModule,
+    PushPipe,
     RxLet,
   ],
 })
