@@ -14,7 +14,7 @@ import { MatLegacySliderModule as MatSliderModule } from '@angular/material/lega
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { RxSwichModule } from '../../../../rx-angular-pocs/';
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 
 @NgModule({
@@ -32,7 +32,7 @@ import { ValueProvidersModule } from '../../../../shared/debug-helper/value-prov
     MatSliderModule,
     MatButtonToggleModule,
     MatInputModule,
-    IfModule,
+    RxIf,
     RxSwichModule,
     ValueProvidersModule,
   ],

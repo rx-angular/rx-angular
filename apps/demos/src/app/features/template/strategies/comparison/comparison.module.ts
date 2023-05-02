@@ -16,7 +16,7 @@ import { SiblingModule } from '../../../../shared/template-structures/sibling/si
 import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
 import { ROUTES } from './comparison.routes';
 import { RxForModule, PipeModule } from '../../../../rx-angular-pocs';
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 
 @NgModule({
   declarations: [ComparisonComponent],
@@ -35,7 +35,7 @@ import { IfModule } from '@rx-angular/template/if';
     ImageArrayModule,
     RxLet,
     RxForModule,
-    IfModule,
+    RxIf,
     PipeModule,
   ],
   exports: [],

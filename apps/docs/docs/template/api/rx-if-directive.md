@@ -103,15 +103,15 @@ n/a
 
 ## Setup
 
-The `IfModule` can be imported as following:
+The `RxIf` can be imported as following:
 
 Module based setup:
 
 ```ts
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 
 @NgModule({
-  imports: [IfModule],
+  imports: [RxIf],
   // ...
 })
 export class AnyModule {}
@@ -120,11 +120,11 @@ export class AnyModule {}
 Standalone component setup:
 
 ```ts
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 
 @Component({
   standalone: true,
-  imports: [IfModule],
+  imports: [RxIf],
   template: `...`,
 })
 export class AnyComponent {}

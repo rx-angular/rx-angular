@@ -17,7 +17,7 @@ import { AppShellComponent } from './app-shell-component/app-shell.component';
 import { AppShellSideNavItemDirective } from './side-nav/side-nav-item.directive';
 import { AppShellSideNavComponent } from './side-nav/side-nav.component';
 import { RxLetModule } from '../rx-angular-pocs/template/directives/let';
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 
 const exportedDeclarations = [
   AppShellHeaderContent,
@@ -40,7 +40,7 @@ const exportedDeclarations = [
     MatSelectModule,
     CdkTreeModule,
     RxLetModule,
-    IfModule,
+    RxIf,
   ],
   exports: exportedDeclarations,
 })
