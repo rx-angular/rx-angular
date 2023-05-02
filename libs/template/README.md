@@ -12,11 +12,11 @@
 
 ## Sub Modules
 
-- [LetDirective (\*rxLet)](https://rx-angular.io/docs/template/api/let-directive)
+- [RxLet (\*rxLet)](https://rx-angular.io/docs/template/api/rx-let-directive)
 - [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
 - [RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/rx-if-directive)
 - [RxUnpatch (unpatch)](https://rx-angular.io/docs/template/api/unpatch-directive)
-- [PushPipe (push)](https://rx-angular.io/docs/template/api/push-pipe)
+- [RxPush (push)](https://rx-angular.io/docs/template/api/push-pipe)
 
 **Experimental features**
 
@@ -73,14 +73,14 @@ nx migrate @rx-angular/template
 You can import each feature module individually.
 
 ```typescript
-import { LetModule } from '@rx-angular/template/let';
-import { ForModule } from '@rx-angular/template/for';
-import { PushModule } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxLet } from '@rx-angular/template/let';
+import { RxFor } from '@rx-angular/template/for';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 
 @NgModule({
   declarations: [...],
-  imports: [ForModule, LetModule, PushModule, UnpatchModule],
+  imports: [RxFor, RxLet, RxPush, RxUnpatch],
 })
 export class MyModule {}
 ```
