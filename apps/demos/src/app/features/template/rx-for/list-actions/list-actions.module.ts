@@ -9,7 +9,7 @@ import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy
 import { RouterModule } from '@angular/router';
 import { PushModule } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
-import { ForModule } from '@rx-angular/template/for';
+import { RxFor } from '@rx-angular/template/for';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/value-providers.module';
@@ -41,7 +41,7 @@ const DECLARATIONS = [ListActionsComponent];
     MatIconModule,
     StrategySelectModule,
     RxLet,
-    ForModule,
+    RxFor,
     IfModule,
   ],
   exports: [DECLARATIONS],

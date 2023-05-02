@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { PushModule } from '@rx-angular/template/push';
-import { ForModule } from '@rx-angular/template/for';
+import { RxFor } from '@rx-angular/template/for';
 import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { AppComponent } from './app.component';
@@ -13,7 +13,7 @@ import { AppComponent } from './app.component';
     PushModule,
     RxLet,
     UnpatchModule,
-    ForModule,
+    RxFor,
   ],
   providers: [],
   bootstrap: [AppComponent],

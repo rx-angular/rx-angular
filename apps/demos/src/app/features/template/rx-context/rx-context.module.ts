@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ForModule } from '@rx-angular/template/for';
+import { RxFor } from '@rx-angular/template/for';
 import { RxLet } from '@rx-angular/template/let';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
@@ -34,7 +34,7 @@ const DECLARATIONS = [RxContextComponent];
     RouterModule,
     MatCardModule,
     DirtyChecksModule,
-    ForModule,
+    RxFor,
     RxContextModule,
     MatIconModule,
     MatProgressSpinnerModule,
