@@ -1,1 +1,1 @@
-export { RxLet } from './lib/rx-let.directive';
+export { RxLet } from './lib/let.directive';

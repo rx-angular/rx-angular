@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { Observable, of, Subject } from 'rxjs';
-import { RxLet } from '../rx-let.directive';
+import { RxLet } from '../let.directive';
 
 @Component({
   template: `

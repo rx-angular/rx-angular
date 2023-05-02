@@ -9,7 +9,7 @@ import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { EMPTY, Observable, of } from 'rxjs';
 
-import { RxLet } from '../rx-let.directive';
+import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({

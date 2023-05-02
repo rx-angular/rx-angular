@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { BehaviorSubject, firstValueFrom, Observable, of, Subject } from 'rxjs';
 
-import { RxLet } from '../rx-let.directive';
+import { RxLet } from '../let.directive';
 import Spy = jasmine.Spy;
 import SpyInstance = jest.SpyInstance;
 
