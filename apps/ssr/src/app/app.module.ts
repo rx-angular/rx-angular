@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { PushPipe } from '@rx-angular/template/push';
+import { RxPush } from '@rx-angular/template/push';
 import { RxFor } from '@rx-angular/template/for';
 import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
   declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    PushPipe,
+    RxPush,
     RxLet,
     UnpatchModule,
     RxFor,

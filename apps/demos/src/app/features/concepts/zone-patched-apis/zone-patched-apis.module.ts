@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './zone-patched-apis.routes';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { PushPipe } from '@rx-angular/template/push';
+import { RxPush } from '@rx-angular/template/push';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { ZonePatchedApisComponent } from './zone-patched-apis.component';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
@@ -19,7 +19,7 @@ import { ValueProvidersModule } from '../../../shared/debug-helper/value-provide
     MatButtonModule,
     DirtyChecksModule,
     UnpatchModule,
-    PushPipe,
+    RxPush,
     VisualizerModule,
     CdDefaultModule,
     ValueProvidersModule,

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './rx-switch-poc.routes';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { PushPipe } from '@rx-angular/template/push';
+import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
@@ -26,7 +26,7 @@ import { ValueProvidersModule } from '../../../../shared/debug-helper/value-prov
     UnpatchModule,
     MatButtonModule,
     DirtyChecksModule,
-    PushPipe,
+    RxPush,
     RxLet,
     MatFormFieldModule,
     MatSliderModule,

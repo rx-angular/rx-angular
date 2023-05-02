@@ -7,7 +7,7 @@ import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { RouterModule } from '@angular/router';
-import { PushPipe } from '@rx-angular/template/push';
+import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { RxFor } from '@rx-angular/template/for';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
@@ -27,7 +27,7 @@ const DECLARATIONS = [ListActionsComponent];
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    PushPipe,
+    RxPush,
     DirtyChecksModule,
     MatButtonModule,
     UnpatchModule,

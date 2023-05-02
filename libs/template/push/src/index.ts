@@ -1,1 +1,1 @@
-export { PushPipe } from './lib/push.pipe';
+export { RxPush } from './lib/push.pipe';

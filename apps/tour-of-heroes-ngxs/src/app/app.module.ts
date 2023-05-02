@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { PushPipe } from '@rx-angular/template/push';
+import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
@@ -42,7 +42,7 @@ import { HeroState } from './ngxs/hero-feature/hero.state';
       disabled: environment.production,
     }),
     RxLet,
-    PushPipe,
+    RxPush,
   ],
   declarations: [
     AppComponent,

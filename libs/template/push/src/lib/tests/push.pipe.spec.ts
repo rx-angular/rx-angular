@@ -5,7 +5,7 @@ import {
 } from '@rx-angular/cdk/render-strategies';
 import { map, tap } from 'rxjs/operators';
 import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
-import { PushPipe } from '../push.pipe';
+import { RxPush } from '../push.pipe';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import {
@@ -45,7 +45,7 @@ let strategyProvider: RxStrategyProvider;
 const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     declarations: [PushPipeTestComponent],
-    imports: [PushPipe],
+    imports: [RxPush],
     providers: [
       ChangeDetectorRef,
       {
@@ -75,7 +75,7 @@ const setupPushPipeComponent = () => {
   strategyProvider = TestBed.inject(RxStrategyProvider);
 };
 
-describe('PushPipe used as pipe in the template', () => {
+describe('RxPush used as pipe in the template', () => {
   beforeAll(() => mockConsole());
 
   beforeEach(setupPushPipeComponent);

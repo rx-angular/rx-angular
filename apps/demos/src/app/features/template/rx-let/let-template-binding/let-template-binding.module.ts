@@ -9,7 +9,7 @@ import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-c
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
-import { PushPipe } from '@rx-angular/template/push';
+import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -32,7 +32,7 @@ const DECLARATIONS = [
     MatIconModule,
     MatProgressSpinnerModule,
     UnpatchModule,
-    PushPipe,
+    RxPush,
     MatBadgeModule,
     RxLet,
   ],

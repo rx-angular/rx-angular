@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './basic-example.routes';
 import { BasicExampleComponent } from './basic-example.component';
-import { PushPipe } from '@rx-angular/template/push';
+import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
@@ -22,7 +22,7 @@ const DECLARATIONS = [BasicExampleComponent];
     DirtyChecksModule,
     RouterModule.forChild(ROUTES),
     MatButtonModule,
-    PushPipe,
+    RxPush,
     RxLet,
     VisualizerModule,
     ValueProvidersModule,

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RxFor } from '@rx-angular/template/for';
 import { RxLet } from '@rx-angular/template/let';
-import { PushPipe } from '@rx-angular/template/push';
+import { RxPush } from '@rx-angular/template/push';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
@@ -41,7 +41,7 @@ const DECLARATIONS = [
     RxLet,
     RxFor,
     StrategySelectModule,
-    PushPipe,
+    RxPush,
   ],
   exports: DECLARATIONS,
 })
