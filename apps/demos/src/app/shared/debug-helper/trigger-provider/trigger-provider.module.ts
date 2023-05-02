@@ -4,7 +4,7 @@ import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     RxLet,
     RxPush,
-    UnpatchModule,
+    RxUnpatch,
     MatIconModule,
   ],
   exports: [TriggerProviderComponent],

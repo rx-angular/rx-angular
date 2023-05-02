@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { RxPush } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 
 import { ROUTES } from './coalescing.routes';
 import { CoalescingComponent } from './coalescing/coalescing.component';
@@ -19,7 +19,7 @@ const DECLARATIONS = [CoalescingComponent];
     RouterModule.forChild(ROUTES),
     VisualizerModule,
     StrategySelectModule,
-    UnpatchModule,
+    RxUnpatch,
     MatButtonModule,
     RxPush,
   ],

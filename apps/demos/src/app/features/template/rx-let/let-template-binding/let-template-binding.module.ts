@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ToStringPipe } from './to-string.pipe';
 
@@ -31,7 +31,7 @@ const DECLARATIONS = [
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    UnpatchModule,
+    RxUnpatch,
     RxPush,
     MatBadgeModule,
     RxLet,

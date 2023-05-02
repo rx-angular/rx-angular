@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ROUTES } from './lazy-loading-components.routes';
 import { LazyLoadingComponentsComponent } from './lazy-loading-components.component';
 import { RxLet } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
@@ -26,7 +26,7 @@ const DECLARATIONS = [
     CommonModule,
     RouterModule.forChild(ROUTES),
     RxLet,
-    UnpatchModule,
+    RxUnpatch,
     GhostElementsModule,
     MatButtonModule,
     VisualizerModule,

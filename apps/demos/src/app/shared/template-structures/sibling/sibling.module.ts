@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { RxPush } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
 import { RenderingsModule } from '../../debug-helper/renderings';
@@ -42,7 +42,7 @@ const DECLARATIONS = [
     CommonModule,
     MatButtonModule,
     DirtyChecksModule,
-    UnpatchModule,
+    RxUnpatch,
     RxPush,
     VisualizerModule,
     ValueProvidersModule,

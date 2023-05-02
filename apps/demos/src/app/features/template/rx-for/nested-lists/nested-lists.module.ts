@@ -4,7 +4,7 @@ import { RxFor } from '@rx-angular/template/for';
 import { RxLet } from '@rx-angular/template/let';
 import { RxPush } from '@rx-angular/template/push';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueModule } from '../../../../shared/debug-helper/work';
@@ -30,7 +30,7 @@ const DECLARATIONS = [
   imports: [
     CommonModule,
     VisualizerModule,
-    UnpatchModule,
+    RxUnpatch,
     MatButtonModule,
     DirtyChecksModule,
     ValueModule,

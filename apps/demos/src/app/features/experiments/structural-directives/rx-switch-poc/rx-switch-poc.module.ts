@@ -5,7 +5,7 @@ import { ROUTES } from './rx-switch-poc.routes';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RxSwitchPocComponent } from './rx-switch-poc.component';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
@@ -23,7 +23,7 @@ import { ValueProvidersModule } from '../../../../shared/debug-helper/value-prov
     CommonModule,
     RouterModule.forChild(ROUTES),
     VisualizerModule,
-    UnpatchModule,
+    RxUnpatch,
     MatButtonModule,
     DirtyChecksModule,
     RxPush,

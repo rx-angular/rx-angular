@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ROUTES } from './zone-patched-apis.routes';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RxPush } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { ZonePatchedApisComponent } from './zone-patched-apis.component';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
@@ -18,7 +18,7 @@ import { ValueProvidersModule } from '../../../shared/debug-helper/value-provide
     RouterModule.forChild(ROUTES),
     MatButtonModule,
     DirtyChecksModule,
-    UnpatchModule,
+    RxUnpatch,
     RxPush,
     VisualizerModule,
     CdDefaultModule,

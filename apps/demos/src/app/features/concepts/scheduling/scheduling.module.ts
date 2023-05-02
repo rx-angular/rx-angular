@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { SchedulingComponent } from './scheduling/scheduling.component';
 import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { ROUTES } from './scheduling.routes';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
@@ -18,7 +18,7 @@ const DECLARATIONS = [SchedulingComponent];
     RouterModule.forChild(ROUTES),
     RxLet,
     RxPush,
-    UnpatchModule,
+    RxUnpatch,
     MatButtonModule,
     VisualizerModule,
   ],

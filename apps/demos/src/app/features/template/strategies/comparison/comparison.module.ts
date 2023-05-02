@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { ComparisonComponent } from './comparison.component';
 
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
@@ -24,7 +24,7 @@ import { RxIf } from '@rx-angular/template/if';
     CommonModule,
     RouterModule.forChild(ROUTES),
     MatButtonModule,
-    UnpatchModule,
+    RxUnpatch,
     VisualizerModule,
     SiblingModule,
     MatCheckboxModule,

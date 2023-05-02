@@ -9,7 +9,7 @@ import { RENDER_CALLBACK_ROUTES } from './render-callback.routes';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 
 @NgModule({
   declarations: [RenderCallbackComponent],
@@ -20,7 +20,7 @@ import { UnpatchModule } from '@rx-angular/template/unpatch';
     MatDividerModule,
     DirtyChecksModule,
     MatButtonModule,
-    UnpatchModule,
+    RxUnpatch,
     RxPush,
     RxLet,
   ],
