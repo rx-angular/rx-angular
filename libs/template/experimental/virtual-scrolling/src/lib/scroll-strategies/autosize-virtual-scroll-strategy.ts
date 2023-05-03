@@ -27,6 +27,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  finalize,
 } from 'rxjs/operators';
 
 import {
@@ -42,6 +43,7 @@ import {
   DEFAULT_RUNWAY_ITEMS_OPPOSITE,
   RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS,
 } from '../virtual-scroll.config';
+import { RxaResizeObserver } from './resize-observer';
 
 /** @internal */
 type VirtualViewItem = {
@@ -251,9 +253,7 @@ export class AutoSizeVirtualScrollStrategy<
   private readonly detached$ = new Subject<void>();
 
   /** @internal */
-  private resizeObserver?: ResizeObserver;
-  /** @internal */
-  private readonly viewsResized$ = new Subject<ResizeObserverEntry[]>();
+  private resizeObserver?: RxaResizeObserver;
   /** @internal */
   private readonly recalculateRange$ = new Subject<void>();
 
@@ -290,9 +290,7 @@ export class AutoSizeVirtualScrollStrategy<
   ): void {
     this.viewport = viewport;
     this.viewRepeater = viewRepeater;
-    this.resizeObserver = new ResizeObserver((events) => {
-      this.viewsResized$.next(events);
-    });
+    this.resizeObserver = new RxaResizeObserver();
     this.maintainVirtualItems();
     this.calcRenderedRange();
     this.positionElements();
@@ -303,7 +301,7 @@ export class AutoSizeVirtualScrollStrategy<
     this.viewport = null;
     this.viewRepeater = null;
     this._virtualItems = [];
-    this.resizeObserver?.disconnect();
+    this.resizeObserver?.destroy();
     this.resizeObserver = undefined;
     this.detached$.next();
   }
@@ -360,59 +358,55 @@ export class AutoSizeVirtualScrollStrategy<
     const trackBy = this.viewRepeater!._trackBy ?? ((i, item) => item);
     this.viewRepeater!.values$.pipe(
       this.until$(),
-      tap({
-        next: (values) => {
-          // somewhat
-          const dataArr = Array.isArray(values)
-            ? values
-            : Array.from(values) ?? [];
-          const existingIds = new Set<any>();
-          let size = 0;
-          const dataLength = dataArr.length;
-          const virtualItems = new Array(dataLength);
-          for (let i = 0; i < dataLength; i++) {
-            const item = dataArr[i];
-            const id = trackBy(i, item);
-            const cachedItem = itemCache.get(id);
-            if (cachedItem === undefined) {
-              // add
-              virtualItems[i] = { size: 0 };
-              itemCache.set(id, { item: dataArr[i], index: i });
-            } else if (cachedItem.index !== i) {
-              // move
-              virtualItems[i] = this._virtualItems[cachedItem.index];
-              itemCache.set(id, { item: dataArr[i], index: i });
-            } else {
-              // update
-              virtualItems[i] = this._virtualItems[i];
-              if (!Object.is(dataArr[i], cachedItem.item)) {
-                if (
-                  i < this.renderedRange.start ||
-                  i >= this.renderedRange.end
-                ) {
-                  virtualItems[i].cached = false;
-                }
-                itemCache.set(id, { item: dataArr[i], index: i });
+      tap((values) => {
+        const dataArr = Array.isArray(values)
+          ? values
+          : values
+          ? Array.from(values)
+          : [];
+        const existingIds = new Set<any>();
+        let size = 0;
+        const dataLength = dataArr.length;
+        const virtualItems = new Array(dataLength);
+        for (let i = 0; i < dataLength; i++) {
+          const item = dataArr[i];
+          const id = trackBy(i, item);
+          const cachedItem = itemCache.get(id);
+          if (cachedItem === undefined) {
+            // add
+            virtualItems[i] = { size: 0 };
+            itemCache.set(id, { item: dataArr[i], index: i });
+          } else if (cachedItem.index !== i) {
+            // move
+            virtualItems[i] = this._virtualItems[cachedItem.index];
+            itemCache.set(id, { item: dataArr[i], index: i });
+          } else {
+            // update
+            virtualItems[i] = this._virtualItems[i];
+            if (!Object.is(dataArr[i], cachedItem.item)) {
+              if (i < this.renderedRange.start || i >= this.renderedRange.end) {
+                virtualItems[i].cached = false;
               }
+              itemCache.set(id, { item: dataArr[i], index: i });
             }
-            existingIds.add(id);
-            size += virtualItems[i].size || this.tombstoneSize;
           }
-          this._virtualItems = virtualItems;
-          // sync delete operations
-          if (itemCache.size > dataLength) {
-            itemCache.forEach((v, k) => {
-              if (!existingIds.has(k)) {
-                itemCache.delete(k);
-              }
-            });
-          }
-          existingIds.clear();
-          this.contentLength = dataLength;
-          this.contentSize = size;
-        },
-        unsubscribe: () => itemCache.clear(),
-      })
+          existingIds.add(id);
+          size += virtualItems[i].size || this.tombstoneSize;
+        }
+        this._virtualItems = virtualItems;
+        // sync delete operations
+        if (itemCache.size > dataLength) {
+          itemCache.forEach((v, k) => {
+            if (!existingIds.has(k)) {
+              itemCache.delete(k);
+            }
+          });
+        }
+        existingIds.clear();
+        this.contentLength = dataLength;
+        this.contentSize = size;
+      }),
+      finalize(() => itemCache.clear())
     ).subscribe();
   }
 
@@ -497,23 +491,25 @@ export class AutoSizeVirtualScrollStrategy<
 
   /** @internal */
   private positionElements(): void {
-    const viewsToObserve$ = new Subject<EmbeddedViewRef<any>[]>();
+    const viewsToObserve$ = new Subject<{
+      view: EmbeddedViewRef<any>;
+      index: number;
+    }>();
     this.viewRepeater!.renderingStart$.pipe(
       switchMap(() => {
         const renderedRange = this.renderedRange;
         const adjustIndexWith = renderedRange.start;
-        let scrolledIndex: number | null = null;
+        const allRenderedViews = new Map<number, EmbeddedViewRef<any>>();
+        let lastIndex = 0;
         let position = 0;
-        let renderedViews: {
-          view: EmbeddedViewRef<any>;
-          index: number;
-          item: T;
-        }[] = [];
+        let scrollTo: number = null;
         return merge(
           this.viewRepeater!.viewRendered$.pipe(
             tap(({ view, index: viewIndex, item }) => {
               const adjustedIndex = viewIndex + adjustIndexWith;
               // this most of the time causes a forced reflow per rendered view.
+              // the reason is not the positioning of the items, but the querying
+              // of the dimensions via offsetHeight.
               // it doesn't sound good, but it's still way more stable than
               // having one large reflow in a microtask after the actual
               // scheduler tick.
@@ -523,61 +519,48 @@ export class AutoSizeVirtualScrollStrategy<
               // schedulers frame budget. This way we will always run with the
               // configured FPS. The only case where this is not true is when rendering 1 single view
               // already explodes the budget
-              this.updateElementSize(view, adjustedIndex);
-              renderedViews.push({
-                view,
+              const size = this.updateElementSize(view, adjustedIndex);
+              if (position === 0 || adjustedIndex - 1 !== lastIndex) {
+                position = this.sizeUntil(adjustedIndex);
+              }
+              this.positionElement(this.getElement(view), position);
+              if (adjustedIndex === this.anchorItem.index) {
+                this.anchorItem = {
+                  index: adjustedIndex,
+                  offset: this.scrollTop - position,
+                };
+                this.anchorScrollTop = position + this.anchorItem.offset;
+                scrollTo = this.anchorScrollTop;
+              }
+              if (adjustedIndex === this._scrollToEdgeIndex) {
+                scrollTo = position;
+                this._scrollToEdgeIndex = null;
+              }
+              position += size;
+              lastIndex = adjustedIndex;
+              this.viewRenderCallback.next({
                 index: adjustedIndex,
+                view,
                 item,
               });
-            }),
-            // coalescing the positioning of items into the next available microTask
-            // the layout should be stable as we forced it before
-            coalesceWith(unpatchedMicroTask()),
-            map(() => {
-              if (position === 0) {
-                position = this.calcInitialPosition(renderedRange);
-              }
-              let lastIndex = 0;
-              let scrollTo = this.anchorScrollTop;
-              // update DOM happens here
-              // layout should be stable by now, we are thrashing it again, though
-              const viewsRendered: EmbeddedViewRef<any>[] = [];
-              for (let i = 0; i < renderedViews.length; i++) {
-                const { view, index, item } = renderedViews[i];
-                viewsRendered.push(view);
-                const element = this.getElement(view);
-                this.positionElement(element, position);
-                if (index === this._scrollToEdgeIndex) {
-                  scrollTo = position;
-                  this._scrollToEdgeIndex = null;
-                }
-                position += this._virtualItems[index].size;
-                if (scrolledIndex == null && position > this.scrollTop) {
-                  scrolledIndex = index;
-                }
-                lastIndex = index;
-                this.viewRenderCallback.next({
-                  index,
-                  view,
-                  item,
-                });
-              }
-              renderedViews = [];
+              allRenderedViews.set(adjustedIndex, view);
               // immediately activate the ResizeObserver after initial positioning
-              viewsToObserve$.next(viewsRendered);
+              viewsToObserve$.next({
+                view,
+                index: adjustedIndex,
+              });
+            }),
+            // coalescing the adjustment of the scrollposition to the next microtask, doing
+            // it after the scheduler tick has finished
+            coalesceWith(unpatchedMicroTask()),
+            tap(() => {
               // this condition only covers the edge case when we scroll to the
               // lower edge of the viewport and we have to wait until the whole
               // renderedRange actually got rendered
               if (this._scrollToEdgeIndex === null) {
                 this.contentSize =
                   position + this.getRemainingSizeFrom(lastIndex + 1);
-                if (
-                  scrolledIndex != null &&
-                  scrolledIndex !== this.scrolledIndex
-                ) {
-                  this.scrolledIndex = scrolledIndex;
-                }
-                if (scrollTo !== this.scrollTop) {
+                if (scrollTo != null && scrollTo !== this.scrollTop) {
                   const maxScrollTo = this._contentSize - this.containerSize;
                   if (
                     scrollTo >= maxScrollTo &&
@@ -588,37 +571,33 @@ export class AutoSizeVirtualScrollStrategy<
                   } else {
                     this.viewport!.scrollTo(scrollTo);
                   }
-                } else if (
-                  position < this.containerSize &&
-                  lastIndex < this.contentLength
-                ) {
-                  this.recalculateRange$.next();
                 }
               }
             })
           ),
           viewsToObserve$.pipe(
-            mergeMap((views) =>
-              this.observeViewSizes$(adjustIndexWith, views).pipe(
-                tap((lowestId) => {
-                  let i = lowestId;
-                  const range = {
-                    start: i + adjustIndexWith,
-                    end: renderedRange.end,
-                  };
-                  let position = this.calcInitialPosition(range);
-                  let index = range.start;
-                  for (i; i < views.length; i++) {
-                    const element = this.getElement(views[i]);
-                    this.positionElement(element, position);
-                    index = i + adjustIndexWith;
-                    position += this.getItemSize(index);
-                  }
-                  this.contentSize =
-                    position + this.getRemainingSizeFrom(index + 1);
-                })
-              )
-            )
+            mergeMap((toObserve) => this.observeViewSizes$(toObserve)),
+            // coalesceWith(unpatchedAnimationFrameTick()),
+            tap((idx) => {
+              let i = idx;
+              const range = {
+                start: i,
+                end: Math.min(
+                  renderedRange.end,
+                  renderedRange.start + allRenderedViews.size
+                ),
+              };
+              let position = this.calcInitialPosition(range);
+              let index = i;
+              for (i; i < range.end; i++) {
+                const element = this.getElement(allRenderedViews.get(i));
+                this.positionElement(element, position);
+                index = i;
+                position += this.getItemSize(index);
+              }
+              this.contentSize =
+                position + this.getRemainingSizeFrom(index + 1);
+            })
           )
         );
       }),
@@ -672,19 +651,11 @@ export class AutoSizeVirtualScrollStrategy<
       offset: Math.max(0, delta),
     };
   }
+
   /** @internal */
   private calcInitialPosition(range: ListRange): number {
-    let pos = 0;
-    let i = 0;
-    this.anchorScrollTop = 0;
-    for (i = 0; i < this.anchorItem.index; i++) {
-      this.anchorScrollTop += this.getItemSize(i);
-    }
-    this.anchorScrollTop += this.anchorItem.offset;
-
-    // Calculate position of starting node
-    pos = this.anchorScrollTop - this.anchorItem.offset;
-    i = this.anchorItem.index;
+    let pos = this.anchorScrollTop - this.anchorItem.offset;
+    let i = this.anchorItem.index;
     while (i > range.start) {
       const itemSize = this.getItemSize(i - 1);
       pos -= itemSize;
@@ -711,54 +682,35 @@ export class AutoSizeVirtualScrollStrategy<
   }
 
   /** @internal */
-  private observeViewSizes$(
-    adjustIndexWith: number,
-    views: EmbeddedViewRef<any>[]
-  ): Observable<number> {
-    const elementCache = new WeakMap<Element, number>();
-    let lowestResizedId: number | undefined;
-    for (let i = 0; i < views.length; i++) {
-      const element = this.getElement(views[i]);
-      this.resizeObserver!.observe(element, this.resizeObserverConfig?.options);
-      elementCache.set(element, i);
+  private observeViewSizes$({
+    view,
+    index,
+  }: {
+    view: EmbeddedViewRef<any>;
+    index: number;
+  }): Observable<number> {
+    return this.resizeObserver
+      .observeElement(this.getElement(view), this.resizeObserverConfig?.options)
+      .pipe(
+        filter((event) => {
+          const size = Math.round(this.extractSize(event));
+          if (this._virtualItems[index].size !== size) {
+            this._virtualItems[index].size = size;
+            return true;
+          }
+          return false;
+        }),
+        map(() => index)
+      );
+  }
+
+  /** @internal */
+  private sizeUntil(until: number): number {
+    let size = 0;
+    for (let i = 0; i < until; i++) {
+      size += this.getItemSize(i);
     }
-    return new Observable<number>((observer) => {
-      const inner = this.viewsResized$.subscribe((events) => {
-        events.forEach((event) => {
-          if (!event.target.isConnected) {
-            return;
-          }
-          const cachedId = elementCache.get(event.target);
-          if (cachedId !== undefined) {
-            const adjustedId = cachedId + adjustIndexWith;
-            const size = Math.round(this.extractSize(event));
-            if (this._virtualItems[adjustedId].size !== size) {
-              lowestResizedId = Math.min(
-                lowestResizedId ?? Number.MAX_SAFE_INTEGER,
-                cachedId
-              );
-              this._virtualItems[adjustedId].size = size;
-            }
-          }
-        });
-        if (lowestResizedId !== undefined) {
-          observer.next(lowestResizedId);
-        }
-      });
-      return () => {
-        for (let i = 0; i < views.length; i++) {
-          const element = this.getElement(views[i]);
-          this.resizeObserver?.unobserve(element);
-        }
-        inner.unsubscribe();
-      };
-    }).pipe(
-      coalesceWith(unpatchedAnimationFrameTick()),
-      map((lowestId) => {
-        lowestResizedId = undefined;
-        return lowestId;
-      })
-    );
+    return size;
   }
 
   /** @internal */
