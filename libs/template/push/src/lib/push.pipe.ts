@@ -7,15 +7,15 @@ import {
   untracked,
 } from '@angular/core';
 import {
-  RxStrategyNames,
-  RxStrategyProvider,
-  strategyHandling,
-} from '@rx-angular/cdk/render-strategies';
-import {
   createTemplateNotifier,
   RxNotification,
   RxNotificationKind,
 } from '@rx-angular/cdk/notifications';
+import {
+  RxStrategyNames,
+  RxStrategyProvider,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
 import {
   MonoTypeOperatorFunction,
   NextObserver,
@@ -26,9 +26,9 @@ import {
   Unsubscribable,
 } from 'rxjs';
 import {
+  filter,
   shareReplay,
   skip,
-  filter,
   switchMap,
   tap,
   withLatestFrom,

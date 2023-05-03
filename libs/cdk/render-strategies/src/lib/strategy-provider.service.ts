@@ -3,23 +3,26 @@ import {
   Inject,
   Injectable,
   NgZone,
-  Optional
+  Optional,
 } from '@angular/core';
 import {
   BehaviorSubject,
   fromEvent,
   MonoTypeOperatorFunction,
-  Observable
+  Observable,
 } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
+
 import {
-  mergeDefaultConfig, RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG
+  mergeDefaultConfig,
+  RX_RENDER_STRATEGIES_CONFIG,
+  RxRenderStrategiesConfig,
 } from './config';
 import {
   RxStrategies,
   RxStrategyCredentials,
   RxStrategyNames,
-  ScheduleOnStrategyOptions
+  ScheduleOnStrategyOptions,
 } from './model';
 import { onStrategy } from './onStrategy';
 

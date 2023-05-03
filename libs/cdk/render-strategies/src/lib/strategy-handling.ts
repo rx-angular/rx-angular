@@ -1,10 +1,9 @@
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, share, startWith, switchAll } from 'rxjs/operators';
 
-import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   RxCustomStrategyCredentials,
-  RxStrategies,
   RxStrategyCredentials,
   RxStrategyNames,
 } from './model';

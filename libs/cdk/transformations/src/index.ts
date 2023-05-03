@@ -1,17 +1,17 @@
 export {
+  extract,
   insert,
   remove,
   toDictionary,
   update,
-  extract,
   upsert,
 } from './lib/array/index';
 export { ComparableData } from './lib/interfaces/comparable-data-type';
 export {
-  setProp,
-  patch,
   deleteProp,
   dictionaryToArray,
-  toggle,
+  patch,
+  setProp,
   slice,
+  toggle,
 } from './lib/object/index';

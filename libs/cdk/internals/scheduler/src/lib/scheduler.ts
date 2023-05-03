@@ -1,7 +1,7 @@
 // see https://github.com/facebook/react/blob/main/packages/scheduler/src/forks/Scheduler.js
 
 import { ɵglobal } from '@angular/core';
-import { enableIsInputPending } from './schedulerFeatureFlags';
+
 import {
   peek,
   pop,
@@ -9,7 +9,6 @@ import {
   ReactSchedulerTask,
   SchedulerTaskZone,
 } from './schedulerMinHeap';
-
 import { PriorityLevel } from './schedulerPriorities';
 
 /**
@@ -581,17 +580,17 @@ function cancelHostTimeout() {
 const _requestPaint = requestPaint;
 
 export {
-  runWithPriority,
-  next,
-  scheduleCallback,
   cancelCallback,
-  wrapCallback,
-  getCurrentPriorityLevel,
-  shouldYieldToHost as shouldYield,
-  _requestPaint as requestPaint,
   continueExecution,
-  pauseExecution,
-  getFirstCallbackNode,
-  getCurrentTime as now,
   forceFrameRate as forceFrameRate,
+  getCurrentPriorityLevel,
+  getFirstCallbackNode,
+  next,
+  getCurrentTime as now,
+  pauseExecution,
+  _requestPaint as requestPaint,
+  runWithPriority,
+  scheduleCallback,
+  shouldYieldToHost as shouldYield,
+  wrapCallback,
 };

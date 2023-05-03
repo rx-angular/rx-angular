@@ -1,4 +1,4 @@
-// eslint-disable-next-line @nx/enforce-module-boundaries
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';

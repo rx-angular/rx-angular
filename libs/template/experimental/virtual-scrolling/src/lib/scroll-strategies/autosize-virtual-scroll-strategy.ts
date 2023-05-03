@@ -19,10 +19,10 @@ import {
   Subject,
 } from 'rxjs';
 import {
-  mergeMap,
   distinctUntilChanged,
   filter,
   map,
+  mergeMap,
   startWith,
   switchMap,
   takeUntil,

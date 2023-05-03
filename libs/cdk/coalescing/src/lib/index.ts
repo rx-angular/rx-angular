@@ -1,3 +1,3 @@
-export { RxCoalescingOptions, coalescingObj } from './model';
 export { coalesceWith } from './coalesceWith';
-export { coalescingManager, CoalescingManager } from './coalescingManager';
+export { CoalescingManager, coalescingManager } from './coalescingManager';
+export { coalescingObj, RxCoalescingOptions } from './model';

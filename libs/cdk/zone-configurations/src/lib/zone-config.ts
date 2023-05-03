@@ -1,4 +1,6 @@
 import { ɵglobal } from '@angular/core';
+
+import { convenienceMethods } from './convenience-methods';
 import {
   RxZoneFlagsHelperFunctions,
   zoneGlobalDisableConfigurationsKeys,
@@ -10,14 +12,13 @@ import {
 } from './model/configurations.types';
 import { RxZoneGlobalConfigurations } from './model/zone.configurations.api';
 import {
-  RxZoneConfigConfiguration,
-  RxZoneConfig,
   RxGlobalDisableConfigurationMethods,
-  RxTestDisableConfigurationMethods,
-  RxZoneGlobalEventsConfigurationsMethods,
   RxRuntimeConfigurationMethods,
+  RxTestDisableConfigurationMethods,
+  RxZoneConfig,
+  RxZoneConfigConfiguration,
+  RxZoneGlobalEventsConfigurationsMethods,
 } from './model/zone-config.types';
-import { convenienceMethods } from './convenience-methods';
 
 const zoneDisable = '__Zone_disable_';
 const zoneSymbol = '__zone_symbol__';

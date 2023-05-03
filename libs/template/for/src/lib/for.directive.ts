@@ -28,7 +28,6 @@ import {
   RxListManager,
   RxListViewComputedContext,
 } from '@rx-angular/cdk/template';
-
 import {
   isObservable,
   Observable,
@@ -37,6 +36,7 @@ import {
   Subscription,
 } from 'rxjs';
 import { shareReplay, switchAll } from 'rxjs/operators';
+
 import { RxForViewContext } from './for-view-context';
 
 /**

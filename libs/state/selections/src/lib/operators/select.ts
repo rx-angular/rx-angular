@@ -1,5 +1,6 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
+
 import { KeyCompareMap, PickSlice } from '../interfaces';
 import {
   isOperateFnArrayGuard,

@@ -7,7 +7,6 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import { RxNotification } from '@rx-angular/cdk/notifications';
 import { RxLet } from '@rx-angular/template/let';

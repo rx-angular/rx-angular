@@ -5,9 +5,9 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { asapScheduler, delay, Observable, ReplaySubject, Subject } from 'rxjs';
-import { TestBed } from '@angular/core/testing';
 import { RxLet } from '../let.directive';
 
 @Component({

@@ -33,7 +33,8 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import { mergeAll, filter, map } from 'rxjs/operators';
+import { filter, map, mergeAll } from 'rxjs/operators';
+
 import {
   RxIfTemplateNames,
   rxIfTemplateNames,

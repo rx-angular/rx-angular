@@ -1,13 +1,14 @@
+import { By } from '@angular/platform-browser';
+import { createOutputSpy, mount } from 'cypress/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import {
+  AutoSizeVirtualScrollStrategy,
+  ListRange,
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
-  ListRange,
-  AutoSizeVirtualScrollStrategy,
 } from '../src/index';
-import { createOutputSpy, mount } from 'cypress/angular';
-import { By } from '@angular/platform-browser';
 import { DEFAULT_ITEM_SIZE } from '../src/lib/virtual-scroll.config';
 import {
   defaultMountConfig,

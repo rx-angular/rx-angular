@@ -1,12 +1,13 @@
+import { By } from '@angular/platform-browser';
+import { createOutputSpy, mount } from 'cypress/angular';
 import { Subject } from 'rxjs';
+
 import {
+  DynamicSizeVirtualScrollStrategy,
+  ListRange,
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
-  ListRange,
-  DynamicSizeVirtualScrollStrategy,
 } from '../src/index';
-import { createOutputSpy, mount } from 'cypress/angular';
-import { By } from '@angular/platform-browser';
 import {
   defaultMountConfig,
   generateItems,

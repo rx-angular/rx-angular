@@ -1,10 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, Output, ViewChild } from '@angular/core';
-import { PrimitiveState } from '@test-helpers';
-import { createStateChecker } from './fixtures';
-import { Observable, Subject } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxState } from '@rx-angular/state';
 import { select } from '@rx-angular/state/selections';
+import { PrimitiveState } from '@test-helpers';
+import { Observable, Subject } from 'rxjs';
+
+import { createStateChecker } from './fixtures';
 
 const initialChildState = { str: 'initialChildState' };
 

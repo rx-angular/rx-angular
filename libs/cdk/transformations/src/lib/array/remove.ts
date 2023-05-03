@@ -1,6 +1,6 @@
-import { ComparableData } from '../interfaces/comparable-data-type';
 import { isDefined } from '../_internals/guards';
 import { valuesComparer } from '../_internals/valuesComparer.util';
+import { ComparableData } from '../interfaces/comparable-data-type';
 
 /**
  * @description

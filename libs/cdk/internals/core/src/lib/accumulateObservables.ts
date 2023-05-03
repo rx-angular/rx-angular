@@ -1,6 +1,8 @@
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import { combineLatest, from, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
+
+import { getZoneUnPatchedApi } from './get-zone-unpatched-api';
 import {
   ArrayReducerFn,
   ExtractObservableValue,
@@ -9,7 +11,6 @@ import {
   PropName,
   PropType,
 } from './model';
-import { getZoneUnPatchedApi } from './get-zone-unpatched-api';
 
 const resolvedPromise = getZoneUnPatchedApi('Promise').resolve();
 const resolvedPromise$ = from(resolvedPromise);
@@ -94,6 +95,6 @@ export function accumulateObservables<T extends ObservableMap & NotEmpty<T>>(
       values.reduce(getEntriesToObjectReducerFn(keys), {} as any)
     ),
     // by using shareReplay we share the last composition work done to create the accumulated object
-    shareReplay({refCount: true, bufferSize: 1})
+    shareReplay({ refCount: true, bufferSize: 1 })
   );
 }

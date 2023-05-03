@@ -1,5 +1,6 @@
 import { TSESLint } from '@typescript-eslint/utils';
 import * as path from 'path';
+
 import rule, { MessageIds } from './no-rxstate-imperative-in-reactive';
 
 const ruleTester = new TSESLint.RuleTester({

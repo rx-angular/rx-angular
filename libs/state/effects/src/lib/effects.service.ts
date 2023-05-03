@@ -7,7 +7,7 @@ import {
   PartialObserver,
   pipe,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import {
   catchError,
@@ -16,8 +16,9 @@ import {
   mergeAll,
   share,
   takeUntil,
-  tap
+  tap,
 } from 'rxjs/operators';
+
 import { DestroyProp, OnDestroy$ } from './model';
 import { toHook, untilDestroyed } from './utils';
 

@@ -10,6 +10,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -19,7 +20,6 @@ import {
   RxVirtualViewRepeater,
 } from './model';
 import { observeElementSize } from './observe-element-size';
-import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 
 /**
  * @description Will be provided through Terser global definitions by Angular CLI

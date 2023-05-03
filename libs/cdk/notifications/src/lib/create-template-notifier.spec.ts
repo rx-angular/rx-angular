@@ -1,4 +1,5 @@
 import { BehaviorSubject, NEVER, of, throwError } from 'rxjs';
+
 import { createTemplateNotifier } from './create-template-notifier';
 import { RxNotification, RxNotificationKind } from './model';
 

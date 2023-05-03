@@ -10,6 +10,7 @@ import {
 import { of, scheduled, Subject } from 'rxjs';
 import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
+
 import { createStateChecker } from './fixtures';
 
 function setupState<T extends object>(cfg: { initialState?: T }) {

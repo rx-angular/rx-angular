@@ -1,25 +1,23 @@
 import {
   RxZoneGlobalDisableConfigurationsKey,
+  RxZoneGlobalEventsConfigurationsKey,
   RxZoneGlobalSettingsConfigurationsKey,
+  RxZoneRuntimeConfigurationsKey,
   RxZoneTestDisableConfigurationsKey,
   RxZoneTestSettingsConfigurationsKey,
-  RxZoneGlobalEventsConfigurationsKey,
-  RxZoneRuntimeConfigurationsKey,
 } from './configurations.types';
 
 export type RxGlobalDisableConfigurationMethods = {
   [disabledFlag in RxZoneGlobalDisableConfigurationsKey]: () => void;
-} &
-  {
-    [symbolFlag in RxZoneGlobalSettingsConfigurationsKey]: () => void;
-  };
+} & {
+  [symbolFlag in RxZoneGlobalSettingsConfigurationsKey]: () => void;
+};
 
 export type RxTestDisableConfigurationMethods = {
   [disabledFlag in RxZoneTestDisableConfigurationsKey]: () => void;
-} &
-  {
-    [symbolFlag in RxZoneTestSettingsConfigurationsKey]: () => void;
-  };
+} & {
+  [symbolFlag in RxZoneTestSettingsConfigurationsKey]: () => void;
+};
 
 export type RxZoneGlobalEventsConfigurationsMethods = {
   [disabledFlag in RxZoneGlobalEventsConfigurationsKey]: (

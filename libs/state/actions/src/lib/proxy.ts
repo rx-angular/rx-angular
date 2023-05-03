@@ -5,9 +5,10 @@
  * @param subjects
  * @param transforms
  */
-import { merge, Subject } from 'rxjs';
-import { KeysOf, ValuesOf, RxActions } from './types';
 import { ErrorHandler } from '@angular/core';
+import { merge, Subject } from 'rxjs';
+
+import { KeysOf, RxActions, ValuesOf } from './types';
 
 export function actionProxyHandler<T extends object, U extends object>(
   subjects: { [K in keyof T]: Subject<ValuesOf<T>> },

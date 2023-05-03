@@ -1,5 +1,6 @@
 import { TSESLint } from '@typescript-eslint/utils';
 import * as path from 'path';
+
 import rule, { MessageIds } from './prefer-no-lodash-clone-deep';
 
 const ruleTester = new TSESLint.RuleTester({

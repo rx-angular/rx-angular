@@ -1,5 +1,6 @@
 import { TSESLint } from '@typescript-eslint/utils';
 import * as path from 'path';
+
 import rule, {
   MessageIds,
   Options,

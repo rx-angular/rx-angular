@@ -28,7 +28,6 @@ import {
   RxTemplateManager,
   RxViewContext,
 } from '@rx-angular/cdk/template';
-
 import {
   defer,
   merge,
@@ -40,7 +39,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 /** @internal */
 type RxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;

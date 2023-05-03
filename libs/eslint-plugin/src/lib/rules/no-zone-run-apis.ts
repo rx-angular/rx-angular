@@ -4,6 +4,7 @@ import {
   TSESTree,
 } from '@typescript-eslint/utils';
 import * as path from 'path';
+
 import { docsUrl } from '../utils/docs';
 import { isKeyof } from '../utils/guards';
 import { namesToRegex } from '../utils/regex';

@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { BehaviorSubject, of, startWith, throwError, tap } from 'rxjs';
+import { BehaviorSubject, of, startWith, tap, throwError } from 'rxjs';
+
 import { RxIf } from '../if.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 

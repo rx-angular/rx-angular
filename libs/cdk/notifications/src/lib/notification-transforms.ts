@@ -1,8 +1,8 @@
 import {
-  RxSuspenseNotification,
-  RxNotificationKind,
-  RxErrorNotification,
   RxCompleteNotification,
+  RxErrorNotification,
+  RxNotificationKind,
+  RxSuspenseNotification,
 } from './model';
 
 export function toRxErrorNotification<T>(

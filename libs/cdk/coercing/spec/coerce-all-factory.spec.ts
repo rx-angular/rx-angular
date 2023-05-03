@@ -1,3 +1,4 @@
+import { jestMatcher } from '@test-helpers';
 import {
   BehaviorSubject,
   concatAll,
@@ -10,8 +11,6 @@ import {
   take,
 } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-
-import { jestMatcher } from '@test-helpers';
 
 import { coerceAllFactory } from '../src/lib/coerce-all-factory';
 

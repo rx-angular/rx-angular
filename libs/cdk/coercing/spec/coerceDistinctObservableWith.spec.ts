@@ -1,3 +1,4 @@
+import { jestMatcher } from '@test-helpers';
 import {
   concatAll,
   exhaustAll,
@@ -7,8 +8,6 @@ import {
   take,
 } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-
-import { jestMatcher } from '@test-helpers';
 
 import { coerceDistinctWith } from '../src/lib/coerceDistinctObservableWith';
 

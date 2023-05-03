@@ -12,6 +12,7 @@ import {
 } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { asapScheduler, delay } from 'rxjs';
+
 import { RxFor } from '../for.directive';
 import { TestComponent } from './fixtures';
 

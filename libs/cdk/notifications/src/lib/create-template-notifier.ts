@@ -14,9 +14,9 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import { rxMaterialize } from './rx-materialize';
 import { RxNotification, RxNotificationKind } from './model';
 import { toRxSuspenseNotification } from './notification-transforms';
+import { rxMaterialize } from './rx-materialize';
 
 /**
  * @description

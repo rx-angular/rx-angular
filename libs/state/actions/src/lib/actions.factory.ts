@@ -1,7 +1,8 @@
-import { Actions, ActionTransforms, RxActions, ValuesOf } from './types';
 import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
-import { actionProxyHandler } from './proxy';
 import { Subject } from 'rxjs';
+
+import { actionProxyHandler } from './proxy';
+import { Actions, ActionTransforms, RxActions, ValuesOf } from './types';
 
 type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
 
@@ -86,7 +87,7 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
   destroy() {
     this.subjects.forEach((s) => {
       Object.values(s).forEach((subject: any) => subject.complete());
-    })
+    });
   }
 
   /**
