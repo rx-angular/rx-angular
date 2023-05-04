@@ -1,5 +1,3 @@
-export const aaaa = '/Server Library';
-
 export {
   FileSystemCacheHandler,
   FileSystemCacheOptions,

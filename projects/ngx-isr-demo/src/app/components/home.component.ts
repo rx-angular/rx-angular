@@ -39,8 +39,8 @@ export default class HomeComponent {
   ];
 
   serverTsCode = `
-  import { ISRHandler } from 'ngx-isr';
-  
+  import { ISRHandler } from 'ngx-isr/server';
+
   export function app(): express.Express {
     // Other Angular Universal setup code...
 
@@ -54,13 +54,13 @@ export default class HomeComponent {
       async (req, res, next) => await isr.serveFromCache(req, res, next),
       async (req, res, next) => await isr.render(req, res, next)
     );
- 
+
     return server;
-  } 
+  }
   `;
 
   ngModuleCode = `
-  import { NgxIsrModule } from 'ngx-isr';
+  import { NgxIsrModule } from 'ngx-isr/server';
 
   @NgModule({
     imports: [

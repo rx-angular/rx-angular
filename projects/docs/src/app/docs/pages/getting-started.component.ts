@@ -148,13 +148,13 @@ export default class IntroComponent {
   appServerModuleCode = `
   import { NgModule } from '@angular/core';
   import { ServerModule } from '@angular/platform-server';
-  
+
   import { AppModule } from './app.module';
   import { AppComponent } from './app.component';
 
   // 1. 👇 Import the provider function
-  import { provideISR } from 'ngx-isr';
-  
+  import { provideISR } from 'ngx-isr/server';
+
   @NgModule({
     imports: [
       AppModule,
@@ -165,11 +165,11 @@ export default class IntroComponent {
       provideISR() // 2. 👈 Register the provider
     ]
   })
-  export class AppServerModule {}  
+  export class AppServerModule {}
   `;
 
   serverConfigCode = `
-  import { provideISR } from 'ngx-isr';
+  import { provideISR } from 'ngx-isr/server';
 
   const serverConfig: ApplicationConfig = {
     providers: [
@@ -182,16 +182,16 @@ export default class IntroComponent {
   serverTsCode = `
   import { environment } from './src/environments/environment';
   import 'zone.js/dist/zone-node';
-  
+
   import { ngExpressEngine } from '@nguniversal/express-engine';
   import * as express from 'express';
   import { join } from 'path';
-  
+
   import { AppServerModule } from './src/main.server';
   import { existsSync } from 'fs';
-  
+
   // 1. 👇 Import the ISRHandler class
-  import { ISRHandler } from 'ngx-isr';
+  import { ISRHandler } from 'ngx-isr/server';
 
   export function app(): express.Express {
     const server = express();
@@ -206,14 +206,14 @@ export default class IntroComponent {
       invalidateSecretToken: process.env['INVALIDATE_TOKEN'] || 'MY_TOKEN',
       enableLogging: !environment.production,
     });
-  
+
     server.engine('html', ngExpressEngine({ bootstrap: AppServerModule }));
-  
+
     server.set('view engine', 'html');
     server.set('views', distFolder);
-  
+
     server.get('*.*', express.static(distFolder, { maxAge: '1y' }));
-  
+
     // 3. 👇 Use the ISRHandler to handle the requests
     server.get('*',
       // Serve page if it exists in cache
@@ -221,12 +221,12 @@ export default class IntroComponent {
       // Server side render the page and add to cache if needed
       async (req, res, next) => await isr.render(req, res, next)
     );
-  
+
     // 4: 👇 Comment out default angular universal handler, because it's will be handled in ISR render method
     // (req, res) => {
     //   res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
     // }
-  
+
     return server;
   }
   `;

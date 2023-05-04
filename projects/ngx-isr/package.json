@@ -2,11 +2,11 @@
   "name": "ngx-isr",
   "author": "Enea Jahollari",
   "description": "Incremental Static Regeneration for Angular",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "peerDependencies": {
     "@angular/common": ">=15.0.0",
     "@angular/core": ">=15.0.0",
-    "@types/node": "^14.15.0"
+    "@types/node": "^14.15.0 || ^16.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"

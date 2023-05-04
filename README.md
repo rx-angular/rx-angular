@@ -117,7 +117,7 @@ Example:
 
 
 6. Register providers
-To register the ngx-isr providers, you can either import `NgxIsrModule` in your `AppServerModule` or provide `provideISR` in your `AppServerModule` providers.
+   To register the ngx-isr providers, you can either import `NgxIsrModule` in your `AppServerModule` or provide `provideISR` in your `AppServerModule` providers.
 
 Or, if you are in a standalone app, you can register the providers in your `app.config.server.ts` file.
 
@@ -125,7 +125,7 @@ Or, if you are in a standalone app, you can register the providers in your `app.
 - Register using `NgxIsrModule`
 
 ```ts
-import { NgxIsrModule } from 'ngx-isr'; // <-- Import module from library
+import { NgxIsrModule } from 'ngx-isr/server'; // <-- Import module from library
 
 @NgModule({
   imports: [
@@ -139,7 +139,7 @@ export class AppServerModule {}
 - Register using the `provideISR` function
 
 ```ts
-import { provideISR } from 'ngx-isr';
+import { provideISR } from 'ngx-isr/server';
 
 @NgModule({
   providers: [
@@ -150,9 +150,9 @@ export class AppServerModule {}
 ```
 
 - Register using the `provideISR` function in standalone app
-  
+
 ```ts
-import { provideISR } from 'ngx-isr';
+import { provideISR } from 'ngx-isr/server';
 
 const serverConfig: ApplicationConfig = {
   providers: [
@@ -166,6 +166,50 @@ When registering the providers, `NgxIsrService` will be initialized and will sta
 
 # Changelog
 
+## Version 0.5.5
+
+### Features
+
+- feat: allow `NgxIsrService` to be used in application code without bringing the whole library in the browser bundle
+- feat: separate the library into secondary entry points for server and browser
+
+### BREAKING CHANGES:
+Imports now should be done from `ngx-isr/server` and `ngx-isr/browser` instead of `ngx-isr`;
+
+```ts
+// Before
+import { NgxIsrModule } from 'ngx-isr';
+
+// After
+import { NgxIsrModule } from 'ngx-isr/server';
+
+// Before
+import { provideISR } from 'ngx-isr';
+
+// After
+import { provideISR } from 'ngx-isr/server';
+```
+
+Things exported from `ngx-isr/server`:
+- `NgxIsrModule`
+- `provideISR`
+- `ISRHandler`
+- `FileSystemCacheHandler` and `FileSystemCacheOptions`
+
+Things exported from `ngx-isr/browser`:
+- `NgxIsrService`
+
+Things exported from `ngx-isr/models`:
+- `CacheHandler`
+- `CacheISRConfig` (renamed from `ISROptions`)
+- `CacheData`
+- `INgxIsrService` and `NgxIsrState`
+- `ISRHandlerConfig`
+- `InvalidateConfig`
+- `RenderConfig`
+- `ServeFromCacheConfig`
+- `RouteISRConfig`
+
 ## Version 0.5.4
 
 ### Features
@@ -176,10 +220,10 @@ When registering the providers, `NgxIsrService` will be initialized and will sta
 ## Version 0.5.3
 
 ### Features
-  
+
 - feat: Introduce `RouteISRConfig` interface for better type safety in route data
-  
-  How to use it? 
+
+  How to use it?
   ```ts
   const routes: Rotues = [{
     path: 'home',
@@ -188,31 +232,31 @@ When registering the providers, `NgxIsrService` will be initialized and will sta
   }];
   ```
 
-- feat: Added build id support 
+- feat: Added build id support
 
   **What is it and why do we need it?**
 
-  The build id is a unique identifier that is generated for each build. It is used to invalidate the cache when a new build is deployed. So, when a new build is deployed, every page that will be requested will be server-rendered again and not served from the cache. This way, the users will always get the latest version of the application. 
-  
+  The build id is a unique identifier that is generated for each build. It is used to invalidate the cache when a new build is deployed. So, when a new build is deployed, every page that will be requested will be server-rendered again and not served from the cache. This way, the users will always get the latest version of the application.
+
   _Useful when you have an external cache handler like Redis._
 
   **How to use it?**
-  
-  To use it, you need to pass the build id to the `ISRHandler` constructor. 
-  Angular itself doesn't generate a build id. But we can generate it using the environment file.
-  What we can do is to set field in the environment file called `buildId` and set it to: `new Date().getTime(),`. 
 
-  Ex. environment.ts: 
+  To use it, you need to pass the build id to the `ISRHandler` constructor.
+  Angular itself doesn't generate a build id. But we can generate it using the environment file.
+  What we can do is to set field in the environment file called `buildId` and set it to: `new Date().getTime(),`.
+
+  Ex. environment.ts:
   ```ts
   export const environment = {
     production: false,
     buildId: new Date().getTime() + '', // We need to convert it to string because the buildId is a string
   };
   ```
-  This way we will have a unique build id for each build because the buildId will evaluated at build time. 
+  This way we will have a unique build id for each build because the buildId will evaluated at build time.
   Then, we pass the build id to the ISRHandler constructor.
 
-  Ex. server.ts: 
+  Ex. server.ts:
   ```ts
   import { environment } from './src/environments/environment';
 
@@ -222,7 +266,7 @@ When registering the providers, `NgxIsrService` will be initialized and will sta
   });
   ```
 
-- fix: Fixed a bug where the cache was not invalidated when the build id changed 
+- fix: Fixed a bug where the cache was not invalidated when the build id changed
 
 
 ### Breaking changes:
@@ -230,9 +274,9 @@ When registering the providers, `NgxIsrService` will be initialized and will sta
 
 
 ## Version 0.5.2
-  * feat: Migrate repository to nx workspace
-  * feat: Added `provideISR` provider function
-  * chore: Update example RedisCacheHandler to use a prefix
+* feat: Migrate repository to nx workspace
+* feat: Added `provideISR` provider function
+* chore: Update example RedisCacheHandler to use a prefix
 
 ## License
 MIT

@@ -125,7 +125,7 @@ Or, if you are in a standalone app, you can register the providers in your `app.
 - Register using `NgxIsrModule`
 
 ```ts
-import { NgxIsrModule } from 'ngx-isr'; // <-- Import module from library
+import { NgxIsrModule } from 'ngx-isr/server'; // <-- Import module from library
 
 @NgModule({
   imports: [
@@ -139,7 +139,7 @@ export class AppServerModule {}
 - Register using the `provideISR` function
 
 ```ts
-import { provideISR } from 'ngx-isr';
+import { provideISR } from 'ngx-isr/server';
 
 @NgModule({
   providers: [
@@ -152,7 +152,7 @@ export class AppServerModule {}
 - Register using the `provideISR` function in standalone app
   
 ```ts
-import { provideISR } from 'ngx-isr';
+import { provideISR } from 'ngx-isr/server';
 
 const serverConfig: ApplicationConfig = {
   providers: [
@@ -165,6 +165,50 @@ const serverConfig: ApplicationConfig = {
 When registering the providers, `NgxIsrService` will be initialized and will start to listen to route changes, only on the server side, so the browser bundle won't contain any extra code.
 
 # Changelog
+
+## Version 0.5.5
+
+### Features
+
+- feat: allow `NgxIsrService` to be used in application code without bringing the whole library in the browser bundle
+- feat: separate the library into secondary entry points for server and browser
+
+### BREAKING CHANGES:
+Imports now should be done from `ngx-isr/server` and `ngx-isr/browser` instead of `ngx-isr`;
+
+```ts
+// Before
+import { NgxIsrModule } from 'ngx-isr';
+
+// After
+import { NgxIsrModule } from 'ngx-isr/server';
+
+// Before
+import { provideISR } from 'ngx-isr';
+
+// After
+import { provideISR } from 'ngx-isr/server';
+```
+
+Things exported from `ngx-isr/server`:
+- `NgxIsrModule`
+- `provideISR`
+- `ISRHandler`
+- `FileSystemCacheHandler` and `FileSystemCacheOptions`
+
+Things exported from `ngx-isr/browser`:
+- `NgxIsrService`
+
+Things exported from `ngx-isr/models`:
+- `CacheHandler`
+- `CacheISRConfig` (renamed from `ISROptions`)
+- `CacheData`
+- `INgxIsrService` and `NgxIsrState`
+- `ISRHandlerConfig`
+- `InvalidateConfig`
+- `RenderConfig`
+- `ServeFromCacheConfig`
+- `RouteISRConfig`
 
 ## Version 0.5.4
 

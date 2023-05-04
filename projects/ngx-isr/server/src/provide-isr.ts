@@ -16,7 +16,7 @@ import { NgxIsrService } from 'ngx-isr/browser';
  *
  * @example
  * ```
- * import { provideISR } from 'ngx-isr';
+ * import { provideISR } from 'ngx-isr/server';
  *
  * @NgModule({
  *  providers: [ provideISR() ]

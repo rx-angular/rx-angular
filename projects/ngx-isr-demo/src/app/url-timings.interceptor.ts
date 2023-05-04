@@ -5,7 +5,7 @@ import {
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { Injectable, Provider } from '@angular/core';
-import { NgxIsrService } from 'ngx-isr';
+import { NgxIsrService } from 'ngx-isr/browser';
 import { tap } from 'rxjs';
 
 @Injectable()
