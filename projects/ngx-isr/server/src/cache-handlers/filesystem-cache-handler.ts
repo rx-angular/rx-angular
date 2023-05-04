@@ -244,8 +244,11 @@ export class FileSystemCacheHandler extends CacheHandler {
       //   newFilePath: '/Users/enea/Documents/GitHub/ngx-isr/dist/ngx-isr-demo/browser/cache/__details__1.html'
       // }
 
-      // move file to cache folder
-      fs.renameSync(path, newFilePath);
+      // copy file to cache folder
+      fs.copyFileSync(path, newFilePath);
+
+      // remove file from the browser folder so that it can be handled by ISR
+      fs.rmSync(path);
     }
 
     console.log(
