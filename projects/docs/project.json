@@ -17,7 +17,7 @@
         "inlineStyleLanguage": "scss",
         "tsConfig": "projects/docs/tsconfig.app.json",
         "assets": [
-          "projects/docs/src/favicon.ico", 
+          "projects/docs/src/favicon.ico",
           "projects/docs/src/assets",
           {
             "glob": "**/*",
@@ -27,9 +27,7 @@
         ],
         "styles": ["projects/docs/src/styles.scss"],
         "scripts": [],
-        "allowedCommonJsDependencies": [
-          "highlight.js"
-        ]
+        "allowedCommonJsDependencies": ["highlight.js"]
       },
       "configurations": {
         "production": {
@@ -77,14 +75,14 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["projects/docs/**/*.ts", "projects/docs/**/*.html"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "projects/docs/jest.config.ts",
@@ -123,9 +121,7 @@
         }
       },
       "defaultConfiguration": "production",
-      "outputs": [
-        "{options.outputPath}"
-      ]
+      "outputs": ["{options.outputPath}"]
     },
     "serve-ssr": {
       "executor": "@nguniversal/builders:ssr-dev-server",

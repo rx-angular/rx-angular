@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { HighlightModule } from 'ngx-highlightjs';
 import { trackInstallEvent } from '../analytics/inject-analytics-script';
 
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import packageJson from '../../../../ngx-isr/package.json';
 
 const LATEST_VERSION = packageJson.version;
