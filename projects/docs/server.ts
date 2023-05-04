@@ -5,11 +5,12 @@ import { ngExpressEngine } from '@nguniversal/express-engine';
 import * as express from 'express';
 import { join } from 'path';
 
-import { AppServerModule } from './src/main.server';
 import { existsSync } from 'fs';
 
 import { ISRHandler } from 'ngx-isr/server';
 import { RedisCacheHandler } from './redis-cache-handler';
+
+import bootstrap from './src/main.server';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -43,12 +44,7 @@ export function app(): express.Express {
   });
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
-  server.engine(
-    'html',
-    ngExpressEngine({
-      bootstrap: AppServerModule,
-    })
-  );
+  server.engine('html', ngExpressEngine({ bootstrap }));
 
   server.set('view engine', 'html');
   server.set('views', distFolder);

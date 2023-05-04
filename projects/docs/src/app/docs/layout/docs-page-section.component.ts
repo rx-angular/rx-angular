@@ -24,9 +24,9 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
           </svg> -->
         </a>
       </h2>
-      <p class="text-base font-light text-waterloo mt-6 dark:text-santa sm:text-lg md:text-xl;">
+      <div class="text-base font-light text-waterloo mt-6 dark:text-santa sm:text-lg md:text-xl;">
         <ng-content></ng-content>
-      </p>
+      </div>
     </div>
   `,
   standalone: true,
