@@ -148,6 +148,7 @@ export class RxIf<T = unknown>
    * <app-hero *rxIf="show$; else: noHero"></app-hero>
    * <ng-template #noHero><no-hero></no-hero></ng-template>
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxIfElse') else: TemplateRef<RxIfViewContext<T>>;
 
   /**
@@ -380,6 +381,7 @@ export class RxIf<T = unknown>
    *
    * @param {boolean} renderParent
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxIfParent') renderParent = this.strategyProvider.config.parent;
 
   /**

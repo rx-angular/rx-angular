@@ -433,6 +433,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param boolean
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxLetParent') renderParent = this.strategyProvider.config.parent;
 
   /**
@@ -466,6 +467,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    *   item$ = itemService.getItem();
    * }
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxLetPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
   constructor(

@@ -213,6 +213,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param {boolean} renderParent
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxForParent') renderParent = this.strategyProvider.config.parent;
 
   /**
@@ -249,6 +250,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param {boolean} patchZone
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxForPatchZone') patchZone = this.strategyProvider.config.patchZone;
 
   /**
@@ -307,6 +309,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param trackByFnOrKey
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxForTrackBy')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   set trackBy(trackByFnOrKey: keyof T | ((idx: number, i: T) => any)) {
@@ -375,6 +378,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param {Subject<U>} renderCallback
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxForRenderCallback') set renderCallback(renderCallback: Subject<U>) {
     this._renderCallback = renderCallback;
   }

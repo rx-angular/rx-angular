@@ -311,6 +311,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param strategyName
    * @see {@link strategies}
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxVirtualForStrategy')
   set strategy(
     strategyName: RxStrategyNames<string> | Observable<RxStrategyNames<string>>
@@ -324,6 +325,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * scrolling the list. If this is set to 0, `rxVirtualFor` won't cache any view,
    * thus destroying & re-creating very often on scroll events.
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxVirtualForViewCacheSize') viewCacheSize =
     this.defaults?.viewCacheSize || DEFAULT_VIEW_CACHE_SIZE;
 
@@ -361,6 +363,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param renderParent
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxVirtualForParent') renderParent = false;
 
   /**
@@ -392,6 +395,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param patchZone
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxVirtualForPatchZone') patchZone =
     this.strategyProvider.config.patchZone;
 
@@ -459,6 +463,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param trackByFnOrKey
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxVirtualForTrackBy')
   set trackBy(trackByFnOrKey: keyof T | TrackByFunction<T>) {
     if (
@@ -526,6 +531,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param renderCallback
    */
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('rxVirtualForRenderCallback') set renderCallback(
     renderCallback: Subject<U>
   ) {
