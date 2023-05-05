@@ -3,8 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-// eslint-disable-next-line @angular-eslint/component-selector
-@Component({ selector: 'test-cmp', template: '' })
+@Component({ selector: 'rx-test-cmp', template: '' })
 export class TestComponent {
   booleanCondition = true;
   booleanCondition$ = new BehaviorSubject(true);
