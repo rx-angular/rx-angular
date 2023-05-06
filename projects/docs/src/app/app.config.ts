@@ -23,7 +23,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     provideClientHydration(),
-    { provide: APP_ID, useValue: 'serverApp' },
     { provide: TitleStrategy, useClass: CustomTitleStrategy },
     {
       provide: HIGHLIGHT_OPTIONS,
