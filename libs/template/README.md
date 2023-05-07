@@ -16,11 +16,12 @@
 - [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
 - [RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/rx-if-directive)
 - [UnpatchDirective (unpatch)](https://rx-angular.io/docs/template/api/unpatch-directive)
-- [PushPipe (`push`)](https://rx-angular.io/docs/template/api/push-pipe)
+- [PushPipe (push)](https://rx-angular.io/docs/template/api/push-pipe)
 
 **Experimental features**
 
-- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/experimental/viewport-prio-directive)
+- [🧪 Virtual Scrolling (virtual-scrolling)](https://www.rx-angular.io/docs/template/api/virtual-scrolling)
+- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/viewport-prio-directive)
 
 All experimental features are very stable and already tested in production apps for multiple months. The reason to have them in experimental is so we can make small typing changes without breaking changes.
 
@@ -69,29 +70,30 @@ nx migrate @rx-angular/template
 
 ## Basic setup
 
-You can import each feature module individually.
+You can import each feature individually.
 
 ```typescript
-import { LetModule } from '@rx-angular/template/let';
-import { ForModule } from '@rx-angular/template/for';
-import { PushModule } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { LetDirective } from '@rx-angular/template/let';
+import { RxFor } from '@rx-angular/template/for';
+import { RxIf } from '@rx-angular/template/if';
+import { PushPipe } from '@rx-angular/template/push';
+import { UnpatchDirective } from '@rx-angular/template/unpatch';
 
-@NgModule({
-  declarations: [...],
-  imports: [ForModule, LetModule, PushModule, UnpatchModule],
+@Component({
+  standalone: true,
+  imports: [LetDirective, RxFor, RxIf, PushPipe, UnpatchDirective],
+  template: `...`,
 })
-export class MyModule {}
+export class AnyComponent {}
 ```
 
 ## Version Compatibility
 
-| Angular                | RxJS                 | @rx-angular/template |
-| ---------------------- | -------------------- | -------------------- |
-| `14`                   | `^7.4.0`             | `> 1.0.0-beta.29`    |
-| `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-beta.29`    |
-| `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-beta.29`   |
+| RxAngular | Angular    |
+| --------- | ---------- |
+| `^1.0.0`  | `>=12.0.0` |
+| `^2.0.0`  | `>=13.0.0` |
+| `^14.0.0` | `^14.0.0`  |
+| `^15.0.0` | `^15.0.0`  |
 
-Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
-All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
+Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see the [official guide](https://angular.io/guide/versions).

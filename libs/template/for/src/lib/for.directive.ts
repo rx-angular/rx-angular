@@ -76,6 +76,7 @@ declare const ngDevMode: boolean;
  */
 @Directive({
   selector: '[rxFor][rxForOf]',
+  standalone: true,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>

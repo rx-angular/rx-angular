@@ -92,7 +92,7 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  * @docsPage LetDirective
  * @publicApi
  */
-@Directive({ selector: '[rxLet]' })
+@Directive({ selector: '[rxLet]', standalone: true })
 export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   static ngTemplateGuard_rxLet: 'binding';
 

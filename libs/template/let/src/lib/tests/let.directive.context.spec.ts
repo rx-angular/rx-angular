@@ -65,7 +65,8 @@ const contentElement = (): HTMLElement => nativeElement.querySelector('.value');
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveTestComponent, LetDirective],
+    declarations: [LetDirectiveTestComponent],
+    imports: [LetDirective],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

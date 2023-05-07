@@ -9,7 +9,7 @@ import { merge, Subject } from 'rxjs';
 import { KeysOf, ValuesOf, RxActions } from './types';
 import { ErrorHandler } from '@angular/core';
 
-export function actionProxyHandler<T extends object, U>(
+export function actionProxyHandler<T extends object, U extends object>(
   subjects: { [K in keyof T]: Subject<ValuesOf<T>> },
   transforms?: U,
   errorHandler?: ErrorHandler
@@ -29,7 +29,6 @@ export function actionProxyHandler<T extends object, U>(
       errorHandler?.handleError(err);
     }
   }
-  type K = keyof T;
   return {
     // shorthand setter for multiple signals e.g. signals({propA: 1, propB: 2})
     apply(_: RxActions<T, U>, __: any, props: [T]): any {
@@ -44,8 +43,9 @@ export function actionProxyHandler<T extends object, U>(
 
       // the user wants to get a single signal as observable
       if (prop.toString().split('').pop() === '$') {
-        if(prop.toString().length === 1) {
-          return (props: KeysOfT[]) => merge(
+        if (prop.toString().length === 1) {
+          return (props: KeysOfT[]) =>
+            merge(
               ...props.map((k) => {
                 subjects[k] = subjects[k] || new Subject<ValuesOfT>();
                 return subjects[k];

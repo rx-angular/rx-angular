@@ -10,11 +10,9 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatIconModule } from '@angular/material/icon';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
-const DECLARATIONS = [
-  PreloadingImagesComponent
-];
+const DECLARATIONS = [PreloadingImagesComponent];
 
 @NgModule({
   declarations: [DECLARATIONS],
@@ -28,9 +26,7 @@ const DECLARATIONS = [
     MatIconModule,
     ValueProvidersModule,
     VisualizerModule,
-    MatButtonModule
-  ]
+    MatButtonModule,
+  ],
 })
-export class PreloadingImagesModule {
-
-}
+export class PreloadingImagesModule {}

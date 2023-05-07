@@ -4,7 +4,6 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { UnpatchDirective } from '../unpatch.directive';
-import { UnpatchModule } from '../unpatch.module';
 
 describe(UnpatchDirective.name, () => {
   enum LogEvent {
@@ -35,7 +34,7 @@ describe(UnpatchDirective.name, () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [UnpatchModule],
+      imports: [UnpatchDirective],
       declarations: [TestComponent],
       teardown: { destroyAfterEach: true },
     });
@@ -54,6 +53,10 @@ describe(UnpatchDirective.name, () => {
       div.nativeElement,
       Zone.__symbol__('addEventListener')
     );
+    const removeEventListener = jest.spyOn(
+      div.nativeElement,
+      'removeEventListener'
+    );
 
     // Act
     fixture.detectChanges();
@@ -70,6 +73,7 @@ describe(UnpatchDirective.name, () => {
       // Let's ensure that change detection hasn't been run.
       expect(tick).toHaveBeenCalledTimes(0);
       expect(addEventListener).toHaveBeenCalledTimes(2);
+      expect(removeEventListener).toHaveBeenCalledTimes(2);
     } finally {
       tick.mockRestore();
       addEventListener.mockRestore();
@@ -85,6 +89,10 @@ describe(UnpatchDirective.name, () => {
     const addEventListener = jest.spyOn(
       div.nativeElement,
       Zone.__symbol__('addEventListener')
+    );
+    const removeEventListener = jest.spyOn(
+      div.nativeElement,
+      'removeEventListener'
     );
 
     // Act
@@ -102,6 +110,7 @@ describe(UnpatchDirective.name, () => {
       // Change detection has been run once since we unpatched only `mouseenter`.
       expect(tick).toHaveBeenCalledTimes(1);
       expect(addEventListener).toHaveBeenCalledTimes(1);
+      expect(removeEventListener).toHaveBeenCalledTimes(1);
     } finally {
       tick.mockRestore();
       addEventListener.mockRestore();

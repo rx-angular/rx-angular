@@ -6,16 +6,16 @@ import { StrategySelectModule } from '../../../shared/debug-helper/strategy-sele
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
 import { RxContextComponent } from './rx-context.component';
 import { GhostElementsModule } from '../../../shared/ghost-elements';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
 import { TriggerProviderModule } from '../../../shared/debug-helper/trigger-provider/trigger-provider.module';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { RouterModule } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { RxContextModule } from '../../../rx-angular-pocs';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 
 const DECLARATIONS = [RxContextComponent];
 

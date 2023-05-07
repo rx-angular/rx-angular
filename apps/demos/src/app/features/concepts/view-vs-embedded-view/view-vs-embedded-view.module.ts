@@ -5,23 +5,15 @@ import { Poc1LetDirective } from './poc1-let.directive';
 import { ViewVsEmbeddedViewComponent } from './view-vs-embedded-view.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { UnpatchModule } from '@rx-angular/template/unpatch';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   declarations: [
     OriginalLetDirective,
     Poc1LetDirective,
-    ViewVsEmbeddedViewComponent
+    ViewVsEmbeddedViewComponent,
   ],
-  exports: [
-    Poc1LetDirective
-  ],
-  imports: [
-    CommonModule,
-    VisualizerModule,
-    UnpatchModule,
-    MatButtonModule
-  ]
+  exports: [Poc1LetDirective],
+  imports: [CommonModule, VisualizerModule, UnpatchModule, MatButtonModule],
 })
-export class ViewVsEmbeddedViewModule {
-}
+export class ViewVsEmbeddedViewModule {}

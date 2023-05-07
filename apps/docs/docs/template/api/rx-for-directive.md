@@ -64,13 +64,13 @@ Each instance of `RxFor` can be configured to render with different settings.
 
 **Rendering**
 
-| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                             |
-| ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `trackBy`        | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                                                                                                   |
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
-| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                                    |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
+| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `trackBy`        | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                                                                                            |
+| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxFor` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
+| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxFor` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
+| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                             |
+| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `RxFor` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
 
 ### Outputs
 
@@ -107,28 +107,14 @@ The following context variables are available for each template:
 
 ## Setup
 
-The `ForModule` can be imported as following:
-
-Module based setup:
+The `RxFor` can be imported as following:
 
 ```
-import { ForModule } from "@rx-angular/template/for";
+import { RxFor } from "@rx-angular/template/for";
 
-@NgModule({
-  imports: [ ForModule ],
-  // ...
-})
-export class AnyModule {}
-```
-
-Standalone component setup:
-
-```
-import { ForModule } from "@rx-angular/template/for";
-
-@NgComponent({
+@Component({
     standalone: true,
-    imports: [ ForModule ],
+    imports: [RxFor],
     template: `...`
 })
 export class AnyComponent {}
@@ -151,11 +137,11 @@ export class AnyComponent {}
 ### Simple example using `*rxFor` with `Observable` values
 
 ```ts
-@NgComponent({
+@Component({
     template: `
-    <ul>
-      <li *rxFor="let item of items$; trackBy: trackItem">{{ item }}</li>
-    </ul>
+      <ul>
+        <li *rxFor="let item of items$; trackBy: trackItem">{{ item }}</li>
+      </ul>
     `
 })
 export class AnyComponent {
@@ -173,11 +159,11 @@ export class AnyComponent {
 > As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refactoring.
 
 ```typescript
-@NgComponent({
+@Component({
     template: `
-    <ul>
-      <li *rxFor="let item of items; trackBy: trackItem">{{ item }}</li>
-    </ul>
+      <ul>
+        <li *rxFor="let item of items; trackBy: trackItem">{{ item }}</li>
+      </ul>
     `
 })
 export class AnyComponent {
@@ -195,12 +181,12 @@ export class AnyComponent {
 > As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refacturing.
 
 ```typescript
-@NgComponent({
+@Component({
   template: `
     <ul>
       <li *rxFor="let item of items; trackBy: 'id'">{{ item }}</li>
     </ul>
-    `,
+  `,
 })
 export class AnyComponent {}
 ```
@@ -272,7 +258,9 @@ The default value for strategy is [`normal`](../../cdk/render-strategies/strateg
 ```
 
 ```ts
-@Component()
+@Component({
+  /**/
+})
 export class AppComponent {
   strategy = 'low';
   strategy$ = of('immediate');
@@ -303,7 +291,7 @@ Imagine the following situation:
   template: ` <ng-content select="app-list-item"></ng-content>`,
 })
 export class AppListComponent {
-  @ContentChildren(AppListItemComponent)
+  @ContentChildren(AppListItemComponent);
   appListItems: QueryList<AppListItemComponent>;
 }
 ```
@@ -436,7 +424,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 
 ```ts
 @Component({
-  selector: 'any-component>',
+  selector: 'app-root',
   template: `
     <div
       *rxFor="let bgColor; in: bgColor$; patchZone: false"

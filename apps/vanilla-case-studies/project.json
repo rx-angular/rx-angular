@@ -1,4 +1,6 @@
 {
+  "name": "vanilla-case-studies",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "generators": {},
   "sourceRoot": "apps/vanilla-case-studies/src",
@@ -80,7 +82,7 @@
         "jestConfig": "apps/vanilla-case-studies/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/apps/vanilla-case-studies"]
+      "outputs": ["{workspaceRoot}/coverage/apps/vanilla-case-studies"]
     }
   },
   "tags": []

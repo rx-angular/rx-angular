@@ -5,7 +5,6 @@ import { mockConsole } from '@test-helpers';
 import { Observable, of, Subject } from 'rxjs';
 import { LetDirective } from '../let.directive';
 
-
 @Component({
   template: `
     <ng-container
@@ -33,7 +32,8 @@ let nativeElement: HTMLElement;
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveNoSuspenseTemplateTestComponent, LetDirective],
+    declarations: [LetDirectiveNoSuspenseTemplateTestComponent],
+    imports: [LetDirective],
     providers: [
       {
         provide: RX_RENDER_STRATEGIES_CONFIG,

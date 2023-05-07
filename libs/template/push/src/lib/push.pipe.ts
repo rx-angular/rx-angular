@@ -84,7 +84,7 @@ import {
  *
  * @publicApi
  */
-@Pipe({ name: 'push', pure: false })
+@Pipe({ name: 'push', pure: false, standalone: true })
 export class PushPipe implements PipeTransform, OnDestroy {
   /**
    * @internal

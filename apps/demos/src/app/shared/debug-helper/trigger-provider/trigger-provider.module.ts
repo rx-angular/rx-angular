@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { TriggerProviderComponent } from './trigger-provider.component';
 import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon.module';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';

@@ -850,7 +850,10 @@ describe('coerceAllFactory', () => {
     describe('flattening via exhaustAll', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
-          () => new BehaviorSubject<Observable<string>>(of(initialValue)),
+          () =>
+            new BehaviorSubject<Observable<string>>(
+              new BehaviorSubject(initialValue)
+            ),
           exhaustAll()
         );
       });

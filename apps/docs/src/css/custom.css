@@ -14,7 +14,7 @@
   --ifm-color-primary-light: #e33359; /* 20% white */
   --ifm-color-primary-lighter: #ea6683; /* 40% white */
   --ifm-color-primary-lightest: #f199ac; /* 60% white */
-
+  --ifm-footer-logo-max-width: 106px;
   /* Code */
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);

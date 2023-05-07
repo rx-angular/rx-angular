@@ -1,6 +1,7 @@
 import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxFor } from '../for.directive';
 import { ForModule } from '../for.module';
 import { createTestComponent, TestComponent } from './fixtures';
 
@@ -24,7 +25,7 @@ describe('rxFor strategies', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TestComponent],
-      imports: [ForModule],
+      imports: [RxFor],
     });
     fixture = createTestComponent(
       `<div><span *rxFor="let item of items; strategy: strategy; renderCallback: renderedValue$">{{item.toString()}};</span></div>`

@@ -19,7 +19,7 @@ _Example_
 
 ```typescript
 import { of } from 'rxjs';
-import { distinctUntilSomeChanged } from 'rx-angular/state';
+import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
 
 interface Person {
   age: number;
@@ -47,7 +47,7 @@ _Example_
 ```typescript
 // An example with `KeyCompareMap`
 import { of } from 'rxjs';
-import { distinctUntilSomeChanged } from 'rxjs/operators';
+import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
 
 interface Person {
   age: number;

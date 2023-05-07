@@ -1,14 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RxFor } from './for.directive';
 
-const DECLARATIONS = [
-  RxFor
-];
+const EXPORTS = [RxFor];
 
+/** @deprecated use the standalone import, will be removed with v16 */
 @NgModule({
-  declarations: DECLARATIONS,
-  imports: [],
-  exports: DECLARATIONS
+  imports: EXPORTS,
+  exports: EXPORTS,
 })
-export class ForModule {
-}
+export class ForModule {}

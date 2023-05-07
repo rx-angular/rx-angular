@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { PushModule } from '@rx-angular/template/push';
 import { LetModule } from '@rx-angular/template/let';
 import { UnpatchModule } from '@rx-angular/template/unpatch';

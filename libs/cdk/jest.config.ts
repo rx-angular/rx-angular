@@ -1,7 +1,6 @@
 /* eslint-disable */
 export default {
   bail: true,
-  name: 'cdk',
   displayName: 'cdk',
   preset: '../../jest.preset.js',
   coverageReporters: ['lcov'],

@@ -79,7 +79,7 @@ describe('rxFor parent-notifications', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ParentNotifyTestComponent],
-      imports: [ForModule],
+      imports: [RxFor],
       teardown: { destroyAfterEach: true },
     });
     fixture = TestBed.createComponent(ParentNotifyTestComponent);

@@ -1,4 +1,6 @@
 {
+  "name": "template",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "libs/template/src",
   "prefix": "rx",
@@ -16,10 +18,10 @@
           "projects": "dependencies"
         }
       ],
-      "outputs": ["dist/libs/template"]
+      "outputs": ["{workspaceRoot}/dist/libs/template"]
     },
     "build": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "dependsOn": [
         {
           "target": "build-lib",
@@ -46,7 +48,7 @@
         ],
         "parallel": false
       },
-      "outputs": ["dist/libs/template/schematics"]
+      "outputs": ["{workspaceRoot}/dist/libs/template/schematics"]
     },
     "test": {
       "executor": "@nrwl/jest:jest",
@@ -55,10 +57,10 @@
         "passWithNoTests": true,
         "codeCoverage": true
       },
-      "outputs": ["coverage/template"]
+      "outputs": ["{workspaceRoot}/coverage/template"]
     },
     "link": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           {
@@ -68,7 +70,7 @@
       }
     },
     "publish": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           {
@@ -117,6 +119,15 @@
       "executor": "@nrwl/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/template/**/*.ts"]
+      }
+    },
+    "component-test": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "libs/template/cypress.config.ts",
+        "testingType": "component",
+        "skipServe": true,
+        "devServerTarget": "tour-of-heroes-ngxs:build"
       }
     }
   },
