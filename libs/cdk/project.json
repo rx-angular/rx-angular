@@ -9,8 +9,7 @@
       "executor": "nx:run-commands",
       "dependsOn": [
         {
-          "target": "build-lib",
-          "projects": "self"
+          "target": "build-lib"
         }
       ],
       "options": {
@@ -36,7 +35,7 @@
       "outputs": ["{workspaceRoot}/dist/libs/cdk/schematics"]
     },
     "build-lib": {
-      "executor": "@nrwl/angular:package",
+      "executor": "@nx/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
         "project": "libs/cdk/ng-package.json",
@@ -45,7 +44,7 @@
       "outputs": ["{workspaceRoot}/dist/libs/cdk"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/cdk/jest.config.ts",
         "passWithNoTests": true,
@@ -64,20 +63,16 @@
       },
       "dependsOn": [
         {
-          "target": "lint",
-          "projects": "self"
+          "target": "lint"
         },
         {
-          "target": "test",
-          "projects": "self"
+          "target": "test"
         },
         {
-          "target": "version",
-          "projects": "self"
+          "target": "version"
         },
         {
-          "target": "build",
-          "projects": "self"
+          "target": "build"
         }
       ]
     },
@@ -100,14 +95,14 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/cdk/**/*.ts"]
       }
     }
   },
   "generators": {
-    "@nrwl/angular:component": {
+    "@nx/angular:component": {
       "style": "scss"
     }
   },

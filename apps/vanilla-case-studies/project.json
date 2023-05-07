@@ -77,7 +77,7 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/vanilla-case-studies/jest.config.ts",
         "passWithNoTests": true
