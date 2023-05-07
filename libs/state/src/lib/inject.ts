@@ -26,7 +26,7 @@ export function withInitialState<State extends object>(
 export function withConnect<State extends object>(
   inputOrSlice$: Observable<Partial<State>>
 ): RxStateFeature<State>;
-export function withConnect<State extends object, Value>(
+export function withConnect<State extends object, Value extends Partial<State>>(
   inputOrSlice$: Observable<Value>,
   projectFn: ProjectStateReducer<State, Value>
 ): RxStateFeature<State>;
@@ -37,20 +37,24 @@ export function withConnect<State extends object, Key extends keyof State>(
 export function withConnect<
   State extends object,
   Key extends keyof State,
-  Value
+  Value extends Partial<State>
 >(
   key: Key,
   input$: Observable<Value>,
   projectSliceFn: ProjectValueReducer<State, Key, Value>
 ): RxStateFeature<State>;
-export function withConnect<State extends object>(
-  callback: (connect: RxState<State>['connect']) => void
-): RxStateFeature<State>;
 export function withConnect<
   State extends object,
   Key extends keyof State,
-  Value
->(callback: () => Record<Key, Observable<Value>>): RxStateFeature<State>;
+  Value extends Partial<State>
+>(
+  callback: (
+    connect: RxState<State>['connect']
+  ) =>
+    | Observable<Partial<State>>
+    | Record<Key, Observable<State[Key] | Value>>
+    | void
+): RxStateFeature<State>;
 /**
  * @internal
  */
@@ -64,7 +68,10 @@ export function withConnect<
     | Observable<Partial<State> | Value>
     | ((
         connect: RxState<State>['connect']
-      ) => Record<Key, Observable<Value>> | void),
+      ) =>
+        | Observable<Partial<State>>
+        | Record<Key, Observable<State[Key] | Value>>
+        | void),
   projectOrSlices$?:
     | ProjectStateReducer<State, Value>
     | Observable<State[Key] | Value>,
@@ -75,7 +82,9 @@ export function withConnect<
       const slices = keyOrInputOrSliceOrCallback$(
         rxState.connect.bind(rxState)
       );
-      if (slices) {
+      if (slices instanceof Observable) {
+        rxState.connect(slices);
+      } else if (slices) {
         Object.keys(slices).forEach((key) => {
           rxState.connect(key as Key, slices[key]);
         });

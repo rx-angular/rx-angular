@@ -132,6 +132,42 @@ describe(rxState, () => {
       );
       expect(component.state.get()).toEqual({ count: 10, count2: 20 });
     });
+
+    it('should connect multiple observables with connect', () => {
+      const { component } = setupStatefulComponent<{
+        count: number;
+        count2: number;
+      }>(
+        withConnect(() => {
+          return of({ count: 10, count2: 20 });
+        })
+      );
+      expect(component.state.get()).toEqual({ count: 10, count2: 20 });
+    });
+
+    it('should throw a TSC error when returned record has incorrect type', () => {
+      setupStatefulComponent<{
+        count: number;
+      }>(
+        /// @ts-expect-error { fail: Observable<boolean> } is not assignable to { count: number }
+        withConnect(() => {
+          return {
+            fail: of({ fail: true }),
+          };
+        })
+      );
+    });
+
+    it('should throw a TSC error when returned observable has incorrect type', () => {
+      setupStatefulComponent<{
+        count: number;
+      }>(
+        /// @ts-expect-error Observable<{ fail: boolean }> is not assignable to Observable<{ count: number }>
+        withConnect(() => {
+          return of({ fail: true });
+        })
+      );
+    });
   });
 
   it('should call ngOnDestroy', () => {
