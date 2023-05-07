@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { expectType } from 'tsd';
 
-import { of } from 'rxjs';
+import { of, tap } from 'rxjs';
 import {
   RxStateFeature,
   rxState,
@@ -53,10 +53,32 @@ describe(rxState, () => {
     expect(component.state.get()).toEqual({ count: 20 });
   });
 
-  it('should compose state with hold', () => {
-    const spy = jest.fn();
-    setupStatefulComponent<{ count: number }>(withHold(of('src'), spy));
-    expect(spy).toHaveBeenCalledWith('src');
+  describe(withHold, () => {
+    it('should hold an observable', () => {
+      const spy = jest.fn();
+      setupStatefulComponent<{ count: number }>(
+        withHold(of('src').pipe(tap(spy)))
+      );
+      expect(spy).toHaveBeenCalledWith('src');
+    });
+
+    it('should hold an observable and sideEffect fn', () => {
+      const spy = jest.fn();
+      setupStatefulComponent<{ count: number }>(withHold(of('src'), spy));
+      expect(spy).toHaveBeenCalledWith('src');
+    });
+
+    it('should hold multiple observables', () => {
+      const spy = jest.fn();
+      setupStatefulComponent<{ count: number }>(
+        withHold((hold) => {
+          hold(of('src').pipe(tap(spy)));
+          hold(of('src2'), spy);
+        })
+      );
+      expect(spy.mock.calls[0][0]).toEqual('src');
+      expect(spy.mock.calls[1][0]).toEqual('src2');
+    });
   });
 
   describe(withConnect, () => {

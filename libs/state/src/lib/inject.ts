@@ -11,9 +11,6 @@ export type RxStateFeature<State extends object> = (
   rxState: RxState<State>
 ) => void;
 
-/**
- * @todo: see how to infer generic type from accumulator to accumulatorFn.
- */
 export function withAccumulator<State extends object>(
   accumulatorFn: AccumulationFn
 ) {
@@ -26,9 +23,6 @@ export function withInitialState<State extends object>(
   return (rxState: RxState<State>) => rxState.set(initialState);
 }
 
-/**
- * @note:
- */
 export function withConnect<State extends object>(
   inputOrSlice$: Observable<Partial<State>>
 ): RxStateFeature<State>;
@@ -73,9 +67,9 @@ export function withConnect<
 ): RxStateFeature<State> {
   return (rxState: RxState<State>) => {
     if (typeof keyOrInputOrSliceOrCallback$ === 'function') {
-      const slices$ = keyOrInputOrSliceOrCallback$();
-      Object.keys(slices$).forEach((key) => {
-        rxState.connect(key as Key, slices$[key]);
+      const slices = keyOrInputOrSliceOrCallback$();
+      Object.keys(slices).forEach((key) => {
+        rxState.connect(key as Key, slices[key]);
       });
       return;
     }
@@ -89,11 +83,19 @@ export function withConnect<
 }
 
 export function withHold<State extends object>(
-  obsOrObsWithSideEffect: Observable<unknown>,
+  obsOrObsWithSideEffectOrCallback:
+    | Observable<unknown>
+    | ((hold: RxState<State>['hold']) => void),
   sideEffectFn?: (arg: unknown) => void
-) {
-  return (rxState: RxState<State>) =>
-    rxState.hold(obsOrObsWithSideEffect, sideEffectFn);
+): RxStateFeature<State> {
+  return (rxState: RxState<State>) => {
+    if (typeof obsOrObsWithSideEffectOrCallback === 'function') {
+      obsOrObsWithSideEffectOrCallback(rxState.hold.bind(rxState));
+      return;
+    }
+
+    rxState.hold(obsOrObsWithSideEffectOrCallback, sideEffectFn);
+  };
 }
 
 export function rxState<State extends object>(
