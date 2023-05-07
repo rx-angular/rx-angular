@@ -59,11 +59,44 @@ describe(rxState, () => {
     expect(spy).toHaveBeenCalledWith('src');
   });
 
-  it('should compose state with connect', () => {
-    const { component } = setupStatefulComponent<{ count: number }>(
-      withConnect(of({ count: 10 }))
-    );
-    expect(component.state.get()).toEqual({ count: 10 });
+  describe(withConnect, () => {
+    it('should connect with slice$', () => {
+      const { component } = setupStatefulComponent<{ count: number }>(
+        withConnect(of({ count: 10 }))
+      );
+      expect(component.state.get()).toEqual({ count: 10 });
+    });
+
+    it('should connect with key and value', () => {
+      const { component } = setupStatefulComponent<{ count: number }>(
+        withConnect('count', of(10))
+      );
+      expect(component.state.get()).toEqual({ count: 10 });
+    });
+
+    it('should connect with key and slice$ and projectFn', () => {
+      const { component } = setupStatefulComponent<{ count: number }>(
+        withConnect('count', of({ count: 10 }), (state, { count }) => {
+          return count + 10;
+        })
+      );
+      expect(component.state.get()).toEqual({ count: 20 });
+    });
+
+    it('should connect with callback (multiple observables)', () => {
+      const { component } = setupStatefulComponent<{
+        count: number;
+        count2: number;
+      }>(
+        withConnect(() => {
+          return {
+            count: of(10),
+            count2: of(20),
+          };
+        })
+      );
+      expect(component.state.get()).toEqual({ count: 10, count2: 20 });
+    });
   });
 
   it('should call ngOnDestroy', () => {

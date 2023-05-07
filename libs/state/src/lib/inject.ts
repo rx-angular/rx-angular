@@ -1,7 +1,11 @@
 import { ChangeDetectorRef, ViewRef, inject } from '@angular/core';
 import { AccumulationFn } from '@rx-angular/state/selections';
 import { Observable } from 'rxjs';
-import { RxState } from './rx-state.service';
+import {
+  ProjectStateReducer,
+  ProjectValueReducer,
+  RxState,
+} from './rx-state.service';
 
 export type RxStateFeature<State extends object> = (
   rxState: RxState<State>
@@ -23,11 +27,65 @@ export function withInitialState<State extends object>(
 }
 
 /**
- * @todo: see how to infer type from RxState.connect parameters.
- * Current limitation is that overload signatures are hard to infer.
+ * @note:
  */
-export function withConnect<State extends object>(inputOrSlice$: any) {
-  return (rxState: RxState<State>) => rxState.connect(inputOrSlice$);
+export function withConnect<State extends object>(
+  inputOrSlice$: Observable<Partial<State>>
+): RxStateFeature<State>;
+export function withConnect<State extends object, Value>(
+  inputOrSlice$: Observable<Value>,
+  projectFn: ProjectStateReducer<State, Value>
+): RxStateFeature<State>;
+export function withConnect<State extends object, Key extends keyof State>(
+  key: Key,
+  slice$: Observable<State[Key]>
+): RxStateFeature<State>;
+export function withConnect<
+  State extends object,
+  Key extends keyof State,
+  Value
+>(
+  key: Key,
+  input$: Observable<Value>,
+  projectSliceFn: ProjectValueReducer<State, Key, Value>
+): RxStateFeature<State>;
+export function withConnect<
+  State extends object,
+  Key extends keyof State,
+  Value
+>(callback: () => Record<Key, Observable<Value>>): RxStateFeature<State>;
+/**
+ * @internal
+ */
+export function withConnect<
+  State extends object,
+  Key extends keyof State,
+  Value extends Partial<State>
+>(
+  keyOrInputOrSliceOrCallback$:
+    | Key
+    | Observable<Partial<State> | Value>
+    | (() => Record<Key, Observable<Value>>),
+  projectOrSlices$?:
+    | ProjectStateReducer<State, Value>
+    | Observable<State[Key] | Value>,
+  projectValueFn?: ProjectValueReducer<State, Key, Value>
+): RxStateFeature<State> {
+  return (rxState: RxState<State>) => {
+    if (typeof keyOrInputOrSliceOrCallback$ === 'function') {
+      const slices$ = keyOrInputOrSliceOrCallback$();
+      Object.keys(slices$).forEach((key) => {
+        rxState.connect(key as Key, slices$[key]);
+      });
+      return;
+    }
+
+    rxState.connect(
+      keyOrInputOrSliceOrCallback$ as any,
+      projectOrSlices$ as any,
+      projectValueFn
+    );
+  };
 }
 
 export function withHold<State extends object>(
