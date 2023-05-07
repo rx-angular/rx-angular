@@ -70,7 +70,7 @@ nx migrate @rx-angular/template
 
 ## Basic setup
 
-You can import each feature module individually.
+You can import each feature individually.
 
 ```typescript
 import { RxLet } from '@rx-angular/template/let';
@@ -78,11 +78,12 @@ import { RxFor } from '@rx-angular/template/for';
 import { RxPush } from '@rx-angular/template/push';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
 
-@NgModule({
-  declarations: [...],
+@Component({
+  standalone: true,
   imports: [RxFor, RxLet, RxPush, RxUnpatch],
+  template: `...`,
 })
-export class MyModule {}
+export class AnyComponent {}
 ```
 
 ## Version Compatibility

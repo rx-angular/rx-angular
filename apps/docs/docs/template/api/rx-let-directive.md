@@ -117,20 +117,6 @@ n/a
 
 The `RxLet` can be imported as following:
 
-Module based setup:
-
-```ts
-import { RxLet } from '@rx-angular/template/let';
-
-@NgModule({
-  imports: [RxLet],
-  // ...
-})
-export class AnyModule {}
-```
-
-Standalone component setup:
-
 ```ts
 import { RxLet } from '@rx-angular/template/let';
 
@@ -237,7 +223,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <button (click)="nextTrigger$.next()">show value</button>
     <ng-container
@@ -263,7 +249,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <ng-container *rxLet="num$; let n; error: error; errorTrg: errorTrigger$">
       {{ n }}
@@ -286,7 +272,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <ng-container
       *rxLet="num$; let n; complete: complete; completeTrg: completeTrigger$"
@@ -311,7 +297,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container
@@ -348,7 +334,7 @@ in a convenient way.
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container
@@ -392,7 +378,9 @@ The default value for strategy is [`normal`](../../cdk/render-strategies/strateg
 ```
 
 ```ts
-@Component()
+@Component({
+  /**/
+})
 export class AppComponent {
   strategy = 'low';
   strategy$ = of('immediate');
@@ -447,9 +435,9 @@ The result of the `renderCallback` will contain the currently rendered value of 
  @Component({
    selector: 'app-root',
    template: `
-   <ng-container *rxLet="num$; let n; renderCallback: valueRendered;">
-      {{ n }}
-   </ng-container>
+    <ng-container *rxLet="num$; let n; renderCallback: valueRendered;">
+        {{ n }}
+    </ng-container>
    `
  })
  export class AppComponent {
@@ -477,7 +465,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 
 ```ts
 @Component({
-  selector: 'any-component>',
+  selector: 'app-root',
   template: `
     <div
       *rxLet="bgColor$; let bgColor; patchZone: false"
