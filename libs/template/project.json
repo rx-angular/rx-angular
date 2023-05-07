@@ -122,7 +122,7 @@
         "cypressConfig": "libs/template/cypress.config.ts",
         "testingType": "component",
         "skipServe": true,
-        "devServerTarget": "tour-of-heroes-ngxs:build"
+        "devServerTarget": "demos:build"
       }
     }
   },
