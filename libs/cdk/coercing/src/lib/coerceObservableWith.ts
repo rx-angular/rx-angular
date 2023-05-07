@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import { coerceObservable } from './coerceObservable';
 
 /**
- * This operator maps an Observable out of a static value or ObservableInput.
+ * This operator maps an Observable out of a static value or an Observable.
  *
  */
 export function coerceObservableWith<T>(): OperatorFunction<
