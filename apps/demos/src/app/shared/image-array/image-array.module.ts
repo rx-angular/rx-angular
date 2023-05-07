@@ -4,7 +4,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { ImageArrayComponent } from './controls/image-array.component';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
-import { PushModule } from '@rx-angular/template/push';
+import { RxPush } from '@rx-angular/template/push';
 import { ColorPrioComponent } from './controls/color-prio.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { RxLetModule } from '../../rx-angular-pocs';
@@ -18,7 +18,7 @@ import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-c
     CommonModule,
     MatInputModule,
     MatProgressBarModule,
-    PushModule,
+    RxPush,
     MatExpansionModule,
     RxLetModule,
     MatButtonModule,

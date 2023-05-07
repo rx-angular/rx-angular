@@ -34,7 +34,7 @@ import {
 } from 'rxjs/operators';
 
 /**
- * @Pipe PushPipe
+ * @Pipe RxPush
  *
  * @description
  *
@@ -42,7 +42,7 @@ import {
  * Just like the *rxLet Directive, it leverages a
  * [RenderStrategy](https://rx-angular.io/docs/cdk/render-strategies)
  *   under the hood which takes care of optimizing the ChangeDetection of your component. The rendering behavior can be
- *   configured per PushPipe instance using either a strategy name or provide a
+ *   configured per RxPush instance using either a strategy name or provide a
  * `RxComponentInput` config.
  *
  * Usage in the template
@@ -85,7 +85,7 @@ import {
  * @publicApi
  */
 @Pipe({ name: 'push', pure: false, standalone: true })
-export class PushPipe implements PipeTransform, OnDestroy {
+export class RxPush implements PipeTransform, OnDestroy {
   /**
    * @internal
    * This is typed as `any` because the type cannot be inferred

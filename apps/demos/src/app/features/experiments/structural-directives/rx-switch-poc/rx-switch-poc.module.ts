@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './rx-switch-poc.routes';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxPush } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RxSwitchPocComponent } from './rx-switch-poc.component';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
@@ -14,7 +14,7 @@ import { MatLegacySliderModule as MatSliderModule } from '@angular/material/lega
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { RxSwichModule } from '../../../../rx-angular-pocs/';
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 
 @NgModule({
@@ -23,16 +23,16 @@ import { ValueProvidersModule } from '../../../../shared/debug-helper/value-prov
     CommonModule,
     RouterModule.forChild(ROUTES),
     VisualizerModule,
-    UnpatchModule,
+    RxUnpatch,
     MatButtonModule,
     DirtyChecksModule,
-    PushModule,
-    LetModule,
+    RxPush,
+    RxLet,
     MatFormFieldModule,
     MatSliderModule,
     MatButtonToggleModule,
     MatInputModule,
-    IfModule,
+    RxIf,
     RxSwichModule,
     ValueProvidersModule,
   ],

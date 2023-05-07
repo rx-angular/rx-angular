@@ -13,7 +13,6 @@ import {
 import { mockConsole } from '@test-helpers';
 import { asapScheduler, delay } from 'rxjs';
 import { RxFor } from '../for.directive';
-import { ForModule } from '../for.module';
 import { TestComponent } from './fixtures';
 
 @Component({
