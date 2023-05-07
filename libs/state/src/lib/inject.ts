@@ -43,6 +43,9 @@ export function withConnect<
   input$: Observable<Value>,
   projectSliceFn: ProjectValueReducer<State, Key, Value>
 ): RxStateFeature<State>;
+export function withConnect<State extends object>(
+  callback: (connect: RxState<State>['connect']) => void
+): RxStateFeature<State>;
 export function withConnect<
   State extends object,
   Key extends keyof State,
@@ -59,7 +62,9 @@ export function withConnect<
   keyOrInputOrSliceOrCallback$:
     | Key
     | Observable<Partial<State> | Value>
-    | (() => Record<Key, Observable<Value>>),
+    | ((
+        connect: RxState<State>['connect']
+      ) => Record<Key, Observable<Value>> | void),
   projectOrSlices$?:
     | ProjectStateReducer<State, Value>
     | Observable<State[Key] | Value>,
@@ -67,10 +72,14 @@ export function withConnect<
 ): RxStateFeature<State> {
   return (rxState: RxState<State>) => {
     if (typeof keyOrInputOrSliceOrCallback$ === 'function') {
-      const slices = keyOrInputOrSliceOrCallback$();
-      Object.keys(slices).forEach((key) => {
-        rxState.connect(key as Key, slices[key]);
-      });
+      const slices = keyOrInputOrSliceOrCallback$(
+        rxState.connect.bind(rxState)
+      );
+      if (slices) {
+        Object.keys(slices).forEach((key) => {
+          rxState.connect(key as Key, slices[key]);
+        });
+      }
       return;
     }
 

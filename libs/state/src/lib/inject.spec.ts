@@ -105,7 +105,7 @@ describe(rxState, () => {
       expect(component.state.get()).toEqual({ count: 20 });
     });
 
-    it('should connect with callback (multiple observables)', () => {
+    it('should connect multiple observables with an object', () => {
       const { component } = setupStatefulComponent<{
         count: number;
         count2: number;
@@ -115,6 +115,19 @@ describe(rxState, () => {
             count: of(10),
             count2: of(20),
           };
+        })
+      );
+      expect(component.state.get()).toEqual({ count: 10, count2: 20 });
+    });
+
+    it('should connect multiple observables with connect', () => {
+      const { component } = setupStatefulComponent<{
+        count: number;
+        count2: number;
+      }>(
+        withConnect((connect) => {
+          connect('count', of(10));
+          connect('count2', of(20));
         })
       );
       expect(component.state.get()).toEqual({ count: 10, count2: 20 });
