@@ -26,56 +26,44 @@ export function withInitialState<State extends object>(
 export function withConnect<State extends object>(
   inputOrSlice$: Observable<Partial<State>>
 ): RxStateFeature<State>;
-export function withConnect<State extends object, Value extends Partial<State>>(
-  inputOrSlice$: Observable<Value>,
-  projectFn: ProjectStateReducer<State, Value>
+export function withConnect<State extends object>(
+  inputOrSlice$: Observable<Partial<State>>,
+  projectFn: ProjectStateReducer<State, Partial<State>>
 ): RxStateFeature<State>;
 export function withConnect<State extends object, Key extends keyof State>(
   key: Key,
   slice$: Observable<State[Key]>
 ): RxStateFeature<State>;
-export function withConnect<
-  State extends object,
-  Key extends keyof State,
-  Value extends Partial<State>
->(
+export function withConnect<State extends object, Key extends keyof State>(
   key: Key,
-  input$: Observable<Value>,
-  projectSliceFn: ProjectValueReducer<State, Key, Value>
+  input$: Observable<Partial<State>>,
+  projectSliceFn: ProjectValueReducer<State, Key, Partial<State>>
 ): RxStateFeature<State>;
-export function withConnect<
-  State extends object,
-  Key extends keyof State,
-  Value extends Partial<State>
->(
+export function withConnect<State extends object, Key extends keyof State>(
   callback: (
     connect: RxState<State>['connect']
   ) =>
     | Observable<Partial<State>>
-    | Record<Key, Observable<State[Key] | Value>>
+    | Record<Key, Observable<State[Key] | Partial<State>>>
     | void
 ): RxStateFeature<State>;
 /**
  * @internal
  */
-export function withConnect<
-  State extends object,
-  Key extends keyof State,
-  Value extends Partial<State>
->(
+export function withConnect<State extends object, Key extends keyof State>(
   keyOrInputOrSliceOrCallback$:
     | Key
-    | Observable<Partial<State> | Value>
+    | Observable<Partial<State>>
     | ((
         connect: RxState<State>['connect']
       ) =>
         | Observable<Partial<State>>
-        | Record<Key, Observable<State[Key] | Value>>
+        | Record<Key, Observable<State[Key]>>
         | void),
   projectOrSlices$?:
-    | ProjectStateReducer<State, Value>
-    | Observable<State[Key] | Value>,
-  projectValueFn?: ProjectValueReducer<State, Key, Value>
+    | ProjectStateReducer<State, Partial<State>>
+    | Observable<State[Key] | Partial<State>>,
+  projectValueFn?: ProjectValueReducer<State, Key, Partial<State>>
 ): RxStateFeature<State> {
   return (rxState: RxState<State>) => {
     if (typeof keyOrInputOrSliceOrCallback$ === 'function') {
@@ -86,16 +74,17 @@ export function withConnect<
         rxState.connect(slices);
       } else if (slices) {
         Object.keys(slices).forEach((key) => {
-          rxState.connect(key as Key, slices[key]);
+          rxState.connect(key as Key, slices[key as Key]);
         });
       }
       return;
     }
 
+    // Notice: disable args type check as workaround for overload resolution issue, no clue how to fix it properly.
     rxState.connect(
       keyOrInputOrSliceOrCallback$ as any,
       projectOrSlices$ as any,
-      projectValueFn
+      projectValueFn as any
     );
   };
 }
