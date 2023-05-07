@@ -7,17 +7,17 @@ import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { RouterModule } from '@angular/router';
-import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
-import { ForModule } from '@rx-angular/template/for';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxPush } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
+import { RxFor } from '@rx-angular/template/for';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/value-providers.module';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { RecursiveModule } from '../../../../shared/template-structures/recursive/recursive.module';
 import { ListActionsComponent } from './list-actions.component';
 import { ROUTES } from './list-actions.routes';
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 
 const DECLARATIONS = [ListActionsComponent];
@@ -27,10 +27,10 @@ const DECLARATIONS = [ListActionsComponent];
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    PushModule,
+    RxPush,
     DirtyChecksModule,
     MatButtonModule,
-    UnpatchModule,
+    RxUnpatch,
     VisualizerModule,
     MatFormFieldModule,
     MatInputModule,
@@ -40,9 +40,9 @@ const DECLARATIONS = [ListActionsComponent];
     ValueProvidersModule,
     MatIconModule,
     StrategySelectModule,
-    LetModule,
-    ForModule,
-    IfModule,
+    RxLet,
+    RxFor,
+    RxIf,
   ],
   exports: [DECLARATIONS],
 })

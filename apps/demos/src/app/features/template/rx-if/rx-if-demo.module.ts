@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 import { RouterModule } from '@angular/router';
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 import { ROUTES } from './rx-if.routes';
 import { RxIfBasicComponent } from './rx-if-basic.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
@@ -29,7 +29,7 @@ const DECLARATIONS = [RxIfBasicComponent];
     ValueProvidersModule,
     StrategySelectModule,
     RouterModule.forChild(ROUTES),
-    IfModule,
+    RxIf,
   ],
   exports: DECLARATIONS,
 })

@@ -8,7 +8,7 @@ import {
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { asapScheduler, delay, Observable, ReplaySubject, Subject } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
-import { LetDirective } from '../let.directive';
+import { RxLet } from '../let.directive';
 
 @Component({
   template: `
@@ -36,7 +36,7 @@ import { LetDirective } from '../let.directive';
 class LetDirectiveTestStrategyComponent {
   @ViewChild('letChild') viewChild: ElementRef;
   @ViewChild('otherChild') otherChild: ElementRef;
-  @ViewChildren(LetDirective) letChildren: QueryList<LetDirective<any>>;
+  @ViewChildren(RxLet) letChildren: QueryList<RxLet<any>>;
   strategy: string;
   value$: Observable<number> = new ReplaySubject(1);
   rendered$ = new Subject();
@@ -51,7 +51,7 @@ let componentInstance: {
   value$: Subject<any>;
   rendered$: Observable<unknown>;
   withParent: boolean;
-  letChildren: QueryList<LetDirective<any>>;
+  letChildren: QueryList<RxLet<any>>;
 };
 let strategyProvider: RxStrategyProvider;
 
@@ -60,7 +60,7 @@ describe('LetDirective parent notification', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LetDirectiveTestStrategyComponent],
-      imports: [LetDirective],
+      imports: [RxLet],
       teardown: { destroyAfterEach: true },
     });
   });

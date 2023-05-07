@@ -6,8 +6,8 @@ import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './passing-values.routes';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { PushModule } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { PassingValuesComponent } from './passing-values.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
@@ -29,9 +29,9 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     RecursiveModule,
     FormsModule,
-    UnpatchModule,
+    RxUnpatch,
     MatButtonModule,
-    PushModule,
+    RxPush,
   ],
   exports: [],
 })

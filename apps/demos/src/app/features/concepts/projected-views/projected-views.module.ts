@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select/strategy-select.module';
 import { ROUTES } from './projected-views.routes';
 import { ProjectedViewsComponent } from './projected-views.component';
@@ -21,7 +21,7 @@ import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/lega
     CommonModule,
     RouterModule.forChild(ROUTES),
     VisualizerModule,
-    UnpatchModule,
+    RxUnpatch,
     MatButtonModule,
     RxLetModule,
     StrategySelectModule,

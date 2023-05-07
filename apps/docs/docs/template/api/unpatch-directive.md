@@ -1,10 +1,10 @@
 ---
-sidebar_label: 'Unpatch'
+sidebar_label: 'RxUnpatch'
 sidebar_position: 4
-title: 'Unpatch'
+title: 'RxUnpatch'
 ---
 
-# UnpatchDirective
+# RxUnpatch
 
 The `unpatch` directive helps developers to partially deactivate `NgZone`, as well as getting rid
 of unnecessary renderings through zones `addEventListener` patches.

@@ -8,7 +8,7 @@ import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
 import { mockConsole } from '@test-helpers';
 import { EMPTY, NEVER, Observable, asapScheduler, of, timer } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { PushPipe } from '../push.pipe';
+import { RxPush } from '../push.pipe';
 
 function wrapWithSpace(str: string): string {
   return ' ' + str + ' ';
@@ -33,7 +33,7 @@ let strategyProvider: RxStrategyProvider;
 const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     declarations: [PushPipeTestComponent],
-    imports: [PushPipe],
+    imports: [RxPush],
     providers: [
       ChangeDetectorRef,
       {
@@ -63,7 +63,7 @@ const setupPushPipeComponent = () => {
   strategyProvider = TestBed.inject(RxStrategyProvider);
 };
 
-describe('PushPipe used as pipe in the template', () => {
+describe('RxPush used as pipe in the template', () => {
   beforeAll(() => mockConsole());
 
   beforeEach(setupPushPipeComponent);

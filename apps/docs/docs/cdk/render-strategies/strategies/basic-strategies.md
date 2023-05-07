@@ -158,12 +158,12 @@ class Component {
 ### Template
 
 ```ts
-import { LetDirective } from '@rx-angular/template/let';
-import { PushPipe } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
 import { RxFor } from '@rx-angular/template/for';
+import { RxPush } from '@rx-angular/template/push';
 
 @Module({
-  imports: [LetDirective, PushPipe, RxFor],
+  imports: [RxLet, RxFor, RxPush],
 })
 class Module {}
 ```
