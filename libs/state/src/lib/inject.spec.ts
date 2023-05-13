@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { expectType } from 'tsd';
 
 import { of, tap } from 'rxjs';
 import {
   RxStateFeature,
+  provideRxState,
   rxState,
   withAccumulator,
   withConnect,
@@ -170,6 +171,29 @@ describe(rxState, () => {
     });
   });
 
+  describe(provideRxState, () => {
+    it('should provide RxState', () => {
+      const CounterStore = provideRxState<{ count: 0 }>({
+        features: [withInitialState({ count: 0 })],
+      });
+
+      @Component({
+        template: `{{ state.get().count }}`,
+      })
+      class StatefulComponent {
+        readonly state = inject(CounterStore);
+      }
+
+      TestBed.configureTestingModule({
+        declarations: [StatefulComponent],
+      });
+
+      const fixture = TestBed.createComponent(StatefulComponent);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.textContent).toEqual('0');
+    });
+  });
+
   it('should call ngOnDestroy', () => {
     const { fixture, component } = setupStatefulComponent();
     const spy = jest.spyOn(component.state, 'ngOnDestroy');
@@ -180,11 +204,11 @@ describe(rxState, () => {
 });
 
 function setupStatefulComponent<State extends object>(
-  ...params: RxStateFeature<State>[]
+  ...features: RxStateFeature<State>[]
 ) {
   @Component({})
   class StatefulComponent {
-    state = rxState<State>(...params);
+    readonly state = rxState<State>(...features);
   }
 
   TestBed.configureTestingModule({

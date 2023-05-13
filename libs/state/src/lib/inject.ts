@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, ViewRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Injectable, InjectionToken, ViewRef, inject } from '@angular/core';
 import { AccumulationFn } from '@rx-angular/state/selections';
 import { Observable } from 'rxjs';
 import {
@@ -119,4 +119,17 @@ export function rxState<State extends object>(
   viewRef.onDestroy(() => rxState.ngOnDestroy());
 
   return rxState;
+}
+
+export function provideRxState<State extends object>({
+  providedIn = null,
+  features = [],
+}: {
+  providedIn?: Injectable['providedIn'];
+  features?: RxStateFeature<State>[];
+} = {}) {
+  return new InjectionToken('RxState', {
+    providedIn,
+    factory: () => rxState<State>(...features),
+  });
 }
