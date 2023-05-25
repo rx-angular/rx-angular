@@ -29,7 +29,7 @@ export function createAccumulationObservable<T extends object>({
   stateObservables = new Subject<Observable<Partial<T>>>(),
   stateSlices = new Subject<Partial<T>>(),
   accumulatorObservable = new BehaviorSubject(defaultAccumulator),
-  handleError = (e: any) => console.error(e),
+  handleError = (e: unknown) => console.error(e),
 } = {}): Accumulator<T> {
   const signal$ = merge(
     stateObservables.pipe(
@@ -49,7 +49,7 @@ export function createAccumulationObservable<T extends object>({
       (error) => handleError(error)
     ),
     // @Notice We catch the error here as it get lost in between `publish` and `publishReplay`. We return empty to
-    catchError((e) => EMPTY),
+    catchError(() => EMPTY),
     publish()
   );
   const state$: Observable<T> = signal$.pipe(publishReplay(1));

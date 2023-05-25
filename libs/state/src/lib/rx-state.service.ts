@@ -53,9 +53,9 @@ export type ProjectValueReducer<T, K extends keyof T, V> = (
 @Injectable()
 export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   private subscription = new Subscription();
-  private handleError = inject(ErrorHandler).handleError;
+  private errorHandler = inject(ErrorHandler);
   private accumulator = createAccumulationObservable<T>({
-    handleError: this.handleError,
+    handleError: this.errorHandler.handleError.bind(this.errorHandler),
   });
   private effectObservable = createSideEffectObservable();
 
