@@ -1,10 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Input, Output, ViewChild } from '@angular/core';
-import { PrimitiveState } from '@test-helpers';
-import { createStateChecker } from './fixtures';
-import { Observable, Subject } from 'rxjs';
+import {
+  Component,
+  ErrorHandler,
+  Input,
+  Output,
+  Type,
+  ViewChild,
+} from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { RxState } from '@rx-angular/state';
 import { select } from '@rx-angular/state/selections';
+import { PrimitiveState } from '@test-helpers';
+import { Observable, Subject, throwError } from 'rxjs';
+import { createStateChecker } from './fixtures';
 
 const initialChildState = { str: 'initialChildState' };
 
@@ -99,35 +106,45 @@ export class RxStateGlueContainerComponent extends RxState<PrimitiveState> {
 
 describe('LocalProviderTestComponent', () => {
   let component: RxStateInjectionComponent;
-  let fixture: ComponentFixture<RxStateInjectionComponent>;
+  let errorHandlerSpy: jest.Mock;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [RxStateInjectionComponent],
-      teardown: { destroyAfterEach: true },
+    const { component: c, errorHandler: e } = setupTestComponent({
+      testComponent: RxStateInjectionComponent,
+      providers: [
+        { provide: ErrorHandler, useValue: { handleError: jest.fn() } },
+      ],
     });
-    fixture = TestBed.createComponent(RxStateInjectionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = c;
+    errorHandlerSpy = e.handleError as jest.Mock;
   });
 
   it('should create', () => {
     stateChecker.checkSubscriptions(component.state, 1);
   });
+
+  describe('state.connect', () => {
+    it('should handle error through global ErrorHandler', () => {
+      const error$ = throwError(() => new Error('whoops'));
+      component.state.connect(error$);
+      expect(errorHandlerSpy).toHaveBeenCalledWith(new Error('whoops'));
+    });
+  });
 });
 
 describe('InheritanceTestComponent', () => {
   let component: RxStateInheritanceComponent;
-  let fixture: ComponentFixture<RxStateInheritanceComponent>;
+  let errorHandlerSpy: jest.Mock;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [RxStateInheritanceComponent],
-      teardown: { destroyAfterEach: true },
+    const { component: c, errorHandler: e } = setupTestComponent({
+      testComponent: RxStateInheritanceComponent,
+      providers: [
+        { provide: ErrorHandler, useValue: { handleError: jest.fn() } },
+      ],
     });
-    fixture = TestBed.createComponent(RxStateInheritanceComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = c;
+    errorHandlerSpy = e.handleError as jest.Mock;
   });
 
   it('should create', () => {
@@ -135,4 +152,68 @@ describe('InheritanceTestComponent', () => {
     component.ngOnDestroy();
     stateChecker.checkSubscriptions(component, 0);
   });
+
+  describe('state.connect', () => {
+    it('should handle error through global ErrorHandler', () => {
+      const error$ = throwError(() => new Error('whoops'));
+      component.connect(error$);
+      expect(errorHandlerSpy).toHaveBeenCalledWith(new Error('whoops'));
+    });
+  });
 });
+
+describe('CustomErrorHandler', () => {
+  let component: RxStateInheritanceComponent;
+  let errorHandlerSpy: jest.SpyInstance;
+
+  class CustomErrorHandler implements ErrorHandler {
+    private prod = true;
+    handleError() {
+      if (this.prod) {
+        throw new Error('Prod error');
+      }
+      throw new Error('Dev error');
+    }
+  }
+
+  beforeEach(() => {
+    const { component: c, errorHandler: e } = setupTestComponent({
+      testComponent: RxStateInheritanceComponent,
+      providers: [
+        {
+          provide: ErrorHandler,
+          useClass: CustomErrorHandler,
+        },
+      ],
+    });
+    component = c;
+    errorHandlerSpy = jest.spyOn(e, 'handleError');
+  });
+
+  describe('state.connect', () => {
+    it('should handle error through CustomErrorHandler', () => {
+      const error$ = throwError(() => new Error('whoops'));
+      component.connect('str', error$);
+      expect(errorHandlerSpy).toThrow(new Error('Prod error'));
+    });
+  });
+});
+
+function setupTestComponent({
+  testComponent,
+  providers,
+}: {
+  testComponent: Type<any>;
+  providers: any[];
+}) {
+  const testBed = TestBed.configureTestingModule({
+    declarations: [testComponent],
+    providers: [...providers],
+    teardown: { destroyAfterEach: true },
+  });
+  const fixture = TestBed.createComponent(testComponent);
+  const component = fixture.componentInstance;
+  const errorHandler = testBed.inject(ErrorHandler);
+
+  return { fixture, component, errorHandler };
+}
