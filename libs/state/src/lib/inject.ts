@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Injectable, InjectionToken, ViewRef, inject } from '@angular/core';
+import { DestroyRef, Injectable, InjectionToken, inject } from '@angular/core';
 import { AccumulationFn } from '@rx-angular/state/selections';
 import { Observable } from 'rxjs';
 import {
@@ -109,14 +109,11 @@ export function rxState<State extends object>(
   ...features: RxStateFeature<State>[]
 ): RxState<State> {
   const rxState = new RxState<State>();
-  /**
-   * @todo: Use DestroyRef instead when upgrading to Angular 16
-   */
-  const viewRef = inject(ChangeDetectorRef) as ViewRef;
+  const destroyRef = inject(DestroyRef);
 
   features.forEach((composeWith) => composeWith(rxState));
 
-  viewRef.onDestroy(() => rxState.ngOnDestroy());
+  destroyRef.onDestroy(() => rxState.ngOnDestroy());
 
   return rxState;
 }

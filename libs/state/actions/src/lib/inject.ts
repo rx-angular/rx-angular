@@ -1,9 +1,4 @@
-import {
-  ChangeDetectorRef,
-  ErrorHandler,
-  ViewRef,
-  inject,
-} from '@angular/core';
+import { DestroyRef, ErrorHandler, inject } from '@angular/core';
 import { RxActionFactory } from './actions.factory';
 import { ActionTransforms, RxActions } from './types';
 
@@ -25,12 +20,9 @@ export function rxActions<
 ): RxActions<Actions, Transforms> {
   const errorHandler = inject(ErrorHandler, { optional: true }) ?? undefined;
   const rxActionFactory = new RxActionFactory<Actions>(errorHandler);
-  /**
-   * @todo: Use DestroyRef instead when upgrading to Angular 16
-   */
-  const viewRef = inject(ChangeDetectorRef) as ViewRef;
+  const destroyRef = inject(DestroyRef);
 
-  viewRef.onDestroy(() => rxActionFactory.ngOnDestroy());
+  destroyRef.onDestroy(() => rxActionFactory.ngOnDestroy());
 
   if (withTransformsFn) {
     return withTransformsFn(rxActionFactory);
