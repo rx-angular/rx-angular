@@ -6,7 +6,7 @@
   "generators": {},
   "targets": {
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/test-helpers/jest.config.ts",
         "passWithNoTests": true
