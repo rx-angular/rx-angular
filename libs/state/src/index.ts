@@ -1,5 +1,6 @@
 export {
   RxStateFeature,
+  provideRxState,
   rxState,
   withAccumulator,
   withConnect,
