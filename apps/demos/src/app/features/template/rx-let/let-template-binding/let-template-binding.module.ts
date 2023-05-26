@@ -9,9 +9,9 @@ import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-c
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
-import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxPush } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ToStringPipe } from './to-string.pipe';
 
@@ -31,10 +31,10 @@ const DECLARATIONS = [
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    UnpatchModule,
-    PushModule,
+    RxUnpatch,
+    RxPush,
     MatBadgeModule,
-    LetModule,
+    RxLet,
   ],
 })
 export class LetTemplateBindingModule {}

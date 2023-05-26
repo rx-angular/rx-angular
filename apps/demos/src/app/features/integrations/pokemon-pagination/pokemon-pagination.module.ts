@@ -7,7 +7,7 @@ import { MatLegacyPaginatorModule as MatPaginatorModule } from '@angular/materia
 import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 import { RouterModule } from '@angular/router';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { ROUTES } from './pokemon-pagination.routes';
 import { PokemonComponent } from './pokemon.component';
 
@@ -15,7 +15,7 @@ import { PokemonComponent } from './pokemon.component';
   imports: [
     CommonModule,
     HttpClientModule,
-    LetModule,
+    RxLet,
     RouterModule.forChild(ROUTES),
     ReactiveFormsModule,
     MatTableModule,

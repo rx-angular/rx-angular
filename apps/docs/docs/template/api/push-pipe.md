@@ -1,10 +1,10 @@
 ---
-sidebar_label: 'PushPipe'
+sidebar_label: 'RxPush'
 sidebar_position: 5
-title: 'PushPipe'
+title: 'RxPush'
 ---
 
-# PushPipe
+# RxPush
 
 The `push` pipe serves as a drop-in replacement for the `async` pipe.
 
@@ -33,7 +33,7 @@ _Example_
 <hero-list-component [heroes]="heroes$ | push"> </hero-list-component>
 ```
 
-The rendering behavior can be configured per PushPipe instance using the strategy parameter.
+The rendering behavior can be configured per RxPush instance using the strategy parameter.
 
 _Example_
 
@@ -48,13 +48,13 @@ _Example_
 - Handling null and undefined values in a clean unified/structured way
 - Distinct same values in a row to increase performance
 - Coalescing of change detection calls to boost performance
-- Lazy rendering (see [LetDirective](let-directive.md))
+- Lazy rendering (see [RxLet](rx-let-directive.md))
 - Chunked rendering
 
 ## Signature
 
 ```typescript
-class PushPipe<U> implements PipeTransform, OnDestroy {
+class RxPush<U> implements PipeTransform, OnDestroy {
   constructor(strategyProvider: RxStrategyProvider, cdRef: ChangeDetectorRef)
   transform(potentialObservable: null, config?: string | Observable<string>) => null;
   transform(potentialObservable: undefined, config?: string | Observable<string>) => undefined;

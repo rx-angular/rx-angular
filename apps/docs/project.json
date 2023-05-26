@@ -12,7 +12,6 @@
       "outputs": ["{options.outputPath}"],
       "dependsOn": [
         {
-          "projects": "self",
           "target": "check-links"
         }
       ]
@@ -30,7 +29,6 @@
       },
       "dependsOn": [
         {
-          "projects": "self",
           "target": "build"
         }
       ]

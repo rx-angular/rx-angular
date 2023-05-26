@@ -4,7 +4,6 @@ import {
   exhaustAll,
   mergeAll,
   Observable,
-  ObservableInput,
   of,
   ReplaySubject,
   Subject,
@@ -22,7 +21,7 @@ function createInputStream(
   values: Record<string, any>,
   inputHandler: {
     values$: Observable<string | string[]>;
-    next(observable: ObservableInput<string | string[]> | string): void;
+    next(observable: Observable<string | string[]> | string): void;
   }
 ) {
   cold(marble, values)
@@ -63,7 +62,7 @@ describe('coerceAllFactory', () => {
   let testScheduler: TestScheduler;
   let inputHandler: {
     values$: Observable<string | string[]>;
-    next(observable: ObservableInput<string | string[]> | string): void;
+    next(observable: Observable<string | string[]> | string): void;
   };
 
   beforeEach(() => {

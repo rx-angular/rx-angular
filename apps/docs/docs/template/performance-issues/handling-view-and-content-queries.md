@@ -104,7 +104,7 @@ See more about configuration under [render strategies](../../cdk/render-strategi
   providers: [{
     provide: RX_RENDER_STRATEGIES_CONFIG,
     useValue: {
-      parent: false // this applies to all letDirectives
+      parent: false // this applies to all RxLets
     }
   }]
 })

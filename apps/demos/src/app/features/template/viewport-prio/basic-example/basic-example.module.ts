@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './basic-example.routes';
 import { BasicExampleComponent } from './basic-example.component';
-import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxPush } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
@@ -18,12 +18,12 @@ const DECLARATIONS = [BasicExampleComponent];
   declarations: [DECLARATIONS],
   imports: [
     CommonModule,
-    UnpatchModule,
+    RxUnpatch,
     DirtyChecksModule,
     RouterModule.forChild(ROUTES),
     MatButtonModule,
-    PushModule,
-    LetModule,
+    RxPush,
+    RxLet,
     VisualizerModule,
     ValueProvidersModule,
     RenderingsModule,

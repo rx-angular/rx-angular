@@ -6,7 +6,7 @@
   "prefix": "rx",
   "targets": {
     "build-lib": {
-      "executor": "@nrwl/angular:package",
+      "executor": "@nx/angular:package",
       "options": {
         "tsConfig": "libs/template/tsconfig.lib.json",
         "project": "libs/template/ng-package.json",
@@ -15,7 +15,7 @@
       "dependsOn": [
         {
           "target": "build",
-          "projects": "dependencies"
+          "dependencies": true
         }
       ],
       "outputs": ["{workspaceRoot}/dist/libs/template"]
@@ -24,8 +24,7 @@
       "executor": "nx:run-commands",
       "dependsOn": [
         {
-          "target": "build-lib",
-          "projects": "self"
+          "target": "build-lib"
         }
       ],
       "options": {
@@ -51,7 +50,7 @@
       "outputs": ["{workspaceRoot}/dist/libs/template/schematics"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/template/jest.config.ts",
         "passWithNoTests": true,
@@ -80,20 +79,16 @@
       },
       "dependsOn": [
         {
-          "target": "lint",
-          "projects": "self"
+          "target": "lint"
         },
         {
-          "target": "test",
-          "projects": "self"
+          "target": "test"
         },
         {
-          "target": "version",
-          "projects": "self"
+          "target": "version"
         },
         {
-          "target": "build",
-          "projects": "self"
+          "target": "build"
         }
       ]
     },
@@ -116,23 +111,23 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/template/**/*.ts"]
       }
     },
     "component-test": {
-      "executor": "@nrwl/cypress:cypress",
+      "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "libs/template/cypress.config.ts",
         "testingType": "component",
         "skipServe": true,
-        "devServerTarget": "tour-of-heroes-ngxs:build"
+        "devServerTarget": "demos:build"
       }
     }
   },
   "generators": {
-    "@nrwl/angular:component": {
+    "@nx/angular:component": {
       "style": "scss"
     }
   },

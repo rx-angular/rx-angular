@@ -1,27 +1,14 @@
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   RX_RENDER_STRATEGIES_CONFIG,
-  RxStrategyCredentials,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
-import { map, tap } from 'rxjs/operators';
 import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
-import { PushModule } from '../push.module';
-import { PushPipe } from '../push.pipe';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import {
-  asapScheduler,
-  EMPTY,
-  from,
-  NEVER,
-  Observable,
-  of,
-  scheduled,
-  share,
-  shareReplay,
-  timer,
-} from 'rxjs';
 import { mockConsole } from '@test-helpers';
+import { EMPTY, NEVER, Observable, asapScheduler, of, timer } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { RxPush } from '../push.pipe';
 
 function wrapWithSpace(str: string): string {
   return ' ' + str + ' ';
@@ -46,7 +33,7 @@ let strategyProvider: RxStrategyProvider;
 const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     declarations: [PushPipeTestComponent],
-    imports: [PushPipe],
+    imports: [RxPush],
     providers: [
       ChangeDetectorRef,
       {
@@ -76,7 +63,7 @@ const setupPushPipeComponent = () => {
   strategyProvider = TestBed.inject(RxStrategyProvider);
 };
 
-describe('PushPipe used as pipe in the template', () => {
+describe('RxPush used as pipe in the template', () => {
   beforeAll(() => mockConsole());
 
   beforeEach(setupPushPipeComponent);

@@ -3,9 +3,9 @@ import { ApplicationRef, Component, NgZone } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { UnpatchDirective } from '../unpatch.directive';
+import { RxUnpatch } from '../unpatch.directive';
 
-describe(UnpatchDirective.name, () => {
+describe(RxUnpatch.name, () => {
   enum LogEvent {
     Click = 'click',
     Mouseenter = 'mouseenter',
@@ -34,7 +34,7 @@ describe(UnpatchDirective.name, () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [UnpatchDirective],
+      imports: [RxUnpatch],
       declarations: [TestComponent],
       teardown: { destroyAfterEach: true },
     });
