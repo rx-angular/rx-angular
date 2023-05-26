@@ -44,7 +44,6 @@ Typically, Subjects are used to implement this functionality. However, in larger
 
 That's where @rx-angular/state/actions comes in. It allows you to create observable action streams in a clean, maintainable, and less error-prone way, thus minimizing the amount of boilerplate code required.
 
-
 ## RxAngular Actions
 
 This package helps to reduce code used to create composable action streams.
@@ -153,7 +152,6 @@ class Component {
     // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
   }
 }
-
 ```
 
 ### Advanced usage
@@ -168,9 +166,7 @@ import { withLatestFrom, switchMap } from 'rxjs/operators';
   template: `
     <input (input)="searchInput($event?.target?.value)" /> Search for:
     {{ search$ | async }}<br />
-    <button (click)="submitBtn()">
-      Submit
-    </button>
+    <button (click)="submitBtn()">Submit</button>
     <br />
     <ul>
       <li *ngFor="let item of list$ | async">{{ item }}</li>
@@ -229,9 +225,7 @@ interface UiActions {
   template: `
     <input (input)="ui.searchInput($event)" /> Search for:
     {{ ui.search$ | async }}<br />
-    <button (click)="ui.submitBtn()">
-      Submit
-    </button>
+    <button (click)="ui.submitBtn()">Submit</button>
     <br />
     <ul>
       <li *ngFor="let item of list$ | async as list">{{ item }}</li>
@@ -240,7 +234,9 @@ interface UiActions {
   providers: [RxActionFactory],
 })
 export class Component {
-  ui = this.factory.create({ searchInput: (e) => e.target ? e.target.value : '' });
+  ui = this.factory.create({
+    searchInput: (e) => (e.target ? e.target.value : ''),
+  });
 
   list$ = this.ui.submitBtn$.pipe(
     withLatestFrom(this.ui.search$),
@@ -249,7 +245,6 @@ export class Component {
 
   constructor(private api: API, private factory: RxActionFactory<UiActions>) {}
 }
-
 ```
 
 #### Using transforms
@@ -284,9 +279,7 @@ interface UiActions {
   template: `
     <input (input)="ui.searchInput($event)" /> Search for:
     {{ ui.searchInput$ | async }}<br />
-    <button (click)="ui.submitBtn()">
-      Submit
-    </button>
+    <button (click)="ui.submitBtn()">Submit</button>
     <br />
     <ul>
       <li *ngFor="let item of list$ | async">{{ item }}</li>
@@ -355,11 +348,7 @@ export class StateService extends RxState<State> {
 
   // Optionally the reactive way
   connectRefreshGenres(genre$: Observable<string | number>): void {
-    this.hold(
-      genre$,
-      genre => this.actions.refreshGenres(genre)
-    );
+    this.hold(genre$, (genre) => this.actions.refreshGenres(genre));
   }
 }
-
 ```
