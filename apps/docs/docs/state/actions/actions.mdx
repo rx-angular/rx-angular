@@ -38,106 +38,10 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 ## Motivation
 
-Operations, or a more commonly used name actions, are a common part of state management and reactive systems in general.
-Even if `@rx-angular/state` provides `set` method, sometimes you need to add behavior to your user input or incoming events.
+Actions are a fundamental part of state management and reactive systems. The @rx-angular/state library provides a powerful set method, but in certain scenarios, you might need to add specific behaviors to your user input or incoming events.
+Typically, Subjects are used to implement this functionality. However, in larger applications, this approach often results in code cluttered with Subjects, leading to increased complexity.
+That's where @rx-angular/state/actions comes in. It allows you to create observable action streams in a clean, maintainable, and less error-prone way, thus minimizing the amount of boilerplate code required.
 
-Subjects are normally used to implement this feature. This leads, especially in bigger applications, to a messy code that is bloated with Subjects.
-
-Let's have a look at this piece of code:
-
-```typescript
-import { Component } from '@angular/core';
-import { Subject } from 'rxjs';
-import { withLatestFrom, switchMap } from 'rxjs/operators';
-
-@Component({
-  selector: 'my-component',
-  template: `
-    <input (input)="searchInput($event?.target?.value)" /> Search for:
-    {{ search$ | async }}<br />
-    <button (click)="submitBtn()">
-      Submit
-    </button>
-    <br />
-    <ul>
-      <li *ngFor="let item of list$ | async">{{ item }}</li>
-    </ul>
-  `,
-})
-export class MyComponent {
-  private _submitBtn = new Subject<void>();
-  private _searchInput = new Subject<string>();
-
-  submitBtn() {
-    this._submitBtn.next();
-  }
-
-  get submitBtn$() {
-    return this._submitBtn.asObservable();
-  }
-
-  searchInput(value: string) {
-    this._searchInput.next(value);
-  }
-
-  get search$() {
-    return this._searchInput.asObservable();
-  }
-
-  list$ = this.submitBtn$.pipe(
-    withLatestFrom(this.search$),
-    switchMap(([_, searchString]) => this.api.query(searchString))
-  );
-
-  constructor(private api: API) {}
-}
-```
-
-Just look at the amount of code we need to write for only 2 observable ui events.
-
-Downsides:
-
-- Boilerplate for setter and getter
-- Transformations spreaded over class and template
-- Manual typing ov subjects and streams
-- No central place for UI trigger
-
-Imagine we could have configurable functions that return all UI logic typed under one object.
-
-```typescript
-import { RxActionFactory } from '@rx-angular/state/actions';
-
-interface UiActions {
-  submitBtn: void;
-  searchInput: string;
-}
-
-@Component({
-  template: `
-    <input (input)="ui.searchInput($event)" /> Search for:
-    {{ ui.search$ | async }}<br />
-    <button (click)="ui.submitBtn()">
-      Submit
-    </button>
-    <br />
-    <ul>
-      <li *ngFor="let item of list$ | async as list">{{ item }}</li>
-    </ul>
-  `,
-  providers: [RxActionFactory],
-})
-export class Component {
-  ui = this.factory.create({ searchInput: (e) => e.target ? e.target.value : '' });
-
-  list$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.search$),
-    switchMap(([_, searchString]) => this.api.query(searchString))
-  );
-
-  constructor(private api: API, private factory: RxActionFactory<UiActions>) {}
-}
-
-```
 
 ## RxAngular Actions
 
@@ -246,6 +150,102 @@ class Component {
     // Optional reactively:
     // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
   }
+}
+
+```
+
+### Advanced usage
+
+```typescript
+import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
+import { withLatestFrom, switchMap } from 'rxjs/operators';
+
+@Component({
+  selector: 'my-component',
+  template: `
+    <input (input)="searchInput($event?.target?.value)" /> Search for:
+    {{ search$ | async }}<br />
+    <button (click)="submitBtn()">
+      Submit
+    </button>
+    <br />
+    <ul>
+      <li *ngFor="let item of list$ | async">{{ item }}</li>
+    </ul>
+  `,
+})
+export class MyComponent {
+  private _submitBtn = new Subject<void>();
+  private _searchInput = new Subject<string>();
+
+  submitBtn() {
+    this._submitBtn.next();
+  }
+
+  get submitBtn$() {
+    return this._submitBtn.asObservable();
+  }
+
+  searchInput(value: string) {
+    this._searchInput.next(value);
+  }
+
+  get search$() {
+    return this._searchInput.asObservable();
+  }
+
+  list$ = this.submitBtn$.pipe(
+    withLatestFrom(this.search$),
+    switchMap(([_, searchString]) => this.api.query(searchString))
+  );
+
+  constructor(private api: API) {}
+}
+```
+
+Just look at the amount of code we need to write for only 2 observable ui events.
+
+Downsides:
+
+- Boilerplate for setter and getter
+- Transformations spreaded over class and template
+- Manual typing ov subjects and streams
+- No central place for UI trigger
+
+Imagine we could have configurable functions that return all UI logic typed under one object.
+
+```typescript
+import { RxActionFactory } from '@rx-angular/state/actions';
+
+interface UiActions {
+  submitBtn: void;
+  searchInput: string;
+}
+
+@Component({
+  template: `
+    <input (input)="ui.searchInput($event)" /> Search for:
+    {{ ui.search$ | async }}<br />
+    <button (click)="ui.submitBtn()">
+      Submit
+    </button>
+    <br />
+    <ul>
+      <li *ngFor="let item of list$ | async as list">{{ item }}</li>
+    </ul>
+  `,
+  providers: [RxActionFactory],
+})
+export class Component {
+  ui = this.factory.create({ searchInput: (e) => e.target ? e.target.value : '' });
+
+  list$ = this.ui.submitBtn$.pipe(
+    withLatestFrom(this.ui.search$),
+    switchMap(([_, searchString]) => this.api.query(searchString))
+  );
+
+  constructor(private api: API, private factory: RxActionFactory<UiActions>) {}
 }
 
 ```
