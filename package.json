@@ -1,6 +1,11 @@
 {
   "name": "ngx-isr",
   "version": "0.0.0",
+  "engines": {
+    "node": "^16.13.0 || ^18.10.0",
+    "npm": "^9.5.0",
+    "yarn": "^1.22.0"
+  },
   "scripts": {
     "ng": "ng",
     "start": "nx build ngx-isr && nx run docs:serve-ssr",
