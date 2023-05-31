@@ -6,23 +6,11 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import {
-  filter,
-  interval,
-  merge,
-  Observable,
-  Subject,
-  Subscription,
-  switchMap,
-  takeUntil,
-} from 'rxjs';
+import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
 //👇 1- import RxState
 import { RxState } from '@rx-angular/state';
-import { RxActionFactory } from '@rx-angular/state/actions';
-import { RxEffects } from '@rx-angular/state/effects';
-
 //👇 2- define a component state
 interface ComponentState {
   refreshInterval: number;
@@ -48,19 +36,16 @@ const initComponentState = {
   template: `
     <h3>Setup</h3>
     <mat-expansion-panel
-      *rxLet="vm$; let vm"
-      (expandedChange)="
-        vm.listExpanded = $event; ui.listExpandedChanges($event)
-      "
+      (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
       [expanded]="listExpanded"
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title> List</mat-panel-title>
+        <mat-panel-title> List </mat-panel-title>
         <mat-panel-description>
           <span
-            >{{ vm.list.length }} Repositories Updated every:
-            {{ vm.refreshInterval }} ms
+            >{{ (storeList$ | async)?.length }} Repositories Updated every:
+            {{ _refreshInterval }} ms
           </span>
         </mat-panel-description>
       </mat-expansion-panel-header>
@@ -68,18 +53,20 @@ const initComponentState = {
       <button
         mat-raised-button
         color="primary"
-        (click)="ui.refreshClicks($event)"
+        (click)="onRefreshClicks($event)"
       >
         Refresh List
       </button>
 
-      <div *ngIf="vm.list.length; else noList">
-        <mat-list>
-          <mat-list-item *ngFor="let item of list">
-            {{ item.name }}
-          </mat-list-item>
-        </mat-list>
-      </div>
+      <ng-container *ngIf="storeList$ | async as list">
+        <div *ngIf="list?.length; else noList">
+          <mat-list>
+            <mat-list-item *ngFor="let item of list">
+              {{ item.name }}
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </ng-container>
 
       <ng-template #noList>
         <mat-card>No list given!</mat-card>
@@ -103,50 +90,52 @@ const initComponentState = {
       }
     `,
   ],
-  providers: [RxActionFactory, RxState, RxEffects],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetupStart {
-  ui = this.rxActions.create();
-  vm$ = this.model.select();
+//👇 3- extend the component
+export class SetupStart implements OnInit, OnDestroy {
+  //👇 Set up the model property of the component
+  intervalSubscription = new Subscription();
+  listExpandedChanges = new Subject<boolean>();
+  storeList$ = this.listService.list$.pipe(
+    map(this.parseListItems),
+    startWith(initComponentState.list)
+  );
 
+  _refreshInterval: number = initComponentState.refreshInterval;
   @Input()
-  set refreshInterval(refreshInterval$: Observable<number>) {
-    this.model.connect(
-      'refreshInterval',
-      refreshInterval$.pipe(filter((rI) => rI > 4000))
-    );
+  set refreshInterval(refreshInterval: number) {
+    if (refreshInterval > 4000) {
+      this._refreshInterval = refreshInterval;
+      this.resetRefreshTick();
+    }
   }
 
+  listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.ui.listExpandedChanges$;
+  listExpandedChange = this.listExpandedChanges;
+  constructor(private listService: ListService) {
+    //👇 Always call super() first in the constructor
+    //👇 Call set() to initialize the state
+  }
 
-  autoTrigger$ = this.model
-    .select('refreshInterval')
-    .pipe(switchMap((ms) => interval(ms)));
+  ngOnDestroy(): void {
+    this.intervalSubscription.unsubscribe();
+  }
 
-  fetchEffect = (_) => this.listService.refetchList();
+  ngOnInit(): void {
+    this.resetRefreshTick();
+  }
 
-  constructor(
-    private listService: ListService,
-    private model: RxState<ComponentState>,
-    private ef: RxEffects,
-    private rxActions: RxActionFactory<{
-      listExpandedChanges: boolean;
-      refreshClicks: undefined;
-    }>
-  ) {
-    this.model.set(initComponentState);
+  resetRefreshTick() {
+    this.intervalSubscription.unsubscribe();
+    this.intervalSubscription = interval(this._refreshInterval)
+      .pipe(tap((_) => this.listService.refetchList()))
+      .subscribe();
+  }
 
-    this.model.connect(
-      'list',
-      this.listService.list$.pipe(map(this.parseListItems))
-    );
-
-    this.ef.register(
-      merge(this.autoTrigger$, this.ui.listExpandedChanges$),
-      this.fetchEffect
-    );
+  onRefreshClicks(event) {
+    this.listService.refetchList();
   }
 
   parseListItems(l: ListServerItem[]): DemoBasicsItem[] {

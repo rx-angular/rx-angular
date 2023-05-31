@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
@@ -103,7 +103,7 @@ export const materialModules = [
 
 @NgModule({
   declarations: [DECLARATIONS],
-  imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES)],
+  imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES), NgIf],
   exports: [DECLARATIONS],
 })
 export class TutorialBasicsModule {}
