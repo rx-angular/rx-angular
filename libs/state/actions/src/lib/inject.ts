@@ -1,4 +1,4 @@
-import { DestroyRef, ErrorHandler, inject } from '@angular/core';
+import { DestroyRef, inject } from '@angular/core';
 import { RxActionFactory } from './actions.factory';
 import { ActionTransforms, RxActions } from './types';
 
@@ -18,8 +18,7 @@ export function rxActions<
     rxActionFactory: RxActionFactory<Actions>
   ) => RxActions<Actions, Transforms>
 ): RxActions<Actions, Transforms> {
-  const errorHandler = inject(ErrorHandler, { optional: true }) ?? undefined;
-  const rxActionFactory = new RxActionFactory<Actions>(errorHandler);
+  const rxActionFactory = new RxActionFactory<Actions>();
   const destroyRef = inject(DestroyRef);
 
   destroyRef.onDestroy(() => rxActionFactory.ngOnDestroy());

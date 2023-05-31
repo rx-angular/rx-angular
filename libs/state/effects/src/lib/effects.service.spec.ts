@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BehaviorSubject, EMPTY, Observable, map, tap, throwError } from 'rxjs';
 import { RxEffects } from './effects.service';
-
-// tslint:disable: max-classes-per-file
 
 type TState = string;
 
@@ -34,7 +35,6 @@ class Service {
   method4OnComplete(..._: any[]): void {}
 }
 
-// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
   providers: [RxEffects],
@@ -52,7 +52,6 @@ class TestComponent {
   }
 }
 
-// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
   providers: [RxEffects],
@@ -69,7 +68,6 @@ class TestUntilEffectComponent {
   }
 }
 
-// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
   providers: [RxEffects],
@@ -80,7 +78,6 @@ class TestOnDestroyComponent {
   }
 }
 
-// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
   providers: [RxEffects],
@@ -109,12 +106,16 @@ class TestUnregisterComponent {
   }
 }
 
-describe('RxEffects', () => {
+describe(RxEffects, () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  test('should invoke callback for each value emitted', async () => {
+  it('should throw if called outside of Angular injection context', () => {
+    expect(() => new RxEffects()).toThrowError(/NG0203/);
+  });
+
+  it('should invoke callback for each value emitted', async () => {
     const service = {
       method1: jest.fn(),
       method2: jest.fn(),
@@ -143,7 +144,7 @@ describe('RxEffects', () => {
     expect(service.method4).toHaveBeenCalledWith('bar4');
   });
 
-  test('should unsubscribe when component is destroyed', async () => {
+  it('should unsubscribe when component is destroyed', async () => {
     const service = {
       method1: jest.fn(),
       method2: jest.fn(),
@@ -179,7 +180,7 @@ describe('RxEffects', () => {
     expect(service.method4).not.toHaveBeenCalled();
   });
 
-  test('should isolate errors and invoke provided ErrorHandler', async () => {
+  it('should isolate errors and invoke provided ErrorHandler', async () => {
     const service = {
       method1: () => {
         throw new Error('something went wrong');
@@ -216,7 +217,7 @@ describe('RxEffects', () => {
     expect(service.method4).toHaveBeenCalledWith('foo4');
   });
 
-  test('should invoke complete callback upon completion', async () => {
+  it('should invoke complete callback upon completion', async () => {
     const service = {
       method1: () => {},
       method2: () => {},
@@ -241,7 +242,7 @@ describe('RxEffects', () => {
     expect(service.method4OnComplete).toHaveBeenCalled();
   });
 
-  test('should invoke error callback when source observable errors', async () => {
+  it('should invoke error callback when source observable errors', async () => {
     const service = {
       method1: () => {},
       method2: () => {},
@@ -279,7 +280,7 @@ describe('RxEffects', () => {
     );
   });
 
-  test('should cancel side-effect if unregistered imperatively', async () => {
+  it('should cancel side-effect if unregistered imperatively', async () => {
     const service = {
       method1: jest.fn(),
       method2: jest.fn(),
@@ -314,7 +315,7 @@ describe('RxEffects', () => {
     expect(service.method2).not.toHaveBeenCalled();
   });
 
-  test('should cancel side-effect if components gets destroyed when using untilEffect', async () => {
+  it('should cancel side-effect if components gets destroyed when using untilEffect', async () => {
     const service = {
       method1: jest.fn(),
     };
@@ -323,7 +324,6 @@ describe('RxEffects', () => {
       providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     const fixture = TestBed.createComponent(TestUntilEffectComponent);
-    const component = fixture.componentInstance;
     const store = TestBed.inject(Store);
 
     expect(service.method1).toHaveBeenCalledWith('');
@@ -340,7 +340,7 @@ describe('RxEffects', () => {
     expect(service.method1).not.toHaveBeenCalled();
   });
 
-  test('should cancel side-effect if components gets destroyed when using onDestroy', async () => {
+  it('should cancel side-effect if components gets destroyed when using onDestroy', async () => {
     const service = {
       method1: jest.fn(),
     };
