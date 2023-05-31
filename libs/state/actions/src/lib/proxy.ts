@@ -9,11 +9,15 @@ import { KeysOf, RxActions, ValuesOf } from './types';
  * @param subjects
  * @param transforms
  */
-export function actionProxyHandler<T extends object, U extends object>(
-  subjects: { [K in keyof T]: Subject<ValuesOf<T>> },
-  transforms?: U,
-  errorHandler?: ErrorHandler
-): ProxyHandler<RxActions<T, U>> {
+export function actionProxyHandler<T extends object, U extends object>({
+  subjects,
+  transforms,
+  errorHandler = null,
+}: {
+  subjects: { [K in keyof T]: Subject<ValuesOf<T>> };
+  transforms?: U;
+  errorHandler: ErrorHandler | null;
+}): ProxyHandler<RxActions<T, U>> {
   type KeysOfT = KeysOf<T>;
   type ValuesOfT = ValuesOf<T>;
 

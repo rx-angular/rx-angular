@@ -68,14 +68,16 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
     const subjects: SubjectMap<T> = {} as SubjectMap<T>;
     this.subjects.push(subjects);
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     function signals(): void {}
+
     return new Proxy(
       signals as any as RxActions<T, U>,
-      actionProxyHandler(
-        subjects as any as { [K in keyof T]: Subject<ValuesOf<T>> },
+      actionProxyHandler({
+        subjects: subjects as any as { [K in keyof T]: Subject<ValuesOf<T>> },
         transforms,
-        this.errorHandler
-      )
+        errorHandler: this.errorHandler,
+      })
     ) as any as RxActions<T, U>;
   }
 
