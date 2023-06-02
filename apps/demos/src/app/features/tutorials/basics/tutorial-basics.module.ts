@@ -103,7 +103,7 @@ export const materialModules = [
 
 @NgModule({
   declarations: [DECLARATIONS],
-  imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES), NgIf],
+  imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES)],
   exports: [DECLARATIONS],
 })
 export class TutorialBasicsModule {}
