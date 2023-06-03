@@ -3,10 +3,15 @@
   "author": "Enea Jahollari",
   "description": "Incremental Static Regeneration for Angular",
   "version": "0.5.5",
+  "engines": {
+    "node": "^16.13.0 || ^18.10.0",
+    "npm": "^9.5.0",
+    "yarn": "^1.22.0"
+  },
   "peerDependencies": {
-    "@angular/common": ">=15.0.0",
-    "@angular/core": ">=15.0.0",
-    "@types/node": "^14.15.0 || ^16.0.0"
+    "@angular/common": ">=16.0.0",
+    "@angular/core": ">=16.0.0",
+    "@types/node": "^16.0.0 || ^18.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
