@@ -1,6 +1,6 @@
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { createSideEffectObservable } from '@rx-angular/state/selections';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers';
 import { TestScheduler } from 'rxjs/testing';
 

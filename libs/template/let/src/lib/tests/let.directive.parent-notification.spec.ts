@@ -8,6 +8,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { asapScheduler, delay, Observable, ReplaySubject, Subject } from 'rxjs';
+
 import { RxLet } from '../let.directive';
 
 @Component({

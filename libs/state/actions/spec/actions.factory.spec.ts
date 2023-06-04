@@ -1,6 +1,6 @@
 import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { isObservable } from 'rxjs';
 
