@@ -54,3 +54,6 @@ Each chapter contains three files:
 [3-output-bindings]: https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/3-output-bindings
 [4-global-state]: https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/4-global-state
 [5-side-effects]: https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/tutorials/basics/5-side-effects
+
+# Instructions
+For each exercise you will find a corresponding [markdown file](https://github.com/rx-angular/rx-angular/tree/main/apps/docs/docs/state/tutorials/basic-tutorial) with all instructions needed to accomplish the exercise.
