@@ -162,8 +162,8 @@ const vm$: Observable<> = model$.pipe(select(map(({ b }) => b === 'a')));
 <!--
 Computes 1 time & Renders 2. ✅; .4 ✅
 -->
-<div *rxLet="model$; let vm">B: {{vm.b}}</div>
-B: {{(model$ | push).b}}
+<div *rxLet="vm$; let vm">B: {{vm.b}}</div>
+B: {{(vm$ | push).b}}
 ```
 
 ## selectSlice
