@@ -2,7 +2,7 @@ import { Component, Input, Output } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'rxa-state-child-selections',
@@ -11,12 +11,12 @@ import { FormBuilder, FormGroup } from '@angular/forms';
       <form *ngIf="formGroup$ | async as formGroup" [formGroup]="formGroup">
         <mat-form-field *ngFor="let c of formGroup.controls | keyvalue">
           <label>{{ c.key }}</label>
-          <input matInput [formControlName]="c.key"/>
+          <input matInput [formControlName]="c.key" />
         </mat-form-field>
       </form>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
   // providers: [SubscriptionHandlingService]
 })
 export class RxStateChildSelectionsComponent {
@@ -29,17 +29,16 @@ export class RxStateChildSelectionsComponent {
     }
   }
 
-  formGroup$: Observable<FormGroup> = this.state$.pipe(
+  formGroup$: Observable<UntypedFormGroup> = this.state$.pipe(
     startWith({}),
     map((input) => this.getFormGroupFromConfig(input))
   );
 
   @Output() formValueChange = this.formGroup$.pipe(
-    switchMap((fg: FormGroup) => fg.valueChanges)
+    switchMap((fg: UntypedFormGroup) => fg.valueChanges)
   );
 
-  constructor(private fb: FormBuilder) {
-  }
+  constructor(private fb: UntypedFormBuilder) {}
 
   select(o$: Observable<any>) {
     return o$.pipe(shareReplay(1));

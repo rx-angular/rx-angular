@@ -58,7 +58,7 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
 }
 
 /**
- * @Directive LetDirective
+ * @Directive RxLet
  *
  * @description
  * In Angular there is one way to handle asynchronous values or streams in the template, the `async` pipe.
@@ -92,8 +92,9 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  * @docsPage LetDirective
  * @publicApi
  */
-@Directive({ selector: '[rxLet]' })
-export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
+@Directive({ selector: '[rxLet]', standalone: true })
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
+export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
   static ngTemplateGuard_rxLet: 'binding';
 
   /**
@@ -481,7 +482,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
   private observablesHandler = createTemplateNotifier<U>();
   /** @internal */
   private strategyHandler = coerceAllFactory<string>(
-    () => new ReplaySubject<RxStrategyNames<string>>(1)
+    () => new ReplaySubject<RxStrategyNames>(1)
   );
   /** @internal */
   private triggerHandler = new ReplaySubject<RxNotificationKind>(1);
@@ -512,7 +513,7 @@ export class LetDirective<U> implements OnInit, OnDestroy, OnChanges {
 
   /** @internal */
   static ngTemplateContextGuard<U>(
-    dir: LetDirective<U>,
+    dir: RxLet<U>,
     ctx: unknown | null | undefined
   ): ctx is RxLetViewContext<U> {
     return true;

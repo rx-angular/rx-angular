@@ -169,5 +169,3 @@ There every patched API is listed.
 - Navigate to `zone.js` code to see if patch is invoked
 
 ![Sources Tab](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/dev-tools_sources_michael-hladky.png)
-
-![Sources Tab - Breakpoints](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/dev-tools_sources_breakpoints_michael-hladky.png)

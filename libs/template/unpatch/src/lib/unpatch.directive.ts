@@ -7,16 +7,16 @@ import {
   OnDestroy,
   SimpleChanges,
 } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
 import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import {
   focusEvents,
-  mouseEvents,
-  wheelEvents,
   inputEvents,
   keyboardEvents,
+  mouseEvents,
   touchEvents,
+  wheelEvents,
 } from '@rx-angular/cdk/zone-configurations';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 const zonePatchedEvents: string[] = [
   ...focusEvents,
@@ -44,7 +44,7 @@ export function unpatchEventListener(
     eventListeners?: (event: string) => EventListenerOrEventListenerObject[];
   },
   event: string
-): void {
+): EventListenerOrEventListenerObject[] {
   // `EventTarget` is patched only in the browser environment, thus
   // running this code on the server-side will throw an exception:
   // `TypeError: element.eventListeners is not a function`.
@@ -62,20 +62,23 @@ export function unpatchEventListener(
   const addEventListener = getZoneUnPatchedApi(
     element,
     'addEventListener'
-  ).bind(element);
+  ).bind(element) as typeof element.addEventListener;
 
+  const listeners: EventListenerOrEventListenerObject[] = [];
   eventListeners.forEach((listener) => {
     // Remove and reapply listeners with patched API
-    // @TODO use (elem as any).removeAllListeners?(eventName?: string): void;
     element.removeEventListener(event, listener);
     // Reapply listeners with un-patched API
     addEventListener(event, listener);
+
+    listeners.push(listener);
   });
+
+  return listeners;
 }
 
-/* eslint-disable @angular-eslint/directive-selector */
 /**
- * @Directive UnpatchEventsDirective
+ * @Directive RxUnpatch
  *
  * @description
  *
@@ -113,11 +116,13 @@ export function unpatchEventListener(
  *
  * @publicApi
  */
-@Directive({ selector: '[unpatch]' })
+// eslint-disable-next-line @angular-eslint/directive-selector
+@Directive({ selector: '[unpatch]', standalone: true })
 /**
  * @todo: add prefix [rxUnpatch]
  */
-export class UnpatchDirective implements OnChanges, AfterViewInit, OnDestroy {
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
+export class RxUnpatch implements OnChanges, AfterViewInit, OnDestroy {
   /**
    * @description
    * List of events that the element should be unpatched from. When input is empty or undefined,
@@ -131,6 +136,7 @@ export class UnpatchDirective implements OnChanges, AfterViewInit, OnDestroy {
 
   private subscription = new Subscription();
   private events$ = new BehaviorSubject<string[]>(zonePatchedEvents);
+  private listeners = new Map<string, EventListenerOrEventListenerObject[]>();
 
   constructor(private host: ElementRef<HTMLElement>) {}
 
@@ -148,11 +154,18 @@ export class UnpatchDirective implements OnChanges, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+
+    for (const [event, listeners = []] of this.listeners) {
+      listeners.forEach((listener) => {
+        this.host.nativeElement.removeEventListener(event, listener);
+      });
+    }
   }
 
   private reapplyUnPatchedEventListeners(events: string[]): void {
     for (const event of events) {
-      unpatchEventListener(this.host.nativeElement, event);
+      const listeners = unpatchEventListener(this.host.nativeElement, event);
+      this.listeners.set(event, listeners);
     }
   }
 }

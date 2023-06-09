@@ -1,24 +1,21 @@
-
+import { ChangeDetectorRef, Component, computed, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   RX_RENDER_STRATEGIES_CONFIG,
-  RxStrategyCredentials,
-  RxStrategyProvider
+  RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
-import { map, tap } from 'rxjs/operators';
 import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
-import { PushModule } from '../push.module';
-import { PushPipe } from '../push.pipe';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { asapScheduler, EMPTY, from, NEVER, Observable, of, scheduled, share, shareReplay, timer } from 'rxjs';
 import { mockConsole } from '@test-helpers';
+import { EMPTY, NEVER, Observable, asapScheduler, of, timer } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { RxPush } from '../push.pipe';
 
 function wrapWithSpace(str: string): string {
   return ' ' + str + ' ';
 }
 
 @Component({
-  template: ` {{ (value$ | push: strategy | json) || 'undefined' }} `,
+  template: ` {{ (value$ | push : strategy | json) || 'undefined' }} `,
 })
 class PushPipeTestComponent {
   value$: Observable<number> = of(42);
@@ -32,26 +29,31 @@ let pushPipeTestComponent: {
 };
 let componentNativeElement: HTMLElement;
 let strategyProvider: RxStrategyProvider;
+let pushPipe: RxPush;
 
 const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     declarations: [PushPipeTestComponent],
-    imports: [PushModule],
+    imports: [RxPush],
     providers: [
+      RxPush,
       ChangeDetectorRef,
       {
         provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
           primaryStrategy: 'native',
           customStrategies: {
-            'custom': {
+            custom: {
               name: 'custom',
-              work: cdRef => {
+              work: (cdRef) => {
                 cdRef.detectChanges();
               },
-              behavior: ({ work }) => o$ => o$.pipe(tap(() => work()))
-            }
-          }
+              behavior:
+                ({ work }) =>
+                (o$) =>
+                  o$.pipe(tap(() => work())),
+            },
+          },
         },
       },
     ],
@@ -61,9 +63,44 @@ const setupPushPipeComponent = () => {
   pushPipeTestComponent = fixturePushPipeTestComponent.componentInstance;
   componentNativeElement = fixturePushPipeTestComponent.nativeElement;
   strategyProvider = TestBed.inject(RxStrategyProvider);
+  pushPipe = TestBed.inject(RxPush);
 };
 
-describe('PushPipe used as pipe in the template', () => {
+describe('RxPush', () => {
+  beforeAll(() => mockConsole());
+  beforeEach(setupPushPipeComponent);
+
+  it('should be instantiable', () => {
+    expect(pushPipe).toBeDefined();
+  });
+
+  describe('transform function', () => {
+    it('should not track signal reads in subscriptions', () => {
+      const trigger = signal(false);
+
+      const obs = new Observable(() => {
+        // Whenever `obs` is subscribed, synchronously read `trigger`.
+        trigger();
+      });
+
+      let trackCount = 0;
+      const tracker = computed(() => {
+        // Subscribe to `obs` within this `computed`. If the subscription side effect runs
+        // within the computed, then changes to `trigger` will invalidate this computed.
+        pushPipe.transform(obs);
+
+        // The computed returns how many times it's run.
+        return ++trackCount;
+      });
+
+      expect(tracker()).toBe(1);
+      trigger.set(true);
+      expect(tracker()).toBe(1);
+    });
+  });
+});
+
+describe('RxPush used as pipe in the template', () => {
   beforeAll(() => mockConsole());
 
   beforeEach(setupPushPipeComponent);
@@ -138,7 +175,7 @@ describe('PushPipe used as pipe in the template', () => {
       const strategy = strategyProvider.strategies['custom'];
       pushPipeTestComponent.strategy = 'custom';
       cdSpy = jest.spyOn(strategy, 'work');
-    })
+    });
 
     it('should not detect changes with sync value', () => {
       fixturePushPipeTestComponent.detectChanges();
@@ -147,36 +184,40 @@ describe('PushPipe used as pipe in the template', () => {
     });
 
     it('should detect changes with async value', async () => {
-      const value$ = new Observable(sub => {
+      const value$ = new Observable((sub) => {
         Promise.resolve().then(() => {
           sub.next(44);
           sub.complete();
         });
         return () => {
           sub.complete();
-        }
+        };
       });
       pushPipeTestComponent.value$ = value$;
       fixturePushPipeTestComponent.detectChanges();
-      expect(componentNativeElement.textContent).toBe(wrapWithSpace('undefined'));
+      expect(componentNativeElement.textContent).toBe(
+        wrapWithSpace('undefined')
+      );
       await Promise.resolve();
       expect(cdSpy).toBeCalledTimes(1);
       expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
     });
 
     it('should detect changes with unpatched Promise', async () => {
-      const value$ = new Observable(sub => {
+      const value$ = new Observable((sub) => {
         unpatchedPromise.resolve().then(() => {
           sub.next(44);
           sub.complete();
         });
         return () => {
           sub.complete();
-        }
+        };
       });
       pushPipeTestComponent.value$ = value$;
       fixturePushPipeTestComponent.detectChanges();
-      expect(componentNativeElement.textContent).toBe(wrapWithSpace('undefined'));
+      expect(componentNativeElement.textContent).toBe(
+        wrapWithSpace('undefined')
+      );
       await unpatchedPromise.resolve();
       expect(cdSpy).toBeCalledTimes(1);
       expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
@@ -186,7 +227,9 @@ describe('PushPipe used as pipe in the template', () => {
       const value$ = timer(0, asapScheduler).pipe(map(() => 44));
       pushPipeTestComponent.value$ = value$;
       fixturePushPipeTestComponent.detectChanges();
-      expect(componentNativeElement.textContent).toBe(wrapWithSpace('undefined'));
+      expect(componentNativeElement.textContent).toBe(
+        wrapWithSpace('undefined')
+      );
       await Promise.resolve();
       expect(cdSpy).toBeCalledTimes(1);
       expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
@@ -196,13 +239,14 @@ describe('PushPipe used as pipe in the template', () => {
       const value$ = timer(0).pipe(map(() => 44));
       pushPipeTestComponent.value$ = value$;
       fixturePushPipeTestComponent.detectChanges();
-      expect(componentNativeElement.textContent).toBe(wrapWithSpace('undefined'));
-      await new Promise(resolve => {
+      expect(componentNativeElement.textContent).toBe(
+        wrapWithSpace('undefined')
+      );
+      await new Promise((resolve) => {
         setTimeout(resolve);
-      })
+      });
       expect(cdSpy).toBeCalledTimes(1);
       expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
     });
-
-  })
+  });
 });

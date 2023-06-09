@@ -4,9 +4,9 @@ import { RouterModule } from '@angular/router';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ROUTES } from './ng-if-hack.routes';
 import { NgIfHackComponent } from './ng-if-hack.component';
-import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxPush } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatIconModule } from '@angular/material/icon';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
@@ -17,7 +17,7 @@ import { NgIfHackRxLetComponent } from './ng-if-hack-rx-let.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgIfHackNgIfPushComponent } from './ng-if-hack-push.component';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 const DECLARATIONS = [
   NgIfHackComponent,
@@ -33,13 +33,13 @@ const DECLARATIONS = [
     CommonModule,
     RouterModule.forChild(ROUTES),
     DirtyChecksModule,
-    LetModule,
-    UnpatchModule,
+    RxLet,
+    RxUnpatch,
     NgxSkeletonLoaderModule,
     MatIconModule,
     ValueProvidersModule,
     VisualizerModule,
-    PushModule,
+    RxPush,
     MatButtonToggleModule,
     GhostElementsModule,
     MatButtonModule,

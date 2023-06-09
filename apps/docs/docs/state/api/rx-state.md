@@ -52,9 +52,9 @@ class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 }
 ```
 
-![](/img/state/api-schema.jpg)
+![](../../../../../libs/state/docs/images/api-schema.jpg)
 
-![](/img/state/api-reveal.jpg)
+![](../../../../../libs/state/docs/images/api-reveal.jpg)
 
 ## $ (state observable)
 

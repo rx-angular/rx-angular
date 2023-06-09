@@ -38,100 +38,13 @@ A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angu
 
 ## Motivation
 
-Signals, or a more commonly used name actions, are a common part of state management and reactive systems in general.
-Even if `@rx-angular/state` provides `set` method, sometimes you need to add behaviour to your user input or incoming events.
+Actions are a fundamental part of state management and reactive systems. The @rx-angular/state library provides a powerful set method, but in certain scenarios, you might need to add specific behaviors to your user input or incoming events.
 
-Subjects are normally used to implement this feature. This leads, especially in bigger applications, to a messy code that is bloated with Subjects.
+Typically, Subjects are used to implement this functionality. However, in larger applications, this approach often results in code cluttered with Subjects, leading to increased complexity.
 
-Let's have a look at this piece of code:
+That's where @rx-angular/state/actions comes in. It allows you to create observable action streams in a clean, maintainable, and less error-prone way, thus minimizing the amount of boilerplate code required.
 
-```typescript
-@Component({
-  template: `
-    <input (input)="searchInput($event?.target?.value)" /> Search for:
-    {{ search$ | async }}<br />
-    <button (click)="submitBtn()">
-      Submit<button>
-        <br />
-        <ul>
-          <li *ngFor="let item of list$ | async as list">{{ item }}</li>
-        </ul>
-      </button>
-    </button>
-  `,
-})
-class Component {
-  private _submitBtn = new Subject<void>();
-  private _searchInput = new Subject<string>();
-
-  set submitBtn() {
-    _submitBtn.next();
-  }
-  get submitBtn$() {
-    return _searchInput.asObservable();
-  }
-  set search(search: string) {
-    _searchInput.next(search);
-  }
-  get search$() {
-    return _searchInput.asObservable();
-  }
-
-  list$ = this.submitBtn$.pipe(
-    withLatestFrom(this.search$),
-    switchMap(([_, searchString]) => this.api.query(searchString))
-  );
-
-  constructor(api: API) {}
-}
-```
-
-Just look at the amount of code we need to write for only 2 observable ui events.
-
-Downsides:
-
-- Boilerplate for setter and getter
-- Transformations spreaded over class and template
-- Manual typing ov subjects and streams
-- No central place for UI trigger
-
-Imagine we could have configurable functions that return all UI logic typed under one object.
-
-```typescript
-import { RxActionFactory } from '@rx-angular/state/actions';
-interface UiActions {
-  submitBtn: void;
-  searchInput: string;
-}
-
-@Component({
-  template: `
-    <input (input)="ui.searchInput($event)" /> Search for:
-    {{ ui.search$ | async }}<br />
-    <button (click)="ui.submitBtn()">
-      Submit<button>
-        <br />
-        <ul>
-          <li *ngFor="let item of list$ | async as list">{{ item }}</li>
-        </ul>
-      </button>
-    </button>
-  `,
-  providers: [RxActionFactory],
-})
-class Component {
-  ui = this.factory.create({ searchInput: (e) => e.target.value });
-
-  list$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.search$),
-    switchMap(([_, searchString]) => this.api.query(searchString))
-  );
-
-  constructor(api: API, private factory: RxActionFactory<UiActions>) {}
-}
-```
-
-## RxAngular Signals
+## RxAngular Actions
 
 This package helps to reduce code used to create composable action streams.
 It mostly is used in combination with state management libs to handle user interaction and backend communication.
@@ -154,7 +67,7 @@ yarn add @rx-angular/state
 By using RxAngular Actions we can reduce the boilerplate significantly, to do so we can start by thinking about the specific section their events and event payload types:
 
 ```typescript
-interface Commands {
+interface Actions {
   refreshUser: string | number;
   refreshList: string | number;
   refreshGenres: string | number;
@@ -164,40 +77,35 @@ interface Commands {
 Next we can use the typing to create the action object:
 
 ```typescript
-commands = getActions<Commands>();
+const actionsFactory = new RxActionFactory<Actions>();
+const actions = actionsFactory.create();
 ```
 
-The object can now be used to emit signals over setters:
+The object can now be used to emit operations over setters:
 
 ```typescript
-commands.refreshUser(value);
-commands.refreshList(value);
-commands.refreshGenres(value);
+actions.refreshUser(value);
+actions.refreshList(value);
+actions.refreshGenres(value);
 ```
 
-The emitted signals can be received over observable properties:
+The emitted operations can be received over observable properties:
 
 ```typescript
-refreshUser$ = commands.refreshUser$;
-refreshList$ = commands.refreshList$;
-refreshGenres$ = commands.refreshGenres$;
+const refreshUser$ = actions.refreshUser$;
+const refreshList$ = actions.refreshList$;
+const refreshGenres$ = actions.refreshGenres$;
 ```
 
-You can also emit multiple signals at once:
+If there is the need to make a combined operation you can also select multiple operations and get their emissions in one stream:
 
 ```typescript
-commands({ refreshUser: true, refreshList: true });
+const refreshUserOrList$ = concat(actions.refreshUser$, actions.refreshList$);
 ```
 
-If there is the need to make a combined signal you can also select multiple signals and get their emissions in one stream:
+### Operations in components
 
-```typescript
-refreshUserOrList$ = commands.$(['refreshUser', 'refreshList']);
-```
-
-### Signals in components
-
-In components/templates we can use signals to map user interaction as well as programmatic to effects or state changes.
+In components/templates we can use operations to map user interaction as well as programmatic to effects or state changes.
 This reduces the component class code as well as template.
 
 In addition, we can use it as a shorthand in the template and directly connect to action dispatching in the class.
@@ -210,8 +118,8 @@ interface UiActions {
 
 @Component({
   template: `
-    <input (input)="ui.searchInput($event)" /> Search for:
-    {{ ui.search$ | async }}<br />
+    <input (input)="ui.searchInput($event.target.value)" /> Search for:
+    {{ ui.searchInput$ | async }}<br />
     <button (click)="ui.submitBtn()">
       Submit<button>
         <br />
@@ -224,10 +132,10 @@ interface UiActions {
   providers: [RxState, RxActionFactory],
 })
 class Component {
-  ui = this.factory.create({ searchInput: (e) => e?.target?.value });
+  ui = this.factory.create<UiActions>({ searchInput: (e) => e });
   list$ = this.state.select('list');
   submittedSearchQuery$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.search$),
+    withLatestFrom(this.ui.searchInput$),
     map(([_, search]) => search),
     debounceTime(1500)
   );
@@ -237,13 +145,105 @@ class Component {
     private factory: RxActionFactory<UiActions>,
     globalState: StateService
   ) {
-    super();
     this.connect('list', this.globalState.refreshGenres$);
 
     this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
     // Optional reactively:
     // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
   }
+}
+```
+
+### Advanced usage
+
+```typescript
+import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
+import { withLatestFrom, switchMap } from 'rxjs/operators';
+
+@Component({
+  selector: 'my-component',
+  template: `
+    <input (input)="searchInput($event?.target?.value)" /> Search for:
+    {{ search$ | async }}<br />
+    <button (click)="submitBtn()">Submit</button>
+    <br />
+    <ul>
+      <li *ngFor="let item of list$ | async">{{ item }}</li>
+    </ul>
+  `,
+})
+export class MyComponent {
+  private _submitBtn = new Subject<void>();
+  private _searchInput = new Subject<string>();
+
+  submitBtn() {
+    this._submitBtn.next();
+  }
+
+  get submitBtn$() {
+    return this._submitBtn.asObservable();
+  }
+
+  searchInput(value: string) {
+    this._searchInput.next(value);
+  }
+
+  get search$() {
+    return this._searchInput.asObservable();
+  }
+
+  list$ = this.submitBtn$.pipe(
+    withLatestFrom(this.search$),
+    switchMap(([_, searchString]) => this.api.query(searchString))
+  );
+
+  constructor(private api: API) {}
+}
+```
+
+Just look at the amount of code we need to write for only 2 observable ui events.
+
+Downsides:
+
+- Boilerplate for setter and getter
+- Transformations spreaded over class and template
+- Manual typing ov subjects and streams
+- No central place for UI trigger
+
+Imagine we could have configurable functions that return all UI logic typed under one object.
+
+```typescript
+import { RxActionFactory } from '@rx-angular/state/actions';
+
+interface UiActions {
+  submitBtn: void;
+  searchInput: string;
+}
+
+@Component({
+  template: `
+    <input (input)="ui.searchInput($event)" /> Search for:
+    {{ ui.search$ | async }}<br />
+    <button (click)="ui.submitBtn()">Submit</button>
+    <br />
+    <ul>
+      <li *ngFor="let item of list$ | async as list">{{ item }}</li>
+    </ul>
+  `,
+  providers: [RxActionFactory],
+})
+export class Component {
+  ui = this.factory.create({
+    searchInput: (e) => (e.target ? e.target.value : ''),
+  });
+
+  list$ = this.ui.submitBtn$.pipe(
+    withLatestFrom(this.ui.search$),
+    switchMap(([_, searchString]) => this.api.query(searchString))
+  );
+
+  constructor(private api: API, private factory: RxActionFactory<UiActions>) {}
 }
 ```
 
@@ -264,32 +264,34 @@ You can write you own transforms or use the predefined functions:
 - eventValue
 
 ```typescript
+import { Component } from '@angular/core';
+import { RxState, RxActionFactory } from '@rx-angular/state';
+import { StateService } from './state.service';
+import { withLatestFrom, map, debounceTime } from 'rxjs/operators';
+
 interface UiActions {
   submitBtn: void;
   searchInput: string;
 }
 
 @Component({
+  selector: 'my-component',
   template: `
     <input (input)="ui.searchInput($event)" /> Search for:
-    {{ ui.search$ | async }}<br />
-    <button (click)="ui.submitBtn()">
-      Submit<button>
-        <br />
-        <ul>
-          <li *ngFor="let item of list$ | async as list">{{ item }}</li>
-        </ul>
-      </button>
-    </button>
+    {{ ui.searchInput$ | async }}<br />
+    <button (click)="ui.submitBtn()">Submit</button>
+    <br />
+    <ul>
+      <li *ngFor="let item of list$ | async">{{ item }}</li>
+    </ul>
   `,
   providers: [RxState, RxActionFactory],
 })
-class Component {
-  //                                (e) => e.target ? e.target.value : e
-  ui = this.factory.create({ searchInput: eventValue });
+export class MyComponent {
+  ui = this.factory.create<UiActions>({ searchInput: eventValue });
   list$ = this.state.select('list');
   submittedSearchQuery$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.search$),
+    withLatestFrom(this.ui.searchInput$),
     map(([_, search]) => search),
     debounceTime(1500)
   );
@@ -297,10 +299,9 @@ class Component {
   constructor(
     private state: RxState<State>,
     private factory: RxActionFactory<UiActions>,
-    globalState: StateService
+    private globalState: StateService
   ) {
-    super();
-    this.connect('list', this.globalState.refreshGenres$);
+    this.state.connect('list', this.globalState.refreshGenres$);
 
     this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
     // Optional reactively:
@@ -320,7 +321,7 @@ interface State {
   genres: MovieGenreModel[];
 }
 
-interface Commands {
+interface Actions {
   refreshGenres: string | number;
 }
 
@@ -328,7 +329,7 @@ interface Commands {
   providedIn: 'root',
 })
 export class StateService extends RxState<State> {
-  private commands = new RxActionFactory<Commands>().create();
+  private actions = new RxActionFactory<Actions>().create();
 
   genres$ = this.select('genres');
 
@@ -337,20 +338,17 @@ export class StateService extends RxState<State> {
 
     this.connect(
       'genres',
-      this.commands.fetchGenres$.pipe(exhaustMap(this.tmdb2Service.getGenres))
+      this.actions.refreshGenres$.pipe(exhaustMap(this.tmdb2Service.getGenres))
     );
   }
 
-  refreshGenres(genre: string): void {
-    this.commands.fetchGenres(genre);
+  refreshGenres(genre: string | number): void {
+    this.actions.refreshGenres(genre);
   }
 
   // Optionally the reactive way
-  connectRefreshGenres(genre$: Observable<string>): void {
-    this.connect(
-      'genres',
-      this.commands.fetchGenres$.pipe(exhaustMap(this.tmdb2Service.getGenres))
-    );
+  connectRefreshGenres(genre$: Observable<string | number>): void {
+    this.hold(genre$, (genre) => this.actions.refreshGenres(genre));
   }
 }
 ```

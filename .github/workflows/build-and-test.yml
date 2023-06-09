@@ -114,6 +114,10 @@ jobs:
       - name: Run Affected e2e
         run: yarn nx affected:e2e --max-parallel=1
 
+      # component test: no clue about parallelism here
+      - name: Run Affected component tests
+        run: yarn nx affected -t component-test --parallel=false
+
       - name: Stop Nx Cloud DTE agents
         if: ${{ always() }}
         run: yarn nx-cloud stop-all-agents
@@ -166,9 +170,6 @@ jobs:
           fetch-depth: 0
       - name: Set up dependencies
         uses: ./.github/actions/setup
-        with:
-          # Docusaurus needs Node.js 16
-          node-version: 16
 
       - name: Build docs
         env:

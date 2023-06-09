@@ -14,7 +14,7 @@ const googleTrackingId = 'UA-180240379-1';
 /** @type {import('@docusaurus/types').Config} */
 module.exports = {
   baseUrl: '/',
-  favicon: 'img/favicon.png',
+  favicon: 'img/logo.png',
   /**
    * Even if you don't use internalization, you can use this field to set useful
    * metadata like html lang. For example, if your site is Chinese, you may want
@@ -37,8 +37,14 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: `https://github.com/${organizationName}/${projectName}/edit/main/apps/docs`,
         },
-        // Disable the blog plugin
-        blog: false,
+        blog: {
+          blogTitle: 'The RxAngular blog',
+          blogDescription:
+            'Announcements, releases and guides from the RxAngular team',
+          postsPerPage: 'ALL',
+          showReadingTime: true,
+          editUrl: `https://github.com/${organizationName}/${projectName}/edit/main/apps/docs`,
+        },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -73,12 +79,18 @@ module.exports = {
           src: 'img/logo.png',
         },
         items: [
-          // {
-          //   to: 'docs/',
-          //   activeBasePath: 'docs',
-          //   label: 'Docs',
-          //   position: 'left',
-          // },
+          {
+            docId: 'state/state',
+            label: 'State',
+            position: 'left',
+            type: 'doc',
+          },
+          {
+            docId: 'template/template',
+            label: 'Template',
+            position: 'left',
+            type: 'doc',
+          },
           {
             docId: 'cdk/cdk',
             label: 'CDK',
@@ -92,18 +104,10 @@ module.exports = {
             type: 'doc',
           },
           {
-            docId: 'state/state',
-            label: 'State',
+            to: 'blog',
+            label: 'Blog',
             position: 'left',
-            type: 'doc',
           },
-          {
-            docId: 'template/template',
-            label: 'Template',
-            position: 'left',
-            type: 'doc',
-          },
-          // { to: 'blog', label: 'Blog', position: 'left' },
           {
             href: `https://github.com/${organizationName}/${projectName}`,
             label: 'GitHub',
@@ -124,20 +128,20 @@ module.exports = {
             title: 'Documentation',
             items: [
               {
-                label: '@rx-angular/cdk',
-                to: 'docs/cdk/',
-              },
-              {
-                label: '@rx-angular/eslint-plugin',
-                to: 'docs/eslint-plugin/',
-              },
-              {
                 label: '@rx-angular/state',
                 to: 'docs/state/',
               },
               {
                 label: '@rx-angular/template',
                 to: 'docs/template/',
+              },
+              {
+                label: '@rx-angular/cdk',
+                to: 'docs/cdk/',
+              },
+              {
+                label: '@rx-angular/eslint-plugin',
+                to: 'docs/eslint-plugin/',
               },
             ],
           },
@@ -161,10 +165,10 @@ module.exports = {
           {
             title: 'More',
             items: [
-              // {
-              //   label: 'Blog',
-              //   to: 'blog',
-              // },
+              {
+                label: 'Blog',
+                to: 'blog',
+              },
               {
                 label: 'GitHub',
                 href: `https://github.com/${organizationName}/${projectName}`,

@@ -1,7 +1,7 @@
 import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { IfModule } from '../if.module';
+import { RxIf } from '../if.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 
 const customErrorHandler: ErrorHandler = {
@@ -24,7 +24,7 @@ describe('rxIf strategies', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TestComponent],
-      imports: [IfModule],
+      imports: [RxIf],
     });
     fixture = createTestComponent(
       `<div><span *rxIf="booleanCondition$; let v; strategy: strategy; renderCallback: renderedValue$">{{v}}</span></div>`

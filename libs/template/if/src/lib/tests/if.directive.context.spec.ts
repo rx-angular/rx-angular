@@ -18,7 +18,7 @@ import {
   throwError,
 } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
-import { IfModule } from '../if.module';
+import { RxIf } from '../if.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 
 const ifContextTemplate = `
@@ -77,7 +77,7 @@ const setupTestComponent = () => {
         },
       },
     ],
-    imports: [IfModule],
+    imports: [RxIf],
   });
 };
 

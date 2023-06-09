@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './nested-vs-injected.routes';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DetectChangesInjectedComponent } from './injected/detect-changes.injected.component';
 import { CdDefaultModule } from '../../../shared/debug-helper/cd-default/cd-default.module';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
@@ -32,20 +32,19 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     CdOnPush3Component,
     DetectChangesInjectedComponent,
     DetectChangesNestedComponent,
-    NestedVsProjectedComponent
+    NestedVsProjectedComponent,
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
     MatButtonModule,
     DirtyChecksModule,
-    UnpatchModule,
+    RxUnpatch,
     CdDefaultModule,
     VisualizerModule,
     CdOnPushModule,
     CdTriggerModule,
-    MatButtonToggleModule
-  ]
+    MatButtonToggleModule,
+  ],
 })
-export class NestedVsInjectedModule {
-}
+export class NestedVsInjectedModule {}

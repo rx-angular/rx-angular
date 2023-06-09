@@ -18,9 +18,6 @@ Besides a well documented and typed API it provides a way to use patched API's i
 ## Key features
 
 - ✅ unpatched Browser API's
-- ✅ unpatched RxJS creators
-- ✅ unpatched RxJS operators
-- ✅ unpatched RxJS schedulers
 - ✅ no need for `runOutsideAngular`
 
 ## Install
@@ -134,54 +131,16 @@ export class AppComponent {
 To reduce lines of code we ship all common browser scheduling APIs as unpatched version directly.
 
 ```typescript
-import {setTimeout} from @rx-angular/cdk/zone-less
+import { setTimeout } from '@rx-angular/cdk/zone-less/browser';
 
 @Component({
   // ...
 })
 export class AppComponent {
-
   doStuff() {
-   // unpatched method of the window object
-    setTimeout(
-      () => console.log('tada!'),
-      300);
-  };
-
-}
-```
-
-**rxjs**
-
-creation
-
-- fromEvent
-- interval
-- timer
-
-scheduler
-
-- async
-- asap
-- queue
-- animationFrame
-
-As RxJS internally uses Browser APIs it is pretty impossible to get rid of the zone involvement.
-For this very reason we shipped the RxJS operators, schedulers and functions that would trigger zone as unpatched version.
-
-```typescript
-import {interval} from @rx-angular/cdk/zone-less
-
-@Component({
-  // ...
-})
-export class AppComponent {
-
-  doStuff() {
-    // unpatched method of RxJS lib
-    interval(300).subscribe();
-  };
-
+    // unpatched method of the window object
+    setTimeout(() => console.log('tada!'), 300);
+  }
 }
 ```
 
@@ -215,6 +174,6 @@ The downside here is we need to inject `NgZone` and rely on dependency injection
 
 ### Zone Configuration
 
-Zone configuration is a less granular way to disable zone. It helps to configure zone in a way where it don't patches specific APIs at all.
+Zone configuration is a less granular way to disable zone. It helps to configure zone in a way where it doesn't patch specific APIs at all.
 
 You can read in detail about it in the docs of [`@rx-angular/cdk/zone-configuration`](../zone-configurations/zone-configurations.mdx).

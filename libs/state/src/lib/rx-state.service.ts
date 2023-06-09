@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   AccumulationFn,
   createAccumulationObservable,
@@ -350,7 +350,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
   /**
    * @internal
    */
-  connect<K extends keyof T, V>(
+  connect<K extends keyof T, V extends Partial<T>>(
     keyOrInputOrSlice$: K | Observable<Partial<T> | V>,
     projectOrSlices$?: ProjectStateReducer<T, V> | Observable<T[K] | V>,
     projectValueFn?: ProjectValueReducer<T, K, V>

@@ -1,19 +1,18 @@
 {
-  "root": "apps/ssr-e2e",
+  "name": "ssr-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/ssr-e2e/src",
   "projectType": "application",
   "targets": {
     "e2e": {
-      "executor": "@nrwl/cypress:cypress",
+      "executor": "@nx/cypress:cypress",
       "options": {
-        "cypressConfig": "apps/ssr-e2e/cypress.json",
-        "tsConfig": "apps/ssr-e2e/tsconfig.e2e.json",
-        "devServerTarget": "ssr:serve-ssr"
+        "cypressConfig": "apps/ssr-e2e/cypress.config.ts",
+        "devServerTarget": "ssr:serve-ssr",
+        "testingType": "e2e"
       }
     }
   },
   "tags": [],
-  "implicitDependencies": [
-    "ssr"
-  ]
+  "implicitDependencies": ["ssr"]
 }

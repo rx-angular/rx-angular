@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
+[![codecov](https://codecov.io/gh/rx-angular/rx-angular/branch/main/graph/badge.svg?token=Jxy4xLJSs1&flag=cdk)](https://codecov.io/gh/rx-angular/rx-angular)
 
 > A Component Development Kit for High performance and ergonomic Angular UI libs and large scale applications.
 
@@ -18,7 +19,7 @@ applications
 - [🛠 Coalescing](https://rx-angular.io/docs/cdk/coalescing)
 - [📡 Notifications](https://rx-angular.io/docs/cdk/notifications)
 - [🖌 Render-Strategies](https://rx-angular.io/docs/cdk/render-strategies)
-- [🔳 Template Management](https://rx-angular.io/docs/cdk/template)
+- [🔳 Template Management](https://rx-angular.io/docs/cdk/template-management)
 - [🔳 Transformations](https://rx-angular.io/docs/cdk/transformations)
 
 ## Demos:
@@ -46,12 +47,11 @@ nx migrate @rx-angular/cdk
 
 ## Version Compatibility
 
-| Angular                | RxJS                 | @rx-angular/cdk     |
-| ---------------------- | -------------------- | ------------------- |
-| `14`                   | `^7.4.0`             | `> 1.0.0-alpha.10`  |
-| `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.0.0-alpha.10`  |
-| `^11.0.0`              | `^6.5.5`             | `<= 1.0.0-alpha.10` |
+| RxAngular | Angular    |
+| --------- | ---------- |
+| `^1.0.0`  | `>=12.0.0` |
+| `^2.0.0`  | `>=13.0.0` |
+| `^14.0.0` | `^14.0.0`  |
+| `^15.0.0` | `^15.0.0`  |
 
-Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
-All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of Angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
+Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see the [official guide](https://angular.io/guide/versions).

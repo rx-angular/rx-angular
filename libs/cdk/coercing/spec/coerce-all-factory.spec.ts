@@ -4,11 +4,10 @@ import {
   exhaustAll,
   mergeAll,
   Observable,
-  ObservableInput,
   of,
   ReplaySubject,
   Subject,
-  take
+  take,
 } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 
@@ -22,17 +21,20 @@ function createInputStream(
   values: Record<string, any>,
   inputHandler: {
     values$: Observable<string | string[]>;
-    next(observable: ObservableInput<string | string[]> | string): void;
+    next(observable: Observable<string | string[]> | string): void;
   }
 ) {
   cold(marble, values)
     .pipe(take(Object.keys(values).length))
-    .subscribe(value => inputHandler.next(value));
+    .subscribe((value) => inputHandler.next(value));
 }
 
 function createNoCompletionValueStreams(
   cold: typeof TestScheduler.prototype.createColdObservable
-): Record<string, ReturnType<typeof TestScheduler.prototype.createColdObservable>> {
+): Record<
+  string,
+  ReturnType<typeof TestScheduler.prototype.createColdObservable>
+> {
   return {
     a: cold('a', { a: 'hello dear contributor' }),
     b: cold('ab', { a: 'hello', b: 'world' }),
@@ -43,7 +45,10 @@ function createNoCompletionValueStreams(
 
 function createWithCompletionValueStreams(
   cold: typeof TestScheduler.prototype.createColdObservable
-): Record<string, ReturnType<typeof TestScheduler.prototype.createColdObservable>> {
+): Record<
+  string,
+  ReturnType<typeof TestScheduler.prototype.createColdObservable>
+> {
   return {
     a: cold('a|', { a: 'hello dear contributor' }),
     b: cold('(ab|)', { a: 'hello', b: 'world' }),
@@ -57,7 +62,7 @@ describe('coerceAllFactory', () => {
   let testScheduler: TestScheduler;
   let inputHandler: {
     values$: Observable<string | string[]>;
-    next(observable: ObservableInput<string | string[]> | string): void;
+    next(observable: Observable<string | string[]> | string): void;
   };
 
   beforeEach(() => {
@@ -72,13 +77,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b-----c-d|';
-          const expected =   '-a-bc-----de';
+          const source = '-a-b-----c-d|';
+          const expected = '-a-bc-----de';
           const valueSubs = {
-            a:               '-^-!',
-            b:               '---^-----!',
-            c:               '---------^-!',
-            d:               '-----------^',
+            a: '-^-!',
+            b: '---^-----!',
+            c: '---------^-!',
+            d: '-----------^',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -102,13 +107,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b-----c-d|';
-          const expected =   '-a-(bc)---de-';
+          const source = '-a-b-----c-d|';
+          const expected = '-a-(bc)---de-';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '---------^-!',
-            d:               '-----------(^!)',
+            a: '-^!',
+            b: '---(^!)',
+            c: '---------^-!',
+            d: '-----------(^!)',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -141,13 +146,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|';
-          const expected =   '-a-----------------';
+          const source = '-a-b----c-d--------|';
+          const expected = '-a-----------------';
           const valueSubs = {
-            a:               '-^',
-            b:               '------------',
-            c:               '------------',
-            d:               '------------',
+            a: '-^',
+            b: '------------',
+            c: '------------',
+            d: '------------',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -167,13 +172,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|'
-          const expected =   '-a-(bc)--d-e-f-gh';
+          const source = '-a-b----c-d--------|';
+          const expected = '-a-(bc)--d-e-f-gh';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '--------^-------!',
-            d:               '----------------(^!)',
+            a: '-^!',
+            b: '---(^!)',
+            c: '--------^-------!',
+            d: '----------------(^!)',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -209,13 +214,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d-------|';
-          const expected =   '-a-bc----dhe-f-g---';
+          const source = '-a-b----c-d-------|';
+          const expected = '-a-bc----dhe-f-g---';
           const valueSubs = {
-            a:               '-^',
-            b:               '---^',
-            c:               '--------^--',
-            d:               '----------^',
+            a: '-^',
+            b: '---^',
+            c: '--------^--',
+            d: '----------^',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -242,13 +247,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d-------|';
-          const expected =   '-a-(bc)--dhe-f-g---';
+          const source = '-a-b----c-d-------|';
+          const expected = '-a-(bc)--dhe-f-g---';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '--------^-------!',
-            d:               '----------(^!)',
+            a: '-^!',
+            b: '---(^!)',
+            c: '--------^-------!',
+            d: '----------(^!)',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -284,13 +289,13 @@ describe('coerceAllFactory', () => {
 
       it('should only emit 1 value from the first observable passed to the input handler since the first observable never completes', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|';
-          const expected =   '-a-----------------';
+          const source = '-a-b----c-d--------|';
+          const expected = '-a-----------------';
           const valueSubs = {
-            a:               '-^',
-            b:               '------------',
-            c:               '------------',
-            d:               '------------',
+            a: '-^',
+            b: '------------',
+            c: '------------',
+            d: '------------',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -310,13 +315,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit the values of the first 3 observables and ignore the value for the last observable', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|'
-          const expected =   '-a-(bc)--d-e-f-g';
+          const source = '-a-b----c-d--------|';
+          const expected = '-a-(bc)--d-e-f-g';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '--------^-------!',
-            d:               '--------------------',
+            a: '-^!',
+            b: '---(^!)',
+            c: '--------^-------!',
+            d: '--------------------',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -327,7 +332,7 @@ describe('coerceAllFactory', () => {
             d: 'hello',
             e: 'world',
             f: 'with',
-            g: 'delay'
+            g: 'delay',
           };
 
           createInputStream(cold, source, values, inputHandler);
@@ -345,18 +350,20 @@ describe('coerceAllFactory', () => {
   describe('ReplaySubject', () => {
     describe('default flattening (switchAll)', () => {
       beforeEach(() => {
-        inputHandler = coerceAllFactory<string>(() => new ReplaySubject<string>(1));
+        inputHandler = coerceAllFactory<string>(
+          () => new ReplaySubject<string>(1)
+        );
       });
 
       it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b-----c-d|';
-          const expected =   '-a-bc-----de';
+          const source = '-a-b-----c-d|';
+          const expected = '-a-bc-----de';
           const valueSubs = {
-            a:               '-^-!',
-            b:               '---^-----!',
-            c:               '---------^-!',
-            d:               '-----------^',
+            a: '-^-!',
+            b: '---^-----!',
+            c: '---------^-!',
+            d: '-----------^',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -380,13 +387,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b-----c-d|';
-          const expected =   '-a-(bc)---de-';
+          const source = '-a-b-----c-d|';
+          const expected = '-a-(bc)---de-';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '---------^-!',
-            d:               '-----------(^!)',
+            a: '-^!',
+            b: '---(^!)',
+            c: '---------^-!',
+            d: '-----------(^!)',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -419,13 +426,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|';
-          const expected =   '-a-----------------';
+          const source = '-a-b----c-d--------|';
+          const expected = '-a-----------------';
           const valueSubs = {
-            a:               '-^',
-            b:               '------------',
-            c:               '------------',
-            d:               '------------',
+            a: '-^',
+            b: '------------',
+            c: '------------',
+            d: '------------',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -445,13 +452,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|'
-          const expected =   '-a-(bc)--d-e-f-gh';
+          const source = '-a-b----c-d--------|';
+          const expected = '-a-(bc)--d-e-f-gh';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '--------^-------!',
-            d:               '----------------(^!)',
+            a: '-^!',
+            b: '---(^!)',
+            c: '--------^-------!',
+            d: '----------------(^!)',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -487,13 +494,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d-------|';
-          const expected =   '-a-bc----dhe-f-g---';
+          const source = '-a-b----c-d-------|';
+          const expected = '-a-bc----dhe-f-g---';
           const valueSubs = {
-            a:               '-^',
-            b:               '---^',
-            c:               '--------^--',
-            d:               '----------^',
+            a: '-^',
+            b: '---^',
+            c: '--------^--',
+            d: '----------^',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -520,13 +527,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d-------|';
-          const expected =   '-a-(bc)--dhe-f-g---';
+          const source = '-a-b----c-d-------|';
+          const expected = '-a-(bc)--dhe-f-g---';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '--------^-------!',
-            d:               '----------(^!)',
+            a: '-^!',
+            b: '---(^!)',
+            c: '--------^-------!',
+            d: '----------(^!)',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -562,13 +569,13 @@ describe('coerceAllFactory', () => {
 
       it('should only emit 1 value from the first observable passed to the input handler since the first observable never completes', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|';
-          const expected =   '-a-----------------';
+          const source = '-a-b----c-d--------|';
+          const expected = '-a-----------------';
           const valueSubs = {
-            a:               '-^',
-            b:               '------------',
-            c:               '------------',
-            d:               '------------',
+            a: '-^',
+            b: '------------',
+            c: '------------',
+            d: '------------',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -588,13 +595,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit the values of the first 3 observables and ignore the value for the last observable', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|'
-          const expected =   '-a-(bc)--d-e-f-g';
+          const source = '-a-b----c-d--------|';
+          const expected = '-a-(bc)--d-e-f-g';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '--------^-------!',
-            d:               '--------------------',
+            a: '-^!',
+            b: '---(^!)',
+            c: '--------^-------!',
+            d: '--------------------',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -605,7 +612,7 @@ describe('coerceAllFactory', () => {
             d: 'hello',
             e: 'world',
             f: 'with',
-            g: 'delay'
+            g: 'delay',
           };
 
           createInputStream(cold, source, values, inputHandler);
@@ -625,18 +632,20 @@ describe('coerceAllFactory', () => {
 
     describe('default flattening (switchAll)', () => {
       beforeEach(() => {
-        inputHandler = coerceAllFactory<string>(() => new BehaviorSubject<Observable<string>>(of(initialValue)));
+        inputHandler = coerceAllFactory<string>(
+          () => new BehaviorSubject<Observable<string>>(of(initialValue))
+        );
       });
 
       it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b-----c-d|';
-          const expected =   'ab-cd-----ef';
+          const source = '-a-b-----c-d|';
+          const expected = 'ab-cd-----ef';
           const valueSubs = {
-            a:               '-^-!',
-            b:               '---^-----!',
-            c:               '---------^-!',
-            d:               '-----------^',
+            a: '-^-!',
+            b: '---^-----!',
+            c: '---------^-!',
+            d: '-----------^',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -661,13 +670,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b-----c-d|';
-          const expected =   'ab-(cd)---ef-';
+          const source = '-a-b-----c-d|';
+          const expected = 'ab-(cd)---ef-';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '---------^-!',
-            d:               '-----------(^!)',
+            a: '-^!',
+            b: '---(^!)',
+            c: '---------^-!',
+            d: '-----------(^!)',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -701,13 +710,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|';
-          const expected =   'ab-----------------';
+          const source = '-a-b----c-d--------|';
+          const expected = 'ab-----------------';
           const valueSubs = {
-            a:               '-^',
-            b:               '------------',
-            c:               '------------',
-            d:               '------------',
+            a: '-^',
+            b: '------------',
+            c: '------------',
+            d: '------------',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -728,13 +737,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|'
-          const expected =   'ab-(cd)--e-f-g-hi';
+          const source = '-a-b----c-d--------|';
+          const expected = 'ab-(cd)--e-f-g-hi';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '--------^-------!',
-            d:               '----------------(^!)',
+            a: '-^!',
+            b: '---(^!)',
+            c: '--------^-------!',
+            d: '----------------(^!)',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -771,13 +780,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d-------|';
-          const expected =   'ab-cd----eif-g-h---';
+          const source = '-a-b----c-d-------|';
+          const expected = 'ab-cd----eif-g-h---';
           const valueSubs = {
-            a:               '-^',
-            b:               '---^',
-            c:               '--------^--',
-            d:               '----------^',
+            a: '-^',
+            b: '---^',
+            c: '--------^--',
+            d: '----------^',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -805,13 +814,13 @@ describe('coerceAllFactory', () => {
 
       it('should emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d-------|';
-          const expected =   'ab-(cd)--eif-g-h---';
+          const source = '-a-b----c-d-------|';
+          const expected = 'ab-(cd)--eif-g-h---';
           const valueSubs = {
-            a:               '-^!',
-            b:               '---(^!)',
-            c:               '--------^-------!',
-            d:               '----------(^!)',
+            a: '-^!',
+            b: '---(^!)',
+            c: '--------^-------!',
+            d: '----------(^!)',
           };
 
           const values = createWithCompletionValueStreams(cold);
@@ -841,20 +850,23 @@ describe('coerceAllFactory', () => {
     describe('flattening via exhaustAll', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
-          () => new BehaviorSubject<Observable<string>>(of(initialValue)),
+          () =>
+            new BehaviorSubject<Observable<string>>(
+              new BehaviorSubject(initialValue)
+            ),
           exhaustAll()
         );
       });
 
       it('should NOT emit value/s from the observable passed to the input handler (no completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|';
-          const expected =   'a------------------';
+          const source = '-a-b----c-d--------|';
+          const expected = 'a------------------';
           const valueSubs = {
-            a:               '------------',
-            b:               '------------',
-            c:               '------------',
-            d:               '------------',
+            a: '------------',
+            b: '------------',
+            c: '------------',
+            d: '------------',
           };
 
           const values = createNoCompletionValueStreams(cold);
@@ -874,13 +886,13 @@ describe('coerceAllFactory', () => {
 
       it('should NOT emit value/s from the observable passed to the input handler (with completion value inputs)', () => {
         testScheduler.run(({ cold, expectObservable, expectSubscriptions }) => {
-          const source =     '-a-b----c-d--------|';
-          const expected =   'a------------------';
+          const source = '-a-b----c-d--------|';
+          const expected = 'a------------------';
           const valueSubs = {
-            a:               '------------',
-            b:               '------------',
-            c:               '------------',
-            d:               '------------',
+            a: '------------',
+            b: '------------',
+            c: '------------',
+            d: '------------',
           };
 
           const values = createWithCompletionValueStreams(cold);

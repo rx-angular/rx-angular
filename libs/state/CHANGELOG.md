@@ -2,6 +2,66 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [15.0.0](https://github.com/rx-angular/rx-angular/compare/state@14.0.0...state@15.0.0) (2023-04-12)
+
+
+### Features
+
+* upgrade Angular to v15 ([a9938bc](https://github.com/rx-angular/rx-angular/commit/a9938bcb7b7df7d0557d9c682ada9cce55ad495e))
+
+
+### BREAKING CHANGES
+
+* The required `@angular/core` version is now `^15.0.0`.
+
+
+
+# [14.0.0](https://github.com/rx-angular/rx-angular/compare/state@2.0.0...state@14.0.0) (2023-04-11)
+
+
+### Bug Fixes
+
+* **state:** set default type for ProxyHandler transforms ([96b46e3](https://github.com/rx-angular/rx-angular/commit/96b46e3deadf209b2b5777b9d52ed43ee1fe5c54))
+
+
+### Features
+
+* upgrade Angular to v14 ([55ca73a](https://github.com/rx-angular/rx-angular/commit/55ca73a84dc03a29e56a8eb65093d42e0b148aa9))
+
+
+### BREAKING CHANGES
+
+* The required `@angular/core` version is now `^14.0.0`.
+
+
+
+# [2.0.0](https://github.com/rx-angular/rx-angular/compare/state@1.7.0...state@2.0.0) (2023-03-06)
+
+
+### Bug Fixes
+
+* bump ng-morph to fix vulnerabilities ([7534535](https://github.com/rx-angular/rx-angular/commit/75345358de107f3a8ab13fb32a8c96ca7f3c8fc0)), closes [#1493](https://github.com/rx-angular/rx-angular/issues/1493)
+* **docs:** fix broken tutorial link in states page and readme ([8e7af86](https://github.com/rx-angular/rx-angular/commit/8e7af86dec88aeebddce5df4595d4cdea0927bde))
+* turn off updating deps in dist package.json ([faec3d4](https://github.com/rx-angular/rx-angular/commit/faec3d492a513d13cf78c4d2248a0dfbf18e5a52)), closes [#1405](https://github.com/rx-angular/rx-angular/issues/1405)
+
+
+### Code Refactoring
+
+* **state:** drop transformations and remove re-export of selections ([0fd18af](https://github.com/rx-angular/rx-angular/commit/0fd18afc1cb2a69b4451b40ee70bc37ecde090cc))
+
+
+### Features
+
+* upgrade to Angular v13 ([76ac5d3](https://github.com/rx-angular/rx-angular/commit/76ac5d3e9dbfaa2de368d7128f4c9aacb094c085))
+
+
+### BREAKING CHANGES
+
+* **state:** The state library no longer export the transformation-helpers, they are now available under `@rx-angular/cdk/transformations`. Selections operators are no longer exported in the main entrypoint `@rx-angular/state`, they are now available under `@rx-angular/state/selections`.
+* The required Angular version is now `>=13.0.0`.
+
+
+
 # [1.7.0](https://github.com/rx-angular/rx-angular/compare/state@1.6.1...state@1.7.0) (2022-09-13)
 
 

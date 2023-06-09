@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RouterModule, Routes } from '@angular/router';
 import { UnpatchEventsModule } from '../../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.module';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks/index';
@@ -8,7 +8,7 @@ import { ValueProvidersModule } from '../../../../shared/debug-helper/value-prov
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { ContentChildDirective, ContentParent } from './intermediate.component';
 import { RxLetScopingComponent } from './rx-let-scoping.component';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 
 const routes: Routes = [
   {
@@ -26,7 +26,7 @@ const routes: Routes = [
     UnpatchEventsModule,
     StrategySelectModule,
     VisualizerModule,
-    LetModule,
+    RxLet,
     DirtyChecksModule,
   ],
 })

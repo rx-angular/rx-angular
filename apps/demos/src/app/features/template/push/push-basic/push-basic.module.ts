@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RouterModule } from '@angular/router';
-import { PushModule } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks/index';
 import { PushBasicComponent } from './push-basic.component';
 import { ROUTES } from './push-basic.routes';
@@ -15,10 +15,10 @@ const DECLARATIONS = [PushBasicComponent];
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    PushModule,
+    RxPush,
     DirtyChecksModule,
     MatButtonModule,
-    UnpatchModule,
+    RxUnpatch,
   ],
   exports: [DECLARATIONS],
 })

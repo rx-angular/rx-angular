@@ -41,14 +41,14 @@ export class AppComponent {
 ## RX_RENDER_STRATEGIES_CONFIG
 
 You can also set the `patchZone` config globally by providing a `RX_RENDER_STRATEGIES_CONFIG`.
-See more about configuration under [render strategies](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md) especially the section [usage-in-the-template](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/README.md#global)
+See more about configuration under [render strategies](../../cdk/render-strategies/render-strategies.mdx) especially the section [usage-in-the-template](../../cdk/render-strategies/render-strategies.mdx#global)
 
 ```ts
 @NgModule({
   providers: [{
     provide: RX_RENDER_STRATEGIES_CONFIG,
     useValue: {
-      patchZone: false // this applies to all letDirectives
+      patchZone: false // this applies to all RxLets
     }
   }]
 })

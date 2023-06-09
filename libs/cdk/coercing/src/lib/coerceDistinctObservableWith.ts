@@ -1,4 +1,4 @@
-import { Observable, ObservableInput, OperatorFunction } from 'rxjs';
+import { Observable, OperatorFunction } from 'rxjs';
 import { distinctUntilChanged, switchAll } from 'rxjs/operators';
 import { coerceObservableWith } from './coerceObservableWith';
 
@@ -13,7 +13,7 @@ import { coerceObservableWith } from './coerceObservableWith';
  *
  */
 export function coerceDistinctWith<T>(
-  flattenOperator?: OperatorFunction<ObservableInput<T>, T>
+  flattenOperator?: OperatorFunction<Observable<T>, T>
 ) {
   flattenOperator = flattenOperator || switchAll();
   return (o$: Observable<Observable<T> | T>) =>

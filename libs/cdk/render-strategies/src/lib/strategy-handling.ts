@@ -2,11 +2,16 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { map, share, startWith, switchAll } from 'rxjs/operators';
 
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
-import { RxCustomStrategyCredentials, RxStrategyCredentials } from './model';
+import {
+  RxCustomStrategyCredentials,
+  RxStrategies,
+  RxStrategyCredentials,
+  RxStrategyNames,
+} from './model';
 
 export interface RxStrategyHandler {
   strategy$: Observable<RxStrategyCredentials>;
-  next(name: string | Observable<string>): void;
+  next(name: RxStrategyNames | Observable<RxStrategyNames>): void;
 }
 
 /**
@@ -23,7 +28,7 @@ export function strategyHandling(
   strategies: RxCustomStrategyCredentials<string>
 ): RxStrategyHandler {
   const hotFlattened = coerceAllFactory<string>(
-    () => new ReplaySubject<string | Observable<string>>(1),
+    () => new ReplaySubject<RxStrategyNames | Observable<RxStrategyNames>>(1),
     switchAll()
   );
   return {
@@ -32,7 +37,7 @@ export function strategyHandling(
       nameToStrategyCredentials(strategies, defaultStrategyName),
       share()
     ) as Observable<RxStrategyCredentials>,
-    next(name: string | Observable<string>) {
+    next(name: RxStrategyNames | Observable<RxStrategyNames>) {
       hotFlattened.next(name);
     },
   };

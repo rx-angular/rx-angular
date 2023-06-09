@@ -19,6 +19,7 @@ import {
   RxStrategyCredentials,
   onStrategy,
   strategyHandling,
+  RxStrategyNames,
 } from '@rx-angular/cdk/render-strategies';
 import {
   RxListViewComputedContext,
@@ -35,7 +36,7 @@ import { createErrorHandler } from './render-error';
 import { notifyAllParentsIfNeeded } from './utils';
 
 export interface RxListManager<T> {
-  nextStrategy: (config: string | Observable<string>) => void;
+  nextStrategy: (config: RxStrategyNames | Observable<RxStrategyNames>) => void;
 
   render(changes$: Observable<NgIterable<T>>): Observable<NgIterable<T> | null>;
 }
@@ -87,7 +88,7 @@ export function createListTemplateManager<
   let partiallyFinished = false;
 
   return {
-    nextStrategy(nextConfig: Observable<string>): void {
+    nextStrategy(nextConfig: Observable<RxStrategyNames>): void {
       strategyHandling$.next(nextConfig);
     },
     render(

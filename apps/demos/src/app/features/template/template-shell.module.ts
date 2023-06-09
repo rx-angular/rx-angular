@@ -5,83 +5,75 @@ const ROUTES: Routes = [
   {
     path: '',
     redirectTo: 'rx-let',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'push',
     loadChildren: () =>
-      import('./push/push.module').then(
-        m => m.PushDemoModule
-      )
+      import('./push/push.module').then((m) => m.PushDemoModule),
   },
   {
     path: 'rx-let',
     loadChildren: () =>
-      import('./rx-let/rx-let-demo.module').then(
-        m => m.RxLetDemoModule
-      )
+      import('./rx-let/rx-let-demo.module').then((m) => m.RxLetDemoModule),
   },
   {
     path: 'rx-if',
     loadChildren: () =>
-      import('./rx-if/rx-if-demo.module').then(
-        m => m.RxIfDemoModule
-      )
+      import('./rx-if/rx-if-demo.module').then((m) => m.RxIfDemoModule),
   },
   {
     path: 'rx-for',
     loadChildren: () =>
-      import('./rx-for/rx-for.module').then(
-        m => m.RxForDemoModule
-      )
+      import('./rx-for/rx-for.module').then((m) => m.RxForDemoModule),
+  },
+  {
+    path: 'rx-virtual-for',
+    loadChildren: () =>
+      import('./rx-virtual-for/rx-virtual-for.module').then(
+        (m) => m.RxVirtualForDemoModule
+      ),
   },
   {
     path: 'pipes',
     loadChildren: () =>
-      import('./pipes/pipes.module').then(
-        m => m.PipesModule
-      )
+      import('./pipes/pipes.module').then((m) => m.PipesModule),
   },
   {
     path: 'unpatch',
     loadChildren: () =>
-      import('./unpatch/unpatch.module').then(
-        m => m.UnpatchModule
-      )
+      import('./unpatch/unpatch.module').then((m) => m.RxUnpatch),
   },
   {
     path: 'rx-context',
     loadChildren: () =>
       import('./rx-context/rx-context.routed.module').then(
-        m => m.RxContextRoutedModule
-      )
+        (m) => m.RxContextRoutedModule
+      ),
   },
   {
     path: 'strategies',
     loadChildren: () =>
-      import('./strategies/strategies.module').then(
-        m => m.StrategiesModule
-      )
+      import('./strategies/strategies.module').then((m) => m.StrategiesModule),
   },
   {
     path: 'view-port-prio',
     loadChildren: () =>
       import('./viewport-prio/viewport-prio-demo.module').then(
-        m => m.ViewportPrioModule
-      )
+        (m) => m.ViewportPrioModule
+      ),
   },
   {
     path: 'render-callback',
-    loadChildren: () => import('./render-callback/render-callback.module')
-      .then(m => m.RenderCallbackModule)
-  }
+    loadChildren: () =>
+      import('./render-callback/render-callback.module').then(
+        (m) => m.RenderCallbackModule
+      ),
+  },
 ];
-
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(ROUTES)
-  ]
+  imports: [RouterModule.forChild(ROUTES)],
 })
 export class TemplateShellModule {}

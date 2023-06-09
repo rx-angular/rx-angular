@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { RouterModule } from '@angular/router';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks/index';
 import { RenderCallbackComponent } from './render-callback.component';
 import { RENDER_CALLBACK_ROUTES } from './render-callback.routes';
-import { MatButtonModule } from '@angular/material/button';
-import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { RxPush } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 
 @NgModule({
   declarations: [RenderCallbackComponent],
@@ -20,9 +20,9 @@ import { UnpatchModule } from '@rx-angular/template/unpatch';
     MatDividerModule,
     DirtyChecksModule,
     MatButtonModule,
-    UnpatchModule,
-    PushModule,
-    LetModule,
+    RxUnpatch,
+    RxPush,
+    RxLet,
   ],
 })
 export class RenderCallbackModule {}

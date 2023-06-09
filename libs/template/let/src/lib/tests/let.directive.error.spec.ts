@@ -9,7 +9,7 @@ import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { Observable, of, throwError } from 'rxjs';
 
-import { LetDirective } from '../let.directive';
+import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
@@ -25,7 +25,8 @@ class LetDirectiveTestErrorComponent {
 
 const setupLetDirectiveTestComponentError = (): void => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveTestErrorComponent, LetDirective],
+    declarations: [LetDirectiveTestErrorComponent],
+    imports: [RxLet],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

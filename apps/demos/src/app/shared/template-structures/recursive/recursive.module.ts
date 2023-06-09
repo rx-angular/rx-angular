@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { RxPush } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
 import { VisualizerModule } from '../../debug-helper/visualizer';
 import { RecursiveObservableWorkAsyncComponent } from './recursive-observable-work-async.component';
@@ -34,13 +34,12 @@ const DECLARATIONS = [
     CommonModule,
     MatButtonModule,
     DirtyChecksModule,
-    UnpatchModule,
-    PushModule,
+    RxUnpatch,
+    RxPush,
     VisualizerModule,
     ValueProvidersModule,
     RenderingsModule,
-    LetModule,
-    PushModule,
+    RxLet,
   ],
   exports: DECLARATIONS,
 })

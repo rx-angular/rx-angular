@@ -1,31 +1,95 @@
-[![rx-angular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://rx-angular.io/)
+[![RxAngular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://rx-angular.io/)
 
-# RxAngular ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
+# RxAngular ![RxAngular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
 
-RxAngular offers a comprehensive toolset for handling fully reactive Angular applications with the main focus on runtime
-performance and template rendering.
+> RxAngular offers a comprehensive toolkit for handling fully reactive Angular applications with the main focus on runtime performance, template rendering, and Developer eXperience.
 
-RxAngular is divided into different packages:
+## Packages
 
-- [📦@rx-angular/cdk](https://rx-angular.io/docs/cdk)
-- [📦@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin)
-- [📦@rx-angular/state](https://rx-angular.io/docs/state)
-- [📦@rx-angular/template](https://rx-angular.io/docs/template)
+RxAngular is made up of different packages that work together or standalone.
 
-Used together, you get a powerful tool for developing high-performance angular applications with or without NgZone.
+| Package                                                               | Description                                                                                                          | Version                                                                                                                               |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| [@rx-angular/state](https://rx-angular.io/docs/state)                 | A powerful state management library, providing a fully reactive way to manage state in components and services.      | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)                 |
+| [@rx-angular/template](https://rx-angular.io/docs/template)           | A set of directives and pipes designed for high-performance and non-blocking rendering for large-scale applications. | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)           |
+| [@rx-angular/cdk](https://rx-angular.io/docs/cdk)                     | A Component Development Kit for high-performance and ergonomic Angular UI libs and large-scale applications.         | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)                     |
+| [@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin) | A set of ESLint rules for building reactive, performant, and zone-less Angular applications.                         | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Feslint-plugin.svg)](https://www.npmjs.com/package/%40rx-angular%2Feslint-plugin) |
 
-This repository holds a set of helpers to create **fully reactive** as well as **fully zone-less** applications.
+This repository holds a set of helpers that are aiming to provide:
 
-## Benefits
+- fully reactive applications
+- fully or partially zone-less applications
+- high-performance and non-blocking rendering
 
-- 🔥 It's fast & performance focused: exceptional runtime speed & small bundle size
-- ✔ Easy upgrade paths: migration scripts included since beta! `ng update @rx-angular/{cdk | template | state}`
-- ✔ Lean and simple: No boilerplate guaranteed
-- ✔ Well typed and tested
-- ✔ Backwards compatible: support for Angular > v11
+## Getting Started
 
-> **❗ Warning**
-> Expect no migration scripts for any change in `experimental` folders
+### Using `@rx-angular/template`
+
+This is an example of how to use the `*rxLet` directive to bind an Observable value to the template. In this example, the component defines a property `time$`, which is an Observable that emits a value every second using the `timer` operator. The emitted values are mapped to the current time string using the `map` operator which is then displayed in the template using `*rxLet`.
+
+```ts
+@Component({
+  selector: 'app-time',
+  standalone: true,
+  imports: [LetDirective],
+  template: `
+    <ng-container *rxLet="time$; let value">
+      {{ value }}
+    </ng-container>
+  `,
+})
+export class TimeComponent {
+  time$ = timer(0, 1000).pipe(map(() => new Date().toTimeString()));
+}
+```
+
+To learn more about @rx-angular/template and its capabilities, check out the official documentation at [https://rx-angular.io/docs/template](https://rx-angular.io/docs/template).
+
+### Using `@rx-angular/state`
+
+In this example, we're creating a fully reactive counter component. We define the state using an interface and use the `RxState` service to manage it. We also define two actions to increment and decrement the count and use the `connect` method to update the state in response to these actions. Finally, we use the `select` method to display the count property of the state in the template.
+
+```ts
+interface CounterState {
+  count: number;
+}
+
+interface CounterActions {
+  increment: void;
+  decrement: void;
+}
+
+@Component({
+  selector: 'app-counter',
+  standalone: true,
+  imports: [PushPipe],
+  template: `
+    <p>Count: {{ count$ | push }}</p>
+    <button (click)="actions.increment()">Increment</button>
+    <button (click)="actions.decrement()">Decrement</button>
+  `,
+  providers: [RxState, RxActionFactory],
+})
+export class CounterComponent {
+  readonly count$ = this.state.select('count');
+  readonly actions = this.actionFactory.create();
+
+  constructor(
+    private readonly state: RxState<CounterState>,
+    private readonly actionFactory: RxActionFactory<CounterActions>
+  ) {
+    this.state.set({ count: 0 });
+    this.state.connect(this.actions.increment$, (state) => ({
+      count: state.count + 1,
+    }));
+    this.state.connect(this.actions.decrement$, (state) => ({
+      count: state.count - 1,
+    }));
+  }
+}
+```
+
+To learn more about @rx-angular/state and its capabilities, check out the official documentation at [https://rx-angular.io/docs/state](https://rx-angular.io/docs/state).
 
 ## Used by
 
@@ -60,24 +124,12 @@ This repository holds a set of helpers to create **fully reactive** as well as *
 
 - [📚 Official docs](https://www.rx-angular.io/)
 - [![Discord](https://icongr.am/material/discord.svg?size=16&color=7289da) Discord channel](https://discord.com/invite/XWWGZsQ)
+- [![Slack](https://icongr.am/material/slack.svg?size=16&color=7289da) Slack](https://join.slack.com/t/rxangular/shared_invite/zt-1tn1hivnp-FemQzop69HI7~wlPSqDjKQ)
 
-## Packages
+## Contributing
 
-Find details in the links to the official docs below for installation and setup instructions, examples and resources.
+We welcome contributions from the community to help improve RxAngular! To get started, please take a look at our contribution guidelines in the [CONTRIBUTING.md](CONTRIBUTING.md) file. We appreciate your help in making RxAngular better for everyone.
 
-- [📦@rx-angular/cdk](https://rx-angular.io/docs/cdk) - Component Development Kit
-- [📦@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin) - ESLint Plugin
-- [📦@rx-angular/state](https://rx-angular.io/docs/state) - Imperative & Reactive Component State-Management
-- [📦@rx-angular/template](https://rx-angular.io/docs/template) - High-Performance Non-Blocking Rendering
+## License
 
-## Version Compatibility
-
-| Angular                | RxJS                 | @rx-angular/state | @rx-angular/template | @rx-angular/cdk     |
-| ---------------------- | -------------------- | ----------------- | -------------------- | ------------------- |
-| `14`                   | `^7.4.0`             | `> 1.4.6`         | `> 1.0.0-beta.29`    | `> 1.0.0-alpha.10`  |
-| `^12.0.0` or `^13.0.0` | `^6.5.5` or `^7.4.0` | `> 1.4.6`         | `> 1.0.0-beta.29`    | `> 1.0.0-alpha.10`  |
-| `^11.0.0`              | `^6.5.5`             | `<= 1.4.6`        | `<= 1.0.0-beta.29`   | `<= 1.0.0-alpha.10` |
-
-Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself.
-All the packages support RxJS versions `^6.5.5` || `^7.4.0`.
-For more information about the compatibilities of angular itself see this [gist](https://gist.github.com/LayZeeDK/c822cc812f75bb07b7c55d07ba2719b3).
+This project is MIT licensed.

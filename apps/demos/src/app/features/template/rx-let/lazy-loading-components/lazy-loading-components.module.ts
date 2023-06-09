@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './lazy-loading-components.routes';
 import { LazyLoadingComponentsComponent } from './lazy-loading-components.component';
-import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { LazyLoadingComponentsObservableComponent } from './lazy-loading-components-observable.component';
@@ -17,7 +17,7 @@ const DECLARATIONS = [
   LazyLoadingComponentsObservableComponent,
   LazyLoadingComponentsPromiseComponent,
   LazyLoadingComponentsAsyncAwaitComponent,
-  LazyLoadingComponentsComponent
+  LazyLoadingComponentsComponent,
 ];
 
 @NgModule({
@@ -25,14 +25,12 @@ const DECLARATIONS = [
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    LetModule,
-    UnpatchModule,
+    RxLet,
+    RxUnpatch,
     GhostElementsModule,
     MatButtonModule,
     VisualizerModule,
-    MatButtonToggleModule
-  ]
+    MatButtonToggleModule,
+  ],
 })
-export class LazyLoadingComponentsModule {
-
-}
+export class LazyLoadingComponentsModule {}
