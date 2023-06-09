@@ -135,14 +135,6 @@ Computes 1 time & Renders 2. ✅; .4 ✅
 B: {{(model$ | push).b}}
 ```
 
-## selectSlice
-
-TODO
-
-## distinctUntilSomeChanges
-
-TODO
-
 # Advanced derivation architecture
 
 **The problem**
@@ -211,7 +203,7 @@ export class ProblemComponent {
     selectSlice(['title', 'sortedList', 'sortDirection'])
   );
 
-  //                                                    ❌ BAD: modle viewmodel mix up 👇
+  //  ❌ BAD: modle viewmodel mix up 👇
   constructor(
     private globalState: GlobalState,
     private state: RxState<Model & Pick<ViewModel, 'sortedList'>>
