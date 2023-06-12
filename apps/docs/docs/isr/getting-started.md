@@ -33,11 +33,38 @@ To use it in your application, you need to register the providers in your **app.
 1. Import the **provideISR()** function from the **ngx-isr** package.
 2. Register the provider in the **providers** array of your **NgModule**.
 
-@TODO appServerModuleCode
+```typescript
+import { NgModule } from '@angular/core';
+import { ServerModule } from '@angular/platform-server';
+
+import { AppModule } from './app.module';
+import { AppComponent } from './app.component';
+
+// 1. 👇 Import the provider function
+import { provideISR } from 'ngx-isr/server';
+
+@NgModule({
+  imports: [AppModule, ServerModule],
+  bootstrap: [AppComponent],
+  providers: [
+    provideISR(), // 2. 👈 Register the provider
+  ],
+})
+export class AppServerModule {}
+```
 
 If you are in a standalone application, you can also register the provider in the **serverConfig**.
 
-@TODO serverConfigCode
+```typescript
+import { provideISR } from 'ngx-isr/server';
+
+const serverConfig: ApplicationConfig = {
+  providers: [
+    provideServerRendering(),
+    provideISR(), // 👈 Use it in config providers
+  ],
+};
+```
 
 ## Configure server handling
 
@@ -48,7 +75,58 @@ Now you need to configure the ISR handler in your **server.ts** file.
 3. Use the ISRHandler instance to handle the requests.
 4. Comment out default angular universal handler, because it's will be handled in ISR render method.
 
-@TODO serverTsCode
+```typescript
+import { environment } from './src/environments/environment';
+import 'zone.js/dist/zone-node';
+
+import { ngExpressEngine } from '@nguniversal/express-engine';
+import * as express from 'express';
+import { join } from 'path';
+
+import { AppServerModule } from './src/main.server';
+import { existsSync } from 'fs';
+
+// 1. 👇 Import the ISRHandler class
+import { ISRHandler } from 'ngx-isr/server';
+
+export function app(): express.Express {
+  const server = express();
+  const distFolder = join(process.cwd(), 'dist/docs/browser');
+  const indexHtml = existsSync(join(distFolder, 'index.original.html'))
+    ? 'index.original.html'
+    : 'index';
+
+  // 2. 👇 Instantiate the ISRHandler class with the index.html file
+  const isr = new ISRHandler({
+    indexHtml,
+    invalidateSecretToken: process.env['INVALIDATE_TOKEN'] || 'MY_TOKEN',
+    enableLogging: !environment.production,
+  });
+
+  server.engine('html', ngExpressEngine({ bootstrap: AppServerModule }));
+
+  server.set('view engine', 'html');
+  server.set('views', distFolder);
+
+  server.get('*.*', express.static(distFolder, { maxAge: '1y' }));
+
+  // 3. 👇 Use the ISRHandler to handle the requests
+  server.get(
+    '*',
+    // Serve page if it exists in cache
+    async (req, res, next) => await isr.serveFromCache(req, res, next),
+    // Server side render the page and add to cache if needed
+    async (req, res, next) => await isr.render(req, res, next)
+  );
+
+  // 4: 👇 Comment out default angular universal handler, because it's will be handled in ISR render method
+  // (req, res) => {
+  //   res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
+  // }
+
+  return server;
+}
+```
 
 > Congratulations!
 > You have successfully configured the **ngx-isr** package.
@@ -60,7 +138,19 @@ we want to be cached using ISR.
 
 To do this, we need to add the **revalidate** key in the route **data** object.
 
-@TODO routes code
+```typescript
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: 'home',
+    component: HomeComponent,
+    data: {
+      revalidate: 100, // 👈 Add the revalidate key
+    },
+  },
+];
+```
 
 The **revalidate** key is the number of seconds after which the page will be revalidated.
 
