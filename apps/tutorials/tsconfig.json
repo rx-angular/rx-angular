@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./tsconfig.editor.json"
+    }
+  ],
+  "extends": "../../tsconfig.base.json"
+}

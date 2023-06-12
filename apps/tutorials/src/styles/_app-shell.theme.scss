@@ -1,0 +1,22 @@
+@use '@angular/material' as mat;
+
+@mixin app-shell-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $headerBg: mat.get-color-from-palette($primary);
+  $headerColor: mat.get-color-from-palette($primary, default-contrast);
+
+  app-side-nav {
+    .app-shell-sidenav-item {
+      &.active {
+        background-color: mat.get-color-from-palette($background, 'hover');
+      }
+    }
+  }
+}
+
+@mixin rxa-app-shell-typography($config) {
+}

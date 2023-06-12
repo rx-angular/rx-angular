@@ -31,12 +31,13 @@ import { PresenterPatternSolution } from './6-presenter-pattern/presenter-patter
 import { PresenterPatternStart } from './6-presenter-pattern/presenter-pattern.start.component';
 import { DemoBasicsComponent } from './solution/demo-basics.component';
 import { DemoBasicsContainerComponent } from './solution/demo-basics.container.component';
+import {RxLetModule} from "../../../../../../demos/src/app/rx-angular-pocs/template/directives/let/let.module";
 
 export const ROUTES = [
-  {
+/*  {
     path: '',
     redirectTo: 'setup',
-  },
+  },*/
   {
     path: 'setup',
     component: SetupContainerComponent,
@@ -103,7 +104,7 @@ export const materialModules = [
 
 @NgModule({
   declarations: [DECLARATIONS],
-  imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES)],
+  imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES), RxLetModule],
   exports: [DECLARATIONS],
 })
 export class TutorialBasicsModule {}

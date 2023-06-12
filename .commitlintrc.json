@@ -13,7 +13,8 @@
         "demos",
         "schematics",
         "ci",
-        "eslint"
+        "eslint",<
+        "tutorials"
       ]
     ],
     "type-empty": [2, "never"],
