@@ -1,7 +1,7 @@
 ---
-sidebar_label: How it Works
+sidebar_label: Error Handling
 sidebar_position: 4
-title: How it Works
+title: Error Handling
 ---
 
 ## How it works?
@@ -14,7 +14,6 @@ errors during the regeneration or caching of your pages.
 By default, when an **http error** occurs during the server-rendering of a page, we don't
 cache the page but fall back to client-side rendering, because it probably will have error
 messages or other content that is not intended to be cached.
-</docs-page-section>
 
 ## Configure error handling
 
@@ -37,7 +36,7 @@ const isr = new ISRHandler({
 In, order to see if the page has an error, you can check the errors property in the generated
 html. Here's an example of a page with an error:
 
-<img src="assets/images/errors-in-html.png" alt="ISR state of a page with an error" />
+<img src="img/isr/errors-in-html.png" alt="ISR state of a page with an error" />
 
 ## Handle other errors
 

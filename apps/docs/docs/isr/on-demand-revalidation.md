@@ -18,13 +18,10 @@ So, you won't have to wait for the cache to expire to get the latest data.
 In order to use on-demand revalidation, we need to add some configuration in the
 **server.ts** file.
 
-```typescript
+```json
 {
-"token": "your-secret-token",
-"urlsToInvalidate": [
-"/",
-"/docs/on-demand-revalidation"
-]
+  "token": "your-secret-token",
+  "urlsToInvalidate": ["/", "/docs/on-demand-revalidation"]
 }
 ```
 
@@ -47,6 +44,7 @@ export function app(): express.Express {
 **token** is the secret token that you set in the **ISRHandler invalidateSecretToken** field. **urlsToInvalidate** is an array of URLs that you want to invalidate.
 
 Here's an example of how to invalidate the cache using**Postman**:
+
 <img src="assets/images/on-demand-postman.png" alt="Postman Invalidate Cache" />
 
 ## Usecases
