@@ -63,6 +63,7 @@ import {
  */
 @Directive({
   selector: '[rxIf]',
+  standalone: true,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxIf<T = unknown>
@@ -134,9 +135,7 @@ export class RxIf<T = unknown>
    * @see {@link RxStrategyNames}
    */
   @Input('rxIfStrategy')
-  set strategy(
-    strategyName: Observable<RxStrategyNames<string>> | RxStrategyNames<string>
-  ) {
+  set strategy(strategyName: Observable<RxStrategyNames> | RxStrategyNames) {
     this.strategyHandler.next(strategyName);
   }
 
@@ -467,11 +466,8 @@ export class RxIf<T = unknown>
   private templateNotifier = createTemplateNotifier<T>();
 
   /** @internal */
-  private readonly strategyHandler = coerceAllFactory<RxStrategyNames<string>>(
-    () =>
-      new ReplaySubject<
-        RxStrategyNames<string> | Observable<RxStrategyNames<string>>
-      >(1),
+  private readonly strategyHandler = coerceAllFactory<RxStrategyNames>(
+    () => new ReplaySubject<RxStrategyNames | Observable<RxStrategyNames>>(1),
     mergeAll()
   );
   /** @internal */

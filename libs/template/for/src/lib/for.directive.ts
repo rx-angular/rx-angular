@@ -19,7 +19,10 @@ import {
   coerceDistinctWith,
   coerceObservableWith,
 } from '@rx-angular/cdk/coercing';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import {
+  RxStrategyNames,
+  RxStrategyProvider,
+} from '@rx-angular/cdk/render-strategies';
 import {
   createListTemplateManager,
   RxListManager,
@@ -73,6 +76,7 @@ declare const ngDevMode: boolean;
  */
 @Directive({
   selector: '[rxFor][rxForOf]',
+  standalone: true,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
@@ -162,7 +166,9 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @see {@link strategies}
    */
   @Input()
-  set rxForStrategy(strategyName: string | Observable<string> | undefined) {
+  set rxForStrategy(
+    strategyName: RxStrategyNames | Observable<RxStrategyNames> | undefined
+  ) {
     this.strategyInput$.next(strategyName);
   }
 
@@ -302,7 +308,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param trackByFnOrKey
    */
   @Input('rxForTrackBy')
-  set trackBy(trackByFnOrKey: string | ((idx: number, i: T) => any)) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  set trackBy(trackByFnOrKey: keyof T | ((idx: number, i: T) => any)) {
     if (
       (typeof ngDevMode === 'undefined' || ngDevMode) &&
       trackByFnOrKey != null &&
@@ -389,7 +396,9 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   ) {}
 
   /** @internal */
-  private strategyInput$ = new ReplaySubject<string | Observable<string>>(1);
+  private strategyInput$ = new ReplaySubject<
+    RxStrategyNames | Observable<RxStrategyNames>
+  >(1);
 
   /** @internal */
   private observables$ = new ReplaySubject<Observable<U> | U>(1);

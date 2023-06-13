@@ -1,4 +1,3 @@
-import 'jest-preset-angular/setup-jest'; // TODO: move this into test-setup when zone-config.spec is in its own lib
 import { ErrorHandler, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';

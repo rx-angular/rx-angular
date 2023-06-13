@@ -1,10 +1,15 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { EMPTY, Observable, of } from 'rxjs';
 
-import { LetDirective } from '../let.directive';
+import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
@@ -28,7 +33,8 @@ let nativeElement: HTMLElement;
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveNoCompleteTemplateTestComponent, LetDirective],
+    declarations: [LetDirectiveNoCompleteTemplateTestComponent],
+    imports: [RxLet],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

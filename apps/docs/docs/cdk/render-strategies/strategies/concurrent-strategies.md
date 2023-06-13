@@ -145,7 +145,7 @@ This enables:
 - render deadlines
 
 One of the first things to understand is the term "frame budget".
-It means we have a maximum time (which is globally defined) a task can take before yielding to the main thread. e.g. 60frames/1000ms=16.6666ms animations or 50ms long task.
+It means we have a maximum time (which is globally defined) a task can take before yielding to the main thread. e.g. 1000ms/60frames=16.6666ms animations or 50ms long task.
 
 Scheduling with notion of frame budget enables us to split work into individual browser tasks as soon as we exceed the budget.
 We then yield to the main thread and are interactive again until the next batch of tasks will get processed.

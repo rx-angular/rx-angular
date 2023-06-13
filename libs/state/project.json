@@ -1,30 +1,30 @@
 {
+  "name": "state",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "root": "libs/state",
   "sourceRoot": "libs/state/src",
   "prefix": "rx",
   "targets": {
     "build-lib": {
-      "executor": "@nrwl/angular:package",
+      "executor": "@nx/angular:package",
       "options": {
         "tsConfig": "libs/state/tsconfig.lib.json",
         "project": "libs/state/ng-package.json",
         "updateBuildableProjectDepsInPackageJson": false
       },
-      "outputs": ["dist/libs/state"],
+      "outputs": ["{workspaceRoot}/dist/libs/state"],
       "dependsOn": [
         {
           "target": "build",
-          "projects": "dependencies"
+          "dependencies": true
         }
       ]
     },
     "build": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "dependsOn": [
         {
-          "target": "build-lib",
-          "projects": "self"
+          "target": "build-lib"
         }
       ],
       "options": {
@@ -47,19 +47,19 @@
         ],
         "parallel": false
       },
-      "outputs": ["dist/libs/state/schematics"]
+      "outputs": ["{workspaceRoot}/dist/libs/state/schematics"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/state/jest.config.js",
+        "jestConfig": "libs/state/jest.config.ts",
         "passWithNoTests": true,
         "codeCoverage": true
       },
-      "outputs": ["coverage/state"]
+      "outputs": ["{workspaceRoot}/coverage/state"]
     },
     "perfBuild": {
-      "executor": "@nrwl/node:build",
+      "executor": "@nx/node:webpack",
       "options": {
         "main": "libs/state/perf/index.ts",
         "outputPath": "dist/libs/state-perf/dist",
@@ -68,13 +68,13 @@
       "outputs": ["{options.outputPath}"]
     },
     "perf": {
-      "executor": "@nrwl/node:execute",
+      "executor": "@nx/node:node",
       "options": {
         "buildTarget": "state:perfBuild"
       }
     },
     "publish": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           {
@@ -84,20 +84,16 @@
       },
       "dependsOn": [
         {
-          "target": "lint",
-          "projects": "self"
+          "target": "lint"
         },
         {
-          "target": "test",
-          "projects": "self"
+          "target": "test"
         },
         {
-          "target": "version",
-          "projects": "self"
+          "target": "version"
         },
         {
-          "target": "build",
-          "projects": "self"
+          "target": "build"
         }
       ]
     },
@@ -107,7 +103,9 @@
         "noVerify": true,
         "baseBranch": "main",
         "versionTagPrefix": "${target}@",
-        "commitMessageFormat": "release(${projectName}): ${version}"
+        "commitMessageFormat": "release(${projectName}): ${version}",
+        "postTargets": ["state:github"],
+        "push": true
       }
     },
     "github": {
@@ -118,14 +116,14 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/state/**/*.ts"]
       }
     }
   },
   "generators": {
-    "@nrwl/angular:component": {
+    "@nx/angular:component": {
       "style": "scss"
     }
   },

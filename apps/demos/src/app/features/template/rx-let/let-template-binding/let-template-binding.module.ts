@@ -5,13 +5,13 @@ import { ROUTES } from './let-template-binding.routes';
 import { LetTemplateBindingComponent } from './let-template-binding.component';
 import { LetTemplateBindingHttpExampleComponent } from './examples/let-template-binding-http-example.component';
 import { LetTemplateBindingSubjectExampleComponent } from './examples/let-template-binding-subject-example.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
+import { RxPush } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ToStringPipe } from './to-string.pipe';
 
@@ -31,10 +31,10 @@ const DECLARATIONS = [
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    UnpatchModule,
-    PushModule,
+    RxUnpatch,
+    RxPush,
     MatBadgeModule,
-    LetModule,
+    RxLet,
   ],
 })
 export class LetTemplateBindingModule {}

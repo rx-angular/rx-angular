@@ -4,6 +4,7 @@ import {
   OnDestroy,
   Pipe,
   PipeTransform,
+  untracked,
 } from '@angular/core';
 import {
   RxStrategyNames,
@@ -34,7 +35,7 @@ import {
 } from 'rxjs/operators';
 
 /**
- * @Pipe PushPipe
+ * @Pipe RxPush
  *
  * @description
  *
@@ -42,7 +43,7 @@ import {
  * Just like the *rxLet Directive, it leverages a
  * [RenderStrategy](https://rx-angular.io/docs/cdk/render-strategies)
  *   under the hood which takes care of optimizing the ChangeDetection of your component. The rendering behavior can be
- *   configured per PushPipe instance using either a strategy name or provide a
+ *   configured per RxPush instance using either a strategy name or provide a
  * `RxComponentInput` config.
  *
  * Usage in the template
@@ -84,10 +85,8 @@ import {
  *
  * @publicApi
  */
-@Pipe({ name: 'push', pure: false })
-export class PushPipe<S extends string = string>
-  implements PipeTransform, OnDestroy
-{
+@Pipe({ name: 'push', pure: false, standalone: true })
+export class RxPush implements PipeTransform, OnDestroy {
   /**
    * @internal
    * This is typed as `any` because the type cannot be inferred
@@ -121,29 +120,29 @@ export class PushPipe<S extends string = string>
 
   transform<U>(
     potentialObservable: null,
-    config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
+    config?: RxStrategyNames | Observable<RxStrategyNames>,
     renderCallback?: NextObserver<U>
   ): null;
   transform<U>(
     potentialObservable: undefined,
-    config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
+    config?: RxStrategyNames | Observable<RxStrategyNames>,
     renderCallback?: NextObserver<U>
   ): undefined;
   transform<U>(
     potentialObservable: ObservableInput<U> | U,
-    config?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>,
+    config?: RxStrategyNames | Observable<RxStrategyNames>,
     renderCallback?: NextObserver<U>
   ): U;
   transform<U>(
     potentialObservable: ObservableInput<U>,
-    config?: PushInput<U, S>
+    config?: PushInput<U>
   ): U;
   transform<U>(
     potentialObservable: ObservableInput<U> | U | null | undefined,
     config:
-      | PushInput<U, S>
-      | RxStrategyNames<S>
-      | Observable<RxStrategyNames<S>>
+      | PushInput<U>
+      | RxStrategyNames
+      | Observable<RxStrategyNames>
       | undefined,
     renderCallback?: NextObserver<U>
   ): U | null | undefined {
@@ -167,7 +166,7 @@ export class PushPipe<S extends string = string>
 
   /** @internal */
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    untracked(() => this.subscription?.unsubscribe());
   }
 
   /** @internal */
@@ -181,26 +180,38 @@ export class PushPipe<S extends string = string>
   private handleChangeDetection(): Unsubscribable {
     const scope = (this.cdRef as any).context;
     const sub = new Subscription();
-    const setRenderedValue = this.templateValues$.subscribe(({ value }) => {
-      this.renderedValue = value;
-    });
-    const render = this.hasInitialValue(this.templateValues$)
-      .pipe(
-        switchMap((isSync) =>
-          this.templateValues$.pipe(
-            // skip ticking change detection
-            // in case we have an initial value, we don't need to perform cd
-            // the variable will be evaluated anyway because of the lifecycle
-            skip(isSync ? 1 : 0),
-            // onlyValues(),
-            this.render(scope),
-            tap((v) => {
-              this._renderCallback?.next(v);
-            })
+
+    // Subscription can be side-effectful, and we don't want any signal reads which happen in the
+    // side effect of the subscription to be tracked by a component's template when that
+    // subscription is triggered via the async pipe. So we wrap the subscription in `untracked` to
+    // decouple from the current reactive context.
+    //
+    // `untracked` also prevents signal _writes_ which happen in the subscription side effect from
+    // being treated as signal writes during the template evaluation (which throws errors).
+    const setRenderedValue = untracked(() =>
+      this.templateValues$.subscribe(({ value }) => {
+        this.renderedValue = value;
+      })
+    );
+    const render = untracked(() =>
+      this.hasInitialValue(this.templateValues$)
+        .pipe(
+          switchMap((isSync) =>
+            this.templateValues$.pipe(
+              // skip ticking change detection
+              // in case we have an initial value, we don't need to perform cd
+              // the variable will be evaluated anyway because of the lifecycle
+              skip(isSync ? 1 : 0),
+              // onlyValues(),
+              this.render(scope),
+              tap((v) => {
+                this._renderCallback?.next(v);
+              })
+            )
           )
         )
-      )
-      .subscribe();
+        .subscribe()
+    );
     sub.add(setRenderedValue);
     sub.add(render);
     return sub;
@@ -241,8 +252,8 @@ export class PushPipe<S extends string = string>
   }
 }
 
-interface PushInput<T, S> {
-  strategy?: RxStrategyNames<S> | Observable<RxStrategyNames<S>>;
+interface PushInput<T> {
+  strategy?: RxStrategyNames | Observable<RxStrategyNames>;
   renderCallback?: NextObserver<T>;
   patchZone?: boolean;
 }
@@ -261,7 +272,7 @@ function onlyValues<T>(): MonoTypeOperatorFunction<RxNotification<T>> {
     );
 }
 
-function isRxComponentInput<U, S>(value: any): value is PushInput<U, S> {
+function isRxComponentInput<U>(value: any): value is PushInput<U> {
   return (
     value != null &&
     (hasOwnProperty.call(value, 'strategy') ||

@@ -8,7 +8,7 @@ import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { LetDirective } from '../let.directive';
+import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
@@ -34,7 +34,8 @@ let componentNativeElement: any;
 
 const setupLetDirectiveTestComponent = (): void => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveTestComponent, LetDirective],
+    declarations: [LetDirectiveTestComponent],
+    imports: [RxLet],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

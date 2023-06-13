@@ -7,8 +7,8 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { MatSelect } from '@angular/material/select';
-import { asyncScheduler } from '@rx-angular/cdk/zone-less/rxjs';
+import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
+import { asyncScheduler } from 'rxjs-zone-less';
 import { RxState } from '@rx-angular/state';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { delay, map, skip } from 'rxjs/operators';

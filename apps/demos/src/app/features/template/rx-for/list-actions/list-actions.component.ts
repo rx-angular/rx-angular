@@ -9,7 +9,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import { asyncScheduler } from '@rx-angular/cdk/zone-less/rxjs';
+import { asyncScheduler } from 'rxjs-zone-less';
 import {
   BehaviorSubject,
   defer,

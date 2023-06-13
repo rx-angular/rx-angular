@@ -25,55 +25,55 @@
       <h2>Context Variables</h2>
       <ng-container
         *rxLet="
-    valueProvider.incremental$;
-    let state;
-    let c = complete;
-    let s = suspense;
-    let e = error;
-    nextTrg: triggerProvider.next$;
-    completeTrg: triggerProvider.complete$;
-    errorTrg: triggerProvider.error$;
-    suspenseTrg: triggerProvider.suspense$;
-  "
+          valueProvider.incremental$;
+          let state;
+          let c = complete;
+          let s = suspense;
+          let e = error;
+          nextTrigger: triggerProvider.next$;
+          completeTrigger: triggerProvider.complete$;
+          errorTrigger: triggerProvider.error$;
+          suspenseTrigger: triggerProvider.suspense$
+        "
       >
-
-        <ng-container *ngIf="c; then: complete"></ng-container>
+        <ng-container *ngIf="c; then complete"></ng-container>
         <ng-container *ngIf="s">
-          <ng-template [ngTemplateOutlet]="suspense"
-                       [ngTemplateOutletContext]="{
-                        $implicit: state
-                       }"></ng-template>
+          <ng-template
+            [ngTemplateOutlet]="suspense"
+            [ngTemplateOutletContext]="{
+              $implicit: state
+            }"
+          ></ng-template>
         </ng-container>
         <ng-container *ngIf="e">
-          <ng-template [ngTemplateOutlet]="error"
-                       [ngTemplateOutletContext]="{
-                        $implicit: state,
-                        $error: e
-                       }"></ng-template>
+          <ng-template
+            [ngTemplateOutlet]="error"
+            [ngTemplateOutletContext]="{
+              $implicit: state,
+              $error: e
+            }"
+          ></ng-template>
         </ng-container>
 
         <div>{{ state }}</div>
-
       </ng-container>
     </div>
     <div class="col-6">
       <h2>Template Bindings</h2>
       <ng-container
         *rxLet="
-    valueProvider.incremental$;
-    let state;
-    error: error;
-    suspense: suspense;
-    complete: complete;
-    nextTrg: triggerProvider.next$;
-    completeTrg: triggerProvider.complete$;
-    errorTrg: triggerProvider.error$;
-    suspenseTrg: triggerProvider.suspense$;
-  "
+          valueProvider.incremental$;
+          let state;
+          error: error;
+          suspense: suspense;
+          complete: complete;
+          nextTrigger: triggerProvider.next$;
+          completeTrigger: triggerProvider.complete$;
+          errorTrigger: triggerProvider.error$;
+          suspenseTrigger: triggerProvider.suspense$
+        "
       >
-
         <div>{{ state }}</div>
-
       </ng-container>
     </div>
     <ng-template #complete>

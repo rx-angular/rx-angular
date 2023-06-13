@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PushModule } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
 import { RenderingsModule } from '../../debug-helper/renderings';
@@ -42,8 +42,8 @@ const DECLARATIONS = [
     CommonModule,
     MatButtonModule,
     DirtyChecksModule,
-    UnpatchModule,
-    PushModule,
+    RxUnpatch,
+    RxPush,
     VisualizerModule,
     ValueProvidersModule,
     RenderingsModule,

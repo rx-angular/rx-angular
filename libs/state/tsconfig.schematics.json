@@ -21,8 +21,5 @@
     "types": ["node"]
   },
   "include": ["schematics/**/*"],
-  "exclude": [
-    "schematics/**/*.spec.ts",
-    "schematics/**/*.test.ts"
-  ]
+  "exclude": ["schematics/**/*.spec.ts", "schematics/**/*.test.ts"]
 }

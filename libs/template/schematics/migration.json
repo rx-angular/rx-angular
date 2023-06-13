@@ -7,7 +7,7 @@
       "factory": "./src/migrations/update-1.0.0-beta.30/index"
     },
     "introduce-rxfor-stable": {
-      "version": "1.0.0-rc.0",
+      "version": "1.0.0-rc.1",
       "description": "Migrate rxFor imports from experimental package",
       "factory": "./src/migrations/introduce-rxfor-stable/index"
     },
@@ -15,6 +15,11 @@
       "version": "1.0.0-rc.4",
       "description": "Migrate rxIf imports from experimental package",
       "factory": "./src/migrations/introduce-rxif-stable/index"
+    },
+    "drop-modules": {
+      "version": "16.0.0",
+      "description": "Migrate to standalone components",
+      "factory": "./src/migrations/drop-modules/index"
     }
   }
 }

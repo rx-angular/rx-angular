@@ -1,15 +1,15 @@
 {
+  "name": "cdk",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "root": "libs/cdk",
   "sourceRoot": "libs/cdk/src",
   "prefix": "rx-angular",
   "targets": {
     "build": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "dependsOn": [
         {
-          "target": "build-lib",
-          "projects": "self"
+          "target": "build-lib"
         }
       ],
       "options": {
@@ -32,28 +32,28 @@
         ],
         "parallel": false
       },
-      "outputs": ["dist/libs/cdk/schematics"]
+      "outputs": ["{workspaceRoot}/dist/libs/cdk/schematics"]
     },
     "build-lib": {
-      "executor": "@nrwl/angular:package",
+      "executor": "@nx/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
         "project": "libs/cdk/ng-package.json",
         "updateBuildableProjectDepsInPackageJson": false
       },
-      "outputs": ["dist/libs/cdk"]
+      "outputs": ["{workspaceRoot}/dist/libs/cdk"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/cdk/jest.config.js",
+        "jestConfig": "libs/cdk/jest.config.ts",
         "passWithNoTests": true,
         "codeCoverage": true
       },
-      "outputs": ["coverage/cdk"]
+      "outputs": ["{workspaceRoot}/coverage/cdk"]
     },
     "publish": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           {
@@ -63,20 +63,16 @@
       },
       "dependsOn": [
         {
-          "target": "lint",
-          "projects": "self"
+          "target": "lint"
         },
         {
-          "target": "test",
-          "projects": "self"
+          "target": "test"
         },
         {
-          "target": "version",
-          "projects": "self"
+          "target": "version"
         },
         {
-          "target": "build",
-          "projects": "self"
+          "target": "build"
         }
       ]
     },
@@ -86,7 +82,9 @@
         "noVerify": true,
         "baseBranch": "main",
         "versionTagPrefix": "${target}@",
-        "commitMessageFormat": "release(${projectName}): ${version}"
+        "commitMessageFormat": "release(${projectName}): ${version}",
+        "postTargets": ["cdk:github"],
+        "push": true
       }
     },
     "github": {
@@ -97,14 +95,14 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/cdk/**/*.ts"]
       }
     }
   },
   "generators": {
-    "@nrwl/angular:component": {
+    "@nx/angular:component": {
       "style": "scss"
     }
   },

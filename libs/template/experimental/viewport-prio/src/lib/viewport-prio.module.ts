@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { ViewportPrioDirective } from './viewport-prio.directive';
 
-const DECLARATIONS = [ViewportPrioDirective];
-
+/** @deprecated use the standalone import, will be removed with v16 */
 @NgModule({
-  declarations: DECLARATIONS,
-  exports: DECLARATIONS
+  imports: [ViewportPrioDirective],
+  exports: [ViewportPrioDirective],
 })
-export class ViewportPrioModule {
-}
+export class ViewportPrioModule {}

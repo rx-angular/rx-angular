@@ -2,6 +2,70 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [15.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@14.0.0...cdk@15.0.0) (2023-04-12)
+
+
+### Features
+
+* upgrade Angular to v15 ([a9938bc](https://github.com/rx-angular/rx-angular/commit/a9938bcb7b7df7d0557d9c682ada9cce55ad495e))
+
+
+### BREAKING CHANGES
+
+* The required `@angular/core` version is now `^15.0.0`.
+
+
+
+# [14.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@2.0.0...cdk@14.0.0) (2023-04-11)
+
+
+### Features
+
+* upgrade Angular to v14 ([55ca73a](https://github.com/rx-angular/rx-angular/commit/55ca73a84dc03a29e56a8eb65093d42e0b148aa9))
+
+
+### BREAKING CHANGES
+
+* The required `@angular/core` version is now `^14.0.0`.
+
+
+
+# [2.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0...cdk@2.0.0) (2023-03-06)
+
+
+### Code Refactoring
+
+* **cdk:** drop `@rx-angular/cdk/zone-less/rxjs` wrappers ([ce7889a](https://github.com/rx-angular/rx-angular/commit/ce7889addb6119e63b6a87ad75a617909fc6411e))
+* **cdk:** remove global strategy ([da7758d](https://github.com/rx-angular/rx-angular/commit/da7758d3c7fb19a39a2849fb7624c52c5e946dfb))
+
+
+### Features
+
+* upgrade to Angular v13 ([76ac5d3](https://github.com/rx-angular/rx-angular/commit/76ac5d3e9dbfaa2de368d7128f4c9aacb094c085))
+
+
+### BREAKING CHANGES
+
+* **cdk:** The cdk library no longer export the set of zone-less RxJS wrappers, they moved in a [new repository](https://github.com/rx-angular/rxjs-zone-less) and now available under `rxjs-zone-less` on NPM.
+* **cdk:** The global render-strategy is no longer available.
+* The required Angular version is now `>=13.0.0`.
+
+
+
+# [1.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.4...cdk@1.0.0) (2023-01-29)
+
+
+### Bug Fixes
+
+* bump ng-morph to fix vulnerabilities ([7534535](https://github.com/rx-angular/rx-angular/commit/75345358de107f3a8ab13fb32a8c96ca7f3c8fc0)), closes [#1493](https://github.com/rx-angular/rx-angular/issues/1493)
+
+
+### Features
+
+* **template:** use default strategy names type for template hint ([59885d0](https://github.com/rx-angular/rx-angular/commit/59885d010d3eb5e1d80c0e2840496cc78614e2c9))
+
+
+
 # [1.0.0-rc.4](https://github.com/rx-angular/rx-angular/compare/cdk@1.0.0-rc.3...cdk@1.0.0-rc.4) (2022-12-24)
 
 

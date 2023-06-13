@@ -4,7 +4,16 @@
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat.core();
+// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
+//  The following line adds:
+//    1. Default typography styles for all components
+//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
+//  If you specify typography styles for the components you use elsewhere, you should delete this line.
+//  If you don't need the default component typographies but still want the hierarchy styles,
+//  you can delete this line and instead use:
+//    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
+@include mat.all-legacy-component-typographies();
+@include mat.legacy-core();
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -16,17 +25,19 @@ $rx-state-accent: mat.define-palette(mat.$indigo-palette, A200, A100, A400);
 $rx-state-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$rx-state-theme: mat.define-dark-theme((
-  color: (
-    primary: $rx-state-primary,
-    accent: $rx-state-accent,
-    warn: $rx-state-warn,
+$rx-state-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $rx-state-primary,
+      accent: $rx-state-accent,
+      warn: $rx-state-warn,
+    ),
   )
-));
+);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-component-themes($rx-state-theme);
+@include mat.all-legacy-component-themes($rx-state-theme);
 @import '../app/app-shell/app-shell.theme';
 @include app-shell-theme($rx-state-theme);

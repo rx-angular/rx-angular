@@ -10,14 +10,8 @@ import {
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import { RxNotification } from '@rx-angular/cdk/notifications';
-import { LetDirective } from '@rx-angular/template/let';
-import {
-  BehaviorSubject,
-  combineLatest,
-  Observable,
-  of,
-  Subject,
-} from 'rxjs';
+import { RxLet } from '@rx-angular/template/let';
+import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
 
 function intersectionObserver(options?: object): {
@@ -60,6 +54,7 @@ const observerSupported = () =>
    */
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[viewport-prio]',
+  standalone: true,
 })
 export class ViewportPrioDirective implements OnInit, OnDestroy {
   // Note that we're picking only the `intersectionRatio` property
@@ -108,9 +103,9 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
   constructor(
     private readonly el: ElementRef<HTMLElement>,
     private strategyProvider: RxStrategyProvider,
-    @Inject(LetDirective)
+    @Inject(RxLet)
     @Optional()
-    private letDirective: LetDirective<any> | null
+    private letDirective: RxLet<any> | null
   ) {}
 
   ngOnInit() {

@@ -1,6 +1,7 @@
 {
+  "name": "docs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "root": "apps/docs",
   "sourceRoot": "apps/docs/src",
   "targets": {
     "build": {
@@ -8,7 +9,12 @@
       "options": {
         "outputPath": "dist/apps/docs"
       },
-      "outputs": ["{options.outputPath}"]
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": [
+        {
+          "target": "check-links"
+        }
+      ]
     },
     "serve": {
       "executor": "@nx-plus/docusaurus:dev-server",
@@ -17,12 +23,46 @@
       }
     },
     "serve-static": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "docusaurus serve --config apps/docs/docusaurus.config.js --dir dist/apps/docs"
       },
-      "dependsOn": [{ "projects": "self", "target": "build" }]
+      "dependsOn": [
+        {
+          "target": "build"
+        }
+      ]
+    },
+    "check-links": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "find ./apps/docs/docs -name \\*.md -print0 | xargs -0 -n1 markdown-link-check -q -p -v -c markdown-link-check.config.json"
+          }
+        ]
+      }
     }
   },
-  "tags": []
+  "tags": [],
+  "namedInputs": {
+    "projectSpecificFiles": [
+      "{workspaceRoot}/CONTRIBUTING.md",
+      "{workspaceRoot}/libs/cdk/README.md",
+      "{workspaceRoot}/libs/cdk/coalescing/README.md",
+      "{workspaceRoot}/libs/cdk/coercing/README.md",
+      "{workspaceRoot}/libs/cdk/notifications/README.md",
+      "{workspaceRoot}/libs/cdk/render-strategies/README.md",
+      "{workspaceRoot}/libs/cdk/transformations/README.md",
+      "{workspaceRoot}/libs/cdk/zone-configurations/README.md",
+      "{workspaceRoot}/libs/cdk/zone-less/README.md",
+      "{workspaceRoot}/libs/cdk/template/README.md",
+      "{workspaceRoot}/libs/eslint-plugin/README.md",
+      "{workspaceRoot}/libs/state/README.md",
+      "{workspaceRoot}/libs/state/actions/README.md",
+      "{workspaceRoot}/libs/state/effects/README.md",
+      "{workspaceRoot}/libs/state/selections/README.md",
+      "{workspaceRoot}/libs/template/README.md"
+    ]
+  }
 }

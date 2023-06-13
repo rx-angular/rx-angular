@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es2020",
     "module": "es2015",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -23,5 +23,10 @@
     "strictInputAccessModifiers": true,
     "enableResourceInlining": true
   },
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": [
+    "src/test-setup.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "jest.config.ts"
+  ]
 }

@@ -27,6 +27,7 @@ export class TestComponent {
     return index;
   }
   trackByContext(): void {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     thisArg = this;
   }
 }

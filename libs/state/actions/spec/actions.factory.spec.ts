@@ -1,17 +1,15 @@
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { RxActionFactory } from '../src/lib/actions.factory';
 import { isObservable } from 'rxjs';
 import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-
-
 const errorHandler = new ErrorHandler();
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
-  providers: [RxActionFactory]
+  providers: [RxActionFactory],
 })
 class TestComponent {
   ui = this.actions.create({
@@ -20,11 +18,11 @@ class TestComponent {
     },
     resize: (_: string | number): number => {
       throw new Error('something went wrong');
-    }
+    },
   });
-  constructor(private actions: RxActionFactory<{search: string, resize: number}>) {
-
-  }
+  constructor(
+    private actions: RxActionFactory<{ search: string; resize: number }>
+  ) {}
 }
 
 /** @test {RxActionFactory} */
@@ -32,7 +30,9 @@ describe('RxActionFactory', () => {
   beforeAll(() => mockConsole());
 
   it('should get created properly', () => {
-    const actions = new RxActionFactory<{ prop: string }>(errorHandler).create();
+    const actions = new RxActionFactory<{ prop: string }>(
+      errorHandler
+    ).create();
     expect(typeof actions.prop).toBe('function');
     expect(isObservable(actions.prop)).toBeFalsy();
     expect(isObservable(actions.prop$)).toBeTruthy();
@@ -40,7 +40,9 @@ describe('RxActionFactory', () => {
 
   it('should emit on the subscribed channels', (done) => {
     const values = 'foo';
-    const actions = new RxActionFactory<{ prop: string }>(errorHandler).create();
+    const actions = new RxActionFactory<{ prop: string }>(
+      errorHandler
+    ).create();
     const exp = values;
     actions.prop$.subscribe((result) => {
       expect(result).toBe(exp);
@@ -52,8 +54,12 @@ describe('RxActionFactory', () => {
   it('should maintain channels per create call', (done) => {
     const values = 'foo';
     const nextSpy = jest.spyOn({ nextSpy: (_: string) => void 0 }, 'nextSpy');
-    const actions = new RxActionFactory<{ prop: string }>(errorHandler).create();
-    const actions2 = new RxActionFactory<{ prop: string }>(errorHandler).create();
+    const actions = new RxActionFactory<{ prop: string }>(
+      errorHandler
+    ).create();
+    const actions2 = new RxActionFactory<{ prop: string }>(
+      errorHandler
+    ).create();
     const exp = values;
 
     actions2.prop$.subscribe(nextSpy as unknown as (_: string) => void);
@@ -63,7 +69,6 @@ describe('RxActionFactory', () => {
     });
     expect(nextSpy).not.toHaveBeenCalled();
     actions.prop(values);
-
   });
 
   it('should emit and transform on the subscribed channels', (done) => {
@@ -81,7 +86,9 @@ describe('RxActionFactory', () => {
   it('should emit on multiple subscribed channels', (done) => {
     const value1 = 'foo';
     const value2 = 'bar';
-    const actions = new RxActionFactory<{ prop1: string, prop2: string }>(errorHandler).create();
+    const actions = new RxActionFactory<{ prop1: string; prop2: string }>(
+      errorHandler
+    ).create();
     const res = {};
     actions.prop1$.subscribe((result) => {
       res['prop1'] = result;
@@ -97,7 +104,9 @@ describe('RxActionFactory', () => {
   it('should emit on multiple subscribed channels over mreged output', (done) => {
     const value1 = 'foo';
     const value2 = 'bar';
-    const actions = new RxActionFactory<{ prop1: string, prop2: string }>(errorHandler).create();
+    const actions = new RxActionFactory<{ prop1: string; prop2: string }>(
+      errorHandler
+    ).create();
 
     const res = [];
     expect(typeof actions.$).toBe('function');
@@ -139,25 +148,23 @@ describe('RxActionFactory', () => {
 
     expect(() => {
       (actions as any).prop = 0;
-    }).toThrow('')
-
+    }).toThrow('');
 
     done();
   });
 
-
   test('should isolate errors and invoke provided ErrorHandler', async () => {
     const customErrorHandler: ErrorHandler = {
-      handleError: jest.fn()
+      handleError: jest.fn(),
     };
     await TestBed.configureTestingModule({
       declarations: [TestComponent],
       providers: [
         {
           provide: ErrorHandler,
-          useValue: customErrorHandler
-        }
-      ]
+          useValue: customErrorHandler,
+        },
+      ],
     }).compileComponents();
     const fixture = TestBed.createComponent(TestComponent);
 
@@ -167,12 +174,10 @@ describe('RxActionFactory', () => {
     expect(customErrorHandler.handleError).toHaveBeenCalledWith(
       new Error('something went wrong')
     );
-  /*
+    /*
     expect(service.method2).toHaveBeenCalledWith('foo2');
     expect(service.method3).toHaveBeenCalledWith('foo3');
     expect(service.method4).toHaveBeenCalledWith('foo4');
     */
   });
-
-
 });

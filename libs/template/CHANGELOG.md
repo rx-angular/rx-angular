@@ -2,6 +2,92 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [15.2.0](https://github.com/rx-angular/rx-angular/compare/template@15.1.0...template@15.2.0) (2023-04-21)
+
+
+### Features
+
+* **template:** introduce experimental virtual-scrolling sub-package ([#1539](https://github.com/rx-angular/rx-angular/issues/1539)) ([786f87c](https://github.com/rx-angular/rx-angular/commit/786f87c24858b4cac00bb52039f48ed05588cf1d)), closes [#1542](https://github.com/rx-angular/rx-angular/issues/1542)
+
+
+
+# [15.1.0](https://github.com/rx-angular/rx-angular/compare/template@15.0.0...template@15.1.0) (2023-04-13)
+
+
+### Features
+
+* **template:** migrate LetDirective to standalone API ([a342dfe](https://github.com/rx-angular/rx-angular/commit/a342dfec7ce640be6c3b6cee21accc74a9864e21))
+* **template:** migrate PushPipe to standalone API ([3ed3e97](https://github.com/rx-angular/rx-angular/commit/3ed3e973c98cc55616f1a81b07de7a6521c7d4de))
+* **template:** migrate RxFor to standalone API ([b58aa7b](https://github.com/rx-angular/rx-angular/commit/b58aa7bfe281e658b3859b4a5f80d587a1e17581))
+* **template:** migrate RxIf to standalone API ([8e2441a](https://github.com/rx-angular/rx-angular/commit/8e2441a78405bec8d49456265cfcd829c96d5f11))
+* **template:** migrate UnpatchDirective to standalone API ([caebca4](https://github.com/rx-angular/rx-angular/commit/caebca4628fe56e55e2c33216de89a366883bdcb))
+* **template:** migrate ViewportPrioDirective to standalone API ([e7c379b](https://github.com/rx-angular/rx-angular/commit/e7c379b955f2bc93b34cb383ff208298b3107db3))
+
+
+
+# [15.0.0](https://github.com/rx-angular/rx-angular/compare/template@14.0.0...template@15.0.0) (2023-04-12)
+
+
+### Features
+
+* upgrade Angular to v15 ([a9938bc](https://github.com/rx-angular/rx-angular/commit/a9938bcb7b7df7d0557d9c682ada9cce55ad495e))
+
+
+### BREAKING CHANGES
+
+* The required `@angular/core` version is now `^15.0.0`.
+
+
+
+# [14.0.0](https://github.com/rx-angular/rx-angular/compare/template@2.0.0...template@14.0.0) (2023-04-11)
+
+
+### Bug Fixes
+
+* **template:** cleanup unpatched listeners ([4c9ef90](https://github.com/rx-angular/rx-angular/commit/4c9ef905d6436042d1712ba0664117ccff6c9732))
+* **template:** correct version to apply rxFor migration ([8fe7695](https://github.com/rx-angular/rx-angular/commit/8fe76953c660b6fd5a23a81003cc0fffb9aad2f6))
+
+
+### Features
+
+* upgrade Angular to v14 ([55ca73a](https://github.com/rx-angular/rx-angular/commit/55ca73a84dc03a29e56a8eb65093d42e0b148aa9))
+
+
+### BREAKING CHANGES
+
+* The required `@angular/core` version is now `^14.0.0`.
+
+
+
+# [2.0.0](https://github.com/rx-angular/rx-angular/compare/template@1.0.0...template@2.0.0) (2023-03-06)
+
+
+### Features
+
+* upgrade to Angular v13 ([76ac5d3](https://github.com/rx-angular/rx-angular/commit/76ac5d3e9dbfaa2de368d7128f4c9aacb094c085))
+
+
+### BREAKING CHANGES
+
+* The required Angular version is now `>=13.0.0`.
+
+
+
+# [1.0.0](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.5...template@1.0.0) (2023-01-29)
+
+
+### Bug Fixes
+
+* bump ng-morph to fix vulnerabilities ([7534535](https://github.com/rx-angular/rx-angular/commit/75345358de107f3a8ab13fb32a8c96ca7f3c8fc0)), closes [#1493](https://github.com/rx-angular/rx-angular/issues/1493)
+* **template:** typing of track by key as keyof T ([4a65b1f](https://github.com/rx-angular/rx-angular/commit/4a65b1f50bc561f3c4414541c1ad38bc9485e353))
+
+
+### Features
+
+* **template:** use default strategy names type for template hint ([59885d0](https://github.com/rx-angular/rx-angular/commit/59885d010d3eb5e1d80c0e2840496cc78614e2c9))
+
+
+
 # [1.0.0-rc.5](https://github.com/rx-angular/rx-angular/compare/template@1.0.0-rc.4...template@1.0.0-rc.5) (2022-12-24)
 
 

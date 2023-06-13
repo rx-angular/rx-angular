@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { ComparisonUnpatchComponent } from './comparison-unpatch.component';
 import { ROUTES } from './comparison.routes';
 import { RunOutsideZoneDirective } from './runOutsideZone.directive';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 const DECLARATIONS = [ComparisonUnpatchComponent, RunOutsideZoneDirective];
 
@@ -16,10 +16,9 @@ const DECLARATIONS = [ComparisonUnpatchComponent, RunOutsideZoneDirective];
     CommonModule,
     MatButtonModule,
     RouterModule.forChild(ROUTES),
-    UnpatchModule,
-    DirtyChecksModule
+    RxUnpatch,
+    DirtyChecksModule,
   ],
-  exports: [DECLARATIONS]
+  exports: [DECLARATIONS],
 })
-export class UnpatchComparisonModule {
-}
+export class UnpatchComparisonModule {}

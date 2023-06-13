@@ -1,17 +1,12 @@
 {
   "name": "@rx-angular/cdk",
-  "version": "1.0.0-rc.4",
+  "version": "15.0.0",
   "description": "@rx-angular/cdk is a Component Development Kit for ergonomic and highly performant angular applications. It helps to to build Large scale applications, UI libs, state management, rendering systems and much more. Furthermore the unique way of mixing reactive as well as imperative code leads to best DX and speed.",
   "main": "index.js",
   "publishConfig": {
     "access": "public"
   },
-  "engines": {
-    "node": ">=10.12.0",
-    "npm": ">=5.3.0",
-    "yarn": ">=1.9.2"
-  },
-  "author": "Michael Hladky <michael.hladky@push-based>",
+  "author": "Michael Hladky <michael.hladky@push-based.io>",
   "homepage": "https://rx-angular.io/",
   "keywords": [
     "angular",
@@ -27,7 +22,7 @@
   "contributors": [
     {
       "name": "Michael Hladky",
-      "email": "michael.hladky@push-based"
+      "email": "michael.hladky@push-based.io"
     },
     {
       "name": "Julian Jandl",
@@ -48,12 +43,12 @@
     "url": "https://github.com/rx-angular/rx-angular.git"
   },
   "peerDependencies": {
-    "@angular/core": ">=12.0.0",
-    "rxjs": ">=6.5.5"
+    "@angular/core": "^16.0.0",
+    "rxjs": "^6.5.3 || ^7.4.0"
   },
   "dependencies": {
     "tslib": "^2.4.1",
-    "ng-morph": "^2.1.1"
+    "ng-morph": "^2.2.3"
   },
   "schematics": "./schematics/collection.json",
   "ng-add": {
