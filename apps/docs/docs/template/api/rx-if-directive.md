@@ -160,7 +160,7 @@ A nice feature of the `*rxIf` directive is, it provides 2 ways to access the [re
 > (!) Context variables are accessible on both, the `then` and `else` template, based on the last valid value
 
 The following context variables are available for each template:
-
+- $implicit: `T` the default variable accessed by `let val`
 - error: `boolean` | `Error`
 - complete: `boolean`
 - suspense: `boolean`
