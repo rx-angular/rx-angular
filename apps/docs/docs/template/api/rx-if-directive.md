@@ -170,12 +170,12 @@ You can use them like this:
 **Context Variables on then template**
 
 ```html
-<ng-container *rxIf="show$; let s = suspense; let e = error, let c = complete">
+<ng-container *rxIf="customer$; let customer; let s = suspense; let e = error, let c = complete">
   <loader *ngIf="s"></loader>
   <error *ngIf="e"></error>
   <complete *ngIf="c"></complete>
 
-  <app-item></app-item>
+  <app-customer [customer]="customer"></app-customer>
 </ng-container>
 ```
 
