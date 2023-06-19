@@ -25,18 +25,19 @@ In order to enable caching of pages with http errors, you should set this flag t
 ```typescript
 const isr = new ISRHandler({
   // other options
+  // highlight-next-line
   skipCachingOnHttpError: false,
 });
 ```
 
-> Warning!
-> Be aware that this may cause some issues with your site. And you should handle these
-> errors appropriately to ensure that your site remains accessible and functional.
+:::caution
+Be aware that this may cause some issues with your site. And you should handle these errors appropriately to ensure that your site remains accessible and functional.
+:::
 
 In, order to see if the page has an error, you can check the errors property in the generated
 html. Here's an example of a page with an error:
 
-<img src="img/isr/errors-in-html.png" alt="ISR state of a page with an error" />
+<img src="/img/isr/errors-in-html.png" alt="ISR state of a page with an error" />
 
 ## Handle other errors
 
@@ -46,7 +47,7 @@ page, but with no content, you can add an error the **errors** of the ISR state.
 In order to do that, you can use the **addError** method of the **NgxIsrService**.
 
 ```typescript
-import { NgxIsrService } from 'ngx-isr/browser';
+import { NgxIsrService } from '@rx-angular/isr/browser';
 
 @Component({})
 export class PostSComponent {
@@ -56,10 +57,12 @@ export class PostSComponent {
     this.otherService.getPosts().subscribe({
       next: (posts) => {
         if (posts.length === 0) {
+          // highlight-start
           this.isrService.addError({
             name: 'No posts',
             message: 'There are no posts to show',
           } as Error);
+          // highlight-end
         }
 
         // other logic
@@ -72,6 +75,6 @@ export class PostSComponent {
 So, if we have a page with no posts, by adding the error to the **errors** property, we
 will be able to skip the caching of the page and fall back to client-side rendering.
 
-> Benefits:
-> You can use this feature to handle errors, or you can use it only to skip caching of
-> pages.
+:::tip
+You can use this feature to handle errors, or you can use it only to skip caching of pages.
+:::
