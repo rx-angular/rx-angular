@@ -42,7 +42,7 @@ const ROUTES: Routes = [
   {
     path: 'unpatch',
     loadChildren: () =>
-      import('./unpatch/unpatch.module').then((m) => m.UnpatchModule),
+      import('./unpatch/unpatch.module').then((m) => m.RxUnpatch),
   },
   {
     path: 'rx-context',

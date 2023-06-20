@@ -1,10 +1,15 @@
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { eventValue, preventDefault, preventDefaultStopPropagation, stopPropagation } from '../src/lib/transforms';
+import {
+  eventValue,
+  preventDefault,
+  preventDefaultStopPropagation,
+  stopPropagation,
+} from '../src/lib/transforms';
 
 const e = {
   preventDefault: () => void 0,
-  stopPropagation: () => void 0
+  stopPropagation: () => void 0,
 } as any as Event;
 
 /** @test {RxActionFactory} */
@@ -12,7 +17,7 @@ describe('Signal transforms', () => {
   beforeAll(() => mockConsole());
 
   it('eventValue should pluck value if an event is passed', () => {
-    expect(eventValue({target: {value: '42'}})).toBe('42');
+    expect(eventValue({ target: { value: '42' } })).toBe('42');
   });
 
   it('eventValue should forward value if no event is passed', () => {
@@ -41,5 +46,4 @@ describe('Signal transforms', () => {
     expect(stopPropagationSpy).toHaveBeenCalled();
     expect(res).toStrictEqual(e);
   });
-
 });

@@ -2,6 +2,25 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [16.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@15.0.0...cdk@16.0.0) (2023-06-20)
+
+
+### Bug Fixes
+
+* **cdk:** update typing for coercing functions ([#1532](https://github.com/rx-angular/rx-angular/issues/1532)) ([cac56ab](https://github.com/rx-angular/rx-angular/commit/cac56ab631b9c408fcd11db3ba0a4f6eda083e1e)), closes [#1516](https://github.com/rx-angular/rx-angular/issues/1516)
+
+
+### Features
+
+* bump Angular to v16 ([31621e6](https://github.com/rx-angular/rx-angular/commit/31621e6cea295a3774a7ac07b91f4df75ba95c32))
+
+
+### BREAKING CHANGES
+
+* Minimum required `@angular/core` version is now `^16.0.0`.
+
+
+
 # [15.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@14.0.0...cdk@15.0.0) (2023-04-12)
 
 

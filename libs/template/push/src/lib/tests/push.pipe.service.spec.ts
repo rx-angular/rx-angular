@@ -4,9 +4,8 @@ import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers';
 import { EMPTY, NEVER, of } from 'rxjs';
 
-import { PushPipe } from '../push.pipe';
+import { RxPush } from '../push.pipe';
 import { MockChangeDetectorRef } from './fixtures';
-
 
 let pushPipe: any;
 
@@ -14,7 +13,7 @@ const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      PushPipe,
+      RxPush,
       {
         provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
@@ -24,10 +23,10 @@ const setupPushPipeComponent = () => {
     ],
     teardown: { destroyAfterEach: true },
   });
-  pushPipe = TestBed.inject(PushPipe);
+  pushPipe = TestBed.inject(RxPush);
 };
 
-describe('PushPipe used as a Service', () => {
+describe('RxPush used as a Service', () => {
   beforeAll(() => mockConsole());
   beforeEach(setupPushPipeComponent);
 

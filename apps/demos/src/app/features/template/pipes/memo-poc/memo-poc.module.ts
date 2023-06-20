@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { RouterModule } from '@angular/router';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { MemoPocComponent } from './memo-poc.component';
 import { ROUTES } from './memo-poc.routes';
@@ -21,7 +21,7 @@ const DECLARATIONS = [MemoPocComponent, FibonacciPipe, FibonacciMemoPipe];
     PushModule,
     DirtyChecksModule,
     MatButtonModule,
-    UnpatchModule,
+    RxUnpatch,
     MatButtonToggleModule,
     MemoModule,
   ],

@@ -43,7 +43,7 @@ would be hidden. This issue is a big problem and leads to many production bugs a
 **Conclusion - Structural directives**
 
 In contrast to global change detection, structural directives allow fine-grained control of change detection on a per directive basis.
-The `LetDirective` comes with its own way to handle change detection in templates in a very efficient way.
+The `RxLet` comes with its own way to handle change detection in templates in a very efficient way.
 However, the change detection behavior is configurable on a per directive or global basis.
 This makes it possible to implement your own strategies, and also provides a migration path from large existing apps running with Angulars default change detection.
 
@@ -102,12 +102,12 @@ It mostly is used in combination with state management libs to handle user inter
 
 **Rendering**
 
-| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                             |
-| ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
-| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `LetDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                                    |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
+| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
+| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
+| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                             |
+| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `RxLet` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
 
 ### Outputs
 
@@ -115,28 +115,14 @@ n/a
 
 ## Setup
 
-The `LetModule` can be imported as following:
-
-Module based setup:
+The `RxLet` can be imported as following:
 
 ```ts
-import { LetModule } from '@rx-angular/template/let';
-
-@NgModule({
-  imports: [LetModule],
-  // ...
-})
-export class AnyModule {}
-```
-
-Standalone component setup:
-
-```ts
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 
 @Component({
   standalone: true,
-  imports: [LetModule],
+  imports: [RxLet],
   template: `...`,
 })
 export class AnyComponent {}
@@ -237,7 +223,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <button (click)="nextTrigger$.next()">show value</button>
     <ng-container
@@ -263,7 +249,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <ng-container *rxLet="num$; let n; error: error; errorTrg: errorTrigger$">
       {{ n }}
@@ -286,7 +272,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <ng-container
       *rxLet="num$; let n; complete: complete; completeTrg: completeTrigger$"
@@ -311,7 +297,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container
@@ -348,7 +334,7 @@ in a convenient way.
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container
@@ -392,7 +378,9 @@ The default value for strategy is [`normal`](../../cdk/render-strategies/strateg
 ```
 
 ```ts
-@Component()
+@Component({
+  /**/
+})
 export class AppComponent {
   strategy = 'low';
   strategy$ = of('immediate');
@@ -447,9 +435,9 @@ The result of the `renderCallback` will contain the currently rendered value of 
  @Component({
    selector: 'app-root',
    template: `
-   <ng-container *rxLet="num$; let n; renderCallback: valueRendered;">
-      {{ n }}
-   </ng-container>
+    <ng-container *rxLet="num$; let n; renderCallback: valueRendered;">
+        {{ n }}
+    </ng-container>
    `
  })
  export class AppComponent {
@@ -477,7 +465,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 
 ```ts
 @Component({
-  selector: 'any-component>',
+  selector: 'app-root',
   template: `
     <div
       *rxLet="bgColor$; let bgColor; patchZone: false"
@@ -511,7 +499,7 @@ import {
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { LetDirective } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 
 @Component({
   template: `
@@ -526,7 +514,7 @@ class TestComponent {
 
 const setupTestComponent = (): void => {
   TestBed.configureTestingModule({
-    declarations: [LetDirective, LetDirectiveTestComponent],
+    declarations: [RxLet, TestComponent],
     providers: [
       {
         // don't forget to configure the primary strategy to 'native'
@@ -555,7 +543,7 @@ requires more effort when writing the tests, as updates will be processed asynch
 
 ```ts
 TestBed.configureTestingModule({
-  declarations: [LetDirective, LetDirectiveTestComponent],
+  declarations: [RxLet, TestComponent],
   providers: [
     {
       // don't forget to configure the primary strategy to 'native'
@@ -578,7 +566,7 @@ class TestComponent {
   value$: Observable<number> = of(42);
 }
 
-describe('LetDirective', () => {
+describe('RxLet', () => {
   beforeEach(setupLetDirectiveTestComponent);
 
   it('should be instantiable', () => {

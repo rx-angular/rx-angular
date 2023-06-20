@@ -2,7 +2,6 @@ import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { RxFor } from '../for.directive';
-import { ForModule } from '../for.module';
 import { createTestComponent, TestComponent } from './fixtures';
 
 const customErrorHandler: ErrorHandler = {

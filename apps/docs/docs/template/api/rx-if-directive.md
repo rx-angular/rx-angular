@@ -95,7 +95,7 @@ export class SomeComponent {
 | `patchZone`      | `boolean`                                          | _default: `true`_ if set to `false`, the `RxIf` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
 | `parent`         | `boolean`                                          | _default: `true`_ if set to `false`, the `RxIf` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
 | `strategy`       | `Observable<RxStrategyNames>` or `RxStrategyNames` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                            |
-| `renderCallback` | `Subject<boolean>`                                 | giving the developer the exact timing when the `LetDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                      |
+| `renderCallback` | `Subject<boolean>`                                 | giving the developer the exact timing when the `RxIf` created, or removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                                    |
 
 ### Outputs
 
@@ -103,28 +103,14 @@ n/a
 
 ## Setup
 
-The `IfModule` can be imported as following:
-
-Module based setup:
+The `RxIf` can be imported as following:
 
 ```ts
-import { IfModule } from '@rx-angular/template/if';
-
-@NgModule({
-  imports: [IfModule],
-  // ...
-})
-export class AnyModule {}
-```
-
-Standalone component setup:
-
-```ts
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 
 @Component({
   standalone: true,
-  imports: [IfModule],
+  imports: [RxIf],
   template: `...`,
 })
 export class AnyComponent {}
@@ -133,7 +119,7 @@ export class AnyComponent {}
 ## Basic Usage
 
 > **⚠ Notice:**
-> By default `*rxLet` is optimized for performance out of the box.
+> By default `*rxIf` is optimized for performance out of the box.
 >
 > This includes:
 >
@@ -287,7 +273,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <button (click)="nextTrigger$.next()">show value</button>
     <ng-container *rxIf="show; complete: complete; nextTrg: nextTrigger$">
@@ -309,7 +295,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <ng-container *rxIf="show$; let n; error: error; errorTrg: errorTrigger$">
       <item></item>
@@ -330,7 +316,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <ng-container
       *rxIf="show$; complete: complete; completeTrg: completeTrigger$"
@@ -353,7 +339,7 @@ e.g. from the complete template back to the value display
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container
@@ -384,7 +370,7 @@ in a convenient way.
 
 ```typescript
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
     <ng-container *rxIf="show$; suspense: suspense; contextTrg: contextTrg$">
@@ -504,7 +490,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 
 ```ts
 @Component({
-  selector: 'any-component',
+  selector: 'app-root',
   template: `
     <div *rxIf="enabled$; patchZone: false" (drag)="itemDrag($event)"></div>
   `,
@@ -533,7 +519,7 @@ import {
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { LetDirective } from '@rx-angular/template/let';
+import { RxIf } from '@rx-angular/template/if';
 
 @Component({
   template: ` <ng-container *rxIf="show$"> visible </ng-container> `,
@@ -544,7 +530,8 @@ class TestComponent {
 
 const setupTestComponent = (): void => {
   TestBed.configureTestingModule({
-    declarations: [],
+    declarations: [TestComponent],
+    imports: [RxIf],
     providers: [
       {
         // don't forget to configure the primary strategy to 'native'

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { RouterModule } from '@angular/router';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { TriggerProviderModule } from '../../../../shared/debug-helper/trigger-provider/trigger-provider.module';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
@@ -22,7 +22,7 @@ import { ROUTES } from './template-triggers.routes';
     MatProgressSpinnerModule,
     MatIconModule,
     CommonModule,
-    LetModule,
+    RxLet,
   ],
   exports: [],
   declarations: [TemplateTriggersComponent],

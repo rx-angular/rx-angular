@@ -8,7 +8,7 @@ import { ValueProvidersModule } from '../../../../shared/debug-helper/value-prov
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { ContentChildDirective, ContentParent } from './intermediate.component';
 import { RxLetScopingComponent } from './rx-let-scoping.component';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 
 const routes: Routes = [
   {
@@ -26,7 +26,7 @@ const routes: Routes = [
     UnpatchEventsModule,
     StrategySelectModule,
     VisualizerModule,
-    LetModule,
+    RxLet,
     DirtyChecksModule,
   ],
 })

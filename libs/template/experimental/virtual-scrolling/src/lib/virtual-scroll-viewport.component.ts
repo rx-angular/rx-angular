@@ -29,6 +29,9 @@ declare const ngDevMode: boolean;
 
 const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
 
+/** Options used to bind passive event listeners. */
+const passiveEventListenerOptions = { passive: true };
+
 /**
  * @Component RxVirtualScrollViewport
  *
@@ -184,9 +187,7 @@ export class RxVirtualScrollViewportComponent
       this.scrollContainer(),
       'scroll',
       this.scrollListener,
-      {
-        passive: true,
-      }
+      passiveEventListenerOptions
     );
   }
 
@@ -208,7 +209,8 @@ export class RxVirtualScrollViewportComponent
     getZoneUnPatchedApi(this.scrollContainer(), 'removeEventListener').call(
       this.scrollContainer(),
       'scroll',
-      this.scrollListener
+      this.scrollListener,
+      passiveEventListenerOptions
     );
     this.destroy$.next();
     this.scrollStrategy.detach();

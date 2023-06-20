@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { PushModule } from '@rx-angular/template/push';
-import { LetModule } from '@rx-angular/template/let';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxPush } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { ComparisonComponent } from './comparison.component';
 
 import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
@@ -16,7 +16,7 @@ import { SiblingModule } from '../../../../shared/template-structures/sibling/si
 import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
 import { ROUTES } from './comparison.routes';
 import { RxForModule, PipeModule } from '../../../../rx-angular-pocs';
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 
 @NgModule({
   declarations: [ComparisonComponent],
@@ -24,18 +24,18 @@ import { IfModule } from '@rx-angular/template/if';
     CommonModule,
     RouterModule.forChild(ROUTES),
     MatButtonModule,
-    UnpatchModule,
+    RxUnpatch,
     VisualizerModule,
     SiblingModule,
     MatCheckboxModule,
     MatFormFieldModule,
     FormsModule,
     MatInputModule,
-    PushModule,
+    RxPush,
     ImageArrayModule,
-    LetModule,
+    RxLet,
     RxForModule,
-    IfModule,
+    RxIf,
     PipeModule,
   ],
   exports: [],
