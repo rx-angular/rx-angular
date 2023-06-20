@@ -49,8 +49,8 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
 @Component({
   selector: 'rx-virtual-scroll-viewport',
   template: `
-    <div #scrollViewport class="rx-virtual-scroll__viewport">
-      <div #runway class="rx-virtual-scroll__run-way"></div>
+    <div #runway class="rx-virtual-scroll__run-way">
+      <div #sentinel class="rx-virtual-scroll__sentinel"></div>
       <ng-content></ng-content>
     </div>
   `,
@@ -71,12 +71,12 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
       }
 
       :host:not(.rx-virtual-scroll-viewport--withSyncScrollbar)
-        .rx-virtual-scroll__viewport {
+        .rx-virtual-scroll__run-way {
         transform: translateZ(0);
         will-change: scroll-position;
       }
 
-      .rx-virtual-scroll__viewport {
+      .rx-virtual-scroll__run-way {
         contain: strict;
         -webkit-overflow-scrolling: touch;
         width: 100%;
@@ -86,7 +86,7 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
         overflow: auto;
       }
 
-      .rx-virtual-scroll__run-way {
+      .rx-virtual-scroll__sentinel {
         width: 1px;
         height: 1px;
         contain: strict;
@@ -106,12 +106,12 @@ export class RxVirtualScrollViewportComponent
     OnDestroy
 {
   /** @internal */
-  @ViewChild('runway', { static: true })
-  private runway!: ElementRef<HTMLElement>;
+  @ViewChild('sentinel', { static: true })
+  private scrollSentinel!: ElementRef<HTMLElement>;
 
   /** @internal */
-  @ViewChild('scrollViewport', { static: true })
-  private scrollViewport!: ElementRef<HTMLElement>;
+  @ViewChild('runway', { static: true })
+  private runway!: ElementRef<HTMLElement>;
 
   /** @internal */
   @ContentChild(RxVirtualViewRepeater)
@@ -219,7 +219,7 @@ export class RxVirtualScrollViewportComponent
   }
 
   scrollContainer(): HTMLElement {
-    return this.scrollViewport.nativeElement;
+    return this.runway.nativeElement;
   }
 
   getScrollTop(): number {
@@ -236,7 +236,7 @@ export class RxVirtualScrollViewportComponent
   }
 
   protected updateContentSize(size: number): void {
-    this.runway.nativeElement.style.transform = `translate(0, ${size}px)`;
+    this.scrollSentinel.nativeElement.style.transform = `translate(0, ${size}px)`;
   }
 
   private scrollListener = (event: Event) => this._elementScrolled.next(event);

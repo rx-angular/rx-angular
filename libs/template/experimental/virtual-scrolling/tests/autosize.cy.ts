@@ -150,8 +150,8 @@ function expectedRange(
 describe('viewport', () => {
   it('has proper runway height', () => {
     mountAutoSize().then(({ fixture, component }) => {
-      const runway = fixture.debugElement.query(
-        By.css('.rx-virtual-scroll__run-way')
+      const sentinel = fixture.debugElement.query(
+        By.css('.rx-virtual-scroll__sentinel')
       );
       fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
@@ -170,7 +170,7 @@ describe('viewport', () => {
         items
       );
       const initialHeight = items.length * component.tombstoneSize;
-      expect((runway.nativeElement as HTMLElement).style.transform).eq(
+      expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${initialHeight}px)`
       );
       cy.get('@viewRange').should('have.been.calledWith', initialRange);
@@ -190,17 +190,17 @@ describe('viewport', () => {
               items.filter((item, i) => i < range.end)
             )
             .then(() => {
-              expect((runway.nativeElement as HTMLElement).style.transform).eq(
-                `translate(0px, ${runwayHeight}px)`
-              );
+              expect(
+                (sentinel.nativeElement as HTMLElement).style.transform
+              ).eq(`translate(0px, ${runwayHeight}px)`);
             });
         });
     });
   });
   it('change runway height on item changes', () => {
     mountAutoSize().then(({ fixture, component }) => {
-      const runway = fixture.debugElement.query(
-        By.css('.rx-virtual-scroll__run-way')
+      const sentinel = fixture.debugElement.query(
+        By.css('.rx-virtual-scroll__sentinel')
       );
       const items = component.items as Item[];
       fixture.detectChanges();
@@ -223,12 +223,12 @@ describe('viewport', () => {
             (items.length - knownElements) * component.tombstoneSize;
           items.push(...generateItems(1));
           fixture.detectChanges();
-          expect((runway.nativeElement as HTMLElement).style.transform).eq(
+          expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
             `translate(0px, ${runwayHeight + component.tombstoneSize}px)`
           );
           items.splice(100, 1);
           fixture.detectChanges();
-          expect((runway.nativeElement as HTMLElement).style.transform).eq(
+          expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
             `translate(0px, ${runwayHeight}px)`
           );
         });
