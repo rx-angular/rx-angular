@@ -91,6 +91,7 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
       provide: RxVirtualScrollStrategy,
       useExisting: AutoSizeVirtualScrollStrategy,
     },
+    RxaResizeObserver,
   ],
   standalone: true,
 })
@@ -250,7 +251,7 @@ export class AutoSizeVirtualScrollStrategy<
   private readonly detached$ = new Subject<void>();
 
   /** @internal */
-  private resizeObserver?: RxaResizeObserver;
+  private resizeObserver = inject(RxaResizeObserver, { self: true });
   /** @internal */
   private readonly recalculateRange$ = new Subject<void>();
 
@@ -287,7 +288,6 @@ export class AutoSizeVirtualScrollStrategy<
   ): void {
     this.viewport = viewport;
     this.viewRepeater = viewRepeater;
-    this.resizeObserver = new RxaResizeObserver();
     this.maintainVirtualItems();
     this.calcRenderedRange();
     this.positionElements();
@@ -298,7 +298,7 @@ export class AutoSizeVirtualScrollStrategy<
     this.viewport = null;
     this.viewRepeater = null;
     this._virtualItems = [];
-    this.resizeObserver?.destroy();
+    this.resizeObserver.destroy();
     this.detached$.next();
   }
 
@@ -689,50 +689,51 @@ export class AutoSizeVirtualScrollStrategy<
     viewRef: EmbeddedViewRef<RxVirtualForViewContext<T, U>>
   ) {
     const element = this.getElement(viewRef);
-    return this.resizeObserver!.observeElement(
-      element,
-      this.resizeObserverConfig?.options
-    ).pipe(
-      takeWhile((event) => event.target.isConnected),
-      map((event) => {
-        const index = viewRef.context.index;
-        const size = Math.round(this.extractSize(event));
-        const diff = size - this._virtualItems[index].size;
-        if (diff !== 0) {
-          this._virtualItems[index].size = size;
-          this._virtualItems[index].cached = true;
-          this.contentSize += diff;
-          return [index, this.viewRepeater!.viewContainer.indexOf(viewRef)];
-        }
-        return null as unknown as [number, number];
-      }),
-      filter(
-        (diff) =>
-          diff !== null &&
-          diff[0] >= this.positionedRange.start &&
-          diff[0] < this.positionedRange.end
-      ),
-      takeUntil(
-        merge(
-          this.viewRepeater!.viewRendered$,
-          this.viewRepeater!.renderingStart$
-        ).pipe(
-          tap(() => {
-            // we need to clean up the position property for views
-            // that fall out of the renderedRange.
-            const index = viewRef.context.index;
-            if (
-              this._virtualItems[index] &&
-              (index < this.renderedRange.start ||
-                index >= this.renderedRange.end)
-            ) {
-              this._virtualItems[index].position = undefined;
-            }
-          }),
-          filter(() => this.viewRepeater!.viewContainer.indexOf(viewRef) === -1)
+    return this.resizeObserver
+      .observeElement(element, this.resizeObserverConfig?.options)
+      .pipe(
+        takeWhile((event) => event.target.isConnected),
+        map((event) => {
+          const index = viewRef.context.index;
+          const size = Math.round(this.extractSize(event));
+          const diff = size - this._virtualItems[index].size;
+          if (diff !== 0) {
+            this._virtualItems[index].size = size;
+            this._virtualItems[index].cached = true;
+            this.contentSize += diff;
+            return [index, this.viewRepeater!.viewContainer.indexOf(viewRef)];
+          }
+          return null as unknown as [number, number];
+        }),
+        filter(
+          (diff) =>
+            diff !== null &&
+            diff[0] >= this.positionedRange.start &&
+            diff[0] < this.positionedRange.end
+        ),
+        takeUntil(
+          merge(
+            this.viewRepeater!.viewRendered$,
+            this.viewRepeater!.renderingStart$
+          ).pipe(
+            tap(() => {
+              // we need to clean up the position property for views
+              // that fall out of the renderedRange.
+              const index = viewRef.context.index;
+              if (
+                this._virtualItems[index] &&
+                (index < this.renderedRange.start ||
+                  index >= this.renderedRange.end)
+              ) {
+                this._virtualItems[index].position = undefined;
+              }
+            }),
+            filter(
+              () => this.viewRepeater!.viewContainer.indexOf(viewRef) === -1
+            )
+          )
         )
-      )
-    );
+      );
   }
 
   /**

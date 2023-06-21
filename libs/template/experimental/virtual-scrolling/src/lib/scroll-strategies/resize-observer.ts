@@ -1,22 +1,20 @@
+import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
+@Injectable()
 export class RxaResizeObserver {
-  private resizeObserver: ResizeObserver;
+  private resizeObserver = new ResizeObserver((events) => {
+    this.viewsResized$.next(events);
+  });
 
   /** @internal */
   private readonly viewsResized$ = new Subject<ResizeObserverEntry[]>();
-
-  constructor() {
-    this.resizeObserver = new ResizeObserver((events) => {
-      this.viewsResized$.next(events);
-    });
-  }
 
   observeElement(
     element: Element,
     options?: ResizeObserverOptions
   ): Observable<ResizeObserverEntry> {
-    this.resizeObserver!.observe(element, options);
+    this.resizeObserver.observe(element, options);
     return new Observable<ResizeObserverEntry>((observer) => {
       const inner = this.viewsResized$.subscribe((events) => {
         const event = events.find((event) => event.target === element);
@@ -25,7 +23,7 @@ export class RxaResizeObserver {
         }
       });
       return () => {
-        this.resizeObserver?.unobserve(element);
+        this.resizeObserver.unobserve(element);
         inner.unsubscribe();
       };
     });
