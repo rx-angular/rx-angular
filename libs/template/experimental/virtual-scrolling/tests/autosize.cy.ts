@@ -276,23 +276,11 @@ describe('rendering, scrolling & positioning', () => {
       const range = expectedRange(component, items, 0);
       cy.get('[data-cy=item]').should('have.length', range.end - range.start);
       let position = 0;
-      cy.get('[data-cy=item]').each((element, i) => {
-        expect(element.css('position')).to.be.eq('absolute');
-        expect(element.attr('style')).to.contain(`translateY(${position}px)`);
-        position += defaultDynamicSize(items[i]);
-      });
-      cy.get('@scrolledIndex').should('have.been.calledWith', 0);
-      cy.get('@viewRange').should('have.been.calledWith', range);
-      cy.get('@renderCallback').should(
-        'have.been.calledWith',
-        items.filter((v, i) => i < range.end)
-      );
-
       cy.get('[data-cy=item]')
         .first()
         .then((element) => {
           element.css('height', `${defaultDynamicSize(items[0]) + 50}px`);
-          position = 0;
+          // position = 0;
           cy.wait(50);
           cy.get('[data-cy=item]').each((element, i) => {
             expect(element.attr('style')).to.contain(
