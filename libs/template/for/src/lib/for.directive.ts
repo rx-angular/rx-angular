@@ -1,5 +1,6 @@
 import {
   ChangeDetectorRef,
+  DestroyRef,
   Directive,
   DoCheck,
   EmbeddedViewRef,
@@ -9,7 +10,6 @@ import {
   IterableDiffers,
   NgIterable,
   NgZone,
-  OnDestroy,
   OnInit,
   TemplateRef,
   TrackByFunction,
@@ -29,13 +29,8 @@ import {
   RxListViewComputedContext,
 } from '@rx-angular/cdk/template';
 
-import {
-  isObservable,
-  Observable,
-  ReplaySubject,
-  Subject,
-  Subscription,
-} from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isObservable, Observable, ReplaySubject, Subject } from 'rxjs';
 import { shareReplay, switchAll } from 'rxjs/operators';
 import { RxForViewContext } from './for-view-context';
 
@@ -80,7 +75,7 @@ declare const ngDevMode: boolean;
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
-  implements OnInit, DoCheck, OnDestroy
+  implements OnInit, DoCheck
 {
   /** @internal */
   private iterableDiffers = inject(IterableDiffers);
@@ -97,6 +92,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private strategyProvider = inject(RxStrategyProvider);
   /** @internal */
   private errorHandler = inject(ErrorHandler);
+  /** @internal */
+  private destroyRef = inject(DestroyRef);
 
   /** @internal */
   private staticValue?: U;
@@ -427,16 +424,13 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private listManager: RxListManager<T>;
 
   /** @internal */
-  private _subscription = new Subscription();
-
-  /** @internal */
   _trackBy: TrackByFunction<T>;
   /** @internal */
   _distinctBy = (a: T, b: T) => a === b;
 
   /** @internal */
   ngOnInit() {
-    this._subscription.add(this.values$.subscribe((v) => (this.values = v)));
+    this.values$.pipe(takeUntilDestroyed()).subscribe((v) => (this.values = v));
     this.listManager = createListTemplateManager<T, RxForViewContext<T>>({
       iterableDiffers: this.iterableDiffers,
       renderSettings: {
@@ -456,11 +450,12 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       trackBy: this._trackBy,
     });
     this.listManager.nextStrategy(this.strategy$);
-    this._subscription.add(
-      this.listManager
-        .render(this.values$)
-        .subscribe((v) => this._renderCallback?.next(v))
-    );
+    this.listManager
+      .render(this.values$)
+      .pipe(takeUntilDestroyed())
+      .subscribe((v) => this._renderCallback?.next(v));
+
+    this.destroyRef.onDestroy(() => this.viewContainerRef.clear());
   }
 
   /** @internal */
@@ -487,12 +482,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     if (this.renderStatic) {
       this.observables$.next(this.staticValue);
     }
-  }
-
-  /** @internal */
-  ngOnDestroy() {
-    this._subscription.unsubscribe();
-    this.viewContainerRef.clear();
   }
 
   /** @internal */

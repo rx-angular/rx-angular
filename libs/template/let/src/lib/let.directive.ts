@@ -6,13 +6,13 @@ import {
   Input,
   NgZone,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
@@ -39,7 +39,6 @@ import {
   ObservableInput,
   ReplaySubject,
   Subject,
-  Subscription,
 } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
@@ -95,7 +94,7 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  */
 @Directive({ selector: '[rxLet]', standalone: true })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
-export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
+export class RxLet<U> implements OnInit, OnChanges {
   /** @internal */
   private strategyProvider = inject(RxStrategyProvider);
   /** @internal */
@@ -497,9 +496,6 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
   private _renderObserver: NextObserver<any>;
 
   /** @internal */
-  private subscription: Subscription = new Subscription();
-
-  /** @internal */
   private templateManager: RxTemplateManager<
     U,
     RxLetViewContext<U | undefined | null>,
@@ -527,27 +523,27 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
 
   /** @internal */
   ngOnInit() {
-    this.subscription.add(
-      this.templateManager
-        .render(merge(this.values$, this.templateNotification$))
-        .subscribe((n) => {
-          this.rendered$.next(n);
-          this._renderObserver?.next(n);
-        })
-    );
-    this.subscription.add(
-      merge(
-        this.contextTrigger || NEVER,
-        this.nextTrigger?.pipe(map(() => RxNotificationKind.Next)) || NEVER,
-        this.suspenseTrigger?.pipe(map(() => RxNotificationKind.Suspense)) ||
-          NEVER,
-        this.completeTrigger?.pipe(map(() => RxNotificationKind.Complete)) ||
-          NEVER,
-        this.errorTrigger?.pipe(map(() => RxNotificationKind.Error)) || NEVER
+    this.templateManager
+      .render(merge(this.values$, this.templateNotification$))
+      .pipe(takeUntilDestroyed())
+      .subscribe((n) => {
+        this.rendered$.next(n);
+        this._renderObserver?.next(n);
+      });
+    merge(
+      this.contextTrigger || NEVER,
+      this.nextTrigger?.pipe(map(() => RxNotificationKind.Next)) || NEVER,
+      this.suspenseTrigger?.pipe(map(() => RxNotificationKind.Suspense)) ||
+        NEVER,
+      this.completeTrigger?.pipe(map(() => RxNotificationKind.Complete)) ||
+        NEVER,
+      this.errorTrigger?.pipe(map(() => RxNotificationKind.Error)) || NEVER
+    )
+      .pipe(
+        filter((v) => !!v),
+        takeUntilDestroyed()
       )
-        .pipe(filter((v) => !!v))
-        .subscribe((t) => this.triggerHandler.next(t))
-    );
+      .subscribe((t) => this.triggerHandler.next(t));
   }
 
   /** @internal */
@@ -578,11 +574,6 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
     if (changes.rxLet) {
       this.observablesHandler.next(this.rxLet);
     }
-  }
-
-  /** @internal */
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 
   /** @internal */

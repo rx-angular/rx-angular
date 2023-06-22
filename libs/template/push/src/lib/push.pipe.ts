@@ -1,12 +1,12 @@
 import {
   ChangeDetectorRef,
   NgZone,
-  OnDestroy,
   Pipe,
   PipeTransform,
   inject,
   untracked,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   RxNotification,
   RxNotificationKind,
@@ -23,8 +23,6 @@ import {
   Observable,
   ObservableInput,
   OperatorFunction,
-  Subscription,
-  Unsubscribable,
 } from 'rxjs';
 import {
   filter,
@@ -40,7 +38,7 @@ import {
  *
  * @description
  *
- * The push pipe serves as a drop-in replacement for angulars built-in async pipe.
+ * The push pipe serves as a drop-in replacement for Angular's built-in async pipe.
  * Just like the *rxLet Directive, it leverages a
  * [RenderStrategy](https://rx-angular.io/docs/cdk/render-strategies)
  *   under the hood which takes care of optimizing the ChangeDetection of your component. The rendering behavior can be
@@ -87,7 +85,7 @@ import {
  * @publicApi
  */
 @Pipe({ name: 'push', pure: false, standalone: true })
-export class RxPush implements PipeTransform, OnDestroy {
+export class RxPush implements PipeTransform {
   /** @internal */
   private strategyProvider = inject(RxStrategyProvider);
   /** @internal */
@@ -101,8 +99,7 @@ export class RxPush implements PipeTransform, OnDestroy {
    * fix https://github.com/rx-angular/rx-angular/pull/684
    */
   private renderedValue: any | null | undefined;
-  /** @internal */
-  private subscription: Unsubscribable;
+
   /** @internal */
   private readonly templateObserver = createTemplateNotifier<any>();
   private readonly templateValues$ = this.templateObserver.values$.pipe(
@@ -159,15 +156,8 @@ export class RxPush implements PipeTransform, OnDestroy {
       }
     }
     this.templateObserver.next(potentialObservable);
-    if (!this.subscription) {
-      this.subscription = this.handleChangeDetection();
-    }
+    this.handleChangeDetection();
     return this.renderedValue as U;
-  }
-
-  /** @internal */
-  ngOnDestroy(): void {
-    untracked(() => this.subscription?.unsubscribe());
   }
 
   /** @internal */
@@ -178,9 +168,8 @@ export class RxPush implements PipeTransform, OnDestroy {
   }
 
   /** @internal */
-  private handleChangeDetection(): Unsubscribable {
+  private handleChangeDetection(): void {
     const scope = (this.cdRef as any).context;
-    const sub = new Subscription();
 
     // Subscription can be side-effectful, and we don't want any signal reads which happen in the
     // side effect of the subscription to be tracked by a component's template when that
@@ -189,12 +178,13 @@ export class RxPush implements PipeTransform, OnDestroy {
     //
     // `untracked` also prevents signal _writes_ which happen in the subscription side effect from
     // being treated as signal writes during the template evaluation (which throws errors).
-    const setRenderedValue = untracked(() =>
-      this.templateValues$.subscribe(({ value }) => {
+    untracked(() =>
+      this.templateValues$.pipe(takeUntilDestroyed()).subscribe(({ value }) => {
         this.renderedValue = value;
       })
     );
-    const render = untracked(() =>
+
+    untracked(() =>
       this.hasInitialValue(this.templateValues$)
         .pipe(
           switchMap((isSync) =>
@@ -209,13 +199,11 @@ export class RxPush implements PipeTransform, OnDestroy {
                 this._renderCallback?.next(v);
               })
             )
-          )
+          ),
+          takeUntilDestroyed()
         )
         .subscribe()
     );
-    sub.add(setRenderedValue);
-    sub.add(render);
-    return sub;
   }
 
   /** @internal */

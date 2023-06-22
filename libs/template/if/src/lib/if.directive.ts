@@ -4,13 +4,13 @@ import {
   Input,
   NgZone,
   OnChanges,
-  OnDestroy,
   OnInit,
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
   inject,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   RxNotificationKind,
@@ -31,7 +31,6 @@ import {
   ObservableInput,
   ReplaySubject,
   Subject,
-  Subscription,
   merge,
 } from 'rxjs';
 import { filter, map, mergeAll } from 'rxjs/operators';
@@ -67,9 +66,7 @@ import {
   standalone: true,
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
-export class RxIf<T = unknown>
-  implements OnInit, OnChanges, OnDestroy, OnChanges
-{
+export class RxIf<T = unknown> implements OnInit, OnChanges, OnChanges {
   /** @internal */
   private strategyProvider = inject(RxStrategyProvider);
   /** @internal */
@@ -81,8 +78,6 @@ export class RxIf<T = unknown>
   /** @internal */
   private viewContainerRef = inject(ViewContainerRef);
 
-  /** @internal */
-  private subscription = new Subscription();
   /** @internal */
   private _renderObserver: NextObserver<unknown>;
   /** @internal */
@@ -491,27 +486,28 @@ export class RxIf<T = unknown>
 
   /** @internal */
   ngOnInit() {
-    this.subscription.add(
-      merge(
-        this.contextTrigger || NEVER,
-        this.nextTrigger?.pipe(map(() => RxNotificationKind.Next)) || NEVER,
-        this.suspenseTrigger?.pipe(map(() => RxNotificationKind.Suspense)) ||
-          NEVER,
-        this.completeTrigger?.pipe(map(() => RxNotificationKind.Complete)) ||
-          NEVER,
-        this.errorTrigger?.pipe(map(() => RxNotificationKind.Error)) || NEVER
+    merge(
+      this.contextTrigger || NEVER,
+      this.nextTrigger?.pipe(map(() => RxNotificationKind.Next)) || NEVER,
+      this.suspenseTrigger?.pipe(map(() => RxNotificationKind.Suspense)) ||
+        NEVER,
+      this.completeTrigger?.pipe(map(() => RxNotificationKind.Complete)) ||
+        NEVER,
+      this.errorTrigger?.pipe(map(() => RxNotificationKind.Error)) || NEVER
+    )
+      .pipe(
+        filter((v) => !!v),
+        takeUntilDestroyed()
       )
-        .pipe(filter((v) => !!v))
-        .subscribe((t) => this.triggerHandler.next(t))
-    );
-    this.subscription.add(
-      this.templateManager
-        .render(this.templateNotifier.values$)
-        .subscribe((n) => {
-          this.rendered$.next(n);
-          this._renderObserver?.next(n);
-        })
-    );
+      .subscribe((t) => this.triggerHandler.next(t));
+
+    this.templateManager
+      .render(this.templateNotifier.values$)
+      .pipe(takeUntilDestroyed())
+      .subscribe((n) => {
+        this.rendered$.next(n);
+        this._renderObserver?.next(n);
+      });
   }
 
   /** @internal */
@@ -552,11 +548,6 @@ export class RxIf<T = unknown>
     if (changes.rxIf) {
       this.templateNotifier.next(this.rxIf);
     }
-  }
-
-  /** @internal */
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 
   /** @internal */
