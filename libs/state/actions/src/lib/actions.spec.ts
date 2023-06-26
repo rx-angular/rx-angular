@@ -1,6 +1,6 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { actions } from './actions';
+import { rxActions } from './actions';
 import { isObservable } from 'rxjs';
 import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -20,24 +20,26 @@ let _actionstransform: RxActions<Actions> = undefined;
   template: '',
 })
 class TestComponent {
-  ui = actions<Actions>();
-  ui2 = actions<Actions>();
+  ui = rxActions<Actions>();
+  ui2 = rxActions<Actions>();
 }
 
 @Component({
   template: '',
 })
 class Test2Component {
-  ui = actions<Actions>({
-    prop: () => 'transformed',
-    search: (e: InputEvent | string): string => {
-      return typeof e === 'object' ? (e as any).target.value : e;
-    },
-    resize: (_: string | number): number => {
-      throw new Error('something went wrong');
-    },
+  ui = rxActions<Actions>(({ transforms }) => {
+    transforms({
+      prop: (x: any) => 'transformed',
+      search: (e: InputEvent | string): string => {
+        return typeof e === 'object' ? (e as any).target.value : e;
+      },
+      resize: (_: string | number): number => {
+        throw new Error('something went wrong');
+      },
+    });
   });
-  ui2 = actions<Actions>();
+  ui2 = rxActions<Actions>();
 }
 
 const customErrorHandler: ErrorHandler = {
@@ -53,10 +55,12 @@ const customErrorHandler: ErrorHandler = {
   ],
 })
 class TestErrorComponent {
-  ui = actions<Actions>({
-    resize: (_: string | number): number => {
-      throw new Error('something went wrong');
-    },
+  ui = rxActions<Actions>(({ transforms }) => {
+    transforms({
+      resize: (_: string | number): number => {
+        throw new Error('something went wrong');
+      },
+    });
   });
 }
 

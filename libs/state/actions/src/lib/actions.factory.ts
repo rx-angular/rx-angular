@@ -65,8 +65,8 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
    *
    */
   create<U extends ActionTransforms<T> = {}>(transforms?: U): RxActions<T, U> {
-    const subjects: SubjectMap<T> = {} as SubjectMap<T>;
-    this.subjects.push(subjects);
+    const subjectMap: SubjectMap<T> = {} as SubjectMap<T>;
+    this.subjects.push(subjectMap);
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     function signals(): void {}
@@ -74,8 +74,8 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
     return new Proxy(
       signals as any as RxActions<T, U>,
       actionProxyHandler({
-        subjects: subjects as any as { [K in keyof T]: Subject<ValuesOf<T>> },
-        transforms,
+        subjectMap,
+        transformsMap: transforms,
         errorHandler: this.errorHandler,
       })
     ) as any as RxActions<T, U>;
