@@ -1,6 +1,6 @@
 import { ErrorHandler } from '@angular/core';
 import { merge, Subject } from 'rxjs';
-import { KeysOf, RxActions, ValuesOf } from './types';
+import { KeysOf, RxActions, SubjectMap, ValuesOf } from './types';
 
 /**
  * @internal
@@ -14,7 +14,7 @@ export function actionProxyHandler<T extends object, U extends object>({
   transforms,
   errorHandler = null,
 }: {
-  subjects: { [K in keyof T]: Subject<ValuesOf<T>> };
+  subjects: SubjectMap<T>;
   transforms?: U;
   errorHandler: ErrorHandler | null;
 }): ProxyHandler<RxActions<T, U>> {

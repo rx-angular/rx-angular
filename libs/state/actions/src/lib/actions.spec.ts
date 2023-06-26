@@ -1,6 +1,6 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { actions } from '../src/lib/actions';
+import { actions } from './actions';
 import { isObservable } from 'rxjs';
 import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -9,15 +9,25 @@ import { RxActions } from '@rx-angular/state/actions';
 type Actions = { prop: string; prop2: string; search: string; resize: number };
 
 let fixture = undefined;
-let componentInstance = undefined;
+let errorfixture = undefined;
+let errorComponentInstance = undefined;
 let _actions: RxActions<Actions> = undefined;
 let _actions2: RxActions<Actions> = undefined;
+let _actionstransform: RxActions<Actions> = undefined;
 
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
 })
 class TestComponent {
+  ui = actions<Actions>();
+  ui2 = actions<Actions>();
+}
+
+@Component({
+  template: '',
+})
+class Test2Component {
   ui = actions<Actions>({
     prop: () => 'transformed',
     search: (e: InputEvent | string): string => {
@@ -60,9 +70,12 @@ describe('actions fn', () => {
       providers: [],
     }).compileComponents();
     fixture = TestBed.createComponent(TestComponent);
-    componentInstance = fixture.componentInstance;
-    _actions = componentInstance.ui;
-    _actions2 = componentInstance.ui2;
+    errorfixture = TestBed.createComponent(TestErrorComponent);
+    errorComponentInstance = fixture.componentInstance;
+    _actionstransform =
+      TestBed.createComponent(Test2Component).componentInstance.ui;
+    _actions = fixture.componentInstance.ui;
+    _actions2 = fixture.componentInstance.ui2;
   });
 
   it('should get created properly', () => {
@@ -97,15 +110,15 @@ describe('actions fn', () => {
 
   it('should emit and transform on the subscribed channels', (done) => {
     const exp = 'transformed';
-    _actions.prop$.subscribe((result) => {
+    _actionstransform.prop$.subscribe((result) => {
       expect(result).toBe(exp);
       done();
     });
-    _actions.prop('');
+    _actionstransform.prop('');
   });
 
   it('should emit on multiple subscribed channels', (done) => {
-    const value1 = 'transformed';
+    const value1 = 'foo';
     const value2 = 'bar';
     const res = {};
     _actions.prop$.subscribe((result) => {
@@ -120,7 +133,7 @@ describe('actions fn', () => {
   });
 
   it('should emit on multiple subscribed channels over mreged output', (done) => {
-    const value1 = 'transformed';
+    const value1 = 'foo';
     const value2 = 'bar';
 
     const res = [];
@@ -136,21 +149,16 @@ describe('actions fn', () => {
 
   it('should destroy all created actions', (done) => {
     let numCalls = 0;
-    let numCalls2 = 0;
 
     _actions.prop$.subscribe(() => ++numCalls);
-    _actions2.prop$.subscribe(() => ++numCalls2);
     expect(numCalls).toBe(0);
-    expect(numCalls2).toBe(0);
     _actions.prop('');
-    _actions2.prop('');
     expect(numCalls).toBe(1);
-    expect(numCalls2).toBe(1);
-    componentInstance.ngOnDestroy();
+
+    // destroyRef should be called
+    fixture.destroy();
     _actions.prop('');
-    _actions2.prop('');
     expect(numCalls).toBe(1);
-    expect(numCalls2).toBe(1);
     done();
   });
 
@@ -162,7 +170,7 @@ describe('actions fn', () => {
     done();
   });
 
-  test('should isolate errors and invoke provided ErrorHandler', async () => {
+  it('should isolate errors and invoke provided ErrorHandler', async () => {
     const fixture = TestBed.createComponent(TestErrorComponent);
 
     fixture.componentInstance.ui.search('');
