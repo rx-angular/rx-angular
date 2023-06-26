@@ -1,10 +1,4 @@
-import {
-  Actions,
-  ActionTransforms,
-  RxActions,
-  SubjectMap,
-  ValuesOf,
-} from './types';
+import { Actions, ActionTransforms, RxActions, SubjectMap } from './types';
 import { DestroyRef, ErrorHandler, inject } from '@angular/core';
 import { actionProxyHandler } from './proxy';
 
