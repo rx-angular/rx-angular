@@ -45,39 +45,35 @@ import { actionProxyHandler } from './proxy';
  * actions.search$.subscribe(); // string Observable
  *
  */
-export function actions<
+export function rxActions<
   T extends Partial<Actions>,
   U extends ActionTransforms<T> = {}
->(transforms?: U): RxActions<T, U> {
-  /**
-   * @internal
-   */
-  const subjectMaps: SubjectMap<T>[] = [] as SubjectMap<T>[];
-  /**
-   * @internal
-   */
+>(setupFn?: (cfg: { transforms: (t: U) => void }) => void): RxActions<T, U> {
+  const subjectMap: SubjectMap<T> = {} as SubjectMap<T>;
   const errorHandler = inject(ErrorHandler);
+  let transformsMap = {} as U;
 
   /**
    * @internal
    * Internally used to clean up potential subscriptions to the subjects. (For Actions it is most probably a rare case but still important to care about)
    */
   inject(DestroyRef).onDestroy(() => {
-    subjectMaps.forEach((s) => {
-      Object.values(s).forEach((subject: any) => subject.complete());
-    });
+    Object.values(subjectMap).forEach((subject: any) => subject.complete());
   });
 
-  const subjectMap: SubjectMap<T> = {} as SubjectMap<T>;
-  subjectMaps.push(subjectMap);
+  // run setup function if given
+  setupFn &&
+    setupFn({
+      transforms: (t: U) => (transformsMap = t),
+    });
 
+  // create actions
   function signals(): void {}
-
   return new Proxy(
     signals as any as RxActions<T, U>,
     actionProxyHandler({
-      subjects: subjectMaps as any,
-      transforms,
+      subjectMap,
+      transformsMap,
       errorHandler,
     })
   ) as any as RxActions<T, U>;

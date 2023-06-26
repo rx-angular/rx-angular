@@ -1,14 +1,14 @@
-import { Actions, ActionTransforms, RxActions, ValuesOf } from './types';
-import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
-import { actionProxyHandler } from './proxy';
+import { ErrorHandler, inject, Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
+import { actionProxyHandler } from './proxy';
+import { Actions, ActionTransforms, RxActions, ValuesOf } from './types';
 
 type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
 
 /**
  * This class creates RxActions bound to Angular's DI life-cycles. This prevents memory leaks and optionally makes the instance reusable across the app.
  * The main function here is called `create`, optionally you can also call `destroy` to complete all action channels.
- * If the instantiator gets destroyed also the actions get destroyed automatically.
+ * If the consumer gets destroyed also the actions get destroyed automatically.
  *
  * @example
  * const factory = new RxActionFactory<{search: string}>();
@@ -18,12 +18,8 @@ type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
  */
 @Injectable()
 export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
+  private readonly errorHandler = inject(ErrorHandler, { optional: true });
   private subjects: SubjectMap<T>[] = [] as SubjectMap<T>[];
-
-  constructor(
-    @Optional()
-    private readonly errorHandler?: ErrorHandler
-  ) {}
 
   /*
    * Returns a object based off of the provided typing with a separate setter `[prop](value: T[K]): void` and observable stream `[prop]$: Observable<T[K]>`;
@@ -69,24 +65,26 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
    *
    */
   create<U extends ActionTransforms<T> = {}>(transforms?: U): RxActions<T, U> {
-    const subjects: SubjectMap<T> = {} as SubjectMap<T>;
-    this.subjects.push(subjects);
+    const subjectMap: SubjectMap<T> = {} as SubjectMap<T>;
+    this.subjects.push(subjectMap);
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     function signals(): void {}
+
     return new Proxy(
       signals as any as RxActions<T, U>,
-      actionProxyHandler(
-        subjects as any as { [K in keyof T]: Subject<ValuesOf<T>> },
-        transforms,
-        this.errorHandler
-      )
+      actionProxyHandler({
+        subjectMap,
+        transformsMap: transforms,
+        errorHandler: this.errorHandler,
+      })
     ) as any as RxActions<T, U>;
   }
 
   destroy() {
     this.subjects.forEach((s) => {
       Object.values(s).forEach((subject: any) => subject.complete());
-    })
+    });
   }
 
   /**

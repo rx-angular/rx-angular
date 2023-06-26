@@ -1,6 +1,6 @@
 import { ErrorHandler } from '@angular/core';
 import { merge, Subject } from 'rxjs';
-import { KeysOf, RxActions, ValuesOf } from './types';
+import { KeysOf, RxActions, SubjectMap, ValuesOf } from './types';
 
 /**
  * @internal
@@ -10,25 +10,25 @@ import { KeysOf, RxActions, ValuesOf } from './types';
  * @param transforms
  */
 export function actionProxyHandler<T extends object, U extends object>({
-  subjects,
-  transforms,
+  subjectMap,
+  transformsMap,
   errorHandler = null,
 }: {
-  subjects: { [K in keyof T]: Subject<ValuesOf<T>> };
-  transforms?: U;
+  subjectMap: SubjectMap<T>;
+  transformsMap?: U;
   errorHandler: ErrorHandler | null;
 }): ProxyHandler<RxActions<T, U>> {
   type KeysOfT = KeysOf<T>;
   type ValuesOfT = ValuesOf<T>;
 
   function dispatch(value: ValuesOfT, prop: KeysOfT) {
-    subjects[prop] = subjects[prop] || new Subject<ValuesOfT>();
+    subjectMap[prop] = subjectMap[prop] || new Subject<ValuesOfT>();
     try {
       const val =
-        transforms && (transforms as any)[prop]
-          ? (transforms as any)[prop](value)
+        transformsMap && (transformsMap as any)[prop]
+          ? (transformsMap as any)[prop](value)
           : value;
-      subjects[prop].next(val);
+      subjectMap[prop].next(val);
     } catch (err) {
       errorHandler?.handleError(err);
     }
@@ -51,15 +51,15 @@ export function actionProxyHandler<T extends object, U extends object>({
           return (props: KeysOfT[]) =>
             merge(
               ...props.map((k) => {
-                subjects[k] = subjects[k] || new Subject<ValuesOfT>();
-                return subjects[k];
+                subjectMap[k] = subjectMap[k] || new Subject<ValuesOfT>();
+                return subjectMap[k];
               })
             );
         }
 
         const propName = prop.toString().slice(0, -1) as KeysOfT;
-        subjects[propName] = subjects[propName] || new Subject<ValuesOfT>();
-        return subjects[propName];
+        subjectMap[propName] = subjectMap[propName] || new Subject<ValuesOfT>();
+        return subjectMap[propName];
       }
 
       // the user wants to get a dispatcher function
