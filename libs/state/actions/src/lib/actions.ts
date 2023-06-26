@@ -48,29 +48,32 @@ import { actionProxyHandler } from './proxy';
 export function rxActions<
   T extends Partial<Actions>,
   U extends ActionTransforms<T> = {}
->(setupFn?: (cfg: { transforms: (t: U) => void }) => void): RxActions<T, U> {
+>(
+  setupFn?: (configFns: { transforms: (t: U) => void }) => void
+): RxActions<T, U> {
   const subjectMap: SubjectMap<T> = {} as SubjectMap<T>;
   const errorHandler = inject(ErrorHandler);
   let transformsMap = {} as U;
 
-  /**
-   * @internal
-   * Internally used to clean up potential subscriptions to the subjects. (For Actions it is most probably a rare case but still important to care about)
-   */
+  // internally used to clean up potential subscriptions to the subjects. (For Actions it is most probably a rare case but still important to care about)
   inject(DestroyRef).onDestroy(() => {
-    Object.values(subjectMap).forEach((subject: any) => subject.complete());
+    for (const key in subjectMap) {
+      subjectMap[key].complete();
+    }
   });
 
   // run setup function if given
-  setupFn &&
+  if (setupFn) {
     setupFn({
       transforms: (t: U) => (transformsMap = t),
     });
+  }
 
   // create actions
-  function signals(): void {}
+  function _fnNeededAsProxyObjectOnly(): void {}
+
   return new Proxy(
-    signals as any as RxActions<T, U>,
+    _fnNeededAsProxyObjectOnly as any as RxActions<T, U>,
     actionProxyHandler({
       subjectMap,
       transformsMap,
