@@ -26,10 +26,7 @@ import { actionProxyHandler } from './proxy';
  * actions.search$.error(new Error('traraaa')); // not possible by typings as well as in code
  * actions.search = "string"; // not a setter. the proxy will throw an error pointing out that you have to call it
  *
- * @param setupFn - A function exposing ways to configure the actions.
- *
- * Options:
- * transforms - A map of transform functions to apply on transformations to actions before emitting them.
+ * @param transforms - A map of transform functions to apply on transformations to actions before emitting them.
  * This is very useful to clean up bloated templates and components. e.g. `[input]="$event?.target?.value"` => `[input]="$event"`
  *
  * @example
@@ -50,34 +47,30 @@ import { actionProxyHandler } from './proxy';
  */
 export function rxActions<
   T extends Partial<Actions>,
-  U extends ActionTransforms<T> = object
->(
-  setupFn?: (configFns: { transforms: (t: U) => void }) => void
-): RxActions<T, U> {
+  U extends ActionTransforms<T> = {}
+>(setupFn?: (cfg: { transforms: (t: U) => void }) => void): RxActions<T, U> {
   const subjectMap: SubjectMap<T> = {} as SubjectMap<T>;
   const errorHandler = inject(ErrorHandler);
   let transformsMap = {} as U;
 
-  // internally used to clean up potential subscriptions to the subjects. (For Actions it is most probably a rare case but still important to care about)
+  /**
+   * @internal
+   * Internally used to clean up potential subscriptions to the subjects. (For Actions it is most probably a rare case but still important to care about)
+   */
   inject(DestroyRef).onDestroy(() => {
-    for (const key in subjectMap) {
-      subjectMap[key].complete();
-    }
+    Object.values(subjectMap).forEach((subject: any) => subject.complete());
   });
 
   // run setup function if given
-  if (setupFn) {
+  setupFn &&
     setupFn({
       transforms: (t: U) => (transformsMap = t),
     });
-  }
 
   // create actions
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  function _fnNeededAsProxyObjectOnly(): void {}
-
+  function signals(): void {}
   return new Proxy(
-    _fnNeededAsProxyObjectOnly as any as RxActions<T, U>,
+    signals as any as RxActions<T, U>,
     actionProxyHandler({
       subjectMap,
       transformsMap,
