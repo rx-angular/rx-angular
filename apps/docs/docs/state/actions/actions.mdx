@@ -10,7 +10,8 @@ hide_title: true
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 
-> This package provides a quick way to create an action channel and some configuration options.
+> This package provides a handy way handle have reactive events of any type.
+> It fit's perfectly for situations like debounce user input or switchMap a HTTP request
 
 ## Key features
 
@@ -18,10 +19,6 @@ hide_title: true
 - ✅ No-Boilerplate
 - ✅ Configurable transformations to have lines in the template
 - ✅ Minimal memory footprint through a Proxy object and lazy initialization
-
-## Demos:
-
-- [⚡ GitHub](https://github.com/BioPhoton/rx-angular-state-actions)
 
 ## Install
 
@@ -31,11 +28,6 @@ npm install --save @rx-angular/state
 yarn add @rx-angular/state
 ```
 
-## Resources
-
-**Example applications:**
-A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-state-actions).
-
 ## Motivation
 
 Actions are a fundamental part of state management and reactive systems. The @rx-angular/state library provides a powerful set method, but in certain scenarios, you might need to add specific behaviors to your user input or incoming events.
@@ -43,118 +35,6 @@ Actions are a fundamental part of state management and reactive systems. The @rx
 Typically, Subjects are used to implement this functionality. However, in larger applications, this approach often results in code cluttered with Subjects, leading to increased complexity.
 
 That's where @rx-angular/state/actions comes in. It allows you to create observable action streams in a clean, maintainable, and less error-prone way, thus minimizing the amount of boilerplate code required.
-
-## RxAngular Actions
-
-This package helps to reduce code used to create composable action streams.
-It mostly is used in combination with state management libs to handle user interaction and backend communication.
-
-### Setup
-
-The coalescing features can be used directly from the `cdk` package or indirectly through the `state` package.
-To do so, install the `cdk` package and, if needed, the packages depending on it:
-
-1. Install `@rx-angular/state`
-
-```bash
-npm i @rx-angular/state
-# or
-yarn add @rx-angular/state
-```
-
-### Basic usage
-
-By using RxAngular Actions we can reduce the boilerplate significantly, to do so we can start by thinking about the specific section their events and event payload types:
-
-```typescript
-interface Actions {
-  refreshUser: string | number;
-  refreshList: string | number;
-  refreshGenres: string | number;
-}
-```
-
-Next we can use the typing to create the action object:
-
-```typescript
-const actionsFactory = new RxActionFactory<Actions>();
-const actions = actionsFactory.create();
-```
-
-The object can now be used to emit operations over setters:
-
-```typescript
-actions.refreshUser(value);
-actions.refreshList(value);
-actions.refreshGenres(value);
-```
-
-The emitted operations can be received over observable properties:
-
-```typescript
-const refreshUser$ = actions.refreshUser$;
-const refreshList$ = actions.refreshList$;
-const refreshGenres$ = actions.refreshGenres$;
-```
-
-If there is the need to make a combined operation you can also select multiple operations and get their emissions in one stream:
-
-```typescript
-const refreshUserOrList$ = concat(actions.refreshUser$, actions.refreshList$);
-```
-
-### Operations in components
-
-In components/templates we can use operations to map user interaction as well as programmatic to effects or state changes.
-This reduces the component class code as well as template.
-
-In addition, we can use it as a shorthand in the template and directly connect to action dispatching in the class.
-
-```typescript
-interface UiActions {
-  submitBtn: void;
-  searchInput: string;
-}
-
-@Component({
-  template: `
-    <input (input)="ui.searchInput($event.target.value)" /> Search for:
-    {{ ui.searchInput$ | async }}<br />
-    <button (click)="ui.submitBtn()">
-      Submit<button>
-        <br />
-        <ul>
-          <li *ngFor="let item of list$ | async as list">{{ item }}</li>
-        </ul>
-      </button>
-    </button>
-  `,
-  providers: [RxState, RxActionFactory],
-})
-class Component {
-  ui = this.factory.create<UiActions>({ searchInput: (e) => e });
-  list$ = this.state.select('list');
-  submittedSearchQuery$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.searchInput$),
-    map(([_, search]) => search),
-    debounceTime(1500)
-  );
-
-  constructor(
-    private state: RxState<State>,
-    private factory: RxActionFactory<UiActions>,
-    globalState: StateService
-  ) {
-    this.connect('list', this.globalState.refreshGenres$);
-
-    this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
-    // Optional reactively:
-    // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
-  }
-}
-```
-
-### Advanced usage
 
 ```typescript
 import { Component } from '@angular/core';
@@ -246,6 +126,57 @@ export class Component {
   constructor(private api: API, private factory: RxActionFactory<UiActions>) {}
 }
 ```
+
+## RxAngular Actions
+
+This package helps to reduce code used to create composable action streams.
+It mostly is used in combination with state management libs to handle user interaction and backend communication.
+
+### Setup
+
+The coalescing features can be used directly from the `cdk` package or indirectly through the `state` package.
+To do so, install the `cdk` package and, if needed, the packages depending on it:
+
+1. Install `@rx-angular/state`
+
+```bash
+npm i @rx-angular/state
+# or
+yarn add @rx-angular/state
+```
+
+### Basic usage in a Component
+
+One of the ways `actions` can be used is to describe user input in a central place.
+To do so we define the UI interactions a user can do e.g. if we have a search box in our UI, the events it produced could get named `searchInput`.click
+
+The types for it could look like that:
+
+````typescript
+interface UI {
+  searchInput: string;
+}
+
+In the class we can use actions like follows:
+
+```typescript
+class Component {
+  ui = actions<UI>();
+  searchQuery$ = this.ui.searchInput$.pipe(
+    debounceTime(1500)
+  );
+  list$ = this.globalState.list$;
+
+  constructor(
+    private rxEffects: RxEffects,
+    globalState: StateService
+  ) {
+    this.rxEffects.register(this.searchQuery$, this.globalState.refreshGenres);
+  }
+}
+````
+
+### Advanced usage
 
 #### Using transforms
 
