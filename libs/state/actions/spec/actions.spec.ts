@@ -153,16 +153,23 @@ describe('actions fn', () => {
 
   it('should destroy all created actions', (done) => {
     let numCalls = 0;
+    let numCalls2 = 0;
+
+    const factory = fixture.componentInstance.actions;
 
     _actions.prop$.subscribe(() => ++numCalls);
+    _actions2.prop$.subscribe(() => ++numCalls2);
     expect(numCalls).toBe(0);
+    expect(numCalls2).toBe(0);
     _actions.prop('');
+    _actions2.prop('');
     expect(numCalls).toBe(1);
-
-    // destroyRef should be called
+    expect(numCalls2).toBe(1);
     fixture.destroy();
     _actions.prop('');
+    _actions2.prop('');
     expect(numCalls).toBe(1);
+    expect(numCalls2).toBe(1);
     done();
   });
 
