@@ -5,7 +5,7 @@ import {
   preventDefault,
   preventDefaultStopPropagation,
   stopPropagation,
-} from '../src/lib/transforms';
+} from './transforms';
 
 const e = {
   preventDefault: () => void 0,

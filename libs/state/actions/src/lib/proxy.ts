@@ -1,19 +1,23 @@
+import { ErrorHandler } from '@angular/core';
+import { merge, Subject } from 'rxjs';
+import { KeysOf, RxActions, ValuesOf } from './types';
+
 /**
  * @internal
  * Internal helper to create the proxy object
- * It lifes as standalone function because we dont need to carrie it in memory for every ActionHandler instance
+ * It lives as standalone function because we don't need to carrie it in memory for every ActionHandler instance
  * @param subjects
  * @param transforms
  */
-import { merge, Subject } from 'rxjs';
-import { KeysOf, ValuesOf, RxActions } from './types';
-import { ErrorHandler } from '@angular/core';
-
-export function actionProxyHandler<T extends object, U extends object>(
-  subjects: { [K in keyof T]: Subject<ValuesOf<T>> },
-  transforms?: U,
-  errorHandler?: ErrorHandler
-): ProxyHandler<RxActions<T, U>> {
+export function actionProxyHandler<T extends object, U extends object>({
+  subjects,
+  transforms,
+  errorHandler = null,
+}: {
+  subjects: { [K in keyof T]: Subject<ValuesOf<T>> };
+  transforms?: U;
+  errorHandler: ErrorHandler | null;
+}): ProxyHandler<RxActions<T, U>> {
   type KeysOfT = KeysOf<T>;
   type ValuesOfT = ValuesOf<T>;
 

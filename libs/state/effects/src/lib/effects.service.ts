@@ -1,13 +1,13 @@
-import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
+import { ErrorHandler, Injectable, OnDestroy, inject } from '@angular/core';
 import {
   EMPTY,
-  from,
   Observable,
   ObservableInput,
   PartialObserver,
-  pipe,
   Subject,
-  Subscription
+  Subscription,
+  from,
+  pipe,
 } from 'rxjs';
 import {
   catchError,
@@ -16,7 +16,7 @@ import {
   mergeAll,
   share,
   takeUntil,
-  tap
+  tap,
 } from 'rxjs/operators';
 import { DestroyProp, OnDestroy$ } from './model';
 import { toHook, untilDestroyed } from './utils';
@@ -64,11 +64,7 @@ import { toHook, untilDestroyed } from './utils';
  */
 @Injectable()
 export class RxEffects implements OnDestroy, OnDestroy$ {
-  constructor(
-    @Optional()
-    private readonly errorHandler: ErrorHandler
-  ) {}
-
+  private readonly errorHandler = inject(ErrorHandler, { optional: true });
   private static nextId = 0;
   readonly _hooks$ = new Subject<DestroyProp>();
   private readonly observables$ = new Subject<Observable<unknown>>();

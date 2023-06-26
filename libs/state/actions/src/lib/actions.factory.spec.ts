@@ -1,48 +1,27 @@
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { mockConsole } from '@test-helpers';
-import { RxActionFactory } from '../src/lib/actions.factory';
-import { isObservable } from 'rxjs';
 import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { mockConsole } from '@test-helpers';
+import { isObservable } from 'rxjs';
+import { RxActionFactory } from './actions.factory';
 
-const errorHandler = new ErrorHandler();
-// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
-@Component({
-  template: '',
-  providers: [RxActionFactory],
-})
-class TestComponent {
-  ui = this.actions.create({
-    search: (e: InputEvent | string): string => {
-      return typeof e === 'object' ? (e as any).target.value : e;
-    },
-    resize: (_: string | number): number => {
-      throw new Error('something went wrong');
-    },
-  });
-  constructor(
-    private actions: RxActionFactory<{ search: string; resize: number }>
-  ) {}
-}
-
-/** @test {RxActionFactory} */
-describe('RxActionFactory', () => {
+describe(RxActionFactory, () => {
   beforeAll(() => mockConsole());
 
+  it('should throw if called outside of Angular injection context', () => {
+    expect(() => new RxActionFactory()).toThrowError(/NG0203/);
+  });
+
   it('should get created properly', () => {
-    const actions = new RxActionFactory<{ prop: string }>(
-      errorHandler
-    ).create();
+    const { actions } = setUp<{ prop: void }>();
     expect(typeof actions.prop).toBe('function');
     expect(isObservable(actions.prop)).toBeFalsy();
     expect(isObservable(actions.prop$)).toBeTruthy();
   });
 
   it('should emit on the subscribed channels', (done) => {
+    const { actions } = setUp<{ prop: string }>();
     const values = 'foo';
-    const actions = new RxActionFactory<{ prop: string }>(
-      errorHandler
-    ).create();
     const exp = values;
     actions.prop$.subscribe((result) => {
       expect(result).toBe(exp);
@@ -54,12 +33,10 @@ describe('RxActionFactory', () => {
   it('should maintain channels per create call', (done) => {
     const values = 'foo';
     const nextSpy = jest.spyOn({ nextSpy: (_: string) => void 0 }, 'nextSpy');
-    const actions = new RxActionFactory<{ prop: string }>(
-      errorHandler
-    ).create();
-    const actions2 = new RxActionFactory<{ prop: string }>(
-      errorHandler
-    ).create();
+    const { fixture } = setUp<{ prop: string }>();
+    const factory = fixture.componentInstance.actions;
+    const actions = factory.create();
+    const actions2 = factory.create();
     const exp = values;
 
     actions2.prop$.subscribe(nextSpy as unknown as (_: string) => void);
@@ -72,8 +49,10 @@ describe('RxActionFactory', () => {
   });
 
   it('should emit and transform on the subscribed channels', (done) => {
-    const actions = new RxActionFactory<{ prop: string }>(errorHandler).create({
-      prop: () => 'transformed',
+    const { actions } = setUp<{ prop: void }>({
+      transforms: {
+        prop: () => 'transformed',
+      },
     });
     const exp = 'transformed';
     actions.prop$.subscribe((result) => {
@@ -86,9 +65,10 @@ describe('RxActionFactory', () => {
   it('should emit on multiple subscribed channels', (done) => {
     const value1 = 'foo';
     const value2 = 'bar';
-    const actions = new RxActionFactory<{ prop1: string; prop2: string }>(
-      errorHandler
-    ).create();
+    const { actions } = setUp<{
+      prop1: string;
+      prop2: string;
+    }>();
     const res = {};
     actions.prop1$.subscribe((result) => {
       res['prop1'] = result;
@@ -101,12 +81,13 @@ describe('RxActionFactory', () => {
     done();
   });
 
-  it('should emit on multiple subscribed channels over mreged output', (done) => {
+  it('should emit on multiple subscribed channels over merged output', (done) => {
     const value1 = 'foo';
     const value2 = 'bar';
-    const actions = new RxActionFactory<{ prop1: string; prop2: string }>(
-      errorHandler
-    ).create();
+    const { actions } = setUp<{
+      prop1: string;
+      prop2: string;
+    }>();
 
     const res = [];
     expect(typeof actions.$).toBe('function');
@@ -122,7 +103,9 @@ describe('RxActionFactory', () => {
   it('should destroy all created actions', (done) => {
     let numCalls = 0;
     let numCalls2 = 0;
-    const factory = new RxActionFactory<{ prop: void }>(errorHandler);
+
+    const { fixture } = setUp<{ prop: void }>();
+    const factory = fixture.componentInstance.actions;
     const actions = factory.create();
     const actions2 = factory.create();
 
@@ -143,8 +126,7 @@ describe('RxActionFactory', () => {
   });
 
   it('should throw if a setter is used', (done) => {
-    const factory = new RxActionFactory<{ prop: number }>(errorHandler);
-    const actions = factory.create();
+    const { actions } = setUp();
 
     expect(() => {
       (actions as any).prop = 0;
@@ -153,31 +135,50 @@ describe('RxActionFactory', () => {
     done();
   });
 
-  test('should isolate errors and invoke provided ErrorHandler', async () => {
+  it('should isolate errors and invoke provided ErrorHandler', async () => {
     const customErrorHandler: ErrorHandler = {
       handleError: jest.fn(),
     };
-    await TestBed.configureTestingModule({
-      declarations: [TestComponent],
-      providers: [
-        {
-          provide: ErrorHandler,
-          useValue: customErrorHandler,
-        },
-      ],
-    }).compileComponents();
-    const fixture = TestBed.createComponent(TestComponent);
 
-    fixture.componentInstance.ui.search('');
-    fixture.componentInstance.ui.resize(42);
+    const { actions } = setUp<{ search: string; resize: number }>({
+      providers: [{ provide: ErrorHandler, useValue: customErrorHandler }],
+      transforms: {
+        search: (e: InputEvent | string): string => {
+          return typeof e === 'object' ? (e as any).target.value : e;
+        },
+        resize: (_: string | number): number => {
+          throw new Error('something went wrong');
+        },
+      },
+    });
+
+    actions.search('');
+    actions.resize(42);
 
     expect(customErrorHandler.handleError).toHaveBeenCalledWith(
       new Error('something went wrong')
     );
-    /*
-    expect(service.method2).toHaveBeenCalledWith('foo2');
-    expect(service.method3).toHaveBeenCalledWith('foo3');
-    expect(service.method4).toHaveBeenCalledWith('foo4');
-    */
   });
 });
+
+function setUp<TActions>({ transforms = {}, providers = [] } = {}) {
+  @Component({
+    template: '',
+    providers: [RxActionFactory],
+  })
+  class TestComponent {
+    ui = this.actions.create(transforms);
+    constructor(public actions: RxActionFactory<TActions>) {}
+  }
+
+  TestBed.configureTestingModule({
+    declarations: [TestComponent],
+    providers,
+  });
+  const fixture = TestBed.createComponent(TestComponent);
+
+  fixture.detectChanges();
+  const actions = fixture.componentInstance.ui;
+
+  return { actions, fixture };
+}
