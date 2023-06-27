@@ -5,7 +5,6 @@ import { isObservable } from 'rxjs';
 import { Component, ErrorHandler, Provider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActionTransforms } from '@rx-angular/state/actions';
-import { rxActions } from './actions';
 
 /** @test {RxActionFactory} */
 describe('RxActionFactory', () => {
@@ -127,7 +126,7 @@ describe('RxActionFactory', () => {
     done();
   });
 
-  it('should isolate errors and invoke provided ErrorHandler', async () => {
+  it('should isolate errors and invoke provided ErrorHandler', () => {
     const customErrorHandler: ErrorHandler = {
       handleError: jest.fn(),
     };
@@ -146,8 +145,8 @@ describe('RxActionFactory', () => {
       ],
     });
 
-    component.actions2.search('');
-    component.actions2.resize(42);
+    component.actions.search('');
+    component.actions.resize(42);
 
     expect(customErrorHandler.handleError).toHaveBeenCalledWith(
       new Error('something went wrong')
@@ -182,16 +181,10 @@ function setupComponent<
     providers,
   })
   class TestComponent {
-    actions = rxActions<Actions>(({ transforms }) => {
-      if (cfg?.transformFns) {
-        transforms(cfg.transformFns);
-      }
-    });
-    actions2 = rxActions<Actions>(({ transforms }) => {
-      if (cfg?.transformFns) {
-        transforms(cfg.transformFns);
-      }
-    });
+    actions = this.rxActions.create(cfg?.transformFns);
+    actions2 = this.rxActions.create(cfg?.transformFns);
+
+    constructor(private rxActions: RxActionFactory<Actions>) {}
   }
 
   TestBed.configureTestingModule({
