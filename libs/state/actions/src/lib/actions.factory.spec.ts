@@ -170,10 +170,10 @@ function setupComponent<
   Actions extends object,
   Transforms extends ActionTransforms<Actions> = object
 >(cfg?: { transformFns?: Transforms; providers?: Provider[] }) {
-  const providers: Provider[] = [RxActionFactory];
+  let providers: Provider[] = [RxActionFactory];
 
   if (Array.isArray(cfg?.providers)) {
-    providers.concat(cfg.providers);
+    providers = providers.concat(cfg.providers);
   }
 
   @Component({
