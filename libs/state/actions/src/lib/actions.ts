@@ -26,7 +26,10 @@ import { actionProxyHandler } from './proxy';
  * actions.search$.error(new Error('traraaa')); // not possible by typings as well as in code
  * actions.search = "string"; // not a setter. the proxy will throw an error pointing out that you have to call it
  *
- * @param transforms - A map of transform functions to apply on transformations to actions before emitting them.
+ * @param setupFn - A function exposing ways to configure the actions.
+ *
+ * Options:
+ * transforms - A map of transform functions to apply on transformations to actions before emitting them.
  * This is very useful to clean up bloated templates and components. e.g. `[input]="$event?.target?.value"` => `[input]="$event"`
  *
  * @example
@@ -47,7 +50,7 @@ import { actionProxyHandler } from './proxy';
  */
 export function rxActions<
   T extends Partial<Actions>,
-  U extends ActionTransforms<T> = {}
+  U extends ActionTransforms<T> = object
 >(
   setupFn?: (configFns: { transforms: (t: U) => void }) => void
 ): RxActions<T, U> {
@@ -70,6 +73,7 @@ export function rxActions<
   }
 
   // create actions
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   function _fnNeededAsProxyObjectOnly(): void {}
 
   return new Proxy(

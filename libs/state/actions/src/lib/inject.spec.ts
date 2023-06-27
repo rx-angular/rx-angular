@@ -54,7 +54,9 @@ function setupComponent<
     rxActionFactory: RxActionFactory<Actions>
   ) => RxActions<Actions, Transforms>
 ) {
-  @Component({})
+  @Component({
+    template: '',
+  })
   class TestComponent {
     actions = rxActions<Actions, Transforms>(withTransforms);
   }
