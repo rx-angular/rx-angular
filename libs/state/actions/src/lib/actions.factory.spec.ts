@@ -1,38 +1,18 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
-import { RxActionFactory } from '../src/lib/actions.factory';
+import { RxActionFactory } from './actions.factory';
 import { isObservable } from 'rxjs';
-import { Component, ErrorHandler } from '@angular/core';
+import { Component, ErrorHandler, Provider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-
-const errorHandler = new ErrorHandler();
-// tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
-@Component({
-  template: '',
-  providers: [RxActionFactory],
-})
-class TestComponent {
-  ui = this.actions.create({
-    search: (e: InputEvent | string): string => {
-      return typeof e === 'object' ? (e as any).target.value : e;
-    },
-    resize: (_: string | number): number => {
-      throw new Error('something went wrong');
-    },
-  });
-  constructor(
-    private actions: RxActionFactory<{ search: string; resize: number }>
-  ) {}
-}
+import { ActionTransforms } from '@rx-angular/state/actions';
+import { rxActions } from './actions';
 
 /** @test {RxActionFactory} */
 describe('RxActionFactory', () => {
   beforeAll(() => mockConsole());
 
   it('should get created properly', () => {
-    const actions = new RxActionFactory<{ prop: string }>(
-      errorHandler
-    ).create();
+    const actions = setupComponent<UiActions>().component.actions;
     expect(typeof actions.prop).toBe('function');
     expect(isObservable(actions.prop)).toBeFalsy();
     expect(isObservable(actions.prop$)).toBeTruthy();
@@ -40,9 +20,7 @@ describe('RxActionFactory', () => {
 
   it('should emit on the subscribed channels', (done) => {
     const values = 'foo';
-    const actions = new RxActionFactory<{ prop: string }>(
-      errorHandler
-    ).create();
+    const actions = setupComponent<UiActions>().component.actions;
     const exp = values;
     actions.prop$.subscribe((result) => {
       expect(result).toBe(exp);
@@ -53,13 +31,11 @@ describe('RxActionFactory', () => {
 
   it('should maintain channels per create call', (done) => {
     const values = 'foo';
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const nextSpy = jest.spyOn({ nextSpy: (_: string) => void 0 }, 'nextSpy');
-    const actions = new RxActionFactory<{ prop: string }>(
-      errorHandler
-    ).create();
-    const actions2 = new RxActionFactory<{ prop: string }>(
-      errorHandler
-    ).create();
+    const component = setupComponent<UiActions>().component;
+    const actions = component.actions;
+    const actions2 = component.actions2;
     const exp = values;
 
     actions2.prop$.subscribe(nextSpy as unknown as (_: string) => void);
@@ -72,9 +48,11 @@ describe('RxActionFactory', () => {
   });
 
   it('should emit and transform on the subscribed channels', (done) => {
-    const actions = new RxActionFactory<{ prop: string }>(errorHandler).create({
-      prop: () => 'transformed',
-    });
+    const actions = setupComponent<UiActions>({
+      transformFns: {
+        prop: () => 'transformed',
+      },
+    }).component.actions;
     const exp = 'transformed';
     actions.prop$.subscribe((result) => {
       expect(result).toBe(exp);
@@ -86,34 +64,30 @@ describe('RxActionFactory', () => {
   it('should emit on multiple subscribed channels', (done) => {
     const value1 = 'foo';
     const value2 = 'bar';
-    const actions = new RxActionFactory<{ prop1: string; prop2: string }>(
-      errorHandler
-    ).create();
+    const actions = setupComponent<UiActions>().component.actions;
     const res = {};
-    actions.prop1$.subscribe((result) => {
-      res['prop1'] = result;
+    actions.prop$.subscribe((result) => {
+      res['prop'] = result;
     });
     actions.prop2$.subscribe((result) => {
       res['prop2'] = result;
     });
-    actions({ prop1: value1, prop2: value2 });
-    expect(res).toStrictEqual({ prop1: value1, prop2: value2 });
+    actions({ prop: value1, prop2: value2 });
+    expect(res).toStrictEqual({ prop: value1, prop2: value2 });
     done();
   });
 
   it('should emit on multiple subscribed channels over mreged output', (done) => {
     const value1 = 'foo';
     const value2 = 'bar';
-    const actions = new RxActionFactory<{ prop1: string; prop2: string }>(
-      errorHandler
-    ).create();
+    const actions = setupComponent<UiActions>().component.actions;
 
     const res = [];
     expect(typeof actions.$).toBe('function');
-    actions.$(['prop1', 'prop2']).subscribe((result) => {
+    actions.$(['prop', 'prop2']).subscribe((result) => {
       res.push(result);
     });
-    actions({ prop1: value1, prop2: value2 });
+    actions({ prop: value1, prop2: value2 });
     expect(res.length).toBe(2);
     expect(res).toStrictEqual([value1, value2]);
     done();
@@ -122,9 +96,9 @@ describe('RxActionFactory', () => {
   it('should destroy all created actions', (done) => {
     let numCalls = 0;
     let numCalls2 = 0;
-    const factory = new RxActionFactory<{ prop: void }>(errorHandler);
-    const actions = factory.create();
-    const actions2 = factory.create();
+    const { fixture, component } = setupComponent<UiActions>();
+    const actions = component.actions;
+    const actions2 = component.actions2;
 
     actions.prop$.subscribe(() => ++numCalls);
     actions2.prop$.subscribe(() => ++numCalls2);
@@ -134,7 +108,7 @@ describe('RxActionFactory', () => {
     actions2.prop();
     expect(numCalls).toBe(1);
     expect(numCalls2).toBe(1);
-    factory.destroy();
+    fixture.destroy();
     actions.prop();
     actions2.prop();
     expect(numCalls).toBe(1);
@@ -143,33 +117,37 @@ describe('RxActionFactory', () => {
   });
 
   it('should throw if a setter is used', (done) => {
-    const factory = new RxActionFactory<{ prop: number }>(errorHandler);
-    const actions = factory.create();
+    const actions = setupComponent<UiActions>().component.actions;
 
     expect(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (actions as any).prop = 0;
     }).toThrow('');
 
     done();
   });
 
-  test('should isolate errors and invoke provided ErrorHandler', async () => {
+  it('should isolate errors and invoke provided ErrorHandler', async () => {
     const customErrorHandler: ErrorHandler = {
       handleError: jest.fn(),
     };
-    await TestBed.configureTestingModule({
-      declarations: [TestComponent],
+    const { component } = setupComponent<UiActions>({
+      transformFns: {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        resize: (_: string | number): number => {
+          throw new Error('something went wrong');
+        },
+      },
       providers: [
         {
           provide: ErrorHandler,
           useValue: customErrorHandler,
         },
       ],
-    }).compileComponents();
-    const fixture = TestBed.createComponent(TestComponent);
+    });
 
-    fixture.componentInstance.ui.search('');
-    fixture.componentInstance.ui.resize(42);
+    component.actions2.search('');
+    component.actions2.resize(42);
 
     expect(customErrorHandler.handleError).toHaveBeenCalledWith(
       new Error('something went wrong')
@@ -181,3 +159,47 @@ describe('RxActionFactory', () => {
     */
   });
 });
+
+type UiActions = {
+  prop: string | void;
+  prop2: string | void;
+  search: string;
+  resize: number;
+};
+
+function setupComponent<
+  Actions extends object,
+  Transforms extends ActionTransforms<Actions> = object
+>(cfg?: { transformFns?: Transforms; providers?: Provider[] }) {
+  const providers: Provider[] = [RxActionFactory];
+
+  if (Array.isArray(cfg?.providers)) {
+    providers.concat(cfg.providers);
+  }
+
+  @Component({
+    template: '',
+    providers,
+  })
+  class TestComponent {
+    actions = rxActions<Actions>(({ transforms }) => {
+      if (cfg?.transformFns) {
+        transforms(cfg.transformFns);
+      }
+    });
+    actions2 = rxActions<Actions>(({ transforms }) => {
+      if (cfg?.transformFns) {
+        transforms(cfg.transformFns);
+      }
+    });
+  }
+
+  TestBed.configureTestingModule({
+    declarations: [TestComponent],
+  });
+
+  const fixture = TestBed.createComponent(TestComponent);
+  const component = fixture.componentInstance;
+
+  return { component, fixture };
+}
