@@ -151,11 +151,6 @@ describe('RxActionFactory', () => {
     expect(customErrorHandler.handleError).toHaveBeenCalledWith(
       new Error('something went wrong')
     );
-    /*
-    expect(service.method2).toHaveBeenCalledWith('foo2');
-    expect(service.method3).toHaveBeenCalledWith('foo3');
-    expect(service.method4).toHaveBeenCalledWith('foo4');
-    */
   });
 });
 
