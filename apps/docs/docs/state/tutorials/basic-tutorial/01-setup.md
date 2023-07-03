@@ -1,7 +1,10 @@
 ---
+
 sidebar_label: Setup
 title: Setting up a Reactive State
+
 # Renamed from apps/demos/src/app/features/tutorials/basics/1-setup/Readme.md
+
 ---
 
 # Setting up a Reactive State
