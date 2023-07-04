@@ -6,9 +6,9 @@ import {
   ContentChild,
   ElementRef,
   OnDestroy,
-  Optional,
   Output,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
@@ -108,6 +108,11 @@ export class RxVirtualScrollViewportComponent
     AfterContentInit,
     OnDestroy
 {
+  private elementRef = inject(ElementRef<HTMLElement>);
+  private scrollStrategy = inject(RxVirtualScrollStrategy<unknown>, {
+    optional: true,
+  });
+
   /** @internal */
   @ViewChild('runway', { static: true })
   private runway!: ElementRef<HTMLElement>;
@@ -142,7 +147,7 @@ export class RxVirtualScrollViewportComponent
    * in sync with the DOM when the next `renderCallback` emitted an event.
    */
   @Output()
-  readonly viewRange = this.scrollStrategy.renderedRange$;
+  readonly viewRange = this.scrollStrategy?.renderedRange$;
 
   /**
    * @description
@@ -151,17 +156,14 @@ export class RxVirtualScrollViewportComponent
    * item actually being visible to the user.
    */
   @Output()
-  readonly scrolledIndexChange = this.scrollStrategy.scrolledIndex$;
+  readonly scrolledIndexChange = this.scrollStrategy?.scrolledIndex$;
 
   /** @internal */
   private readonly destroy$ = new Subject<void>();
 
   /** @internal */
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    @Optional() private scrollStrategy: RxVirtualScrollStrategy<unknown>
-  ) {
-    if (NG_DEV_MODE && !scrollStrategy) {
+  constructor() {
+    if (NG_DEV_MODE && !this.scrollStrategy) {
       throw Error(
         'Error: rx-virtual-scroll-viewport requires an `RxVirtualScrollStrategy` to be set.'
       );
