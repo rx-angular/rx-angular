@@ -1,0 +1,9 @@
+/
+/docs
+/one
+/two
+/three
+/details
+/details/1
+/details/2
+/details/3
