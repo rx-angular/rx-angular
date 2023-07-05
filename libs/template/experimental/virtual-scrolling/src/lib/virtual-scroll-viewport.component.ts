@@ -147,7 +147,7 @@ export class RxVirtualScrollViewportComponent
    * in sync with the DOM when the next `renderCallback` emitted an event.
    */
   @Output()
-  readonly viewRange = this.scrollStrategy?.renderedRange$;
+  readonly viewRange = this.scrollStrategy.renderedRange$;
 
   /**
    * @description
@@ -156,7 +156,7 @@ export class RxVirtualScrollViewportComponent
    * item actually being visible to the user.
    */
   @Output()
-  readonly scrolledIndexChange = this.scrollStrategy?.scrolledIndex$;
+  readonly scrolledIndexChange = this.scrollStrategy.scrolledIndex$;
 
   /** @internal */
   private readonly destroy$ = new Subject<void>();
