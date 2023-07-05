@@ -19,9 +19,7 @@
         }
       },
       "defaultConfiguration": "production",
-      "outputs": [
-        "{workspaceRoot}/dist/ngx-isr"
-      ]
+      "outputs": ["{workspaceRoot}/dist/ngx-isr"]
     },
     "test": {
       "executor": "@angular-devkit/build-angular:karma",

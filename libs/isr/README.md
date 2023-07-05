@@ -3,6 +3,7 @@
 </p>
 
 # Incremental Static Regeneration for Angular
+
 A library that enables Angular Universal applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
 
 📰 [Documentation](https://ngx-isr.vercel.app/)
@@ -10,9 +11,10 @@ A library that enables Angular Universal applications to generate static pages a
 📰 [ISR Blog post](https://itnext.io/incremental-static-regeneration-for-angular-42b0a8440e53)
 
 # Features
+
 - ⏰ Scheduled cache invalidation
 - ▶️ On-demand cache invalidation
-- 🔌  Plugin based cache handlers
+- 🔌 Plugin based cache handlers
 - 👌 No build changes required!
 - 🅰️ Supports Angular Universal
 - 🛡️ NgModules & Standalone Compatible
@@ -20,6 +22,7 @@ A library that enables Angular Universal applications to generate static pages a
 # How to use it?
 
 1. Install npm package
+
 ```bash
 npm install ngx-isr
 # or
@@ -29,53 +32,63 @@ pnpm add ngx-isr
 ```
 
 2. Initialize `ISRHandler` inside `server.ts`
+
 ```ts
 const isr = new ISRHandler({
   indexHtml,
   invalidateSecretToken: 'MY_TOKEN', // replace with env secret key ex. process.env.REVALIDATE_SECRET_TOKEN
-  enableLogging: !environment.production
+  enableLogging: !environment.production,
 });
 ```
 
 3. Add invalidation url handler
+
 ```ts
 server.use(express.json());
-server.post("/api/invalidate", async (req, res) => await isr.invalidate(req, res));
+server.post(
+  '/api/invalidate',
+  async (req, res) => await isr.invalidate(req, res)
+);
 ```
 
 4. Replace Angular default server side rendering with ISR rendering
 
 Replace
+
 ```ts
-server.get('*',
-  (req, res) => {
-    res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
-  }
-);
+server.get('*', (req, res) => {
+  res.render(indexHtml, {
+    req,
+    providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
+  });
+});
 ```
+
 with
 
 ```ts
-server.get('*',
+server.get(
+  '*',
   // Serve page if it exists in cache
   async (req, res, next) => await isr.serveFromCache(req, res, next),
   // Server side render the page and add to cache if needed
-  async (req, res, next) => await isr.render(req, res, next),
+  async (req, res, next) => await isr.render(req, res, next)
 );
 ```
 
 You can also pass `providers` to each of the `ISRHandler` methods.
 
 ```ts
-server.get('*',
-  ...
-    async (req, res, next) => await isr.render(req, res, next, {
+server.get(
+  '*',
+  ...async (req, res, next) =>
+    await isr.render(req, res, next, {
       providers: [
         { provide: APP_BASE_HREF, useValue: req.baseUrl }, // <-- Needs to be provided when passing providers
         { provide: CUSTOM_TOKEN, useValue: 'Hello from ISR' },
-        CustomService
-      ]
-    }),
+        CustomService,
+      ],
+    })
 );
 ```
 
@@ -83,20 +96,24 @@ It is also possible to pass a `modifyCachedHtml` or `modifyGeneratedHtml` callba
 These methods provide a way to modify the html served from cache or the html that is generated on the fly.
 
 **Important:** Use these methods with caution as the logic written can increase the processing time.
+
 ```ts
-server.get('*',
+server.get(
+  '*',
   // Serve page if it exists in cache
-  async (req, res, next) => await isr.serveFromCache(req, res, next, {
-    modifyCachedHtml: (req, cachedHtml) => {
+  async (req, res, next) =>
+    await isr.serveFromCache(req, res, next, {
+      modifyCachedHtml: (req, cachedHtml) => {
         return `${cachedHtml}<!-- Hello, I'm a modification to the original cache! -->`;
-    }
-  }),
+      },
+    }),
   // Server side render the page and add to cache if needed
-  async (req, res, next) => await isr.render(req, res, next, {
-    modifyGeneratedHtml: (req, html) => {
-      return `${html}<!-- Hello, I'm modifying the generatedHtml before caching it! -->`
-    }
-  }),
+  async (req, res, next) =>
+    await isr.render(req, res, next, {
+      modifyGeneratedHtml: (req, html) => {
+        return `${html}<!-- Hello, I'm modifying the generatedHtml before caching it! -->`;
+      },
+    })
 );
 ```
 
@@ -105,6 +122,7 @@ ISRHandler provides `APP_BASE_HREF` by default. And if you want pass `providers`
 5. Add `revalidate` key in route data
 
 Example:
+
 ```ts
 {
   path: "example",
@@ -115,12 +133,10 @@ Example:
 
 > **NOTE:** Routes that don't have revalidate key in data won't be handled by ISR. They will fallback to Angular default server side rendering pipeline.
 
-
 6. Register providers
-To register the ngx-isr providers, you can either import `NgxIsrModule` in your `AppServerModule` or provide `provideISR` in your `AppServerModule` providers.
+   To register the ngx-isr providers, you can either import `NgxIsrModule` in your `AppServerModule` or provide `provideISR` in your `AppServerModule` providers.
 
 Or, if you are in a standalone app, you can register the providers in your `app.config.server.ts` file.
-
 
 - Register using `NgxIsrModule`
 
@@ -129,9 +145,8 @@ import { NgxIsrModule } from 'ngx-isr/server'; // <-- Import module from library
 
 @NgModule({
   imports: [
-    ...
-    NgxIsrModule.forRoot()  // <-- Use it in module imports
-  ]
+    ...NgxIsrModule.forRoot(), // <-- Use it in module imports
+  ],
 })
 export class AppServerModule {}
 ```
@@ -143,21 +158,21 @@ import { provideISR } from 'ngx-isr/server';
 
 @NgModule({
   providers: [
-    provideISR() // <-- Use it in module providers
-  ]
+    provideISR(), // <-- Use it in module providers
+  ],
 })
 export class AppServerModule {}
 ```
 
 - Register using the `provideISR` function in standalone app
-  
+
 ```ts
 import { provideISR } from 'ngx-isr/server';
 
 const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(),
-    provideISR() // <-- Use it in config providers
+    provideISR(), // <-- Use it in config providers
   ],
 };
 ```
@@ -174,6 +189,7 @@ When registering the providers, `NgxIsrService` will be initialized and will sta
 - feat: separate the library into secondary entry points for server and browser
 
 ### BREAKING CHANGES:
+
 Imports now should be done from `ngx-isr/server` and `ngx-isr/browser` instead of `ngx-isr`;
 
 ```ts
@@ -191,15 +207,18 @@ import { provideISR } from 'ngx-isr/server';
 ```
 
 Things exported from `ngx-isr/server`:
+
 - `NgxIsrModule`
 - `provideISR`
 - `ISRHandler`
 - `FileSystemCacheHandler` and `FileSystemCacheOptions`
 
 Things exported from `ngx-isr/browser`:
+
 - `NgxIsrService`
 
 Things exported from `ngx-isr/models`:
+
 - `CacheHandler`
 - `CacheISRConfig` (renamed from `ISROptions`)
 - `CacheData`
@@ -220,43 +239,49 @@ Things exported from `ngx-isr/models`:
 ## Version 0.5.3
 
 ### Features
-  
+
 - feat: Introduce `RouteISRConfig` interface for better type safety in route data
-  
-  How to use it? 
+
+  How to use it?
+
   ```ts
-  const routes: Rotues = [{
-    path: 'home',
-    component: HomeComponent,
-    data: { revalidate: 0 } as RouteISRConfig // 👈 Add type to route data
-  }];
+  const routes: Rotues = [
+    {
+      path: 'home',
+      component: HomeComponent,
+      data: { revalidate: 0 } as RouteISRConfig, // 👈 Add type to route data
+    },
+  ];
   ```
 
-- feat: Added build id support 
+- feat: Added build id support
 
   **What is it and why do we need it?**
 
-  The build id is a unique identifier that is generated for each build. It is used to invalidate the cache when a new build is deployed. So, when a new build is deployed, every page that will be requested will be server-rendered again and not served from the cache. This way, the users will always get the latest version of the application. 
-  
+  The build id is a unique identifier that is generated for each build. It is used to invalidate the cache when a new build is deployed. So, when a new build is deployed, every page that will be requested will be server-rendered again and not served from the cache. This way, the users will always get the latest version of the application.
+
   _Useful when you have an external cache handler like Redis._
 
   **How to use it?**
-  
-  To use it, you need to pass the build id to the `ISRHandler` constructor. 
-  Angular itself doesn't generate a build id. But we can generate it using the environment file.
-  What we can do is to set field in the environment file called `buildId` and set it to: `new Date().getTime(),`. 
 
-  Ex. environment.ts: 
+  To use it, you need to pass the build id to the `ISRHandler` constructor.
+  Angular itself doesn't generate a build id. But we can generate it using the environment file.
+  What we can do is to set field in the environment file called `buildId` and set it to: `new Date().getTime(),`.
+
+  Ex. environment.ts:
+
   ```ts
   export const environment = {
     production: false,
     buildId: new Date().getTime() + '', // We need to convert it to string because the buildId is a string
   };
   ```
-  This way we will have a unique build id for each build because the buildId will evaluated at build time. 
+
+  This way we will have a unique build id for each build because the buildId will evaluated at build time.
   Then, we pass the build id to the ISRHandler constructor.
 
-  Ex. server.ts: 
+  Ex. server.ts:
+
   ```ts
   import { environment } from './src/environments/environment';
 
@@ -266,17 +291,18 @@ Things exported from `ngx-isr/models`:
   });
   ```
 
-- fix: Fixed a bug where the cache was not invalidated when the build id changed 
-
+- fix: Fixed a bug where the cache was not invalidated when the build id changed
 
 ### Breaking changes:
+
 - `ISROptions` is being deprecated. Use `CacheISRConfig` instead.
 
-
 ## Version 0.5.2
-  * feat: Migrate repository to nx workspace
-  * feat: Added `provideISR` provider function
-  * chore: Update example RedisCacheHandler to use a prefix
+
+- feat: Migrate repository to nx workspace
+- feat: Added `provideISR` provider function
+- chore: Update example RedisCacheHandler to use a prefix
 
 ## License
+
 MIT
