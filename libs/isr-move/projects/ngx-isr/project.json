@@ -1,0 +1,35 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "ngx-isr",
+  "projectType": "library",
+  "sourceRoot": "projects/ngx-isr/src",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "options": {
+        "project": "projects/ngx-isr/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/ngx-isr/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "projects/ngx-isr/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production",
+      "outputs": [
+        "{workspaceRoot}/dist/ngx-isr"
+      ]
+    },
+    "test": {
+      "executor": "@angular-devkit/build-angular:karma",
+      "options": {
+        "main": "projects/ngx-isr/src/test.ts",
+        "tsConfig": "projects/ngx-isr/tsconfig.spec.json",
+        "karmaConfig": "projects/ngx-isr/karma.conf.js"
+      }
+    }
+  }
+}
