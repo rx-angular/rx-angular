@@ -4,18 +4,19 @@ import {
   OnDestroy,
   Pipe,
   PipeTransform,
+  inject,
   untracked,
 } from '@angular/core';
+import {
+  RxNotification,
+  RxNotificationKind,
+  createTemplateNotifier,
+} from '@rx-angular/cdk/notifications';
 import {
   RxStrategyNames,
   RxStrategyProvider,
   strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
-import {
-  createTemplateNotifier,
-  RxNotification,
-  RxNotificationKind,
-} from '@rx-angular/cdk/notifications';
 import {
   MonoTypeOperatorFunction,
   NextObserver,
@@ -26,9 +27,9 @@ import {
   Unsubscribable,
 } from 'rxjs';
 import {
+  filter,
   shareReplay,
   skip,
-  filter,
   switchMap,
   tap,
   withLatestFrom,
@@ -87,6 +88,12 @@ import {
  */
 @Pipe({ name: 'push', pure: false, standalone: true })
 export class RxPush implements PipeTransform, OnDestroy {
+  /** @internal */
+  private strategyProvider = inject(RxStrategyProvider);
+  /** @internal */
+  private cdRef = inject(ChangeDetectorRef);
+  /** @internal */
+  private ngZone = inject(NgZone);
   /**
    * @internal
    * This is typed as `any` because the type cannot be inferred
@@ -111,12 +118,6 @@ export class RxPush implements PipeTransform, OnDestroy {
   private patchZone: false | NgZone;
   /** @internal */
   private _renderCallback: NextObserver<any>;
-
-  constructor(
-    private strategyProvider: RxStrategyProvider,
-    private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone
-  ) {}
 
   transform<U>(
     potentialObservable: null,

@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [16.0.1](https://github.com/rx-angular/rx-angular/compare/template@16.0.0...template@16.0.1) (2023-06-22)
+
+
+### Bug Fixes
+
+* **template:** fix properties not initialized ([02b62fb](https://github.com/rx-angular/rx-angular/commit/02b62fb5da76cb3e765a35848c4961a91f96a64a)), closes [#1580](https://github.com/rx-angular/rx-angular/issues/1580)
+
+
+
 # [16.0.0](https://github.com/rx-angular/rx-angular/compare/template@15.2.0...template@16.0.0) (2023-06-20)
 
 
