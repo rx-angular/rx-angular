@@ -89,12 +89,12 @@ describe('viewport', () => {
   it('has proper runway height', () => {
     const { itemSize } = defaultMountConfig;
     mountFixedSize().then(({ fixture }) => {
-      const runway = fixture.debugElement.query(
-        By.css('.rx-virtual-scroll__run-way')
+      const sentinel = fixture.debugElement.query(
+        By.css('.rx-virtual-scroll__sentinel')
       );
       fixture.detectChanges();
       cy.get('@renderCallback').should('have.been.called');
-      expect((runway.nativeElement as HTMLElement).style.transform).eq(
+      expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${defaultItemLength * itemSize}px)`
       );
     });
@@ -105,15 +105,15 @@ describe('viewport', () => {
       const items = fixture.componentInstance.items as Item[];
       items.push(...generateItems(1));
       fixture.detectChanges();
-      const runway = fixture.debugElement.query(
-        By.css('.rx-virtual-scroll__run-way')
+      const sentinel = fixture.debugElement.query(
+        By.css('.rx-virtual-scroll__sentinel')
       );
-      expect((runway.nativeElement as HTMLElement).style.transform).eq(
+      expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${items.length * itemSize}px)`
       );
       items.splice(0, 1);
       fixture.detectChanges();
-      expect((runway.nativeElement as HTMLElement).style.transform).eq(
+      expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${items.length * itemSize}px)`
       );
     });
