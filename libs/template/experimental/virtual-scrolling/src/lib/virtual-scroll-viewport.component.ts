@@ -6,9 +6,9 @@ import {
   ContentChild,
   ElementRef,
   OnDestroy,
-  Optional,
   Output,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
@@ -108,6 +108,11 @@ export class RxVirtualScrollViewportComponent
     AfterContentInit,
     OnDestroy
 {
+  private elementRef = inject(ElementRef<HTMLElement>);
+  private scrollStrategy = inject(RxVirtualScrollStrategy<unknown>, {
+    optional: true,
+  });
+
   /** @internal */
   @ViewChild('sentinel', { static: true })
   private scrollSentinel!: ElementRef<HTMLElement>;
@@ -157,11 +162,8 @@ export class RxVirtualScrollViewportComponent
   private readonly destroy$ = new Subject<void>();
 
   /** @internal */
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    @Optional() private scrollStrategy: RxVirtualScrollStrategy<unknown>
-  ) {
-    if (NG_DEV_MODE && !scrollStrategy) {
+  constructor() {
+    if (NG_DEV_MODE && !this.scrollStrategy) {
       throw Error(
         'Error: rx-virtual-scroll-viewport requires an `RxVirtualScrollStrategy` to be set.'
       );
