@@ -78,7 +78,10 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["projects/docs/**/*.ts", "projects/docs/**/*.html"]
+        "lintFilePatterns": [
+          "libs/isr-move/projects/docs/**/*.ts",
+          "libs/isr-move/projects/docs/**/*.html"
+        ]
       }
     },
     "test": {
