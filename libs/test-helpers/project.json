@@ -12,6 +12,16 @@
         "passWithNoTests": true
       },
       "outputs": ["{workspaceRoot}/coverage/${projectRoot}"]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/test-helpers/**/*.ts",
+          "libs/test-helpers/**/*.html"
+        ]
+      }
     }
   },
   "tags": ["type:test-util"]
