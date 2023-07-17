@@ -11,7 +11,7 @@
         "jestConfig": "libs/test-helpers/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["{workspaceRoot}/coverage/libs/test-helpers"]
+      "outputs": ["{workspaceRoot}/coverage/${projectRoot}"]
     }
   },
   "tags": ["type:test-util"]
