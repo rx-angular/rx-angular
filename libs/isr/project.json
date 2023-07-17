@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "name": "@rx-angular/isr",
+  "name": "isr",
   "projectType": "library",
   "sourceRoot": "libs/isr/src",
   "prefix": "lib",
