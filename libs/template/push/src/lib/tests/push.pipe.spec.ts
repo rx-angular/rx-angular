@@ -5,7 +5,7 @@ import {
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
-import { mockConsole } from '@test-helpers';
+import { mockConsole } from '@test-helpers/rx-angular';
 import { EMPTY, NEVER, Observable, asapScheduler, of, timer } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { RxPush } from '../push.pipe';

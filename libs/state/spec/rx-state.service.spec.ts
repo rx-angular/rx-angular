@@ -6,7 +6,7 @@ import {
   initialPrimitiveState,
   jestMatcher,
   PrimitiveState,
-} from '@test-helpers';
+} from '@test-helpers/rx-angular';
 import { of, scheduled, Subject } from 'rxjs';
 import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';

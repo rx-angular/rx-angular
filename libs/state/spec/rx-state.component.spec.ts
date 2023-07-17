@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, Output, ViewChild } from '@angular/core';
-import { PrimitiveState } from '@test-helpers';
+import { PrimitiveState } from '@test-helpers/rx-angular';
 import { createStateChecker } from './fixtures';
 import { Observable, Subject } from 'rxjs';
 import { RxState } from '@rx-angular/state';

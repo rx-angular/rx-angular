@@ -6,7 +6,10 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { initialPrimitiveState, PrimitiveState } from '@test-helpers';
+import {
+  initialPrimitiveState,
+  PrimitiveState,
+} from '@test-helpers/rx-angular';
 import { Observable, Subject } from 'rxjs';
 import { RxState } from '@rx-angular/state';
 import { select } from '@rx-angular/state/selections';

@@ -5,6 +5,22 @@
   "projectType": "library",
   "generators": {},
   "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/test-helpers/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/test-helpers/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/test-helpers/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
