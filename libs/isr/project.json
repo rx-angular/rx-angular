@@ -21,6 +21,22 @@
         "tsConfig": "libs/isr/tsconfig.spec.json",
         "karmaConfig": "libs/isr/karma.conf.js"
       }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/isr/**/*.ts",
+          "libs/isr/**/*.html",
+          "libs/isr/browser/**/*.ts",
+          "libs/isr/browser/**/*.html",
+          "libs/isr/models/**/*.ts",
+          "libs/isr/models/**/*.html",
+          "libs/isr/server/**/*.ts",
+          "libs/isr/server/**/*.html"
+        ]
+      }
     }
   }
 }
