@@ -9,7 +9,7 @@ export class IsrService implements IsrServiceInterface {
   constructor() {
     if (isPlatformServer(this.platformId)) {
       throw new Error(
-        `NgxIsrService should not be instantiated on the server. 
+        `IsrService should not be instantiated on the server.
           It is only used on the client as a injection token.`
       );
     }

@@ -25,6 +25,16 @@
     "Angular ISR"
   ],
   "license": "MIT",
+  "contributors": [
+    {
+      "name": "Enea Jahollari",
+      "email": "jahollarienea14@gmail.com"
+    },
+    {
+      "name": "Michael Hladky",
+      "email": "michael.hladky@push-based.io"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/rx-angular/rx-angular/tree/main/libs/isr"
