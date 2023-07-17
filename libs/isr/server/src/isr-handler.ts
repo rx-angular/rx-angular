@@ -9,7 +9,7 @@ import {
   ISRHandlerConfig,
   RenderConfig,
   ServeFromCacheConfig,
-} from 'ngx-isr/models';
+} from '@rx-angular/isr/models';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
 import { renderUrl, RenderUrlConfig } from './utils/render-url';
 

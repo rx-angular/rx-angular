@@ -1,9 +1,9 @@
 import { isPlatformServer } from '@angular/common';
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
-import { INgxIsrService, NgxIsrState } from 'ngx-isr/models';
+import { IsrServiceInterface, IsrState } from '@rx-angular/isr/models';
 
 @Injectable({ providedIn: 'root' })
-export class NgxIsrService implements INgxIsrService {
+export class IsrService implements IsrServiceInterface {
   private platformId = inject(PLATFORM_ID);
 
   constructor() {
@@ -15,11 +15,11 @@ export class NgxIsrService implements INgxIsrService {
     }
   }
 
-  getState(): NgxIsrState {
+  getState(): IsrState {
     return { revalidate: null, errors: [], extra: {} };
   }
 
-  patchState(partialState: Partial<NgxIsrState>): void {}
+  patchState(partialState: Partial<IsrState>): void {}
 
   getExtra(): Record<string, any> {
     return {};

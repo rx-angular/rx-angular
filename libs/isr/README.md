@@ -24,11 +24,11 @@ A library that enables Angular Universal applications to generate static pages a
 1. Install npm package
 
 ```bash
-npm install ngx-isr
+npm install @rx-angular/isr
 # or
-yarn add ngx-isr
+yarn add @rx-angular/isr
 # or
-pnpm add ngx-isr
+pnpm add @rx-angular/isr
 ```
 
 2. Initialize `ISRHandler` inside `server.ts`
@@ -134,7 +134,7 @@ Example:
 > **NOTE:** Routes that don't have revalidate key in data won't be handled by ISR. They will fallback to Angular default server side rendering pipeline.
 
 6. Register providers
-   To register the ngx-isr providers, you can either import `NgxIsrModule` in your `AppServerModule` or provide `provideISR` in your `AppServerModule` providers.
+   To register the ISR providers, you can either import `NgxIsrModule` in your `AppServerModule` or provide `provideISR` in your `AppServerModule` providers.
 
 Or, if you are in a standalone app, you can register the providers in your `app.config.server.ts` file.
 

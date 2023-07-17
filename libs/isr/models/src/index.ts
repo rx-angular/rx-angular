@@ -13,4 +13,4 @@ export {
   RouteISRConfig,
 } from './isr-handler-config';
 
-export { INgxIsrService, NgxIsrState } from './ngx-isr-service.interface';
+export { IsrServiceInterface, IsrState } from './isr-service.interface';

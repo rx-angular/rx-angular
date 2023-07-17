@@ -1,1 +1,1 @@
-export * from './isr.service';
+export { IsrService } from './isr.service';

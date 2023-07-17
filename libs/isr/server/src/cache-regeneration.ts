@@ -1,5 +1,9 @@
 import { Provider } from '@angular/core';
-import { CacheData, CacheHandler, ISRHandlerConfig } from 'ngx-isr/models';
+import {
+  CacheData,
+  CacheHandler,
+  ISRHandlerConfig,
+} from '@rx-angular/isr/models';
 import { renderUrl } from './utils/render-url';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
 import { Request, Response } from 'express';

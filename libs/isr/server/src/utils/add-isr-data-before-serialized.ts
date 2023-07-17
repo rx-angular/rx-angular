@@ -1,7 +1,7 @@
-import { INgxIsrService, NgxIsrState } from 'ngx-isr/models';
+import { IsrServiceInterface, IsrState } from '@rx-angular/isr/models';
 
 export function addIsrDataBeforeSerialized(
-  isrService: INgxIsrService,
+  isrService: IsrServiceInterface,
   doc: Document
 ): () => Promise<void> {
   return () => addISRDataToBody(doc, isrService.getState());
@@ -10,7 +10,7 @@ export function addIsrDataBeforeSerialized(
 // append script with revalidate and errors data for the current route
 function addISRDataToBody(
   doc: Document,
-  { revalidate, errors, extra }: NgxIsrState
+  { revalidate, errors, extra }: IsrState
 ): Promise<void> {
   return new Promise<void>((resolve) => {
     const script = doc.createElement('script');

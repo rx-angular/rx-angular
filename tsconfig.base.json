@@ -60,7 +60,12 @@
       "@rx-angular/template/let": ["libs/template/let/src/index.ts"],
       "@rx-angular/template/push": ["libs/template/push/src/index.ts"],
       "@rx-angular/template/unpatch": ["libs/template/unpatch/src/index.ts"],
-      "@test-helpers": ["libs/test-helpers/src/index.ts"]
+      "@test-helpers": ["libs/test-helpers/src/index.ts"],
+
+      "@rx-angular/isr": ["dist/isr/isr", "dist/isr"],
+      "@rx-angular/isr/browser": ["libs/isr/browser/src/index.ts"],
+      "@rx-angular/isr/models": ["libs/isr/models/src/index.ts"],
+      "@rx-angular/isr/server": ["libs/isr/server/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

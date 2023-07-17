@@ -1,5 +1,5 @@
 {
-  "name": "ngx-isr",
+  "name": "@rx-angular/isr",
   "author": "Enea Jahollari",
   "description": "Incremental Static Regeneration for Angular",
   "version": "0.5.6",
@@ -27,6 +27,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eneajaho/ngx-isr"
+    "url": "https://github.com/rx-angular/rx-angular/tree/main/libs/isr"
   }
 }

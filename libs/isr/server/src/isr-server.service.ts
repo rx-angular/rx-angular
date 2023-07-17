@@ -2,24 +2,24 @@ import { Injectable, inject } from '@angular/core';
 import { ChildActivationEnd, Router } from '@angular/router';
 import { filter, map, take } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { INgxIsrService, NgxIsrState } from 'ngx-isr/models';
+import { IsrServiceInterface, IsrState } from '@rx-angular/isr/models';
 
-const initialState: NgxIsrState = {
+const initialState: IsrState = {
   revalidate: null,
   errors: [],
   extra: {},
 };
 
 @Injectable({ providedIn: 'root' })
-export class NgxIsrServerService implements INgxIsrService {
+export class IsrServerService implements IsrServiceInterface {
   private readonly router = inject(Router);
-  private state: NgxIsrState = initialState;
+  private state: IsrState = initialState;
 
-  getState(): NgxIsrState {
+  getState(): IsrState {
     return this.state;
   }
 
-  patchState(partialState: Partial<NgxIsrState>): void {
+  patchState(partialState: Partial<IsrState>): void {
     this.state = { ...this.state, ...partialState };
   }
 

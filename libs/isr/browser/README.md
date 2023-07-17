@@ -1,3 +1,3 @@
-# ngx-isr/browser
+# @rx-angular/isr/browser
 
-Secondary entry point of `ngx-isr`. It can be used by importing from `ngx-isr/browser`.
+Secondary entry point of `@rx-angular/isr`. It can be used by importing from `@rx-angular/isr/browser`.

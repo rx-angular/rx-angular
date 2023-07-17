@@ -8,14 +8,14 @@ import { HTTP_ERROR_PROVIDER_ISR } from './http-errors.interceptor';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
 import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serialized';
 import { DOCUMENT, isPlatformServer } from '@angular/common';
-import { NgxIsrService } from 'ngx-isr/browser';
-import { NgxIsrServerService } from './ngx-isr-server.service';
+import { IsrService } from '@rx-angular/isr/browser';
+import { IsrServerService } from './isr-server.service';
 
-@NgModule({ providers: [NgxIsrService] })
-export class NgxIsrModule {
+@NgModule({ providers: [IsrService] })
+export class IsrModule {
   constructor(
-    isrService: NgxIsrService,
-    @Inject(PLATFORM_ID) platformId: object
+    private isrService: IsrService,
+    @Inject(PLATFORM_ID) private platformId: object
   ) {
     // Activate ISR only on the server
     if (isPlatformServer(platformId)) {
@@ -23,21 +23,21 @@ export class NgxIsrModule {
     }
   }
 
-  static forRoot(): ModuleWithProviders<NgxIsrModule> {
+  static forRoot(): ModuleWithProviders<IsrModule> {
     return {
-      ngModule: NgxIsrModule,
+      ngModule: IsrModule,
       providers: [
-        NgxIsrServerService,
+        IsrServerService,
         HTTP_ERROR_PROVIDER_ISR,
         {
-          provide: NgxIsrService,
-          useExisting: NgxIsrServerService,
+          provide: IsrService,
+          useExisting: IsrServerService,
         },
         {
           provide: BEFORE_APP_SERIALIZED,
           useFactory: addIsrDataBeforeSerialized,
           multi: true,
-          deps: [NgxIsrService, DOCUMENT],
+          deps: [IsrService, DOCUMENT],
         },
       ],
     };

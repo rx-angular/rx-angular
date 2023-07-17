@@ -1,12 +1,12 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { NgxIsrServerService } from './ngx-isr-server.service';
+import { IsrServerService } from './isr-server.service';
 import { HTTP_ERROR_PROVIDER_ISR } from './http-errors.interceptor';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
 import { DOCUMENT, isPlatformServer } from '@angular/common';
 import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serialized';
 import { ENVIRONMENT_INITIALIZER } from '@angular/core';
 import { PLATFORM_ID } from '@angular/core';
-import { NgxIsrService } from 'ngx-isr/browser';
+import { IsrService } from '@rx-angular/isr/browser';
 
 /**
  * @description
@@ -16,7 +16,7 @@ import { NgxIsrService } from 'ngx-isr/browser';
  *
  * @example
  * ```
- * import { provideISR } from 'ngx-isr/server';
+ * import { provideISR } from '@rx-angular/isr/server';
  *
  * @NgModule({
  *  providers: [ provideISR() ]
@@ -37,27 +37,27 @@ import { NgxIsrService } from 'ngx-isr/browser';
  */
 export const provideISR = (): EnvironmentProviders => {
   return makeEnvironmentProviders([
-    NgxIsrServerService,
+    IsrServerService,
     HTTP_ERROR_PROVIDER_ISR,
     {
-      provide: NgxIsrService,
-      useExisting: NgxIsrServerService,
+      provide: IsrService,
+      useExisting: IsrServerService,
     },
     {
       provide: BEFORE_APP_SERIALIZED,
       useFactory: addIsrDataBeforeSerialized,
       multi: true,
-      deps: [NgxIsrServerService, DOCUMENT],
+      deps: [IsrServerService, DOCUMENT],
     },
     {
       provide: ENVIRONMENT_INITIALIZER,
-      useFactory: (isrService: NgxIsrService, platformId: object) => () => {
+      useFactory: (isrService: IsrService, platformId: object) => () => {
         // Activate ISR only on the server
         if (isPlatformServer(platformId)) {
           isrService.activate();
         }
       },
-      deps: [NgxIsrService, PLATFORM_ID],
+      deps: [IsrService, PLATFORM_ID],
       multi: true,
     },
   ]);

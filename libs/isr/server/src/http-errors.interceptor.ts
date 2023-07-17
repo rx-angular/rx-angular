@@ -7,11 +7,11 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { NgxIsrService } from 'ngx-isr/browser';
+import { IsrService } from '@rx-angular/isr/browser';
 
 @Injectable()
 export class HttpErrorsInterceptor implements HttpInterceptor {
-  constructor(private ngxIsrService: NgxIsrService) {}
+  constructor(private isrService: IsrService) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -19,7 +19,7 @@ export class HttpErrorsInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((err) => {
-        this.ngxIsrService.addError(err);
+        this.isrService.addError(err);
         return throwError(() => err);
       })
     );

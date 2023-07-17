@@ -1,14 +1,12 @@
-import { HttpErrorResponse } from '@angular/common/http';
-
-export interface NgxIsrState {
+export interface IsrState {
   revalidate: number | null;
   errors: Error[];
   extra: Record<string, any>;
 }
 
-export interface INgxIsrService {
-  getState(): NgxIsrState;
-  patchState(partialState: Partial<NgxIsrState>): void;
+export interface IsrServiceInterface {
+  getState(): IsrState;
+  patchState(partialState: Partial<IsrState>): void;
   getExtra(): Record<string, any>;
   activate(): void;
   addError(error: Error): void;
