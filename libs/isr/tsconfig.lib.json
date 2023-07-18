@@ -1,24 +1,17 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "es2020",
-    "module": "es2015",
-    "inlineSources": true,
+    "outDir": "../../dist/out-tsc",
     "declaration": true,
     "declarationMap": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "lib": ["dom", "es2018"],
-    "types": ["node"]
-  },
-  "angularCompilerOptions": {
-    "compilationMode": "partial"
+    "inlineSources": true,
+    "types": []
   },
   "exclude": [
-    "src/test.ts",
-    "./test-setup.ts",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "jest.config.ts"
-  ]
+    "src/**/*.spec.ts",
+    "src/test-setup.ts",
+    "jest.config.ts",
+    "src/**/*.test.ts"
+  ],
+  "include": ["src/**/*.ts"]
 }
