@@ -1,5 +1,5 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '../src/lib/rx-state.service';
 import { select } from '@rx-angular/state/selections';
 import {
   initialNestedState,
