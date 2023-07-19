@@ -21,13 +21,6 @@ export const ROUTES: Routes = [
       )
   },
   {
-    path: 'tutorials',
-    loadChildren: () =>
-      import('../features/tutorials/tutorials-shell.module').then(
-        (m) => m.TutorialsShellModule
-      )
-  },
-  {
     path: 'integrations',
     loadChildren: () =>
       import('../features/integrations/integrations-shell.module').then(

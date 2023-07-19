@@ -1,0 +1,15 @@
+<rxa-app-shell>
+  <rxa-side-nav [navItems]="menuItems"> </rxa-side-nav>
+  <ng-container rxaAppShellSidenavTitle>
+    <a style="color: inherit; text-decoration: none" routerLink="/"
+    >RxAngular Tutorials</a
+    >
+  </ng-container>
+<!--  <ng-container rxaAppShellHeaderContent>
+    &lt;!&ndash;<rxa-dirty-check [color]="'#3700ff1f'" radius="40"></rxa-dirty-check> &ndash;&gt;
+    &lt;!&ndash; <rxa-config-panel></rxa-config-panel> &ndash;&gt;
+  </ng-container>-->
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</rxa-app-shell>
