@@ -19,34 +19,36 @@ import {
   Subject,
 } from 'rxjs';
 import {
-  mergeMap,
   distinctUntilChanged,
+  exhaustMap,
   filter,
+  finalize,
+  groupBy,
   map,
+  mergeMap,
   startWith,
   switchMap,
   takeUntil,
+  takeWhile,
   tap,
 } from 'rxjs/operators';
 
 import {
   ListRange,
+  RxVirtualForViewContext,
   RxVirtualScrollStrategy,
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
 } from '../model';
-import { unpatchedAnimationFrameTick, unpatchedMicroTask } from '../util';
-import {
-  DEFAULT_ITEM_SIZE,
-  DEFAULT_RUNWAY_ITEMS,
-  DEFAULT_RUNWAY_ITEMS_OPPOSITE,
-  RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS,
-} from '../virtual-scroll.config';
+import { unpatchedMicroTask } from '../util';
+import { RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS } from '../virtual-scroll.config';
+import { RxaResizeObserver } from './resize-observer';
 
 /** @internal */
 type VirtualViewItem = {
   size: number;
   cached?: boolean;
+  position?: number;
 };
 
 /** @internal */
@@ -89,6 +91,7 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
       provide: RxVirtualScrollStrategy,
       useExisting: AutoSizeVirtualScrollStrategy,
     },
+    RxaResizeObserver,
   ],
   standalone: true,
 })
@@ -108,14 +111,13 @@ export class AutoSizeVirtualScrollStrategy<
    * @description
    * The amount of items to render upfront in scroll direction
    */
-  @Input() runwayItems = this.defaults?.runwayItems ?? DEFAULT_RUNWAY_ITEMS;
+  @Input() runwayItems = this.defaults?.runwayItems ?? 10;
 
   /**
    * @description
    * The amount of items to render upfront in reverse scroll direction
    */
-  @Input() runwayItemsOpposite =
-    this.defaults?.runwayItemsOpposite ?? DEFAULT_RUNWAY_ITEMS_OPPOSITE;
+  @Input() runwayItemsOpposite = this.defaults?.runwayItemsOpposite ?? 2;
 
   /**
    * @description
@@ -127,7 +129,7 @@ export class AutoSizeVirtualScrollStrategy<
    * will be the size of a tombstone item being rendered before the actual item
    * is inserted into its position.
    */
-  @Input() tombstoneSize = this.defaults?.itemSize ?? DEFAULT_ITEM_SIZE;
+  @Input() tombstoneSize = this.defaults?.itemSize ?? 50;
 
   /**
    * @description
@@ -176,6 +178,9 @@ export class AutoSizeVirtualScrollStrategy<
     this._contentSize = size;
     this._contentSize$.next(size);
   }
+  private get contentSize(): number {
+    return this._contentSize;
+  }
 
   /** @internal */
   private readonly _renderedRange$ = new ReplaySubject<ListRange>(1);
@@ -194,6 +199,9 @@ export class AutoSizeVirtualScrollStrategy<
     return this._renderedRange;
   }
   /** @internal */
+  private positionedRange: ListRange = { start: 0, end: 0 };
+
+  /** @internal */
   private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
   /** @internal */
   readonly scrolledIndex$ = this._scrolledIndex$.pipe(distinctUntilChanged());
@@ -210,19 +218,10 @@ export class AutoSizeVirtualScrollStrategy<
   }
 
   /**
-   * is set, when scrollToIndex is called and the scroll event touches
-   * the edge of the viewport at the bottom. This is the only event where
-   * we actually have to `guess` the scroll anchor and might end up having
-   * to adjust
-   * @internal
-   * */
-  private _scrollToEdgeIndex: number | null = null;
-
-  /**
    * is set, when scrollToIndex is called
    * @internal
    * */
-  private _scrollToAnchor: AnchorItem | null = null;
+  private _scrollToIndex: number | null = null;
 
   /** @internal */
   private containerSize = 0;
@@ -236,6 +235,7 @@ export class AutoSizeVirtualScrollStrategy<
   private direction: 'up' | 'down' = 'down';
   /** @internal */
   private anchorScrollTop = 0;
+
   /** @internal */
   private anchorItem = {
     index: 0,
@@ -251,9 +251,7 @@ export class AutoSizeVirtualScrollStrategy<
   private readonly detached$ = new Subject<void>();
 
   /** @internal */
-  private resizeObserver?: ResizeObserver;
-  /** @internal */
-  private readonly viewsResized$ = new Subject<ResizeObserverEntry[]>();
+  private resizeObserver = inject(RxaResizeObserver, { self: true });
   /** @internal */
   private readonly recalculateRange$ = new Subject<void>();
 
@@ -290,9 +288,6 @@ export class AutoSizeVirtualScrollStrategy<
   ): void {
     this.viewport = viewport;
     this.viewRepeater = viewRepeater;
-    this.resizeObserver = new ResizeObserver((events) => {
-      this.viewsResized$.next(events);
-    });
     this.maintainVirtualItems();
     this.calcRenderedRange();
     this.positionElements();
@@ -303,33 +298,24 @@ export class AutoSizeVirtualScrollStrategy<
     this.viewport = null;
     this.viewRepeater = null;
     this._virtualItems = [];
-    this.resizeObserver?.disconnect();
-    this.resizeObserver = undefined;
+    this.resizeObserver.destroy();
     this.detached$.next();
   }
 
   scrollToIndex(index: number, behavior?: ScrollBehavior): void {
     const _index = Math.min(Math.max(index, 0), this.contentLength - 1);
-    let size = 0;
-    for (let i = 0; i < _index; i++) {
-      size += this.getItemSize(i);
+    if (_index !== this._scrolledIndex) {
+      const scrollTop = this.calcInitialPosition(_index);
+      this._scrollToIndex = _index;
+      this.viewport!.scrollTo(scrollTop, behavior);
     }
-    this._scrollToAnchor = {
-      index: _index,
-      offset: 0,
-    };
-    this._scrollToEdgeIndex = null;
-    if (size + this.containerSize > this._contentSize) {
-      this._scrollToEdgeIndex = _index;
-      this._scrollToAnchor = this.calculateAnchoredItem(
-        this._scrollToAnchor,
-        -Math.max(size + this.containerSize - this._contentSize)
-      );
-    }
-    this.viewport!.scrollTo(size, behavior);
   }
 
-  /** @internal */
+  /**
+   * starts the subscriptions that maintain the virtualItems array on changes
+   * to the underlying dataset
+   * @internal
+   */
   private maintainVirtualItems(): void {
     // reset virtual viewport when opposite orientation to the scroll direction
     // changes, as we have to expect dimension changes for all items when this
@@ -337,7 +323,7 @@ export class AutoSizeVirtualScrollStrategy<
     this.viewport!.containerRect$.pipe(
       map(({ width }) => width),
       distinctUntilChanged(),
-      filter(() => this._virtualItems.length > 0),
+      filter(() => this.renderedRange.end > 0 && this._virtualItems.length > 0),
       this.until$()
     ).subscribe(() => {
       // reset because we have no idea how items will behave
@@ -360,111 +346,121 @@ export class AutoSizeVirtualScrollStrategy<
     const trackBy = this.viewRepeater!._trackBy ?? ((i, item) => item);
     this.viewRepeater!.values$.pipe(
       this.until$(),
-      tap({
-        next: (values) => {
-          // somewhat
-          const dataArr = Array.isArray(values)
-            ? values
-            : Array.from(values) ?? [];
-          const existingIds = new Set<any>();
-          let size = 0;
-          const dataLength = dataArr.length;
-          const virtualItems = new Array(dataLength);
-          for (let i = 0; i < dataLength; i++) {
-            const item = dataArr[i];
-            const id = trackBy(i, item);
-            const cachedItem = itemCache.get(id);
-            if (cachedItem === undefined) {
-              // add
-              virtualItems[i] = { size: 0 };
-              itemCache.set(id, { item: dataArr[i], index: i });
-            } else if (cachedItem.index !== i) {
-              // move
-              virtualItems[i] = this._virtualItems[cachedItem.index];
-              itemCache.set(id, { item: dataArr[i], index: i });
-            } else {
-              // update
-              virtualItems[i] = this._virtualItems[i];
-              if (!Object.is(dataArr[i], cachedItem.item)) {
-                if (
-                  i < this.renderedRange.start ||
-                  i >= this.renderedRange.end
-                ) {
-                  virtualItems[i].cached = false;
-                }
-                itemCache.set(id, { item: dataArr[i], index: i });
-              }
+      tap((values) => {
+        const dataArr = Array.isArray(values)
+          ? values
+          : values
+          ? Array.from(values)
+          : [];
+        const existingIds = new Set<any>();
+        let size = 0;
+        const dataLength = dataArr.length;
+        const virtualItems = new Array<VirtualViewItem>(dataLength);
+        for (let i = 0; i < dataLength; i++) {
+          const item = dataArr[i];
+          const id = trackBy(i, item);
+          const cachedItem = itemCache.get(id);
+          if (cachedItem === undefined) {
+            // add
+            virtualItems[i] = { size: 0 };
+            itemCache.set(id, { item: dataArr[i], index: i });
+          } else if (cachedItem.index !== i) {
+            // move
+            virtualItems[i] = this._virtualItems[cachedItem.index];
+            virtualItems[i].position = undefined;
+            itemCache.set(id, { item: dataArr[i], index: i });
+          } else {
+            // update
+            // todo: properly determine update (Object.is?)
+            virtualItems[i] = this._virtualItems[i];
+            // if index is not part of rendered range, remove cache
+            if (i < this.renderedRange.start || i >= this.renderedRange.end) {
+              virtualItems[i].cached = false;
             }
-            existingIds.add(id);
-            size += virtualItems[i].size || this.tombstoneSize;
+            itemCache.set(id, { item: dataArr[i], index: i });
           }
-          this._virtualItems = virtualItems;
-          // sync delete operations
-          if (itemCache.size > dataLength) {
-            itemCache.forEach((v, k) => {
-              if (!existingIds.has(k)) {
-                itemCache.delete(k);
-              }
-            });
-          }
-          existingIds.clear();
-          this.contentLength = dataLength;
-          this.contentSize = size;
-        },
-        unsubscribe: () => itemCache.clear(),
-      })
+          existingIds.add(id);
+          size += virtualItems[i].size || this.tombstoneSize;
+        }
+        this._virtualItems = virtualItems;
+        // sync delete operations
+        if (itemCache.size > dataLength) {
+          itemCache.forEach((v, k) => {
+            if (!existingIds.has(k)) {
+              itemCache.delete(k);
+            }
+          });
+        }
+        existingIds.clear();
+        this.contentLength = dataLength;
+        this.contentSize = size;
+      }),
+      finalize(() => itemCache.clear())
     ).subscribe();
   }
 
-  /** @internal */
+  /**
+   * listen to triggers that should change the renderedRange
+   * @internal
+   */
   private calcRenderedRange(): void {
-    const onScroll$ = this.viewport!.elementScrolled$.pipe(
-      coalesceWith(unpatchedAnimationFrameTick()),
-      map(() => this.viewport!.getScrollTop()),
-      startWith(0),
-      tap((scrollTop) => {
-        this.direction = scrollTop > this.scrollTop ? 'down' : 'up';
-        this.scrollTop = scrollTop;
-      })
-    );
+    let removeScrollAnchorOnNextScroll = false;
+    const onlyTriggerWhenStable =
+      <A>() =>
+      (o$: Observable<A>) =>
+        o$.pipe(
+          filter(
+            () =>
+              this.renderedRange.end === 0 ||
+              (this.scrollTop === this.anchorScrollTop &&
+                this._scrollToIndex === null)
+          )
+        );
     combineLatest([
       this.viewport!.containerRect$.pipe(
-        map(({ height }) => height),
-        distinctUntilChanged()
+        map(({ height }) => {
+          this.containerSize = height;
+          return height;
+        }),
+        distinctUntilChanged(),
+        onlyTriggerWhenStable()
       ),
-      onScroll$,
-      merge(
-        this._contentSize$.pipe(distinctUntilChanged()),
-        this.recalculateRange$.pipe(startWith(void 0))
-      ).pipe(coalesceWith(unpatchedMicroTask())),
+      this.viewport!.elementScrolled$.pipe(
+        startWith(void 0),
+        tap(() => {
+          const scrollTop = this.viewport!.getScrollTop();
+          this.direction = scrollTop > this.scrollTop ? 'down' : 'up';
+          this.scrollTop = scrollTop;
+          if (removeScrollAnchorOnNextScroll) {
+            this._scrollToIndex = null;
+            removeScrollAnchorOnNextScroll = false;
+          } else {
+            removeScrollAnchorOnNextScroll = this._scrollToIndex !== null;
+          }
+        })
+      ),
+      this._contentSize$.pipe(distinctUntilChanged(), onlyTriggerWhenStable()),
+      this.recalculateRange$.pipe(onlyTriggerWhenStable(), startWith(void 0)),
     ])
       .pipe(
-        map(([containerSize]) => {
-          this.containerSize = containerSize;
+        // make sure to not over calculate things by coalescing all triggers to the next microtask
+        coalesceWith(unpatchedMicroTask()),
+        map(() => {
           const range = { start: 0, end: 0 };
           const delta = this.scrollTop - this.anchorScrollTop;
-          if (this._scrollToAnchor) {
-            this.anchorItem = this._scrollToAnchor;
-            this._scrollToAnchor = null;
+          if (this.scrollTop == 0) {
+            this.anchorItem = { index: 0, offset: 0 };
           } else {
-            // reset scrollToIndex after consequent scroll or any other update
-            if (this._scrollToEdgeIndex !== null) {
-              this._scrollToEdgeIndex = null;
-            }
-            if (this.scrollTop == 0) {
-              this.anchorItem = { index: 0, offset: 0 };
-            } else {
-              this.anchorItem = this.calculateAnchoredItem(
-                this.anchorItem,
-                delta
-              );
-            }
+            this.anchorItem = this.calculateAnchoredItem(
+              this.anchorItem,
+              delta
+            );
           }
-          this.scrolledIndex = this.anchorItem.index;
           this.anchorScrollTop = this.scrollTop;
+          this.scrolledIndex = this.anchorItem.index;
           this.lastScreenItem = this.calculateAnchoredItem(
             this.anchorItem,
-            containerSize
+            this.containerSize
           );
           if (this.direction === 'up') {
             range.start = Math.max(0, this.anchorItem.index - this.runwayItems);
@@ -495,135 +491,249 @@ export class AutoSizeVirtualScrollStrategy<
       .subscribe((range: ListRange) => (this.renderedRange = range));
   }
 
-  /** @internal */
+  /**
+   * position elements after they are created/updated/moved or their dimensions
+   * change from other sources
+   * @internal
+   */
   private positionElements(): void {
-    const viewsToObserve$ = new Subject<EmbeddedViewRef<any>[]>();
-    this.viewRepeater!.renderingStart$.pipe(
-      switchMap(() => {
-        const renderedRange = this.renderedRange;
-        const adjustIndexWith = renderedRange.start;
-        let scrolledIndex: number | null = null;
+    const viewsToObserve$ = new Subject<
+      EmbeddedViewRef<RxVirtualForViewContext<T, U>>
+    >();
+    const positionByIterableChange$ = this.viewRepeater!.renderingStart$.pipe(
+      switchMap((batchedUpdates) => {
+        // initialIndex tells us what will be the first index to be change detected
+        // if it's not the first one, we maybe have to adjust the position
+        // of all items in the viewport before this index
+        const initialIndex = batchedUpdates.size
+          ? batchedUpdates.values().next().value + this.renderedRange.start
+          : this.renderedRange.start;
         let position = 0;
-        let renderedViews: {
-          view: EmbeddedViewRef<any>;
-          index: number;
-          item: T;
-        }[] = [];
-        return merge(
-          this.viewRepeater!.viewRendered$.pipe(
-            tap(({ view, index: viewIndex, item }) => {
-              const adjustedIndex = viewIndex + adjustIndexWith;
-              // this most of the time causes a forced reflow per rendered view.
-              // it doesn't sound good, but it's still way more stable than
-              // having one large reflow in a microtask after the actual
-              // scheduler tick.
-              // Right here, we can insert work into the task which is currently
-              // executed as part of the concurrent scheduler tick.
-              // causing the forced reflow here, also makes it count for the
-              // schedulers frame budget. This way we will always run with the
-              // configured FPS. The only case where this is not true is when rendering 1 single view
-              // already explodes the budget
-              this.updateElementSize(view, adjustedIndex);
-              renderedViews.push({
-                view,
-                index: adjustedIndex,
-                item,
+        let scrollToAnchorPosition: number | null = null;
+        return this.viewRepeater!.viewRendered$.pipe(
+          tap(({ view, index: viewIndex, item }) => {
+            const itemIndex = view.context.index;
+            // this most of the time causes a forced reflow per rendered view.
+            // it doesn't sound good, but it's still way more stable than
+            // having one large reflow in a microtask after the actual
+            // scheduler tick.
+            // Right here, we can insert work into the task which is currently
+            // executed as part of the concurrent scheduler tick.
+            // causing the forced reflow here, also makes it count for the
+            // schedulers frame budget. This way we will always run with the
+            // configured FPS. The only case where this is not true is when rendering 1 single view
+            // already explodes the budget
+            const [, sizeDiff] = this.updateElementSize(view, itemIndex);
+            const virtualItem = this._virtualItems[itemIndex];
+
+            // before positioning the first view of this batch, calculate the
+            // anchorScrollTop & initial position of the view
+            if (itemIndex === initialIndex) {
+              this.calcAnchorScrollTop();
+              position = this.calcInitialPosition(itemIndex);
+
+              // if we receive a partial update and the current views position is
+              // new, we can safely assume that all positions from views before the current
+              // index are also off. We need to adjust them
+              if (
+                initialIndex > this.renderedRange.start &&
+                virtualItem.position !== position
+              ) {
+                let beforePosition = position;
+                let i = initialIndex - 1;
+                while (i >= this.renderedRange.start) {
+                  const view = this.getViewRef(i - this.renderedRange.start);
+                  const virtualItem = this._virtualItems[i];
+                  const element = this.getElement(view);
+                  beforePosition -= virtualItem.size;
+                  virtualItem.position = beforePosition;
+                  this.positionElement(element, beforePosition);
+                  i--;
+                }
+              }
+            } else if (itemIndex < this.anchorItem.index && sizeDiff) {
+              this.anchorScrollTop += sizeDiff;
+            }
+            const size = virtualItem.size;
+            // position current element if we need to
+            if (virtualItem.position !== position) {
+              const element = this.getElement(view);
+              this.positionElement(element, position);
+              virtualItem.position = position;
+            }
+            if (this._scrollToIndex === itemIndex) {
+              scrollToAnchorPosition = position;
+            }
+            position += size;
+            // immediately activate the ResizeObserver after initial positioning
+            viewsToObserve$.next(view);
+            this.viewRenderCallback.next({
+              index: itemIndex,
+              view,
+              item,
+            });
+            // after positioning the actual view, we also need to position all
+            // views from the current index on until either the renderedRange.end
+            // is hit or we hit an index that will anyway receive an update.
+            // we can derive that information from the batchedUpdates index Set
+            const { lastPositionedIndex: lastIndex, position: newPosition } =
+              this.positionUnchangedViews({
+                viewIndex,
+                itemIndex,
+                batchedUpdates,
+                position,
               });
-            }),
-            // coalescing the positioning of items into the next available microTask
-            // the layout should be stable as we forced it before
-            coalesceWith(unpatchedMicroTask()),
-            map(() => {
-              if (position === 0) {
-                position = this.calcInitialPosition(renderedRange);
-              }
-              let lastIndex = 0;
-              let scrollTo = this.anchorScrollTop;
-              // update DOM happens here
-              // layout should be stable by now, we are thrashing it again, though
-              const viewsRendered: EmbeddedViewRef<any>[] = [];
-              for (let i = 0; i < renderedViews.length; i++) {
-                const { view, index, item } = renderedViews[i];
-                viewsRendered.push(view);
-                const element = this.getElement(view);
-                this.positionElement(element, position);
-                if (index === this._scrollToEdgeIndex) {
-                  scrollTo = position;
-                  this._scrollToEdgeIndex = null;
-                }
-                position += this._virtualItems[index].size;
-                if (scrolledIndex == null && position > this.scrollTop) {
-                  scrolledIndex = index;
-                }
-                lastIndex = index;
-                this.viewRenderCallback.next({
-                  index,
-                  view,
-                  item,
-                });
-              }
-              renderedViews = [];
-              // immediately activate the ResizeObserver after initial positioning
-              viewsToObserve$.next(viewsRendered);
-              // this condition only covers the edge case when we scroll to the
-              // lower edge of the viewport and we have to wait until the whole
-              // renderedRange actually got rendered
-              if (this._scrollToEdgeIndex === null) {
-                this.contentSize =
-                  position + this.getRemainingSizeFrom(lastIndex + 1);
+            position = newPosition;
+            this.positionedRange.start = this.renderedRange.start;
+            this.positionedRange.end = lastIndex + 1;
+          }),
+          coalesceWith(unpatchedMicroTask()),
+          tap(() => {
+            this.adjustContentSize(position);
+            if (this._scrollToIndex === null) {
+              this.maybeAdjustScrollPosition();
+            } else if (scrollToAnchorPosition != null) {
+              if (scrollToAnchorPosition !== this.anchorScrollTop) {
                 if (
-                  scrolledIndex != null &&
-                  scrolledIndex !== this.scrolledIndex
+                  scrollToAnchorPosition >
+                  this.contentSize - this.containerSize
                 ) {
-                  this.scrolledIndex = scrolledIndex;
-                }
-                if (scrollTo !== this.scrollTop) {
-                  const maxScrollTo = this._contentSize - this.containerSize;
-                  if (
-                    scrollTo >= maxScrollTo &&
-                    Math.ceil(this.scrollTop) >= maxScrollTo
-                  ) {
-                    // just trigger re-calculation of the renderedRange in case this happens
-                    this.recalculateRange$.next();
-                  } else {
-                    this.viewport!.scrollTo(scrollTo);
+                  // if the anchorItemPosition is larger than the maximum scrollPos,
+                  // we want to scroll until the bottom.
+                  // of course, we need to be sure all the items until the end are positioned
+                  // until we are sure that we need to scroll to the bottom
+                  if (this.renderedRange.end === this.positionedRange.end) {
+                    this._scrollToIndex = null;
+                    this.viewport!.scrollTo(this.contentSize);
                   }
-                } else if (
-                  position < this.containerSize &&
-                  lastIndex < this.contentLength
-                ) {
-                  this.recalculateRange$.next();
+                } else {
+                  this._scrollToIndex = null;
+                  this.viewport!.scrollTo(scrollToAnchorPosition);
                 }
+              } else {
+                this._scrollToIndex = null;
+                this.maybeAdjustScrollPosition();
               }
-            })
+            }
+          })
+        );
+      })
+    );
+    const positionByResizeObserver$ = viewsToObserve$.pipe(
+      groupBy((viewRef) => viewRef),
+      mergeMap((o$) =>
+        o$.pipe(
+          exhaustMap((viewRef) =>
+            this.observeViewSize$(viewRef).pipe(
+              finalize(() => {
+                if (
+                  this._virtualItems[viewRef.context.index]?.position !==
+                  undefined
+                ) {
+                  this._virtualItems[viewRef.context.index].position =
+                    undefined;
+                }
+              })
+            )
           ),
-          viewsToObserve$.pipe(
-            mergeMap((views) =>
-              this.observeViewSizes$(adjustIndexWith, views).pipe(
-                tap((lowestId) => {
-                  let i = lowestId;
-                  const range = {
-                    start: i + adjustIndexWith,
-                    end: renderedRange.end,
-                  };
-                  let position = this.calcInitialPosition(range);
-                  let index = range.start;
-                  for (i; i < views.length; i++) {
-                    const element = this.getElement(views[i]);
-                    this.positionElement(element, position);
-                    index = i + adjustIndexWith;
-                    position += this.getItemSize(index);
-                  }
-                  this.contentSize =
-                    position + this.getRemainingSizeFrom(index + 1);
-                })
-              )
+          coalesceWith(unpatchedMicroTask()),
+          tap(([index, viewIndex]) => {
+            this.calcAnchorScrollTop();
+            let position = this.calcInitialPosition(index);
+            let viewIdx = viewIndex;
+            if (this._virtualItems[index].position !== position) {
+              // we want to reposition the whole viewport, when the current position has changed
+              while (viewIdx > 0) {
+                viewIdx--;
+                position -=
+                  this._virtualItems[this.getViewRef(viewIdx).context.index]
+                    .size;
+              }
+            } else {
+              // we only need to reposition everything from the next viewIndex on
+              viewIdx++;
+              position += this._virtualItems[index].size;
+            }
+            // position all views from the specified viewIndex
+            while (viewIdx < this.viewRepeater!.viewContainer.length) {
+              const view = this.getViewRef(viewIdx);
+              const itemIndex = view.context.index;
+              const virtualItem = this._virtualItems[itemIndex];
+              const element = this.getElement(view);
+              virtualItem.position = position;
+              this.positionElement(element, position);
+              position += virtualItem.size;
+              viewIdx++;
+            }
+            this.maybeAdjustScrollPosition();
+          })
+        )
+      )
+    );
+    merge(positionByIterableChange$, positionByResizeObserver$)
+      .pipe(this.until$())
+      .subscribe();
+  }
+
+  /** @internal */
+  private adjustContentSize(position: number) {
+    let newContentSize = position;
+    for (let i = this.positionedRange.end; i < this._virtualItems.length; i++) {
+      newContentSize += this.getItemSize(i);
+    }
+    this.contentSize = newContentSize;
+  }
+
+  /** @internal */
+  private observeViewSize$(
+    viewRef: EmbeddedViewRef<RxVirtualForViewContext<T, U>>
+  ) {
+    const element = this.getElement(viewRef);
+    return this.resizeObserver
+      .observeElement(element, this.resizeObserverConfig?.options)
+      .pipe(
+        takeWhile((event) => event.target.isConnected),
+        map((event) => {
+          const index = viewRef.context.index;
+          const size = Math.round(this.extractSize(event));
+          const diff = size - this._virtualItems[index].size;
+          if (diff !== 0) {
+            this._virtualItems[index].size = size;
+            this._virtualItems[index].cached = true;
+            this.contentSize += diff;
+            return [index, this.viewRepeater!.viewContainer.indexOf(viewRef)];
+          }
+          return null as unknown as [number, number];
+        }),
+        filter(
+          (diff) =>
+            diff !== null &&
+            diff[0] >= this.positionedRange.start &&
+            diff[0] < this.positionedRange.end
+        ),
+        takeUntil(
+          merge(
+            this.viewRepeater!.viewRendered$,
+            this.viewRepeater!.renderingStart$
+          ).pipe(
+            tap(() => {
+              // we need to clean up the position property for views
+              // that fall out of the renderedRange.
+              const index = viewRef.context.index;
+              if (
+                this._virtualItems[index] &&
+                (index < this.renderedRange.start ||
+                  index >= this.renderedRange.end)
+              ) {
+                this._virtualItems[index].position = undefined;
+              }
+            }),
+            filter(
+              () => this.viewRepeater!.viewContainer.indexOf(viewRef) === -1
             )
           )
-        );
-      }),
-      this.until$()
-    ).subscribe();
+        )
+      );
   }
 
   /**
@@ -635,62 +745,91 @@ export class AutoSizeVirtualScrollStrategy<
     initialAnchor: AnchorItem,
     delta: number
   ): AnchorItem {
-    if (delta == 0) return initialAnchor;
+    if (delta === 0) return initialAnchor;
     delta += initialAnchor.offset;
     let i = initialAnchor.index;
-    let tombstones = 0;
     const items = this._virtualItems;
     if (delta < 0) {
-      while (delta < 0 && i > 0 && items[i - 1].size) {
-        delta += items[i - 1].size;
+      while (delta < 0 && i > 0) {
+        delta += this.getItemSize(i - 1);
         i--;
       }
-      tombstones = Math.max(
-        -i,
-        Math.ceil(Math.min(delta, 0) / this.tombstoneSize)
-      );
     } else {
-      while (
-        delta > 0 &&
-        i < this.contentLength &&
-        items[i].size &&
-        items[i].size <= delta
-      ) {
-        delta -= items[i].size;
+      while (delta > 0 && i < items.length && this.getItemSize(i) <= delta) {
+        delta -= this.getItemSize(i);
         i++;
       }
-      if (i >= this.contentLength) {
-        tombstones = 0;
-      } else if (!items[i].size) {
-        tombstones = Math.floor(Math.max(delta, 0) / this.tombstoneSize);
-      }
     }
-    i += tombstones;
-    delta -= tombstones * this.tombstoneSize;
     return {
-      index: Math.min(i, this.contentLength),
+      index: Math.min(i, items.length),
       offset: Math.max(0, delta),
     };
   }
+
   /** @internal */
-  private calcInitialPosition(range: ListRange): number {
-    let pos = 0;
-    let i = 0;
+  private positionUnchangedViews({
+    viewIndex,
+    itemIndex,
+    batchedUpdates,
+    position,
+  }: {
+    viewIndex: number;
+    itemIndex: number;
+    batchedUpdates: Set<number>;
+    position: number;
+  }): { position: number; lastPositionedIndex: number } {
+    let _viewIndex = viewIndex + 1;
+    let index = itemIndex + 1;
+    let lastPositionedIndex = itemIndex;
+    while (!batchedUpdates.has(_viewIndex) && index < this.renderedRange.end) {
+      const virtualItem = this._virtualItems[index];
+      if (position !== virtualItem.position) {
+        const view = this.getViewRef(_viewIndex);
+        const element = this.getElement(view);
+        this.positionElement(element, position);
+        virtualItem.position = position;
+      }
+      position += virtualItem.size;
+      lastPositionedIndex = index;
+      index++;
+      _viewIndex++;
+    }
+    return { position, lastPositionedIndex };
+  }
+
+  /**
+   * Adjust the scroll position when the anchorScrollTop differs from
+   * the actual scrollTop.
+   * Trigger a range recalculation if there is empty space
+   *
+   * @internal
+   */
+  private maybeAdjustScrollPosition(): void {
+    if (this.anchorScrollTop !== this.scrollTop) {
+      this.viewport!.scrollTo(this.anchorScrollTop);
+    }
+  }
+
+  /** @internal */
+  private calcAnchorScrollTop(): void {
     this.anchorScrollTop = 0;
-    for (i = 0; i < this.anchorItem.index; i++) {
+    for (let i = 0; i < this.anchorItem.index; i++) {
       this.anchorScrollTop += this.getItemSize(i);
     }
     this.anchorScrollTop += this.anchorItem.offset;
+  }
 
+  /** @internal */
+  private calcInitialPosition(start: number): number {
     // Calculate position of starting node
-    pos = this.anchorScrollTop - this.anchorItem.offset;
-    i = this.anchorItem.index;
-    while (i > range.start) {
+    let pos = this.anchorScrollTop - this.anchorItem.offset;
+    let i = this.anchorItem.index;
+    while (i > start) {
       const itemSize = this.getItemSize(i - 1);
       pos -= itemSize;
       i--;
     }
-    while (i < range.start) {
+    while (i < start) {
       const itemSize = this.getItemSize(i);
       pos += itemSize;
       i++;
@@ -699,75 +838,27 @@ export class AutoSizeVirtualScrollStrategy<
   }
 
   /** @internal */
-  private updateElementSize(view: EmbeddedViewRef<any>, index: number): number {
-    const oldSize = this._virtualItems[index].size;
-    const isCached = this._virtualItems[index].cached && oldSize > 0;
+  private getViewRef(
+    index: number
+  ): EmbeddedViewRef<RxVirtualForViewContext<T, U>> {
+    return <EmbeddedViewRef<RxVirtualForViewContext<T, U>>>(
+      this.viewRepeater!.viewContainer.get(index)!
+    );
+  }
+
+  /** @internal */
+  private updateElementSize(
+    view: EmbeddedViewRef<any>,
+    index: number
+  ): [number, number] {
+    const oldSize = this.getItemSize(index);
+    const isCached = this._virtualItems[index].cached;
     const size = isCached
       ? oldSize
       : this.getElementSize(this.getElement(view));
     this._virtualItems[index].size = size;
     this._virtualItems[index].cached = true;
-    return size;
-  }
-
-  /** @internal */
-  private observeViewSizes$(
-    adjustIndexWith: number,
-    views: EmbeddedViewRef<any>[]
-  ): Observable<number> {
-    const elementCache = new WeakMap<Element, number>();
-    let lowestResizedId: number | undefined;
-    for (let i = 0; i < views.length; i++) {
-      const element = this.getElement(views[i]);
-      this.resizeObserver!.observe(element, this.resizeObserverConfig?.options);
-      elementCache.set(element, i);
-    }
-    return new Observable<number>((observer) => {
-      const inner = this.viewsResized$.subscribe((events) => {
-        events.forEach((event) => {
-          if (!event.target.isConnected) {
-            return;
-          }
-          const cachedId = elementCache.get(event.target);
-          if (cachedId !== undefined) {
-            const adjustedId = cachedId + adjustIndexWith;
-            const size = Math.round(this.extractSize(event));
-            if (this._virtualItems[adjustedId].size !== size) {
-              lowestResizedId = Math.min(
-                lowestResizedId ?? Number.MAX_SAFE_INTEGER,
-                cachedId
-              );
-              this._virtualItems[adjustedId].size = size;
-            }
-          }
-        });
-        if (lowestResizedId !== undefined) {
-          observer.next(lowestResizedId);
-        }
-      });
-      return () => {
-        for (let i = 0; i < views.length; i++) {
-          const element = this.getElement(views[i]);
-          this.resizeObserver?.unobserve(element);
-        }
-        inner.unsubscribe();
-      };
-    }).pipe(
-      coalesceWith(unpatchedAnimationFrameTick()),
-      map((lowestId) => {
-        lowestResizedId = undefined;
-        return lowestId;
-      })
-    );
-  }
-
-  /** @internal */
-  private getRemainingSizeFrom(from: number): number {
-    let remaining = 0;
-    for (let i = from; i < this.contentLength; i++) {
-      remaining += this.getItemSize(i);
-    }
-    return remaining;
+    return [size, size - oldSize];
   }
 
   /** @internal */
