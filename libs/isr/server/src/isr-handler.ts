@@ -179,7 +179,7 @@ export class ISRHandler {
         const timeStart = performance.now();
         finalHtml = config.modifyCachedHtml(req, html);
         const totalTime = (performance.now() - timeStart).toFixed(2);
-        finalHtml += `<!--\nℹ️ NgxISR: This cachedHtml has been modified with modifyCachedHtml()\n❗️
+        finalHtml += `<!--\nℹ️ ISR: This cachedHtml has been modified with modifyCachedHtml()\n❗️
         This resulted into more ${totalTime}ms of processing time.\n-->`;
       }
 

@@ -12,7 +12,7 @@ export interface RenderUrlConfig {
 }
 
 const EXTRA_PROVIDERS: Provider[] = [
-  { provide: SERVER_CONTEXT, useValue: 'ngx-isr' },
+  { provide: SERVER_CONTEXT, useValue: 'isr' },
 ];
 
 // helper method that generates html of an url

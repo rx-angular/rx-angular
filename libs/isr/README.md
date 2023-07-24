@@ -6,9 +6,7 @@
 
 A library that enables Angular Universal applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
 
-📰 [Documentation](https://ngx-isr.vercel.app/)
-
-📰 [ISR Blog post](https://itnext.io/incremental-static-regeneration-for-angular-42b0a8440e53)
+📰 [Documentation](https://www.rx-angular.io/docs/isr)
 
 # Features
 
@@ -138,14 +136,14 @@ Example:
 
 Or, if you are in a standalone app, you can register the providers in your `app.config.server.ts` file.
 
-- Register using `NgxIsrModule`
+- Register using `IsrModule`
 
 ```ts
-import { NgxIsrModule } from 'ngx-isr/server'; // <-- Import module from library
+import { IsrModule } from '@rx-angular/isr/server'; // <-- Import module from library
 
 @NgModule({
   imports: [
-    ...NgxIsrModule.forRoot(), // <-- Use it in module imports
+    ...IsrModule.forRoot(), // <-- Use it in module imports
   ],
 })
 export class AppServerModule {}
@@ -154,7 +152,7 @@ export class AppServerModule {}
 - Register using the `provideISR` function
 
 ```ts
-import { provideISR } from 'ngx-isr/server';
+import { provideISR } from '@rx-angular/isr/server';
 
 @NgModule({
   providers: [
@@ -167,7 +165,7 @@ export class AppServerModule {}
 - Register using the `provideISR` function in standalone app
 
 ```ts
-import { provideISR } from 'ngx-isr/server';
+import { provideISR } from '@rx-angular/isr/server';
 
 const serverConfig: ApplicationConfig = {
   providers: [
@@ -177,131 +175,7 @@ const serverConfig: ApplicationConfig = {
 };
 ```
 
-When registering the providers, `NgxIsrService` will be initialized and will start to listen to route changes, only on the server side, so the browser bundle won't contain any extra code.
-
-# Changelog
-
-## Version 0.5.5
-
-### Features
-
-- feat: allow `NgxIsrService` to be used in application code without bringing the whole library in the browser bundle
-- feat: separate the library into secondary entry points for server and browser
-
-### BREAKING CHANGES:
-
-Imports now should be done from `ngx-isr/server` and `ngx-isr/browser` instead of `ngx-isr`;
-
-```ts
-// Before
-import { NgxIsrModule } from 'ngx-isr';
-
-// After
-import { NgxIsrModule } from 'ngx-isr/server';
-
-// Before
-import { provideISR } from 'ngx-isr';
-
-// After
-import { provideISR } from 'ngx-isr/server';
-```
-
-Things exported from `ngx-isr/server`:
-
-- `NgxIsrModule`
-- `provideISR`
-- `ISRHandler`
-- `FileSystemCacheHandler` and `FileSystemCacheOptions`
-
-Things exported from `ngx-isr/browser`:
-
-- `NgxIsrService`
-
-Things exported from `ngx-isr/models`:
-
-- `CacheHandler`
-- `CacheISRConfig` (renamed from `ISROptions`)
-- `CacheData`
-- `INgxIsrService` and `NgxIsrState`
-- `ISRHandlerConfig`
-- `InvalidateConfig`
-- `RenderConfig`
-- `ServeFromCacheConfig`
-- `RouteISRConfig`
-
-## Version 0.5.4
-
-### Features
-
-- feat: refactor FileSystem cache handler from scratch (fixes: #35)
-- fix: buildId can be null but also undefined, added a check for it
-
-## Version 0.5.3
-
-### Features
-
-- feat: Introduce `RouteISRConfig` interface for better type safety in route data
-
-  How to use it?
-
-  ```ts
-  const routes: Rotues = [
-    {
-      path: 'home',
-      component: HomeComponent,
-      data: { revalidate: 0 } as RouteISRConfig, // 👈 Add type to route data
-    },
-  ];
-  ```
-
-- feat: Added build id support
-
-  **What is it and why do we need it?**
-
-  The build id is a unique identifier that is generated for each build. It is used to invalidate the cache when a new build is deployed. So, when a new build is deployed, every page that will be requested will be server-rendered again and not served from the cache. This way, the users will always get the latest version of the application.
-
-  _Useful when you have an external cache handler like Redis._
-
-  **How to use it?**
-
-  To use it, you need to pass the build id to the `ISRHandler` constructor.
-  Angular itself doesn't generate a build id. But we can generate it using the environment file.
-  What we can do is to set field in the environment file called `buildId` and set it to: `new Date().getTime(),`.
-
-  Ex. environment.ts:
-
-  ```ts
-  export const environment = {
-    production: false,
-    buildId: new Date().getTime() + '', // We need to convert it to string because the buildId is a string
-  };
-  ```
-
-  This way we will have a unique build id for each build because the buildId will evaluated at build time.
-  Then, we pass the build id to the ISRHandler constructor.
-
-  Ex. server.ts:
-
-  ```ts
-  import { environment } from './src/environments/environment';
-
-  const isr = new ISRHandler({
-    .. other options
-    buildId: environment.buildTimestamp // Pass the build id
-  });
-  ```
-
-- fix: Fixed a bug where the cache was not invalidated when the build id changed
-
-### Breaking changes:
-
-- `ISROptions` is being deprecated. Use `CacheISRConfig` instead.
-
-## Version 0.5.2
-
-- feat: Migrate repository to nx workspace
-- feat: Added `provideISR` provider function
-- chore: Update example RedisCacheHandler to use a prefix
+When registering the providers, `IsrService` will be initialized and will start to listen to route changes, only on the server side, so the browser bundle won't contain any extra code.
 
 ## License
 
