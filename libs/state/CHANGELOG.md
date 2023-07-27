@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [16.0.0](https://github.com/rx-angular/rx-angular/compare/state@15.0.0...state@16.0.0) (2023-06-20)
+
+
+### Features
+
+* bump Angular to v16 ([31621e6](https://github.com/rx-angular/rx-angular/commit/31621e6cea295a3774a7ac07b91f4df75ba95c32))
+
+
+### BREAKING CHANGES
+
+* Minimum required `@angular/core` version is now `^16.0.0`.
+
+
+
 # [15.0.0](https://github.com/rx-angular/rx-angular/compare/state@14.0.0...state@15.0.0) (2023-04-12)
 
 

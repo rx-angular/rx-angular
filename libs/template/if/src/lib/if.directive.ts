@@ -9,22 +9,22 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
+  inject,
 } from '@angular/core';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
-  createTemplateNotifier,
   RxNotificationKind,
+  createTemplateNotifier,
 } from '@rx-angular/cdk/notifications';
 import {
   RxStrategyNames,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import {
-  createTemplateManager,
   RxTemplateManager,
+  createTemplateManager,
 } from '@rx-angular/cdk/template';
 import {
-  merge,
   NEVER,
   NextObserver,
   Observable,
@@ -32,12 +32,13 @@ import {
   ReplaySubject,
   Subject,
   Subscription,
+  merge,
 } from 'rxjs';
-import { mergeAll, filter, map } from 'rxjs/operators';
+import { filter, map, mergeAll } from 'rxjs/operators';
 import {
   RxIfTemplateNames,
-  rxIfTemplateNames,
   RxIfViewContext,
+  rxIfTemplateNames,
 } from './model/index';
 
 /**
@@ -69,6 +70,17 @@ import {
 export class RxIf<T = unknown>
   implements OnInit, OnChanges, OnDestroy, OnChanges
 {
+  /** @internal */
+  private strategyProvider = inject(RxStrategyProvider);
+  /** @internal */
+  private cdRef = inject(ChangeDetectorRef);
+  /** @internal */
+  private ngZone = inject(NgZone);
+  /** @internal */
+  private templateRef = inject<TemplateRef<RxIfViewContext<T>>>(TemplateRef);
+  /** @internal */
+  private viewContainerRef = inject(ViewContainerRef);
+
   /** @internal */
   private subscription = new Subscription();
   /** @internal */
@@ -476,14 +488,6 @@ export class RxIf<T = unknown>
   private get thenTemplate(): TemplateRef<RxIfViewContext<T>> {
     return this.then ? this.then : this.templateRef;
   }
-
-  constructor(
-    private strategyProvider: RxStrategyProvider,
-    private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone,
-    private readonly templateRef: TemplateRef<RxIfViewContext<T>>,
-    private readonly viewContainerRef: ViewContainerRef
-  ) {}
 
   /** @internal */
   ngOnInit() {
