@@ -4,17 +4,19 @@ import {
   OnDestroy,
   Pipe,
   PipeTransform,
+  inject,
+  untracked,
 } from '@angular/core';
+import {
+  RxNotification,
+  RxNotificationKind,
+  createTemplateNotifier,
+} from '@rx-angular/cdk/notifications';
 import {
   RxStrategyNames,
   RxStrategyProvider,
   strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
-import {
-  createTemplateNotifier,
-  RxNotification,
-  RxNotificationKind,
-} from '@rx-angular/cdk/notifications';
 import {
   MonoTypeOperatorFunction,
   NextObserver,
@@ -25,9 +27,9 @@ import {
   Unsubscribable,
 } from 'rxjs';
 import {
+  filter,
   shareReplay,
   skip,
-  filter,
   switchMap,
   tap,
   withLatestFrom,
@@ -86,6 +88,12 @@ import {
  */
 @Pipe({ name: 'push', pure: false, standalone: true })
 export class RxPush implements PipeTransform, OnDestroy {
+  /** @internal */
+  private strategyProvider = inject(RxStrategyProvider);
+  /** @internal */
+  private cdRef = inject(ChangeDetectorRef);
+  /** @internal */
+  private ngZone = inject(NgZone);
   /**
    * @internal
    * This is typed as `any` because the type cannot be inferred
@@ -110,12 +118,6 @@ export class RxPush implements PipeTransform, OnDestroy {
   private patchZone: false | NgZone;
   /** @internal */
   private _renderCallback: NextObserver<any>;
-
-  constructor(
-    private strategyProvider: RxStrategyProvider,
-    private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone
-  ) {}
 
   transform<U>(
     potentialObservable: null,
@@ -165,7 +167,7 @@ export class RxPush implements PipeTransform, OnDestroy {
 
   /** @internal */
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    untracked(() => this.subscription?.unsubscribe());
   }
 
   /** @internal */
@@ -179,26 +181,38 @@ export class RxPush implements PipeTransform, OnDestroy {
   private handleChangeDetection(): Unsubscribable {
     const scope = (this.cdRef as any).context;
     const sub = new Subscription();
-    const setRenderedValue = this.templateValues$.subscribe(({ value }) => {
-      this.renderedValue = value;
-    });
-    const render = this.hasInitialValue(this.templateValues$)
-      .pipe(
-        switchMap((isSync) =>
-          this.templateValues$.pipe(
-            // skip ticking change detection
-            // in case we have an initial value, we don't need to perform cd
-            // the variable will be evaluated anyway because of the lifecycle
-            skip(isSync ? 1 : 0),
-            // onlyValues(),
-            this.render(scope),
-            tap((v) => {
-              this._renderCallback?.next(v);
-            })
+
+    // Subscription can be side-effectful, and we don't want any signal reads which happen in the
+    // side effect of the subscription to be tracked by a component's template when that
+    // subscription is triggered via the async pipe. So we wrap the subscription in `untracked` to
+    // decouple from the current reactive context.
+    //
+    // `untracked` also prevents signal _writes_ which happen in the subscription side effect from
+    // being treated as signal writes during the template evaluation (which throws errors).
+    const setRenderedValue = untracked(() =>
+      this.templateValues$.subscribe(({ value }) => {
+        this.renderedValue = value;
+      })
+    );
+    const render = untracked(() =>
+      this.hasInitialValue(this.templateValues$)
+        .pipe(
+          switchMap((isSync) =>
+            this.templateValues$.pipe(
+              // skip ticking change detection
+              // in case we have an initial value, we don't need to perform cd
+              // the variable will be evaluated anyway because of the lifecycle
+              skip(isSync ? 1 : 0),
+              // onlyValues(),
+              this.render(scope),
+              tap((v) => {
+                this._renderCallback?.next(v);
+              })
+            )
           )
         )
-      )
-      .subscribe();
+        .subscribe()
+    );
     sub.add(setRenderedValue);
     sub.add(render);
     return sub;

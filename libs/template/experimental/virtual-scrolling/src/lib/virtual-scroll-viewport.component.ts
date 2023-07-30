@@ -6,9 +6,9 @@ import {
   ContentChild,
   ElementRef,
   OnDestroy,
-  Optional,
   Output,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
@@ -52,8 +52,8 @@ const passiveEventListenerOptions = { passive: true };
 @Component({
   selector: 'rx-virtual-scroll-viewport',
   template: `
-    <div #scrollViewport class="rx-virtual-scroll__viewport">
-      <div #runway class="rx-virtual-scroll__run-way"></div>
+    <div #runway class="rx-virtual-scroll__run-way">
+      <div #sentinel class="rx-virtual-scroll__sentinel"></div>
       <ng-content></ng-content>
     </div>
   `,
@@ -74,12 +74,12 @@ const passiveEventListenerOptions = { passive: true };
       }
 
       :host:not(.rx-virtual-scroll-viewport--withSyncScrollbar)
-        .rx-virtual-scroll__viewport {
+        .rx-virtual-scroll__run-way {
         transform: translateZ(0);
         will-change: scroll-position;
       }
 
-      .rx-virtual-scroll__viewport {
+      .rx-virtual-scroll__run-way {
         contain: strict;
         -webkit-overflow-scrolling: touch;
         width: 100%;
@@ -89,7 +89,7 @@ const passiveEventListenerOptions = { passive: true };
         overflow: auto;
       }
 
-      .rx-virtual-scroll__run-way {
+      .rx-virtual-scroll__sentinel {
         width: 1px;
         height: 1px;
         contain: strict;
@@ -108,13 +108,18 @@ export class RxVirtualScrollViewportComponent
     AfterContentInit,
     OnDestroy
 {
+  private elementRef = inject(ElementRef<HTMLElement>);
+  private scrollStrategy = inject(RxVirtualScrollStrategy<unknown>, {
+    optional: true,
+  });
+
+  /** @internal */
+  @ViewChild('sentinel', { static: true })
+  private scrollSentinel!: ElementRef<HTMLElement>;
+
   /** @internal */
   @ViewChild('runway', { static: true })
   private runway!: ElementRef<HTMLElement>;
-
-  /** @internal */
-  @ViewChild('scrollViewport', { static: true })
-  private scrollViewport!: ElementRef<HTMLElement>;
 
   /** @internal */
   @ContentChild(RxVirtualViewRepeater)
@@ -157,11 +162,8 @@ export class RxVirtualScrollViewportComponent
   private readonly destroy$ = new Subject<void>();
 
   /** @internal */
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    @Optional() private scrollStrategy: RxVirtualScrollStrategy<unknown>
-  ) {
-    if (NG_DEV_MODE && !scrollStrategy) {
+  constructor() {
+    if (NG_DEV_MODE && !this.scrollStrategy) {
       throw Error(
         'Error: rx-virtual-scroll-viewport requires an `RxVirtualScrollStrategy` to be set.'
       );
@@ -221,7 +223,7 @@ export class RxVirtualScrollViewportComponent
   }
 
   scrollContainer(): HTMLElement {
-    return this.scrollViewport.nativeElement;
+    return this.runway.nativeElement;
   }
 
   getScrollTop(): number {
@@ -238,7 +240,7 @@ export class RxVirtualScrollViewportComponent
   }
 
   protected updateContentSize(size: number): void {
-    this.runway.nativeElement.style.transform = `translate(0, ${size}px)`;
+    this.scrollSentinel.nativeElement.style.transform = `translate(0, ${size}px)`;
   }
 
   private scrollListener = (event: Event) => this._elementScrolled.next(event);
