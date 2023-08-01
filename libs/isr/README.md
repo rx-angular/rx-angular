@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="460" height="300" src="https://raw.githubusercontent.com/eneajaho/ngx-isr/main/projects/ngx-isr-demo/src/assets/logo.svg">
+  <img width="460" height="300" src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/apps/docs/static/img/isr-logo.png">
 </p>
 
 # Incremental Static Regeneration for Angular
@@ -132,7 +132,7 @@ Example:
 > **NOTE:** Routes that don't have revalidate key in data won't be handled by ISR. They will fallback to Angular default server side rendering pipeline.
 
 6. Register providers
-   To register the ISR providers, you can either import `NgxIsrModule` in your `AppServerModule` or provide `provideISR` in your `AppServerModule` providers.
+   To register the ISR providers, you can either import `IsrModule` in your `AppServerModule` or provide `provideISR` in your `AppServerModule` providers.
 
 Or, if you are in a standalone app, you can register the providers in your `app.config.server.ts` file.
 
@@ -143,7 +143,7 @@ import { IsrModule } from '@rx-angular/isr/server'; // <-- Import module from li
 
 @NgModule({
   imports: [
-    ...IsrModule.forRoot(), // <-- Use it in module imports
+    IsrModule.forRoot(), // <-- Use it in module imports
   ],
 })
 export class AppServerModule {}
