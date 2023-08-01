@@ -9,22 +9,6 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
-        /**
-         * @Notice: overwrite root enforce-module-boundaries to allow deep imports of secondary entry-points.
-         */
-        "@nx/enforce-module-boundaries": [
-          "error",
-          {
-            "enforceBuildableLibDependency": false,
-            "allow": ["@rx-angular/template/**"],
-            "depConstraints": [
-              {
-                "sourceTag": "template",
-                "onlyDependOnLibsWithTags": ["type:test-util", "cdk"]
-              }
-            ]
-          }
-        ],
         "@angular-eslint/directive-selector": [
           "error",
           {
