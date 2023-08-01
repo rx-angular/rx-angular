@@ -44,14 +44,14 @@ html. Here's an example of a page with an error:
 You can also handle other errors that are not http errors. For example, if you have a posts
 page, but with no content, you can add an error the **errors** of the ISR state.
 
-In order to do that, you can use the **addError** method of the **NgxIsrService**.
+In order to do that, you can use the **addError** method of the **IsrService**.
 
 ```typescript
-import { NgxIsrService } from '@rx-angular/isr/browser';
+import { IsrService } from '@rx-angular/isr/browser';
 
 @Component({})
 export class PostSComponent {
-  private isrService = inject(NgxIsrService);
+  private isrService = inject(IsrService);
 
   loadPosts() {
     this.otherService.getPosts().subscribe({

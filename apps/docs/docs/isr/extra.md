@@ -18,12 +18,12 @@ import {
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { Injectable, Provider } from '@angular/core';
-import { NgxIsrService } from '@rx-angular/isr';
+import { IsrService } from '@rx-angular/isr';
 import { tap } from 'rxjs';
 
 @Injectable()
 export class UrlTimingsInterceptor implements HttpInterceptor {
-  constructor(private ngxIsrService: NgxIsrService) {}
+  constructor(private isrService: IsrService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler) {
     let timing1 = performance.now();
@@ -31,7 +31,7 @@ export class UrlTimingsInterceptor implements HttpInterceptor {
       tap(() => {
         let timing2 = performance.now();
 
-        const currentExtra = this.ngxIsrService.getExtra();
+        const currentExtra = this.isrService.getExtra();
 
         const currentRequestsTimings = currentExtra['requestsTimings'] || [];
 
@@ -41,13 +41,13 @@ export class UrlTimingsInterceptor implements HttpInterceptor {
         };
 
         if (currentRequestsTimings.find((t) => t.url === request.url)) {
-          this.ngxIsrService.addExtra({
+          this.isrService.addExtra({
             requestsTimings: currentRequestsTimings.map((t) =>
               t.url === request.url ? currentUrlTiming : t
             ),
           });
         } else {
-          this.ngxIsrService.addExtra({
+          this.isrService.addExtra({
             requestsTimings: [...currentRequestsTimings, currentUrlTiming],
           });
         }

@@ -18,8 +18,8 @@ With **@rx-angular/isr** we provide this functionality by doing some **tricks un
 
 ## How?
 
-The moment we register the providers using the **NgxIsrModule.forRoot()** or the **provideISR()**
-function, the NgxIsrService will start to listen to route changes on the server-side.
+The moment we register the providers using the **IsrModule.forRoot()** or the **provideISR()**
+function, the IsrService will start to listen to route changes on the server-side.
 
 The moment the route is set and won't change anymore, we grab the route data and attach them in the HTML as JSON.
 
