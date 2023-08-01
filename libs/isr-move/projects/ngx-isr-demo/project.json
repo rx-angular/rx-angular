@@ -18,13 +18,9 @@
           "projects/ngx-isr-demo/src/favicon.ico",
           "projects/ngx-isr-demo/src/assets"
         ],
-        "styles": [
-          "projects/ngx-isr-demo/src/styles.scss"
-        ],
+        "styles": ["projects/ngx-isr-demo/src/styles.scss"],
         "scripts": [],
-        "allowedCommonJsDependencies": [
-          "highlight.js"
-        ]
+        "allowedCommonJsDependencies": ["highlight.js"]
       },
       "configurations": {
         "production": {
@@ -58,9 +54,7 @@
         }
       },
       "defaultConfiguration": "production",
-      "outputs": [
-        "{options.outputPath}"
-      ]
+      "outputs": ["{options.outputPath}"]
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
@@ -106,9 +100,7 @@
         }
       },
       "defaultConfiguration": "production",
-      "outputs": [
-        "{options.outputPath}"
-      ]
+      "outputs": ["{options.outputPath}"]
     },
     "serve-ssr": {
       "executor": "@nguniversal/builders:ssr-dev-server",

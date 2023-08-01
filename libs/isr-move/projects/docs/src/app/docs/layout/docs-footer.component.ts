@@ -9,9 +9,13 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           class="px-4 py-8  md:mt-0 bg-ghost dark:bg-cinder dark:border-tuna sm:px-6 lg:px-8"
           id="contact">
           <p class="text-xs font-light  lg:text-base text-comet dark:text-santa sm:text-xl">
-            Have any issues? 
-            Open an issue on <a href="https://github.com/eneajaho/ngx-isr/issues" target="_blank" class="text-main-100">Github issues</a>, 
-            or email me at jahollarienea14[@]gmail.com for <b>paid support</b>.
+            Have any issues? Open an issue on
+            <a
+              href="https://github.com/eneajaho/ngx-isr/issues"
+              target="_blank"
+              class="text-main-100"
+              >Github issues</a
+            >, or email me at jahollarienea14[@]gmail.com for <b>paid support</b>.
           </p>
           <p class="text-xs font-light  lg:text-base text-comet dark:text-santa sm:text-xl"></p>
         </div>
@@ -34,12 +38,15 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
               Built with ❤️ & <b class="text-red-600">Angular</b>
             </p>
 
-            <p  class="mt-10 text-center text-sm leading-5 text-gray-500">
-              Docs theme by 
-              <a href="https://wicked-templates.gumroad.com/l/rdzjw" target="_blank" class="text-main">
+            <p class="mt-10 text-center text-sm leading-5 text-gray-500">
+              Docs theme by
+              <a
+                href="https://wicked-templates.gumroad.com/l/rdzjw"
+                target="_blank"
+                class="text-main">
                 Wicked Templates 🎨
-              </a> 
-              <br>
+              </a>
+              <br />
               (converted to Angular & added some sugar 🍬)
             </p>
           </div>

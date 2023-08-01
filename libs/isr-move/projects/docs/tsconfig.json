@@ -11,7 +11,7 @@
 
     // added this two to allow importing json files like package.json
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   },
   "files": [],
   "include": [],

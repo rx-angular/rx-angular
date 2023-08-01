@@ -44,4 +44,3 @@ export class DocsSidebarLinksComponent {
 
   menu = inject(DocsLayoutService).menu;
 }
-

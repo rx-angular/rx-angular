@@ -7,12 +7,8 @@ import { NgxIsrModule } from 'ngx-isr/server';
 import { HTTP_URL_TIMINGS_INTERCEPTOR_ISR } from './url-timings.interceptor';
 
 @NgModule({
-  imports: [
-    AppModule,
-    ServerModule,
-    NgxIsrModule.forRoot()
-  ],
+  imports: [AppModule, ServerModule, NgxIsrModule.forRoot()],
   bootstrap: [AppComponent],
-  providers: [HTTP_URL_TIMINGS_INTERCEPTOR_ISR]
+  providers: [HTTP_URL_TIMINGS_INTERCEPTOR_ISR],
 })
 export class AppServerModule {}

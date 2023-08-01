@@ -1,17 +1,16 @@
 import { Component, ChangeDetectionStrategy, Input, inject } from '@angular/core';
-import {Clipboard} from '@angular/cdk/clipboard';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-terminal-block',
   template: `
     <div class="p-4 rounded-md relative" style="background-color: #2e343d;">
-      <code class="text-green-400">
-         $ {{ text }}
-      </code>
+      <code class="text-green-400"> $ {{ text }} </code>
 
-      <div 
+      <div
         (click)="clipboard.copy(text)"
-      class="absolute right-2" style="top: 50%; transform: translateY(-50%);">
+        class="absolute right-2"
+        style="top: 50%; transform: translateY(-50%);">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

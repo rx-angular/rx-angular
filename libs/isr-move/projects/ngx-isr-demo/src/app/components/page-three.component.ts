@@ -6,11 +6,11 @@ import { Component } from '@angular/core';
   template: `
     <p class="page-1234">
       page-three works!
-      <span>{{ time | date:'medium' }} </span>
+      <span>{{ time | date : 'medium' }} </span>
     </p>
   `,
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export default class PageThreeComponent {
   time = new Date();

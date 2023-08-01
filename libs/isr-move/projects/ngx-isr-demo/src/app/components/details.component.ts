@@ -10,15 +10,13 @@ const API_URL = 'https://jsonplaceholder.typicode.com';
   template: `
     <p class="page-1234">
       Details!!
-      <span>{{ time | date:'medium' }} </span>
+      <span>{{ time | date : 'medium' }} </span>
 
-      <span *ngIf="todo$ | async as todo">
-        Title: {{ todo.title }}
-      </span>
+      <span *ngIf="todo$ | async as todo"> Title: {{ todo.title }} </span>
     </p>
   `,
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export default class DetailsComponent {
   private http = inject(HttpClient);

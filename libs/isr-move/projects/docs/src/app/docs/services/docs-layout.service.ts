@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DocsLayoutService {
-
   mainTitle$ = new BehaviorSubject('ngx-isr Docs');
   darkMode$ = new BehaviorSubject(true);
   mobileMenuOpen$ = new BehaviorSubject(false);
@@ -70,7 +69,7 @@ export class DocsLayoutService {
       id: PAGE_IDS.api,
       title: 'API',
       routeLink: '/docs/api',
-    }
+    },
   ];
 
   setTitle(title: string) {
@@ -78,9 +77,9 @@ export class DocsLayoutService {
   }
 
   setPageDataBasedOnPageId(pageId: string) {
-    const page = this.menu.find((page) => page.id === pageId);
+    const page = this.menu.find(page => page.id === pageId);
     if (!page) return;
-    
+
     const pageIndex = this.menu.indexOf(page);
     const prevPage = this.menu[pageIndex - 1];
     const nextPage = this.menu[pageIndex + 1];
@@ -107,19 +106,19 @@ export class DocsLayoutService {
       this.mobileMenuOpen$.next(show);
       return;
     }
-  
+
     this.mobileMenuOpen$.next(!this.mobileMenuOpen$.getValue());
   }
 }
 
 /**
  * Configure page data based on page id. Should be used only in component constructor!
- * @param pageId 
+ * @param pageId
  */
 export const configurePage = (pageId: string) => {
   const docLayout = inject(DocsLayoutService);
   docLayout.setPageDataBasedOnPageId(pageId);
-}
+};
 
 export const PAGE_IDS = {
   intro: 'intro',
@@ -134,8 +133,7 @@ export const PAGE_IDS = {
   deploying: 'deploying',
   useNgxIsrServiceForMoreThanCaching: 'use-ngx-isr-service-for-more-than-caching',
   api: 'api',
-}
-
+};
 
 interface DocsMenuItem {
   id: string;

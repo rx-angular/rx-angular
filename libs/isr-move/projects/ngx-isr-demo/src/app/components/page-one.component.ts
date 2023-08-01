@@ -7,17 +7,18 @@ import { HttpClient } from '@angular/common/http';
   template: `
     <p class="page-1234">
       page-one works!
-      <span>{{ time | date:'medium' }} </span>
+      <span>{{ time | date : 'medium' }} </span>
 
       <button
-          (click)="invalidate()"
-          class="bg-amber-500 text-amber-900 rounded-md ml-5 px-2 py-1">
+        (click)="invalidate()"
+        class="bg-amber-500 text-amber-900 rounded-md ml-5 px-2 py-1"
+      >
         Invalidate
       </button>
     </p>
   `,
   standalone: true,
-  imports: [ CommonModule ]
+  imports: [CommonModule],
 })
 export default class PageOneComponent {
   time = new Date();
@@ -25,11 +26,13 @@ export default class PageOneComponent {
   constructor(private http: HttpClient) {}
 
   invalidate() {
-    this.http.post('/api/invalidate', {
-      token: 'MY_TOKEN',
-      urlsToInvalidate: [ '/one', '/two' ]
-    }).subscribe(res => {
-      console.log('invalidate', res);
-    });
+    this.http
+      .post('/api/invalidate', {
+        token: 'MY_TOKEN',
+        urlsToInvalidate: ['/one', '/two'],
+      })
+      .subscribe((res) => {
+        console.log('invalidate', res);
+      });
   }
 }
