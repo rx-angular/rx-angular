@@ -6,9 +6,12 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { initialPrimitiveState, PrimitiveState } from '@test-helpers';
+import {
+  initialPrimitiveState,
+  PrimitiveState,
+} from '@test-helpers/rx-angular';
 import { Observable, Subject } from 'rxjs';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '../src/lib/rx-state.service';
 import { select } from '@rx-angular/state/selections';
 
 const initialChildState = { str: 'initialChildState' };
@@ -23,7 +26,8 @@ const initialChildState = { str: 'initialChildState' };
 })
 export class RxStateGlueComponent
   extends RxState<{ str: string }>
-  implements AfterViewInit {
+  implements AfterViewInit
+{
   afterViewInit = false;
   str$ = this.select('str');
 
@@ -66,7 +70,8 @@ export class RxStateGlueComponent
 })
 export class RxStateGlueContainerComponent
   extends RxState<PrimitiveState & { strWrong: string }>
-  implements AfterViewInit {
+  implements AfterViewInit
+{
   strChange$ = new Subject<string>();
   strChangeWrong$ = new Subject<string>();
   str$ = this.select('str');

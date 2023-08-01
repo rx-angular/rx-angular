@@ -3,12 +3,14 @@ import {
   asapScheduler,
   concat,
   defer,
-  from, NEVER,
+  from,
+  NEVER,
   Observable,
-  of, scheduled,
-  timer
+  of,
+  scheduled,
+  timer,
 } from 'rxjs';
-import { jestMatcher, mockConsole } from '@test-helpers';
+import { jestMatcher, mockConsole } from '@test-helpers/rx-angular';
 import { TestScheduler } from 'rxjs/testing';
 import { coalesceWith } from '../src/lib/coalesceWith';
 
@@ -287,23 +289,17 @@ describe('coalesce operator additional logic', () => {
         }
       });
 
-      it('should emit once per micro task', done => {
+      it('should emit once per micro task', (done) => {
         const scope = {};
         const arrNum = [1, 2, 3, 4];
         const arrAlph = ['a', 'b', 'c', 'd'];
         const num$ = concat(from(arrNum), NEVER).pipe(
           share(),
-          coalesceWith(
-            scheduled([1], asapScheduler),
-            scope
-          )
+          coalesceWith(scheduled([1], asapScheduler), scope)
         );
         const alph$ = concat(from(arrAlph), NEVER).pipe(
           share(),
-          coalesceWith(
-            scheduled([1], asapScheduler),
-            scope
-          )
+          coalesceWith(scheduled([1], asapScheduler), scope)
         );
         let numValue;
         num$.subscribe({
@@ -316,7 +312,7 @@ describe('coalesce operator additional logic', () => {
           },
           complete: () => {
             throw new Error('should not be called');
-          }
+          },
         });
         alph$.subscribe({
           next: (x: string) => {
@@ -329,7 +325,7 @@ describe('coalesce operator additional logic', () => {
           },
           complete: () => {
             throw new Error('should not be called');
-          }
+          },
         });
       });
 

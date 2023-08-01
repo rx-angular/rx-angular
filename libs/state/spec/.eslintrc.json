@@ -8,18 +8,7 @@
         "plugin:@nx/angular",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
-      "rules": {
-        /**
-         * @Notice: overwrite root enforce-module-boundaries to allow deep imports of secondary entry-points.
-         */
-        "@nx/enforce-module-boundaries": [
-          "error",
-          {
-            "enforceBuildableLibDependency": false,
-            "allow": ["@rx-angular/state", "@rx-angular/state/**"]
-          }
-        ]
-      }
+      "rules": {}
     },
     {
       "files": ["*.html"],

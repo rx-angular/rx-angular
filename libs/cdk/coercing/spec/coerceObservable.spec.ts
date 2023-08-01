@@ -1,5 +1,5 @@
 import { coerceObservable } from '@rx-angular/cdk/coercing';
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from '@test-helpers/rx-angular';
 import { of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 
