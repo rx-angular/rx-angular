@@ -79,4 +79,4 @@ export class AppServerModule {}
 
 Now, we can run our app and see the results:
 
-<img src="/img/isr/extra.png" alt="Extra data in isr cache" />
+![Extra data in isr cache](/img/isr/extra.png)

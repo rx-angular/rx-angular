@@ -46,7 +46,7 @@ Now, we can invalidate the cache by sending a **POST** request to the **/api/inv
 
 Here's an example of how to invalidate the cache using **Postman**:
 
-<img src="/img/isr/on-demand-postman.png" alt="Postman Invalidate Cache" />
+![Postman Invalidate Cache](/img/isr/on-demand-postman.png)
 
 ## Usecases
 

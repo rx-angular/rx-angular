@@ -37,7 +37,7 @@ Be aware that this may cause some issues with your site. And you should handle t
 In, order to see if the page has an error, you can check the errors property in the generated
 html. Here's an example of a page with an error:
 
-<img src="/img/isr/errors-in-html.png" alt="ISR state of a page with an error" />
+![ISR state of a page with an error](/img/isr/errors-in-html.png)
 
 ## Handle other errors
 
