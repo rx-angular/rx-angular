@@ -79,4 +79,4 @@ export class AppServerModule {}
 
 Now, we can run our app and see the results:
 
-![Extra data in isr cache](/img/isr/extra.png)
+![Extra data in isr cache](pathname:///img/isr/extra.png)
