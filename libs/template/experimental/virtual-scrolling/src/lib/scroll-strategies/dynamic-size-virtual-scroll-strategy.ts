@@ -7,6 +7,7 @@ import {
   OnDestroy,
   SimpleChanges,
 } from '@angular/core';
+import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   combineLatest,
   MonoTypeOperatorFunction,
@@ -14,7 +15,6 @@ import {
   Subject,
 } from 'rxjs';
 import {
-  debounce,
   distinctUntilChanged,
   map,
   startWith,
@@ -29,7 +29,7 @@ import {
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
 } from '../model';
-import { unpatchedAnimationFrameTick } from '../util';
+import { unpatchedMicroTask } from '../util';
 import {
   DEFAULT_ITEM_SIZE,
   DEFAULT_RUNWAY_ITEMS,
@@ -47,16 +47,6 @@ type AnchorItem = {
   index: number;
   offset: number;
 };
-
-/** @internal */
-function removeFromArray(arr: any[], index: number): any {
-  // perf: array.pop is faster than array.splice!
-  if (index >= arr.length - 1) {
-    return arr.pop();
-  } else {
-    return arr.splice(index, 1)[0];
-  }
-}
 
 const defaultItemSize = () => DEFAULT_ITEM_SIZE;
 
@@ -279,24 +269,25 @@ export class DynamicSizeVirtualScrollStrategy<
 
   /** @internal */
   private calcRenderedRange(): void {
-    const onScroll$ = this.viewport!.elementScrolled$.pipe(
-      debounce(() => unpatchedAnimationFrameTick()),
-      map(() => this.viewport!.getScrollTop()),
-      startWith(0),
-      tap((_scrollTop) => {
-        this.direction = _scrollTop > this.scrollTop ? 'down' : 'up';
-        this.scrollTop = _scrollTop;
-      })
-    );
     combineLatest([
       this.viewport!.containerRect$.pipe(
         map(({ height }) => height),
         distinctUntilChanged()
       ),
-      onScroll$,
+      this.viewport!.elementScrolled$.pipe(
+        startWith(void 0),
+        tap(() => {
+          const scrollTop = this.viewport!.getScrollTop();
+          this.direction = scrollTop > this.scrollTop ? 'down' : 'up';
+          this.scrollTop = scrollTop;
+        })
+      ),
+      this._contentSize$.pipe(distinctUntilChanged()),
       this.recalculateRange$.pipe(startWith(void 0)),
     ])
       .pipe(
+        // make sure to not over calculate things by coalescing all triggers to the next microtask
+        coalesceWith(unpatchedMicroTask()),
         map(([containerHeight]) => {
           const range = { start: 0, end: 0 };
           const length = this.contentLength;
@@ -389,13 +380,13 @@ export class DynamicSizeVirtualScrollStrategy<
         i--;
       }
     } else {
-      while (delta > 0 && i < this.contentLength && items[i].size <= delta) {
+      while (delta > 0 && i < items.length && items[i].size <= delta) {
         delta -= items[i].size;
         i++;
       }
     }
     return {
-      index: Math.min(i, this.contentLength),
+      index: Math.min(i, items.length),
       offset: delta,
     };
   }
