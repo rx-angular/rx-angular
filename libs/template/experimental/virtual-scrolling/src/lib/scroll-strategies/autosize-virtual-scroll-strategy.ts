@@ -669,7 +669,6 @@ export class AutoSizeVirtualScrollStrategy<
               })
             )
           ),
-          coalesceWith(unpatchedMicroTask()),
           tap(([index, viewIndex]) => {
             this.calcAnchorScrollTop();
             let position = this.calcInitialPosition(index);
