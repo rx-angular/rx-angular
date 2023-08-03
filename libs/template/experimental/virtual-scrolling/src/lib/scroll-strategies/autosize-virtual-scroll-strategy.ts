@@ -1,7 +1,6 @@
 import {
   Directive,
   EmbeddedViewRef,
-  HostBinding,
   inject,
   Input,
   NgIterable,
@@ -40,7 +39,11 @@ import {
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
 } from '../model';
-import { unpatchedMicroTask } from '../util';
+import {
+  calculateVisibleContainerSize,
+  parseScrollTopBoundaries,
+  unpatchedMicroTask,
+} from '../util';
 import { RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS } from '../virtual-scroll.config';
 import { RxaResizeObserver } from './resize-observer';
 
@@ -151,7 +154,6 @@ export class AutoSizeVirtualScrollStrategy<
    * on chromium based browsers when the rendered views differ
    * in dimensions too much or change dimensions heavily.
    */
-  @HostBinding('class.rx-virtual-scroll-viewport--withSyncScrollbar')
   @Input()
   set withSyncScrollbar(input: boolean) {
     this._withSyncScrollbar = input != null && `${input}` !== 'false';
@@ -232,6 +234,12 @@ export class AutoSizeVirtualScrollStrategy<
   /** @internal */
   private scrollTop = 0;
   /** @internal */
+  private scrollTopWithOutOffset = 0;
+  /** @internal */
+  private scrollTopAfterOffset = 0;
+  /** @internal */
+  private viewportOffset = 0;
+  /** @internal */
   private direction: 'up' | 'down' = 'down';
   /** @internal */
   private anchorScrollTop = 0;
@@ -274,6 +282,9 @@ export class AutoSizeVirtualScrollStrategy<
     ) {
       this.recalculateRange$.next();
     }
+    if (changes['withSyncScrollbar']) {
+      this.updateScrollElementClass();
+    }
   }
 
   /** @internal */
@@ -288,6 +299,7 @@ export class AutoSizeVirtualScrollStrategy<
   ): void {
     this.viewport = viewport;
     this.viewRepeater = viewRepeater;
+    this.updateScrollElementClass();
     this.maintainVirtualItems();
     this.calcRenderedRange();
     this.positionElements();
@@ -295,6 +307,7 @@ export class AutoSizeVirtualScrollStrategy<
 
   /** @internal */
   detach(): void {
+    this.updateScrollElementClass(false);
     this.viewport = null;
     this.viewRepeater = null;
     this._virtualItems = [];
@@ -307,8 +320,12 @@ export class AutoSizeVirtualScrollStrategy<
     if (_index !== this._scrolledIndex) {
       const scrollTop = this.calcInitialPosition(_index);
       this._scrollToIndex = _index;
-      this.viewport!.scrollTo(scrollTop, behavior);
+      this.scrollTo(scrollTop, behavior);
     }
+  }
+
+  private scrollTo(scrollTo: number, behavior?: ScrollBehavior): void {
+    this.viewport!.scrollTo(this.viewportOffset + scrollTo, behavior);
   }
 
   /**
@@ -428,8 +445,20 @@ export class AutoSizeVirtualScrollStrategy<
       this.viewport!.elementScrolled$.pipe(
         startWith(void 0),
         tap(() => {
-          const scrollTop = this.viewport!.getScrollTop();
-          this.direction = scrollTop > this.scrollTop ? 'down' : 'up';
+          this.viewportOffset = this.viewport!.measureOffset();
+          const { scrollTop, scrollTopWithOutOffset, scrollTopAfterOffset } =
+            parseScrollTopBoundaries(
+              this.viewport!.getScrollTop(),
+              this.viewportOffset,
+              this._contentSize,
+              this.containerSize
+            );
+          this.direction =
+            scrollTopWithOutOffset > this.scrollTopWithOutOffset
+              ? 'down'
+              : 'up';
+          this.scrollTopWithOutOffset = scrollTopWithOutOffset;
+          this.scrollTopAfterOffset = scrollTopAfterOffset;
           this.scrollTop = scrollTop;
           if (removeScrollAnchorOnNextScroll) {
             this._scrollToIndex = null;
@@ -460,7 +489,11 @@ export class AutoSizeVirtualScrollStrategy<
           this.scrolledIndex = this.anchorItem.index;
           this.lastScreenItem = this.calculateAnchoredItem(
             this.anchorItem,
-            this.containerSize
+            calculateVisibleContainerSize(
+              this.containerSize,
+              this.scrollTopWithOutOffset,
+              this.scrollTopAfterOffset
+            )
           );
           if (this.direction === 'up') {
             range.start = Math.max(0, this.anchorItem.index - this.runwayItems);
@@ -604,11 +637,11 @@ export class AutoSizeVirtualScrollStrategy<
                   // until we are sure that we need to scroll to the bottom
                   if (this.renderedRange.end === this.positionedRange.end) {
                     this._scrollToIndex = null;
-                    this.viewport!.scrollTo(this.contentSize);
+                    this.scrollTo(this.contentSize);
                   }
                 } else {
                   this._scrollToIndex = null;
-                  this.viewport!.scrollTo(scrollToAnchorPosition);
+                  this.scrollTo(scrollToAnchorPosition);
                 }
               } else {
                 this._scrollToIndex = null;
@@ -762,7 +795,7 @@ export class AutoSizeVirtualScrollStrategy<
     }
     return {
       index: Math.min(i, items.length),
-      offset: Math.max(0, delta),
+      offset: delta,
     };
   }
 
@@ -806,7 +839,7 @@ export class AutoSizeVirtualScrollStrategy<
    */
   private maybeAdjustScrollPosition(): void {
     if (this.anchorScrollTop !== this.scrollTop) {
-      this.viewport!.scrollTo(this.anchorScrollTop);
+      this.scrollTo(this.anchorScrollTop);
     }
   }
 
@@ -873,5 +906,19 @@ export class AutoSizeVirtualScrollStrategy<
   private positionElement(element: HTMLElement, scrollTop: number): void {
     element.style.position = 'absolute';
     element.style.transform = `translateY(${scrollTop}px)`;
+  }
+
+  /** @internal */
+  private updateScrollElementClass(force = this.withSyncScrollbar): void {
+    const scrollElement = this.viewport?.getScrollElement?.();
+    if (
+      !!scrollElement &&
+      scrollElement.classList.contains('rx-virtual-scroll-element')
+    ) {
+      scrollElement.classList.toggle(
+        'rx-virtual-scroll-element--withSyncScrollbar',
+        force
+      );
+    }
   }
 }
