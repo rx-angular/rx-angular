@@ -295,6 +295,44 @@ The following reactive context variables are available for each template:
 </rx-virtual-scroll-viewport>
 ```
 
+## Custom Scroll Elements
+
+It is also possible to define a scroll container which is not part of the `rx-virtual-scroll-viewport` itself.
+This is useful if you like to include other containers into the scroll container of your virtual list.
+
+> You find demos for custom scroll elements in the [`demos`](https://github.com/rx-angular/rx-angular/tree/main/apps/demos/src/app/features/template/rx-virtual-for) app of the rx-angular monorepo
+
+**Perf notice**
+
+The included `RxVirtualScrollStrategy`s are smart enough to detect if they are completely hidden from the viewport, by also accounting
+for the size of the contents before & after. When not part of the viewport, it will render less views (minimum of `runwayItems` or `runwayItemsOpposite`).
+
+### With user defined scroll element
+
+In order to define a custom scroll container, you need to apply the `rxVirtualScrollElement` directive to the element you would like to act
+as scroll container for the virtual scroll viewport.
+
+```html
+<div rxVirtualScrollElement>
+  <div>You can place any content you like before</div>
+  <rx-virtual-scroll-viewport [itemSize]="50">
+    <div *rxVirtualFor="let item of items$;">{{ item }}</div>
+  </rx-virtual-scroll-viewport>
+  <div>You can also place any content you like after</div>
+</div>
+```
+
+### With window scroll
+
+`@rx-angular/template` also ships a directive to use the window as scroll element. This is especially useful for mobile applications.
+To enable window scrolling, simply add the `scrollWindow` directive to the `rx-virtual-scroll-viewport`.
+
+```html
+<rx-virtual-scroll-viewport [itemSize]="50" scrollWindow>
+  <div *rxVirtualFor="let item of items$;">{{ item }}</div>
+</rx-virtual-scroll-viewport>
+```
+
 ## Advanced Usage
 
 ### Use render strategies (`strategy`)
