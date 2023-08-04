@@ -52,7 +52,7 @@ function mountFixedSize(
         *rxVirtualFor="
           let item of items;
           renderCallback: renderCallback;
-          viewCacheSize: viewCache;
+          templateCacheSize: viewCache;
           strategy: strategy;
           trackBy: trackBy;
         "

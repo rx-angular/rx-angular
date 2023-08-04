@@ -2,7 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 export interface RxVirtualScrollDefaultOptions {
   /* determines how many templates can be cached and re-used on rendering, defaults to 20 */
-  viewCacheSize?: number;
+  templateCacheSize?: number;
   /* determines how many views will be rendered in scroll direction, defaults to 15 */
   runwayItems?: number;
   /* determines how many views will be rendered in the opposite scroll direction, defaults to 5 */
@@ -25,13 +25,13 @@ export function RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS_FACTORY(): RxVirtualScrollDefa
   return {
     runwayItems: DEFAULT_RUNWAY_ITEMS,
     runwayItemsOpposite: DEFAULT_RUNWAY_ITEMS_OPPOSITE,
-    viewCacheSize: DEFAULT_VIEW_CACHE_SIZE,
+    templateCacheSize: DEFAULT_TEMPLATE_CACHE_SIZE,
     itemSize: DEFAULT_ITEM_SIZE,
   };
 }
 
 /** @internal */
-export const DEFAULT_VIEW_CACHE_SIZE = 20;
+export const DEFAULT_TEMPLATE_CACHE_SIZE = 20;
 /** @internal */
 export const DEFAULT_ITEM_SIZE = 50;
 /** @internal */
