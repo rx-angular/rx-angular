@@ -77,6 +77,7 @@ export interface VirtualScrollMountConfig<T> {
   itemSize?: number;
   strategy?: RxStrategyNames<string> | Observable<RxStrategyNames<string>>;
   containerHeight?: number;
+  template?: string;
 }
 
 export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
