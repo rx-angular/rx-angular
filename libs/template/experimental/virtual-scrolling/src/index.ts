@@ -3,6 +3,8 @@ export {
   RxVirtualForViewContext,
   RxVirtualScrollStrategy,
   RxVirtualViewRepeater,
+  RxVirtualScrollViewport,
+  RxVirtualScrollElement,
 } from './lib/model';
 export * from './lib/scroll-strategies/autosize-virtual-scroll-strategy';
 export * from './lib/scroll-strategies/dynamic-size-virtual-scroll-strategy';
@@ -14,3 +16,5 @@ export {
   RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS_FACTORY,
   RxVirtualScrollDefaultOptions,
 } from './lib/virtual-scroll.config';
+export { RxVirtualScrollElementDirective } from './lib/virtual-scroll-element.directive';
+export { RxVirtualScrollWindowDirective } from './lib/virtual-scroll-window.directive';
