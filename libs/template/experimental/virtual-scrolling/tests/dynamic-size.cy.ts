@@ -132,10 +132,10 @@ function expectedRange(
 describe('viewport', () => {
   it('has proper runway height', () => {
     mountDynamicSize().then(({ fixture }) => {
+      fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__sentinel')
       );
-      fixture.detectChanges();
       const items = fixture.componentInstance.items as Item[];
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${totalItemHeight(items)}px)`

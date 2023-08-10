@@ -4,7 +4,6 @@ import {
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
   ListRange,
-  RxVirtualScrollElement,
   RxVirtualScrollWindowDirective,
   RxVirtualScrollElementDirective,
 } from '../src/index';
@@ -97,10 +96,10 @@ describe('viewport', () => {
   it('has proper runway height', () => {
     const { itemSize } = defaultMountConfig;
     mountFixedSize().then(({ fixture }) => {
+      fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__sentinel')
       );
-      fixture.detectChanges();
       cy.get('@renderCallback').should('have.been.called');
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${defaultItemLength * itemSize}px)`

@@ -155,10 +155,10 @@ function expectedRange(
 describe('viewport', () => {
   it('has proper runway height', () => {
     mountAutoSize().then(({ fixture, component }) => {
+      fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__sentinel')
       );
-      fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
       let endIndex = 0;
       const checkingKnownElements$ = new Subject<void>();
@@ -204,12 +204,11 @@ describe('viewport', () => {
   });
   it('change runway height on item changes', () => {
     mountAutoSize().then(({ fixture, component }) => {
+      const items = component.items as Item[];
+      fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__sentinel')
       );
-      const items = component.items as Item[];
-      fixture.detectChanges();
-
       const viewportComponent = getViewportComponent(fixture);
       const renderedViews = new Set<number>();
       viewportComponent.viewRepeater.viewRendered$
@@ -604,7 +603,15 @@ describe('custom scrollable', () => {
         const items = component.items as Item[];
         fixture.detectChanges();
         const viewportComponent = getViewportComponent(fixture);
-        const initialRange = expectedRange(component, items, 0, 'up');
+        const initialRange = expectedRange(
+          {
+            ...component,
+            containerHeight: component.containerHeight - 50,
+          },
+          items,
+          0,
+          'up'
+        );
         const renderedInitialItems = items.filter(
           (v, i) => i < initialRange.end
         );
