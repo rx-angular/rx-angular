@@ -6,3 +6,5 @@
 /**/images/**/*
 .docusaurus/
 CHANGELOG.md
+
+.angular

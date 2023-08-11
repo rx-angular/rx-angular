@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="460" height="300" src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/apps/docs/static/img/isr-logo.png">
+  <img width="460" height="300" src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/apps/docs/static/img/isr-logo.png" />
 </p>
 
 # Incremental Static Regeneration for Angular
