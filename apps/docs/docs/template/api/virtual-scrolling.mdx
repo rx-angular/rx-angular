@@ -92,7 +92,7 @@ all pre-packaged ScrollStrategies as well as control the majority of inputs.
 - configurable frame budget (defaults to 60 FPS)
 - Super efficient layouting with css transformations
 - Scoped layouting with css containment
-- Define a viewCache in order to re-use views instead of re-creating them
+- Define a templateCache in order to re-use views instead of re-creating them
 - triggers change-detection on `EmbeddedView` level
 - Zone-agnostic, opt-out of `NgZone` with `patchZone`
 - 3 Configurable `RxVirtualScrollStrategy` providing the core logic to calculate the viewRange and position DOM
@@ -471,14 +471,14 @@ Read more about the concurrent mode in the [concurrent strategies section](https
 
 #### Inputs
 
-| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                                                                         |
-| ---------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `trackBy`        | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxVirtualFor` provides a shorthand where you can name the property directly.                                                                                                                                                                                                                                        |
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxVirtualForDirective` will operate out of `NgZone`. See [NgZone optimizations](https://www.rx-angular.io/docs/template/performance-issues/ngzone-optimizations)                                                                                                                                          |
-| `parent`         | `boolean`                                                          | _default: `false`_ if set to `false`, the `RxVirtualForDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](https://www.rx-angular.io/docs/template/performance-issues/handling-view-and-content-queries) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes. [Render Strategies](https://www.rx-angular.io/docs/cdk/render-strategies)                                                                                                                                                                                      |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `RxVirtualForDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                                                                 |
-| `viewCacheSize`  | `number`                                                           | _default: `20`_ Controls the amount if views held in cache for later re-use when a user is scrolling the list If this is set to 0, `rxVirtualFor` won't cache any view, thus destroying & re-creating very often on scroll events.                                                                                                                  |
+| Input               | Type                                                               | description                                                                                                                                                                                                                                                                                                                                         |
+| ------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `trackBy`           | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxVirtualFor` provides a shorthand where you can name the property directly.                                                                                                                                                                                                                                        |
+| `patchZone`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxVirtualForDirective` will operate out of `NgZone`. See [NgZone optimizations](https://www.rx-angular.io/docs/template/performance-issues/ngzone-optimizations)                                                                                                                                          |
+| `parent`            | `boolean`                                                          | _default: `false`_ if set to `false`, the `RxVirtualForDirective` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](https://www.rx-angular.io/docs/template/performance-issues/handling-view-and-content-queries) |
+| `strategy`          | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes. [Render Strategies](https://www.rx-angular.io/docs/cdk/render-strategies)                                                                                                                                                                                      |
+| `renderCallback`    | `Subject<U>`                                                       | giving the developer the exact timing when the `RxVirtualForDirective` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                                                                 |
+| `templateCacheSize` | `number`                                                           | _default: `20`_ Controls the amount if views held in cache for later re-use when a user is scrolling the list If this is set to 0, `rxVirtualFor` won't cache any view, thus destroying & re-creating very often on scroll events.                                                                                                                  |
 
 ### RxVirtualScrollViewportComponent
 
@@ -669,7 +669,7 @@ import { RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS } from '@rx-angular/template/experime
       useValue: { // should be of type `RxVirtualScrollDefaultOptions`
         runwayItems: 50,
         // turn off cache by default
-        viewCacheSize: 0
+          templateCacheSize: 0
       }
   }]
 })
@@ -679,7 +679,7 @@ import { RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS } from '@rx-angular/template/experime
 
 ```ts
 /* determines how many templates can be cached and re-used on rendering */
-const DEFAULT_VIEW_CACHE_SIZE = 20;
+const DEFAULT_TEMPLATE_CACHE_SIZE = 20;
 /* determines how many views will be rendered in scroll direction */
 const DEFAULT_ITEM_SIZE = 50;
 /* determines how many views will be rendered in the opposite scroll direction */
@@ -693,7 +693,7 @@ const DEFAULT_RUNWAY_ITEMS_OPPOSITE = 2;
 ```ts
 export interface RxVirtualScrollDefaultOptions {
   /* determines how many templates can be cached and re-used on rendering, defaults to 20 */
-  viewCacheSize?: number;
+  templateCacheSize?: number;
   /* determines how many views will be rendered in scroll direction, defaults to 15 */
   runwayItems?: number;
   /* determines how many views will be rendered in the opposite scroll direction, defaults to 5 */
