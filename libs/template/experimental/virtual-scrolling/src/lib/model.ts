@@ -25,7 +25,7 @@ export interface TemplateSettings<Implicit, Context, ComputedContext> {
   templateRef: TemplateRef<Context>;
   createViewContext: CreateViewContext<Implicit, Context, ComputedContext>;
   updateViewContext: UpdateViewContext<Implicit, Context, ComputedContext>;
-  viewCacheSize: number;
+  templateCacheSize: number;
 }
 
 export interface ListRange {
