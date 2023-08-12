@@ -15,10 +15,12 @@ hide_title: true
 
 ## Key features
 
-- ✅ Fully Typed
 - ✅ No-Boilerplate
-- ✅ Configurable transformations to have lines in the template
 - ✅ Minimal memory footprint through a Proxy object and lazy initialization
+- ✅ Auto unsubscribe on component or service destroy
+- ✅ Trigger effects
+- ✅ Configurable transformations to have lines in the template
+- ✅ Fully Typed
 
 ## Install
 
@@ -28,157 +30,142 @@ npm install --save @rx-angular/state
 yarn add @rx-angular/state
 ```
 
-## Motivation
-
-Actions are a fundamental part of state management and reactive systems. The @rx-angular/state library provides a powerful set method, but in certain scenarios, you might need to add specific behaviors to your user input or incoming events.
-
-Typically, Subjects are used to implement this functionality. However, in larger applications, this approach often results in code cluttered with Subjects, leading to increased complexity.
-
-That's where @rx-angular/state/actions comes in. It allows you to create observable action streams in a clean, maintainable, and less error-prone way, thus minimizing the amount of boilerplate code required.
-
-```typescript
-import { Component } from '@angular/core';
-import { Subject } from 'rxjs';
-import { withLatestFrom, switchMap } from 'rxjs/operators';
-
-@Component({
-  selector: 'my-component',
-  template: `
-    <input (input)="searchInput($event?.target?.value)" /> Search for:
-    {{ search$ | async }}<br />
-    <button (click)="submitBtn()">Submit</button>
-    <br />
-    <ul>
-      <li *ngFor="let item of list$ | async">{{ item }}</li>
-    </ul>
-  `,
-})
-export class MyComponent {
-  private _submitBtn = new Subject<void>();
-  private _searchInput = new Subject<string>();
-
-  submitBtn() {
-    this._submitBtn.next();
-  }
-
-  get submitBtn$() {
-    return this._submitBtn.asObservable();
-  }
-
-  searchInput(value: string) {
-    this._searchInput.next(value);
-  }
-
-  get search$() {
-    return this._searchInput.asObservable();
-  }
-
-  list$ = this.submitBtn$.pipe(
-    withLatestFrom(this.search$),
-    switchMap(([_, searchString]) => this.api.query(searchString))
-  );
-
-  constructor(private api: API) {}
-}
-```
-
-Just look at the amount of code we need to write for only 2 observable ui events.
-
-Downsides:
-
-- Boilerplate for setter and getter
-- Transformations spreaded over class and template
-- Manual typing ov subjects and streams
-- No central place for UI trigger
-
-Imagine we could have configurable functions that return all UI logic typed under one object.
-
-```typescript
-import { RxActionFactory } from '@rx-angular/state/actions';
-
-interface UiActions {
-  submitBtn: void;
-  searchInput: string;
-}
-
-@Component({
-  template: `
-    <input (input)="ui.searchInput($event)" /> Search for:
-    {{ ui.search$ | async }}<br />
-    <button (click)="ui.submitBtn()">Submit</button>
-    <br />
-    <ul>
-      <li *ngFor="let item of list$ | async as list">{{ item }}</li>
-    </ul>
-  `,
-  providers: [RxActionFactory],
-})
-export class Component {
-  ui = this.factory.create({
-    searchInput: (e) => (e.target ? e.target.value : ''),
-  });
-
-  list$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.search$),
-    switchMap(([_, searchString]) => this.api.query(searchString))
-  );
-
-  constructor(private api: API, private factory: RxActionFactory<UiActions>) {}
-}
-```
-
-## RxAngular Actions
-
 This package helps to reduce code used to create composable action streams.
 It mostly is used in combination with state management libs to handle user interaction and backend communication.
 
-### Setup
+## Setup
 
-The coalescing features can be used directly from the `cdk` package or indirectly through the `state` package.
-To do so, install the `cdk` package and, if needed, the packages depending on it:
+`Actions` can be imported as following:
 
-1. Install `@rx-angular/state`
+```ts
+import { rxActions } from '@rx-angular/state/actions';
 
-```bash
-npm i @rx-angular/state
-# or
-yarn add @rx-angular/state
+@Component({
+  standalone: true,
+  template: `...`,
+})
+export class AnyComponent {
+  actions = rxActions<UI>();
+}
 ```
 
 ### Basic usage in a Component
 
-One of the ways `actions` can be used is to describe user input in a central place.
-To do so we define the UI interactions a user can do e.g. if we have a search box in our UI, the events it produced could get named `searchInput`.click
+# Actions
 
-The types for it could look like that:
+Primitive building block to handle event logic and event creation.
+It is imported via `import { rxActions } from '@rx-angular/state/actions';`
 
-````typescript
-interface UI {
-  searchInput: string;
-}
-
-In the class we can use actions like follows:
+The action automatically creates an Observable and a callback function for imperative programming based on the types. It also has a new shorthand to tie the event changes to a side effect.
 
 ```typescript
-class Component {
-  ui = actions<UI>();
-  searchQuery$ = this.ui.searchInput$.pipe(
-    debounceTime(1500)
-  );
-  list$ = this.globalState.list$;
+import { rxActions } from '@rx-angular/state/actions';
 
-  constructor(
-    private rxEffects: RxEffects,
-    globalState: StateService
-  ) {
-    this.rxEffects.register(this.searchQuery$, this.globalState.refreshGenres);
+@Component({...})
+export class AnyComponent {
+  ui = rxActions<{ name: string }>();
+  name$ = this.ui.name$; // Observable<string> - listens to name changes
+  emitName = this.ui.name; // (name: string) => void - emits name change
+  sub = this.ui.onName(console.log) // () => void - when called stops the side effect execution
+}
+```
+
+## Usage in component to handle UI interaction
+
+This example shows how to create an action instance for the components template.
+We can see how to apply behaviour onto the search input (debouncing the user input for 300 ms).
+
+```typescript
+import { rxActions } from '@rx-angular/state/actions';
+
+type ListUi = { searchInput: string };
+
+@Component({
+  template: ` <input name="search" (change)="ui.searchInput($event)" /> `,
+})
+class ListComponent {
+  protected ui = rxActions<ListUi>();
+  // UI input with applied behaviour
+  query$ = this.ui.searchInput$.pipe(debounceTime(300));
+}
+```
+
+## Usage in a service to handle data fetching
+
+In this example we see how to use an action instance to handle data fetching.
+We can see how to apply behaviour onto the refresh calls (`exhaustMap` the HTTP requests).
+
+```typescript
+import { rxActions } from '@rx-angular/state/actions';
+
+type Actions = { refresh: void };
+
+@Injectable({ providedIn: 'root' })
+export class MovieService {
+  private actions = rxActions<Actions>();
+  // data refresh with applied behaviour
+  movies$ = this.actions.refresh$.pipe(exhaustMap((_) => getMovies()));
+
+  refresh() {
+    this.actions.refresh();
   }
 }
-````
+```
 
-### Advanced usage
+## Handling side effects on event emission
 
-#### Using transforms
+In this example we use the `on` shorthand to trigger a side effect every time the event it emitted.
+It returns a function which when called stops firing the side effect.
+
+```typescript
+import { rxActions } from '@rx-angular/state/actions';
+
+type EditUi = { save: void };
+
+@Component({
+  template: ` <button (click)="editUi.save($event)" /> `,
+})
+class ListComponent {
+  protected editUi = rxActions<EditUi>();
+  private saveObsEf = this.editUi.onSearchInput(
+    (searchInput$) => searchInput$.pipe(debounceTime(300)), // apply behaviour
+    (q: string) => this.state.search(q) // fire side effect
+  );
+
+  // It is also possible to use tap, however this is not recommended to do
+  private saveObsEf2 = this.editUi.onSearchInput((query$) =>
+    query$.pipe(
+      debounceTime(300), // apply behaviour
+      tap((q: string) => this.state.search(q)) // fire side effect
+    )
+  );
+}
+```
+
+### Unsubscribe from events programmatically
+
+```typescript
+import { rxActions } from '@rx-angular/state/actions';
+
+type EditUi = { save: void };
+
+@Component({
+  template: ` <button (click)="editUi.save($event)" /> `,
+})
+class ListComponent {
+  protected editUi = rxActions<EditUi>();
+  private saveObsEf = this.editUi.onSearchInput(
+    (searchInput$) => searchInput$.pipe(debounceTime(300)), // apply behaviour
+    (q: string) => this.state.search(q) // fire side effect
+  );
+
+  stopListenToClick() {
+    this.saveObsEf();
+  }
+}
+```
+
+## Transform events in a central place
 
 Often we process `Events` from the template and occasionally also trigger those channels in the class programmatically.
 
@@ -187,99 +174,66 @@ This is also true for the programmatic usage in the component class or a service
 
 To ease this pain we can manage this login with `transforms`.
 
-You can write you own transforms or use the predefined functions:
+You can write your own transforms, leverage Browser APIs like `String` and `Boolean` or use the predefined functions.
 
-- preventDefault
-- stopPropagation
-- preventDefaultStopPropagation
-- eventValue
+### Use existing transform functions
+
+The existing transform functions are:
+
+- `preventDefault` - calls `preventDefault` on a passed event
+- `stopPropagation`
+- `preventDefaultStopPropagation`
+- `eventValue`
+
+Here we see how to use an action transforms. This concept is similar to Input transforms.
+The logic is placed in a single place and transforms the event before emission.
 
 ```typescript
-import { Component } from '@angular/core';
-import { RxState, RxActionFactory } from '@rx-angular/state';
-import { StateService } from './state.service';
-import { withLatestFrom, map, debounceTime } from 'rxjs/operators';
+import { rxActions, eventValue } from '@rx-angular/state/actions';
 
-interface UiActions {
-  submitBtn: void;
-  searchInput: string;
-}
+type ListUi = { searchInput: string };
 
 @Component({
-  selector: 'my-component',
-  template: `
-    <input (input)="ui.searchInput($event)" /> Search for:
-    {{ ui.searchInput$ | async }}<br />
-    <button (click)="ui.submitBtn()">Submit</button>
-    <br />
-    <ul>
-      <li *ngFor="let item of list$ | async">{{ item }}</li>
-    </ul>
-  `,
-  providers: [RxState, RxActionFactory],
+  // takes a DOM Event
+  template: `<input name="search" (change)="ui.searchInput($event)" />`,
 })
-export class MyComponent {
-  ui = this.factory.create<UiActions>({ searchInput: eventValue });
-  list$ = this.state.select('list');
-  submittedSearchQuery$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.searchInput$),
-    map(([_, search]) => search),
-    debounceTime(1500)
+class ListComponent {
+  protected ui = rxActions<ListUi>(({ transform }) =>
+    transform({ searchInput: eventValue })
   );
 
-  constructor(
-    private state: RxState<State>,
-    private factory: RxActionFactory<UiActions>,
-    private globalState: StateService
-  ) {
-    this.state.connect('list', this.globalState.refreshGenres$);
-
-    this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
-    // Optional reactively:
-    // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
+  searchChange(query: string) {
+    // takes a string
+    this.ui.searchInput(query);
   }
 }
 ```
 
-### Usage for global services
-
-In services, it comes in handy to have a minimal typed action system.
-This helps to have them composable for further optimizations.
-Furthermore, we can still expose setters to trigger actions the imperative way.
+## Use custom transform functions
 
 ```typescript
-interface State {
-  genres: MovieGenreModel[];
-}
+import { rxActions, eventValue } from '@rx-angular/state/actions';
 
-interface Actions {
-  refreshGenres: string | number;
-}
+type ListUi = { searchInput: string };
 
-@Injectable({
-  providedIn: 'root',
+@Component({
+  // takes a DOM Event
+  template: `<input
+    type="number"
+    name="code"
+    (change)="ui.codeChange($event)"
+  />`,
 })
-export class StateService extends RxState<State> {
-  private actions = new RxActionFactory<Actions>().create();
+class ListComponent {
+  protected ui = rxActions<ListUi>(({ transform }) =>
+    transform({
+      codeChange: (v) => Number(eventValue(v)) + '#POSTFIX',
+    })
+  );
 
-  genres$ = this.select('genres');
-
-  constructor(private tmdb2Service: Tmdb2Service) {
-    super();
-
-    this.connect(
-      'genres',
-      this.actions.refreshGenres$.pipe(exhaustMap(this.tmdb2Service.getGenres))
-    );
-  }
-
-  refreshGenres(genre: string | number): void {
-    this.actions.refreshGenres(genre);
-  }
-
-  // Optionally the reactive way
-  connectRefreshGenres(genre$: Observable<string | number>): void {
-    this.hold(genre$, (genre) => this.actions.refreshGenres(genre));
+  searchChange(code: number) {
+    // takes a number
+    this.ui.codeChange(query);
   }
 }
 ```
