@@ -559,7 +559,7 @@ const customScrollableTemplate = (
         *rxVirtualFor="
           let item of items;
           renderCallback: renderCallback;
-          viewCacheSize: viewCache;
+          templateCacheSize: viewCache;
           strategy: strategy;
           trackBy: trackBy;
         "
@@ -682,7 +682,7 @@ const windowScrollableTemplate = (
         *rxVirtualFor="
           let item of items;
           renderCallback: renderCallback;
-          viewCacheSize: viewCache;
+          templateCacheSize: viewCache;
           strategy: strategy;
           trackBy: trackBy;
         "
