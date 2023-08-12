@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 export type ValuesOf<O> = O[keyof O];
 // type Keys = KeysOf<{ a: string, b: number }>; // "a" | "b"
@@ -28,6 +28,7 @@ type FunctionParamsOrValueType<U, K, F> = InferArguments<
 export type Actions = {};
 
 export type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
+export type EffectMap<T> = { [K in keyof T]: Subscription };
 
 export type ActionTransforms<T extends {}> = Partial<{
   [K in keyof T]: (...args: any[]) => T[K];
@@ -47,11 +48,18 @@ export type ActionObservables<T extends Actions> = {
   [K in ExtractString<T> as `${K}$`]: Observable<InstanceOrType<T[K]>>;
 };
 
+export type ActionEffects<T extends Actions> = {
+  [K in ExtractString<T> as `on${Capitalize<K>}`]: (
+    sideEffectFn: (value: T[K]) => void
+  ) => () => void;
+};
+
 export type RxActions<T extends Actions, U extends {} = T> = ActionDispatchers<
   T,
   U
 > &
   ActionObservables<T> &
+  ActionEffects<T> &
   ((slice: Partial<T>) => void) & {
     $: (props: (keyof T)[]) => Observable<ValuesOf<T>>;
   };

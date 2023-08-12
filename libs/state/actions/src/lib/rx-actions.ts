@@ -1,4 +1,10 @@
-import { Actions, ActionTransforms, RxActions, SubjectMap } from './types';
+import {
+  Actions,
+  ActionTransforms,
+  EffectMap,
+  RxActions,
+  SubjectMap,
+} from './types';
 import { DestroyRef, ErrorHandler, inject } from '@angular/core';
 import { actionProxyHandler } from './proxy';
 
@@ -50,6 +56,7 @@ export function rxActions<
   U extends ActionTransforms<T> = {}
 >(setupFn?: (cfg: { transforms: (t: U) => void }) => void): RxActions<T, U> {
   const subjectMap: SubjectMap<T> = {} as SubjectMap<T>;
+  const effectMap: EffectMap<T> = {} as EffectMap<T>;
   const errorHandler = inject(ErrorHandler);
   let transformsMap = {} as U;
 
@@ -74,6 +81,7 @@ export function rxActions<
     actionProxyHandler({
       subjectMap,
       transformsMap,
+      effectMap,
       errorHandler,
     })
   ) as any as RxActions<T, U>;

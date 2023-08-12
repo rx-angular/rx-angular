@@ -1,7 +1,13 @@
 import { ErrorHandler, inject, Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { actionProxyHandler } from './proxy';
-import { Actions, ActionTransforms, RxActions, ValuesOf } from './types';
+import {
+  Actions,
+  ActionTransforms,
+  EffectMap,
+  RxActions,
+  ValuesOf,
+} from './types';
 
 type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
 
@@ -66,6 +72,7 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
    */
   create<U extends ActionTransforms<T> = {}>(transforms?: U): RxActions<T, U> {
     const subjectMap: SubjectMap<T> = {} as SubjectMap<T>;
+    const effectMap: EffectMap<T> = {} as EffectMap<T>;
     this.subjects.push(subjectMap);
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -75,6 +82,7 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
       signals as any as RxActions<T, U>,
       actionProxyHandler({
         subjectMap,
+        effectMap,
         transformsMap: transforms,
         errorHandler: this.errorHandler,
       })
