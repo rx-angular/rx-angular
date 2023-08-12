@@ -9,9 +9,21 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
+html.window-scrolling {
+  .app-shell-container {
+    height: auto;
+  }
+
+  .app-shell-content {
+    overflow: visible;
+  }
+  .app-shell-content-container {
+    height: auto;
+  }
+}
+
 @import 'styles/utils';
 @import 'styles/theme';
 @import 'styles/general';
 @import 'styles/debug-helpers';
 @import 'app/features/integrations/dynamic-counter/dynamic-counter.scss';
-

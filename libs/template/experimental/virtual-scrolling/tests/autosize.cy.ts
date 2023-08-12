@@ -5,6 +5,8 @@ import {
   RxVirtualScrollViewportComponent,
   ListRange,
   AutoSizeVirtualScrollStrategy,
+  RxVirtualScrollWindowDirective,
+  RxVirtualScrollElementDirective,
 } from '../src/index';
 import { createOutputSpy, mount } from 'cypress/angular';
 import { By } from '@angular/platform-browser';
@@ -51,7 +53,8 @@ function mountAutoSize(
   const renderCallbackSpy = createOutputSpy<Item[]>('renderCallback');
   renderCallback$.subscribe((rendered) => renderCallbackSpy.emit(rendered));
   return mount(
-    `
+    config?.template ??
+      `
     <rx-virtual-scroll-viewport
       (scrolledIndexChange)="scrolledIndex.emit($event)"
       (viewRange)="viewRange.emit($event)"
@@ -95,6 +98,8 @@ function mountAutoSize(
         RxVirtualScrollViewportComponent,
         RxVirtualFor,
         AutoSizeVirtualScrollStrategy,
+        RxVirtualScrollWindowDirective,
+        RxVirtualScrollElementDirective,
       ],
     }
   );
@@ -150,10 +155,10 @@ function expectedRange(
 describe('viewport', () => {
   it('has proper runway height', () => {
     mountAutoSize().then(({ fixture, component }) => {
+      fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__sentinel')
       );
-      fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
       let endIndex = 0;
       const checkingKnownElements$ = new Subject<void>();
@@ -199,12 +204,11 @@ describe('viewport', () => {
   });
   it('change runway height on item changes', () => {
     mountAutoSize().then(({ fixture, component }) => {
+      const items = component.items as Item[];
+      fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__sentinel')
       );
-      const items = component.items as Item[];
-      fixture.detectChanges();
-
       const viewportComponent = getViewportComponent(fixture);
       const renderedViews = new Set<number>();
       viewportComponent.viewRepeater.viewRendered$
@@ -531,5 +535,258 @@ describe('data mutations', () => {
         });
       });
     });
+  });
+});
+
+const customScrollableTemplate = (
+  itemTemplate = `<div>{{ item.id }}</div><div *ngIf="item.description">{{item.description}}</div>`
+) => `
+  <div rxVirtualScrollElement style="height: ${defaultMountConfig.containerHeight}px; width: 100vw;">
+    <div style="height: 50px;">
+      Content Before
+    </div>
+    <rx-virtual-scroll-viewport
+      (scrolledIndexChange)="scrolledIndex.emit($event)"
+      (viewRange)="viewRange.emit($event)"
+      data-cy="viewport"
+      [style.height.px]="containerHeight"
+      [runwayItems]="runwayItems"
+      [runwayItemsOpposite]="runwayItemsOpposite"
+      [tombstoneSize]="tombstoneSize"
+      autosize>
+      <div
+        [style.height.px]="dynamicSize(item)"
+        *rxVirtualFor="
+          let item of items;
+          renderCallback: renderCallback;
+          templateCacheSize: viewCache;
+          strategy: strategy;
+          trackBy: trackBy;
+        "
+        [attr.data-cy]="'item'"
+      >
+        ${itemTemplate}
+      </div>
+    </rx-virtual-scroll-viewport>
+    <div style="height: 50px;">Content After</div>
+  </div>
+`;
+describe('custom scrollable', () => {
+  it('displays and positions items', () => {
+    mountAutoSize({ template: customScrollableTemplate() }).then(
+      ({ component }) => {
+        const items = component.items as Item[];
+        const range = expectedRange(
+          { ...component, containerHeight: component.containerHeight - 50 },
+          items,
+          0
+        );
+        cy.get('[data-cy=item]').should('have.length', range.end - range.start);
+        let position = 0;
+        cy.get('[data-cy=item]').each((element, i) => {
+          expect(element.css('position')).to.be.eq('absolute');
+          expect(element.attr('style')).to.contain(`translateY(${position}px)`);
+          position += defaultDynamicSize(items[i]);
+        });
+        cy.get('@scrolledIndex').should('have.been.calledWith', 0);
+        cy.get('@viewRange').should('have.been.calledWith', range);
+        cy.get('@renderCallback').should(
+          'have.been.calledWith',
+          items.filter((v, i) => i < range.end)
+        );
+      }
+    );
+  });
+  it('reacts to scroll events', () => {
+    mountAutoSize({ template: customScrollableTemplate(`{{ item.id }}`) }).then(
+      ({ fixture, component }) => {
+        const items = component.items as Item[];
+        fixture.detectChanges();
+        const viewportComponent = getViewportComponent(fixture);
+        const initialRange = expectedRange(
+          {
+            ...component,
+            containerHeight: component.containerHeight - 50,
+          },
+          items,
+          0,
+          'up'
+        );
+        const renderedInitialItems = items.filter(
+          (v, i) => i < initialRange.end
+        );
+        cy.get('@renderCallback')
+          .should('have.been.calledWith', renderedInitialItems)
+          .then(() => {
+            const scrollToSomeWhere =
+              (items.length / 2) * component.tombstoneSize;
+            viewportComponent.scrollTo(scrollToSomeWhere);
+            cy.wait(200);
+            cy.get('@renderCallback')
+              .should('have.been.called')
+              .then(() => {
+                let position = 0;
+                cy.get('[data-cy=item]').each((element) => {
+                  const id = parseInt(element.text().trim());
+                  if (!position) {
+                    position = extractTranslateYValue(element.attr('style'));
+                  }
+                  const item = items[id];
+                  expect(element.attr('style')).contains(
+                    `translateY(${position}px)`
+                  );
+                  position += component.dynamicSize(item);
+                });
+              });
+          });
+      }
+    );
+  });
+  it('scrolls to an index', () => {
+    mountAutoSize({ template: customScrollableTemplate() }).then(
+      ({ fixture, component }) => {
+        fixture.detectChanges();
+        const viewportComponent = getViewportComponent(fixture);
+        viewportComponent.scrollToIndex(340);
+        const items = component.items as Item[];
+        const range = expectedRange(
+          { ...component, dynamicSize: () => component.tombstoneSize },
+          items,
+          340,
+          'down'
+        );
+        cy.get('@scrolledIndex').should('have.been.calledWith', 340);
+        cy.get('@viewRange').should('have.been.calledWith', range);
+      }
+    );
+  });
+});
+
+const windowScrollableTemplate = (
+  itemTemplate = `<div>{{ item.id }}</div><div *ngIf="item.description">{{item.description}}</div>`
+) => `
+  <div style="height: 50px;">
+      Content Before
+  </div>
+    <rx-virtual-scroll-viewport
+      scrollWindow
+      (scrolledIndexChange)="scrolledIndex.emit($event)"
+      (viewRange)="viewRange.emit($event)"
+      data-cy="viewport"
+      [runwayItems]="runwayItems"
+      [runwayItemsOpposite]="runwayItemsOpposite"
+      [tombstoneSize]="tombstoneSize"
+      autosize>
+      <div
+        [style.height.px]="dynamicSize(item)"
+        *rxVirtualFor="
+          let item of items;
+          renderCallback: renderCallback;
+          templateCacheSize: viewCache;
+          strategy: strategy;
+          trackBy: trackBy;
+        "
+        [attr.data-cy]="'item'"
+      >
+        ${itemTemplate}
+      </div>
+    </rx-virtual-scroll-viewport>
+  <div style="height: 50px;">Content After</div>
+`;
+describe('window scrolling', () => {
+  it('displays and positions items', () => {
+    let containerHeight = 0;
+    cy.window().then((w) => (containerHeight = w.innerHeight));
+    mountAutoSize({ template: windowScrollableTemplate() }).then(
+      ({ component }) => {
+        const items = component.items as Item[];
+        const range = expectedRange(
+          { ...component, containerHeight: containerHeight - 50 },
+          items,
+          0
+        );
+        cy.get('[data-cy=item]').should('have.length', range.end - range.start);
+        let position = 0;
+        cy.get('[data-cy=item]').each((element, i) => {
+          expect(element.css('position')).to.be.eq('absolute');
+          expect(element.attr('style')).to.contain(`translateY(${position}px)`);
+          position += defaultDynamicSize(items[i]);
+        });
+        cy.get('@scrolledIndex').should('have.been.calledWith', 0);
+        cy.get('@viewRange').should('have.been.calledWith', range);
+        cy.get('@renderCallback').should(
+          'have.been.calledWith',
+          items.filter((v, i) => i < range.end)
+        );
+      }
+    );
+  });
+  it('reacts to scroll events', () => {
+    let containerHeight = 0;
+    cy.window().then((w) => (containerHeight = w.innerHeight));
+    mountAutoSize({ template: windowScrollableTemplate(`{{ item.id }}`) }).then(
+      ({ fixture, component }) => {
+        const items = component.items as Item[];
+        fixture.detectChanges();
+        const viewportComponent = getViewportComponent(fixture);
+        const initialRange = expectedRange(
+          { ...component, containerHeight: containerHeight - 50 },
+          items,
+          0,
+          'up'
+        );
+        const renderedInitialItems = items.filter(
+          (v, i) => i < initialRange.end
+        );
+        cy.get('@renderCallback')
+          .should('have.been.calledWith', renderedInitialItems)
+          .then(() => {
+            const scrollToSomeWhere =
+              (items.length / 2) * component.tombstoneSize;
+            viewportComponent.scrollTo(scrollToSomeWhere);
+            cy.wait(200);
+            cy.get('@renderCallback')
+              .should('have.been.called')
+              .then(() => {
+                let position = 0;
+                cy.get('[data-cy=item]').each((element) => {
+                  const id = parseInt(element.text().trim());
+                  if (!position) {
+                    position = extractTranslateYValue(element.attr('style'));
+                  }
+                  const item = items[id];
+                  expect(element.attr('style')).contains(
+                    `translateY(${position}px)`
+                  );
+                  position += component.dynamicSize(item);
+                });
+              });
+          });
+      }
+    );
+  });
+  it('scrolls to an index', () => {
+    let containerHeight = 0;
+    cy.window().then((w) => (containerHeight = w.innerHeight));
+    mountAutoSize({ template: windowScrollableTemplate() }).then(
+      ({ fixture, component }) => {
+        fixture.detectChanges();
+        const viewportComponent = getViewportComponent(fixture);
+        viewportComponent.scrollToIndex(340);
+        const items = component.items as Item[];
+        const range = expectedRange(
+          {
+            ...component,
+            containerHeight,
+            dynamicSize: () => component.tombstoneSize,
+          },
+          items,
+          340,
+          'down'
+        );
+        cy.get('@scrolledIndex').should('have.been.calledWith', 340);
+        cy.get('@viewRange').should('have.been.calledWith', range);
+      }
+    );
   });
 });

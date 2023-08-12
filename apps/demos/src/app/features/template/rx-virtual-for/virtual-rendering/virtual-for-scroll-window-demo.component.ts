@@ -1,11 +1,13 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
+  inject,
   OnInit,
   QueryList,
   TemplateRef,
@@ -30,6 +32,7 @@ import {
   shareReplay,
   startWith,
   withLatestFrom,
+  tap,
 } from 'rxjs/operators';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
@@ -162,10 +165,14 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
               <span *rxLet="rxaScrolledIndex$; let idx">{{ idx }}</span>
             </div>
           </div>
-          <ng-container *rxLet="rxVirtualForState$; let state">
+          <ng-container
+            *rxLet="rxVirtualForState$; let state; strategy: 'native'"
+            [ngSwitch]="state.scrollStrategy"
+          >
             <rx-virtual-scroll-viewport
+              scrollWindow
               (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
-              *ngIf="state.scrollStrategy === 'fixed'"
+              *ngSwitchCase="'fixed'"
               [itemSize]="itemSize"
               [runwayItemsOpposite]="state.runwayItemsOpposite"
               [runwayItems]="state.runwayItems"
@@ -186,7 +193,8 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
               </div>
             </rx-virtual-scroll-viewport>
             <rx-virtual-scroll-viewport
-              *ngIf="state.scrollStrategy === 'auto'"
+              scrollWindow
+              *ngSwitchCase="'auto'"
               (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
               autosize
               withSyncScrollbar
@@ -233,7 +241,8 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
               </div>
             </rx-virtual-scroll-viewport>
             <rx-virtual-scroll-viewport
-              *ngIf="state.scrollStrategy === 'dynamic'"
+              scrollWindow
+              *ngSwitchCase="'dynamic'"
               (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
               [dynamic]="dynamicSize"
               [runwayItemsOpposite]="state.runwayItemsOpposite"
@@ -288,6 +297,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
           </div>
           <ng-container *rxLet="scrollStrategy$; let viewMode">
             <cdk-virtual-scroll-viewport
+              scrollWindow
               (scrolledIndexChange)="cdkScrolledIndex$.next($event)"
               *ngIf="viewMode === 'fixed'"
               class="viewport"
@@ -309,6 +319,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
               *ngIf="viewMode === 'auto'"
               class="viewport"
               autosize
+              scrollWindow
             >
               <div
                 *cdkVirtualFor="
@@ -329,9 +340,6 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
   styles: [
     `
       :host {
-      }
-      .viewport {
-        height: 550px;
       }
       .item {
         width: 250px;
@@ -357,7 +365,9 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
   providers: [RxState],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VirtualForTestComponent implements OnInit, AfterViewInit {
+export class VirtualForScrollWindowDemoComponent
+  implements OnInit, AfterViewInit
+{
   @ViewChild(ArrayProviderComponent)
   arrayProvider: ArrayProviderComponent;
 
@@ -395,31 +405,13 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
   renderedItems$ = this.rendered.pipe(
     map(
       () =>
-        this.virtualViewport.scrollContainer().querySelectorAll('.item').length
+        this.virtualViewport['elementRef'].nativeElement.querySelectorAll(
+          '.item'
+        ).length
     )
   );
 
-  data$ = defer(() =>
-    this.afterViewInit$.pipe(
-      switchMap(() =>
-        this.arrayProvider.array$.pipe(
-          map((values) =>
-            values.map((item) => {
-              let content = this.contentCache[item.id];
-              if (!content) {
-                content = this.randomContent();
-                this.contentCache[item.id] = content;
-              }
-              return {
-                ...item,
-                content,
-              };
-            })
-          )
-        )
-      )
-    )
-  ).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
+  data$ = this.state.select('data');
 
   extractSize = (entries: ResizeObserverEntry) =>
     entries.borderBoxSize[0].blockSize;
@@ -455,6 +447,7 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
 
   constructor(
     public state: RxState<{
+      data: any[];
       runwayItems: number;
       runwayItemsOpposite: number;
       scrollStrategy: 'fixed' | 'auto' | 'dynamic';
@@ -464,13 +457,36 @@ export class VirtualForTestComponent implements OnInit, AfterViewInit {
       runwayItems: 20,
       runwayItemsOpposite: 5,
       scrollStrategy: 'fixed',
+      data: [],
+    });
+    const doc = inject(DOCUMENT);
+    doc.documentElement.classList.add('window-scrolling');
+    inject(DestroyRef).onDestroy(() => {
+      doc.documentElement.classList.remove('window-scrolling');
     });
   }
 
   ngOnInit() {}
 
   ngAfterViewInit() {
-    this.afterViewInit$.next();
+    this.state.connect(
+      'data',
+      this.arrayProvider.array$.pipe(
+        map((values) =>
+          values.map((item) => {
+            let content = this.contentCache[item.id];
+            if (!content) {
+              content = this.randomContent();
+              this.contentCache[item.id] = content;
+            }
+            return {
+              ...item,
+              content,
+            };
+          })
+        )
+      )
+    );
   }
 
   scrollToIndex(index: string): void {

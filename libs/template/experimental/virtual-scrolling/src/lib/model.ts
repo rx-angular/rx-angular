@@ -1,5 +1,6 @@
 import {
   Directive,
+  ElementRef,
   EmbeddedViewRef,
   NgIterable,
   TemplateRef,
@@ -115,6 +116,8 @@ export abstract class RxVirtualScrollViewport {
   abstract containerRect$: Observable<{ height: number; width: number }>;
   abstract getScrollTop(): number;
   abstract scrollTo(scrollTo: number, behavior?: ScrollBehavior): void;
+  abstract getScrollElement(): HTMLElement;
+  abstract measureOffset(): number;
 }
 
 /** @internal */
@@ -147,4 +150,11 @@ export class RxVirtualForViewContext<
   constructor(item: T, public rxVirtualForOf: U, customProps?: C) {
     super(item, customProps);
   }
+}
+
+@Directive()
+export abstract class RxVirtualScrollElement {
+  abstract elementScrolled$: Observable<void>;
+  abstract getElementRef(): ElementRef<HTMLElement>;
+  abstract measureOffset(): number;
 }
