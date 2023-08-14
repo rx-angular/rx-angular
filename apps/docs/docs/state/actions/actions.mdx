@@ -354,6 +354,7 @@ type ListUi = { searchInput: string };
 })
 class ListComponent {
   protected ui = rxActions<ListUi>(({ transforms }) =>
+    // if event is forwarded pluck the value `e?.target?.value` else forward the value as is
     transforms({ searchInput: eventValue })
   );
 

@@ -5,7 +5,12 @@ import {
   RxActions,
   SubjectMap,
 } from './types';
-import { DestroyRef, ErrorHandler, inject } from '@angular/core';
+import {
+  assertInInjectionContext,
+  DestroyRef,
+  ErrorHandler,
+  inject,
+} from '@angular/core';
 import { actionProxyHandler } from './proxy';
 
 /**
@@ -55,6 +60,9 @@ export function rxActions<
   T extends Partial<Actions>,
   U extends ActionTransforms<T> = {}
 >(setupFn?: (cfg: { transforms: (t: U) => void }) => void): RxActions<T, U> {
+  // Assert rxAction usage
+  assertInInjectionContext(rxActions);
+
   const subjectMap: SubjectMap<T> = {} as SubjectMap<T>;
   const effectMap: EffectMap<T> = {} as EffectMap<T>;
   const errorHandler = inject(ErrorHandler);

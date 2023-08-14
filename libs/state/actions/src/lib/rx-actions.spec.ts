@@ -194,6 +194,10 @@ describe('actions fn', () => {
       new Error('something went wrong')
     );
   });
+
+  it('should throw if called outside of injection context', () => {
+    expect(() => rxActions<Actions>()).not.toThrow('');
+  });
 });
 
 type Actions = { prop: string; prop2: string; search: string; resize: number };
