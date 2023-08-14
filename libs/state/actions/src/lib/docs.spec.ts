@@ -1,24 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  Component,
-  inject,
-  Injectable,
-  InjectionToken,
-  Output,
-  Provider,
-} from '@angular/core';
+import { Component, inject, Injectable, Output } from '@angular/core';
 import { rxActions } from './rx-actions';
 import { eventValue } from './transforms';
 import { ActionTransforms } from '@rx-angular/state/actions';
-import {
-  debounceTime,
-  exhaustMap,
-  Observable,
-  timer,
-  map,
-  Subject,
-  of,
-} from 'rxjs';
+import { debounceTime, exhaustMap, Observable, Subject, of } from 'rxjs';
 import { wait } from 'nx-cloud/lib/utilities/waiter';
 import { take } from 'rxjs/operators';
 

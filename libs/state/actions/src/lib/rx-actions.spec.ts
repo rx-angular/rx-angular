@@ -1,5 +1,3 @@
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { mockConsole } from '@test-helpers';
 import { rxActions } from './rx-actions';
 import { debounceTime, isObservable } from 'rxjs';
 import { Component, ErrorHandler, Provider } from '@angular/core';
@@ -7,8 +5,6 @@ import { TestBed } from '@angular/core/testing';
 import { ActionTransforms } from '@rx-angular/state/actions';
 
 describe('actions fn', () => {
-  beforeAll(() => mockConsole());
-
   it('should get created properly', () => {
     const { component } = setupComponent<Actions>();
     expect(typeof component.actions.prop).toBe('function');
@@ -196,7 +192,7 @@ describe('actions fn', () => {
   });
 
   it('should throw if called outside of injection context', () => {
-    expect(() => rxActions<Actions>()).not.toThrow('');
+    expect(() => rxActions<Actions>()).toThrow('');
   });
 });
 
