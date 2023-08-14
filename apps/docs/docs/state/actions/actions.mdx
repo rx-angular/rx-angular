@@ -49,27 +49,6 @@ export class AnyComponent {
 }
 ```
 
-### Basic usage in a Component
-
-# Actions
-
-Primitive building block to handle event logic and event creation.
-It is imported via `import { rxActions } from '@rx-angular/state/actions';`
-
-The action automatically creates an Observable and a callback function for imperative programming based on the types. It also has a new shorthand to tie the event changes to a side effect.
-
-```typescript
-import { rxActions } from '@rx-angular/state/actions';
-
-@Component({...})
-export class AnyComponent {
-  ui = rxActions<{ name: string }>();
-  name$ = this.ui.name$; // Observable<string> - listens to name changes
-  emitName = this.ui.name; // (name: string) => void - emits name change
-  sub = this.ui.onName(console.log) // () => void - when called stops the side effect execution
-}
-```
-
 ## Usage in component to handle UI interaction
 
 This example shows how to create an action instance for the components template.
@@ -81,13 +60,66 @@ import { rxActions } from '@rx-angular/state/actions';
 type ListUi = { searchInput: string };
 
 @Component({
-  template: ` <input name="search" (change)="ui.searchInput($event)" /> `,
+  template: `<input name="search" (change)="ui.searchInput($event)" />`,
 })
 class ListComponent {
   protected ui = rxActions<ListUi>();
   // UI input with applied behaviour
-  query$ = this.ui.searchInput$.pipe(debounceTime(300));
+  @Output()
+  queryUpdate$ = this.ui.searchInput$.pipe(debounceTime(300));
 }
+```
+
+### Test usage in component to handle UI interaction
+
+```typescript
+import { ListComponent } from './list.component';
+
+function setupComponent(cfg?: {
+  transformFns?: ActionTransforms<ListUi>;
+  providers?: Provider[];
+}) {
+  let providers = [];
+  if (Array.isArray(cfg?.providers)) {
+    providers = cfg.providers;
+  }
+  TestBed.configureTestingModule({
+    declarations: [ListComponent],
+  });
+
+  const fixture = TestBed.createComponent(ListComponent);
+  const component = fixture.componentInstance;
+
+  const searchInputElem: HTMLInputElement = fixture.nativeElement.querySelector(
+    'input[name="search"]'
+  );
+  const searchInputChange = (value: string) => {
+    searchInputElem.value = value;
+    searchInputElem.dispatchEvent(new Event('change'));
+  };
+
+  return { fixture, component, searchInputChange };
+}
+
+describe('actions in a component', () => {
+  it('should emit event if input fires change event', async () => {
+    const { component, fixture, searchInputChange } = setupComponent();
+    const spyEmission = jest.fn((value: ListUi['searchInput']) => void 0);
+
+    component.queryUpdate$.subscribe(spyEmission);
+    expect(spyEmission).toBeCalledTimes(0);
+
+    searchInputChange('abc');
+    expect(spyEmission).toBeCalledTimes(0); // should debounce emission
+    await wait(310);
+    expect(spyEmission).toBeCalledTimes(1); // then fire
+    expect(spyEmission).toBeCalledWith('abc'); // with value
+
+    fixture.destroy(); // should unsubscribe onDestroy
+    searchInputChange('xyz');
+    expect(spyEmission).toBeCalledTimes(1); // and not listening anymore
+  });
+});
 ```
 
 ## Usage in a service to handle data fetching
@@ -102,14 +134,62 @@ type Actions = { refresh: void };
 
 @Injectable({ providedIn: 'root' })
 export class MovieService {
+  private movieResource = inject(MovieResource);
   private actions = rxActions<Actions>();
   // data refresh with applied behaviour
-  movies$ = this.actions.refresh$.pipe(exhaustMap((_) => getMovies()));
+  movies$ = this.actions.refresh$.pipe(
+    exhaustMap((_) => this.movieResource.getMovies())
+  );
 
   refresh() {
     this.actions.refresh();
   }
 }
+```
+
+### Testing usage in a service to handle data fetching
+
+To test actions in a service most of the time mock logic is required.
+
+```typescript
+import { MovieResource } from './movie.resource';
+import { MovieService } from './movie.service';
+
+// Test helper code ==========
+
+export class MovieResourceMock {
+  httpRequest = new Subject<Movie[]>();
+  getMovies(qurey?: string): Observable<Movie[]> {
+    return this.httpRequest.pipe(take(1));
+  }
+}
+
+function setupService() {
+  TestBed.overrideProvider(MovieResource, {
+    useFactory: () => new MovieResourceMock(),
+  });
+
+  const service = TestBed.inject(MovieService);
+  const resource = TestBed.inject(MovieResource) as MovieResourceMock;
+  return { service, resource };
+}
+
+// Test code ==========
+
+describe('actions in a service', () => {
+  it('should emit event if method is called', async () => {
+    const { service, resource } = setupService();
+    const spyEmission = jest.fn((value: Movie[]) => void 0);
+
+    service.movies$.subscribe(spyEmission);
+    service.refresh();
+    service.refresh(); // multiple triggers
+    expect(spyEmission).toBeCalledTimes(0); // don't fire new http requests while old one is running
+    resource.httpRequest.next([{ title: 'test' }]); // simulate response
+    expect(spyEmission).toBeCalledTimes(1); // response arrived 1 time
+    expect(spyEmission).toBeCalledWith([{ title: 'test' }]); // with simulated result
+  });
+});
 ```
 
 ## Handling side effects on event emission
@@ -120,44 +200,80 @@ It returns a function which when called stops firing the side effect.
 ```typescript
 import { rxActions } from '@rx-angular/state/actions';
 
-type EditUi = { save: void };
+type ListUi = { refresh: string };
 
 @Component({
-  template: ` <button (click)="editUi.save($event)" /> `,
+  template: `<button (click)="editUi.refresh($event)">Refresh</button>`,
 })
 class ListComponent {
-  protected editUi = rxActions<EditUi>();
-  private saveObsEf = this.editUi.onSearchInput(
-    (searchInput$) => searchInput$.pipe(debounceTime(300)), // apply behaviour
-    (q: string) => this.state.search(q) // fire side effect
-  );
+  protected ui = rxActions<ListUiEf>();
+  protected movieResource = inject(MovieResource);
+  protected toastService = inject(ToastService);
 
-  // It is also possible to use tap, however this is not recommended to do
-  private saveObsEf2 = this.editUi.onSearchInput((query$) =>
-    query$.pipe(
-      debounceTime(300), // apply behaviour
-      tap((q: string) => this.state.search(q)) // fire side effect
-    )
+  private saveObsEf = this.ui.onRefresh(
+    (save$) => save$.pipe(exhaustMap((_) => this.movieResource.getMovies())), // apply behaviour
+    () => this.toastService.showSuccess('Refresh done!') // fire side effect
   );
 }
 ```
 
-### Unsubscribe from events programmatically
+### Test handling side effects on event emission
+
+```typescript
+// Test helper code ==========
+
+function getEfComponentAndService(cfg?: {
+  transformFns?: ActionTransforms<ListUi>;
+}) {
+  TestBed.configureTestingModule({ declarations: [ListEfComponent] });
+  TestBed.overrideProvider(MovieResource, {
+    useFactory: () => new MovieResourceMock(),
+  });
+
+  const resource = TestBed.inject(MovieResource) as MovieResourceMock;
+  const toast = TestBed.inject(ToastService);
+
+  const fixture = TestBed.createComponent(ListEfComponent);
+  const component = fixture.componentInstance;
+
+  const refreshButtonElem: HTMLInputElement =
+    fixture.nativeElement.querySelector('button');
+  const refreshClick = () => {
+    refreshButtonElem.dispatchEvent(new Event('click'));
+  };
+
+  return { fixture, component, refreshClick, resource, toast };
+}
+
+// Test code ==========
+
+describe('action effect in a Component', () => {
+  it('should emit event if method is called', async () => {
+    const { refreshClick, resource, toast } = getEfComponentAndService();
+    const spyToast = jest.spyOn(toast, 'showSuccess');
+
+    refreshClick();
+    refreshClick(); // multiple triggers
+    expect(spyToast).toBeCalledTimes(0); // don't fire new http requests while old one is running
+    resource.httpResponse.next([{ title: 'test' }]);
+    expect(spyToast).toBeCalledTimes(1); // response arrived 1 time
+    expect(spyToast).toBeCalledWith('Refresh done!'); // with simulated result
+  });
+});
+```
+
+## Unsubscribing from events programmatically
 
 ```typescript
 import { rxActions } from '@rx-angular/state/actions';
 
-type EditUi = { save: void };
-
-@Component({
-  template: ` <button (click)="editUi.save($event)" /> `,
-})
+@Component(...)
 class ListComponent {
-  protected editUi = rxActions<EditUi>();
-  private saveObsEf = this.editUi.onSearchInput(
-    (searchInput$) => searchInput$.pipe(debounceTime(300)), // apply behaviour
-    (q: string) => this.state.search(q) // fire side effect
-  );
+  protected ui = rxActions<ListUi>();
+   private saveObsEf = this.ui.onSave(
+      (save$) => save$.pipe(exhaustMap(_ => this.movieService.refresh(q)), // apply behaviour
+      (list: Movie[]) => this.toastService.showSuccess(list) // fire side effect
+    );
 
   stopListenToClick() {
     this.saveObsEf();
@@ -165,7 +281,46 @@ class ListComponent {
 }
 ```
 
+### Test unsubscribing from events programmatically
+
+```typescript
+// Test code ==========
+
+describe('action effect in a Component', () => {
+  it('should emit event if method is called', async () => {
+    const { refreshClick, resource, toast } = getEfComponentAndService();
+    const spyToast = jest.spyOn(toast, 'showSuccess');
+
+    refreshClick();
+    refreshClick(); // multiple triggers
+    expect(spyToast).toBeCalledTimes(0); // don't fire new http requests while old one is running
+    resource.httpResponse.next([{ title: 'test' }]);
+    expect(spyToast).toBeCalledTimes(1); // response arrived 1 time
+    expect(spyToast).toBeCalledWith('Refresh done!'); // with simulated result
+  });
+});
+```
+
 ## Transform events in a central place
+
+```typescript
+export class MovieServiceMock {
+  httpRequest = new Subject<Movie[]>();
+  getMovies(qurey?: string): Observable<Movie[]> {
+    return this.httpRequest.pipe(take(1));
+  }
+}
+
+function setupService() {
+  TestBed.overrideProvider(MovieResource, {
+    useFactory: () => new MovieResourceMock(),
+  });
+
+  const service = TestBed.inject(MovieService);
+  const resource = TestBed.inject(MovieResource) as MovieResourceMock;
+  return { service, resource };
+}
+```
 
 Often we process `Events` from the template and occasionally also trigger those channels in the class programmatically.
 
@@ -198,8 +353,8 @@ type ListUi = { searchInput: string };
   template: `<input name="search" (change)="ui.searchInput($event)" />`,
 })
 class ListComponent {
-  protected ui = rxActions<ListUi>(({ transform }) =>
-    transform({ searchInput: eventValue })
+  protected ui = rxActions<ListUi>(({ transforms }) =>
+    transforms({ searchInput: eventValue })
   );
 
   searchChange(query: string) {
@@ -209,12 +364,14 @@ class ListComponent {
 }
 ```
 
-## Use custom transform functions
+### Use custom transform functions
 
 ```typescript
 import { rxActions, eventValue } from '@rx-angular/state/actions';
 
 type ListUi = { searchInput: string };
+
+const codeTransform = (v) => parseInt(eventValue(v)) + '#POSTFIX';
 
 @Component({
   // takes a DOM Event
@@ -227,7 +384,7 @@ type ListUi = { searchInput: string };
 class ListComponent {
   protected ui = rxActions<ListUi>(({ transform }) =>
     transform({
-      codeChange: (v) => Number(eventValue(v)) + '#POSTFIX',
+      codeChange: codeTransform,
     })
   );
 
@@ -236,4 +393,43 @@ class ListComponent {
     this.ui.codeChange(query);
   }
 }
+```
+
+### Test transform functions
+
+```typescript
+// Test helper code ==========
+
+function getTransformComponentAndService() {
+  TestBed.configureTestingModule({ declarations: [ListTransformComponent] });
+  const fixture = TestBed.createComponent(ListTransformComponent);
+  const component = fixture.componentInstance;
+
+  const searchInputElem: HTMLInputElement = fixture.nativeElement.querySelector(
+    'input[name="search"]'
+  );
+  const searchInputChange = (value: string) => {
+    searchInputElem.value = value;
+    searchInputElem.dispatchEvent(new Event('change'));
+  };
+
+  return { component, searchInputChange };
+}
+
+// Test code ==========
+
+describe('action transform in a component', () => {
+  it('should emit event if method is called', async () => {
+    const { searchInputChange, component } = getTransformComponentAndService();
+    const spyEmission = jest.fn(() => void 0);
+
+    component.queryUpdate.subscribe(spyEmission);
+    searchInputChange('1.5');
+    expect(spyEmission).toBeCalledTimes(1);
+    expect(spyEmission).toBeCalledWith('1#POSTFIX');
+    component.searchChange('2.5');
+    expect(spyEmission).toBeCalledTimes(2);
+    expect(spyEmission).toBeCalledWith('2#POSTFIX');
+  });
+});
 ```

@@ -1,5 +1,5 @@
 import { ErrorHandler } from '@angular/core';
-import { merge, Subject } from 'rxjs';
+import { merge, OperatorFunction, Subject } from 'rxjs';
 import { EffectMap, KeysOf, RxActions, SubjectMap, ValuesOf } from './types';
 
 /**
@@ -72,8 +72,11 @@ export function actionProxyHandler<T extends object, U extends object>({
       // the user wants to get a single EventEmitter and trigger a side effect on event emission
       if (prop.toString().startsWith('on')) {
         const propName = prop.toString().slice(2).toLowerCase() as KeysOfT;
-        return (sf: (v: T[KeysOfT]) => void) => {
-          const sub = getEventEmitter(propName).subscribe(sf);
+        return (
+          behaviour: OperatorFunction<T[KeysOfT], T[KeysOfT]>,
+          sf: (v: T[KeysOfT]) => void
+        ) => {
+          const sub = getEventEmitter(propName).pipe(behaviour).subscribe(sf);
           effectMap[propName] = sub;
           return () => sub.unsubscribe();
         };

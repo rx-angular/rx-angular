@@ -1,7 +1,7 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { mockConsole } from '@test-helpers';
 import { rxActions } from './rx-actions';
-import { isObservable } from 'rxjs';
+import { debounceTime, isObservable } from 'rxjs';
 import { Component, ErrorHandler, Provider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActionTransforms } from '@rx-angular/state/actions';
@@ -30,12 +30,10 @@ describe('actions fn', () => {
 
   it('should maintain channels per create call', (done) => {
     const values = 'foo';
-    const nextSpy = jest.spyOn({ nextSpy: (_: string) => void 0 }, 'nextSpy');
+    const nextSpy = jest.fn((_: string) => void 0);
     const exp = values;
     const { component } = setupComponent<Actions>();
-    component.actions2.prop$.subscribe(
-      nextSpy as unknown as (_: string) => void
-    );
+    component.actions2.prop$.subscribe(nextSpy);
     component.actions.prop$.subscribe((result) => {
       expect(result).toBe(exp);
       done();
@@ -93,50 +91,51 @@ describe('actions fn', () => {
   it('should trigger side effect', () => {
     const { component } = setupComponent<Actions>();
     const t = { se: () => void 0 };
-    const spyT = jest.spyOn({ spyT: (_: any) => void 0 }, 'spyT') as any;
+    const dummyBehaviour = (o$) => o$;
+    const spyT = jest.fn((_: any) => void 0);
 
-    const sub = component.actions.onProp(spyT);
+    const sub = component.actions.onProp(dummyBehaviour, spyT);
     component.actions.prop('p');
     expect(spyT).toBeCalledTimes(1);
     expect(spyT).toBeCalledWith('p');
   });
 
-  it('should not trigger side effect after unsubscribed', () => {
+  it('should apply behaviour to trigger', () => {
     const { component } = setupComponent<Actions>();
     const t = { se: () => void 0 };
-    const spyT = jest.spyOn({ spyT: (_: any) => void 0 }, 'spyT') as any;
+    const dummyBehaviour = (o$) => o$.pipe(debounceTime(30));
+    const spyT = jest.fn((_: any) => void 0);
 
-    const sub = component.actions.onProp(spyT);
-    sub();
+    const sub = component.actions.onProp(dummyBehaviour, spyT);
     component.actions.prop('p');
-    expect(spyT).toBeCalledTimes(1);
+    expect(5).toBe(6);
+  });
+
+  it('should not trigger side effect after unsubscribed', () => {
+    const { component, fixture } = setupComponent<Actions>();
+    const t = { se: () => void 0 };
+    const dummyBehaviour = (o$) => o$;
+    const spyT = jest.fn((_: any) => void 0);
+
+    const unsub = component.actions.onProp(dummyBehaviour, spyT);
+    unsub(); // stop listening to the emissions
+    component.actions.prop('p');
+    expect(spyT).toBeCalledTimes(0);
   });
 
   it('should destroy all created actions and subscriptions on component destroy', (done) => {
-    const spyEmission = jest.spyOn(
-      { spyEmission: (_: any) => void 0 },
-      'spyEmission'
-    ) as any;
-    const spyEffect = jest.spyOn(
-      { spyEffect: (_: any) => void 0 },
-      'spyEffect'
-    ) as any;
-    const spyEmission2 = jest.spyOn(
-      { spyEmission2: (_: any) => void 0 },
-      'spyEmission2'
-    ) as any;
-    const spyEffect2 = jest.spyOn(
-      { spyEffect2: (_: any) => void 0 },
-      'spyEffect2'
-    ) as any;
+    const dummyBehaviour = (o$) => o$;
+    const spyEmission = jest.fn((_: any) => void 0);
+    const spyEffect = jest.fn((_: any) => void 0);
+    const spyEmission2 = jest.fn((_: any) => void 0);
+    const spyEffect2 = jest.fn((_: any) => void 0);
 
     const { component, fixture } = setupComponent<Actions>();
-
     component.actions.prop$.subscribe(spyEmission);
     component.actions2.prop$.subscribe(spyEmission2);
 
-    const ef = component.actions.onProp(spyEffect);
-    const ef2 = component.actions2.onProp(spyEffect2);
+    const ef = component.actions.onProp(dummyBehaviour, spyEffect);
+    const ef2 = component.actions2.onProp(dummyBehaviour, spyEffect2);
 
     expect(spyEmission).toBeCalledTimes(0);
     expect(spyEffect).toBeCalledTimes(0);
@@ -148,7 +147,7 @@ describe('actions fn', () => {
     expect(spyEffect).toBeCalledTimes(1);
 
     expect(spyEmission2).toBeCalledTimes(1);
-    expect(spyEffect).toBeCalledTimes(1);
+    expect(spyEffect2).toBeCalledTimes(1);
 
     fixture.destroy();
     component.actions.prop('');

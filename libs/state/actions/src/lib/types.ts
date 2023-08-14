@@ -1,4 +1,4 @@
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, OperatorFunction, Subject, Subscription } from 'rxjs';
 
 export type ValuesOf<O> = O[keyof O];
 // type Keys = KeysOf<{ a: string, b: number }>; // "a" | "b"
@@ -48,9 +48,10 @@ export type ActionObservables<T extends Actions> = {
   [K in ExtractString<T> as `${K}$`]: Observable<InstanceOrType<T[K]>>;
 };
 
-export type ActionEffects<T extends Actions> = {
+export type ActionEffects<T extends Actions, O = T> = {
   [K in ExtractString<T> as `on${Capitalize<K>}`]: (
-    sideEffectFn: (value: T[K]) => void
+    fn: OperatorFunction<T[K], T[K] | any>,
+    sideEffectFn: (value: T[K] | any) => void
   ) => () => void;
 };
 
