@@ -22,6 +22,8 @@ import { DestroyProp, OnDestroy$ } from './model';
 import { toHook, untilDestroyed } from './utils';
 
 /**
+ * @deprecated - use rxEffects instead
+ *
  * Reduces subscription boilerplate for performing observable-based side-effects in components.
  *
  * Before:

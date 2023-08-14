@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RxEffects } from '@rx-angular/state/effects';
 import { of, tap } from 'rxjs';
-import { rxEffects, RxEffectsSetupFn } from '../src/lib/effects';
+import { rxEffects, RxEffectsSetupFn } from './effects';
 
 describe(rxEffects, () => {
   it('should create RxEffects instance', () => {
