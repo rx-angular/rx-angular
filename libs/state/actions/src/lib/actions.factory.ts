@@ -1,13 +1,7 @@
 import { ErrorHandler, inject, Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { actionProxyHandler } from './proxy';
-import {
-  Actions,
-  ActionTransforms,
-  EffectMap,
-  RxActions,
-  ValuesOf,
-} from './types';
+import { Actions, ActionTransforms, EffectMap, RxActions } from './types';
 
 type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
 
@@ -15,14 +9,17 @@ type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
  * @deprecated - use rxActions instead
  *
  * This class creates RxActions bound to Angular's DI life-cycles. This prevents memory leaks and optionally makes the instance reusable across the app.
- * The main function here is called `create`, optionally you can also call `destroy` to complete all action channels.
+ * The function has to be used inside an injection context.
  * If the consumer gets destroyed also the actions get destroyed automatically.
  *
  * @example
- * const factory = new RxActionFactory<{search: string}>();
- * const actions = factory.create();
- * actions.search('');
- * actions.search$.subscribe();
+ * @Component({
+ *   standalone: true,
+ *   template: `...`,
+ * })
+ * export class AnyComponent {
+ *   ui = rxActions<{search: string, refresh: void}>();
+ * }
  */
 @Injectable()
 export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
