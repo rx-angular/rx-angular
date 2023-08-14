@@ -1,12 +1,12 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { RxState } from '@rx-angular/state';
+import { RxState } from '../src/lib/rx-state.service';
 import { select } from '@rx-angular/state/selections';
 import {
   initialNestedState,
   initialPrimitiveState,
   jestMatcher,
   PrimitiveState,
-} from '@test-helpers';
+} from '@test-helpers/rx-angular';
 import { of, scheduled, Subject } from 'rxjs';
 import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';

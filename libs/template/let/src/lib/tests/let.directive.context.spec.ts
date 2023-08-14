@@ -11,7 +11,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { mockConsole } from '@test-helpers';
+import { mockConsole } from '@test-helpers/rx-angular';
 import {
   BehaviorSubject,
   EMPTY,

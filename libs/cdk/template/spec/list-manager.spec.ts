@@ -22,7 +22,7 @@ import {
   RxListViewContext,
 } from '@rx-angular/cdk/template';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { mockConsole } from '@test-helpers';
+import { mockConsole } from '@test-helpers/rx-angular';
 import { ReplaySubject } from 'rxjs';
 
 @Component({

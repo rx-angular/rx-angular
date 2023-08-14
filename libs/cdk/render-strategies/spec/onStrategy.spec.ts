@@ -1,5 +1,5 @@
 import { TestScheduler } from 'rxjs/testing';
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from '@test-helpers/rx-angular';
 import {
   onStrategy,
   RX_NATIVE_STRATEGIES,

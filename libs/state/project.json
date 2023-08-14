@@ -74,28 +74,7 @@
       }
     },
     "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npm publish dist/libs/state"
-          }
-        ]
-      },
-      "dependsOn": [
-        {
-          "target": "lint"
-        },
-        {
-          "target": "test"
-        },
-        {
-          "target": "version"
-        },
-        {
-          "target": "build"
-        }
-      ]
+      "command": "npm publish dist/libs/state"
     },
     "version": {
       "executor": "@jscutlery/semver:version",

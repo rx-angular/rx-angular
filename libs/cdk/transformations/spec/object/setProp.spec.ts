@@ -1,5 +1,10 @@
 import { setProp } from '@rx-angular/cdk/transformations';
-import { initialNestedState, initialPrimitiveState, NestedState, PrimitiveState } from '@test-helpers';
+import {
+  initialNestedState,
+  initialPrimitiveState,
+  NestedState,
+  PrimitiveState,
+} from '@test-helpers/rx-angular';
 
 let primitiveState: PrimitiveState;
 let nestedState: NestedState;
