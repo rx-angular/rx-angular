@@ -327,7 +327,7 @@ Often we process `Events` from the template and occasionally also trigger those 
 This leads to a cluttered codebase as we have to consider first the value in the event which leads to un necessary and repetitive code in the template.
 This is also true for the programmatic usage in the component class or a service.
 
-To ease this pain we can manage this login with `transforms`.
+By using the `transformations` API, we can preconfigure how our input events are mapped to actual values in a single place.
 
 You can write your own transforms, leverage Browser APIs like `String` and `Boolean` or use the predefined functions.
 
