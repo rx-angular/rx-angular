@@ -12,6 +12,8 @@ import {
 type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
 
 /**
+ * @deprecated - use rxActions instead
+ *
  * This class creates RxActions bound to Angular's DI life-cycles. This prevents memory leaks and optionally makes the instance reusable across the app.
  * The main function here is called `create`, optionally you can also call `destroy` to complete all action channels.
  * If the consumer gets destroyed also the actions get destroyed automatically.
