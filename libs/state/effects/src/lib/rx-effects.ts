@@ -4,10 +4,13 @@ import {
   ErrorHandler,
   inject,
 } from '@angular/core';
-import { from, of, Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { SideEffectFnOrObserver, SideEffectObservable } from './types';
 
-type RxEffects = {};
+type RxEffects<T> = {
+  register: RegisterFn<T>;
+  onCleanup: OnCleanupFn<T>;
+};
 type RegisterFn<T> = (
   observable: SideEffectObservable<T>,
   sideEffectOrObserver?: SideEffectFnOrObserver<T>
@@ -53,7 +56,7 @@ export type RxEffectsSetupFn<T> = (cfg: {
  * @docsPage RxEffects
  *
  */
-export function rxEffects<T>(setupFn?: RxEffectsSetupFn<T>): RxEffects {
+export function rxEffects<T>(setupFn?: RxEffectsSetupFn<T>): RxEffects<T> {
   assertInInjectionContext(rxEffects);
   const errorHandler = inject(ErrorHandler, { optional: true });
   const destroyRef = inject(DestroyRef);
