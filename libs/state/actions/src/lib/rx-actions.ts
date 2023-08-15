@@ -14,46 +14,33 @@ import {
 import { actionProxyHandler } from './proxy';
 
 /**
- * Returns a object based off of the provided typing with a separate setter `[prop](value: T[K]): void` and observable stream `[prop]$: Observable<T[K]>`;
- *
- * { search: string } => { search$: Observable<string>, search: (value: string) => void;}
+ * Manage events in components and services in a single place
  *
  * @example
  *
- * interface UIActions {
+ * interface UI {
  *  search: string,
  *  submit: void
  * };
  *
- * const actions = new RxActionFactory<UIActions>().create();
+ * import { rxActions } from '@rx-angular/state/actions';
  *
- * actions.search($event.target.value);
- * actions.search$.subscribe();
+ * @Component({...})
+ * export class Component {
+ *   ui = rxActions<{ name: string }>(({transforms}) => transforms({name: v => v}));
  *
- * As it is well typed the following things would not work:
- * actions.submit('not void'); // not void
- * actions.search(); // requires an argument
- * actions.search(42); // not a string
- * actions.search$.error(new Error('traraaa')); // not possible by typings as well as in code
- * actions.search = "string"; // not a setter. the proxy will throw an error pointing out that you have to call it
+ *   name$ = this.ui.name$; // Observable<string> - listens to name changes
+ *   emitName = this.ui.name; // (name: string) => void - emits name change
+ *   sub = this.ui.onName(o$ => o$.pipe(), console.log) // () => void - stops side effect
  *
- * @param transforms - A map of transform functions to apply on transformations to actions before emitting them.
- * This is very useful to clean up bloated templates and components. e.g. `[input]="$event?.target?.value"` => `[input]="$event"`
- *
- * @example
- * function coerceSearchActionParams(e: Event | string | number): string {
- *   if(e?.target?.value !== undefined) {
- *      return e?.target?.value + ''
+ *   onInit() {
+ *     const name$ = this.ui.name$; // Observable<string> - listens to name changes
+ *     const emitName = this.ui.name; // (name: string) => void - emits name change
+ *     const stop = this.ui.onName(o$ => o$.pipe(), console.log) // () => void - stops side effect
+ *     stop();
  *   }
- *   return e + '';
- * }
- * const actions = getActions<search: string, submit: void>({search: coerceSearchActionParams, submit: (v: any) => void 0;});
  *
- * actions.search($event);
- * actions.search('string');
- * actions.search(42);
- * actions.submit('not void'); // does not error anymore
- * actions.search$.subscribe(); // string Observable
+ * }
  *
  */
 export function rxActions<
