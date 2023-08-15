@@ -1,6 +1,6 @@
 import { rxEffects } from '@rx-angular/state/effects';
 import { Component, inject, Injectable, InjectionToken } from '@angular/core';
-import { of, timer } from 'rxjs';
+import { debounceTime, of, Subject, timer } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
 import { wait } from 'nx-cloud/lib/utilities/waiter';
 
@@ -9,43 +9,35 @@ type Movie = {};
 @Injectable({ providedIn: 'root' })
 export class LocalStorage {
   items = {};
+
   setItem(prop: string, value: string) {
     this.items[prop] = value;
   }
+
   removeItem(prop: string) {
     delete this.items[prop];
   }
+
   getItem(prop: string) {
     return this.items[prop];
   }
 }
 
-const BackupInterval = new InjectionToken<number>('BackupInterval');
-
 @Component({
-  template: ` <input name="title" [(ngModel)]="movie" />
+  template: ` <input name="title" (change)="change.next(title.value)" #title />
     <button name="save" (click)="save()">Save</button>`,
-  providers: [{ provide: BackupInterval, useValue: 40 }],
 })
 class ListComponent {
-  protected movie = '';
-  private backupInterval = inject(BackupInterval);
+  private change = new Subject<string>();
   private localStorage = inject(LocalStorage);
 
   private ef = rxEffects(({ register }) => {
-    const updateBackup = () =>
-      this.localStorage.setItem('editName', this.movie);
-    register(timer(0, this.backupInterval), updateBackup);
+    const updateBackup = (title) => this.localStorage.setItem('title', title);
+    register(this.change.pipe(debounceTime(300)), updateBackup);
   });
 
   save() {
     localStorage.removeItem('editName');
-  }
-
-  ngOnInit() {
-    this.effects.register(this.util.rotationChanged$, () => {
-      console.log('viewport rotation changed');
-    });
   }
 }
 
@@ -54,7 +46,6 @@ class ListComponent {
 function setupComponent() {
   TestBed.configureTestingModule({
     declarations: [ListComponent],
-    providers: [{ provide: BackupInterval, useValue: 10 }],
   });
 
   const localStorage = TestBed.inject(LocalStorage);
@@ -63,7 +54,7 @@ function setupComponent() {
   const component = fixture.componentInstance;
 
   const searchInputElem: HTMLInputElement = fixture.nativeElement.querySelector(
-    'input[name="search"]'
+    'input[name="title"]'
   );
   const searchInputChange = (value: string) => {
     searchInputElem.value = value;
@@ -86,19 +77,17 @@ describe('effects usage in a component', () => {
     const spyRemoveItem = jest.spyOn(localStorage, 'removeItem');
 
     expect(spySetItem).toBeCalledTimes(0);
-    await wait(200);
+    searchInputChange('abc');
+    expect(spySetItem).toBeCalledTimes(0); // debounceed
+    await wait(350);
     expect(spySetItem).toBeCalledTimes(1);
-    expect(spySetItem).toBeCalledWith('');
-
-    expect(spySetItem).toBeCalledTimes(1);
-    expect(spySetItem).toBeCalledWith(1);
+    expect(spySetItem).toBeCalledWith('title', 'abc');
   });
 });
 
 function setupComponent2() {
   TestBed.configureTestingModule({
     declarations: [ListComponent],
-    providers: [{ provide: BackupInterval, useValue: 10 }],
   });
 
   const localStorage = TestBed.inject(LocalStorage);
