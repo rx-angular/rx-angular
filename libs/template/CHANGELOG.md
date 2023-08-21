@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [16.1.0](https://github.com/rx-angular/rx-angular/compare/template@16.0.2...template@16.1.0) (2023-08-21)
+
+
+### Features
+
+* **template:** decouple scroll-element from viewport ([9eddb36](https://github.com/rx-angular/rx-angular/commit/9eddb365a6d77a8c7a15a295c640fe151353ba4e))
+
+
+
 ## [16.0.2](https://github.com/rx-angular/rx-angular/compare/template@16.0.1...template@16.0.2) (2023-07-17)
 
 
