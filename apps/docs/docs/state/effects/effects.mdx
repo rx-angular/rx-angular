@@ -5,12 +5,15 @@ title: 'Effects'
 hide_title: true
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # @rx-angular/state/effects
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 
-> A small typed convenience helper to handle side effects and Observable subscriptions.
+> A small convenience helper to handle side effects based on Observable inputs.
 
 `@rx-angular/state/effects` is a small set of helpers designed to handle effects.
 
@@ -74,53 +77,54 @@ To accomplish this, we need to make sure to clean up every side effect in the `O
 
 ![rx-angular--state--effects--motivation-when-to-use--michael-hladky](https://user-images.githubusercontent.com/10064416/154174403-5ab34eb8-68e4-40f9-95de-12a62784ac40.png)
 
-### Functional Creation (_NEW_)
-
-The new functional creation API lets you create and configure `RxEffects` in only one place.
-Thanks to the new `DestroyRef`, there is no need for manually providing an instance anymore.
+<Tabs>
+<TabItem value="new" label="Functional Creation (_NEW_)">
+    The new functional creation API lets you create and configure `RxEffects` in only one place.
+    Thanks to the new `DestroyRef`, there is no need for manually providing an instance anymore.
 
 ```typescript
 import { rxEffects } from '@rx-angular/state/effects';
 import { inject, Component } from '@angular/core';
+import { fromEvent } from 'rxjs';
 
 @Component({})
 export class MyComponent {
-  private readonly util = inject(Util);
   // create and configure `RxEffects` in a single step
-  readonly effects = rxEffects(({ register, registerUntilDestroy }) => {
-    // side effect that runs when `windowResize$` emits a value
-    register(this.util.windowResize$, () => {
+  readonly effects = rxEffects(({ register, onDestroy }) => {
+    // side effect that runs when `window resize` emits a value
+    register(fromEvent(window, 'resize'), () => {
       console.log('window was resized');
     });
 
     // side effect that runs on component destruction
-    registerUntilDestroy(() => {
+    onDestroy(() => {
       console.log('custom cleanup logic (e.g flushing local storage)');
     });
   });
 }
 ```
 
-### Class Based
+</TabItem>
+<TabItem value="class-based" label="Class Based (Classic)">
 
 However, the class based approach is still valid and works exactly as before.
 
 ```typescript
 import { RxEffects } from '@rx-angular/state/effects';
 import { inject, Component } from '@angular/core';
+import { fromEvent } from 'rxjs';
 
 @Component({
   // provide `RxEffects` as a local instance of your component
   providers: [RxEffects],
 })
 export class MyComponent {
-  private readonly util = inject(Util);
   // inject your provided instance
   readonly effects = inject(RxEffects);
 
   ngOnInit() {
     // side effect that runs when `windowResize$` emits a value
-    this.effects.register(this.util.windowResize$, () => {
+    this.effects.register(fromEvent(window, 'resize'), () => {
       console.log('window was resized');
     });
     // side effect that runs on component destruction
@@ -130,6 +134,9 @@ export class MyComponent {
   }
 }
 ```
+
+</TabItem>
+</Tabs>
 
 ### Register Multiple Observables
 
@@ -158,12 +165,56 @@ effects.register(animationFrameScheduler.schedule(action));
 
 All registered effects are automatically unsubscribed when the component is destroyed. If you wish to cancel a specific effect earlier, you can do this either declaratively (obs$.pipe(takeUntil(otherObs$))) or imperatively using the returned effect ID:
 
-```typescript
-this.effectId = this.effects.register(obs$, doSideEffect);
+<Tabs>
+<TabItem value="new" label="Functional Creation (_NEW_)">
 
-// later
-this.effects.unregister(this.effectId); // doSideEffect will no longer be called
+```typescript
+import { rxEffects } from '@rx-angular/state/effects';
+import { Component } from '@angular/core';
+import { fromEvent } from 'rxjs';
+
+@Component({})
+export class MyComponent {
+  // create and configure `RxEffects` in a single step
+  effects = rxEffects();
+  resizeEffect = this.effects.register(fromEvent(window, 'resize'), () => {
+    console.log('window was resized');
+  });
+
+  undoResizeEffect() {
+    // effect is now unsubscribed
+    this.resizeEffect();
+  }
+}
 ```
+
+</TabItem>
+<TabItem value="class-based" label="Class Based (Classic)">
+
+```typescript
+import { RxEffects } from '@rx-angular/state/effects';
+import { Component, inject } from '@angular/core';
+import { fromEvent } from 'rxjs';
+
+@Component({
+  providers: [RxEffects],
+})
+export class MyComponent {
+  // create and configure `RxEffects` in a single step
+  effects = inject(RxEffects);
+  resizeEffect = this.effects.register(fromEvent(window, 'resize'), () => {
+    console.log('window was resized');
+  });
+
+  undoResizeEffect() {
+    // effect is now unsubscribed
+    this.effects.unregister(this.resizeEffect);
+  }
+}
+```
+
+</TabItem>
+</Tabs>
 
 ### Error handling
 
@@ -172,10 +223,15 @@ The built-in Angular ErrorHandler gets automatically notified of the error, so t
 
 However, there are additional ways to tweak the error handling.
 
+Note that your subscription ends after an error occurred. If the stream encountered an error once, it is done
+Read more about how to recover from this in the next section.
+
 We can hook into this process by providing a custom error handler:
 
 ```typescript
-import { ErrorHandler } from '@angular/core';
+import { ErrorHandler, Component } from '@angular/core';
+import { throwError } from 'rxjs';
+import { rxEffects } from '@rx-angular/state/effects';
 
 @Component({
   providers: [
@@ -192,6 +248,59 @@ import { ErrorHandler } from '@angular/core';
 class MyComponent {
   readonly effects = rxEffects(({ register }) => {
     // if your effects runs into an error, your custom errorHandler will be informed
+    register(throwError('E'));
+  });
+}
+```
+
+### Retry on error
+
+In order to recover from an error state and keep the side effect alive, you have two options:
+
+- [`retry`](https://rxjs.dev/api/operators/retry)
+- [`catchError`](https://rxjs.dev/api/index/function/catchError)
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { retry, catchError, of, exhaustMap, Subject } from 'rxjs';
+import { rxEffects } from '@rx-angular/state/effects';
+
+@Component()
+class MyComponent {
+  http = inject(HttpClient);
+  login$ = new Subject<{ user: string; pass: string }>();
+
+  readonly effects = rxEffects(({ register }) => {
+    register(
+      this.login$.pipe(
+        exhaustMap(({ user, pass }) =>
+          this.http.post('/auth/', { user, pass })
+        ),
+        // retry when an error occurs
+        retry()
+      ),
+      (data) => {
+        alert(`welcome ${data.user}`);
+      }
+    );
+
+    register(
+      this.login$.pipe(
+        exhaustMap(({ user, pass }) =>
+          this.http.post('/auth/', { user, pass })
+        ),
+        // catch the error and return a custom value
+        catchError((err) => {
+          return of(null);
+        })
+      ),
+      (data) => {
+        if (data) {
+          alert(`welcome ${data.user}`);
+        }
+      }
+    );
   });
 }
 ```
@@ -377,10 +486,10 @@ export class MyComponent {
 
   constructor() {
     // [#1st approach] The subscribe's next callback it used to wrap and execute the side effect
-    effect$.subscribe(this.runSideEffect);
+    this.effect$.subscribe(this.runSideEffect);
 
     // [#2nd approach] `tap` is used to wrap and execute the side effect
-    effect$.pipe(tap(this.runSideEffect)).subscribe();
+    this.effect$.pipe(tap(this.runSideEffect)).subscribe();
   }
 }
 ```
