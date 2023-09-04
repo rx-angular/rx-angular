@@ -7,18 +7,18 @@ import {
 import { from, Subscription } from 'rxjs';
 import { SideEffectFnOrObserver, SideEffectObservable } from './types';
 
-type RxEffects<T> = {
-  register: RegisterFn<T>;
+type RxEffects = {
+  register<T>(
+    observable: SideEffectObservable<T>,
+    sideEffectOrObserver?: SideEffectFnOrObserver<T>
+  ): void;
   onDestroy: (fn: Fn) => Fn;
 };
-type RegisterFn<T> = (
-  observable: SideEffectObservable<T>,
-  sideEffectOrObserver?: SideEffectFnOrObserver<T>
-) => () => void;
+
 type Fn = () => void;
 
-export type RxEffectsSetupFn<T> = (
-  cfg: Pick<RxEffects<T>, 'register' | 'onDestroy'>
+export type RxEffectsSetupFn = (
+  cfg: Pick<RxEffects, 'register' | 'onDestroy'>
 ) => void;
 
 /**
@@ -55,7 +55,7 @@ export type RxEffectsSetupFn<T> = (
  * @docsPage RxEffects
  *
  */
-export function rxEffects<T>(setupFn?: RxEffectsSetupFn<T>): RxEffects<T> {
+export function rxEffects(setupFn?: RxEffectsSetupFn): RxEffects {
   assertInInjectionContext(rxEffects);
   const errorHandler = inject(ErrorHandler, { optional: true });
   const destroyRef = inject(DestroyRef);
@@ -81,7 +81,7 @@ export function rxEffects<T>(setupFn?: RxEffectsSetupFn<T>): RxEffects<T> {
    *
    * @return {Function} - unregisterFn
    */
-  function register(
+  function register<T>(
     obs$: SideEffectObservable<T>,
     sideEffect?: SideEffectFnOrObserver<T>
   ): () => void {
