@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { of, Subject, tap } from 'rxjs';
+import { Observable, of, Subject, tap } from 'rxjs';
 import { rxEffects, RxEffectsSetupFn } from './rx-effects';
 
 describe(rxEffects, () => {
@@ -14,6 +14,20 @@ describe(rxEffects, () => {
     const spy = jest.fn();
     setupComponent(({ register }) => register(of('src'), spy));
     expect(spy).toHaveBeenCalledWith('src');
+  });
+
+  it('should continuously run sideEffect', () => {
+    const spyNext = jest.fn();
+    const trigger = new Subject();
+    setupComponent(({ register }) => {
+      register(trigger, spyNext);
+    });
+
+    trigger.next(1);
+    expect(spyNext).toHaveBeenCalledWith(1);
+    trigger.next(2);
+    expect(spyNext).toHaveBeenCalledWith(2);
+    expect(spyNext).toHaveBeenCalledTimes(2);
   });
 
   it('should register multiple observables', () => {
@@ -41,6 +55,20 @@ describe(rxEffects, () => {
     trigger.error('E');
     expect(spyNext).toHaveBeenCalledTimes(1);
     expect(spyError).toHaveBeenCalledTimes(1);
+  });
+
+  it('should unsubscribe onDestroy', () => {
+    const spyInternalOnCleanup = jest.fn();
+
+    const { fixture } = setupComponent(({ register }) => {
+      register(
+        new Observable(() => {
+          return spyInternalOnCleanup;
+        })
+      );
+    });
+    fixture.destroy();
+    expect(spyInternalOnCleanup).toHaveBeenCalled();
   });
 
   it('should call onDestroy', () => {
