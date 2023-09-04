@@ -9,18 +9,17 @@ import { SideEffectFnOrObserver, SideEffectObservable } from './types';
 
 type RxEffects<T> = {
   register: RegisterFn<T>;
-  onCleanup: OnCleanupFn<T>;
+  onDestroy: (fn: Fn) => Fn;
 };
 type RegisterFn<T> = (
   observable: SideEffectObservable<T>,
   sideEffectOrObserver?: SideEffectFnOrObserver<T>
 ) => () => void;
-type OnCleanupFn<T> = (sideEffect: () => void) => void;
+type Fn = () => void;
 
-export type RxEffectsSetupFn<T> = (cfg: {
-  register: RegisterFn<T>;
-  onCleanup: OnCleanupFn<T>;
-}) => void;
+export type RxEffectsSetupFn<T> = (
+  cfg: Pick<RxEffects<T>, 'register' | 'onDestroy'>
+) => void;
 
 /**
  * @description
@@ -61,9 +60,7 @@ export function rxEffects<T>(setupFn?: RxEffectsSetupFn<T>): RxEffects<T> {
   const errorHandler = inject(ErrorHandler, { optional: true });
   const destroyRef = inject(DestroyRef);
   const runningEffects: Subscription[] = [];
-  const destroyEf = destroyRef.onDestroy(() =>
-    runningEffects.forEach((ef) => ef.unsubscribe())
-  );
+  destroyRef.onDestroy(() => runningEffects.forEach((ef) => ef.unsubscribe()));
 
   /**
    * Subscribe to observables and trigger side effect.
@@ -79,8 +76,10 @@ export function rxEffects<T>(setupFn?: RxEffectsSetupFn<T>): RxEffects<T> {
    *   }
    * }
    *
-   * @param obs$ Source observable input
-   * @param observer Observer object
+   * @param {SideEffectObservable} obs$ Source observable input
+   * @param {SideEffectFnOrObserver} sideEffect Observer object
+   *
+   * @return {Function} - unregisterFn
    */
   function register(
     obs$: SideEffectObservable<T>,
@@ -91,12 +90,15 @@ export function rxEffects<T>(setupFn?: RxEffectsSetupFn<T>): RxEffects<T> {
         ? {
             ...sideEffect,
             // preserve original logic
-            error: (e) => {
+            error: (e: unknown) => {
               sideEffect?.error(e);
               errorHandler.handleError(e);
             },
           }
-        : { next: sideEffect, error: (e) => errorHandler.handleError(e) };
+        : {
+            next: sideEffect,
+            error: (e: unknown) => errorHandler.handleError(e),
+          };
     const sub = from(obs$).subscribe(observer);
     runningEffects.push(sub);
     return () => sub.unsubscribe();
@@ -111,21 +113,22 @@ export function rxEffects<T>(setupFn?: RxEffectsSetupFn<T>): RxEffects<T> {
    *   template: `<button name="save" (click)="save()">Save</button>`
    * })
    * class ListComponent {
-   *   private ef = rxEffects(({onCleanup}) => {
-   *      onCleanup(() => console.log('done'));
+   *   private ef = rxEffects(({onDestroy}) => {
+   *      onDestroy(() => console.log('done'));
    *   }
    * }
    *
-   * @param obs$ Source observable input
-   * @param observer Observer object
+   * @param {Fn} callback onDestroy callback
+   *
+   * @return {Fn} unregisterFn
    */
-  function onCleanup(fn) {
-    destroyRef.onDestroy(fn);
+  function onDestroy(callback: Fn): Fn {
+    return destroyRef.onDestroy(callback);
   }
 
   const effects = {
     register,
-    onCleanup,
+    onDestroy,
   };
 
   setupFn?.(effects);

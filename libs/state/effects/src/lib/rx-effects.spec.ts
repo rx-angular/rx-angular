@@ -43,16 +43,16 @@ describe(rxEffects, () => {
     expect(spyError).toHaveBeenCalledTimes(1);
   });
 
-  it('should call onCleanup', () => {
+  it('should call onDestroy', () => {
     const spySideEffect = jest.fn();
     const spyInternalOnCleanup = jest.fn();
 
-    const { fixture, component } = setupComponent(({ register, onCleanup }) => {
+    const { fixture, component } = setupComponent(({ register, onDestroy }) => {
       register(of('src').pipe(tap(spySideEffect)));
-      onCleanup(spyInternalOnCleanup);
+      onDestroy(spyInternalOnCleanup);
     });
     const spyOnCleanup = jest.fn();
-    component.effects.onCleanup(spyOnCleanup);
+    component.effects.onDestroy(spyOnCleanup);
 
     expect(spySideEffect).toHaveBeenCalled();
     expect(spyInternalOnCleanup).not.toHaveBeenCalled();
