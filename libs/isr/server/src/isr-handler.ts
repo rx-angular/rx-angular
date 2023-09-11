@@ -12,6 +12,7 @@ import {
 } from '@rx-angular/isr/models';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
 import { renderUrl, RenderUrlConfig } from './utils/render-url';
+import { RenderVariant, VariantRebuildItem } from '@rx-angular/isr/models';
 
 export class ISRHandler {
   protected cache!: CacheHandler;
@@ -70,19 +71,26 @@ export class ISRHandler {
     const notInCache: string[] = [];
     const urlWithErrors: Record<string, any> = {};
 
-    for (const url of urlsToInvalidate) {
+    // Include all possible variants in the list of URLs to be invalidated including
+    // their modified request to regenerate the pages
+    const variantUrlsToInvalidate =
+      this.getVariantUrlsToInvalidate(urlsToInvalidate);
+
+    for (const variantUrl of variantUrlsToInvalidate) {
+      const { cachKey, url, reqSimulator } = variantUrl;
+
       // check if the url is in cache
-      const urlExists = await this.cache.has(url);
+      const urlExists = await this.cache.has(cachKey);
 
       if (!urlExists) {
-        notInCache.push(url);
+        notInCache.push(cachKey);
         continue;
       }
 
       try {
         // re-render the page again
         const html = await renderUrl({
-          req,
+          req: reqSimulator(req),
           res,
           url,
           indexHtml,
@@ -94,7 +102,7 @@ export class ISRHandler {
 
         // if there are errors when rendering the site we throw an error
         if (errors?.length && this.config.skipCachingOnHttpError) {
-          urlWithErrors[url] = errors;
+          urlWithErrors[cachKey] = errors;
         }
 
         // add the regenerated page to cache
@@ -102,15 +110,17 @@ export class ISRHandler {
           revalidate,
           buildId: this.config.buildId,
         };
-        await this.cache.add(req.url, html, cacheConfig);
+        await this.cache.add(cachKey, html, cacheConfig);
       } catch (err) {
-        urlWithErrors[url] = err;
+        urlWithErrors[cachKey] = err;
       }
     }
 
-    const invalidatedUrls = urlsToInvalidate.filter(
-      (url) => !notInCache.includes(url) && !urlWithErrors[url]
-    );
+    const invalidatedUrls = variantUrlsToInvalidate
+      .map((val) => val.cachKey)
+      .filter(
+        (cachKey) => !notInCache.includes(cachKey) && !urlWithErrors[cachKey]
+      );
 
     if (notInCache.length) {
       this.logger.log(
@@ -139,6 +149,28 @@ export class ISRHandler {
     return res.json(response);
   }
 
+  getVariantUrlsToInvalidate(urlsToInvalidate: string[]): VariantRebuildItem[] {
+    const variants = this.config.variants || [];
+    const result: VariantRebuildItem[] = [];
+
+    const defaultVariant = (req: Request) => req;
+
+    for (const url of urlsToInvalidate) {
+      result.push({ url, cachKey: url, reqSimulator: defaultVariant });
+      for (const variant of variants) {
+        result.push({
+          url,
+          cachKey: getCacheKey(url, variant),
+          reqSimulator: variant.simulateVariant
+            ? variant.simulateVariant
+            : defaultVariant,
+        });
+      }
+    }
+
+    return result;
+  }
+
   async serveFromCache(
     req: Request,
     res: Response,
@@ -146,7 +178,9 @@ export class ISRHandler {
     config?: ServeFromCacheConfig
   ): Promise<any> {
     try {
-      const cacheData = await this.cache.get(req.url);
+      const variant = this.getVariant(req);
+
+      const cacheData = await this.cache.get(getCacheKey(req.url, variant));
       const { html, options: cacheConfig, createdAt } = cacheData;
 
       const cacheHasBuildId =
@@ -184,7 +218,10 @@ export class ISRHandler {
       }
 
       // Cache exists. Send it.
-      this.logger.log(`Page was retrieved from cache: `, req.url);
+      this.logger.log(
+        `Page was retrieved from cache: `,
+        getCacheKey(req.url, variant)
+      );
       return res.send(finalHtml);
     } catch (error) {
       // Cache does not exist. Serve user using SSR
@@ -230,13 +267,24 @@ export class ISRHandler {
         return res.send(finalHtml);
       }
 
+      const variant = this.getVariant(req);
+
       // Cache the rendered `html` for this request url to use for subsequent requests
-      await this.cache.add(req.url, finalHtml, {
+      await this.cache.add(getCacheKey(req.url, variant), finalHtml, {
         revalidate,
         buildId: this.config.buildId,
       });
       return res.send(finalHtml);
     });
+  }
+
+  protected getVariant(req: Request): RenderVariant | null {
+    if (!this.config.variants) {
+      return null;
+    }
+    return (
+      this.config.variants.find((variant) => variant.detectVariant(req)) || null
+    );
   }
 }
 
@@ -245,4 +293,9 @@ const extractDataFromBody = (
 ): { token: string | null; urlsToInvalidate: string[] } => {
   const { urlsToInvalidate, token } = req.body;
   return { urlsToInvalidate, token };
+};
+
+const getCacheKey = (url: string, variant: RenderVariant | null): string => {
+  if (!variant) return url;
+  return `${url}<variantId:${variant.identifier}>`;
 };

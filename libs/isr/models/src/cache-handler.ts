@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 /**
  * CacheISRConfig is the configuration object that is used to store the
  * cache data in the cache handler.
@@ -12,6 +14,18 @@ export interface CacheData {
   html: string;
   options: CacheISRConfig;
   createdAt: number;
+}
+
+export interface RenderVariant {
+  identifier: string;
+  detectVariant: (req: Request) => boolean;
+  simulateVariant?: (req: Request) => Request;
+}
+
+export interface VariantRebuildItem {
+  url: string;
+  cachKey: string;
+  reqSimulator: (req: Request) => Request;
 }
 
 export abstract class CacheHandler {
