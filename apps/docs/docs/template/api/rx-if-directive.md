@@ -425,7 +425,7 @@ Depending on the bound value as well as the configured `RxRenderStrategy`, updat
 `@rx-angular/template` directives can be asynchronous.
 
 Whenever a template gets inserted into, or removed from, its parent component, the directive has to inform the parent in order to
-update any view- or contentquery (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
+update any view or content query (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
 
 This is required if your components state is dependent on its view or content children:
 
@@ -498,7 +498,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 export class AppComponent {
   enabled$ = state.select('enabled');
   // As the part of the template where this function is used as event listener callback
-  // has `patchZone` false the all event listeners run ouside zone.
+  // has `patchZone` false the all event listeners run outside zone.
   itemDrag(event: DragEvent) {}
 }
 ```

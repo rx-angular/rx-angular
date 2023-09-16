@@ -12,7 +12,7 @@ Cache handlers are classes that extend the `CacheHandler` abstract class. They a
 
 The default cache handler is the `InMemoryCacheHandler`. It stores the cached pages in memory (RAM). It uses the `Map` data structure to store the pages.
 
-### FileSystemCacheHandler (prerendering on steroids)
+### FileSystemCacheHandler (pre-rendering on steroids)
 
 There are cases where you want to store the cached pages in the file system. For example, if you want to deploy your app to a serverless environment, you can't use the `InMemoryCacheHandler` because the memory is not persistent. In this case, you can use the `FileSystemCacheHandler`.
 
