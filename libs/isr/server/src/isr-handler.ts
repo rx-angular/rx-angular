@@ -77,7 +77,7 @@ export class ISRHandler {
       this.getVariantUrlsToInvalidate(urlsToInvalidate);
 
     for (const variantUrl of variantUrlsToInvalidate) {
-      const { cachKey, url, reqSimulator } = variantUrl;
+      const { cacheKey, url, reqSimulator } = variantUrl;
 
       // check if the url is in cache
       const urlExists = await this.cache.has(cachKey);
