@@ -24,7 +24,7 @@ export interface RenderVariant {
 
 export interface VariantRebuildItem {
   url: string;
-  cachKey: string;
+  cacheKey: string;
   reqSimulator: (req: Request) => Request;
 }
 
