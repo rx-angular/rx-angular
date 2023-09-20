@@ -80,10 +80,10 @@ export class ISRHandler {
       const { cacheKey, url, reqSimulator } = variantUrl;
 
       // check if the url is in cache
-      const urlExists = await this.cache.has(cachKey);
+      const urlExists = await this.cache.has(cacheKey);
 
       if (!urlExists) {
-        notInCache.push(cachKey);
+        notInCache.push(cacheKey);
         continue;
       }
 
@@ -102,7 +102,7 @@ export class ISRHandler {
 
         // if there are errors when rendering the site we throw an error
         if (errors?.length && this.config.skipCachingOnHttpError) {
-          urlWithErrors[cachKey] = errors;
+          urlWithErrors[cacheKey] = errors;
         }
 
         // add the regenerated page to cache
@@ -110,16 +110,16 @@ export class ISRHandler {
           revalidate,
           buildId: this.config.buildId,
         };
-        await this.cache.add(cachKey, html, cacheConfig);
+        await this.cache.add(cacheKey, html, cacheConfig);
       } catch (err) {
-        urlWithErrors[cachKey] = err;
+        urlWithErrors[cacheKey] = err;
       }
     }
 
     const invalidatedUrls = variantUrlsToInvalidate
-      .map((val) => val.cachKey)
+      .map((val) => val.cacheKey)
       .filter(
-        (cachKey) => !notInCache.includes(cachKey) && !urlWithErrors[cachKey]
+        (cacheKey) => !notInCache.includes(cacheKey) && !urlWithErrors[cacheKey]
       );
 
     if (notInCache.length) {
@@ -156,11 +156,11 @@ export class ISRHandler {
     const defaultVariant = (req: Request) => req;
 
     for (const url of urlsToInvalidate) {
-      result.push({ url, cachKey: url, reqSimulator: defaultVariant });
+      result.push({ url, cacheKey: url, reqSimulator: defaultVariant });
       for (const variant of variants) {
         result.push({
           url,
-          cachKey: getCacheKey(url, variant),
+          cacheKey: getCacheKey(url, variant),
           reqSimulator: variant.simulateVariant
             ? variant.simulateVariant
             : defaultVariant,
