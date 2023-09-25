@@ -1,8 +1,10 @@
----
+## import { ComponentFixture } from '@angular/core/testing';
+
 sidebar_label: 'Effects'
 sidebar_position: 5
 title: 'Effects'
 hide_title: true
+
 ---
 
 import Tabs from '@theme/Tabs';
@@ -192,7 +194,7 @@ import { rxEffects } from '@rx-angular/state/effects';
 @Injectable()
 export class EffectsService {
   // either share the `effects` const or wrap the API
-  readonly effects = rxEffects({});
+  readonly effects = rxEffects();
 
   // share only some APIs if you like
   register: typeof this.effects.register = this.effects.register.bind(
@@ -662,6 +664,142 @@ export class MyComponent {
 The `untilEffect` top level API was dropped. You would need to build your own workaround for this.
 
 :::
+
+## Testing
+
+The `rxEffects` API is designed to not force developers to interact with its instance in order to properly test your
+components.
+Side effects always have a trigger and a side effect function, `rxEffects` only acts as a glue between those two. Typically
+you want to test either the trigger or the side effect function.
+
+### Basic Testing
+
+Take a look at the following example where we want test if the auth services' login method is called when the login button
+is clicked. Instead of interacting with `rxEffects` directly, we are testing the trigger and the side effect function.
+
+<Tabs>
+
+<TabItem value="component" label="login.component.ts">
+
+```typescript title="/src/login.component.ts"
+import { rxEffects } from '@rx-angular/state/effects';
+import { Component } from '@angular/core';
+import { AuthService } from './auth.service.ts';
+
+@Component({
+  selector: 'login',
+  template: '<button (click)="login.next()">Login</button>',
+})
+export class MyComponent {
+  readonly login = new Subject<void>();
+  // create & setup `RxEffects` in a single step, no providers anymore
+  readonly effects = rxEffects(({ register }) => {
+    register(this.login.pipe(exhaustMap(() => this.authService.login())));
+  });
+
+  constructor(private authService: AuthService) {}
+}
+```
+
+</TabItem>
+
+<TabItem value="spec" label="login.component.spec.ts">
+
+```typescript title="/src/login.component.spec.ts"
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+
+describe('LoginComponent', () => {
+  let service: AuthService;
+  let fixture: ComponentFixture<LoginComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [LoginComponent],
+      providers: [AuthService],
+    });
+    service = TestBed.inject(AuthService);
+    fixture = TestBed.createComponent(LoginComponent);
+  });
+
+  it('should login on button click', () => {
+    // arrange
+    const button = fixture.debugElement.query(By.css('button'));
+    const spy = spyOn(service, 'login');
+    // act
+    button.nativeElement.click();
+    // assert
+    expect(spy).toHaveBeenCalled();
+  });
+});
+```
+
+</TabItem>
+
+</Tabs>
+
+### Service Based Testing
+
+As `rxEffects` is no DI token, but a creation function, you cannot inject it into your `TestBed`. As already explained in the
+[RxEffects as Service](#rxeffects-as-service) section, in order to overcome this, you need to wrap your `rxEffects` into a service.
+
+<Tabs>
+
+<TabItem value="service" label="login-effects.service.ts">
+
+```typescript title="/src/login-effects.service.ts"
+import { rxEffects } from '@rx-angular/state/effects';
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class LoginEffects {
+  private login$ = new Subject<void>();
+  // create & setup `RxEffects` in a single step, no providers anymore
+  private readonly effects = rxEffects(({ register }) => {
+    register(this.login$.pipe(exhaustMap(() => this.authService.login())));
+  });
+
+  constructor(private authService: AuthService) {}
+
+  login() {
+    this.login$.next();
+  }
+}
+```
+
+</TabItem>
+
+<TabItem value="spec" label="login-effects.service.spec.ts">
+
+```typescript title="/src/login-effects.service.spec.ts"
+import { TestBed } from '@angular/core/testing';
+
+describe('LoginEffects', () => {
+  let authService: AuthService;
+  let effects: LoginEffects;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [AuthService, LoginEffects],
+    });
+    authService = TestBed.inject(AuthService);
+    effects = TestBed.inject(LoginEffects);
+  });
+
+  it('should call authService login', () => {
+    // arrange
+    const spy = spyOn(authService, 'login');
+    // act
+    effects.login();
+    // assert
+    expect(spy).toHaveBeenCalled();
+  });
+});
+```
+
+</TabItem>
+
+</Tabs>
 
 ## Concepts
 

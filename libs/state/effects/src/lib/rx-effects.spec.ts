@@ -91,7 +91,7 @@ describe(rxEffects, () => {
   });
 });
 
-function setupComponent<T>(setupFn?: RxEffectsSetupFn<T>) {
+function setupComponent(setupFn?: RxEffectsSetupFn) {
   @Component({})
   class TestComponent {
     readonly effects = rxEffects(setupFn);
