@@ -91,13 +91,13 @@ export function rxEffects(setupFn?: RxEffectsSetupFn): RxEffects {
             ...sideEffect,
             // preserve original logic
             error: (e: unknown) => {
-              sideEffect?.error(e);
-              errorHandler.handleError(e);
+              sideEffect.error?.(e);
+              errorHandler?.handleError(e);
             },
           }
         : {
             next: sideEffect,
-            error: (e: unknown) => errorHandler.handleError(e),
+            error: (e: unknown) => errorHandler?.handleError(e),
           };
     const sub = from(obs$).subscribe(observer);
     runningEffects.push(sub);
