@@ -1,80 +1,97 @@
-import { TestBed } from '@angular/core/testing';
-import { Component, inject, Injectable, Output } from '@angular/core';
-import { rxActions } from './rx-actions';
-import { eventValue } from './transforms';
-import { ActionTransforms } from '@rx-angular/state/actions';
-import { debounceTime, exhaustMap, Observable, Subject, of } from 'rxjs';
-import { wait } from 'nx-cloud/lib/utilities/waiter';
+import { AsyncPipe, DOCUMENT } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  Component,
+  Inject,
+  inject,
+  Injectable,
+  Output,
+  signal,
+} from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
+import { rxActions } from './rx-actions';
+import { exhaustMap, Observable, of, Subject } from 'rxjs';
 
-// CASE: Usage in component to handle UI interaction ====
+@Injectable()
+class AuthService {
+  login(credentials: { username: string; password: string }) {
+    return of(true);
+  }
+}
 
-// Source code ==========
+class AuthServiceMock {
+  login(credentials: { username: string; password: string }) {
+    return of(true);
+  }
+}
 
-type ListUi = { searchInput: string };
+type Movie = Record<string, any>;
+
+// usage in component to handle UI interaction
 
 @Component({
-  template: `<input
-    name="search"
-    (change)="ui.searchInput($event.target.value)"
-  />`,
+  template: `
+    <input placeholder="username" #username />
+    <input type="password" placeholder="password" #password />
+    <button
+      (click)="
+        actions.login({
+          username: username.value,
+          password: password.value
+        })
+      "
+    >
+      Login
+    </button>
+  `,
+  standalone: true,
 })
-class ListComponent {
-  ui = rxActions<ListUi>();
-  // UI input with applied behaviour
-  @Output()
-  queryUpdate$ = this.ui.searchInput$.pipe(debounceTime(300));
+class LoginComponent {
+  actions = rxActions<{ login: { username: string; password: string } }>();
+
+  constructor(private service: AuthService) {
+    this.actions.login$
+      .pipe(exhaustMap((credentials) => this.service.login(credentials)))
+      .subscribe();
+  }
 }
 
-// Test helper code ==========
+describe('usage in component to handle UI interaction', () => {
+  let fixture: ComponentFixture<LoginComponent>;
+  let service: AuthService;
 
-function getComponent(cfg?: { transformFns?: ActionTransforms<ListUi> }) {
-  TestBed.configureTestingModule({
-    declarations: [ListComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [LoginComponent],
+      providers: [AuthService],
+    }).compileComponents();
+    fixture = TestBed.createComponent(LoginComponent);
+    service = TestBed.inject(AuthService);
+    fixture.detectChanges();
   });
 
-  const fixture = TestBed.createComponent(ListComponent);
-  const component = fixture.componentInstance;
+  it('login on form submit', () => {
+    // arrange
+    const username = fixture.debugElement.query(By.css('input:first-child'));
+    const password = fixture.debugElement.query(
+      By.css('input[type="password"]')
+    );
+    const btn = fixture.debugElement.query(By.css('button'));
+    const loginSpy = jest.spyOn(service, 'login');
+    username.nativeElement.value = 'user';
+    password.nativeElement.value = 'pwd';
 
-  const searchInputElem: HTMLInputElement = fixture.nativeElement.querySelector(
-    'input[name="search"]'
-  );
-  const searchInputChange = (value: string) => {
-    searchInputElem.value = value;
-    searchInputElem.dispatchEvent(new Event('change'));
-  };
+    // act
+    fixture.detectChanges();
+    btn.nativeElement.click();
 
-  return { fixture, component, searchInputChange };
-}
-
-// Test code ==========
-
-describe('actions in a component', () => {
-  it('should emit event if input fires change event', async () => {
-    const { component, fixture, searchInputChange } = getComponent();
-    const spyEmission = jest.fn((value: ListUi['searchInput']) => void 0);
-
-    component.queryUpdate$.subscribe(spyEmission);
-    expect(spyEmission).toBeCalledTimes(0);
-
-    searchInputChange('abc');
-    expect(spyEmission).toBeCalledTimes(0); // should debounce emission
-    await wait(310);
-    expect(spyEmission).toBeCalledTimes(1); // then fire
-    expect(spyEmission).toBeCalledWith('abc'); // with value
-
-    fixture.destroy();
-    searchInputChange('xyz');
-    expect(spyEmission).toBeCalledTimes(1);
+    // assert
+    expect(loginSpy).toHaveBeenCalled();
   });
 });
 
-// CASE: Usage in a service to handle data fetching ====
-
-// Source code =====
-
-type Actions = { refresh: void };
-type Movie = Record<string, any>;
+// usage in a service to handle data fetching
 
 @Injectable({ providedIn: 'root' })
 export class MovieResource {
@@ -94,183 +111,207 @@ export class MovieResourceMock {
 
 @Injectable({ providedIn: 'root' })
 export class MovieService {
-  private actions = rxActions<Actions>();
   private movieResource = inject(MovieResource);
-  // data refresh with applied behaviour
-  movies$ = this.actions.refresh$.pipe(
-    exhaustMap((_) => this.movieResource.getMovies())
+  private actions = rxActions<{ refresh: void }>();
+  movies = signal<Movie[]>([]);
+
+  private refreshEffect = this.actions.onRefresh(
+    // data refresh with applied behaviour
+    (refresh$) =>
+      refresh$.pipe(exhaustMap(() => this.movieResource.getMovies())),
+    // set the value to the state
+    (movies) => this.movies.set(movies)
   );
 
   refresh() {
     this.actions.refresh();
   }
+
+  disable() {
+    this.refreshEffect();
+  }
 }
 
-// Test helper code ==========
+describe('usage in a service to handle data fetching', () => {
+  let service: MovieService;
+  let resource: MovieResourceMock;
 
-function setupService() {
-  TestBed.overrideProvider(MovieResource, {
-    useFactory: () => new MovieResourceMock(),
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        MovieService,
+        { provide: MovieResource, useClass: MovieResourceMock },
+      ],
+    }).compileComponents();
+    service = TestBed.inject(MovieService);
+    resource = TestBed.inject(MovieResource) as any;
   });
 
-  const service = TestBed.inject(MovieService);
-  const resource = TestBed.inject(MovieResource) as MovieResourceMock;
-  return { service, resource };
-}
-
-// Test code ==========
-
-describe('actions in a service', () => {
-  it('should emit event if method is called', async () => {
-    const { service, resource } = setupService();
-    const spyEmission = jest.fn((value: Movie[]) => void 0);
-
-    service.movies$.subscribe(spyEmission);
+  it('should fetch movies on refresh', () => {
+    // arrange
+    const movies = [{ id: '1' }];
+    // act
     service.refresh();
-    service.refresh(); // multiple triggers
-    expect(spyEmission).toBeCalledTimes(0); // don't fire new http requests while old one is running
-    resource.httpResponse.next([{ title: 'test' }]); // simulate response
-    expect(spyEmission).toBeCalledTimes(1); // response arrived 1 time
-    expect(spyEmission).toBeCalledWith([{ title: 'test' }]); // with simulated result
+    resource.httpResponse.next(movies);
+    // assert
+    expect(service.movies()).toEqual(movies);
   });
 });
 
-// CASE: Handling side effects on event emission ====
-@Injectable({ providedIn: 'root' })
-export class ToastService {
-  showSuccess(msg: string): void {}
-}
-
-type ListUiEf = { refresh: void };
+// handling side effects on event emission
 
 @Component({
-  template: `<button name="refresh" (click)="ui.refresh()">Refresh</button>`,
+  template: `
+    <input placeholder="username" #username />
+    <input type="password" placeholder="password" #password />
+    <button
+      (click)="
+        actions.login({
+          username: username.value,
+          password: password.value
+        })
+      "
+    >
+      Login
+    </button>
+  `,
+  standalone: true,
 })
-class ListEfComponent {
-  protected ui = rxActions<ListUiEf>();
-  protected movieResource = inject(MovieResource);
-  protected toastService = inject(ToastService);
+class Login2Component {
+  actions = rxActions<{ login: { username: string; password: string } }>();
 
-  private saveObsEf = this.ui.onRefresh(
-    (save$) => save$.pipe(exhaustMap((_) => this.movieResource.getMovies())), // apply behaviour
-    () => this.toastService.showSuccess('Refresh done!') // fire side effect
+  private loginEffect = this.actions.onLogin(
+    (credentials$) =>
+      credentials$.pipe(
+        exhaustMap((credentials) => this.service.login(credentials))
+      ),
+    () => this.doc.defaultView.alert('successfully logged in')
   );
-
-  stopListenToClick() {
-    this.saveObsEf();
-  }
+  constructor(
+    private service: AuthService,
+    @Inject(DOCUMENT) private doc: Document
+  ) {}
 }
 
-// Test helper code ==========
-
-function getEfComponentAndService(cfg?: {
-  transformFns?: ActionTransforms<ListUi>;
-}) {
-  TestBed.configureTestingModule({ declarations: [ListEfComponent] });
-  TestBed.overrideProvider(MovieResource, {
-    useFactory: () => new MovieResourceMock(),
-  });
-
-  const resource = TestBed.inject(MovieResource) as MovieResourceMock;
-  const toast = TestBed.inject(ToastService);
-
-  const fixture = TestBed.createComponent(ListEfComponent);
-  const component = fixture.componentInstance;
-
-  const refreshButtonElem: HTMLInputElement =
-    fixture.nativeElement.querySelector('button');
-  const refreshClick = () => {
-    refreshButtonElem.dispatchEvent(new Event('click'));
+describe('handling side effects on event emission', () => {
+  let fixture: ComponentFixture<Login2Component>;
+  const documentMock = {
+    defaultView: {
+      alert: (v) => v,
+    },
   };
 
-  return { fixture, component, refreshClick, resource, toast };
-}
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [Login2Component],
+      providers: [{ provide: AuthService, useClass: AuthServiceMock }],
+    })
+      .overrideComponent(Login2Component, {
+        set: {
+          providers: [
+            {
+              provide: DOCUMENT,
+              useValue: documentMock,
+            },
+          ],
+        },
+      })
+      .compileComponents();
+    fixture = TestBed.createComponent(Login2Component);
+    fixture.detectChanges();
+  });
 
-// Test code ==========
+  it('should alert success after login', () => {
+    // arrange
+    const username = fixture.debugElement.query(By.css('input:first-child'));
+    const password = fixture.debugElement.query(
+      By.css('input[type="password"]')
+    );
+    const btn = fixture.debugElement.query(By.css('button'));
+    const alertSpy = jest.spyOn(documentMock.defaultView, 'alert');
+    username.nativeElement.value = 'user';
+    password.nativeElement.value = 'pwd';
 
-describe('action effect in a Service', () => {
-  it('should emit event if method is called', async () => {
-    const { refreshClick, resource, toast } = getEfComponentAndService();
-    const spyToast = jest.spyOn(toast, 'showSuccess');
+    // act
+    fixture.detectChanges();
+    btn.nativeElement.click();
 
-    refreshClick();
-    refreshClick(); // multiple triggers
-    expect(spyToast).toBeCalledTimes(0); // don't fire new http requests while old one is running
-    resource.httpResponse.next([{ title: 'test' }]);
-    expect(spyToast).toBeCalledTimes(1); // response arrived 1 time
-    expect(spyToast).toBeCalledWith('Refresh done!'); // with simulated result
+    // assert
+    expect(alertSpy).toHaveBeenCalled();
   });
 });
 
-// Test code ==========
+// unsubscribing from events programmatically
 
-describe('action effect in a Component', () => {
-  it('should emit event if method is called', async () => {
-    const { refreshClick, resource, toast, component } =
-      getEfComponentAndService();
-    const spyToast = jest.spyOn(toast, 'showSuccess');
+describe('unsubscribing from events programmatically', () => {
+  let service: MovieService;
+  let resource: MovieResourceMock;
 
-    refreshClick();
-    expect(spyToast).toBeCalledTimes(0); // don't fire new http requests while old one is running
-    component.stopListenToClick();
-    resource.httpResponse.next([{ title: 'test' }]);
-    expect(spyToast).toBeCalledTimes(0); // response arrived 1 time
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        MovieService,
+        { provide: MovieResource, useClass: MovieResourceMock },
+      ],
+    }).compileComponents();
+    service = TestBed.inject(MovieService);
+    resource = TestBed.inject(MovieResource) as any;
+  });
+
+  it('should fetching when disabled', () => {
+    // arrange
+    const movies = [{ id: '1' }];
+    service.disable();
+    // act
+    service.refresh();
+    resource.httpResponse.next(movies);
+    // assert
+    expect(service.movies()).toEqual([]);
   });
 });
 
-// CASE: Transform in a central place =====
-
-const codeTransform = (v) => parseInt(eventValue(v)) + '#POSTFIX';
+// transform functions
 
 @Component({
-  // takes a DOM Event
-  template: `<input name="search" (change)="ui.searchInput($event)" />`,
+  template: `
+    <input name="name" #input (input)="ui.greet(input.value)" />
+    <div>{{ ui.greet$ | async }}</div>
+  `,
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'app-greet',
+  standalone: true,
+  imports: [AsyncPipe],
 })
-class ListTransformComponent {
-  protected ui = rxActions<ListUi>(({ transforms }) =>
-    transforms({ searchInput: codeTransform })
+class GreetComponent {
+  ui = rxActions<{ greet: string }>(({ transforms }) =>
+    transforms({
+      // highlight-next-line
+      greet: (v) => `Hello ${v}`,
+    })
   );
-
-  @Output()
-  queryUpdate = this.ui.searchInput$;
-
-  searchChange(query: string) {
-    // takes a string
-    this.ui.searchInput(query);
-  }
 }
 
-// Test helper code ==========
+describe('transform functions', () => {
+  let fixture: ComponentFixture<GreetComponent>;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [GreetComponent],
+    });
+    fixture = TestBed.createComponent(GreetComponent);
+    fixture.detectChanges();
+  });
 
-function getTransformComponentAndService() {
-  TestBed.configureTestingModule({ declarations: [ListTransformComponent] });
-  const fixture = TestBed.createComponent(ListTransformComponent);
-  const component = fixture.componentInstance;
-
-  const searchInputElem: HTMLInputElement = fixture.nativeElement.querySelector(
-    'input[name="search"]'
-  );
-  const searchInputChange = (value: string) => {
-    searchInputElem.value = value;
-    searchInputElem.dispatchEvent(new Event('change'));
-  };
-
-  return { component, searchInputChange };
-}
-
-// Test code ==========
-
-describe('action transform in a component', () => {
-  it('should emit event if method is called', async () => {
-    const { searchInputChange, component } = getTransformComponentAndService();
-    const spyEmission = jest.fn(() => void 0);
-
-    component.queryUpdate.subscribe(spyEmission);
-    searchInputChange('1.5');
-    expect(spyEmission).toBeCalledTimes(1);
-    expect(spyEmission).toBeCalledWith('1#POSTFIX');
-    component.searchChange('2.5');
-    expect(spyEmission).toBeCalledTimes(2);
-    expect(spyEmission).toBeCalledWith('2#POSTFIX');
+  it('should greet me', () => {
+    // arrange
+    const input = fixture.debugElement.query(By.css('input'));
+    const div = fixture.debugElement.query(By.css('div'));
+    input.nativeElement.value = 'me';
+    // act
+    (input.nativeElement as HTMLInputElement).dispatchEvent(
+      new InputEvent('input')
+    );
+    fixture.detectChanges();
+    // assert
+    expect(div.nativeElement.textContent.trim()).toBe('Hello me');
   });
 });

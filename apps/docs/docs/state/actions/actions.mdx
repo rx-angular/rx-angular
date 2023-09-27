@@ -5,22 +5,24 @@ title: 'Actions'
 hide_title: true
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # @rx-angular/state/actions
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 
-> `RxActions` is a powerful yet simple tool to manage actions of any type.
+> `RxActions` is a powerful yet simple tool to manage action throughout your application.
 > It can be seen as the glue between user based events and your applications state.
 
 ## Key features
 
-- ✅ No-Boilerplate
+- ✅ No boilerplate
 - ✅ Minimal memory footprint through a Proxy object and lazy initialization
 - ✅ Automatic subscription handling
-- ✅ Dispatch actions
-- ✅ Transformations help you to have a clean template
-- ✅ Fully Typed
+- ✅ Clean separation of concerns
+- ✅ Supports imperative & reactive code styles
 
 ## Install
 
@@ -30,115 +32,148 @@ npm install --save @rx-angular/state
 yarn add @rx-angular/state
 ```
 
-This package helps to reduce code used to create composable action streams.
-It mostly is used in combination with state management libs to handle user interaction and backend communication.
+## Motivation
+
+Actions are an essential part of any state management system. They represent unique events from e.g. user interactions, external
+system events or device APIs. From a pure technical perspective, actions are the triggers for state changes and side effect executions.
+The `@rx-angular/state/actions` package helps to reduce & streamline your code used to create composable action streams.
+
+It is best suited to be used in combination with [RxState](./state) and/or [RxEffects](./effects) but can also be
+used in a standalone way.
+
+:::note
+
+Actions represent unique events that happen in your application.
+
+:::
 
 ## Usage
 
-`RxActions` are instantiated by the creation function `rxActions` coming from the `@rx-angular/state/actions` package.
+:::info Migration Guide
 
-```typescript
+We have transitioned to a new functional API.
+
+Read the [following section](#migrate-to-new-functional-api) for a migration guide explaining how to upgrade your codebase to the new API.
+
+:::
+
+`RxActions` are instantiated by the creation function `rxActions`, imported from the `@rx-angular/state/actions` entrypoint.
+
+The following example shows how to use `rxActions` in a standalone way for a simple login
+component. The interface for our actions will be `{ login: { username: string; password: string; } }`.
+
+:::note Dispatch & React to actions
+
+Note how `rxActions` transforms the action interface into a dispatchable action `login()` and a readable stream, `login$`.
+This way it makes it easy to dispatch it from the template and to glue it to other building blocks.
+
+:::
+
+```typescript title="src/login.component.ts"
 import { rxActions } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
 
 @Component({
-  standalone: true,
-  template: `...`,
+  template: `
+    <input placeholder="username" #username />
+    <input type="password" placeholder="password" #password />
+    <button
+      (click)="
+        actions.login({
+          username: username.value,
+          password: password.value
+        })
+      "
+    >
+      Login
+    </button>
+  `,
 })
-export class AnyComponent {
-  actions = rxActions<UI>();
-}
-```
+class LoginComponent {
+  actions = rxActions<{ login: { username: string; password: string } }>();
 
-### Usage in component to handle UI interaction
-
-This example shows how to create an action instance for the components template.
-We can see how to apply behaviour onto the search input (debouncing the user input for 300 ms).
-
-```typescript
-import { rxActions } from '@rx-angular/state/actions';
-
-type ListUi = { searchInput: string };
-
-@Component({
-  template: `<input name="search" (change)="ui.searchInput($event)" />`,
-})
-class ListComponent {
-  protected ui = rxActions<ListUi>();
-  // UI input with applied behaviour
-  @Output()
-  queryUpdate$ = this.ui.searchInput$.pipe(debounceTime(300));
-}
-```
-
-### Test usage in component to handle UI interaction
-
-```typescript
-import { ListComponent } from './list.component';
-
-function setupComponent(cfg?: {
-  transformFns?: ActionTransforms<ListUi>;
-  providers?: Provider[];
-}) {
-  let providers = [];
-  if (Array.isArray(cfg?.providers)) {
-    providers = cfg.providers;
+  constructor(private service: AuthService) {
+    this.actions.login$
+      .pipe(exhaustMap((credentials) => this.service.login(credentials)))
+      .subscribe();
   }
-  TestBed.configureTestingModule({
-    declarations: [ListComponent],
-  });
-
-  const fixture = TestBed.createComponent(ListComponent);
-  const component = fixture.componentInstance;
-
-  const searchInputElem: HTMLInputElement = fixture.nativeElement.querySelector(
-    'input[name="search"]'
-  );
-  const searchInputChange = (value: string) => {
-    searchInputElem.value = value;
-    searchInputElem.dispatchEvent(new Event('change'));
-  };
-
-  return { fixture, component, searchInputChange };
 }
+```
 
-describe('actions in a component', () => {
-  it('should emit event if input fires change event', async () => {
-    const { component, fixture, searchInputChange } = setupComponent();
-    const spyEmission = jest.fn((value: ListUi['searchInput']) => void 0);
+### Handling side effects on event emission
 
-    component.queryUpdate$.subscribe(spyEmission);
-    expect(spyEmission).toBeCalledTimes(0);
+In this example we use the `on` shorthand to trigger a side effect every time the event it emitted.
+It returns a function which when called stops firing the side effect.
 
-    searchInputChange('abc');
-    expect(spyEmission).toBeCalledTimes(0); // should debounce emission
-    await wait(310);
-    expect(spyEmission).toBeCalledTimes(1); // then fire
-    expect(spyEmission).toBeCalledWith('abc'); // with value
+:::tip on shorthand
 
-    fixture.destroy(); // should unsubscribe onDestroy
-    searchInputChange('xyz');
-    expect(spyEmission).toBeCalledTimes(1); // and not listening anymore
-  });
-});
+`rxActions` also has a built in solution to easily apply side effects on actions.
+For every property in your actions type, you will get the `on` shorthand, e.g. `{ refresh: void }`
+will also expose the `onRefresh` method.
+
+:::
+
+```typescript title="src/login.component.ts"
+import { DOCUMENT } from '@angular/common';
+import { rxActions } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
+
+@Component({
+  template: `
+    <input placeholder="username" #username />
+    <input type="password" placeholder="password" #password />
+    <button
+      (click)="
+        actions.login({
+          username: username.value,
+          password: password.value
+        })
+      "
+    >
+      Login
+    </button>
+  `,
+})
+class LoginComponent {
+  actions = rxActions<{ login: { username: string; password: string } }>();
+
+  private loginEffect = this.actions.onLogin(
+    (credentials$) =>
+      credentials$.pipe(
+        exhaustMap((credentials) => this.service.login(credentials))
+      ),
+    () => this.doc.defaultView.alert('successfully logged in')
+  );
+  constructor(
+    private service: AuthService,
+    @Inject(DOCUMENT) private doc: Document
+  ) {}
+}
 ```
 
 ### Usage in a service to handle data fetching
 
-In this example we see how to use an action instance to handle data fetching.
+In this example we see how to use `rxActions` to handle data fetching.
 We can see how to apply behaviour onto the refresh calls (`exhaustMap` the HTTP requests).
+We also use a `signal` to hold our state of fetched movies.
 
-```typescript
+```typescript title="src/movie.service.ts"
+import { signal } from '@angular/core';
 import { rxActions } from '@rx-angular/state/actions';
-
-type Actions = { refresh: void };
+import { exhaustMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MovieService {
   private movieResource = inject(MovieResource);
-  private actions = rxActions<Actions>();
-  // data refresh with applied behaviour
-  movies$ = this.actions.refresh$.pipe(
-    exhaustMap((_) => this.movieResource.getMovies())
+  private actions = rxActions<{ refresh: void }>();
+  movies = signal<Movie[]>([]);
+
+  private refreshEffect = this.actions.onRefresh(
+    // data refresh with applied behaviour
+    (refresh$) =>
+      refresh$.pipe(exhaustMap(() => this.movieResource.getMovies())),
+    // set the value to the state
+    (movies) => this.movies.set(movies)
   );
 
   refresh() {
@@ -147,180 +182,43 @@ export class MovieService {
 }
 ```
 
-### Testing usage in a service to handle data fetching
+### Unsubscribing from events programmatically
 
-To test actions in a service most of the time mock logic is required.
+The return value of the `on` shorthand is a cleanup function. Calling it will stop the effects execution.
 
-```typescript
-import { MovieResource } from './movie.resource';
-import { MovieService } from './movie.service';
-
-// Test helper code ==========
-
-export class MovieResourceMock {
-  httpRequest = new Subject<Movie[]>();
-  getMovies(qurey?: string): Observable<Movie[]> {
-    return this.httpRequest.pipe(take(1));
-  }
-}
-
-function setupService() {
-  TestBed.overrideProvider(MovieResource, {
-    useFactory: () => new MovieResourceMock(),
-  });
-
-  const service = TestBed.inject(MovieService);
-  const resource = TestBed.inject(MovieResource) as MovieResourceMock;
-  return { service, resource };
-}
-
-// Test code ==========
-
-describe('actions in a service', () => {
-  it('should emit event if method is called', async () => {
-    const { service, resource } = setupService();
-    const spyEmission = jest.fn((value: Movie[]) => void 0);
-
-    service.movies$.subscribe(spyEmission);
-    service.refresh();
-    service.refresh(); // multiple triggers
-    expect(spyEmission).toBeCalledTimes(0); // don't fire new http requests while old one is running
-    resource.httpRequest.next([{ title: 'test' }]); // simulate response
-    expect(spyEmission).toBeCalledTimes(1); // response arrived 1 time
-    expect(spyEmission).toBeCalledWith([{ title: 'test' }]); // with simulated result
-  });
-});
-```
-
-### Handling side effects on event emission
-
-In this example we use the `on` shorthand to trigger a side effect every time the event it emitted.
-It returns a function which when called stops firing the side effect.
-
-```typescript
+```typescript title="src/movie.service.ts"
+import { signal } from '@angular/core';
 import { rxActions } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
 
-type ListUi = { refresh: string };
+@Injectable({ providedIn: 'root' })
+export class MovieService {
+  private movieResource = inject(MovieResource);
+  private actions = rxActions<{ refresh: void }>();
+  movies = signal<Movie[]>([]);
 
-@Component({
-  template: `<button (click)="editUi.refresh($event)">Refresh</button>`,
-})
-class ListComponent {
-  protected ui = rxActions<ListUiEf>();
-  protected movieResource = inject(MovieResource);
-  protected toastService = inject(ToastService);
-
-  private saveObsEf = this.ui.onRefresh(
-    (save$) => save$.pipe(exhaustMap((_) => this.movieResource.getMovies())), // apply behaviour
-    () => this.toastService.showSuccess('Refresh done!') // fire side effect
+  // highlight-start
+  private refreshEffect = this.actions.onRefresh(
+    // data refresh with applied behaviour
+    (refresh$) =>
+      refresh$.pipe(exhaustMap(() => this.movieResource.getMovies())),
+    // set the value to the state
+    (movies) => this.movies.set(movies)
   );
-}
-```
+  // highlight-end
 
-### Test handling side effects on event emission
+  refresh() {
+    this.actions.refresh();
+  }
 
-```typescript
-// Test helper code ==========
-
-function getEfComponentAndService(cfg?: {
-  transformFns?: ActionTransforms<ListUi>;
-}) {
-  TestBed.configureTestingModule({ declarations: [ListEfComponent] });
-  TestBed.overrideProvider(MovieResource, {
-    useFactory: () => new MovieResourceMock(),
-  });
-
-  const resource = TestBed.inject(MovieResource) as MovieResourceMock;
-  const toast = TestBed.inject(ToastService);
-
-  const fixture = TestBed.createComponent(ListEfComponent);
-  const component = fixture.componentInstance;
-
-  const refreshButtonElem: HTMLInputElement =
-    fixture.nativeElement.querySelector('button');
-  const refreshClick = () => {
-    refreshButtonElem.dispatchEvent(new Event('click'));
-  };
-
-  return { fixture, component, refreshClick, resource, toast };
-}
-
-// Test code ==========
-
-describe('action effect in a Component', () => {
-  it('should emit event if method is called', async () => {
-    const { refreshClick, resource, toast } = getEfComponentAndService();
-    const spyToast = jest.spyOn(toast, 'showSuccess');
-
-    refreshClick();
-    refreshClick(); // multiple triggers
-    expect(spyToast).toBeCalledTimes(0); // don't fire new http requests while old one is running
-    resource.httpResponse.next([{ title: 'test' }]);
-    expect(spyToast).toBeCalledTimes(1); // response arrived 1 time
-    expect(spyToast).toBeCalledWith('Refresh done!'); // with simulated result
-  });
-});
-```
-
-## Unsubscribing from events programmatically
-
-```typescript
-import { rxActions } from '@rx-angular/state/actions';
-
-@Component(...)
-class ListComponent {
-  protected ui = rxActions<ListUi>();
-   private saveObsEf = this.ui.onSave(
-      (save$) => save$.pipe(exhaustMap(_ => this.movieService.refresh(q)), // apply behaviour
-      (list: Movie[]) => this.toastService.showSuccess(list) // fire side effect
-    );
-
-  stopListenToClick() {
-    this.saveObsEf();
+  disable() {
+    // highlight-next-line
+    this.refreshEffect();
   }
 }
 ```
 
-### Test unsubscribing from events programmatically
-
-```typescript
-// Test code ==========
-
-describe('action effect in a Component', () => {
-  it('should emit event if method is called', async () => {
-    const { refreshClick, resource, toast } = getEfComponentAndService();
-    const spyToast = jest.spyOn(toast, 'showSuccess');
-
-    refreshClick();
-    refreshClick(); // multiple triggers
-    expect(spyToast).toBeCalledTimes(0); // don't fire new http requests while old one is running
-    resource.httpResponse.next([{ title: 'test' }]);
-    expect(spyToast).toBeCalledTimes(1); // response arrived 1 time
-    expect(spyToast).toBeCalledWith('Refresh done!'); // with simulated result
-  });
-});
-```
-
-### Transformations
-
-```typescript
-export class MovieServiceMock {
-  httpRequest = new Subject<Movie[]>();
-  getMovies(qurey?: string): Observable<Movie[]> {
-    return this.httpRequest.pipe(take(1));
-  }
-}
-
-function setupService() {
-  TestBed.overrideProvider(MovieResource, {
-    useFactory: () => new MovieResourceMock(),
-  });
-
-  const service = TestBed.inject(MovieService);
-  const resource = TestBed.inject(MovieResource) as MovieResourceMock;
-  return { service, resource };
-}
-```
+## Transformations
 
 Often we process `Events` from the template and occasionally also trigger those channels in the class programmatically.
 
@@ -331,106 +229,384 @@ By using the `transformations` API, we can preconfigure how our input events are
 
 You can write your own transforms, leverage Browser APIs like `String` and `Boolean` or use the predefined functions.
 
-#### Use existing transform functions
+### Use existing transform functions
 
 The existing transform functions are:
 
-- `preventDefault` - calls `preventDefault` on a passed event
-- `stopPropagation`
-- `preventDefaultStopPropagation`
-- `eventValue`
+- `preventDefault` -> calls `preventDefault` on a passed event
+- `stopPropagation` -> calls `stopPropagation` on a passed event
+- `preventDefaultStopPropagation` -> calls both of the above
+- `eventValue` -> extracts the value from an input event
 
 Here we see how to use an action transforms. This concept is similar to Input transforms.
 The logic is placed in a single place and transforms the event before emission.
 
-```typescript
+```typescript title="src/list.component.ts"
 import { rxActions, eventValue } from '@rx-angular/state/actions';
-
-type ListUi = { searchInput: string };
 
 @Component({
   // takes a DOM Event
-  template: `<input name="search" (change)="ui.searchInput($event)" />`,
+  template: `<input name="search" (change)="actions.search($event)" />`,
 })
 class ListComponent {
-  protected ui = rxActions<ListUi>(({ transforms }) =>
+  actions = rxActions<{ search: string }>(({ transforms }) =>
     // if event is forwarded pluck the value `e?.target?.value` else forward the value as is
-    transforms({ searchInput: eventValue })
+    transforms({ search: eventValue })
   );
-
-  searchChange(query: string) {
-    // takes a string
-    this.ui.searchInput(query);
-  }
 }
 ```
 
 ### Use custom transform functions
 
-```typescript
-import { rxActions, eventValue } from '@rx-angular/state/actions';
-
-type ListUi = { searchInput: string };
-
-const codeTransform = (v) => parseInt(eventValue(v)) + '#POSTFIX';
+```typescript title="src/greet.component.ts"
+import { Component } from '@angular/core';
+import { rxActions } from '@rx-angular/state/actions';
 
 @Component({
-  // takes a DOM Event
-  template: `<input
-    type="number"
-    name="code"
-    (change)="ui.codeChange($event)"
-  />`,
+  template: `
+    <input name="name" (input)="ui.greet()" />
+    <div>{{ ui.greet$ | async }}</div>
+  `,
+  /**/
 })
-class ListComponent {
-  protected ui = rxActions<ListUi>(({ transform }) =>
-    transform({
-      codeChange: codeTransform,
+export class GreetComponent {
+  ui = rxActions<{ greet: string }>(({ transforms }) =>
+    transforms({
+      // highlight-next-line
+      greet: (v) => `Hello ${v}`,
     })
   );
+}
+```
 
-  searchChange(code: number) {
-    // takes a number
-    this.ui.codeChange(query);
+## Migrate to new functional API
+
+The new functional API provides a nicer developer experience and aligns with the new Angular APIs recently released.
+We want to emphasize everyone to use the new functional API. The following examples showcases the key differences
+and how to migrate from the class based approach to the functional one.
+
+The beauty of the new functional approach is that it works without providers. This way, you simply use the new
+creation function `rxActions`.
+Instead of importing `RxActionsFactory` and putting it into the `providers` array, you now import `rxActions`.
+The namespace still stays the same.
+
+```typescript
+import { rxActions } from '@rx-angular/state/actions';
+```
+
+<Tabs>
+<TabItem value="class-based" label="Class Based (deprecated)">
+
+```typescript title="src/login.component.ts"
+// highlight-next-line
+import { RxActionFactory } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
+
+@Component({
+  template: `
+    <input placeholder="username" #username />
+    <input type="password" placeholder="password" #password />
+    <button
+      (click)="
+        actions.login({
+          username: username.value,
+          password: password.value
+        })
+      "
+    >
+      Login
+    </button>
+  `,
+  // provide `RxActionFactory` as local instance of your component
+  // highlight-next-line
+  providers: [RxActionFactory]
+})
+export class LoginComponent {
+  // highlight-next-line
+  actions = this.actionFactory.create();
+
+  constructor(
+    private service: AuthService
+    // highlight-next-line
+    private actionFactory: RxActionFactory<{ login: { username: string; password: string } }>
+  ) {
+    this.actions.login$
+      .pipe(exhaustMap((credentials) => this.service.login(credentials)))
+      .subscribe();
   }
 }
 ```
 
-### Test transform functions
+</TabItem>
 
-```typescript
-// Test helper code ==========
+<TabItem value="functional" label="Functional API (NEW)">
 
-function getTransformComponentAndService() {
-  TestBed.configureTestingModule({ declarations: [ListTransformComponent] });
-  const fixture = TestBed.createComponent(ListTransformComponent);
-  const component = fixture.componentInstance;
+```typescript title="src/login.component.ts"
+// highlight-next-line
+import { rxActions } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
 
-  const searchInputElem: HTMLInputElement = fixture.nativeElement.querySelector(
-    'input[name="search"]'
-  );
-  const searchInputChange = (value: string) => {
-    searchInputElem.value = value;
-    searchInputElem.dispatchEvent(new Event('change'));
-  };
+@Component({
+  template: `
+    <input placeholder="username" #username />
+    <input type="password" placeholder="password" #password />
+    <button
+      (click)="
+        actions.login({
+          username: username.value,
+          password: password.value
+        })
+      "
+    >
+      Login
+    </button>
+  `,
+})
+export class LoginComponent {
+  // highlight-next-line
+  actions = rxActions<{ login: { username: string; password: string } }>();
 
-  return { component, searchInputChange };
+  constructor(private service: AuthService) {
+    this.actions.login$
+      .pipe(exhaustMap((credentials) => this.service.login(credentials)))
+      .subscribe();
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Testing
+
+The following section shows different examples on how to test angular building blocks that use `rxActions`.
+The components and services tested here, all are described in the examples before.
+
+### Test usage in component to handle UI interaction
+
+```typescript title="src/login.component.spec.ts"
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+
+describe('LoginComponent', () => {
+  let fixture: ComponentFixture<LoginComponent>;
+  let service: AuthService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [LoginComponent],
+      providers: [AuthService],
+    }).compileComponents();
+    fixture = TestBed.createComponent(LoginComponent);
+    service = TestBed.inject(AuthService);
+    fixture.detectChanges();
+  });
+
+  it('login on form submit', () => {
+    // arrange
+    const username = fixture.debugElement.query(By.css('input:first-child'));
+    const password = fixture.debugElement.query(
+      By.css('input[type="password"]')
+    );
+    const btn = fixture.debugElement.query(By.css('button'));
+    const loginSpy = jest.spyOn(service, 'login');
+    username.nativeElement.value = 'user';
+    password.nativeElement.value = 'pwd';
+
+    // act
+    fixture.detectChanges();
+    btn.nativeElement.click();
+
+    // assert
+    expect(loginSpy).toHaveBeenCalled();
+  });
+});
+```
+
+### Testing usage in a service to handle data fetching
+
+To test actions in a service most of the time mock logic is required.
+
+```typescript title="src/movie.service.spec.ts"
+import { TestBed } from '@angular/core/testing';
+import { Observable } from 'rxjs';
+import { MovieResource } from './movie.resource';
+import { MovieService } from './movie.service';
+
+// MovieResource Mock helper
+
+export class MovieResourceMock {
+  httpRequest = new Subject<Movie[]>();
+  getMovies(): Observable<Movie[]> {
+    return this.httpRequest.pipe(take(1));
+  }
 }
 
 // Test code ==========
 
-describe('action transform in a component', () => {
-  it('should emit event if method is called', async () => {
-    const { searchInputChange, component } = getTransformComponentAndService();
-    const spyEmission = jest.fn(() => void 0);
+describe('MovieService', () => {
+  let service: MovieService;
+  let resource: MovieResourceMock;
 
-    component.queryUpdate.subscribe(spyEmission);
-    searchInputChange('1.5');
-    expect(spyEmission).toBeCalledTimes(1);
-    expect(spyEmission).toBeCalledWith('1#POSTFIX');
-    component.searchChange('2.5');
-    expect(spyEmission).toBeCalledTimes(2);
-    expect(spyEmission).toBeCalledWith('2#POSTFIX');
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        MovieService,
+        { provide: MovieResource, useClass: MovieResourceMock },
+      ],
+    }).compileComponents();
+    service = TestBed.inject(MovieService);
+    resource = TestBed.inject(MovieResource) as any;
+  });
+
+  it('should fetch movies on refresh', () => {
+    // arrange
+    const movies = [{ id: '1' }];
+    // act
+    service.refresh();
+    resource.httpResponse.next(movies);
+    // assert
+    expect(service.movies()).toEqual(movies);
+  });
+});
+```
+
+### Test handling side effects on event emission
+
+```typescript title="src/login.component.spec.ts"
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { of } from 'rxjs';
+
+class AuthServiceMock {
+  login(credentials: { username: string; password: string }) {
+    return of(true);
+  }
+}
+
+describe('LoginComponent', () => {
+  let fixture: ComponentFixture<LoginComponent>;
+  const documentMock = {
+    defaultView: {
+      alert: (v) => v,
+    },
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [LoginComponent],
+      providers: [{ provide: AuthService, useClass: AuthServiceMock }],
+    })
+      .overrideComponent(LoginComponent, {
+        set: {
+          providers: [
+            {
+              provide: DOCUMENT,
+              useValue: documentMock,
+            },
+          ],
+        },
+      })
+      .compileComponents();
+    fixture = TestBed.createComponent(LoginComponent);
+    fixture.detectChanges();
+  });
+
+  it('should alert success after login', () => {
+    // arrange
+    const username = fixture.debugElement.query(By.css('input:first-child'));
+    const password = fixture.debugElement.query(
+      By.css('input[type="password"]')
+    );
+    const btn = fixture.debugElement.query(By.css('button'));
+    const alertSpy = jest.spyOn(documentMock.defaultView, 'alert');
+    username.nativeElement.value = 'user';
+    password.nativeElement.value = 'pwd';
+
+    // act
+    fixture.detectChanges();
+    btn.nativeElement.click();
+
+    // assert
+    expect(alertSpy).toHaveBeenCalled();
+  });
+});
+```
+
+### Test unsubscribing from events programmatically
+
+```typescript title="src/movie.service.spec.ts"
+import { TestBed } from '@angular/core/testing';
+import { Observable } from 'rxjs';
+import { MovieResource } from './movie.resource';
+import { MovieService } from './movie.service';
+
+// MovieResource Mock helper
+
+export class MovieResourceMock {
+  httpRequest = new Subject<Movie[]>();
+  getMovies(): Observable<Movie[]> {
+    return this.httpRequest.pipe(take(1));
+  }
+}
+
+// Test code ==========
+
+describe('MovieService', () => {
+  let service: MovieService;
+  let resource: MovieResourceMock;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        MovieService,
+        { provide: MovieResource, useClass: MovieResourceMock },
+      ],
+    }).compileComponents();
+    service = TestBed.inject(MovieService);
+    resource = TestBed.inject(MovieResource);
+  });
+
+  it('should stop fetching when autoRefresh has stopped', () => {
+    // arrange
+    const getMoviesSpy = jest.spyOn(resource, 'getMovies');
+    resource.httpRequest.next(movies);
+    // act
+    service.refresh();
+    // assert
+    expect(service.movies()).toEqual(movies);
+  });
+});
+```
+
+### Test transform functions
+
+```typescript title="src/greet.component.spec.ts"
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+
+describe('GreetComponent', () => {
+  let fixture: ComponentFixture<GreetComponent>;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [GreetComponent],
+    });
+    fixture = TestBed.createComponent(GreetComponent);
+    fixture.detectChanges();
+  });
+
+  it('should greet me', () => {
+    // arrange
+    const input = fixture.debugElement.query(By.css('input'));
+    const div = fixture.debugElement.query(By.css('div'));
+    input.nativeElement.value = 'me';
+    // act
+    (input.nativeElement as HTMLInputElement).dispatchEvent(
+      new InputEvent('input')
+    );
+    fixture.detectChanges();
+    // assert
+    expect(div.nativeElement.textContent.trim()).toBe('Hello me');
   });
 });
 ```
