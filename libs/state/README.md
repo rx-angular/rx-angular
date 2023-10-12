@@ -37,7 +37,38 @@ ng update @rx-angular/state
 nx migrate @rx-angular/state
 ```
 
-## Usage
+## Usage (recommended)
+
+The new functional creation API lets you create and configure `RxState` in only one place.
+
+```ts
+import { rxState } from '@rx-angular/state';
+import { RxFor } from '@rx-angular/template/for';
+
+@Component({
+  template: `<movie *rxFor="let movie of movies$" [movie]="movie" />`,
+  imports: [RxFor],
+})
+export class MovieListComponent {
+  private movieResource = inject(MovieResource);
+
+  private state = rxState<{ movies: Movie[] }>(({ set, connect }) => {
+    // set initial state
+    set({ movies: [] });
+    // connect data source to state
+    connect('movies', this.movieResource.fetchMovies());
+  });
+
+  // select a property for the template to consume
+  movies$ = this.state.select('movies');
+}
+```
+
+The functional approach will be the new default approach for newer versions.
+
+Read the [Migration Guide](https://rx-angular.io/docs/state/setup#migrate-to-new-functional-api) for a migration guide explaining how to upgrade your codebase to the new API.
+
+## Usage (legacy)
 
 Local Provider (recommended): Use RxState as a local provider in your component to make use of Angular's Dependency Injection.
 
