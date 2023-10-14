@@ -14,6 +14,12 @@ It offers a lightweight and intuitive API and automatic subscription handling, m
 This library offers unique features such as merging global state into local state, shared state selections, subscription-free interaction, and integration with imperative functions like component lifecycle and HostBindings.
 It is an ideal alternative or complimentary library to global state management solutions like Akita, NgRx, and NgXs.
 
+### Key features
+
+- ⚡️ Fully reactive
+- 🛡️ Strongly typed
+- 🚀 Highly performant
+
 ### Introduction Video
 
 [![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)](https://www.youtube.com/watch?v=CcQYj4V2IKw)
@@ -37,7 +43,9 @@ ng update @rx-angular/state
 nx migrate @rx-angular/state
 ```
 
-## Usage (recommended)
+## Usage
+
+### Functional Creation (NEW)
 
 The new functional creation API lets you create and configure `RxState` in only one place.
 
@@ -68,9 +76,9 @@ The functional approach will be the new default approach for newer versions.
 
 Read the [Migration Guide](https://rx-angular.io/docs/state/setup#migrate-to-new-functional-api) for a migration guide explaining how to upgrade your codebase to the new API.
 
-## Usage (legacy)
+### Class Based
 
-Local Provider (recommended): Use RxState as a local provider in your component to make use of Angular's Dependency Injection.
+Local Provider: Use RxState as a local provider in your component to make use of Angular's Dependency Injection.
 
 With the new `inject` method:
 
@@ -187,6 +195,7 @@ Optimize state selections and data transfer, ensure only the necessary data is t
 | `^2.0.0`  | `>=13.0.0` |
 | `^14.0.0` | `^14.0.0`  |
 | `^15.0.0` | `^15.0.0`  |
+| `^16.0.0` | `^16.0.0`  |
 
 Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see the [official guide](https://angular.io/guide/versions).
 
