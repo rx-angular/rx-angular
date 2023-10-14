@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { RxStateSetupFn, rxState } from './inject';
+import { RxStateSetupFn, rxState } from './rx-state';
 
 describe(rxState, () => {
-  it('should create RxState instance', () => {
+  it('should create rxState', () => {
     const { component } = setupComponent();
     expect(component.state).toBeDefined();
   });
@@ -26,30 +26,6 @@ describe(rxState, () => {
     component.state.set({ count: 10 });
     expect(component.state.get()).toEqual({ count: 20 });
   });
-
-  /*it('should hold an observable', () => {
-    const spy = jest.fn();
-    setupComponent<{ count: number }>(({ hold }) =>
-      hold(of('src').pipe(tap(spy)))
-    );
-    expect(spy).toHaveBeenCalledWith('src');
-  });
-
-  it('should hold an observable and sideEffect fn', () => {
-    const spy = jest.fn();
-    setupComponent<{ count: number }>(({ hold }) => hold(of('src'), spy));
-    expect(spy).toHaveBeenCalledWith('src');
-  });
-
-  it('should hold multiple observables', () => {
-    const spy = jest.fn();
-    setupComponent<{ count: number }>(({ hold }) => {
-      hold(of('src').pipe(tap(spy)));
-      hold(of('src2'), spy);
-    });
-    expect(spy.mock.calls[0][0]).toEqual('src');
-    expect(spy.mock.calls[1][0]).toEqual('src2');
-  });*/
 
   it('should connect with slice$', () => {
     const { component } = setupComponent<{ count: number }>(({ connect }) =>

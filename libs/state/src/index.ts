@@ -1,4 +1,4 @@
-export { RxStateSetupFn, rxState } from './lib/inject';
+export { RxStateSetupFn, rxState } from './lib/rx-state';
 export {
   ProjectStateFn,
   ProjectStateReducer,
