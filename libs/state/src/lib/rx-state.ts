@@ -44,7 +44,7 @@ export function rxState<State extends object>(
 
   destroyRef.onDestroy(() => legacyState.ngOnDestroy());
 
-  const state = {
+  const state: RxState<State> = {
     get: legacyState.get.bind(legacyState),
     set: legacyState.set.bind(legacyState),
     connect: legacyState.connect.bind(legacyState),
