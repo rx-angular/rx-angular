@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { RxStateSetupFn, rxState } from './rx-state';
+import { RxState } from './rx-state.service';
 
 describe(rxState, () => {
   it('should create rxState', () => {
@@ -87,13 +88,13 @@ describe(rxState, () => {
     });
   });
 
-  /*it('should call ngOnDestroy', () => {
-    const { fixture, component } = setupComponent();
-    const spy = jest.spyOn(component.state, 'ngOnDestroy');
-    expect(spy).not.toHaveBeenCalled();
+  it('should call ngOnDestroy', () => {
+    RxState.prototype.ngOnDestroy = jest.fn();
+    const { fixture } = setupComponent();
+    expect(RxState.prototype.ngOnDestroy).not.toHaveBeenCalled();
     fixture.destroy();
-    expect(spy).toHaveBeenCalled();
-  });*/
+    expect(RxState.prototype.ngOnDestroy).toHaveBeenCalled();
+  });
 });
 
 function setupComponent<State extends object>(setupFn?: RxStateSetupFn<State>) {
