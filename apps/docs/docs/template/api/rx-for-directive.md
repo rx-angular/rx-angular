@@ -27,7 +27,7 @@ Each instance of `RxFor` can be configured to render with different settings.
 
 - Bootstrapping of `ngFor`is slow
 - Change detection and render work processed in a UI blocking way
-- Laziness of DOM is not given (slow emplate creation)
+- Laziness of DOM is not given (slow template creation)
 - Nested structures are very slow, especially with updates
 - Destruction is more computation heavy than adding bootstrapping
 
@@ -178,7 +178,7 @@ export class AnyComponent {
 ### Save code with the `trackBy` shortcut
 
 > **💡 DX Tip:**
-> As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refacturing.
+> As `rxFor` accepts also static values it can serve as a drop in replacement with an easy find and replace refactoring.
 
 ```typescript
 @Component({
@@ -435,7 +435,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 })
 export class AppComponent {
   // As the part of the template where this function is used as event listener callback
-  // has `patchZone` false the all event listeners run ouside zone.
+  // has `patchZone` false the all event listeners run outside zone.
   calcBgColor(moveEvent: MouseEvent) {
     // do something with the background in combination with the mouse position
   }
@@ -495,7 +495,7 @@ TestBed.configureTestingModule({
 }).compileComponents();
 ```
 
-This way, `*rxFor` will use the same rendering strategy used by the Angulars built-in `async` pipe.
+This way, `*rxFor` will use the same rendering strategy used by the Angular's built-in `async` pipe.
 
 ## Resources
 
