@@ -133,3 +133,7 @@ We welcome contributions from the community to help improve RxAngular! To get st
 ## License
 
 This project is MIT licensed.
+
+---
+
+made with ❤ by [push-based.io](https://www.push-based.io)

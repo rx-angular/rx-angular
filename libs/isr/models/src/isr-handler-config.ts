@@ -1,5 +1,5 @@
 import { Provider } from '@angular/core';
-import { CacheHandler } from './cache-handler';
+import { CacheHandler, RenderVariant } from './cache-handler';
 import { Request } from 'express';
 
 export interface ISRHandlerConfig {
@@ -42,6 +42,30 @@ export interface ISRHandlerConfig {
    * If not provided, defaults to true.
    */
   skipCachingOnHttpError?: boolean;
+
+  /**
+   * An optional way to define multiple variants of a page.
+   * This can be useful if the appearance page differs, for example,
+   * based on a cookie and the cached variant would thus lead to a content shift.
+   * Each variant needs an identifier and a callback function
+   * to identify the variant. It is also possible to modify the request
+   * to recreate the variant in case of on-demand cache invalidation.
+   *
+   * @example
+   * variants: [
+   *     {
+   *         identifier: 'logged-in',
+   *         detectVariant: (req) => {
+   *             return req.cookies && req.cookies.access_token;
+   *         },
+   *         simulateVariant: (req) => {
+   *             req.cookies['access_token'] = 'isr';
+   *             return req;
+   *         },
+   *     },
+   * ],
+   */
+  variants?: RenderVariant[];
 }
 
 export interface ServeFromCacheConfig {
