@@ -176,8 +176,7 @@ export class CounterComponent {
 
 :::tip
 
-**You can save 1 change detection run per emission** and improve performance of your application
-by providing `Observables` directly as `Input`.
+**You can save 1 change detection run per emission** and improve performance of your application by providing `Observables` directly as `Input`.
 This way the ChangeDetection for the `Input` binding will only fire once for the first assignment.
 
 You can use `coerceObservable` from `@rx-angular/cdk/coercing` to support static values as well as Observables with a single line of code.
@@ -222,7 +221,7 @@ export class CounterComponent {
 
 ## Output Property Bindings
 
-**Combining `Output` bindings directly from RxState**
+**Combining `Output` bindings directly from RxState.**
 
 :::tip
 
@@ -509,7 +508,7 @@ export class MovieListComponent {
 
 </TabItem>
 
-<TabItem value="new" label="Functional Creation (_NEW_)">
+<TabItem value="new" label="Functional Creation (NEW)">
 
 ```typescript
 // highlight-next-line
@@ -543,7 +542,7 @@ export class MovieListComponent {
 :::info
 
 The new `rxState` creation function drops the `hold` method and with it, it's capabilities of managing side effects.
-If you need to have such a feature, we encourage to use [`rxEffects`](./effects/effects.mdx)
+If you need to have such a feature, we encourage to use [`rxEffects`](./effects/effects.mdx).
 
 :::
 
@@ -581,10 +580,10 @@ export class MovieListComponent {
 
 </TabItem>
 
-<TabItem value="new" label="Functional Creation (_NEW_)">
+<TabItem value="new" label="Functional Creation (NEW)">
 
 :::warning
-Not support anymore, please use [`rxEffects`](./effects/effects.mdx)
+Not support anymore, please use [`rxEffects`](./effects/effects.mdx).
 :::
 
 </TabItem>
@@ -623,11 +622,11 @@ export class StatefulComponent extends RxState<{ state: number }> {
 
 </TabItem>
 
-<TabItem value="new" label="Functional Creation (_NEW_)">
+<TabItem value="new" label="Functional Creation (NEW)">
 
 :::warning
 
-Not support anymore, please choose either the RxState as a Service approach, or use it as a private property
+Not support anymore, please choose either the RxState as a Service approach, or use it as a private property.
 
 :::
 
@@ -635,11 +634,4 @@ Not support anymore, please choose either the RxState as a Service approach, or 
 
 </Tabs>
 
-_disclaimer_: this doc is work in progress. Not every use case has found its way into the docs. We encourage you to contribute :).
-
-<Tabs>
-
-<TabItem value="class-based" label="Class Based (Classic)"></TabItem>
-<TabItem value="new" label="Functional Creation (_NEW_)"></TabItem>
-
-</Tabs>
+_Disclaimer_: this doc is work in progress. Not every use case has found its way into the docs. We encourage you to contribute 🙂.
