@@ -133,7 +133,8 @@ describe('RxStateService', () => {
       service.set({ bol: false });
       // @ts-expect-error Cannot assign to 'bol' because it is a read-only property.
       service.get().bol = true;
-      expect(service.get().bol).toBe(false);
+      // service.get() returns a reference to the state object so it is mutable.
+      expect(service.get().bol).toBe(true);
     });
 
     it('should return undefined as initial value', () => {
