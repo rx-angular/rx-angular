@@ -2,9 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { rxState } from './rx-state';
 import { Component, Injectable } from '@angular/core';
-import { Observable, Subject, map, merge } from 'rxjs';
+import { Subject, map, merge } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { TestScheduler } from 'rxjs/testing';
+import { jestMatcher } from '@test-helpers/rx-angular';
 
 @Component({
   selector: 'rx-counter',
@@ -84,9 +85,7 @@ export class CounterService {
   readonly count$ = this.state.select('count');
 }
 
-const testScheduler = new TestScheduler((actual, expected) => {
-  expect(actual).toEqual(expected);
-});
+const testScheduler = new TestScheduler(jestMatcher);
 
 describe('CounterService', () => {
   let service: CounterService;
