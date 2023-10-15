@@ -1,0 +1,9 @@
+{
+  "name": "@test-helpers/rx-angular",
+  "version": "0.0.1",
+  "peerDependencies": {},
+  "dependencies": {
+    "tslib": "^2.4.1"
+  },
+  "sideEffects": false
+}

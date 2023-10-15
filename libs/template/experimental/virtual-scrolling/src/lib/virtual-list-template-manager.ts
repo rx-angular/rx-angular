@@ -46,7 +46,7 @@ export function createVirtualListTemplateManager<
   templateRef,
   createViewContext,
   updateViewContext,
-  viewCacheSize,
+  templateCacheSize,
 }: TemplateSettings<T, C, any>): RxVirtualListTemplateManager<T, C> {
   let _viewCache: EmbeddedViewRef<C>[] = [];
   let itemCount = 0;
@@ -143,7 +143,7 @@ export function createVirtualListTemplateManager<
    * destroyed.
    */
   function _maybeCacheView(view: EmbeddedViewRef<C>) {
-    if (_viewCache.length < viewCacheSize) {
+    if (_viewCache.length < templateCacheSize) {
       _viewCache.push(view);
       return true;
     } else {

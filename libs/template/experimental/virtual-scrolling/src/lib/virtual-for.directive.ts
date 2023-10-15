@@ -60,7 +60,7 @@ import {
   RxVirtualListTemplateManager,
 } from './virtual-list-template-manager';
 import {
-  DEFAULT_VIEW_CACHE_SIZE,
+  DEFAULT_TEMPLATE_CACHE_SIZE,
   RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS,
 } from './virtual-scroll.config';
 
@@ -324,8 +324,8 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * scrolling the list. If this is set to 0, `rxVirtualFor` won't cache any view,
    * thus destroying & re-creating very often on scroll events.
    */
-  @Input('rxVirtualForViewCacheSize') viewCacheSize =
-    this.defaults?.viewCacheSize || DEFAULT_VIEW_CACHE_SIZE;
+  @Input('rxVirtualForTemplateCacheSize') templateCacheSize =
+    this.defaults?.templateCacheSize || DEFAULT_TEMPLATE_CACHE_SIZE;
 
   /**
    * @description
@@ -605,7 +605,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       templateRef: this.template,
       createViewContext: this.createViewContext.bind(this),
       updateViewContext: this.updateViewContext.bind(this),
-      viewCacheSize: this.viewCacheSize,
+      templateCacheSize: this.templateCacheSize,
     });
     this.render()
       .pipe(takeUntil(this._destroy$))

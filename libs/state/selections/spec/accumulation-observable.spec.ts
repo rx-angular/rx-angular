@@ -1,5 +1,5 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from '@test-helpers/rx-angular';
 import { of, throwError } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
@@ -9,7 +9,10 @@ import {
   createAccumulationObservable,
 } from '@rx-angular/state/selections';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { initialPrimitiveState, PrimitiveState } from '@test-helpers';
+import {
+  initialPrimitiveState,
+  PrimitiveState,
+} from '@test-helpers/rx-angular';
 
 function setupAccumulationObservable<T extends object>(cfg: {
   initialState?: T;

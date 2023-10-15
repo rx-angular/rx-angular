@@ -12,11 +12,11 @@ Some examples how to reactively handle basic [`HostBindings`](https://angular.io
 Sadly `HostBindings` are not able to bind to `Observable` sources out of the box. So we have to come up with custom solutions
 in order to have fully reactive components.
 
-In the following examples we will use the `rxLet` directive or the `push` pipe as replacements for angulars `async` pipe.
+In the following examples we will use the `rxLet` directive or the `push` pipe as replacements for angular's `async` pipe.
 `rxLet` and `push` belong to the not yet released `@rx-angular/template` package.
 
 Furthermore we want to express that we will come up with a more convenient solution facing this problem. This can be seen as WIP and
-should not be the longterm solution to handle `HostBindings` in a fully reactive way.
+should not be the long term solution to handle `HostBindings` in a fully reactive way.
 
 Imagine you have the following state which you want to bind to properties of your host element.
 
@@ -92,12 +92,12 @@ export class RxComponent {
 }
 ```
 
-By calling `ChangeDetectorRef#markForCheck` after every state change, we flag our component dirty when needed and let angulars
+By calling `ChangeDetectorRef#markForCheck` after every state change, we flag our component dirty when needed and let angular's
 `ChangeDetection` do it's magic for us.
 
 ### Let the template handle changeDetection
 
-If you happen to need your variables not only for your `HostBindings` but aswell in the view, we could easily let
+If you happen to need your variables not only for your `HostBindings` but as well in the view, we could easily let
 our viewHelpers take care of detecting changes. Just make sure all of your variables needed for the `HostBindings` are bound
 to the view correctly.
 
@@ -124,7 +124,7 @@ With this setup you can opt-out of the `ChangeDetection` of angular and manage `
 This approach even works when calling `ChangeDetectorRef#detach` for your component.
 We will utilize the `ElementRef` itself for this purpose and manipulate the DOM on our own.
 
-Feel free to use angulars `Renderer2` if you want an abstraction layer, should work the exact same way.
+Feel free to use angular's `Renderer2` if you want an abstraction layer, should work the exact same way.
 
 ```typescript
 @Component({
