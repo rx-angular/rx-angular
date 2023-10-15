@@ -57,7 +57,7 @@ import { RxFor } from '@rx-angular/template/for';
   imports: [RxFor],
 })
 export class MovieListComponent {
-  private store = inject(Store<MovieState>);
+  private store = inject<Store<MovieState>>(Store);
 
   private state = rxState<{ movies: Movie[] }>(({ set, connect }) => {
     // set initial state
@@ -286,7 +286,7 @@ import { RxFor } from '@rx-angular/template/for';
   imports: [RxFor, ReactiveFormsModule],
 })
 export class MovieListComponent {
-  private store = inject(Store<MovieState>);
+  private store = inject<Store<MovieState>>(Store);
 
   search = new FormControl<string>();
 
@@ -333,7 +333,7 @@ import { RxFor } from '@rx-angular/template/for';
   imports: [RxFor, ReactiveFormsModule],
 })
 export class MovieListComponent {
-  private store = inject(Store<MovieState>);
+  private store = inject<Store<MovieState>>(Store);
 
   search = new FormControl<string>();
 
