@@ -5,7 +5,7 @@ import {
   jestMatcher,
   NestedState,
   PrimitiveState,
-} from '@test-helpers';
+} from '@test-helpers/rx-angular';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';

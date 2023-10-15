@@ -22,6 +22,10 @@ coverage:
         target: 90%
         flags:
           - eslint-plugin
+      isr:
+        target: 90%
+        flags:
+          - isr
 
 flags:
   state:
@@ -39,6 +43,10 @@ flags:
   eslint-plugin:
     paths:
       - libs/eslint-plugin
+    carryforward: true
+  isr:
+    paths:
+      - libs/isr
     carryforward: true
 
 comment:

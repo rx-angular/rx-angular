@@ -10,7 +10,7 @@ This snippet compares 3 different implementations of the same problem.
 It serves as a small refactoring guide
 and shows the difference of imperative and declarative/reactive programming.
 
-This snippet uses the `rxLet` directive (`@rx-angular/template`, not released yet) as replacement for angulars `async` pipe.
+This snippet uses the `rxLet` directive (`@rx-angular/template`, not released yet) as replacement for angular's `async` pipe.
 All examples will work with the `async`.
 
 **Problem**:

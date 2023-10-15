@@ -1,5 +1,5 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from '@test-helpers/rx-angular';
 import { Observable, of } from 'rxjs';
 import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 import { map, mergeMap } from 'rxjs/operators';

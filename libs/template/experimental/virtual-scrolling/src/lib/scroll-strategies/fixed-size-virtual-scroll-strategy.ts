@@ -31,7 +31,11 @@ import {
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
 } from '../model';
-import { unpatchedAnimationFrameTick } from '../util';
+import {
+  calculateVisibleContainerSize,
+  parseScrollTopBoundaries,
+  unpatchedAnimationFrameTick,
+} from '../util';
 import {
   DEFAULT_ITEM_SIZE,
   DEFAULT_RUNWAY_ITEMS,
@@ -138,6 +142,14 @@ export class FixedSizeVirtualScrollStrategy<
   }
 
   private scrollTop = 0;
+  /** @internal */
+  private scrollTopWithOutOffset = 0;
+  /** @internal */
+  private scrollTopAfterOffset = 0;
+  /** @internal */
+  private viewportOffset = 0;
+  /** @internal */
+  private containerSize = 0;
   private direction: 'up' | 'down' = 'down';
 
   private readonly detached$ = new Subject<void>();
@@ -208,24 +220,42 @@ export class FixedSizeVirtualScrollStrategy<
     );
     const onScroll$ = this.viewport!.elementScrolled$.pipe(
       coalesceWith(unpatchedAnimationFrameTick()),
-      map(() => this.viewport!.getScrollTop()),
-      startWith(0),
-      tap((_scrollTop) => {
-        this.direction = _scrollTop > this.scrollTop ? 'down' : 'up';
-        this.scrollTop = _scrollTop;
+      startWith(void 0),
+      tap(() => {
+        this.viewportOffset = this.viewport!.measureOffset();
+        const { scrollTop, scrollTopWithOutOffset, scrollTopAfterOffset } =
+          parseScrollTopBoundaries(
+            this.viewport!.getScrollTop(),
+            this.viewportOffset,
+            this._contentSize,
+            this.containerSize
+          );
+        this.direction =
+          scrollTopWithOutOffset > this.scrollTopWithOutOffset ? 'down' : 'up';
+        this.scrollTopWithOutOffset = scrollTopWithOutOffset;
+        this.scrollTopAfterOffset = scrollTopAfterOffset;
+        this.scrollTop = scrollTop;
       })
     );
     combineLatest([
       dataLengthChanged$,
       this.viewport!.containerRect$.pipe(
-        map(({ height }) => height),
+        map(({ height }) => {
+          this.containerSize = height;
+          return height;
+        }),
         distinctUntilChanged()
       ),
       onScroll$,
       this.runwayStateChanged$.pipe(startWith(void 0)),
     ])
       .pipe(
-        map(([length, containerSize]) => {
+        map(([length]) => {
+          const containerSize = calculateVisibleContainerSize(
+            this.containerSize,
+            this.scrollTopWithOutOffset,
+            this.scrollTopAfterOffset
+          );
           const range: ListRange = { start: 0, end: 0 };
           if (this.direction === 'up') {
             range.start = Math.floor(
@@ -272,7 +302,7 @@ export class FixedSizeVirtualScrollStrategy<
 
   scrollToIndex(index: number, behavior?: ScrollBehavior): void {
     const scrollTop = this.itemSize * index;
-    this.viewport!.scrollTo(scrollTop, behavior);
+    this.viewport!.scrollTo(this.viewportOffset + scrollTop, behavior);
   }
 
   private untilDetached$<A>(): MonoTypeOperatorFunction<A> {
