@@ -1,3 +1,4 @@
+import { tap } from 'rxjs/operators';
 import { rxActions } from './rx-actions';
 import { debounceTime, isObservable } from 'rxjs';
 import { Component, ErrorHandler, Provider } from '@angular/core';
@@ -99,12 +100,13 @@ describe('actions fn', () => {
   it('should apply behaviour to trigger', () => {
     const { component } = setupComponent<Actions>();
     const t = { se: () => void 0 };
-    const dummyBehaviour = (o$) => o$.pipe(debounceTime(30));
+    const spyBehavior = jest.fn();
+    const dummyBehaviour = (o$) => o$.pipe(tap(spyBehavior));
     const spyT = jest.fn((_: any) => void 0);
 
     const sub = component.actions.onProp(dummyBehaviour, spyT);
     component.actions.prop('p');
-    expect(5).toBe(6);
+    expect(spyBehavior).toHaveBeenCalledTimes(1);
   });
 
   it('should not trigger side effect after unsubscribed', () => {

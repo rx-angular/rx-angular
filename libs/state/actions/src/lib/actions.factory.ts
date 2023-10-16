@@ -1,4 +1,4 @@
-import { ErrorHandler, inject, Injectable, OnDestroy } from '@angular/core';
+import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
 import { Subject } from 'rxjs';
 import { actionProxyHandler } from './proxy';
 import { Actions, ActionTransforms, EffectMap, RxActions } from './types';
@@ -23,8 +23,9 @@ type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
  */
 @Injectable()
 export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
-  private readonly errorHandler = inject(ErrorHandler, { optional: true });
   private subjects: SubjectMap<T>[] = [] as SubjectMap<T>[];
+
+  constructor(@Optional() private readonly errorHandler?: ErrorHandler) {}
 
   /*
    * Returns a object based off of the provided typing with a separate setter `[prop](value: T[K]): void` and observable stream `[prop]$: Observable<T[K]>`;

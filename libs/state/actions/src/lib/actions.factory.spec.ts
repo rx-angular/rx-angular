@@ -1,5 +1,5 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { mockConsole } from '@test-helpers';
+import { mockConsole } from '@test-helpers/rx-angular';
 import { RxActionFactory } from './actions.factory';
 import { isObservable } from 'rxjs';
 import { Component, ErrorHandler } from '@angular/core';
