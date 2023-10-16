@@ -102,9 +102,11 @@ describe('actions fn', () => {
     const t = { se: () => void 0 };
     const spyBehavior = jest.fn();
     const dummyBehaviour = (o$) => o$.pipe(tap(spyBehavior));
-    const spyT = jest.fn((_: any) => void 0);
 
-    const sub = component.actions.onProp(dummyBehaviour, spyT);
+    const sub = component.actions.onProp(dummyBehaviour);
+    component.actions.prop('p');
+    expect(spyBehavior).toHaveBeenCalledTimes(1);
+    sub();
     component.actions.prop('p');
     expect(spyBehavior).toHaveBeenCalledTimes(1);
   });

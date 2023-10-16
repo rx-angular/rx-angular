@@ -51,7 +51,7 @@ export type ActionObservables<T extends Actions> = {
 export type ActionEffects<T extends Actions, O = T> = {
   [K in ExtractString<T> as `on${Capitalize<K>}`]: (
     fn: OperatorFunction<T[K], T[K] | any>,
-    sideEffectFn: (value: T[K] | any) => void
+    sideEffectFn?: (value: T[K] | any) => void
   ) => () => void;
 };
 
