@@ -377,7 +377,7 @@ Learn more about the general concept of [`RenderStrategies`](../../cdk/render-st
 
 #### Local strategies and view/content queries (`parent`)
 
-By default, `*rxVirtualFor` has turned the `parent` flag off. This means you are unable to rely on any content or viewqueries.
+By default, `*rxVirtualFor` has turned the `parent` flag off. This means you are unable to rely on any content or view queries.
 Read more about this at [handling view and content queries](../performance-issues/handling-view-and-content-queries.md)
 
 ### Use the `renderCallback`
@@ -449,9 +449,9 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 @Component(/**/)
 export class AppComponent {
   // As the part of the template where this function is used as event listener callback
-  // has `patchZone` false the all event listeners run ouside zone.
+  // has `patchZone` false the all event listeners run outside zone.
   calcBgColor(moveEvent: MouseEvent) {
-    // this function will run outside of angulars zone
+    // this function will run outside of angular's zone
     // do something with the background in combination with the mouse position
   }
 }
@@ -850,7 +850,7 @@ actual runtime performance.
 
 ![cdk-fixed-size--throttled](../../../static/img/template/virtual-scrolling/cdk-fixed-size--throttled.png)
 
-RxAngulars virtual scrolling implementation also uses the `requestAnimationFrame` scheduler, but not for change detection.
+RxAngular's virtual scrolling implementation also uses the `requestAnimationFrame` scheduler, but not for change detection.
 It is used for coalescing scroll events and calculation of changes to the view range.
 
 The scheduling being used for running change detection is configurable, by default it uses the [`normal Concurrent Strategy`](../../cdk/render-strategies/strategies/concurrent-strategies.md).

@@ -3,6 +3,8 @@ export {
   CacheISRConfig,
   CacheISRConfig as ISROptions,
   CacheData,
+  RenderVariant,
+  VariantRebuildItem,
 } from './cache-handler';
 
 export {

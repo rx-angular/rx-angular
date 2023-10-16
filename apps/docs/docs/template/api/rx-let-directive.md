@@ -45,7 +45,7 @@ would be hidden. This issue is a big problem and leads to many production bugs a
 In contrast to global change detection, structural directives allow fine-grained control of change detection on a per directive basis.
 The `RxLet` comes with its own way to handle change detection in templates in a very efficient way.
 However, the change detection behavior is configurable on a per directive or global basis.
-This makes it possible to implement your own strategies, and also provides a migration path from large existing apps running with Angulars default change detection.
+This makes it possible to implement your own strategies, and also provides a migration path from large existing apps running with Angular's default change detection.
 
 This package helps to reduce code used to create composable action streams.
 It mostly is used in combination with state management libs to handle user interaction and backend communication.
@@ -395,8 +395,8 @@ Structural directives maintain `EmbeddedViews` within a components' template.
 Depending on the bound value as well as the configured `RxRenderStrategy`, updates processed by the
 `@rx-angular/template` directives can be asynchronous.
 
-Whenever a template gets inserted into, or removed from, its parent component, the directive has to inform the parent in order to
-update any view- or contentquery (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
+Whenever a template gets inserted into or removed from its parent component, the directive has to inform the parent in order to
+update any view or content queries (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
 
 This is required if your components state is dependent on its view or content children:
 
@@ -476,7 +476,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 })
 export class AppComponent {
   // As the part of the template where this function is used as event listener callback
-  // has `patchZone` false the all event listeners run ouside zone.
+  // has `patchZone` false the all event listeners run outside zone.
   calcBgColor(moveEvent: MouseEvent) {
     // do something with the background in combination with the mouse position
   }

@@ -161,6 +161,7 @@ A nice feature of the `*rxIf` directive is, it provides 2 ways to access the [re
 
 The following context variables are available for each template:
 
+- $implicit: `T` the default variable accessed by `let val`
 - error: `boolean` | `Error`
 - complete: `boolean`
 - suspense: `boolean`
@@ -170,12 +171,14 @@ You can use them like this:
 **Context Variables on then template**
 
 ```html
-<ng-container *rxIf="show$; let s = suspense; let e = error, let c = complete">
+<ng-container
+  *rxIf="customer$; let customer; let s = suspense; let e = error, let c = complete"
+>
   <loader *ngIf="s"></loader>
   <error *ngIf="e"></error>
   <complete *ngIf="c"></complete>
 
-  <app-item></app-item>
+  <app-customer [customer]="customer"></app-customer>
 </ng-container>
 ```
 
@@ -425,7 +428,7 @@ Depending on the bound value as well as the configured `RxRenderStrategy`, updat
 `@rx-angular/template` directives can be asynchronous.
 
 Whenever a template gets inserted into, or removed from, its parent component, the directive has to inform the parent in order to
-update any view- or contentquery (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
+update any view or content query (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
 
 This is required if your components state is dependent on its view or content children:
 
@@ -498,7 +501,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 export class AppComponent {
   enabled$ = state.select('enabled');
   // As the part of the template where this function is used as event listener callback
-  // has `patchZone` false the all event listeners run ouside zone.
+  // has `patchZone` false the all event listeners run outside zone.
   itemDrag(event: DragEvent) {}
 }
 ```
