@@ -1,15 +1,15 @@
 ---
 sidebar_label: RxState
-sidebar_position: 1
+sidebar_position: 2
 title: RxState
 # Moved from libs/state/api/
 ---
 
 ## Overview
 
-RxState is a light-weight reactive state management service for managing local state in angular.
+`RxState` is a light-weight reactive state management service for managing local state in Angular.
 
-_Example_
+## Example
 
 ```typescript
 Component({
