@@ -30,7 +30,7 @@ export class MovieListComponent {
 
 ## Signature
 
-The functional creation API is based on the class-based `RxState` API, more details about the signature [here](./rx-state).
+The functional creation API is based on the class-based `RxState` API, more details about the signature [here](./rx-state.md).
 
 ```typescript
 import { RxState as LegacyState } from '@rx-angular/state';
