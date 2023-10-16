@@ -119,7 +119,7 @@ export class MyComponent {
 
 ## Impact
 
-![rx-angular--state--effects--motivation-process-diagramm--michael-hladky](https://user-images.githubusercontent.com/10064416/154173507-049815ea-ee2a-4569-8a4d-6abdc319a349.png)
+![rx-angular--state--effects--motivation-process-diagram--michael-hladky](https://user-images.githubusercontent.com/10064416/154173507-049815ea-ee2a-4569-8a4d-6abdc319a349.png)
 
 Compared to common approaches `rxEffects` does not rely on additional decorators or operators.
 In fact, it removes the necessity of the `subscribe`.

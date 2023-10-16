@@ -347,7 +347,7 @@ export class ChecklistComponent implements OnDestroy {
 - Component initialization is not depending on the `OnInit` lifecycle hook and will be a reaction to the `init$` event.
 - We removed imperative `answerTask()` method.
 - Now we have only one subscription to manage.
-- We dont have any code inside subscription.
+- We don't have any code inside subscription.
 
 **However:**
 
@@ -381,7 +381,7 @@ name$ = this.state.select('name');
 tasks$ = this.state.select('tasks');
 ```
 
-Visually it looks the same but the select operator provides a lot more than just passing keys. You can read about it [here](https://rx-angular.io/docs/state/api/rx-state#select). Also selection will be shareReplayed, distincted and undefined values will be filtered out.
+Visually it looks the same but the select operator provides a lot more than just passing keys. You can read about it [here](https://rx-angular.io/docs/state/api/rx-state#select). Also selection will be shareReplayed, distinct and undefined values will be filtered out.
 
 **Updating state reactively**
 

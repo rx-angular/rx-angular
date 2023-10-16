@@ -88,7 +88,7 @@ console.log(window.__zone_symbol__clearTimeout);
 
 ![Log unpatched timer APIs](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular_zone-flags_setTimeout-unpatched_michael-hladky.png)
 
-> **💡 Pro Tipps:**
+> **💡 Pro Tips:**
 >
 > - RxAngular offers more convenient ways to configure and debug zone flags.
 >   In `zone-flags.ts` the content looks like the following:
@@ -138,7 +138,7 @@ __Zone_disable_timer = true;
 
 ![Performance Profile of unpatched Event Listener](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_event-listener-unpatched-flames_michael-hladky.png)
 
-> **💡 Pro Tipps:**
+> **💡 Pro Tips:**
 > Recordings should be fully identical with flags on/off to make a valid comparison. Fully identical means even the mouse moves and time to wait in between the interactions are important. This will make it easy and fast to find the right spot in flames.
 > You can use this tool to compare two charts by drag and dropping the profile measures into the UI. (need to download reports as JSON)
 > Every `.js` file has its own different color on the chart (assigned randomly – except native browser calls, they are yellow)
@@ -154,11 +154,11 @@ __Zone_disable_timer = true;
 `zone.js` patching mechanism is also visible in the flame charts timing lane.
 You can find the timing marks before the bootstrap phase of Angular.
 
-![zone.js - Timeing Marks](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zonejs_timing-marks_overview_michael-hladky.png)
+![zone.js - Timing Marks](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zonejs_timing-marks_overview_michael-hladky.png)
 There every patched API is listed.
-![zone.js - Timeing Marks Detailed](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zonejs_timing-marks_detail_michael-hladky.png)
+![zone.js - Timing Marks Detailed](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zonejs_timing-marks_detail_michael-hladky.png)
 
-> **💡 Pro Tipps:**
+> **💡 Pro Tips:**
 >
 > - Unpatched APIs should not show up in the timing lane. This can serve as another check.
 > - If you can't see the timings panel, check [this link](https://www.reddit.com/r/reactnative/comments/g88aj9/timings_tab_in_chrome_performance_profiler_missing)

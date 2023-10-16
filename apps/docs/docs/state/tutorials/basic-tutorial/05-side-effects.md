@@ -267,7 +267,7 @@ In the example, we can get rid of the following snippets:
 We can say without any doubt we did an excellent job. :)
 
 Side effects are now organized in a structured and readable way, and the subscription handling gets done automatically by the state layer.
-Furthermore, we managed to get rid of all implemented lifecycles as well as the callback function for the button click.
+Furthermore, we managed to get rid of all implemented life cycles as well as the callback function for the button click.
 
 All in all, an amazing job!
 

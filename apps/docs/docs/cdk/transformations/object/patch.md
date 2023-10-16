@@ -19,9 +19,9 @@ interface Creature {
 
 const cat = { id: 1, type: 'cat' };
 
-const catWithname = patch(cat, { name: 'Fluffy' });
+const catWithName = patch(cat, { name: 'Fluffy' });
 
-// catWithname will be:
+// catWithName will be:
 // {id: 1, type: 'cat', name: 'Fluffy'};
 ```
 
