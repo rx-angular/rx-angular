@@ -84,7 +84,7 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
         subjectMap,
         effectMap,
         transformsMap: transforms,
-        errorHandler: this.errorHandler,
+        errorHandler: this.errorHandler ?? null,
       })
     ) as any as RxActions<T, U>;
   }
