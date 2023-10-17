@@ -1,7 +1,7 @@
 import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BehaviorSubject, EMPTY, Observable, throwError, map, tap } from 'rxjs';
-import { RxEffects } from './../src/lib/effects.service';
+import { RxEffects } from './effects.service';
 
 // tslint:disable: max-classes-per-file
 
@@ -21,29 +21,23 @@ const selector3 = (state: TState) => `${state}3`;
 const selector4 = (state: TState) => `${state}4`;
 
 class Service {
-  method1(..._: any[]): void {
-  }
+  method1(..._: any[]): void {}
 
-  method2(..._: any[]): void {
-  }
+  method2(..._: any[]): void {}
 
-  method3(..._: any[]): void {
-  }
+  method3(..._: any[]): void {}
 
-  method4(..._: any[]): void {
-  }
+  method4(..._: any[]): void {}
 
-  method4OnError(..._: any[]): void {
-  }
+  method4OnError(..._: any[]): void {}
 
-  method4OnComplete(..._: any[]): void {
-  }
+  method4OnComplete(..._: any[]): void {}
 }
 
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
-  providers: [RxEffects]
+  providers: [RxEffects],
 })
 class TestComponent {
   constructor(store: Store, service: Service, effects: RxEffects) {
@@ -53,7 +47,7 @@ class TestComponent {
     effects.register(store.select(selector4), {
       next: service.method4,
       error: service.method4OnError,
-      complete: service.method4OnComplete
+      complete: service.method4OnComplete,
     });
   }
 }
@@ -61,22 +55,24 @@ class TestComponent {
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
-  providers: [RxEffects]
+  providers: [RxEffects],
 })
 class TestUntilEffectComponent {
   constructor(store: Store, service: Service, private effects: RxEffects) {
-    const effectId1 = effects.register(store.select((v) => v === 'effectTrigger'), () => void 0);
-    store.state$.pipe(
-      effects.untilEffect(effectId1)
-    ).subscribe(service.method1);
-
+    const effectId1 = effects.register(
+      store.select((v) => v === 'effectTrigger'),
+      () => void 0
+    );
+    store.state$
+      .pipe(effects.untilEffect(effectId1))
+      .subscribe(service.method1);
   }
 }
 
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
-  providers: [RxEffects]
+  providers: [RxEffects],
 })
 class TestOnDestroyComponent {
   constructor(store: Store, service: Service, private effects: RxEffects) {
@@ -87,7 +83,7 @@ class TestOnDestroyComponent {
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
-  providers: [RxEffects]
+  providers: [RxEffects],
 })
 class TestUnregisterComponent {
   private readonly effectId1: number;
@@ -123,11 +119,11 @@ describe('RxEffects', () => {
       method1: jest.fn(),
       method2: jest.fn(),
       method3: jest.fn(),
-      method4: jest.fn()
+      method4: jest.fn(),
     };
     await TestBed.configureTestingModule({
       declarations: [TestComponent],
-      providers: [Store, { provide: Service, useValue: service }]
+      providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
@@ -152,11 +148,11 @@ describe('RxEffects', () => {
       method1: jest.fn(),
       method2: jest.fn(),
       method3: jest.fn(),
-      method4: jest.fn()
+      method4: jest.fn(),
     };
     await TestBed.configureTestingModule({
       declarations: [TestComponent],
-      providers: [Store, { provide: Service, useValue: service }]
+      providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     const fixture = TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
@@ -190,10 +186,10 @@ describe('RxEffects', () => {
       },
       method2: jest.fn(),
       method3: jest.fn(),
-      method4: jest.fn()
+      method4: jest.fn(),
     };
     const customErrorHandler: ErrorHandler = {
-      handleError: jest.fn()
+      handleError: jest.fn(),
     };
     await TestBed.configureTestingModule({
       declarations: [TestComponent],
@@ -202,9 +198,9 @@ describe('RxEffects', () => {
         { provide: Service, useValue: service },
         {
           provide: ErrorHandler,
-          useValue: customErrorHandler
-        }
-      ]
+          useValue: customErrorHandler,
+        },
+      ],
     }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
@@ -222,19 +218,15 @@ describe('RxEffects', () => {
 
   test('should invoke complete callback upon completion', async () => {
     const service = {
-      method1: () => {
-      },
-      method2: () => {
-      },
-      method3: () => {
-      },
-      method4: () => {
-      },
-      method4OnComplete: jest.fn()
+      method1: () => {},
+      method2: () => {},
+      method3: () => {},
+      method4: () => {},
+      method4OnComplete: jest.fn(),
     };
     await TestBed.configureTestingModule({
       declarations: [TestComponent],
-      providers: [Store, { provide: Service, useValue: service }]
+      providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
@@ -251,15 +243,11 @@ describe('RxEffects', () => {
 
   test('should invoke error callback when source observable errors', async () => {
     const service = {
-      method1: () => {
-      },
-      method2: () => {
-      },
-      method3: () => {
-      },
-      method4: () => {
-      },
-      method4OnError: jest.fn()
+      method1: () => {},
+      method2: () => {},
+      method3: () => {},
+      method4: () => {},
+      method4OnError: jest.fn(),
     };
     jest
       .spyOn(Store.prototype, 'select')
@@ -274,12 +262,12 @@ describe('RxEffects', () => {
         Store,
         { provide: Service, useValue: service },
         {
-          provide: ErrorHandler, useValue: {
-            handleError: () => {
-            }
-          }
-        }
-      ]
+          provide: ErrorHandler,
+          useValue: {
+            handleError: () => {},
+          },
+        },
+      ],
     }).compileComponents();
     TestBed.createComponent(TestComponent);
     const store = TestBed.inject(Store);
@@ -294,11 +282,11 @@ describe('RxEffects', () => {
   test('should cancel side-effect if unregistered imperatively', async () => {
     const service = {
       method1: jest.fn(),
-      method2: jest.fn()
+      method2: jest.fn(),
     };
     await TestBed.configureTestingModule({
       declarations: [TestUnregisterComponent],
-      providers: [Store, { provide: Service, useValue: service }]
+      providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     const fixture = TestBed.createComponent(TestUnregisterComponent);
     const component = fixture.componentInstance;
@@ -332,7 +320,7 @@ describe('RxEffects', () => {
     };
     await TestBed.configureTestingModule({
       declarations: [TestUntilEffectComponent],
-      providers: [Store, { provide: Service, useValue: service }]
+      providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     const fixture = TestBed.createComponent(TestUntilEffectComponent);
     const component = fixture.componentInstance;
@@ -350,7 +338,6 @@ describe('RxEffects', () => {
     store.state$.next('foo');
 
     expect(service.method1).not.toHaveBeenCalled();
-
   });
 
   test('should cancel side-effect if components gets destroyed when using onDestroy', async () => {
@@ -359,7 +346,7 @@ describe('RxEffects', () => {
     };
     await TestBed.configureTestingModule({
       declarations: [TestOnDestroyComponent],
-      providers: [Store, { provide: Service, useValue: service }]
+      providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     const fixture = TestBed.createComponent(TestOnDestroyComponent);
     const component = fixture.componentInstance;
