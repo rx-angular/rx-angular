@@ -5,6 +5,7 @@ import { Component, Injectable } from '@angular/core';
 import { Subject, map, merge } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { TestScheduler } from 'rxjs/testing';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers/rx-angular';
 
 @Component({

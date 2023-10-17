@@ -7,7 +7,7 @@ import {
   PartialObserver,
   pipe,
   Subject,
-  Subscription
+  Subscription,
 } from 'rxjs';
 import {
   catchError,
@@ -16,12 +16,14 @@ import {
   mergeAll,
   share,
   takeUntil,
-  tap
+  tap,
 } from 'rxjs/operators';
 import { DestroyProp, OnDestroy$ } from './model';
 import { toHook, untilDestroyed } from './utils';
 
 /**
+ * @deprecated - use rxEffects instead
+ *
  * Reduces subscription boilerplate for performing observable-based side-effects in components.
  *
  * Before:
@@ -66,7 +68,7 @@ import { toHook, untilDestroyed } from './utils';
 export class RxEffects implements OnDestroy, OnDestroy$ {
   constructor(
     @Optional()
-    private readonly errorHandler: ErrorHandler
+    private readonly errorHandler: ErrorHandler | null
   ) {}
 
   private static nextId = 0;
