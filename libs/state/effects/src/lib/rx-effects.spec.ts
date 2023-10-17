@@ -1,13 +1,28 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Observable, of, Subject, tap } from 'rxjs';
+import { Observable, of, Subject, tap, timer } from 'rxjs';
 import { rxEffects, RxEffectsSetupFn } from './rx-effects';
+import { TestScheduler } from 'rxjs/testing';
+import { jestMatcher } from '@test-helpers/rx-angular';
 
 describe(rxEffects, () => {
   it('should register an observable', () => {
     const spy = jest.fn();
     setupComponent(({ register }) => register(of('src').pipe(tap(spy))));
     expect(spy).toHaveBeenCalledWith('src');
+  });
+
+  it('should unregister a subscription', () => {
+    expect.assertions(1);
+    const spy = jest.fn();
+    const scheduler = new TestScheduler(jestMatcher);
+
+    setupComponent(({ register }) => {
+      const unRegister = register(timer(10, scheduler), spy);
+      unRegister();
+      scheduler.flush();
+      expect(spy).not.toHaveBeenCalled();
+    });
   });
 
   it('should register an observable and sideEffect fn', () => {

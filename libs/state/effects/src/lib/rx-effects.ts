@@ -7,13 +7,13 @@ import {
 import { from, Subscription } from 'rxjs';
 import { SideEffectFnOrObserver, SideEffectObservable } from './types';
 
-type RxEffects = {
+interface RxEffects {
   register<T>(
     observable: SideEffectObservable<T>,
     sideEffectOrObserver?: SideEffectFnOrObserver<T>
-  ): void;
+  ): Fn;
   onDestroy: (fn: Fn) => Fn;
-};
+}
 
 type Fn = () => void;
 
