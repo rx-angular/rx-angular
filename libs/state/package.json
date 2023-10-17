@@ -1,8 +1,7 @@
 {
   "name": "@rx-angular/state",
-  "version": "15.0.0",
+  "version": "16.0.0",
   "description": "@rx-angular/state is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state and side effects in angular",
-  "main": "index.js",
   "publishConfig": {
     "access": "public"
   },
@@ -48,7 +47,7 @@
   },
   "dependencies": {
     "tslib": "^2.4.1",
-    "ng-morph": "^2.2.3"
+    "ng-morph": "^3.0.0"
   },
   "ng-add": {
     "save": "dependencies"

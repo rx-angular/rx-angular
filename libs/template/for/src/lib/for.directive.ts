@@ -2,9 +2,9 @@ import {
   ChangeDetectorRef,
   Directive,
   DoCheck,
-  ElementRef,
   EmbeddedViewRef,
   ErrorHandler,
+  inject,
   Input,
   IterableDiffers,
   NgIterable,
@@ -82,6 +82,22 @@ declare const ngDevMode: boolean;
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, DoCheck, OnDestroy
 {
+  /** @internal */
+  private iterableDiffers = inject(IterableDiffers);
+  /** @internal */
+  private cdRef = inject(ChangeDetectorRef);
+  /** @internal */
+  private ngZone = inject(NgZone);
+  /** @internal */
+  private templateRef =
+    inject<TemplateRef<RxForViewContext<T, U>>>(TemplateRef);
+  /** @internal */
+  private viewContainerRef = inject(ViewContainerRef);
+  /** @internal */
+  private strategyProvider = inject(RxStrategyProvider);
+  /** @internal */
+  private errorHandler = inject(ErrorHandler);
+
   /** @internal */
   private staticValue?: U;
   /** @internal */
@@ -382,18 +398,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private get template(): TemplateRef<RxForViewContext<T, U>> {
     return this._template || this.templateRef;
   }
-
-  /** @internal */
-  constructor(
-    private iterableDiffers: IterableDiffers,
-    private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone,
-    private eRef: ElementRef,
-    private templateRef: TemplateRef<RxForViewContext<T, U>>,
-    private readonly viewContainerRef: ViewContainerRef,
-    private strategyProvider: RxStrategyProvider,
-    private errorHandler: ErrorHandler
-  ) {}
 
   /** @internal */
   private strategyInput$ = new ReplaySubject<

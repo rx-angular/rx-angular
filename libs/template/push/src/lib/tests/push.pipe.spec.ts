@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   RX_RENDER_STRATEGIES_CONFIG,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
-import { mockConsole } from '@test-helpers';
+import { mockConsole } from '@test-helpers/rx-angular';
 import { EMPTY, NEVER, Observable, asapScheduler, of, timer } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { RxPush } from '../push.pipe';
@@ -29,12 +29,14 @@ let pushPipeTestComponent: {
 };
 let componentNativeElement: HTMLElement;
 let strategyProvider: RxStrategyProvider;
+let pushPipe: RxPush;
 
 const setupPushPipeComponent = () => {
   TestBed.configureTestingModule({
     declarations: [PushPipeTestComponent],
     imports: [RxPush],
     providers: [
+      RxPush,
       ChangeDetectorRef,
       {
         provide: RX_RENDER_STRATEGIES_CONFIG,
@@ -61,7 +63,42 @@ const setupPushPipeComponent = () => {
   pushPipeTestComponent = fixturePushPipeTestComponent.componentInstance;
   componentNativeElement = fixturePushPipeTestComponent.nativeElement;
   strategyProvider = TestBed.inject(RxStrategyProvider);
+  pushPipe = TestBed.inject(RxPush);
 };
+
+describe('RxPush', () => {
+  beforeAll(() => mockConsole());
+  beforeEach(setupPushPipeComponent);
+
+  it('should be instantiable', () => {
+    expect(pushPipe).toBeDefined();
+  });
+
+  describe('transform function', () => {
+    it('should not track signal reads in subscriptions', () => {
+      const trigger = signal(false);
+
+      const obs = new Observable(() => {
+        // Whenever `obs` is subscribed, synchronously read `trigger`.
+        trigger();
+      });
+
+      let trackCount = 0;
+      const tracker = computed(() => {
+        // Subscribe to `obs` within this `computed`. If the subscription side effect runs
+        // within the computed, then changes to `trigger` will invalidate this computed.
+        pushPipe.transform(obs);
+
+        // The computed returns how many times it's run.
+        return ++trackCount;
+      });
+
+      expect(tracker()).toBe(1);
+      trigger.set(true);
+      expect(tracker()).toBe(1);
+    });
+  });
+});
 
 describe('RxPush used as pipe in the template', () => {
   beforeAll(() => mockConsole());

@@ -1,0 +1,34 @@
+.rx-virtual-scroll-viewport {
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  contain: strict;
+
+  .rx-virtual-scroll {
+    &__runway {
+      contain: strict;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+    }
+    &__sentinel {
+      width: 1px;
+      height: 1px;
+      contain: strict;
+      position: absolute;
+      will-change: transform;
+    }
+  }
+}
+.rx-virtual-scroll-element {
+  contain: strict;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  &:not(&:is(&--withSyncScrollbar)) {
+    transform: translateZ(0);
+    will-change: scroll-position;
+  }
+}

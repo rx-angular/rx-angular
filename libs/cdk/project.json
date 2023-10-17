@@ -53,28 +53,7 @@
       "outputs": ["{workspaceRoot}/coverage/cdk"]
     },
     "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npm publish dist/libs/cdk"
-          }
-        ]
-      },
-      "dependsOn": [
-        {
-          "target": "lint"
-        },
-        {
-          "target": "test"
-        },
-        {
-          "target": "version"
-        },
-        {
-          "target": "build"
-        }
-      ]
+      "command": "npm publish dist/libs/cdk"
     },
     "version": {
       "executor": "@jscutlery/semver:version",
