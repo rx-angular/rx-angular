@@ -23,7 +23,7 @@ You will always (aka repetitive) want to ensure that:
 You will sometimes (aka situational) need:
 
 - a subset of the state (derivations)
-- compose the state with other Observables or change the Observables behaviour
+- compose the state with other Observables or change the Observables behavior
 
 Note that `RxState#connect` already applies the `stateful` operator under the hood.
 
@@ -32,7 +32,7 @@ _Example_
 ```typescript
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { stateful } from 'rx-angular/state';
+import { stateful } from 'rx-angular/state/selections';
 
 const state$: Observable<{ name: string; items: string[] }>;
 const derivation$ = state$.pipe(

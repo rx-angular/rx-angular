@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ROUTES } from './nested-vs-injected.routes';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DetectChangesInjectedComponent } from './injected/detect-changes.injected.component';
 import { CdDefaultModule } from '../../../shared/debug-helper/cd-default/cd-default.module';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
@@ -39,7 +39,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     RouterModule.forChild(ROUTES),
     MatButtonModule,
     DirtyChecksModule,
-    UnpatchModule,
+    RxUnpatch,
     CdDefaultModule,
     VisualizerModule,
     CdOnPushModule,

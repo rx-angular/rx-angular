@@ -7,6 +7,7 @@ import {
   OnDestroy,
   SimpleChanges,
 } from '@angular/core';
+import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   combineLatest,
   MonoTypeOperatorFunction,
@@ -14,7 +15,6 @@ import {
   Subject,
 } from 'rxjs';
 import {
-  debounce,
   distinctUntilChanged,
   map,
   startWith,
@@ -29,7 +29,11 @@ import {
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
 } from '../model';
-import { unpatchedAnimationFrameTick } from '../util';
+import {
+  calculateVisibleContainerSize,
+  parseScrollTopBoundaries,
+  unpatchedMicroTask,
+} from '../util';
 import {
   DEFAULT_ITEM_SIZE,
   DEFAULT_RUNWAY_ITEMS,
@@ -47,16 +51,6 @@ type AnchorItem = {
   index: number;
   offset: number;
 };
-
-/** @internal */
-function removeFromArray(arr: any[], index: number): any {
-  // perf: array.pop is faster than array.splice!
-  if (index >= arr.length - 1) {
-    return arr.pop();
-  } else {
-    return arr.splice(index, 1)[0];
-  }
-}
 
 const defaultItemSize = () => DEFAULT_ITEM_SIZE;
 
@@ -171,9 +165,17 @@ export class DynamicSizeVirtualScrollStrategy<
     return this._virtualItems.length;
   }
   /** @internal */
+  private containerSize = 0;
+  /** @internal */
   private _virtualItems: VirtualViewItem[] = [];
   /** @internal */
   private scrollTop = 0;
+  /** @internal */
+  private scrollTopWithOutOffset = 0;
+  /** @internal */
+  private scrollTopAfterOffset = 0;
+  /** @internal */
+  private viewportOffset = 0;
   /** @internal */
   private direction: 'up' | 'down' = 'down';
   /** @internal */
@@ -236,11 +238,11 @@ export class DynamicSizeVirtualScrollStrategy<
 
   scrollToIndex(index: number, behavior?: ScrollBehavior): void {
     const _index = Math.min(Math.max(index, 0), this.contentLength - 1);
-    let offset = 0;
+    let scrollTo = 0;
     for (let i = 0; i < _index; i++) {
-      offset += this._virtualItems[i].size;
+      scrollTo += this._virtualItems[i].size;
     }
-    this.viewport!.scrollTo(offset, behavior);
+    this.viewport!.scrollTo(this.viewportOffset + scrollTo, behavior);
   }
 
   /** @internal */
@@ -279,28 +281,43 @@ export class DynamicSizeVirtualScrollStrategy<
 
   /** @internal */
   private calcRenderedRange(): void {
-    const onScroll$ = this.viewport!.elementScrolled$.pipe(
-      debounce(() => unpatchedAnimationFrameTick()),
-      map(() => this.viewport!.getScrollTop()),
-      startWith(0),
-      tap((_scrollTop) => {
-        this.direction = _scrollTop > this.scrollTop ? 'down' : 'up';
-        this.scrollTop = _scrollTop;
-      })
-    );
     combineLatest([
       this.viewport!.containerRect$.pipe(
-        map(({ height }) => height),
+        map(({ height }) => {
+          this.containerSize = height;
+          return height;
+        }),
         distinctUntilChanged()
       ),
-      onScroll$,
+      this.viewport!.elementScrolled$.pipe(
+        startWith(void 0),
+        tap(() => {
+          this.viewportOffset = this.viewport!.measureOffset();
+          const { scrollTop, scrollTopWithOutOffset, scrollTopAfterOffset } =
+            parseScrollTopBoundaries(
+              this.viewport!.getScrollTop(),
+              this.viewportOffset,
+              this._contentSize,
+              this.containerSize
+            );
+          this.direction =
+            scrollTopWithOutOffset > this.scrollTopWithOutOffset
+              ? 'down'
+              : 'up';
+          this.scrollTopWithOutOffset = scrollTopWithOutOffset;
+          this.scrollTopAfterOffset = scrollTopAfterOffset;
+          this.scrollTop = scrollTop;
+        })
+      ),
+      this._contentSize$.pipe(distinctUntilChanged()),
       this.recalculateRange$.pipe(startWith(void 0)),
     ])
       .pipe(
-        map(([containerHeight]) => {
+        // make sure to not over calculate things by coalescing all triggers to the next microtask
+        coalesceWith(unpatchedMicroTask()),
+        map(() => {
           const range = { start: 0, end: 0 };
           const length = this.contentLength;
-
           const delta = this.scrollTop - this.anchorScrollTop;
           if (this.scrollTop == 0) {
             this.anchorItem = { index: 0, offset: 0 };
@@ -314,7 +331,11 @@ export class DynamicSizeVirtualScrollStrategy<
           this.anchorScrollTop = this.scrollTop;
           this.lastScreenItem = this.calculateAnchoredItem(
             this.anchorItem,
-            containerHeight
+            calculateVisibleContainerSize(
+              this.containerSize,
+              this.scrollTopWithOutOffset,
+              this.scrollTopAfterOffset
+            )
           );
           if (this.direction === 'up') {
             range.start = Math.max(0, this.anchorItem.index - this.runwayItems);
@@ -348,10 +369,13 @@ export class DynamicSizeVirtualScrollStrategy<
   /** @internal */
   private positionElements(): void {
     this.viewRepeater!.renderingStart$.pipe(
-      switchMap(() => {
+      switchMap((batchedUpdates) => {
         const renderedRange = this.renderedRange;
         const adjustIndexWith = renderedRange.start;
-        let position = this.calcInitialPosition(renderedRange);
+        const initialIndex = batchedUpdates.size
+          ? batchedUpdates.values().next().value + this.renderedRange.start
+          : this.renderedRange.start;
+        let position = this.calcInitialPosition(initialIndex);
         return this.viewRepeater!.viewRendered$.pipe(
           tap(({ view, index: viewIndex, item }) => {
             const index = viewIndex + adjustIndexWith;
@@ -389,24 +413,33 @@ export class DynamicSizeVirtualScrollStrategy<
         i--;
       }
     } else {
-      while (delta > 0 && i < this.contentLength && items[i].size <= delta) {
+      while (delta > 0 && i < items.length && items[i].size <= delta) {
         delta -= items[i].size;
         i++;
       }
     }
     return {
-      index: Math.min(i, this.contentLength),
+      index: Math.min(i, items.length),
       offset: delta,
     };
   }
 
   /** @internal */
-  private calcInitialPosition(range: ListRange): number {
-    let position = this.anchorScrollTop - this.anchorItem.offset;
-    for (let i = range.start; i < this.anchorItem.index; i++) {
-      position -= this.getItemSize(i);
+  private calcInitialPosition(start: number): number {
+    // Calculate position of starting node
+    let pos = this.anchorScrollTop - this.anchorItem.offset;
+    let i = this.anchorItem.index;
+    while (i > start) {
+      const itemSize = this.getItemSize(i - 1);
+      pos -= itemSize;
+      i--;
     }
-    return position;
+    while (i < start) {
+      const itemSize = this.getItemSize(i);
+      pos += itemSize;
+      i++;
+    }
+    return pos;
   }
   /** @internal */
   private getItemSize(index: number): number {

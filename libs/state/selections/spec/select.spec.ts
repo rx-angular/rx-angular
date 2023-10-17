@@ -1,11 +1,11 @@
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   initialNestedState,
   initialPrimitiveState,
   jestMatcher,
   NestedState,
   PrimitiveState,
-} from '@test-helpers';
+} from '@test-helpers/rx-angular';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';

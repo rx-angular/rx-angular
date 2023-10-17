@@ -5,13 +5,39 @@
   "projectType": "library",
   "generators": {},
   "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/test-helpers/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/test-helpers/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/test-helpers/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/test-helpers/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["{workspaceRoot}/coverage/libs/test-helpers"]
+      "outputs": ["{workspaceRoot}/coverage/${projectRoot}"]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/test-helpers/**/*.ts",
+          "libs/test-helpers/**/*.html"
+        ]
+      }
     }
   },
   "tags": ["type:test-util"]

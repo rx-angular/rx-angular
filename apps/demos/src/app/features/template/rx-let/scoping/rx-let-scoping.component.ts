@@ -6,7 +6,6 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { LetDirective } from '@rx-angular/template/let';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 

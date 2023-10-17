@@ -7,8 +7,8 @@ import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { RouterModule } from '@angular/router';
-import { PushModule } from '@rx-angular/template/push';
-import { UnpatchModule } from '@rx-angular/template/unpatch';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/value-providers.module';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
@@ -23,10 +23,10 @@ const DECLARATIONS = [PushVsAsyncComponent];
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
-    PushModule,
+    RxPush,
     DirtyChecksModule,
     MatButtonModule,
-    UnpatchModule,
+    RxUnpatch,
     VisualizerModule,
     MatFormFieldModule,
     MatInputModule,

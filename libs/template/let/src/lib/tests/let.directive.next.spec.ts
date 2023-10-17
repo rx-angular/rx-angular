@@ -7,10 +7,10 @@ import {
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { EMPTY, interval, NEVER, Observable, of } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { LetDirective } from '../let.directive';
+import { RxLet } from '../let.directive';
 import { take } from 'rxjs/operators';
 import { MockChangeDetectorRef } from './fixtures';
-import { mockConsole } from '@test-helpers';
+import { mockConsole } from '@test-helpers/rx-angular';
 
 @Component({
   template: `
@@ -37,7 +37,7 @@ let componentNativeElement: any;
 const setupLetDirectiveTestComponent = (): void => {
   TestBed.configureTestingModule({
     declarations: [LetDirectiveTestComponent],
-    imports: [LetDirective],
+    imports: [RxLet],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

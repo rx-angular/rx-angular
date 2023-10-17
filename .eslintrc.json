@@ -1,14 +1,18 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
+  "plugins": ["@nx"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@nrwl/nx/enforce-module-boundaries": [
+        "@nx/enforce-module-boundaries": [
           "error",
           {
+            "allowCircularSelfDependency": false,
+            "banTransitiveDependencies": true,
+            "checkDynamicDependenciesExceptions": [],
+            "checkNestedExternalImports": true,
             "enforceBuildableLibDependency": true,
             "allow": [],
             "depConstraints": [
@@ -38,7 +42,7 @@
       "extends": [
         "prettier",
         "eslint:recommended",
-        "plugin:@nrwl/nx/typescript",
+        "plugin:@nx/typescript",
         "plugin:@angular-eslint/recommended",
         "plugin:@typescript-eslint/recommended"
       ],
@@ -61,7 +65,7 @@
       "extends": [
         "prettier",
         "plugin:@angular-eslint/template/recommended",
-        "plugin:@nrwl/nx/javascript"
+        "plugin:@nx/javascript"
       ],
       "rules": {
         "@typescript-eslint/no-non-null-assertion": "off"

@@ -6,7 +6,7 @@
   "prefix": "rx",
   "targets": {
     "build-lib": {
-      "executor": "@nrwl/angular:package",
+      "executor": "@nx/angular:package",
       "options": {
         "tsConfig": "libs/state/tsconfig.lib.json",
         "project": "libs/state/ng-package.json",
@@ -16,7 +16,7 @@
       "dependsOn": [
         {
           "target": "build",
-          "projects": "dependencies"
+          "dependencies": true
         }
       ]
     },
@@ -24,8 +24,7 @@
       "executor": "nx:run-commands",
       "dependsOn": [
         {
-          "target": "build-lib",
-          "projects": "self"
+          "target": "build-lib"
         }
       ],
       "options": {
@@ -51,7 +50,7 @@
       "outputs": ["{workspaceRoot}/dist/libs/state/schematics"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/state/jest.config.ts",
         "passWithNoTests": true,
@@ -60,7 +59,7 @@
       "outputs": ["{workspaceRoot}/coverage/state"]
     },
     "perfBuild": {
-      "executor": "@nrwl/node:webpack",
+      "executor": "@nx/node:webpack",
       "options": {
         "main": "libs/state/perf/index.ts",
         "outputPath": "dist/libs/state-perf/dist",
@@ -69,38 +68,13 @@
       "outputs": ["{options.outputPath}"]
     },
     "perf": {
-      "executor": "@nrwl/node:node",
+      "executor": "@nx/node:node",
       "options": {
         "buildTarget": "state:perfBuild"
       }
     },
     "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npm publish dist/libs/state"
-          }
-        ]
-      },
-      "dependsOn": [
-        {
-          "target": "lint",
-          "projects": "self"
-        },
-        {
-          "target": "test",
-          "projects": "self"
-        },
-        {
-          "target": "version",
-          "projects": "self"
-        },
-        {
-          "target": "build",
-          "projects": "self"
-        }
-      ]
+      "command": "npm publish dist/libs/state"
     },
     "version": {
       "executor": "@jscutlery/semver:version",
@@ -121,14 +95,14 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/state/**/*.ts"]
       }
     }
   },
   "generators": {
-    "@nrwl/angular:component": {
+    "@nx/angular:component": {
       "style": "scss"
     }
   },

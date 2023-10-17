@@ -98,6 +98,12 @@ module.exports = {
             type: 'doc',
           },
           {
+            docId: 'isr/isr',
+            label: 'ISR',
+            position: 'left',
+            type: 'doc',
+          },
+          {
             docId: 'eslint-plugin/eslint-plugin',
             label: 'ESLint',
             position: 'left',

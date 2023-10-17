@@ -1,0 +1,46 @@
+---
+sidebar_label: '@rx-angular/isr'
+sidebar_position: 5
+title: 'ISR'
+hide_title: true
+---
+
+import Readme, { toc as readmeToc } from '@site/../../libs/isr/README.md';
+
+<Readme />
+
+## All-in-One library
+
+ISR provides everything you need to speed up your Angular Universal app.
+
+### Scheduled cache invalidation
+
+@rx-angular/isr provides a simple API to invalidate the cache based on a schedule.
+Requests are not cached by default. You have to explicitly mark the routes you want to cache.
+
+### On-demand cache invalidation
+
+Revalidate specific routes on demand, when you need to and not based on a schedule.
+This is useful when you need to invalidate the cache when a user performs an action.
+
+### Plugin based cache handlers
+
+Cache handlers are pluggable, allowing the cache to be stored in different locations.
+It provides a default cache handler that stores the cache in memory.
+
+### No build changes required!
+
+Easy to setup and use and also no changes to your build process are required.
+
+### Supports Angular Universal
+
+Compatible with Angular Universal is used as a plugin for the Angular Universal platform.
+
+### NgModules & Standalone Compatible
+
+Supports both NgModules and standalone use. You can use it in your existing Angular project.
+
+<!-- Workaround for generating table of contents -->
+<!-- See https://github.com/facebook/docusaurus/issues/3915#issuecomment-896193142 -->
+
+export const toc = [...readmeToc];

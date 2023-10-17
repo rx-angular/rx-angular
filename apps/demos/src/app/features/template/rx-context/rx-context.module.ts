@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { ForModule } from '@rx-angular/template/for';
-import { LetModule } from '@rx-angular/template/let';
+import { RxFor } from '@rx-angular/template/for';
+import { RxLet } from '@rx-angular/template/let';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
@@ -22,7 +22,7 @@ const DECLARATIONS = [RxContextComponent];
 @NgModule({
   declarations: DECLARATIONS,
   imports: [
-    LetModule,
+    RxLet,
     VisualizerModule,
     ValueProvidersModule,
     StrategySelectModule,
@@ -34,7 +34,7 @@ const DECLARATIONS = [RxContextComponent];
     RouterModule,
     MatCardModule,
     DirtyChecksModule,
-    ForModule,
+    RxFor,
     RxContextModule,
     MatIconModule,
     MatProgressSpinnerModule,

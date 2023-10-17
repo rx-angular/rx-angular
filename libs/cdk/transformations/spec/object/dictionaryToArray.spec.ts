@@ -1,5 +1,5 @@
 import { dictionaryToArray } from '@rx-angular/cdk/transformations';
-import { initialPrimitiveState } from '@test-helpers';
+import { initialPrimitiveState } from '@test-helpers/rx-angular';
 
 interface Creature {
   id: number;

@@ -6,7 +6,7 @@ import {
 } from '@angular/core/testing';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { mockConsole } from '@test-helpers';
+import { mockConsole } from '@test-helpers/rx-angular';
 import {
   BehaviorSubject,
   concat,
@@ -19,7 +19,6 @@ import {
 } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 import { RxIf } from '../if.directive';
-import { IfModule } from '../if.module';
 import { createTestComponent, TestComponent } from './fixtures';
 
 const ifContextTemplate = `

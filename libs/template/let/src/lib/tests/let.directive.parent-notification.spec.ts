@@ -5,10 +5,10 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { asapScheduler, delay, Observable, ReplaySubject, Subject } from 'rxjs';
 import { TestBed } from '@angular/core/testing';
-import { LetDirective } from '../let.directive';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { Observable, ReplaySubject, Subject, asapScheduler, delay } from 'rxjs';
+import { RxLet } from '../let.directive';
 
 @Component({
   template: `
@@ -36,7 +36,7 @@ import { LetDirective } from '../let.directive';
 class LetDirectiveTestStrategyComponent {
   @ViewChild('letChild') viewChild: ElementRef;
   @ViewChild('otherChild') otherChild: ElementRef;
-  @ViewChildren(LetDirective) letChildren: QueryList<LetDirective<any>>;
+  @ViewChildren(RxLet) letChildren: QueryList<RxLet<any>>;
   strategy: string;
   value$: Observable<number> = new ReplaySubject(1);
   rendered$ = new Subject();
@@ -51,7 +51,7 @@ let componentInstance: {
   value$: Subject<any>;
   rendered$: Observable<unknown>;
   withParent: boolean;
-  letChildren: QueryList<LetDirective<any>>;
+  letChildren: QueryList<RxLet<any>>;
 };
 let strategyProvider: RxStrategyProvider;
 
@@ -60,7 +60,7 @@ describe('LetDirective parent notification', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LetDirectiveTestStrategyComponent],
-      imports: [LetDirective],
+      imports: [RxLet],
       teardown: { destroyAfterEach: true },
     });
   });
@@ -104,7 +104,7 @@ describe('LetDirective parent notification', () => {
 
       it('should update parent', (done) => {
         fixture.detectChanges();
-        const cdRef = componentInstance.letChildren.first.cdRef;
+        const cdRef = (componentInstance.letChildren.first as any).cdRef;
         cdRef.detectChanges = jest.fn();
         const behavior = strategyProvider.strategies[strategy].behavior;
         componentInstance.rendered$
@@ -122,8 +122,8 @@ describe('LetDirective parent notification', () => {
 
       it('should scope parent notifications', (done) => {
         fixture.detectChanges();
-        const cdRef = componentInstance.letChildren.first.cdRef;
-        const cdRef2 = componentInstance.letChildren.last.cdRef;
+        const cdRef = (componentInstance.letChildren.first as any).cdRef;
+        const cdRef2 = (componentInstance.letChildren.last as any).cdRef;
         expect(cdRef2).toEqual(cdRef);
         cdRef.detectChanges = jest.fn();
         const behavior = strategyProvider.strategies[strategy].behavior;
@@ -167,7 +167,7 @@ describe('LetDirective parent notification', () => {
 
       it('should not update parent', (done) => {
         fixture.detectChanges();
-        const cdRef = componentInstance.letChildren.first.cdRef;
+        const cdRef = (componentInstance.letChildren.first as any).cdRef;
         cdRef.detectChanges = jest.fn();
         const behavior = strategyProvider.strategies[strategy].behavior;
         componentInstance.rendered$

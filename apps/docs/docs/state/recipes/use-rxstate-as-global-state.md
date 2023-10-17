@@ -189,7 +189,7 @@ export class TodoComponent extends RxState<TodosState> {
 
 Here we `connect` to the global state instance and filter out the already completed tasks.
 
-Our `AllTasksComponent` is slightly different in that it doesn´t actually need to filter anything, and thus it only needs to manage the **local** `isExpanded` value, and just have the `tasks` and `counter` values come directly from the **global** state.
+Our `AllTasksComponent` is slightly different in that it doesn't actually need to filter anything, and thus it only needs to manage the **local** `isExpanded` value, and just have the `tasks` and `counter` values come directly from the **global** state.
 
 ```typescript
 interface AllTodosState {

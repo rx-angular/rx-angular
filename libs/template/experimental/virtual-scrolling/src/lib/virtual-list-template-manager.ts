@@ -1,4 +1,4 @@
-import { EmbeddedViewRef, IterableChanges } from '@angular/core';
+import { EmbeddedViewRef, IterableChanges, ViewRef } from '@angular/core';
 import { RxListViewContext } from '@rx-angular/cdk/template';
 
 import { TemplateSettings } from './model';
@@ -11,7 +11,8 @@ export interface RxVirtualListChange<T, C> {
 
 export type RxVirtualListChanges<T, C> = [
   number,
-  () => RxVirtualListChange<T, C>
+  () => RxVirtualListChange<T, C>,
+  boolean? // removed
 ][];
 
 /**
@@ -23,9 +24,10 @@ export interface RxVirtualListTemplateManager<T, C> {
   getListChanges(
     changes: IterableChanges<T>,
     items: T[],
-    count: number,
+    renderCount: number,
     adjustIndexWith: number
   ): [RxVirtualListChanges<T, C>, boolean];
+  setItemCount(itemCount: number): void;
   detach(): void;
 }
 
@@ -44,12 +46,14 @@ export function createVirtualListTemplateManager<
   templateRef,
   createViewContext,
   updateViewContext,
-  viewCacheSize,
+  templateCacheSize,
 }: TemplateSettings<T, C, any>): RxVirtualListTemplateManager<T, C> {
   let _viewCache: EmbeddedViewRef<C>[] = [];
+  let itemCount = 0;
 
   return {
     getListChanges,
+    setItemCount: (count) => (itemCount = count),
     detach: () => {
       for (let i = 0; i < _viewCache.length; i++) {
         _viewCache[i].destroy();
@@ -108,7 +112,7 @@ export function createVirtualListTemplateManager<
   }
 
   /** Detaches the view at the given index and inserts into the view cache. */
-  function _detachAndCacheView(index: number) {
+  function _detachAndCacheView(index: number | undefined) {
     const detachedView = viewContainerRef.detach(index) as EmbeddedViewRef<C>;
     _maybeCacheView(detachedView);
     detachedView.detectChanges();
@@ -124,7 +128,7 @@ export function createVirtualListTemplateManager<
   ): EmbeddedViewRef<C> {
     const oldView = viewContainerRef.get(adjustedPreviousIndex);
     const view = <EmbeddedViewRef<C>>(
-      viewContainerRef.move(oldView, currentIndex)
+      viewContainerRef.move(oldView as ViewRef, currentIndex)
     );
     updateViewContext(value, view, {
       count,
@@ -139,7 +143,7 @@ export function createVirtualListTemplateManager<
    * destroyed.
    */
   function _maybeCacheView(view: EmbeddedViewRef<C>) {
-    if (_viewCache.length < viewCacheSize) {
+    if (_viewCache.length < templateCacheSize) {
       _viewCache.push(view);
       return true;
     } else {
@@ -180,6 +184,7 @@ export function createVirtualListTemplateManager<
     const listChanges: RxVirtualListChanges<T, C> = [];
     let notifyParent = false;
     let appendedAtEnd = 0;
+    const otherMovedIds: number[] = [];
     changes.forEachOperation(
       ({ item, previousIndex }, adjustedPreviousIndex, currentIndex) => {
         if (previousIndex == null) {
@@ -209,11 +214,12 @@ export function createVirtualListTemplateManager<
         } else if (currentIndex == null) {
           // remove
           listChanges.push([
-            adjustedPreviousIndex,
+            adjustedPreviousIndex as number,
             () => {
-              _detachAndCacheView(adjustedPreviousIndex);
+              _detachAndCacheView(adjustedPreviousIndex ?? undefined);
               return { item };
             },
+            true,
           ]);
           notifyParent = true;
         } else if (adjustedPreviousIndex !== null) {
@@ -235,6 +241,7 @@ export function createVirtualListTemplateManager<
               };
             },
           ]);
+          otherMovedIds.push(adjustedPreviousIndex);
           changedIdxs.add(item);
           notifyParent = true;
         }
@@ -261,7 +268,30 @@ export function createVirtualListTemplateManager<
         changedIdxs.add(item);
       }
     });
-    if (notifyParent) {
+    for (let i = 0; i < otherMovedIds.length; i++) {
+      const itemIndex = otherMovedIds[i];
+      const item = items[itemIndex];
+      if (item && !changedIdxs.has(item)) {
+        changedIdxs.add(item);
+        listChanges.push([
+          itemIndex,
+          () => {
+            const view = _updateView(
+              item,
+              itemIndex,
+              count,
+              itemIndex + adjustIndexWith
+            );
+            return {
+              view,
+              index: itemIndex,
+              item,
+            };
+          },
+        ]);
+      }
+    }
+    if (itemCount !== count && changedIdxs.size < items.length) {
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         if (!changedIdxs.has(item)) {

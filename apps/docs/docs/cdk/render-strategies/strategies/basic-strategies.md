@@ -74,7 +74,7 @@ In a simple setup the pull might be a quick solution and you just `.get()` the v
 
 Compare it with HTTP calls vs WebSockets.
 
-If we apply this concepts to our change detection mechanics we can directly apply changes where they are needd and skip nearly all the unnessecary work.
+If we apply this concepts to our change detection mechanics we can directly apply changes where they are need and skip nearly all the unnecessary work.
 
 In combination with Observables, and EmbeddedViews change detection can be speed up dramatically by this architecture.
 
@@ -158,12 +158,12 @@ class Component {
 ### Template
 
 ```ts
-import { LetModule } from '@rx-angular/template/let';
-import { ForModule } from '@rx-angular/template/for';
-import { PushModule } from '@rx-angular/template/push';
+import { RxLet } from '@rx-angular/template/let';
+import { RxFor } from '@rx-angular/template/for';
+import { RxPush } from '@rx-angular/template/push';
 
 @Module({
-  imports: [LetModule, ForModule, PushModule],
+  imports: [RxLet, RxFor, RxPush],
 })
 class Module {}
 ```
