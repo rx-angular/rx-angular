@@ -6,8 +6,8 @@ Structural directives maintain `EmbeddedViews` within a components' template.
 Depending on the bound value as well as the configured `RxRenderStrategy`, updates processed by the
 `@rx-angular/template` directives can be asynchronous.
 
-Whenever a template gets inserted into, or removed from, its parent component, the directive has to inform the parent in order to
-update any view- or contentquery (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
+Whenever a template gets inserted into or removed from its parent component, the directive has to inform the parent in order to
+update any view or content query (`@ViewChild`, `@ViewChildren`, `@ContentChild`, `@ContentChildren`).
 
 Take a look at the following example:
 
@@ -28,7 +28,7 @@ export class AppListComponent {
 }
 ```
 
-`AppListComponent` has a `@ViewChild` viewquery where it queries for an `ElementRef<HTMLElement>` with an `rxLet` applied to it.
+`AppListComponent` has a `@ViewChild` view query where it queries for an `ElementRef<HTMLElement>` with an `rxLet` applied to it.
 In this case `AppListComponent`s state is dependent on its `ViewChild`, it needs to get informed
 about updates of its child views, otherwise its `append()` method will fail.
 

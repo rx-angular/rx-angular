@@ -2,6 +2,73 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [16.1.0](https://github.com/rx-angular/rx-angular/compare/template@16.0.2...template@16.1.0) (2023-08-21)
+
+
+### Features
+
+* **template:** decouple scroll-element from viewport ([9eddb36](https://github.com/rx-angular/rx-angular/commit/9eddb365a6d77a8c7a15a295c640fe151353ba4e))
+
+
+
+## [16.0.2](https://github.com/rx-angular/rx-angular/compare/template@16.0.1...template@16.0.2) (2023-07-17)
+
+
+### Bug Fixes
+
+* **template:** autosize virtual scroll handles updates with trackBy ([5d1034e](https://github.com/rx-angular/rx-angular/commit/5d1034e3a6526f684308bd29fb48dbc21f6daade))
+* **template:** virtual-scroll scrollStrategy dependency error in es2022 ([#1586](https://github.com/rx-angular/rx-angular/issues/1586)) ([45ead14](https://github.com/rx-angular/rx-angular/commit/45ead1435e1a1d881937a2d913252a9f38ed06dc))
+* **template:** virtual-scrolling rxjs 6 compat. autosize update handling ([57588ea](https://github.com/rx-angular/rx-angular/commit/57588ea236baed54086e1a3b9db340722bf7bde6))
+
+
+
+## [16.0.1](https://github.com/rx-angular/rx-angular/compare/template@16.0.0...template@16.0.1) (2023-06-22)
+
+
+### Bug Fixes
+
+* **template:** fix properties not initialized ([02b62fb](https://github.com/rx-angular/rx-angular/commit/02b62fb5da76cb3e765a35848c4961a91f96a64a)), closes [#1580](https://github.com/rx-angular/rx-angular/issues/1580)
+
+
+
+# [16.0.0](https://github.com/rx-angular/rx-angular/compare/template@15.2.0...template@16.0.0) (2023-06-20)
+
+
+### Bug Fixes
+
+* **template:** added tests for untracked push pipe ([5978a15](https://github.com/rx-angular/rx-angular/commit/5978a154278368aeb135bd281b64d95d5bbfb655))
+* **template:** remove `scroll` listener ([7766fbf](https://github.com/rx-angular/rx-angular/commit/7766fbf750717c9aaa5c7e42fa90ff2f679ddcd9))
+* **template:** untrack subscription and unsubscription in push pipe ([fbdbf5b](https://github.com/rx-angular/rx-angular/commit/fbdbf5b330334d46319e3790bc78265bd0a2cf74))
+
+
+### Features
+
+* bump Angular to v16 ([31621e6](https://github.com/rx-angular/rx-angular/commit/31621e6cea295a3774a7ac07b91f4df75ba95c32))
+* **template:** add migration for NgModule to standalone transition ([175a541](https://github.com/rx-angular/rx-angular/commit/175a541897e9fd1eaad82c458487ed5d9a4e5611))
+* **template:** drop ForModule ([5896d7b](https://github.com/rx-angular/rx-angular/commit/5896d7bb33ccb9e06820c703e84ad7a41108a0ef))
+* **template:** drop IfModule ([815c4ea](https://github.com/rx-angular/rx-angular/commit/815c4eac5057ae321e0f9d490b022d15390649ba))
+* **template:** drop LetModule ([6ea7361](https://github.com/rx-angular/rx-angular/commit/6ea736121785fc1cd29c3b3c0552f842d0d454d8))
+* **template:** drop PushModule ([5da7cb6](https://github.com/rx-angular/rx-angular/commit/5da7cb6c9b7c6b5c0d23777fafb0dda2d6ed7b53))
+* **template:** drop UnpatchModule ([2ab65f7](https://github.com/rx-angular/rx-angular/commit/2ab65f721352082bd31db3b3f349cc18733c96e7))
+* **template:** rename LetDirective to RxLet ([ef1e129](https://github.com/rx-angular/rx-angular/commit/ef1e1299b8af8068d289b9891634f48fe30fa27c))
+* **template:** rename PushPipe to RxPush ([808f6ff](https://github.com/rx-angular/rx-angular/commit/808f6ff85d98aebaafc6f3c59132f51d14a4cf08))
+* **template:** rename UnpatchDirective to RxUnpatch ([3a7f914](https://github.com/rx-angular/rx-angular/commit/3a7f914baa2ad3b2969a44ba572d76d9ad38f6d9))
+
+
+### BREAKING CHANGES
+
+* Minimum required `@angular/core` version is now `^16.0.0`.
+* **template:** The UnpatchModule was dropped. Use the standalone import instead.
+* **template:** The UnpatchDirective was renamed to RxUnpatch
+* **template:** The PushPipe was renamed to RxPush
+* **template:** Removed PushModule, use the standalone import instead
+* **template:** Removed IfModule, use the standalone import instead
+* **template:** Removed ForModule, use the standalone import instead
+* **template:** Removed LetModule, use the standalone import instead
+* **template:** LetDirective was renamed to RxLet for consistency reasons
+
+
+
 # [15.2.0](https://github.com/rx-angular/rx-angular/compare/template@15.1.0...template@15.2.0) (2023-04-21)
 
 

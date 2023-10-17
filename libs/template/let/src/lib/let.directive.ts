@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Directive,
   ErrorHandler,
+  inject,
   Input,
   NgZone,
   OnChanges,
@@ -40,7 +41,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 /** @internal */
 type RxLetTemplateNames = 'nextTpl' | RxBaseTemplateNames;
@@ -95,6 +96,20 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
 @Directive({ selector: '[rxLet]', standalone: true })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
+  /** @internal */
+  private strategyProvider = inject(RxStrategyProvider);
+  /** @internal */
+  private cdRef = inject(ChangeDetectorRef);
+  /** @internal */
+  private ngZone = inject(NgZone);
+  /** @internal */
+  private nextTemplateRef =
+    inject<TemplateRef<RxLetViewContext<U>>>(TemplateRef);
+  /** @internal */
+  private viewContainerRef = inject(ViewContainerRef);
+  /** @internal */
+  private errorHandler = inject(ErrorHandler);
+
   static ngTemplateGuard_rxLet: 'binding';
 
   /**
@@ -468,15 +483,6 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    * }
    */
   @Input('rxLetPatchZone') patchZone = this.strategyProvider.config.patchZone;
-
-  constructor(
-    private strategyProvider: RxStrategyProvider,
-    public cdRef: ChangeDetectorRef,
-    private ngZone: NgZone,
-    private readonly nextTemplateRef: TemplateRef<RxLetViewContext<U>>,
-    private readonly viewContainerRef: ViewContainerRef,
-    private errorHandler: ErrorHandler
-  ) {}
 
   /** @internal */
   private observablesHandler = createTemplateNotifier<U>();

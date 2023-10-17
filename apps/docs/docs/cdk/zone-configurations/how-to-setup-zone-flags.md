@@ -37,7 +37,7 @@ Every fired event in the Browser will now pass our patch from above.
 
 ### The flagging mechanism
 
-When `zone.js` is first time initialised on the page, it takes values of flags already located in `window` object.
+When `zone.js` is first time initialized on the page, it takes values of flags already located in `window` object.
 So it's important to set them **before `zone.js` is init**. So we need to inject `zone-flags.js` code **above** the zone code.
 
 ```typescript
@@ -108,7 +108,7 @@ As well as inline documentation of scopes, methods and configuration details in 
 2. In `polyfills.ts` above the zone import, import `zone-flags.ts`:
 
 ```typescript
-// ☝️ Make sure zoneflags are imported before zone.js
+// ☝️ Make sure zone flags are imported before zone.js
 import './zone-flags';
 // Zone JS is required by default for Angular itself.
 import 'zone.js/dist/zone';
@@ -133,7 +133,7 @@ zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
 ```typescript
 // Zone JS is required by default for Angular itself.
 import 'zone.js/dist/zone';
-// ☝️ Make sure zoneflags are imported before zone.js
+// ☝️ Make sure zone flags are imported before zone.js
 import './zone-runtime';
 ```
 

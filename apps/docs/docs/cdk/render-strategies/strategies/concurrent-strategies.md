@@ -17,7 +17,7 @@ There are 5 core concepts of the concurrent strategies:
 
 The Browser has only one UI thread (main thread), meaning things happen one after another.
 
-Users constantly interract with our site and this means if our main thread is busy, they can't interact whit the page. The events like scroll or click will get delayed until the main thread is unblocked from work again and can process those interactions.
+Users constantly interact with our site and this means if our main thread is busy, they can't interact whit the page. The events like scroll or click will get delayed until the main thread is unblocked from work again and can process those interactions.
 
 ![Render Strategies - Frame Drop Overview](https://user-images.githubusercontent.com/10064416/145212039-b4b20fe5-19c9-4062-aba3-b5749cca978d.png)
 
@@ -73,7 +73,7 @@ A simple way to schedule work is using `setTimeout`.
 
 ```typescript
 function work(): viod {
-  concole.log('work done!');
+  console.log('work done!');
 }
 
 const asyncId = setTimeout(work);
@@ -122,7 +122,7 @@ All scheduled tasks will end up in the same task of the main thread.
 
 ![Render Strategies-chunking-animation-frame](https://user-images.githubusercontent.com/10064416/145215060-56d037a7-ec51-4846-9e78-a0f358128c61.png)
 
-The image shows that all AnimatioFrame events end up in the same task.
+The image shows that all AnimationFrame events end up in the same task.
 
 This scenario gets to a problem depending on:
 
@@ -134,7 +134,7 @@ This scenario gets to a problem depending on:
 ![concurrent scheduling - abstract diagram](https://user-images.githubusercontent.com/10064416/145228577-6b8f0bb7-6547-4835-aecc-13d7e07baf02.png)
 
 Concurrent scheduling is a marketing term and simply means that there is a mechanism in place that knows how much time is spent in the current task.
-This number is called frame budget and measured in milliseconds. As a result of this technique we're getting prioritized user-centric scheduling behaviours.
+This number is called frame budget and measured in milliseconds. As a result of this technique we're getting prioritized user-centric scheduling behavior's.
 
 This enables:
 
@@ -159,7 +159,7 @@ Instead all remaining work will get executed as fast as possible. This means in 
 ![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/146287356-023836c8-a697-4640-a4ae-7d567bc02bf0.png)
 Every strategy has a different render deadline. Strategies are designed from the perspective of how important the work is for the user. see: [RAIL model](https://web.dev/rail/)
 
-What concurrent scheduling does under the hood is is cunking up work in cycles of scheduling, prioritization and execution based on different settings.
+What concurrent scheduling does under the hood is is chunking up work in cycles of scheduling, prioritization and execution based on different settings.
 
 ![Render Strategies - task flow](https://user-images.githubusercontent.com/10064416/146287195-89e22ed8-12ba-4099-9379-430a41469b9c.png)
 
@@ -185,7 +185,7 @@ Urgent work that must happen immediately is initiated and visible by the user. T
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 0ms             |
 
-![render-strategies-concurrent-immediate-diagramm](https://user-images.githubusercontent.com/10064416/146285874-684230bf-f38d-4150-a803-fdf896a57c8a.png)
+![render-strategies-concurrent-immediate-diagram](https://user-images.githubusercontent.com/10064416/146285874-684230bf-f38d-4150-a803-fdf896a57c8a.png)
 
 **Usecase:**
 
@@ -248,7 +248,7 @@ Critical work that must be done in the current frame, is initiated and visible b
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 250ms           |
 
-![render-strategies-concurrent-userBlocking-diagramm](https://user-images.githubusercontent.com/10064416/146285898-c60e4ab6-98bd-4c0a-8c1f-a2ecbc829f88.png)
+![render-strategies-concurrent-userBlocking-diagram](https://user-images.githubusercontent.com/10064416/146285898-c60e4ab6-98bd-4c0a-8c1f-a2ecbc829f88.png)
 
 **Usecase:**
 
@@ -311,7 +311,7 @@ Heavy work visible to the user. For example, since it has a higher timeout, it i
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 5000ms          |
 
-![render-strategies-concurrent-normal-diagramm](https://user-images.githubusercontent.com/10064416/146285895-ec045bf7-5c68-4359-a723-032c963b80b5.png)
+![render-strategies-concurrent-normal-diagram](https://user-images.githubusercontent.com/10064416/146285895-ec045bf7-5c68-4359-a723-032c963b80b5.png)
 
 <!-- In most cases it is a rendering from user interaction that depends on network and can be delayed by the couple of frames to the point where requested data is available. It should not delay current frame but should target next available frame. -->
 
@@ -351,7 +351,7 @@ Work that is typically not visible to the user or initiated by the user.
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | 10000ms         |
 
-![render-strategies-concurrent-low-diagramm](https://user-images.githubusercontent.com/10064416/146285894-8d2992f3-6e5f-49db-8c45-d54424cc4a3e.png)
+![render-strategies-concurrent-low-diagram](https://user-images.githubusercontent.com/10064416/146285894-8d2992f3-6e5f-49db-8c45-d54424cc4a3e.png)
 
 **Usecase:**
 
@@ -407,7 +407,7 @@ Urgent work that should happen in the background and is not initiated but visibl
 | ----------------- | ------------- | --------------- |
 | 🠗 `detectChanges` | `postMessage` | ❌              |
 
-![render-strategies-concurrent-idle-diagramm](https://user-images.githubusercontent.com/10064416/146285892-c996b043-c1c0-411b-abbd-1d2867e36711.png)
+![render-strategies-concurrent-idle-diagram](https://user-images.githubusercontent.com/10064416/146285892-c996b043-c1c0-411b-abbd-1d2867e36711.png)
 
 **Usecase:**
 

@@ -15,9 +15,9 @@ _Example_
 ```typescript
 const cat = { id: 1, type: 'cat', name: 'Fluffy' };
 
-const anonymusCat = deleteProp(cat, 'name');
+const anonymousCat = deleteProp(cat, 'name');
 
-// anonymusCat will be:
+// anonymousCat will be:
 // {id: 1, type: 'cat'};
 ```
 

@@ -1,4 +1,7 @@
-import { initialPrimitiveState, PrimitiveState } from '@test-helpers';
+import {
+  initialPrimitiveState,
+  PrimitiveState,
+} from '@test-helpers/rx-angular';
 import { slice } from '@rx-angular/cdk/transformations';
 
 let primitiveState: PrimitiveState;

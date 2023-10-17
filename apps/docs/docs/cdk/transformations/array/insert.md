@@ -64,7 +64,7 @@ export class ListComponent {
   }
 
   // Imperative implementation
-  insertCeature(): void {
+  insertCreature(): void {
     const creatureToAdd = {
       id: generateId(),
       name: 'newCreature',

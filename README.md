@@ -47,18 +47,9 @@ To learn more about @rx-angular/template and its capabilities, check out the off
 
 ### Using `@rx-angular/state`
 
-In this example, we're creating a fully reactive counter component. We define the state using an interface and use the `RxState` service to manage it. We also define two actions to increment and decrement the count and use the `connect` method to update the state in response to these actions. Finally, we use the `select` method to display the count property of the state in the template.
+In this example, we're creating a fully reactive counter component. We use the `rxState` functional API to create the state. We also define two actions to increment and decrement the count and use the `connect` function to update the state in response to these actions. Finally, we use the `select` function to display the count property of the state in the template.
 
 ```ts
-interface CounterState {
-  count: number;
-}
-
-interface CounterActions {
-  increment: void;
-  decrement: void;
-}
-
 @Component({
   selector: 'app-counter',
   standalone: true,
@@ -68,24 +59,29 @@ interface CounterActions {
     <button (click)="actions.increment()">Increment</button>
     <button (click)="actions.decrement()">Decrement</button>
   `,
-  providers: [RxState, RxActionFactory],
+  providers: [RxActionFactory],
 })
 export class CounterComponent {
-  readonly count$ = this.state.select('count');
-  readonly actions = this.actionFactory.create();
+  private readonly actions = inject<
+    RxActionFactory<{
+      increment: void;
+      decrement: void;
+    }>
+  >(RxActionFactory).create();
 
-  constructor(
-    private readonly state: RxState<CounterState>,
-    private readonly actionFactory: RxActionFactory<CounterActions>
-  ) {
-    this.state.set({ count: 0 });
-    this.state.connect(this.actions.increment$, (state) => ({
+  private readonly state = rxState<{
+    count: number;
+  }>(({ set, connect }) => {
+    set({ count: 0 });
+    connect(this.actions.increment$, (state) => ({
       count: state.count + 1,
     }));
-    this.state.connect(this.actions.decrement$, (state) => ({
+    connect(this.actions.decrement$, (state) => ({
       count: state.count - 1,
     }));
-  }
+  });
+
+  readonly count$ = this.state.select('count');
 }
 ```
 
@@ -133,3 +129,7 @@ We welcome contributions from the community to help improve RxAngular! To get st
 ## License
 
 This project is MIT licensed.
+
+---
+
+made with ❤ by [push-based.io](https://www.push-based.io)

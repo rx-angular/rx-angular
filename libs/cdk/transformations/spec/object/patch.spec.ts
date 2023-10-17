@@ -3,7 +3,7 @@ import {
   initialPrimitiveState,
   NestedState,
   PrimitiveState,
-} from '@test-helpers';
+} from '@test-helpers/rx-angular';
 import { patch } from '@rx-angular/cdk/transformations';
 
 let primitiveState: PrimitiveState;

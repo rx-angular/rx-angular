@@ -1,0 +1,637 @@
+---
+sidebar_label: Setup
+sidebar_position: 2
+title: Setup
+# Renamed from libs/state/docs/usage.md
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Basic Setup
+
+The new functional creation API lets you create and configure `RxState` in only one place.
+
+:::info Migration Guide
+
+Read the [following section](#migrate-to-new-functional-api) for a migration guide explaining how to upgrade your codebase to the new API.
+
+:::
+
+```ts
+import { rxState } from '@rx-angular/state';
+import { RxFor } from '@rx-angular/template/for';
+
+@Component({
+  template: `<movie *rxFor="let movie of movies$" [movie]="movie" />`,
+  imports: [RxFor],
+})
+export class MovieListComponent {
+  private state = rxState<{ movies: Movie[] }>(({ set }) => {
+    // set initial state
+    set({ movies: [] });
+  });
+
+  // select a property for the template to consume
+  movies$ = this.state.select('movies');
+}
+```
+
+The functional approach will be the new default approach for newer versions.
+
+Read the [Migration Guide](https://rx-angular.io/docs/state/setup#migrate-to-new-functional-api) for a migration guide explaining how to upgrade your codebase to the new API.
+
+## Connect global state
+
+**Connect state slices from third-party services (e.g. NgRx `Store`)**
+
+Many people have problems combining observables with the component state in a clean way.
+Here is a use case where the `@ngrx/store` gets connected to the local state:
+
+```typescript
+import { rxState } from '@rx-angular/state';
+import { RxFor } from '@rx-angular/template/for';
+
+@Component({
+  template: `<movie *rxFor="let movie of movies$" [movie]="movie" />`,
+  imports: [RxFor],
+})
+export class MovieListComponent {
+  private store = inject<Store<MovieState>>(Store);
+
+  private state = rxState<{ movies: Movie[] }>(({ set, connect }) => {
+    // set initial state
+    set({ movies: [] });
+    // connect global state to your local state
+    connect('movies', this.store.select('movies'));
+  });
+
+  // select a property for the template to consume
+  movies$ = this.state.select('movies');
+}
+```
+
+## Store loading & error information
+
+`RxState`s API makes it extremely easy to derive and store loading & error information when interacting with 3rd party data.
+Using one of the overloads of the `connect` method, we can fill our whole state object with only one connection.
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { rxState } from '@rx-angular/state';
+import { RxFor } from '@rx-angular/template/for';
+import { RxIf } from '@rx-angular/template/if';
+import { map, catchError, startWith, endWith } from 'rxjs';
+
+@Component({
+  template: `
+    <loader *rxIf="loading$" />
+    <error *rxIf="error$" />
+    <movie *rxFor="let movie of movies$" [movie]="movie" />
+  `,
+  imports: [RxFor, RxIf],
+})
+export class MovieListComponent {
+  private movieResource = inject(MovieResource);
+
+  private state = rxState<{
+    movies: Movie[];
+    loading: boolean;
+    error: boolean;
+  }>(({ set, connect }) => {
+    // set initial state
+    set({ movies: [], loading: false, error: false });
+    // connect global state to your local state
+    connect(
+      this.movieResource.fetchMovies().pipe(
+        // map actual data
+        map((movies) => ({ movies })),
+        // in case of an error, store it
+        catchError(() => of({ error: true })),
+        // start with loading true
+        startWith({ loading: true }),
+        // when request completes, we can set loading to false
+        endWith({ loading: false })
+      )
+    );
+  });
+
+  // select a property for the template to consume
+  movies$ = this.state.select('movies');
+  loading$ = this.state.select('loading');
+  error$ = this.state.select('error');
+}
+```
+
+## Input Property Bindings
+
+**Combining `Input` bindings passing single values with RxState**
+
+:::info
+
+As change detection is anyway executed when a new value arrives as input binding, you don't need to
+wrap that property with an async pipe in your template.
+
+This approach is only suggested to use certain use cases.
+
+1. Your input property is mutated from withing your own component (see example below)
+2. You need that property in your state to compute other values
+
+:::
+
+```typescript
+import { rxState } from '@rx-angular/state';
+import { Subject } from 'rxjs';
+
+@Component({
+  selector: 'app-count',
+  template: `
+    <div>{{ count$ | async }}</div>
+    <button (click)="increment.next()">increment</button>
+    <button (click)="decrement.next()">decrement</button>
+  `,
+})
+export class CounterComponent {
+  readonly count$ = this.state.select('count');
+
+  @Input() set count(count: number) {
+    this.state.set({ count });
+  }
+
+  increment = new Subject();
+  decrement = new Subject();
+
+  private state = rxState<{ count: number }>(({ set, connect }) => {
+    // set initial state
+    set({ count: 0 });
+    // increment
+    connect('count', this.increment, ({ count }) => count++);
+    // decrement
+    connect('count', this.decrement, ({ count }) => count--);
+  });
+}
+```
+
+## Combining `Input` bindings passing Observables
+
+:::tip
+
+**You can save 1 change detection run per emission** and improve performance of your application by providing `Observables` directly as `Input`.
+This way the ChangeDetection for the `Input` binding will only fire once for the first assignment.
+
+You can use `coerceObservable` from `@rx-angular/cdk/coercing` to support static values as well as Observables with a single line of code.
+
+:::
+
+```typescript
+import { rxState } from '@rx-angular/state';
+import { Observable, Subject } from 'rxjs';
+import { coerceObservable } from '@rx-angular/cdk/coercing';
+
+@Component({
+  selector: 'app-count',
+  template: `
+    <div>{{ count$ | async }}</div>
+    <button (click)="increment.next()">increment</button>
+    <button (click)="decrement.next()">decrement</button>
+  `,
+})
+export class CounterComponent {
+  readonly count$ = this.state.select('count');
+
+  //highlight-next-line
+  @Input() set count(count: Observable<number> | number) {
+    // You can use `coerceObservable` from `@rx-angular/cdk` to support static values as well as Observables with a single line of code.
+    this.state.connect('count', coerceObservable(count));
+  }
+
+  increment = new Subject();
+  decrement = new Subject();
+
+  private state = rxState<{ count: number }>(({ set, connect }) => {
+    // set initial state
+    set({ count: 0 });
+    // increment
+    connect('count', this.increment, ({ count }) => count++);
+    // decrement
+    connect('count', this.decrement, ({ count }) => count--);
+  });
+}
+```
+
+## Output Property Bindings
+
+**Combining `Output` bindings directly from RxState.**
+
+:::tip
+
+For output bindings it is recommended to use the `$` property. The `$` property exposes the raw state without any selector benefits as memoization.
+This is important for output events, as events should not be stateful, e.g. repeat their latest value.
+:::
+
+```typescript
+import { rxState } from '@rx-angular/state';
+import { select } from '@rx-angular/state/selections';
+import { Observable, Subject } from 'rxjs';
+import { coerceObservable } from '@rx-angular/cdk/coercing';
+
+@Component({
+  selector: 'app-count',
+  template: `
+    <div>{{ count$ | async }}</div>
+    <button (click)="increment.next()">increment</button>
+    <button (click)="decrement.next()">decrement</button>
+  `,
+})
+export class StatefulComponent {
+  readonly count$ = this.state.select('count');
+
+  @Input() set count(count: Observable<number> | number) {
+    // You can use `coerceObservable` from `@rx-angular/cdk` to support static values as well as Observables with a single line of code.
+    this.state.connect('count', coerceObservable(count));
+  }
+
+  //highlight-next-line
+  @Output() countChange = this.state.$.pipe(select('count'));
+
+  increment = new Subject();
+  decrement = new Subject();
+
+  private state = rxState<{ count: number }>(({ set, connect }) => {
+    // set initial state
+    set({ count: 0 });
+    // increment
+    connect('count', this.increment, ({ count }) => count++);
+    // decrement
+    connect('count', this.decrement, ({ count }) => count--);
+  });
+}
+```
+
+## Updates based on previous state
+
+Often it is needed calculate your new state based off some input and a previous state. The following example shows a
+local filtering algorithm implemented with `RxState`.
+
+```typescript
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { rxState } from '@rx-angular/state';
+import { RxFor } from '@rx-angular/template/for';
+
+@Component({
+  template: `
+    <input placeholder="Search" [formControl]="search" />
+    <movie *rxFor="let movie of movies$" [movie]="movie" />
+  `,
+  imports: [RxFor, ReactiveFormsModule],
+})
+export class MovieListComponent {
+  private store = inject<Store<MovieState>>(Store);
+
+  search = new FormControl<string>();
+
+  private state = rxState<{ movies: Movie[] }>(({ set, connect }) => {
+    // set initial state
+    set({ movies: [] });
+    // connect global state to your local state
+    connect('movies', this.store.select('movies'));
+
+    // use the oldState and the searchInput to calculate the new state
+    //highlight-start
+    connect('movies', this.search.valueChanges, (oldState, searchInput) => {
+      return oldState.movies.filter((movie) =>
+        movie.title.includes(searchInput)
+      );
+    });
+    //highlight-end
+  });
+
+  // select a property for the template to consume
+  movies$ = this.state.select('movies');
+}
+```
+
+## Derive state using selections
+
+:::tip
+
+Instead of storing your derived state as properties in your state, use the selection APIs to
+derive them as new streams.
+
+:::
+
+```typescript
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { rxState } from '@rx-angular/state';
+import { RxFor } from '@rx-angular/template/for';
+
+@Component({
+  template: `
+    <input placeholder="Search" [formControl]="search" />
+    <movie *rxFor="let movie of filteredMovies$" [movie]="movie" />
+  `,
+  imports: [RxFor, ReactiveFormsModule],
+})
+export class MovieListComponent {
+  private store = inject<Store<MovieState>>(Store);
+
+  search = new FormControl<string>();
+
+  private state = rxState<{ movies: Movie[]; searchValue: string }>(
+    ({ set, connect }) => {
+      // set initial state
+      set({ movies: [], searchValue: string });
+      // connect global state to your local state
+      connect('movies', this.store.select('movies'));
+
+      // use the oldState and the searchInput to calculate the new state
+      //highlight-next-line
+      connect('searchValue', this.search.valueChanges);
+    }
+  );
+
+  // derive filteredMovies from your stored state
+  //highlight-next-line
+  filteredMovies$ = this.state.select(
+    ['movies', 'searchValue'],
+    (movies, searchValue) => {
+      return movies.filter((movie) => movie.title.includes(searchValue));
+    }
+  );
+}
+```
+
+## rxState in a Service
+
+If you strive for a more sophisticated **separation of concerns**, you can simply use `rxState` as part of any `@Injectable` service.
+
+```typescript
+import { inject, Injectable } from '@angular/core';
+import { rxState } from '@rx-angular/state';
+
+@Injectable({ providedIn: 'root' })
+export class MovieService {
+  private resource = inject(MovieResource);
+
+  private state = rxState<{ movies: Movie[] }>(({ set, connect }) => {
+    // set initial state
+    set({ movies: [] });
+    // connect global state to your local state
+    connect('movies', this.resource.fetchMovies());
+  });
+
+  // select a property for the template to consume
+  movies$ = this.state.select('movies');
+
+  // expose the select method
+  select: typeof this.state.select = this.state.select.bind(this.state);
+}
+```
+
+## rxState as DI Token
+
+You can use the `rxState` function as a factory for an `InjectionToken`. This way you can still create DI State tokens.
+
+Create a local `Service` by using `rxState` as factory function.
+
+```typescript
+import { InjectionToken, inject } from '@angular/core';
+import { rxState } from '@rx-angular/state';
+
+export const MovieState = new InjectionToken({
+  factory: () => {
+    // inject dependencies here
+    const movieResource = inject(MovieResource);
+
+    return rxState<{ movies: Movie[] }>(({ set, connect }) => {
+      // set initial state
+      set({ movies: [] });
+      // connect global state to your local state
+      connect('movies', movieResource.fetchMovies());
+    });
+  },
+});
+```
+
+`Provide` the `Service` inside the providers array when using a `Component` or `Directive`.
+
+```typescript
+@Component({
+  template: ` <div>{{ viewState$ | async | json }}</div> `,
+  providers: [MovieState],
+})
+export class MovieListComponent {
+  private movieState = inject(MovieState);
+
+  viewState$ = this.movieState.select('movies');
+}
+```
+
+## Custom state accumulation (mutability)
+
+The `AccumulationFn` is a function that runs on every state change and is responsible for building a new state from a given input.
+By default it merges together the state by spreading it - producing a new object on every change.
+
+```typescript
+const defaultAccumulator: AccumulationFn = <T>(
+  state: T,
+  slice: Partial<T>
+): T => {
+  return { ...state, ...slice };
+};
+```
+
+Use `setAccumulator` to change that behavior. This way you could e.g. introduce `immer` as your accumulation to have
+full immutability.
+
+```typescript
+import { produce } from 'immer';
+import { rxState } from '@rx-angular/state';
+
+const immerAccumulator = (state, slice) =>
+  produce(state, (draft) => {
+    Object.keys(slice).forEach((k) => {
+      draft[k] = slice[k];
+    });
+  });
+
+state = rxState(({ setAccumulator }) => setAccumulator(immerAccumulator));
+```
+
+Or you can use any other custom deep-copying algorithm or simply go fully mutable.
+
+```typescript
+const myAccumulator = (state: MyState, slice: Partial<MyState>) =>
+  deepCopy(state, slice);
+state.setAccumulator(myAccumulator);
+```
+
+This can be done at runtime.
+
+## Migrate to new functional API
+
+The new functional API provides a nicer developer experience and aligns with the new Angular APIs recently released.
+It will be the new **default** approach for using `RxState` and we want to emphasize everyone to use the new functional API.
+The following examples showcases the key differences and how to migrate from the class based approach to the functional one.
+
+### Providers
+
+The beauty of the new functional approach is that it works without providers. This way, you simply use the new
+creation function `rxState`.
+Instead of importing `RxState` and putting it into the `providers` array, you now import `rxState`.
+The namespace still stays the same.
+
+<Tabs>
+
+<TabItem value="class-based" label="Class Based (Classic)">
+
+```typescript
+// highlight-next-line
+import { RxState } from '@rx-angular/state/state';
+import { inject, Component } from '@angular/core';
+
+@Component({
+  template: `<div>{{ state$ | async | json }}</div>`,
+  // highlight-next-line
+  providers: [RxState],
+})
+export class MovieListComponent {
+  // expose state for the template
+  readonly viewState$ = this.state.select();
+
+  // highlight-next-line
+  constructor(private state: RxState<{ movies: Movie[] }>) {
+    this.state.set({ movies: [] });
+  }
+}
+```
+
+</TabItem>
+
+<TabItem value="new" label="Functional Creation (NEW)">
+
+```typescript
+// highlight-next-line
+import { rxState } from '@rx-angular/state';
+import { Component } from '@angular/core';
+
+@Component({
+  template: `<div>{{ state$ | async | json }}</div>`,
+})
+export class MovieListComponent {
+  // create `RxState` in a single step, no providers anymore
+  // highlight-next-line
+  private state = rxState<{ movies: Movie[] }>();
+
+  // expose state for the template
+  readonly state$ = this.state.select();
+
+  constructor() {
+    // use the state APIs as before
+    this.state.set({ movies: [] });
+  }
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+### Manage side effects
+
+:::info
+
+The new `rxState` creation function drops the `hold` method and with it, it's capabilities of managing side effects.
+If you need to have such a feature, we encourage to use [`rxEffects`](./effects/effects.mdx).
+
+:::
+
+<Tabs>
+
+<TabItem value="class-based" label="Class Based (Classic)">
+
+```typescript
+import { RxState } from '@rx-angular/state';
+import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
+
+@Component({
+  template: `<movie
+    (click)="deleteClick$.next(item.id)"
+    *rxFor="let item of items$"
+  />`,
+  providers: [RxState],
+})
+export class MovieListComponent {
+  readonly items$ = this.state.select('movies');
+
+  readonly deleteClick$ = new Subject();
+
+  constructor(
+    private state: RxState<{ movies: Movie[] }>,
+    private movieResource: MovieResource
+  ) {
+    this.state.hold(
+      this.deleteClick$.pipe(concatMap((id) => this.movieResource.delete(id)))
+    );
+  }
+}
+```
+
+</TabItem>
+
+<TabItem value="new" label="Functional Creation (NEW)">
+
+:::warning
+Not support anymore, please use [`rxEffects`](./effects/effects.mdx).
+:::
+
+</TabItem>
+
+</Tabs>
+
+### Inheritance
+
+:::info
+
+The new `rxState` creation function does not return a class instance, thus no longer supporting inheritance.
+
+:::
+
+<Tabs>
+
+<TabItem value="class-based" label="Class Based (Classic)">
+
+If you wish, there is also the possibility of **extending** the `RxState` service. This can come in very handy for small
+components. Keep in mind you will expose the full `RxState` API to everyone having access to the component extending it.
+
+```typescript
+import { RxState } from '@rx-angular/state';
+
+@Directive({
+  selector: '[appStateful]',
+})
+export class StatefulComponent extends RxState<{ state: number }> {
+  readonly state$ = this.select();
+
+  constructor() {
+    super();
+  }
+}
+```
+
+</TabItem>
+
+<TabItem value="new" label="Functional Creation (NEW)">
+
+:::warning
+
+Not support anymore, please choose either the RxState as a Service approach, or use it as a private property.
+
+:::
+
+</TabItem>
+
+</Tabs>
+
+_Disclaimer_: this doc is work in progress. Not every use case has found its way into the docs. We encourage you to contribute 🙂.

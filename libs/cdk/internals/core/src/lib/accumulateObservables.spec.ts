@@ -1,5 +1,5 @@
 import { TestScheduler } from 'rxjs/testing';
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from '@test-helpers/rx-angular';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import { from, Observable, of } from 'rxjs';
 import { accumulateObservables } from './accumulateObservables';
