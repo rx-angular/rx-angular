@@ -28,10 +28,12 @@ This repository holds a set of helpers that are aiming to provide:
 This is an example of how to use the `*rxLet` directive to bind an Observable value to the template. In this example, the component defines a property `time$`, which is an Observable that emits a value every second using the `timer` operator. The emitted values are mapped to the current time string using the `map` operator which is then displayed in the template using `*rxLet`.
 
 ```ts
+import { RxLet } from '@rx-angular/template/let';
+
 @Component({
   selector: 'app-time',
   standalone: true,
-  imports: [LetDirective],
+  imports: [RxLet],
   template: `
     <ng-container *rxLet="time$; let value">
       {{ value }}
@@ -47,27 +49,29 @@ To learn more about @rx-angular/template and its capabilities, check out the off
 
 ### Using `@rx-angular/state`
 
-In this example, we're creating a fully reactive counter component. We use the `rxState` functional API to create the state. We also define two actions to increment and decrement the count and use the `connect` function to update the state in response to these actions. Finally, we use the `select` function to display the count property of the state in the template.
+In this example, we're creating a fully reactive counter component. We use `rxState` to manage the component's state, `rxActions` to define structured actions for state updates (specifically `increment` and `decrement`), and `rxEffects` to trigger side-effects when state changes occur. These mechanisms collectively enable efficient state management, action handling, and side-effect execution, resulting in a responsive and well-structured counter component.
 
 ```ts
+import { rxState } from '@rx-angular/state';
+import { rxEffects } from '@rx-angular/state/effects';
+import { rxActions } from '@rx-angular/state/actions';
+import { RxPush } from '@rx-angular/template/push';
+
 @Component({
   selector: 'app-counter',
   standalone: true,
-  imports: [PushPipe],
+  imports: [RxPush],
   template: `
     <p>Count: {{ count$ | push }}</p>
     <button (click)="actions.increment()">Increment</button>
     <button (click)="actions.decrement()">Decrement</button>
   `,
-  providers: [RxActionFactory],
 })
 export class CounterComponent {
-  private readonly actions = inject<
-    RxActionFactory<{
-      increment: void;
-      decrement: void;
-    }>
-  >(RxActionFactory).create();
+  readonly actions = rxActions<{
+    increment: void;
+    decrement: void;
+  }>();
 
   private readonly state = rxState<{
     count: number;
@@ -82,10 +86,16 @@ export class CounterComponent {
   });
 
   readonly count$ = this.state.select('count');
+
+  constructor() {
+    rxEffects(({ register }) => {
+      register(this.count$, (count) => console.log(`Count changed: ${count}`));
+    });
+  }
 }
 ```
 
-To learn more about @rx-angular/state and its capabilities, check out the official documentation at [https://rx-angular.io/docs/state](https://rx-angular.io/docs/state).
+To learn more about `@rx-angular/state` and its capabilities, check out the official documentation at [https://rx-angular.io/docs/state](https://rx-angular.io/docs/state).
 
 ## Used by
 
