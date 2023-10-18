@@ -8,12 +8,13 @@
 
 RxAngular is made up of different packages that work together or standalone.
 
-| Package                                                               | Description                                                                                                          | Version                                                                                                                               |
-| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| [@rx-angular/state](https://rx-angular.io/docs/state)                 | A powerful state management library, providing a fully reactive way to manage state in components and services.      | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)                 |
-| [@rx-angular/template](https://rx-angular.io/docs/template)           | A set of directives and pipes designed for high-performance and non-blocking rendering for large-scale applications. | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)           |
-| [@rx-angular/cdk](https://rx-angular.io/docs/cdk)                     | A Component Development Kit for high-performance and ergonomic Angular UI libs and large-scale applications.         | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)                     |
-| [@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin) | A set of ESLint rules for building reactive, performant, and zone-less Angular applications.                         | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Feslint-plugin.svg)](https://www.npmjs.com/package/%40rx-angular%2Feslint-plugin) |
+| Package                                                               | Description                                                                                                                                              | Version                                                                                                                               |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| [@rx-angular/state](https://rx-angular.io/docs/state)                 | A powerful state management library, providing a fully reactive way to manage state in components and services.                                          | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)                 |
+| [@rx-angular/template](https://rx-angular.io/docs/template)           | A set of directives and pipes designed for high-performance and non-blocking rendering for large-scale applications.                                     | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)           |
+| [@rx-angular/cdk](https://rx-angular.io/docs/cdk)                     | A Component Development Kit for high-performance and ergonomic Angular UI libs and large-scale applications.                                             | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)                     |
+| [@rx-angular/isr](https://rx-angular.io/docs/isr)                     | A library that enables Angular Universal applications to generate static pages at runtime and then update them incrementally on demand or on a schedule. | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fisr.svg)](https://www.npmjs.com/package/%40rx-angular%2Fisr)                     |
+| [@rx-angular/eslint-plugin](https://rx-angular.io/docs/eslint-plugin) | A set of ESLint rules for building reactive, performant, and zone-less Angular applications.                                                             | [![npm](https://img.shields.io/npm/v/%40rx-angular%2Feslint-plugin.svg)](https://www.npmjs.com/package/%40rx-angular%2Feslint-plugin) |
 
 This repository holds a set of helpers that are aiming to provide:
 
@@ -45,7 +46,7 @@ export class TimeComponent {
 }
 ```
 
-To learn more about @rx-angular/template and its capabilities, check out the official documentation at [https://rx-angular.io/docs/template](https://rx-angular.io/docs/template).
+To learn more about `@rx-angular/template` and its capabilities, check out the official documentation at [https://rx-angular.io/docs/template](https://rx-angular.io/docs/template).
 
 ### Using `@rx-angular/state`
 
@@ -142,4 +143,4 @@ This project is MIT licensed.
 
 ---
 
-made with ❤ by [push-based.io](https://www.push-based.io)
+Made with ❤ by [push-based.io](https://www.push-based.io)
