@@ -21,7 +21,7 @@
     "type-enum": [
       2,
       "always",
-      ["fix", "feat", "perf", "docs", "refactor", "test", "chore"]
+      ["fix", "feat", "perf", "docs", "refactor", "test", "chore", "revert"]
     ]
   }
 }
