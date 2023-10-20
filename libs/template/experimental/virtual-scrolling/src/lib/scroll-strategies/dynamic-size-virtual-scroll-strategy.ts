@@ -135,6 +135,10 @@ export class DynamicSizeVirtualScrollStrategy<
     this._contentSize$.next(size);
   }
 
+  private get contentSize(): number {
+    return this._contentSize;
+  }
+
   /** @internal */
   private readonly _renderedRange$ = new ReplaySubject<ListRange>(1);
   /** @internal */
