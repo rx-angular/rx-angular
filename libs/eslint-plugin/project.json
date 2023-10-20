@@ -5,7 +5,7 @@
   "projectType": "library",
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["libs/eslint-plugin/**/*.ts"]
@@ -27,7 +27,8 @@
         "tsConfig": "libs/eslint-plugin/tsconfig.lib.json",
         "packageJson": "libs/eslint-plugin/package.json",
         "main": "libs/eslint-plugin/src/index.ts",
-        "assets": ["libs/eslint-plugin/*.md"]
+        "assets": ["libs/eslint-plugin/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   },

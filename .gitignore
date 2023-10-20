@@ -49,3 +49,5 @@ Thumbs.db
 .cache-loader/
 
 .angular
+
+.nx/cache
