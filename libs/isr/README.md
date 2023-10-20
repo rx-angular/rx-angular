@@ -2,13 +2,11 @@
   <img width="460" height="300" src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/apps/docs/static/img/isr-logo.png" />
 </p>
 
-# Incremental Static Regeneration for Angular
+# @rx-angular/isr
 
 A library that enables Angular Universal applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
 
-📰 [Documentation](https://www.rx-angular.io/docs/isr)
-
-# Features
+## Features
 
 - ⏰ Scheduled cache invalidation
 - ▶️ On-demand cache invalidation
@@ -17,19 +15,15 @@ A library that enables Angular Universal applications to generate static pages a
 - 🅰️ Supports Angular Universal
 - 🛡️ NgModules & Standalone Compatible
 
-# How to use it?
+## Installation
 
-1. Install npm package
-
-```bash
+```
 npm install @rx-angular/isr
-# or
-yarn add @rx-angular/isr
-# or
-pnpm add @rx-angular/isr
 ```
 
-2. Initialize `ISRHandler` inside `server.ts`
+## How to use it?
+
+1. Initialize `ISRHandler` inside `server.ts`
 
 ```ts
 const isr = new ISRHandler({
@@ -39,7 +33,7 @@ const isr = new ISRHandler({
 });
 ```
 
-3. Add invalidation url handler
+2. Add invalidation url handler
 
 ```ts
 server.use(express.json());
@@ -49,7 +43,7 @@ server.post(
 );
 ```
 
-4. Replace Angular default server side rendering with ISR rendering
+3. Replace Angular default server side rendering with ISR rendering
 
 Replace
 
@@ -117,7 +111,7 @@ server.get(
 
 ISRHandler provides `APP_BASE_HREF` by default. And if you want pass `providers` into the methods of ISRHandler, you will also have to provide `APP_BASE_HREF` token.
 
-5. Add `revalidate` key in route data
+4. Add `revalidate` key in route data
 
 Example:
 
@@ -131,7 +125,7 @@ Example:
 
 > **NOTE:** Routes that don't have revalidate key in data won't be handled by ISR. They will fallback to Angular default server side rendering pipeline.
 
-6. Register providers
+5. Register providers
    To register the ISR providers, you can either import `IsrModule` in your `AppServerModule` or provide `provideISR` in your `AppServerModule` providers.
 
 Or, if you are in a standalone app, you can register the providers in your `app.config.server.ts` file.

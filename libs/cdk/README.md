@@ -27,22 +27,10 @@ applications
 - ⛔ [Zone Flags](https://github.com/BioPhoton/rx-angular-cdk-zone-configuration)
 - 🔳 [rxFor](https://stackblitz.com/edit/rx-angular-cdk-demos-c52q34)
 
-## Install
+## Installation
 
-```bash
-npm install --save @rx-angular/cdk
-# or
-yarn add @rx-angular/cdk
 ```
-
-## Update
-
-If you are using `@rx-angular/cdk` already, please consider upgrading with the `@angular/cli update` command in order to make sure all provided code migrations are processed properly.
-
-```bash
-ng update @rx-angular/cdk
-# or with nx
-nx migrate @rx-angular/cdk
+npm install @rx-angular/cdk
 ```
 
 ## Version Compatibility
@@ -53,5 +41,6 @@ nx migrate @rx-angular/cdk
 | `^2.0.0`  | `>=13.0.0` |
 | `^14.0.0` | `^14.0.0`  |
 | `^15.0.0` | `^15.0.0`  |
+| `^16.0.0` | `^16.0.0`  |
 
 Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see the [official guide](https://angular.io/guide/versions).
