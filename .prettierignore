@@ -8,3 +8,5 @@
 CHANGELOG.md
 
 .angular
+
+/.nx/cache

@@ -9,8 +9,7 @@
       "executor": "@nx/angular:package",
       "options": {
         "tsConfig": "libs/template/tsconfig.lib.json",
-        "project": "libs/template/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": false
+        "project": "libs/template/ng-package.json"
       },
       "dependsOn": [
         {
@@ -90,7 +89,8 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["libs/template/**/*.ts"]
       }

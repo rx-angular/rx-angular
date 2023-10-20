@@ -38,8 +38,7 @@
       "executor": "@nx/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
-        "project": "libs/cdk/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": false
+        "project": "libs/cdk/ng-package.json"
       },
       "outputs": ["{workspaceRoot}/dist/libs/cdk"]
     },
@@ -74,7 +73,8 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["libs/cdk/**/*.ts"]
       }

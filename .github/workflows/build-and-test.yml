@@ -1,10 +1,9 @@
-name: rx-angular CI
+name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 concurrency:
   # Group concurrency on workflow, then:
@@ -22,9 +21,11 @@ concurrency:
 
 env:
   NODE_OPTIONS: --max-old-space-size=6144
-  NX_VERBOSE_LOGGING: false
   docs-name: docs
   docs-path: dist/apps/docs
+  NX_CLOUD_DISTRIBUTED_EXECUTION: true # this enables DTE
+  NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT: 4 # expected number of agents
+  NX_BRANCH: ${{ github.event.number || github.ref_name }}
 
 jobs:
   dte_agents:
@@ -49,13 +50,14 @@ jobs:
     steps:
       - name: Checkout all commits
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
       - name: Start Nx Cloud DTE Agent
         run: yarn nx-cloud start-agent
+        env:
+          NX_AGENT_NAME: ${{ matrix.agent }}
 
   # We're using Nx Cloud for Distributed Task Execution
   # Reference: https://nx.dev/using-nx/dte
@@ -70,90 +72,71 @@ jobs:
       NX_DISTRIBUTED_TASK_EXECUTION: true
 
     steps:
-      - name: Checkout all commits
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        name: Checkout [Pull Request]
+        if: ${{ github.event_name == 'pull_request' }}
         with:
+          # By default, PRs will be checked-out based on the Merge Commit, but we want the actual branch HEAD.
+          ref: ${{ github.event.pull_request.head.sha }}
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
+
+      - uses: actions/checkout@v3
+        name: Checkout [Default Branch]
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
-      - name: Start Nx Cloud DTE
-        # The --agent-count parameter must match the number of strategies run by the dte_agents job
-        run: yarn nx-cloud start-ci-run --agent-count=4
+      - name: Initialize the Nx Cloud distributed CI run
+        run: yarn nx-cloud start-ci-run
 
-      - name: Lint Nx workspace
-        env:
-          # DTE is disabled to run this step on the DTE coordinator while the agents are set up
-          NX_CLOUD_DISTRIBUTED_EXECUTION: false
-          NX_DISTRIBUTED_TASK_EXECUTION: false
-        run: yarn nx workspace-lint
-      - name: Check formatting
-        env:
-          # DTE is disabled to run this step on the DTE coordinator while the agents are set up
-          NX_CLOUD_DISTRIBUTED_EXECUTION: false
-          NX_DISTRIBUTED_TASK_EXECUTION: false
-        run: yarn nx format:check
+      - name: Run commands in parallel
+        run: |
+          pids=()
+          # list of commands to be run on main has env flag NX_CLOUD_DISTRIBUTED_EXECUTION set to false
+          NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx-cloud record -- yarn nx format:check & pids+=($!)
 
-      # Distribution strategy for 2 vCPUs per hosted runner (GitHub Free):
-      #
+          # list of commands to be run on agents
+          yarn nx affected -t lint --parallel=3 &
+          pids+=($!)
 
-      # lint: 2 tasks assigned at a time, 1 task per vCPU
-      - name: Run Affected lint
-        run: yarn nx affected:lint --parallel --max-parallel=2 --quiet
+          yarn nx affected -t test --parallel=3 &
+          pids+=($!)
 
-      # test: 1 task assigned at a time with 2 parallel processes, 1 process per vCPU
-      - name: Run Affected test
-        id: test
-        run: yarn nx affected:test --parallel --max-parallel=1 --max-workers=2 --ci --code-coverage
+          yarn nx affected -t build --exclude=docs --parallel=3 &
+          pids+=($!)
 
-      # build: 2 tasks assigned at a time, 1 task per vCPU
-      - name: Run Affected build
-        run: yarn nx affected:build --exclude=docs --parallel --max-parallel=2
+          yarn nx affected -t e2e --parallel=1 &
+          pids+=($!)
 
-      # e2e: 1 tasks assigned at a time, 1 process per agent
-      - name: Run Affected e2e
-        run: yarn nx affected:e2e --max-parallel=1
+          yarn nx affected -t component-test --parallel=1 &
+          pids+=($!)
 
-      # component test: no clue about parallelism here
-      - name: Run Affected component tests
-        run: yarn nx affected -t component-test --parallel=false
+          # run all commands in parallel and bail if one of them fails
+          for pid in ${pids[*]}; do
+            if ! wait $pid; then
+              exit 1
+            fi
+          done
+
+          exit 0
 
       - name: Stop Nx Cloud DTE agents
         if: ${{ always() }}
         run: yarn nx-cloud stop-all-agents
 
       # Upload coverage reports to Codecov
-      - name: Upload state coverage
+      - name: Upload coverage
         if: steps.test.outcome == 'success'
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/state/lcov.info
-          flags: state
-
-      - name: Upload template coverage
-        if: steps.test.outcome == 'success'
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/template/lcov.info
-          flags: template
-
-      - name: Upload cdk coverage
-        if: steps.test.outcome == 'success'
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/cdk/lcov.info
-          flags: cdk
-
-      - name: Upload eslint-plugin coverage
-        if: steps.test.outcome == 'success'
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage/eslint-plugin/lcov.info
-          flags: eslint-plugin
+          files: coverage/state/lcov.info, coverage/template/lcov.info, coverage/cdk/lcov.info, coverage/isr/lcov.info, coverage/eslint-plugin/lcov.info
+          flags: state, template, cdk, isr, eslint-plugin
 
   # The docs project is built in a separate job because it requires Node.js 16
   build-docs:

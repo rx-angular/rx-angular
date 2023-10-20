@@ -9,8 +9,7 @@
       "executor": "@nx/angular:package",
       "options": {
         "tsConfig": "libs/state/tsconfig.lib.json",
-        "project": "libs/state/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": false
+        "project": "libs/state/ng-package.json"
       },
       "outputs": ["{workspaceRoot}/dist/libs/state"],
       "dependsOn": [
@@ -59,16 +58,18 @@
       "outputs": ["{workspaceRoot}/coverage/state"]
     },
     "perfBuild": {
-      "executor": "@nx/node:webpack",
+      "executor": "@nx/webpack:webpack",
       "options": {
         "main": "libs/state/perf/index.ts",
         "outputPath": "dist/libs/state-perf/dist",
-        "tsConfig": "libs/state/tsconfig.perf.json"
+        "tsConfig": "libs/state/tsconfig.perf.json",
+        "compiler": "tsc",
+        "target": "node"
       },
       "outputs": ["{options.outputPath}"]
     },
     "perf": {
-      "executor": "@nx/node:node",
+      "executor": "@nx/js:node",
       "options": {
         "buildTarget": "state:perfBuild"
       }
@@ -95,7 +96,8 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["libs/state/**/*.ts"]
       }
