@@ -54,8 +54,8 @@
       "options": {
         "noVerify": true,
         "baseBranch": "main",
-        "versionTagPrefix": "${target}@",
-        "commitMessageFormat": "release(${projectName}): ${version}",
+        "tagPrefix": "{projectName}@",
+        "commitMessageFormat": "release({projectName}): {version}",
         "postTargets": ["isr:github"],
         "push": true
       }

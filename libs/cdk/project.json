@@ -59,8 +59,8 @@
       "options": {
         "noVerify": true,
         "baseBranch": "main",
-        "versionTagPrefix": "${target}@",
-        "commitMessageFormat": "release(${projectName}): ${version}",
+        "tagPrefix": "{projectName}@",
+        "commitMessageFormat": "release({projectName}): {version}",
         "postTargets": ["cdk:github"],
         "push": true
       }

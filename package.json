@@ -85,7 +85,7 @@
     "@angular/language-service": "16.2.10",
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-angular": "^17.3.0",
-    "@jscutlery/semver": "^2.30.1",
+    "@jscutlery/semver": "^4.0.0",
     "@nguniversal/builders": "16.2.0",
     "@ngxs/devtools-plugin": "^3.7.0",
     "@nx-plus/docusaurus": "14.1.0",
