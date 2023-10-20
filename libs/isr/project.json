@@ -8,8 +8,7 @@
     "build": {
       "executor": "@nx/angular:package",
       "options": {
-        "project": "libs/isr/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": false
+        "project": "libs/isr/ng-package.json"
       },
       "outputs": ["{workspaceRoot}/dist/libs/isr"],
       "configurations": {
