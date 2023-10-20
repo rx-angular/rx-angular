@@ -24,23 +24,10 @@ It is an ideal alternative or complimentary library to global state management s
 
 [![intro-video_rx-angular--state-rx-state](https://user-images.githubusercontent.com/10064416/147395467-876ec499-645f-4f84-bde9-9bffaac22c62.PNG)](https://www.youtube.com/watch?v=CcQYj4V2IKw)
 
-## Install and Update
+## Installation
 
-```bash
-npm install --save @rx-angular/state
-# or
-pnpm install --save @rx-angular/state
-# or
-yarn add @rx-angular/state
 ```
-
-For those currently using @rx-angular/state, we recommend updating with the @angular/cli update command to ensure a smooth transition and proper processing of all code migrations.
-Simply run the following command:
-
-```bash
-ng update @rx-angular/state
-# or with nx
-nx migrate @rx-angular/state
+npm install @rx-angular/state
 ```
 
 ## Usage

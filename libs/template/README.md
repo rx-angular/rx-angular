@@ -38,30 +38,8 @@ All experimental features are very stable and already tested in production apps 
 
 ## Installation
 
-Using schematics:
-
-```bash
-ng add @rx-angular/template
-# or
-nx add @rx-angular/template
 ```
-
-Manually:
-
-```bash
-npm install --save @rx-angular/template @rx-angular/cdk
-# or
-yarn add @rx-angular/template @rx-angular/cdk
-```
-
-## Update
-
-If you are using `@rx-angular/template` already, please consider upgrading with the `@angular/cli update` command in order to make sure all provided code migrations are processed properly.
-
-```bash
-ng update @rx-angular/template
-# or with nx
-nx migrate @rx-angular/template
+npm install @rx-angular/template
 ```
 
 ## API
@@ -94,5 +72,6 @@ export class AnyComponent {}
 | `^2.0.0`  | `>=13.0.0` |
 | `^14.0.0` | `^14.0.0`  |
 | `^15.0.0` | `^15.0.0`  |
+| `^16.0.0` | `^16.0.0`  |
 
 Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see the [official guide](https://angular.io/guide/versions).
