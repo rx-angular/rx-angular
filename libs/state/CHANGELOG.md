@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [16.1.1](https://github.com/rx-angular/rx-angular/compare/state@16.1.0...state@16.1.1) (2023-10-20)
+
+
+### Reverts
+
+* make state.get return readonly ([aa3425e](https://github.com/rx-angular/rx-angular/commit/aa3425e42410134f0f6eba13bb289fb79058840c))
+
+
+
 # [16.1.0](https://github.com/rx-angular/rx-angular/compare/state@16.0.0...state@16.1.0) (2023-10-18)
 
 

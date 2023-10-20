@@ -130,14 +130,6 @@ describe('RxStateService', () => {
   });
 
   describe('get', () => {
-    it('should return readonly state', () => {
-      service.set({ bol: false });
-      // @ts-expect-error Cannot assign to 'bol' because it is a read-only property.
-      service.get().bol = true;
-      // service.get() returns a reference to the state object so it is mutable.
-      expect(service.get().bol).toBe(true);
-    });
-
     it('should return undefined as initial value', () => {
       const state = setupState({ initialState: undefined });
       const val = state.get();
@@ -164,16 +156,6 @@ describe('RxStateService', () => {
   });
 
   describe('select', () => {
-    it('should have readonly state projection', () => {
-      const state = setupState({ initialState: initialPrimitiveState });
-      state.select(['num', 'bol'], (x) => {
-        // @ts-expect-error Cannot assign to 'num' because it is a read-only property.
-        x.num = 1;
-        return x;
-      });
-      expect(state.get().num).toBe(initialPrimitiveState.num);
-    });
-
     it('should return undefined as initial value', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({ initialState: undefined });
@@ -292,16 +274,6 @@ describe('RxStateService', () => {
   });
 
   describe('set', () => {
-    it('should have readonly state projection', () => {
-      service.set({ bol: false });
-      service.set((s) => {
-        // @ts-expect-error Cannot assign to 'bol' because it is a read-only property.
-        s.bol = true;
-        return { bol: false };
-      });
-      expect(service.get().bol).toBe(false);
-    });
-
     describe('with state partial', () => {
       it('should add new slices', () => {
         const state = setupState({});
@@ -367,16 +339,6 @@ describe('RxStateService', () => {
   });
 
   describe('connect', () => {
-    it('should have readonly state projection', () => {
-      service.set({ bol: false });
-      service.connect(of({ bol: true }), (s) => {
-        // @ts-expect-error Cannot assign to 'bol' because it is a read-only property.
-        s.bol = true;
-        return { bol: false };
-      });
-      expect(service.get().bol).toBe(false);
-    });
-
     it('should work with observables directly', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({ initialState: initialPrimitiveState });
