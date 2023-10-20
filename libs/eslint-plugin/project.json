@@ -13,7 +13,7 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/eslint-plugin"],
+      "outputs": ["{workspaceRoot}/coverage/eslint-plugin"],
       "options": {
         "jestConfig": "libs/eslint-plugin/jest.config.ts",
         "passWithNoTests": true

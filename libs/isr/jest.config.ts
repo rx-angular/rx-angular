@@ -3,7 +3,8 @@ export default {
   displayName: 'isr',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/isr',
+  coverageReporters: ['lcov'],
+  coverageDirectory: '../../coverage/isr',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

@@ -24,7 +24,7 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": ["{workspaceRoot}/coverage/isr"],
       "options": {
         "jestConfig": "libs/isr/jest.config.ts",
         "passWithNoTests": true,
