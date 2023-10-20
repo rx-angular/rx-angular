@@ -81,12 +81,6 @@ jobs:
         # The --agent-count parameter must match the number of strategies run by the dte_agents job
         run: yarn nx-cloud start-ci-run --agent-count=4
 
-      - name: Lint Nx workspace
-        env:
-          # DTE is disabled to run this step on the DTE coordinator while the agents are set up
-          NX_CLOUD_DISTRIBUTED_EXECUTION: false
-          NX_DISTRIBUTED_TASK_EXECUTION: false
-        run: yarn nx workspace-lint
       - name: Check formatting
         env:
           # DTE is disabled to run this step on the DTE coordinator while the agents are set up
@@ -97,26 +91,26 @@ jobs:
       # Distribution strategy for 2 vCPUs per hosted runner (GitHub Free):
       #
 
-      # lint: 2 tasks assigned at a time, 1 task per vCPU
+      # lint: 3 tasks assigned at a time, 1 task per vCPU
       - name: Run Affected lint
-        run: yarn nx affected:lint --parallel --max-parallel=2 --quiet
+        run: yarn nx affected:lint --parallel=3 --quiet
 
-      # test: 1 task assigned at a time with 2 parallel processes, 1 process per vCPU
+      # test: 3 tasks assigned at a time, 1 task per vCPU
       - name: Run Affected test
         id: test
-        run: yarn nx affected:test --parallel --max-parallel=1 --max-workers=2 --ci --code-coverage
+        run: yarn nx affected:test --parallel=3 --ci --code-coverage
 
       # build: 2 tasks assigned at a time, 1 task per vCPU
       - name: Run Affected build
-        run: yarn nx affected:build --exclude=docs --parallel --max-parallel=2
+        run: yarn nx affected:build --exclude=docs --parallel=2
 
-      # e2e: 1 tasks assigned at a time, 1 process per agent
+      # e2e: 1 task assigned at a time, 1 task per vCPU
       - name: Run Affected e2e
-        run: yarn nx affected:e2e --max-parallel=1
+        run: yarn nx affected:e2e --parallel=1
 
-      # component test: no clue about parallelism here
+      # component tests: 1 task assigned at a time, 1 task per vCPU
       - name: Run Affected component tests
-        run: yarn nx affected -t component-test --parallel=false
+        run: yarn nx affected -t component-test --parallel=1
 
       - name: Stop Nx Cloud DTE agents
         if: ${{ always() }}

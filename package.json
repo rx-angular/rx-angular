@@ -13,7 +13,6 @@
     "build": "nx build",
     "test": "nx test",
     "test:coverage": "nx test --code-coverage",
-    "lint": "nx workspace-lint && nx lint",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",
     "affected:build": "nx affected:build",
