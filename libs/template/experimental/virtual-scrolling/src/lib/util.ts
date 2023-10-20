@@ -22,17 +22,19 @@ export function unpatchedMicroTask(): Observable<void> {
   return from(Promise.resolve()) as Observable<void>;
 }
 
-export function unpatchedScroll(el: any): Observable<void> {
+export function unpatchedScroll(el: EventTarget): Observable<void> {
   return new Observable<void>((observer) => {
     const listener = () => observer.next();
     getZoneUnPatchedApi(el, 'addEventListener').call(el, 'scroll', listener, {
       passive: true,
     });
     return () => {
-      getZoneUnPatchedApi(
-        this.elementRef.nativeElement,
-        'removeEventListener'
-      ).call(el, 'scroll', listener, { passive: true });
+      getZoneUnPatchedApi(el, 'removeEventListener').call(
+        el,
+        'scroll',
+        listener,
+        { passive: true }
+      );
     };
   });
 }
