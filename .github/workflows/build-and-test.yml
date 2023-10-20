@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 concurrency:
   # Group concurrency on workflow, then:
@@ -22,9 +21,11 @@ concurrency:
 
 env:
   NODE_OPTIONS: --max-old-space-size=6144
-  NX_VERBOSE_LOGGING: false
   docs-name: docs
   docs-path: dist/apps/docs
+  NX_CLOUD_DISTRIBUTED_EXECUTION: true # this enables DTE
+  NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT: 4 # expected number of agents
+  NX_BRANCH: ${{ github.event.number || github.ref_name }}
 
 jobs:
   dte_agents:
@@ -49,13 +50,14 @@ jobs:
     steps:
       - name: Checkout all commits
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
       - name: Start Nx Cloud DTE Agent
         run: yarn nx-cloud start-agent
+        env:
+          NX_AGENT_NAME: ${{ matrix.agent }}
 
   # We're using Nx Cloud for Distributed Task Execution
   # Reference: https://nx.dev/using-nx/dte
@@ -70,10 +72,22 @@ jobs:
       NX_DISTRIBUTED_TASK_EXECUTION: true
 
     steps:
-      - name: Checkout all commits
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        name: Checkout [Pull Request]
+        if: ${{ github.event_name == 'pull_request' }}
         with:
+          # By default, PRs will be checked-out based on the Merge Commit, but we want the actual branch HEAD.
+          ref: ${{ github.event.pull_request.head.sha }}
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
+
+      - uses: actions/checkout@v3
+        name: Checkout [Default Branch]
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
