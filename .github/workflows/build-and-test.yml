@@ -107,7 +107,7 @@ jobs:
           yarn nx affected -t test --parallel=3 &
           pids+=($!)
 
-          yarn nx affected -t build --parallel=3 &
+          yarn nx affected -t build --exclude=docs --parallel=3 &
           pids+=($!)
 
           yarn nx affected -t e2e --parallel=1 &
