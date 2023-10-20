@@ -2,6 +2,16 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [16.1.1](https://github.com/rx-angular/rx-angular/compare/template@16.1.0...template@16.1.1) (2023-10-20)
+
+
+### Bug Fixes
+
+* **template:** fix view calculation in dynamic-size strategy ([f272801](https://github.com/rx-angular/rx-angular/commit/f272801e261dc929c51f7057a891ae1d592490b7))
+* **template:** properly unsubscribe from scroll event ([3e08100](https://github.com/rx-angular/rx-angular/commit/3e081001b60a0a95c9e4c1ae9eabbf90d9543e7d))
+
+
+
 # [16.1.0](https://github.com/rx-angular/rx-angular/compare/template@16.0.2...template@16.1.0) (2023-08-21)
 
 
