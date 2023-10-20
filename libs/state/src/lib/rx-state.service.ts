@@ -21,18 +21,13 @@ import {
 } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-export type ProjectStateFn<T> = (oldState: Readonly<T>) => Partial<T>;
-export type ProjectValueFn<T, K extends keyof T> = (
-  oldState: Readonly<T>
-) => T[K];
+export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
+export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
 
-export type ProjectStateReducer<T, V> = (
-  oldState: Readonly<T>,
-  value: V
-) => Partial<T>;
+export type ProjectStateReducer<T, V> = (oldState: T, value: V) => Partial<T>;
 
 export type ProjectValueReducer<T, K extends keyof T, V> = (
-  oldState: Readonly<T>,
+  oldState: T,
   value: V
 ) => T[K];
 
@@ -110,9 +105,9 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    *   doStuff();
    * }
    *
-   * @return Readonly<T>
+   * @return T
    */
-  get(): Readonly<T>;
+  get(): T;
 
   /**
    * @description
@@ -128,28 +123,25 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    *
    * const foo = state.get('bar', 'foo');
    *
-   * @return Readonly<T> | Readonly<T[K1]> | Readonly<T[K1][K2]>
+   * @return T | T[K1] | T[K1][K2]
    */
 
-  get<K1 extends keyof T>(k1: K1): Readonly<T[K1]>;
+  get<K1 extends keyof T>(k1: K1): T[K1];
   /** @internal **/
-  get<K1 extends keyof T, K2 extends keyof T[K1]>(
-    k1: K1,
-    k2: K2
-  ): Readonly<T[K1][K2]>;
+  get<K1 extends keyof T, K2 extends keyof T[K1]>(k1: K1, k2: K2): T[K1][K2];
   /** @internal **/
   get<K1 extends keyof T, K2 extends keyof T[K1], K3 extends keyof T[K1][K2]>(
     k1: K1,
     k2: K2,
     k3: K3
-  ): Readonly<T[K1][K2][K3]>;
+  ): T[K1][K2][K3];
   /** @internal **/
   get<
     K1 extends keyof T,
     K2 extends keyof T[K1],
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3]
-  >(k1: K1, k2: K2, k3: K3, k4: K4): Readonly<T[K1][K2][K3][K4]>;
+  >(k1: K1, k2: K2, k3: K3, k4: K4): T[K1][K2][K3][K4];
   /** @internal **/
   get<
     K1 extends keyof T,
@@ -157,7 +149,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     K3 extends keyof T[K1][K2],
     K4 extends keyof T[K1][K2][K3],
     K5 extends keyof T[K1][K2][K3][K4]
-  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): Readonly<T[K1][K2][K3][K4][K5]>;
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): T[K1][K2][K3][K4][K5];
   /** @internal **/
   get<
     K1 extends keyof T,
@@ -166,14 +158,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     K4 extends keyof T[K1][K2][K3],
     K5 extends keyof T[K1][K2][K3][K4],
     K6 extends keyof T[K1][K2][K3][K4][K5]
-  >(
-    k1: K1,
-    k2: K2,
-    k3: K3,
-    k4: K4,
-    k5: K5,
-    k6: K6
-  ): Readonly<T[K1][K2][K3][K4][K5][K6]>;
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5, k6: K6): T[K1][K2][K3][K4][K5][K6];
   /** @internal **/
   get<
     K1 extends keyof T,
@@ -190,15 +175,14 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       | [K1, K2, K3, K4]
       | [K1, K2, K3, K4, K5]
       | [K1, K2, K3, K4, K5, K6]
-  ): Readonly<
+  ):
     | T
     | T[K1]
     | T[K1][K2]
     | T[K1][K2][K3]
     | T[K1][K2][K3][K4]
     | T[K1][K2][K3][K4][K5]
-    | T[K1][K2][K3][K4][K5][K6]
-  > {
+    | T[K1][K2][K3][K4][K5][K6] {
     const hasStateAnyKeys = Object.keys(this.accumulator.state).length > 0;
     if (!!keys && keys.length) {
       return safePluck(this.accumulator.state, keys);
@@ -246,7 +230,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * @param {ProjectValueFn<T, K>} projectSlice
    * @return void
    */
-  set<K extends keyof T>(key: K, projectSlice: ProjectValueFn<T, K>): void;
+  set<K extends keyof T, O>(key: K, projectSlice: ProjectValueFn<T, K>): void;
   /**
    * @internal
    */
@@ -505,7 +489,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    */
   select<K extends keyof T, V>(
     keys: K[],
-    fn: (slice: Readonly<PickSlice<T, K>>) => V,
+    fn: (slice: PickSlice<T, K>) => V,
     keyCompareMap?: KeyCompareMap<Pick<T, K>>
   ): Observable<V>;
   /**
@@ -519,10 +503,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    *
    * @return Observable<V>
    */
-  select<K extends keyof T, V>(
-    k: K,
-    fn: (val: Readonly<T[K]>) => V
-  ): Observable<V>;
+  select<K extends keyof T, V>(k: K, fn: (val: T[K]) => V): Observable<V>;
   /**
    * @description
    * Access a single property of the state by providing keys.
