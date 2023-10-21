@@ -7,10 +7,9 @@ title: Logic comparison - Increment a Value
 # Logic comparison - Increment a Value
 
 This snippet compares 3 different implementations of the same problem.
-It serves as a small refactoring guide
-and shows the difference of imperative and declarative/reactive programming.
+It serves as a small refactoring guide and shows the difference of imperative and declarative/reactive programming.
 
-This snippet uses the `rxLet` directive (`@rx-angular/template`, not released yet) as replacement for angular's `async` pipe.
+This snippet uses the `rxLet` directive as replacement for Angular's `async` pipe.
 All examples will work with the `async`.
 
 **Problem**:
@@ -23,7 +22,7 @@ We have a component that:
 ## Imperative
 
 **State**:
-The component's state is a simple object `state: { count: number } = {};`.
+The component's state is a simple object `state: { count: number } = { count: 0 };`.
 
 **Display**:
 To display the value we use a template expression `{{ state.count }}`.
@@ -48,7 +47,8 @@ This results in an `ApplicationRef.tick` call which re-renders all dirty flagged
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyComponent {
-  state: { count: number } = {};
+  state: { count: number } = { count: 0 };
+
   onClick(e) {
     this.state.count = this.state.count + 1;
   }
@@ -58,9 +58,9 @@ export class MyComponent {
 ## Reactive reading
 
 **State**:
-The component's state gets managed with `RxState` by extending the class. `export class MyComponent extends RxState<{ count: number }> {`
+The component's state gets managed with `rxState` function.
 The component's state is a simple interface: `{ count: number }`.
-Inside the class we expose our state as Observable `readonly state$ = this.select();`
+Inside the class we expose our state as Observable `private readonly state$ = this.state.select();`
 
 **Display**:
 To display the value we use a simple structural directive called `*rxLet` which binds the `state$` property of the component to its `host element`. We can then assign our state observable to a `local template variable`.
@@ -70,7 +70,7 @@ Whenever the bound Observable emits a new value the `rxLet` directive flags this
 **Action**:
 The state gets incremented by one whenever the button gets clicked.
 The click binding is set-up over an event binding `(click)` and fires the callback `onClick`.
-This callback increments the state's `count` property by sending the new value `this.set('count', s => s.count + 1);`
+This callback increments the state's `count` property by sending the new value `this.state.set('count', s => s.count + 1);`
 
 **Rendering**:
 The click binding gets detected by zone which in turn flags this component and all of its ancestors as dirty.
@@ -85,10 +85,13 @@ This results in an `ApplicationRef.tick` call which re-renders all dirty flagged
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyComponent extends RxState<{ count: number }> {
-  state$ = this.select();
+export class MyComponent {
+  private readonly state = rxState<{ count: number }>(({ set }) =>
+    set({ count: 0 })
+  );
+  readonly state$ = this.state.select();
   onClick(e) {
-    this.set('count', (s) => s.count + 1);
+    this.state.set('count', (state) => state.count + 1);
   }
 }
 ```
@@ -96,9 +99,9 @@ export class MyComponent extends RxState<{ count: number }> {
 ## Reactive Writing
 
 **State**:
-The component's state gets managed with `RxState` by extending the class. `export class MyComponent extends RxState<{ count: number }> {`
+The component's state gets managed with `rxState` function.
 The components state is a simple interface `{ count: number }`.
-Inside the class we expose our state as Observable `readonly state$ = this.select();`
+Inside the class we expose our state as Observable `readonly state$ = this.state.select();`
 
 **Display**:
 To display the value we use a a simple structural directive called `*rxLet` which binds the `state$` property of the component to its `host element`. We can then assign our state observable to a `local template variable`.
@@ -107,12 +110,11 @@ Whenever the bound Observable emits a new value the `rxLet` directive flags this
 
 **Action**:
 The state gets incremented by one whenever the button gets clicked.
-In the class we use a Subject to track clicks `btn$ = new Subject();`.
+In the class we use a Subject to track clicks `readonly increment$ = new Subject<void>();`.
 The click binding is set-up over an event binding `(click)` and fires the Subjects `next` method.
 
-This Observable gets connected to the component's state in the constructor `this.connect(btn$, (oldState, clickEvent) => ({ count: s.count + 1 }));`.
+This Observable gets connected to the component's state in the setup function `connect(this.increment$, (state) => ({ count: state.count + 1 }))`.
 Whenever the Subject emits, we apply the increment logic passed as a function.
-The function signature looks like this: `(oldState: T, newValue: T[K]) => T`.
 
 **Rendering**:
 The click binding gets detected by zone which in turn flags this component and all of its ancestors as dirty.
@@ -123,20 +125,21 @@ This results in an `ApplicationRef.tick` call which re-renders all dirty flagged
   selector: 'my-comp',
   template: `
     <div *rxLet="state$; let s">Value: {{ s.count }}</div>
-    <button (click)="btn$.next($event)">Increment</button>
+    <button (click)="increment$.next()">Increment</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyComponent extends RxState<{ count: number }> {
-  readonly state$ = this.select();
-  readonly btn$ = new Subject();
-  constructor() {
-    this.connect(this.btn$, (s, e) => ({ count: s.count + 1 }));
-  }
+export class MyComponent {
+  readonly increment$ = new Subject<void>();
+  private readonly state = rxState<{ count: number }>(({ set, connect }) => {
+    set({ count: 0 });
+    connect(this.increment$, (state) => ({ count: state.count + 1 }));
+  });
+  readonly state$ = this.state.select();
 }
 ```
 
-## Control rendering with `unpatch`
+## Control rendering with `RxUnpatch`
 
 In this section we use the `unpatch` directive to get control over rendering.
 
@@ -151,16 +154,17 @@ A rerender gets only triggered by the `rxLet` directive. The process is the same
   selector: 'my-comp',
   template: `
     <div *rxLet="state$; let s">Value: {{ s.count }}</div>
-    <button [unpatch] (click)="btn$.next($event)">Increment</button>
+    <button [unpatch] (click)="increment$.next()">Increment</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyComponent extends RxState<{ count: number }> {
-  state$ = this.select();
-  btn$ = new Subject();
-  constructor() {
-    this.connect(this.btn$, (oldState, clickEvent) => ({ count: s.count + 1 }));
-  }
+export class MyComponent {
+  readonly increment$ = new Subject<void>();
+  private readonly state = rxState<{ count: number }>(({ set, connect }) => {
+    set({ count: 0 });
+    connect(this.increment$, (state) => ({ count: state.count + 1 }));
+  });
+  readonly state$ = this.state.select();
 }
 ```
 
@@ -178,15 +182,16 @@ The rendering still gets managed by the `rxLet` Directive. But with the `strateg
   selector: 'my-comp',
   template: `
     <div *rxLet="state$; let s; strategy: 'local'">Value: {{ s.count }}</div>
-    <button [unpatch] (click)="btn$.next($event)">Increment</button>
+    <button (click)="increment$.next()">Increment</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyComponent extends RxState<{ count: number }> {
-  state$ = this.select();
-  btn$ = new Subject();
-  constructor() {
-    this.connect(this.btn$, (s, e) => ({ count: s.count + 1 }));
-  }
+export class MyComponent {
+  readonly increment$ = new Subject<void>();
+  private readonly state = rxState<{ count: number }>(({ set, connect }) => {
+    set({ count: 0 });
+    connect(this.increment$, (state) => ({ count: state.count + 1 }));
+  });
+  readonly state$ = this.state.select();
 }
 ```
