@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, isSignal, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { RxStateSetupFn, rxState } from './rx-state';
@@ -95,11 +95,86 @@ describe(rxState, () => {
     fixture.destroy();
     expect(RxState.prototype.ngOnDestroy).toHaveBeenCalled();
   });
+
+  describe('signals', () => {
+    it('should be undefined when key is undefined', () => {
+      const { component } = setupComponent<{ count: number }>();
+      const state = component.state;
+      const count = state.signal('count');
+
+      expect(count()).toBe(undefined);
+    });
+
+    it('should create one signal per key', () => {
+      const { component } = setupComponent<{ count: number }>(({ set }) => {
+        set({ count: 1337 });
+      });
+      const state = component.state;
+      const count = state.signal('count');
+      const count2 = state.signal('count');
+
+      expect(isSignal(count)).toBe(true);
+      expect(count === count2).toBe(true);
+    });
+
+    it('signal should get updated', () => {
+      const { component } = setupComponent<{ count: number }>(({ set }) => {
+        set({ count: 1337 });
+      });
+      const state = component.state;
+      const count = state.signal('count');
+      expect(count()).toBe(1337);
+
+      state.set({ count: 1 });
+      expect(count()).toBe(1);
+
+      state.connect(of({ count: 2 }));
+      expect(count()).toBe(2);
+    });
+
+    xit('should connect a signal', () => {
+      // TODO: we need TestBed flushEffect for it
+      const counterInput = signal(1337);
+      const { component } = setupComponent<{ count: number }>(({ connect }) => {
+        connect('count', counterInput);
+      });
+      const state = component.state;
+
+      expect(state.get('count')).toBe(1337);
+
+      counterInput.set(2);
+
+      expect(state.get('count')).toBe(2);
+    });
+
+    it('should create a computed', () => {
+      const { component } = setupComponent<{
+        count: number;
+        multiplier: number;
+      }>(({ set }) => {
+        set({ count: 1337, multiplier: 1 });
+      });
+      const state = component.state;
+      const multiplied = state.computed(
+        ({ count, multiplier }) => count() * multiplier()
+      );
+
+      expect(multiplied()).toBe(1337);
+
+      state.set({ multiplier: 10 });
+
+      expect(multiplied()).toBe(13370);
+    });
+  });
 });
+
+type ITestComponent<State extends object> = {
+  state: ReturnType<typeof rxState<State>>;
+};
 
 function setupComponent<State extends object>(setupFn?: RxStateSetupFn<State>) {
   @Component({})
-  class TestComponent {
+  class TestComponent implements ITestComponent<State> {
     readonly state = rxState<State>(setupFn);
   }
 
