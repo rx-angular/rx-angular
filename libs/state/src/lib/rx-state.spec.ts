@@ -132,19 +132,75 @@ describe(rxState, () => {
       expect(count()).toBe(2);
     });
 
-    xit('should connect a signal', () => {
-      // TODO: we need TestBed flushEffect for it
+    it('should connect a signal to a key', () => {
       const counterInput = signal(1337);
-      const { component } = setupComponent<{ count: number }>(({ connect }) => {
-        connect('count', counterInput);
-      });
+      const { component, fixture } = setupComponent<{ count: number }>(
+        ({ connect }) => {
+          connect('count', counterInput);
+        },
+        `{{ count() }}`
+      );
       const state = component.state;
 
+      fixture.detectChanges();
+
       expect(state.get('count')).toBe(1337);
+      expect(fixture.nativeElement.textContent.trim()).toBe('1337');
 
       counterInput.set(2);
 
+      fixture.detectChanges();
+
       expect(state.get('count')).toBe(2);
+      expect(fixture.nativeElement.textContent.trim()).toBe('2');
+    });
+
+    it('should connect a signal to a key with mapping function', () => {
+      const counterInput = signal(2);
+      const { component, fixture } = setupComponent<{ count: number }>(
+        ({ connect }) => {
+          connect('count', counterInput, (state, count) => {
+            return (state?.count ?? count) * count;
+          });
+        },
+        `{{ count() }}`
+      );
+      const state = component.state;
+
+      fixture.detectChanges();
+
+      expect(state.get('count')).toBe(4);
+      expect(fixture.nativeElement.textContent.trim()).toBe('4');
+
+      counterInput.set(4);
+
+      fixture.detectChanges();
+
+      expect(state.get('count')).toBe(16);
+      expect(fixture.nativeElement.textContent.trim()).toBe('16');
+    });
+
+    it('should connect a signal slice', () => {
+      const counterInput = signal({ count: 1337 });
+      const { component, fixture } = setupComponent<{ count: number }>(
+        ({ connect }) => {
+          connect(counterInput);
+        },
+        `{{ count() }}`
+      );
+      const state = component.state;
+
+      fixture.detectChanges();
+
+      expect(state.get('count')).toBe(1337);
+      expect(fixture.nativeElement.textContent.trim()).toBe('1337');
+
+      counterInput.set({ count: 2 });
+
+      fixture.detectChanges();
+
+      expect(state.get('count')).toBe(2);
+      expect(fixture.nativeElement.textContent.trim()).toBe('2');
     });
 
     it('should create a computed', () => {
@@ -172,10 +228,18 @@ type ITestComponent<State extends object> = {
   state: ReturnType<typeof rxState<State>>;
 };
 
-function setupComponent<State extends object>(setupFn?: RxStateSetupFn<State>) {
-  @Component({})
+function setupComponent<State extends { count: number }>(
+  setupFn?: RxStateSetupFn<State>,
+  template?: string
+) {
+  @Component({
+    template,
+  })
   class TestComponent implements ITestComponent<State> {
     readonly state = rxState<State>(setupFn);
+
+    readonly count$ = this.state.select('count');
+    readonly count = this.state.signal('count');
   }
 
   TestBed.configureTestingModule({
