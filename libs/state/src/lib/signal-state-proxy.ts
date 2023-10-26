@@ -14,7 +14,7 @@ export type SignalStateProxy<State extends object> = {
   [K in keyof State]: Signal<State[K]>;
 };
 
-export function createSignalStoreProxy<State extends object>(
+export function createSignalStateProxy<State extends object>(
   state$: Observable<State>,
   stateFn: <K extends keyof State>(k: K) => State[K]
 ) {
