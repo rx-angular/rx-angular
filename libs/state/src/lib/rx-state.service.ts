@@ -29,7 +29,7 @@ import {
   Unsubscribable,
 } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { createSignalStoreProxy, SignalStateProxy } from './signal-state-proxy';
+import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
 
 export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
@@ -716,7 +716,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     const subscription = new Subscription();
     subscription.add(this.accumulator.subscribe());
     subscription.add(this.effectObservable.subscribe());
-    this.signalStoreProxy = createSignalStoreProxy<T>(
+    this.signalStoreProxy = createSignalStateProxy<T>(
       this.$,
       this.get.bind(this)
     );
