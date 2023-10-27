@@ -1,4 +1,4 @@
-describe('@rx-angular/template universal rendering', () => {
+describe('RxAngular SSR', () => {
   describe('PushPipe', () => {
     it('should display green text', () => {
       cy.request('http://localhost:4200')
@@ -10,7 +10,7 @@ describe('@rx-angular/template universal rendering', () => {
     });
   });
 
-  describe('LetDirective', () => {
+  describe('RxLet', () => {
     it('should display green text', () => {
       cy.request('http://localhost:4200')
         .its('body')
