@@ -11,38 +11,19 @@
         "tsConfig": "libs/template/tsconfig.lib.json",
         "project": "libs/template/ng-package.json"
       },
-      "dependsOn": [
-        {
-          "target": "build",
-          "dependencies": true
-        }
-      ],
+      "dependsOn": ["^build"],
       "outputs": ["{workspaceRoot}/dist/libs/template"]
     },
     "build": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        {
-          "target": "build-lib"
-        }
-      ],
+      "dependsOn": ["build-lib"],
       "options": {
         "commands": [
-          {
-            "command": "npx tsc -p libs/template/tsconfig.schematics.json"
-          },
-          {
-            "command": "npx cpx libs/template/schematics/collection.json dist/libs/template/schematics"
-          },
-          {
-            "command": "npx cpx libs/template/schematics/migration.json dist/libs/template/schematics"
-          },
-          {
-            "command": "npx cpx libs/template/schematics/src/**/files/** dist/libs/template/schematics/src"
-          },
-          {
-            "command": "npx cpx libs/template/schematics/src/**/schema.json dist/libs/template/schematics/src"
-          }
+          "yarn tsc -p libs/template/tsconfig.schematics.json",
+          "yarn cpx libs/template/schematics/collection.json dist/libs/template/schematics",
+          "yarn cpx libs/template/schematics/migration.json dist/libs/template/schematics",
+          "yarn cpx libs/template/schematics/src/**/files/** dist/libs/template/schematics/src",
+          "yarn cpx libs/template/schematics/src/**/schema.json dist/libs/template/schematics/src"
         ],
         "parallel": false
       },
@@ -56,16 +37,6 @@
         "codeCoverage": true
       },
       "outputs": ["{workspaceRoot}/coverage/template"]
-    },
-    "link": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "cd ./dist/libs/template && npm link"
-          }
-        ]
-      }
     },
     "publish": {
       "command": "npm publish dist/libs/template"
@@ -84,8 +55,8 @@
     "github": {
       "executor": "@jscutlery/semver:github",
       "options": {
-        "tag": "${tag}",
-        "notes": "${notes}"
+        "tag": "{tag}",
+        "notes": "{notes}"
       }
     },
     "lint": {
@@ -103,11 +74,6 @@
         "skipServe": true,
         "devServerTarget": "demos:build"
       }
-    }
-  },
-  "generators": {
-    "@nx/angular:component": {
-      "style": "scss"
     }
   },
   "tags": ["type:lib", "template"]

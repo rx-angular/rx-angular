@@ -12,37 +12,18 @@
         "project": "libs/state/ng-package.json"
       },
       "outputs": ["{workspaceRoot}/dist/libs/state"],
-      "dependsOn": [
-        {
-          "target": "build",
-          "dependencies": true
-        }
-      ]
+      "dependsOn": ["^build"]
     },
     "build": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        {
-          "target": "build-lib"
-        }
-      ],
+      "dependsOn": ["build-lib"],
       "options": {
         "commands": [
-          {
-            "command": "npx tsc -p libs/state/tsconfig.schematics.json"
-          },
-          {
-            "command": "npx cpx libs/state/schematics/collection.json dist/libs/state/schematics"
-          },
-          {
-            "command": "npx cpx libs/state/schematics/migration.json dist/libs/state/schematics"
-          },
-          {
-            "command": "npx cpx libs/state/schematics/src/**/files/** dist/libs/state/schematics/src"
-          },
-          {
-            "command": "npx cpx libs/state/schematics/src/**/schema.json dist/libs/state/schematics/src"
-          }
+          "yarn tsc -p libs/state/tsconfig.schematics.json",
+          "yarn cpx libs/state/schematics/collection.json dist/libs/state/schematics",
+          "yarn cpx libs/state/schematics/migration.json dist/libs/state/schematics",
+          "yarn cpx libs/state/schematics/src/**/files/** dist/libs/state/schematics/src",
+          "yarn cpx libs/state/schematics/src/**/schema.json dist/libs/state/schematics/src"
         ],
         "parallel": false
       },
@@ -91,8 +72,8 @@
     "github": {
       "executor": "@jscutlery/semver:github",
       "options": {
-        "tag": "${tag}",
-        "notes": "${notes}"
+        "tag": "{tag}",
+        "notes": "{notes}"
       }
     },
     "lint": {
@@ -101,11 +82,6 @@
       "options": {
         "lintFilePatterns": ["libs/state/**/*.ts"]
       }
-    }
-  },
-  "generators": {
-    "@nx/angular:component": {
-      "style": "scss"
     }
   },
   "tags": ["type:lib", "state"]
