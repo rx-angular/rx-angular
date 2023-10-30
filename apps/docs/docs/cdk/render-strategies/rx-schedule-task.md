@@ -10,7 +10,7 @@ Chromium based browsers consider all tasks that take more than 50ms as long task
 
 ## Scheduling mechanisms in browser
 
-Most common ways of delaying task execution are:
+Most common ways of delaying a task execution are:
 
 - `setTimeout`
 - `requestAnimationFrame`
