@@ -49,7 +49,7 @@ updateStateAndBackup<T>(data: T) {
 - It also accepts configuration object as an optional second parameter
   - `strategy` which will be used for scheduling (`normal` is default, for full list of available strategies see [concurrent strategies documentation](strategies/concurrent-strategies.md))
   - `delay` which is responsible for delaying the task execution (default is 0ms)
-  - `ngZone` if you want your function be executed withing ngzone (default scheduling runs out of zone)
+  - `ngZone` if you want your function be executed within ngzone (default scheduling runs out of zone)
 
 ### Return type
 
