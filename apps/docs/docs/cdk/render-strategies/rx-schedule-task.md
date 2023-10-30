@@ -4,7 +4,7 @@
 
 ## Motivation
 
-Chromium based browsers considers all tasks that taking more than 50ms as long tasks. If task runs more than 50ms, users will start noticing lags. Optimally all user interactions should happen at 30 fps framerate with 32ms budget per browser task. In ideal world it should be 60 fps and 16ms budget.
+Chromium based browsers consider all tasks that take more than 50ms as long tasks. If task runs for more than 50ms, users will start noticing lags. Optimally all user interactions should happen at 30 fps frame-rate with 32ms budget per browser task. In an ideal world, it should be 60 fps and 16ms budget.
 
 > 💡 In reality browser has a reserved overhead of 4ms, try to stick to 28ms of work for 30 fps and 12ms for 60 fps.
 
