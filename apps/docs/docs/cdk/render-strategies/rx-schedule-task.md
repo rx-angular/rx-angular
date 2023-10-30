@@ -16,7 +16,7 @@ Most common ways of delaying a task execution are:
 - `requestAnimationFrame`
 - `requestIdleCallback`
 
-`rxScheduleTask` provides similar API but comes with huge benefits of notion of frame budget and priority configuration.
+`rxScheduleTask` provides a similar API but comes with huge benefits of notion of frame budget and priority configuration.
 
 ## Concurrent strategies
 
