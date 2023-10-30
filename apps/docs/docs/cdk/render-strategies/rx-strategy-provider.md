@@ -8,7 +8,7 @@
 
 Chromium based browsers considers all tasks that taking more than 50ms as long tasks. If task runs more than 50ms, users will start noticing lags. Optimally all user interactions should happen at 30 fps framerate with 32ms budget per browser task. In ideal world it should be 60 fps and 16ms budget.
 
-> 💡 To achieve 30 fps or 60 fps in web apps, you can't just focus on 16ms JavaScript execution time. Remember to account for the browser's other tasks, like style recalculations, layout, and painting. Aim for 28ms (30 fps) or 12ms (60 fps) of total JavaScript processing, keeping in mind the browser's overheads.
+> 💡 To achieve 30 fps or 60 fps in web apps, you can't just focus on JavaScript execution time. Remember to account for the browser's other tasks, like style recalculations, layout, and painting.
 
 ## Scheduling mechanisms in browser
 
