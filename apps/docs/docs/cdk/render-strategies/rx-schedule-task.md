@@ -24,7 +24,7 @@ Most common ways of delaying task execution are:
 
 To address the problem of long tasks and help browser split the work @rx-angular/cdk provides concurrent strategies. This strategies will help browser to chunk the work into non-blocking tasks whenever it's possible.
 
-You can read detailed information about concurrent strategies [here](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concurrent-strategies.md).
+You can read detailed information about concurrent strategies [here](strategies/concurrent-strategies.md).
 
 ## Usage examples
 
@@ -32,7 +32,7 @@ You can read detailed information about concurrent strategies [here](https://git
 
 - Just as common delaying apis this method `accepts` a work function that should be scheduled.
 - It also accepts configuration object as an optional second parameter
-  - `strategy` which will be used for scheduling (`normal` is default, for full list of available strategies see [concurrent strategies documentation](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/docs/concurrent-strategies.md))
+  - `strategy` which will be used for scheduling (`normal` is default, for full list of available strategies see [concurrent strategies documentation](strategies/concurrent-strategies.md))
   - `delay` which is responsible for delaying the task execution (default is 0ms)
   - `ngZone` if you want your function be executed withing ngzone (default scheduling runs out of zone)
 
