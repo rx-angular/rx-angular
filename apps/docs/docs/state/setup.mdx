@@ -32,8 +32,11 @@ export class MovieListComponent {
     set({ movies: [] });
   });
 
-  // select a property for the template to consume
+  // select a property for the template to consume as an observable
   movies$ = this.state.select('movies');
+
+  // OR select a property for the template to consume as a signal
+  movies = this.state.signal('movies'); // Signal<Movie[]>
 }
 ```
 
@@ -50,24 +53,23 @@ Here is a use case where the `@ngrx/store` gets connected to the local state:
 
 ```typescript
 import { rxState } from '@rx-angular/state';
-import { RxFor } from '@rx-angular/template/for';
 
-@Component({
-  template: `<movie *rxFor="let movie of movies$" [movie]="movie" />`,
-  imports: [RxFor],
-})
+@Component({})
 export class MovieListComponent {
   private store = inject<Store<MovieState>>(Store);
 
   private state = rxState<{ movies: Movie[] }>(({ set, connect }) => {
     // set initial state
     set({ movies: [] });
-    // connect global state to your local state
-    connect('movies', this.store.select('movies'));
-  });
 
-  // select a property for the template to consume
-  movies$ = this.state.select('movies');
+    // connect global state to your local state
+    //highlight-next-line
+    connect('movies', this.store.select('movies'));
+
+    // OR connect global state in form of a signal to your local state
+    //highlight-next-line
+    connect('movies', this.store.selectSignal('movies'));
+  });
 }
 ```
 
@@ -350,14 +352,20 @@ export class MovieListComponent {
     }
   );
 
-  // derive filteredMovies from your stored state
+  // derive filteredMovies$ from your stored state as an observable
   //highlight-next-line
   filteredMovies$ = this.state.select(
     ['movies', 'searchValue'],
     (movies, searchValue) => {
       return movies.filter((movie) => movie.title.includes(searchValue));
     }
-  );
+  ); // Observable<Movie[]>
+
+  // derive filteredMovies from your stored state as a signal
+  //highlight-next-line
+  filteredMovies = this.state.computed(({ movies, searchValue }) => {
+    return movies().filter((movie) => movie.title.includes(searchValue()));
+  }); // Signal<Movie[]>
 }
 ```
 
@@ -380,11 +388,17 @@ export class MovieService {
     connect('movies', this.resource.fetchMovies());
   });
 
-  // select a property for the template to consume
-  movies$ = this.state.select('movies');
+  // select a property for the template to consume as an observable
+  movies$ = this.state.select('movies'); // Observable<Movie[]>
+
+  // select a property for the template to consume as a signal
+  movies = this.state.signal('movies'); // Signal<Movie[]>
 
   // expose the select method
   select: typeof this.state.select = this.state.select.bind(this.state);
+
+  // expose the signal method
+  signal: typeof this.state.signal = this.state.signal.bind(this.state);
 }
 ```
 
