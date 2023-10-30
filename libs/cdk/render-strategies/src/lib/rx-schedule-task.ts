@@ -27,7 +27,7 @@ const defaultStrategy: keyof StrategiesPriorityRecord = 'normal';
  * It is useful for tasks that can be done asynchronously.
  *
  * ```ts
- * const task = rxScheduleTask(() => localStorage.setItem(state, JSON.stringify(state));
+ * const task = rxScheduleTask(() => localStorage.setItem(state, JSON.stringify(state)));
  * ```
  */
 export const rxScheduleTask = (
