@@ -46,7 +46,7 @@ Function returns a callback that you can use to cancel already scheduled tasks.
 import { rxScheduleTask } from '@rx-angular/cdk/render-strategies';
 ...
 
-function updateStateAndBackup<T>(data: T) {
+updateStateAndBackup<T>(data: T) {
   this.stateService.set(data);
 
   rxScheduleTask(() => localStorage.setItem('state', JSON.stringify(state)));
