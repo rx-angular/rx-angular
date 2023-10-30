@@ -15,6 +15,8 @@ Most common ways of delaying a task execution are:
 - `setTimeout`
 - `requestAnimationFrame`
 - `requestIdleCallback`
+- `Promise.resolve`
+- `queueMicrotask`
 
 `rxScheduleTask` provides a similar API but comes with huge benefits of notion of frame budget and priority configuration.
 
@@ -28,18 +30,6 @@ You can read detailed information about concurrent strategies [here](strategies/
 
 ## Usage examples
 
-### Input params
-
-- Just as common delaying apis this method `accepts` a work function that should be scheduled.
-- It also accepts a configuration object as an optional second parameter
-  - `strategy` which will be used for scheduling (`normal` is default, for full list of available strategies see [concurrent strategies documentation](strategies/concurrent-strategies.md))
-  - `delay` which is responsible for delaying the task execution (default is 0ms)
-  - `ngZone` if you want your function be executed within ngzone (default scheduling runs out of zone)
-
-### Return type
-
-Function returns a callback that you can use to cancel already scheduled tasks.
-
 ### Default usage
 
 ```typescript
@@ -52,6 +42,18 @@ updateStateAndBackup<T>(data: T) {
   rxScheduleTask(() => localStorage.setItem('state', JSON.stringify(state)));
 }
 ```
+
+### Input params
+
+- Just as common delaying apis this method `accepts` a work function that should be scheduled.
+- It also accepts configuration object as an optional second parameter
+  - `strategy` which will be used for scheduling (`normal` is default, for full list of available strategies see [concurrent strategies documentation](strategies/concurrent-strategies.md))
+  - `delay` which is responsible for delaying the task execution (default is 0ms)
+  - `ngZone` if you want your function be executed withing ngzone (default scheduling runs out of zone)
+
+### Return type
+
+Function returns a callback that you can use to cancel already scheduled tasks.
 
 ### Usage with non-default strategy
 
