@@ -22,7 +22,7 @@ Most common ways of delaying task execution are:
 
 > 💡 Under the hood all our concurrent strategies are based on MessageChannel technology.
 
-To address the problem of long tasks and help browser split the work @rx-angular/cdk provides concurrent strategies. This strategies will help browser to chunk the work into non-blocking tasks whenever it's possible.
+To address the problem of long tasks and help browser split the work @rx-angular/cdk provides concurrent strategies. These strategies will help browser to chunk the work into non-blocking tasks whenever it's possible.
 
 You can read detailed information about concurrent strategies [here](strategies/concurrent-strategies.md).
 
