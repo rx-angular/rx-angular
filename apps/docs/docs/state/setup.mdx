@@ -366,6 +366,14 @@ export class MovieListComponent {
   filteredMovies = this.state.computed(({ movies, searchValue }) => {
     return movies().filter((movie) => movie.title.includes(searchValue()));
   }); // Signal<Movie[]>
+
+  // derive asynchronous filteredMovies from your stored state as a signal
+  //highlight-next-line
+  filteredMovies = this.state.computedFrom(
+    select('searchValue'),
+    switchMap((searchValue) => this.movieResource.fetchMovies(searchValue)),
+    startWith([] as Movie[]) // needed as the initial value otherwise it will throw an error
+  ); // Signal<Movie[]>
 }
 ```
 
