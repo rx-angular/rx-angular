@@ -23,10 +23,10 @@ import {
   EMPTY,
   isObservable,
   Observable,
+  OperatorFunction,
   Subscribable,
   Subscription,
   Unsubscribable,
-  type OperatorFunction,
 } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
@@ -678,16 +678,45 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * @description
    * Lets you create a computed signal derived from state and rxjs operators.
    *
-   * @throws If the initial value is not provided and the signal is not sync. Use startWith() to provide an initial value.
+   * @throws If the initial value is not provided and the signal is not sync.
+   * Use startWith() to provide an initial value.
+   *
+   * @param op1 { OperatorFunction<T, A> }
+   * @returns Observable<A>
    */
-  computedFrom<Output>(
-    ...operators: OperatorFunction<T, Output>[]
-  ): Signal<Output> {
-    return toSignal(
-      // @ts-ignore
-      this.select(...operators),
-      { injector: this.injector, requireSync: true }
-    );
+  computedFrom<A = T>(op1: OperatorFunction<T, A>): Signal<A>;
+  /** @internal */
+  computedFrom<A = T, B = A>(
+    op1: OperatorFunction<T, A>,
+    op2: OperatorFunction<A, B>
+  ): Signal<B>;
+  /** @internal */
+  computedFrom<A = T, B = A, C = B>(
+    op1: OperatorFunction<T, A>,
+    op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>
+  ): Signal<C>;
+  /** @internal */
+  computedFrom<A = T, B = A, C = B, D = C>(
+    op1: OperatorFunction<T, A>,
+    op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>,
+    op4: OperatorFunction<C, D>
+  ): Signal<D>;
+  /** @internal */
+  computedFrom<A = T, B = A, C = B, D = C, E = D>(
+    op1: OperatorFunction<T, A>,
+    op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>,
+    op4: OperatorFunction<C, D>,
+    op5: OperatorFunction<D, E>
+  ): Signal<E>;
+  /** @internal */
+  computedFrom<R>(...ops: OperatorFunction<T, unknown>[]): Signal<R> {
+    return toSignal<R>(this.select(...(ops as Parameters<typeof select>)), {
+      injector: this.injector,
+      requireSync: true,
+    });
   }
 
   /**
