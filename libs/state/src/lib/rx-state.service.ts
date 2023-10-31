@@ -405,7 +405,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       | Signal<T[K] | V>,
     projectValueFn?: ProjectValueReducer<T, K, V>
   ): void {
-    let inputOrSlice$: Observable<Partial<T> | V>;
+    let inputOrSlice$: Observable<Partial<T> | V> | undefined;
     if (!isKeyOf<T>(keyOrInputOrSlice$)) {
       if (isObservable(keyOrInputOrSlice$)) {
         inputOrSlice$ = keyOrInputOrSlice$;
@@ -431,7 +431,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     }
 
     let slices$: Observable<T[K] | V> | null = null;
-    let stateReducer: ProjectStateReducer<T, V>;
+    let stateReducer: ProjectStateReducer<T, V> | undefined;
 
     if (projectOrSlices$) {
       if (isObservable(projectOrSlices$)) {
@@ -443,9 +443,13 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       }
     }
 
-    if (inputOrSlice$ && projectValueFn === undefined && stateReducer) {
+    if (
+      inputOrSlice$ &&
+      projectValueFn === undefined &&
+      stateReducer !== undefined
+    ) {
       const slice$ = inputOrSlice$.pipe(
-        map((v) => stateReducer(this.get(), v as V))
+        map((v) => stateReducer!(this.get(), v as V))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;

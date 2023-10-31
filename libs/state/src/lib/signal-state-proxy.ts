@@ -36,8 +36,11 @@ export function createSignalStateProxy<State extends object>(
       }
       return _signal;
     },
-    has(target, prop) {
-      return !!target[prop];
+    has<K extends keyof State>(
+      target: SignalStateProxy<State>,
+      prop: K | string | symbol
+    ) {
+      return !!target[prop as K];
     },
     ownKeys(target) {
       return [...Reflect.ownKeys(target)];
