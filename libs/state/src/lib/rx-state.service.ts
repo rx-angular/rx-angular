@@ -8,7 +8,6 @@ import {
   Signal,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   AccumulationFn,
   createAccumulationObservable,

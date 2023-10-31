@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { select } from '@rx-angular/state/selections';
 
 export type SignalStateProxy<State extends object> = {
