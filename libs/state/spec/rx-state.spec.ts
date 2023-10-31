@@ -1,8 +1,8 @@
 import { Component, isSignal, signal } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { delay, of, pipe, startWith } from 'rxjs';
-import { rxState, RxStateSetupFn } from './rx-state';
-import { RxState } from './rx-state.service';
+import { rxState, RxStateSetupFn } from '../src/lib/rx-state';
+import { RxState } from '../src/lib/rx-state.service';
 import { selectSlice } from '@rx-angular/state/selections';
 import { map } from 'rxjs/operators';
 
