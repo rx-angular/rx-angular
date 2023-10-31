@@ -1,8 +1,10 @@
 import { Component, isSignal, signal } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { RxStateSetupFn, rxState } from './rx-state';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { delay, of, pipe, startWith } from 'rxjs';
+import { rxState, RxStateSetupFn } from './rx-state';
 import { RxState } from './rx-state.service';
+import { selectSlice } from '@rx-angular/state/selections';
+import { map } from 'rxjs/operators';
 
 describe(rxState, () => {
   it('should create rxState', () => {
@@ -221,6 +223,55 @@ describe(rxState, () => {
 
       expect(multiplied()).toBe(13370);
     });
+
+    it('should create a signal using signals and rxjs operators and emit sync without initial value', fakeAsync(() => {
+      const { component } = setupComponent<{
+        count: number;
+        multiplier: number;
+      }>(({ set }) => {
+        set({ count: 1337, multiplier: 1 });
+      });
+      const state = component.state;
+
+      const multiplied = state.computedFrom(
+        pipe(
+          selectSlice(['count', 'multiplier']),
+          map(({ count, multiplier }) => count * multiplier)
+        )
+      );
+
+      expect(multiplied()).toBe(1337);
+      state.set({ multiplier: 10 });
+      expect(multiplied()).toBe(13370);
+    }));
+
+    it('should create a signal using signals and rxjs operators and emit async with startWith', fakeAsync(() => {
+      const { component } = setupComponent<{
+        count: number;
+        multiplier: number;
+      }>(({ set }) => {
+        set({ count: 1337, multiplier: 1 });
+      });
+      const state = component.state;
+
+      const multiplied = state.computedFrom(
+        pipe(
+          selectSlice(['count', 'multiplier']),
+          map(({ count, multiplier }) => count * multiplier),
+          delay(1000),
+          startWith(10)
+        )
+      );
+
+      expect(multiplied()).toBe(10);
+      tick(1000);
+      expect(multiplied()).toBe(1337);
+      state.set({ multiplier: 10 });
+      tick(500);
+      expect(multiplied()).toBe(1337);
+      tick(500);
+      expect(multiplied()).toBe(13370);
+    }));
   });
 });
 

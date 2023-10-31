@@ -7,7 +7,7 @@ import {
   OnDestroy,
   Signal,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   AccumulationFn,
@@ -23,10 +23,10 @@ import {
   EMPTY,
   isObservable,
   Observable,
-  OperatorFunction,
   Subscribable,
   Subscription,
   Unsubscribable,
+  type OperatorFunction,
 } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
@@ -672,6 +672,22 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     return computed(() => {
       return fn(this.signalStoreProxy);
     });
+  }
+
+  /**
+   * @description
+   * Lets you create a computed signal derived from state and rxjs operators.
+   *
+   * @throws If the initial value is not provided and the signal is not sync. Use startWith() to provide an initial value.
+   */
+  computedFrom<Output>(
+    ...operators: OperatorFunction<T, Output>[]
+  ): Signal<Output> {
+    return toSignal(
+      // @ts-ignore
+      this.select(...operators),
+      { injector: this.injector, requireSync: true }
+    );
   }
 
   /**
