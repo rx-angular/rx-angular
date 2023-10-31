@@ -3,7 +3,15 @@ import { RxState as LegacyState } from './rx-state.service';
 
 export type RxState<T extends object> = Pick<
   LegacyState<T>,
-  'get' | 'select' | 'connect' | 'set' | '$' | 'setAccumulator'
+  | 'get'
+  | 'select'
+  | 'connect'
+  | 'set'
+  | '$'
+  | 'setAccumulator'
+  | 'signal'
+  | 'computed'
+  | 'computedFrom'
 >;
 
 export type RxStateSetupFn<State extends object> = (
@@ -49,6 +57,9 @@ export function rxState<State extends object>(
     set: legacyState.set.bind(legacyState),
     connect: legacyState.connect.bind(legacyState),
     select: legacyState.select.bind(legacyState),
+    signal: legacyState.signal.bind(legacyState),
+    computed: legacyState.computed.bind(legacyState),
+    computedFrom: legacyState.computedFrom.bind(legacyState),
     $: legacyState.$,
     setAccumulator: legacyState.setAccumulator.bind(legacyState),
   };
