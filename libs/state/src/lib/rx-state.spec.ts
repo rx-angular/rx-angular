@@ -255,12 +255,10 @@ describe(rxState, () => {
       const state = component.state;
 
       const multiplied = state.computedFrom(
-        pipe(
-          selectSlice(['count', 'multiplier']),
-          map(({ count, multiplier }) => count * multiplier),
-          delay(1000),
-          startWith(10)
-        )
+        selectSlice(['count', 'multiplier']),
+        map(({ count, multiplier }) => count * multiplier),
+        delay(1000),
+        startWith(10)
       );
 
       expect(multiplied()).toBe(10);
