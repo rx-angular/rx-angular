@@ -11,6 +11,7 @@ export type RxState<T extends object> = Pick<
   | 'setAccumulator'
   | 'signal'
   | 'computed'
+  | 'computedFrom'
 >;
 
 export type RxStateSetupFn<State extends object> = (
@@ -58,6 +59,7 @@ export function rxState<State extends object>(
     select: legacyState.select.bind(legacyState),
     signal: legacyState.signal.bind(legacyState),
     computed: legacyState.computed.bind(legacyState),
+    computedFrom: legacyState.computedFrom.bind(legacyState),
     $: legacyState.$,
     setAccumulator: legacyState.setAccumulator.bind(legacyState),
   };
