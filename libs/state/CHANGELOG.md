@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [16.3.0](https://github.com/rx-angular/rx-angular/compare/state@16.2.0...state@16.3.0) (2023-11-01)
+
+
+### Features
+
+* expose select and get in rxState setup fn ([d04e465](https://github.com/rx-angular/rx-angular/commit/d04e4657a7e0b060895b5298cdc7a7a138474e98))
+
+
+
 # [16.2.0](https://github.com/rx-angular/rx-angular/compare/state@16.1.1...state@16.2.0) (2023-11-01)
 
 
