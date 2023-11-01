@@ -15,7 +15,10 @@ export type RxState<T extends object> = Pick<
 >;
 
 export type RxStateSetupFn<State extends object> = (
-  rxState: Pick<RxState<State>, 'connect' | 'set' | 'setAccumulator'>
+  rxState: Pick<
+    RxState<State>,
+    'connect' | 'set' | 'get' | 'select' | 'setAccumulator'
+  >
 ) => void;
 
 /**
