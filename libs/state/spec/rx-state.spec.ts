@@ -4,7 +4,7 @@ import { delay, of, pipe, startWith } from 'rxjs';
 import { rxState, RxStateSetupFn } from '../src/lib/rx-state';
 import { RxState } from '../src/lib/rx-state.service';
 import { selectSlice } from '@rx-angular/state/selections';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 describe(rxState, () => {
   it('should create rxState', () => {
@@ -70,6 +70,35 @@ describe(rxState, () => {
       count2: number;
     }>(({ connect }) => connect(of({ count: 10, count2: 20 })));
     expect(component.state.get()).toEqual({ count: 10, count2: 20 });
+  });
+
+  it('should select state inside setup', () => {
+    const { component } = setupComponent<{
+      isAuth: boolean;
+      messages: string[];
+      count: number;
+    }>(({ set, connect, select }) => {
+      set({ isAuth: false, messages: [] });
+      connect('messages', select('isAuth').pipe(filter((x) => !x)), () => []);
+      connect('messages', select('isAuth').pipe(filter((x) => x)), () => [
+        'Hi',
+      ]);
+    });
+
+    expect(component.state.get()).toEqual({
+      isAuth: false,
+      messages: [],
+    });
+    component.state.set({ isAuth: true });
+    expect(component.state.get()).toEqual({
+      isAuth: true,
+      messages: ['Hi'],
+    });
+    component.state.set({ isAuth: false });
+    expect(component.state.get()).toEqual({
+      isAuth: false,
+      messages: [],
+    });
   });
 
   it('should throw a TSC error when returned record has incorrect type', () => {
