@@ -1,5 +1,6 @@
 import {
   Directive,
+  ElementRef,
   EmbeddedViewRef,
   NgIterable,
   TemplateRef,
@@ -25,7 +26,7 @@ export interface TemplateSettings<Implicit, Context, ComputedContext> {
   templateRef: TemplateRef<Context>;
   createViewContext: CreateViewContext<Implicit, Context, ComputedContext>;
   updateViewContext: UpdateViewContext<Implicit, Context, ComputedContext>;
-  viewCacheSize: number;
+  templateCacheSize: number;
 }
 
 export interface ListRange {
@@ -115,6 +116,8 @@ export abstract class RxVirtualScrollViewport {
   abstract containerRect$: Observable<{ height: number; width: number }>;
   abstract getScrollTop(): number;
   abstract scrollTo(scrollTo: number, behavior?: ScrollBehavior): void;
+  abstract getScrollElement(): HTMLElement;
+  abstract measureOffset(): number;
 }
 
 /** @internal */
@@ -124,13 +127,16 @@ export abstract class RxVirtualViewRepeater<
   U extends NgIterable<T> = NgIterable<T>
 > {
   abstract values$: Observable<U | null | undefined>;
-  abstract viewsRendered$: Observable<EmbeddedViewRef<any>[]>;
+  abstract viewsRendered$: Observable<
+    EmbeddedViewRef<RxVirtualForViewContext<T, U>>[]
+  >;
   abstract viewRendered$: Observable<{
     view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>;
     index: number;
     item: T;
   }>;
-  abstract renderingStart$: Observable<void>;
+  abstract viewContainer: ViewContainerRef;
+  abstract renderingStart$: Observable<Set<number>>;
   _trackBy: TrackByFunction<T> | null;
 }
 
@@ -144,4 +150,11 @@ export class RxVirtualForViewContext<
   constructor(item: T, public rxVirtualForOf: U, customProps?: C) {
     super(item, customProps);
   }
+}
+
+@Directive()
+export abstract class RxVirtualScrollElement {
+  abstract elementScrolled$: Observable<void>;
+  abstract getElementRef(): ElementRef<HTMLElement>;
+  abstract measureOffset(): number;
 }

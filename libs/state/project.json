@@ -9,41 +9,21 @@
       "executor": "@nx/angular:package",
       "options": {
         "tsConfig": "libs/state/tsconfig.lib.json",
-        "project": "libs/state/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": false
+        "project": "libs/state/ng-package.json"
       },
       "outputs": ["{workspaceRoot}/dist/libs/state"],
-      "dependsOn": [
-        {
-          "target": "build",
-          "dependencies": true
-        }
-      ]
+      "dependsOn": ["^build"]
     },
     "build": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        {
-          "target": "build-lib"
-        }
-      ],
+      "dependsOn": ["build-lib"],
       "options": {
         "commands": [
-          {
-            "command": "npx tsc -p libs/state/tsconfig.schematics.json"
-          },
-          {
-            "command": "npx cpx libs/state/schematics/collection.json dist/libs/state/schematics"
-          },
-          {
-            "command": "npx cpx libs/state/schematics/migration.json dist/libs/state/schematics"
-          },
-          {
-            "command": "npx cpx libs/state/schematics/src/**/files/** dist/libs/state/schematics/src"
-          },
-          {
-            "command": "npx cpx libs/state/schematics/src/**/schema.json dist/libs/state/schematics/src"
-          }
+          "yarn tsc -p libs/state/tsconfig.schematics.json",
+          "yarn cpx libs/state/schematics/collection.json dist/libs/state/schematics",
+          "yarn cpx libs/state/schematics/migration.json dist/libs/state/schematics",
+          "yarn cpx libs/state/schematics/src/**/files/** dist/libs/state/schematics/src",
+          "yarn cpx libs/state/schematics/src/**/schema.json dist/libs/state/schematics/src"
         ],
         "parallel": false
       },
@@ -59,51 +39,32 @@
       "outputs": ["{workspaceRoot}/coverage/state"]
     },
     "perfBuild": {
-      "executor": "@nx/node:webpack",
+      "executor": "@nx/webpack:webpack",
       "options": {
         "main": "libs/state/perf/index.ts",
         "outputPath": "dist/libs/state-perf/dist",
-        "tsConfig": "libs/state/tsconfig.perf.json"
+        "tsConfig": "libs/state/tsconfig.perf.json",
+        "compiler": "tsc",
+        "target": "node"
       },
       "outputs": ["{options.outputPath}"]
     },
     "perf": {
-      "executor": "@nx/node:node",
+      "executor": "@nx/js:node",
       "options": {
         "buildTarget": "state:perfBuild"
       }
     },
     "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npm publish dist/libs/state"
-          }
-        ]
-      },
-      "dependsOn": [
-        {
-          "target": "lint"
-        },
-        {
-          "target": "test"
-        },
-        {
-          "target": "version"
-        },
-        {
-          "target": "build"
-        }
-      ]
+      "command": "npm publish dist/libs/state"
     },
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
         "noVerify": true,
         "baseBranch": "main",
-        "versionTagPrefix": "${target}@",
-        "commitMessageFormat": "release(${projectName}): ${version}",
+        "tagPrefix": "{projectName}@",
+        "commitMessageFormat": "release({projectName}): {version}",
         "postTargets": ["state:github"],
         "push": true
       }
@@ -111,20 +72,16 @@
     "github": {
       "executor": "@jscutlery/semver:github",
       "options": {
-        "tag": "${tag}",
-        "notes": "${notes}"
+        "tag": "{tag}",
+        "notes": "{notes}"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["libs/state/**/*.ts"]
       }
-    }
-  },
-  "generators": {
-    "@nx/angular:component": {
-      "style": "scss"
     }
   },
   "tags": ["type:lib", "state"]

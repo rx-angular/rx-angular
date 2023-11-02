@@ -1,36 +1,48 @@
+import { ErrorHandler } from '@angular/core';
+import { merge, OperatorFunction, Subject } from 'rxjs';
+import { EffectMap, KeysOf, RxActions, SubjectMap, ValuesOf } from './types';
+
 /**
  * @internal
  * Internal helper to create the proxy object
- * It lifes as standalone function because we dont need to carrie it in memory for every ActionHandler instance
+ * It lives as standalone function because we don't need to carrie it in memory for every ActionHandler instance
  * @param subjects
  * @param transforms
  */
-import { merge, Subject } from 'rxjs';
-import { KeysOf, ValuesOf, RxActions } from './types';
-import { ErrorHandler } from '@angular/core';
-
-export function actionProxyHandler<T extends object, U extends object>(
-  subjects: { [K in keyof T]: Subject<ValuesOf<T>> },
-  transforms?: U,
-  errorHandler?: ErrorHandler
-): ProxyHandler<RxActions<T, U>> {
+export function actionProxyHandler<T extends object, U extends object>({
+  subjectMap,
+  transformsMap,
+  effectMap,
+  errorHandler = null,
+}: {
+  subjectMap: SubjectMap<T>;
+  transformsMap?: U;
+  effectMap: EffectMap<T>;
+  errorHandler: ErrorHandler | null;
+}): ProxyHandler<RxActions<T, U>> {
   type KeysOfT = KeysOf<T>;
   type ValuesOfT = ValuesOf<T>;
 
+  function getEventEmitter(prop: KeysOfT): Subject<ValuesOfT> {
+    if (!subjectMap[prop]) {
+      subjectMap[prop] = new Subject<ValuesOfT>();
+    }
+    return subjectMap[prop];
+  }
   function dispatch(value: ValuesOfT, prop: KeysOfT) {
-    subjects[prop] = subjects[prop] || new Subject<ValuesOfT>();
+    subjectMap[prop] = subjectMap[prop] || new Subject<ValuesOfT>();
     try {
       const val =
-        transforms && (transforms as any)[prop]
-          ? (transforms as any)[prop](value)
+        transformsMap && (transformsMap as any)[prop]
+          ? (transformsMap as any)[prop](value)
           : value;
-      subjects[prop].next(val);
+      subjectMap[prop].next(val);
     } catch (err) {
       errorHandler?.handleError(err);
     }
   }
   return {
-    // shorthand setter for multiple signals e.g. signals({propA: 1, propB: 2})
+    // shorthand setter for multiple EventEmitter e.g. actions({propA: 1, propB: 2})
     apply(_: RxActions<T, U>, __: any, props: [T]): any {
       props.forEach((slice) =>
         Object.entries(slice).forEach(([k, v]) =>
@@ -41,24 +53,36 @@ export function actionProxyHandler<T extends object, U extends object>(
     get(_, property: string) {
       const prop = property as KeysOfT;
 
-      // the user wants to get a single signal as observable
+      // the user wants to get multiple or one single EventEmitter as observable `eventEmitter.prop$`
       if (prop.toString().split('').pop() === '$') {
+        // the user wants to get multiple EventEmitter as observable `eventEmitter.$(['prop1', 'prop2'])`
         if (prop.toString().length === 1) {
           return (props: KeysOfT[]) =>
             merge(
               ...props.map((k) => {
-                subjects[k] = subjects[k] || new Subject<ValuesOfT>();
-                return subjects[k];
+                return getEventEmitter(k);
               })
             );
         }
-
+        // the user wants to get a single EventEmitter as observable `eventEmitter.prop$`
         const propName = prop.toString().slice(0, -1) as KeysOfT;
-        subjects[propName] = subjects[propName] || new Subject<ValuesOfT>();
-        return subjects[propName];
+        return getEventEmitter(propName);
       }
 
-      // the user wants to get a dispatcher function
+      // the user wants to get a single EventEmitter and trigger a side effect on event emission
+      if (prop.toString().startsWith('on')) {
+        const propName = prop.toString().slice(2).toLowerCase() as KeysOfT;
+        return (
+          behaviour: OperatorFunction<T[KeysOfT], T[KeysOfT]>,
+          sf: (v: T[KeysOfT]) => void
+        ) => {
+          const sub = getEventEmitter(propName).pipe(behaviour).subscribe(sf);
+          effectMap[propName] = sub;
+          return () => sub.unsubscribe();
+        };
+      }
+
+      // the user wants to get a dispatcher function to imperatively dispatch the EventEmitter
       return (args: ValuesOfT) => {
         dispatch(args, prop);
       };

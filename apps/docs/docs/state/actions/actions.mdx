@@ -5,23 +5,24 @@ title: 'Actions'
 hide_title: true
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # @rx-angular/state/actions
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fstate.svg)](https://www.npmjs.com/package/%40rx-angular%2Fstate)
 ![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
 
-> This package provides a quick way to create an action channel and some configuration options.
+> `RxActions` is a powerful yet simple tool to manage action throughout your application.
+> It can be seen as the glue between user based events and your applications state.
 
 ## Key features
 
-- ✅ Fully Typed
-- ✅ No-Boilerplate
-- ✅ Configurable transformations to have lines in the template
+- ✅ No boilerplate
 - ✅ Minimal memory footprint through a Proxy object and lazy initialization
-
-## Demos:
-
-- [⚡ GitHub](https://github.com/BioPhoton/rx-angular-state-actions)
+- ✅ Automatic subscription handling
+- ✅ Clean separation of concerns
+- ✅ Supports imperative & reactive code styles
 
 ## Install
 
@@ -31,324 +32,581 @@ npm install --save @rx-angular/state
 yarn add @rx-angular/state
 ```
 
-## Resources
-
-**Example applications:**
-A demo application is available on [GitHub](https://github.com/BioPhoton/rx-angular-state-actions).
-
 ## Motivation
 
-Actions are a fundamental part of state management and reactive systems. The @rx-angular/state library provides a powerful set method, but in certain scenarios, you might need to add specific behaviors to your user input or incoming events.
+Actions are an essential part of any state management system. They represent unique events from e.g. user interactions, external
+system events or device APIs. From a pure technical perspective, actions are the triggers for state changes and side effect executions.
+The `@rx-angular/state/actions` package helps to reduce & streamline your code used to create composable action streams.
 
-Typically, Subjects are used to implement this functionality. However, in larger applications, this approach often results in code cluttered with Subjects, leading to increased complexity.
+It is best suited to be used in combination with [RxState](./setup) and/or [RxEffects](./effects) but can also be
+used in a standalone way.
 
-That's where @rx-angular/state/actions comes in. It allows you to create observable action streams in a clean, maintainable, and less error-prone way, thus minimizing the amount of boilerplate code required.
+:::note
 
-## RxAngular Actions
+Actions represent unique events that happen in your application.
 
-This package helps to reduce code used to create composable action streams.
-It mostly is used in combination with state management libs to handle user interaction and backend communication.
+:::
 
-### Setup
+## Usage
 
-The coalescing features can be used directly from the `cdk` package or indirectly through the `state` package.
-To do so, install the `cdk` package and, if needed, the packages depending on it:
+:::info Migration Guide
 
-1. Install `@rx-angular/state`
+We have transitioned to a new functional API.
 
-```bash
-npm i @rx-angular/state
-# or
-yarn add @rx-angular/state
-```
+Read the [following section](#migrate-to-new-functional-api) for a migration guide explaining how to upgrade your codebase to the new API.
 
-### Basic usage
+:::
 
-By using RxAngular Actions we can reduce the boilerplate significantly, to do so we can start by thinking about the specific section their events and event payload types:
+`RxActions` are instantiated by the creation function `rxActions`, imported from the `@rx-angular/state/actions` entrypoint.
 
-```typescript
-interface Actions {
-  refreshUser: string | number;
-  refreshList: string | number;
-  refreshGenres: string | number;
-}
-```
+The following example shows how to use `rxActions` in a standalone way for a simple login
+component. The interface for our actions will be `{ login: { username: string; password: string; } }`.
 
-Next we can use the typing to create the action object:
+:::note Dispatch & React to actions
 
-```typescript
-const actionsFactory = new RxActionFactory<Actions>();
-const actions = actionsFactory.create();
-```
+Note how `rxActions` transforms the action interface into a dispatchable action `login()` and a readable stream, `login$`.
+This way it makes it easy to dispatch it from the template and to glue it to other building blocks.
 
-The object can now be used to emit operations over setters:
+:::
 
-```typescript
-actions.refreshUser(value);
-actions.refreshList(value);
-actions.refreshGenres(value);
-```
-
-The emitted operations can be received over observable properties:
-
-```typescript
-const refreshUser$ = actions.refreshUser$;
-const refreshList$ = actions.refreshList$;
-const refreshGenres$ = actions.refreshGenres$;
-```
-
-If there is the need to make a combined operation you can also select multiple operations and get their emissions in one stream:
-
-```typescript
-const refreshUserOrList$ = concat(actions.refreshUser$, actions.refreshList$);
-```
-
-### Operations in components
-
-In components/templates we can use operations to map user interaction as well as programmatic to effects or state changes.
-This reduces the component class code as well as template.
-
-In addition, we can use it as a shorthand in the template and directly connect to action dispatching in the class.
-
-```typescript
-interface UiActions {
-  submitBtn: void;
-  searchInput: string;
-}
+```typescript title="src/login.component.ts"
+import { rxActions } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
 
 @Component({
   template: `
-    <input (input)="ui.searchInput($event.target.value)" /> Search for:
-    {{ ui.searchInput$ | async }}<br />
-    <button (click)="ui.submitBtn()">
-      Submit<button>
-        <br />
-        <ul>
-          <li *ngFor="let item of list$ | async as list">{{ item }}</li>
-        </ul>
-      </button>
+    <input placeholder="username" #username />
+    <input type="password" placeholder="password" #password />
+    <button
+      (click)="
+        actions.login({
+          username: username.value,
+          password: password.value
+        })
+      "
+    >
+      Login
     </button>
   `,
-  providers: [RxState, RxActionFactory],
 })
-class Component {
-  ui = this.factory.create<UiActions>({ searchInput: (e) => e });
-  list$ = this.state.select('list');
-  submittedSearchQuery$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.searchInput$),
-    map(([_, search]) => search),
-    debounceTime(1500)
-  );
+class LoginComponent {
+  actions = rxActions<{ login: { username: string; password: string } }>();
 
+  constructor(private service: AuthService) {
+    this.actions.login$
+      .pipe(exhaustMap((credentials) => this.service.login(credentials)))
+      .subscribe();
+  }
+}
+```
+
+### Handling side effects on event emission
+
+In this example we use the `on` shorthand to trigger a side effect every time the event it emitted.
+It returns a function which when called stops firing the side effect.
+
+:::tip on shorthand
+
+`rxActions` also has a built in solution to easily apply side effects on actions.
+For every property in your actions type, you will get the `on` shorthand, e.g. `{ refresh: void }`
+will also expose the `onRefresh` method.
+
+:::
+
+```typescript title="src/login.component.ts"
+import { DOCUMENT } from '@angular/common';
+import { rxActions } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
+
+@Component({
+  template: `
+    <input placeholder="username" #username />
+    <input type="password" placeholder="password" #password />
+    <button
+      (click)="
+        actions.login({
+          username: username.value,
+          password: password.value
+        })
+      "
+    >
+      Login
+    </button>
+  `,
+})
+class LoginComponent {
+  actions = rxActions<{ login: { username: string; password: string } }>();
+
+  private loginEffect = this.actions.onLogin(
+    (credentials$) =>
+      credentials$.pipe(
+        exhaustMap((credentials) => this.service.login(credentials))
+      ),
+    () => this.doc.defaultView.alert('successfully logged in')
+  );
   constructor(
-    private state: RxState<State>,
-    private factory: RxActionFactory<UiActions>,
-    globalState: StateService
-  ) {
-    this.connect('list', this.globalState.refreshGenres$);
-
-    this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
-    // Optional reactively:
-    // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
-  }
+    private service: AuthService,
+    @Inject(DOCUMENT) private doc: Document
+  ) {}
 }
 ```
 
-### Advanced usage
+### Usage in a service to handle data fetching
 
-```typescript
-import { Component } from '@angular/core';
-import { Subject } from 'rxjs';
-import { withLatestFrom, switchMap } from 'rxjs/operators';
+In this example we see how to use `rxActions` to handle data fetching.
+We can see how to apply behaviour onto the refresh calls (`exhaustMap` the HTTP requests).
+We also use a `signal` to hold our state of fetched movies.
 
-@Component({
-  selector: 'my-component',
-  template: `
-    <input (input)="searchInput($event?.target?.value)" /> Search for:
-    {{ search$ | async }}<br />
-    <button (click)="submitBtn()">Submit</button>
-    <br />
-    <ul>
-      <li *ngFor="let item of list$ | async">{{ item }}</li>
-    </ul>
-  `,
-})
-export class MyComponent {
-  private _submitBtn = new Subject<void>();
-  private _searchInput = new Subject<string>();
+```typescript title="src/movie.service.ts"
+import { signal } from '@angular/core';
+import { rxActions } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
 
-  submitBtn() {
-    this._submitBtn.next();
-  }
+@Injectable({ providedIn: 'root' })
+export class MovieService {
+  private movieResource = inject(MovieResource);
+  private actions = rxActions<{ refresh: void }>();
+  movies = signal<Movie[]>([]);
 
-  get submitBtn$() {
-    return this._submitBtn.asObservable();
-  }
-
-  searchInput(value: string) {
-    this._searchInput.next(value);
-  }
-
-  get search$() {
-    return this._searchInput.asObservable();
-  }
-
-  list$ = this.submitBtn$.pipe(
-    withLatestFrom(this.search$),
-    switchMap(([_, searchString]) => this.api.query(searchString))
+  private refreshEffect = this.actions.onRefresh(
+    // data refresh with applied behaviour
+    (refresh$) =>
+      refresh$.pipe(exhaustMap(() => this.movieResource.getMovies())),
+    // set the value to the state
+    (movies) => this.movies.set(movies)
   );
 
-  constructor(private api: API) {}
+  refresh() {
+    this.actions.refresh();
+  }
 }
 ```
 
-Just look at the amount of code we need to write for only 2 observable ui events.
+### Unsubscribing from events programmatically
 
-Downsides:
+The return value of the `on` shorthand is a cleanup function. Calling it will stop the effects execution.
 
-- Boilerplate for setter and getter
-- Transformations spreaded over class and template
-- Manual typing ov subjects and streams
-- No central place for UI trigger
+```typescript title="src/movie.service.ts"
+import { signal } from '@angular/core';
+import { rxActions } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
 
-Imagine we could have configurable functions that return all UI logic typed under one object.
+@Injectable({ providedIn: 'root' })
+export class MovieService {
+  private movieResource = inject(MovieResource);
+  private actions = rxActions<{ refresh: void }>();
+  movies = signal<Movie[]>([]);
 
-```typescript
-import { RxActionFactory } from '@rx-angular/state/actions';
-
-interface UiActions {
-  submitBtn: void;
-  searchInput: string;
-}
-
-@Component({
-  template: `
-    <input (input)="ui.searchInput($event)" /> Search for:
-    {{ ui.search$ | async }}<br />
-    <button (click)="ui.submitBtn()">Submit</button>
-    <br />
-    <ul>
-      <li *ngFor="let item of list$ | async as list">{{ item }}</li>
-    </ul>
-  `,
-  providers: [RxActionFactory],
-})
-export class Component {
-  ui = this.factory.create({
-    searchInput: (e) => (e.target ? e.target.value : ''),
-  });
-
-  list$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.search$),
-    switchMap(([_, searchString]) => this.api.query(searchString))
+  // highlight-start
+  private refreshEffect = this.actions.onRefresh(
+    // data refresh with applied behaviour
+    (refresh$) =>
+      refresh$.pipe(exhaustMap(() => this.movieResource.getMovies())),
+    // set the value to the state
+    (movies) => this.movies.set(movies)
   );
+  // highlight-end
 
-  constructor(private api: API, private factory: RxActionFactory<UiActions>) {}
+  refresh() {
+    this.actions.refresh();
+  }
+
+  disable() {
+    // highlight-next-line
+    this.refreshEffect();
+  }
 }
 ```
 
-#### Using transforms
+## Transformations
 
 Often we process `Events` from the template and occasionally also trigger those channels in the class programmatically.
 
 This leads to a cluttered codebase as we have to consider first the value in the event which leads to un necessary and repetitive code in the template.
 This is also true for the programmatic usage in the component class or a service.
 
-To ease this pain we can manage this login with `transforms`.
+By using the `transformations` API, we can preconfigure how our input events are mapped to actual values in a single place.
 
-You can write you own transforms or use the predefined functions:
+You can write your own transforms, leverage Browser APIs like `String` and `Boolean` or use the predefined functions.
 
-- preventDefault
-- stopPropagation
-- preventDefaultStopPropagation
-- eventValue
+### Use existing transform functions
 
-```typescript
-import { Component } from '@angular/core';
-import { RxState, RxActionFactory } from '@rx-angular/state';
-import { StateService } from './state.service';
-import { withLatestFrom, map, debounceTime } from 'rxjs/operators';
+The existing transform functions are:
 
-interface UiActions {
-  submitBtn: void;
-  searchInput: string;
-}
+- `preventDefault` -> calls `preventDefault` on a passed event
+- `stopPropagation` -> calls `stopPropagation` on a passed event
+- `preventDefaultStopPropagation` -> calls both of the above
+- `eventValue` -> extracts the value from an input event
+
+Here we see how to use an action transforms. This concept is similar to Input transforms.
+The logic is placed in a single place and transforms the event before emission.
+
+```typescript title="src/list.component.ts"
+import { rxActions, eventValue } from '@rx-angular/state/actions';
 
 @Component({
-  selector: 'my-component',
-  template: `
-    <input (input)="ui.searchInput($event)" /> Search for:
-    {{ ui.searchInput$ | async }}<br />
-    <button (click)="ui.submitBtn()">Submit</button>
-    <br />
-    <ul>
-      <li *ngFor="let item of list$ | async">{{ item }}</li>
-    </ul>
-  `,
-  providers: [RxState, RxActionFactory],
+  // takes a DOM Event
+  template: `<input name="search" (change)="actions.search($event)" />`,
 })
-export class MyComponent {
-  ui = this.factory.create<UiActions>({ searchInput: eventValue });
-  list$ = this.state.select('list');
-  submittedSearchQuery$ = this.ui.submitBtn$.pipe(
-    withLatestFrom(this.ui.searchInput$),
-    map(([_, search]) => search),
-    debounceTime(1500)
+class ListComponent {
+  actions = rxActions<{ search: string }>(({ transforms }) =>
+    // if event is forwarded pluck the value `e?.target?.value` else forward the value as is
+    transforms({ search: eventValue })
   );
+}
+```
+
+### Use custom transform functions
+
+```typescript title="src/greet.component.ts"
+import { Component } from '@angular/core';
+import { rxActions } from '@rx-angular/state/actions';
+
+@Component({
+  template: `
+    <input name="name" (input)="ui.greet()" />
+    <div>{{ ui.greet$ | async }}</div>
+  `,
+  /**/
+})
+export class GreetComponent {
+  ui = rxActions<{ greet: string }>(({ transforms }) =>
+    transforms({
+      // highlight-next-line
+      greet: (v) => `Hello ${v}`,
+    })
+  );
+}
+```
+
+## Migrate to new functional API
+
+The new functional API provides a nicer developer experience and aligns with the new Angular APIs recently released.
+We want to emphasize everyone to use the new functional API. The following examples showcases the key differences
+and how to migrate from the class based approach to the functional one.
+
+The beauty of the new functional approach is that it works without providers. This way, you simply use the new
+creation function `rxActions`.
+Instead of importing `RxActionsFactory` and putting it into the `providers` array, you now import `rxActions`.
+The namespace still stays the same.
+
+```typescript
+import { rxActions } from '@rx-angular/state/actions';
+```
+
+<Tabs>
+<TabItem value="class-based" label="Class Based (deprecated)">
+
+```typescript title="src/login.component.ts"
+// highlight-next-line
+import { RxActionFactory } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
+
+@Component({
+  template: `
+    <input placeholder="username" #username />
+    <input type="password" placeholder="password" #password />
+    <button
+      (click)="
+        actions.login({
+          username: username.value,
+          password: password.value
+        })
+      "
+    >
+      Login
+    </button>
+  `,
+  // provide `RxActionFactory` as local instance of your component
+  // highlight-next-line
+  providers: [RxActionFactory]
+})
+export class LoginComponent {
+  // highlight-next-line
+  actions = this.actionFactory.create();
 
   constructor(
-    private state: RxState<State>,
-    private factory: RxActionFactory<UiActions>,
-    private globalState: StateService
+    private service: AuthService
+    // highlight-next-line
+    private actionFactory: RxActionFactory<{ login: { username: string; password: string } }>
   ) {
-    this.state.connect('list', this.globalState.refreshGenres$);
-
-    this.state.hold(this.submittedSearchQuery$, this.globalState.refreshGenres);
-    // Optional reactively:
-    // this.globalState.connectRefreshGenres(this.submittedSearchQuery$);
+    this.actions.login$
+      .pipe(exhaustMap((credentials) => this.service.login(credentials)))
+      .subscribe();
   }
 }
 ```
 
-### Usage for global services
+</TabItem>
 
-In services, it comes in handy to have a minimal typed action system.
-This helps to have them composable for further optimizations.
-Furthermore, we can still expose setters to trigger actions the imperative way.
+<TabItem value="functional" label="Functional API (NEW)">
 
-```typescript
-interface State {
-  genres: MovieGenreModel[];
-}
+```typescript title="src/login.component.ts"
+// highlight-next-line
+import { rxActions } from '@rx-angular/state/actions';
+import { exhaustMap } from 'rxjs';
 
-interface Actions {
-  refreshGenres: string | number;
-}
-
-@Injectable({
-  providedIn: 'root',
+@Component({
+  template: `
+    <input placeholder="username" #username />
+    <input type="password" placeholder="password" #password />
+    <button
+      (click)="
+        actions.login({
+          username: username.value,
+          password: password.value
+        })
+      "
+    >
+      Login
+    </button>
+  `,
 })
-export class StateService extends RxState<State> {
-  private actions = new RxActionFactory<Actions>().create();
+export class LoginComponent {
+  // highlight-next-line
+  actions = rxActions<{ login: { username: string; password: string } }>();
 
-  genres$ = this.select('genres');
-
-  constructor(private tmdb2Service: Tmdb2Service) {
-    super();
-
-    this.connect(
-      'genres',
-      this.actions.refreshGenres$.pipe(exhaustMap(this.tmdb2Service.getGenres))
-    );
-  }
-
-  refreshGenres(genre: string | number): void {
-    this.actions.refreshGenres(genre);
-  }
-
-  // Optionally the reactive way
-  connectRefreshGenres(genre$: Observable<string | number>): void {
-    this.hold(genre$, (genre) => this.actions.refreshGenres(genre));
+  constructor(private service: AuthService) {
+    this.actions.login$
+      .pipe(exhaustMap((credentials) => this.service.login(credentials)))
+      .subscribe();
   }
 }
+```
+
+</TabItem>
+</Tabs>
+
+## Testing
+
+The following section shows different examples on how to test angular building blocks that use `rxActions`.
+The components and services tested here, all are described in the examples before.
+
+### Test usage in component to handle UI interaction
+
+```typescript title="src/login.component.spec.ts"
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+
+describe('LoginComponent', () => {
+  let fixture: ComponentFixture<LoginComponent>;
+  let service: AuthService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [LoginComponent],
+      providers: [AuthService],
+    }).compileComponents();
+    fixture = TestBed.createComponent(LoginComponent);
+    service = TestBed.inject(AuthService);
+    fixture.detectChanges();
+  });
+
+  it('login on form submit', () => {
+    // arrange
+    const username = fixture.debugElement.query(By.css('input:first-child'));
+    const password = fixture.debugElement.query(
+      By.css('input[type="password"]')
+    );
+    const btn = fixture.debugElement.query(By.css('button'));
+    const loginSpy = jest.spyOn(service, 'login');
+    username.nativeElement.value = 'user';
+    password.nativeElement.value = 'pwd';
+
+    // act
+    fixture.detectChanges();
+    btn.nativeElement.click();
+
+    // assert
+    expect(loginSpy).toHaveBeenCalled();
+  });
+});
+```
+
+### Testing usage in a service to handle data fetching
+
+To test actions in a service most of the time mock logic is required.
+
+```typescript title="src/movie.service.spec.ts"
+import { TestBed } from '@angular/core/testing';
+import { Observable } from 'rxjs';
+import { MovieResource } from './movie.resource';
+import { MovieService } from './movie.service';
+
+// MovieResource Mock helper
+
+export class MovieResourceMock {
+  httpRequest = new Subject<Movie[]>();
+  getMovies(): Observable<Movie[]> {
+    return this.httpRequest.pipe(take(1));
+  }
+}
+
+// Test code ==========
+
+describe('MovieService', () => {
+  let service: MovieService;
+  let resource: MovieResourceMock;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        MovieService,
+        { provide: MovieResource, useClass: MovieResourceMock },
+      ],
+    }).compileComponents();
+    service = TestBed.inject(MovieService);
+    resource = TestBed.inject(MovieResource) as any;
+  });
+
+  it('should fetch movies on refresh', () => {
+    // arrange
+    const movies = [{ id: '1' }];
+    // act
+    service.refresh();
+    resource.httpResponse.next(movies);
+    // assert
+    expect(service.movies()).toEqual(movies);
+  });
+});
+```
+
+### Test handling side effects on event emission
+
+```typescript title="src/login.component.spec.ts"
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { of } from 'rxjs';
+
+class AuthServiceMock {
+  login(credentials: { username: string; password: string }) {
+    return of(true);
+  }
+}
+
+describe('LoginComponent', () => {
+  let fixture: ComponentFixture<LoginComponent>;
+  const documentMock = {
+    defaultView: {
+      alert: (v) => v,
+    },
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [LoginComponent],
+      providers: [{ provide: AuthService, useClass: AuthServiceMock }],
+    })
+      .overrideComponent(LoginComponent, {
+        set: {
+          providers: [
+            {
+              provide: DOCUMENT,
+              useValue: documentMock,
+            },
+          ],
+        },
+      })
+      .compileComponents();
+    fixture = TestBed.createComponent(LoginComponent);
+    fixture.detectChanges();
+  });
+
+  it('should alert success after login', () => {
+    // arrange
+    const username = fixture.debugElement.query(By.css('input:first-child'));
+    const password = fixture.debugElement.query(
+      By.css('input[type="password"]')
+    );
+    const btn = fixture.debugElement.query(By.css('button'));
+    const alertSpy = jest.spyOn(documentMock.defaultView, 'alert');
+    username.nativeElement.value = 'user';
+    password.nativeElement.value = 'pwd';
+
+    // act
+    fixture.detectChanges();
+    btn.nativeElement.click();
+
+    // assert
+    expect(alertSpy).toHaveBeenCalled();
+  });
+});
+```
+
+### Test unsubscribing from events programmatically
+
+```typescript title="src/movie.service.spec.ts"
+import { TestBed } from '@angular/core/testing';
+import { Observable } from 'rxjs';
+import { MovieResource } from './movie.resource';
+import { MovieService } from './movie.service';
+
+// MovieResource Mock helper
+
+export class MovieResourceMock {
+  httpRequest = new Subject<Movie[]>();
+  getMovies(): Observable<Movie[]> {
+    return this.httpRequest.pipe(take(1));
+  }
+}
+
+// Test code ==========
+
+describe('MovieService', () => {
+  let service: MovieService;
+  let resource: MovieResourceMock;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        MovieService,
+        { provide: MovieResource, useClass: MovieResourceMock },
+      ],
+    }).compileComponents();
+    service = TestBed.inject(MovieService);
+    resource = TestBed.inject(MovieResource);
+  });
+
+  it('should stop fetching when autoRefresh has stopped', () => {
+    // arrange
+    const getMoviesSpy = jest.spyOn(resource, 'getMovies');
+    resource.httpRequest.next(movies);
+    // act
+    service.refresh();
+    // assert
+    expect(service.movies()).toEqual(movies);
+  });
+});
+```
+
+### Test transform functions
+
+```typescript title="src/greet.component.spec.ts"
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+
+describe('GreetComponent', () => {
+  let fixture: ComponentFixture<GreetComponent>;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [GreetComponent],
+    });
+    fixture = TestBed.createComponent(GreetComponent);
+    fixture.detectChanges();
+  });
+
+  it('should greet me', () => {
+    // arrange
+    const input = fixture.debugElement.query(By.css('input'));
+    const div = fixture.debugElement.query(By.css('div'));
+    input.nativeElement.value = 'me';
+    // act
+    (input.nativeElement as HTMLInputElement).dispatchEvent(
+      new InputEvent('input')
+    );
+    fixture.detectChanges();
+    // assert
+    expect(div.nativeElement.textContent.trim()).toBe('Hello me');
+  });
+});
 ```

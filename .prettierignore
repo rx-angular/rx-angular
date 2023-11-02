@@ -6,3 +6,7 @@
 /**/images/**/*
 .docusaurus/
 CHANGELOG.md
+
+.angular
+
+/.nx/cache

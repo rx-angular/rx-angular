@@ -7,28 +7,14 @@
   "targets": {
     "build": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        {
-          "target": "build-lib"
-        }
-      ],
+      "dependsOn": ["build-lib"],
       "options": {
         "commands": [
-          {
-            "command": "npx tsc -p libs/cdk/tsconfig.schematics.json"
-          },
-          {
-            "command": "npx cpx libs/cdk/schematics/collection.json dist/libs/cdk/schematics"
-          },
-          {
-            "command": "npx cpx libs/cdk/schematics/migration.json dist/libs/cdk/schematics"
-          },
-          {
-            "command": "npx cpx libs/cdk/schematics/src/**/files/** dist/libs/cdk/schematics/src"
-          },
-          {
-            "command": "npx cpx libs/cdk/schematics/src/**/schema.json dist/libs/cdk/schematics/src"
-          }
+          "yarn tsc -p libs/cdk/tsconfig.schematics.json",
+          "yarn cpx libs/cdk/schematics/collection.json dist/libs/cdk/schematics",
+          "yarn cpx libs/cdk/schematics/migration.json dist/libs/cdk/schematics",
+          "yarn cpx libs/cdk/schematics/src/**/files/** dist/libs/cdk/schematics/src",
+          "yarn cpx libs/cdk/schematics/src/**/schema.json dist/libs/cdk/schematics/src"
         ],
         "parallel": false
       },
@@ -38,8 +24,7 @@
       "executor": "@nx/angular:package",
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
-        "project": "libs/cdk/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": false
+        "project": "libs/cdk/ng-package.json"
       },
       "outputs": ["{workspaceRoot}/dist/libs/cdk"]
     },
@@ -53,36 +38,15 @@
       "outputs": ["{workspaceRoot}/coverage/cdk"]
     },
     "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npm publish dist/libs/cdk"
-          }
-        ]
-      },
-      "dependsOn": [
-        {
-          "target": "lint"
-        },
-        {
-          "target": "test"
-        },
-        {
-          "target": "version"
-        },
-        {
-          "target": "build"
-        }
-      ]
+      "command": "npm publish dist/libs/cdk"
     },
     "version": {
       "executor": "@jscutlery/semver:version",
       "options": {
         "noVerify": true,
         "baseBranch": "main",
-        "versionTagPrefix": "${target}@",
-        "commitMessageFormat": "release(${projectName}): ${version}",
+        "tagPrefix": "{projectName}@",
+        "commitMessageFormat": "release({projectName}): {version}",
         "postTargets": ["cdk:github"],
         "push": true
       }
@@ -90,20 +54,16 @@
     "github": {
       "executor": "@jscutlery/semver:github",
       "options": {
-        "tag": "${tag}",
-        "notes": "${notes}"
+        "tag": "{tag}",
+        "notes": "{notes}"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["libs/cdk/**/*.ts"]
       }
-    }
-  },
-  "generators": {
-    "@nx/angular:component": {
-      "style": "scss"
     }
   },
   "tags": ["type:lib", "cdk"]

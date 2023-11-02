@@ -1,5 +1,13 @@
-import { Injectable, OnDestroy } from '@angular/core';
-// eslint-disable-next-line @nx/enforce-module-boundaries
+import {
+  computed,
+  inject,
+  Injectable,
+  Injector,
+  isSignal,
+  OnDestroy,
+  Signal,
+} from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
   AccumulationFn,
   createAccumulationObservable,
@@ -20,6 +28,7 @@ import {
   Unsubscribable,
 } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
 
 export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
@@ -56,6 +65,10 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   private accumulator = createAccumulationObservable<T>();
   private effectObservable = createSideEffectObservable();
+
+  private readonly injector = inject(Injector);
+
+  private signalStoreProxy: SignalStateProxy<T>;
 
   /**
    * @description
@@ -296,6 +309,12 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * // 5 due to the projectionFunction
    */
   connect(inputOrSlice$: Observable<Partial<T>>): void;
+  /**
+   * @description
+   * Connect a `Signal<Partial<T>>` to the state `T`.
+   * Any change emitted by the source will get merged into the state.
+   */
+  connect(signal: Signal<Partial<T>>): void;
 
   /**
    * @description
@@ -316,6 +335,14 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     projectFn: ProjectStateReducer<T, V>
   ): void;
   /**
+   * @description
+   * Connect a `Signal<V>` to the state `T`.
+   * Any change emitted by the source will get forwarded to the project function and merged into the state.
+   *
+   * You have to provide a `projectionFunction` to access the current state object and do custom mappings.
+   */
+  connect<V>(signal: Signal<V>, projectFn: ProjectStateReducer<T, V>): void;
+  /**
    *
    * @description
    * Connect an `Observable<T[K]>` source to a specific property `K` in the state `T`. Any emitted change will update
@@ -329,6 +356,13 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * // every 250ms the property timer will get updated
    */
   connect<K extends keyof T>(key: K, slice$: Observable<T[K]>): void;
+  /**
+   *
+   * @description
+   * Connect a `Signal<T[K]>` source to a specific property `K` in the state `T`. Any emitted change will update
+   * this specific property in the state.
+   */
+  connect<K extends keyof T>(key: K, signal: Signal<T[K]>): void;
   /**
    *
    * @description
@@ -348,56 +382,87 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     projectSliceFn: ProjectValueReducer<T, K, V>
   ): void;
   /**
+   *
+   * @description
+   * Connect a `Signal<V>` source to a specific property in the state. Additionally, you can provide a
+   * `projectionFunction` to access the current state object on every emission of your connected `Observable`.
+   * Any change emitted by the source will get merged into the state.
+   * Subscription handling is done automatically.
+   */
+  connect<K extends keyof T, V>(
+    key: K,
+    signal: Signal<V>,
+    projectSliceFn: ProjectValueReducer<T, K, V>
+  ): void;
+  /**
    * @internal
    */
   connect<K extends keyof T, V extends Partial<T>>(
-    keyOrInputOrSlice$: K | Observable<Partial<T> | V>,
-    projectOrSlices$?: ProjectStateReducer<T, V> | Observable<T[K] | V>,
+    keyOrInputOrSlice$: K | Observable<Partial<T> | V> | Signal<Partial<T> | V>,
+    projectOrSlices$?:
+      | ProjectStateReducer<T, V>
+      | Observable<T[K] | V>
+      | Signal<T[K] | V>,
     projectValueFn?: ProjectValueReducer<T, K, V>
   ): void {
+    let inputOrSlice$: Observable<Partial<T> | V> | undefined;
+    if (!isKeyOf<T>(keyOrInputOrSlice$)) {
+      if (isObservable(keyOrInputOrSlice$)) {
+        inputOrSlice$ = keyOrInputOrSlice$;
+      } else {
+        // why can't typescript infer the correct type?
+        inputOrSlice$ = toObservable(
+          keyOrInputOrSlice$ as Signal<Partial<T> | V>,
+          { injector: this.injector }
+        );
+      }
+    }
+    const key: K | null =
+      !inputOrSlice$ && isKeyOf<T>(keyOrInputOrSlice$)
+        ? keyOrInputOrSlice$
+        : null;
     if (
       projectValueFn === undefined &&
       projectOrSlices$ === undefined &&
-      isObservable(keyOrInputOrSlice$)
+      inputOrSlice$
     ) {
-      this.accumulator.nextSliceObservable(keyOrInputOrSlice$);
+      this.accumulator.nextSliceObservable(inputOrSlice$);
       return;
     }
 
+    let slices$: Observable<T[K] | V> | null = null;
+    let stateReducer: ProjectStateReducer<T, V> | undefined;
+
+    if (projectOrSlices$) {
+      if (isObservable(projectOrSlices$)) {
+        slices$ = projectOrSlices$;
+      } else if (isSignal(projectOrSlices$)) {
+        slices$ = toObservable(projectOrSlices$, { injector: this.injector });
+      } else {
+        stateReducer = projectOrSlices$;
+      }
+    }
+
     if (
+      inputOrSlice$ &&
       projectValueFn === undefined &&
-      typeof projectOrSlices$ === 'function' &&
-      isObservable(keyOrInputOrSlice$) &&
-      !isObservable(projectOrSlices$)
+      stateReducer !== undefined
     ) {
-      const project = projectOrSlices$;
-      const slice$ = keyOrInputOrSlice$.pipe(
-        map((v) => project(this.get(), v as V))
+      const slice$ = inputOrSlice$.pipe(
+        map((v) => stateReducer!(this.get(), v as V))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
     }
 
-    if (
-      projectValueFn === undefined &&
-      isKeyOf<T>(keyOrInputOrSlice$) &&
-      isObservable(projectOrSlices$)
-    ) {
-      const key = keyOrInputOrSlice$;
-      const slice$ = projectOrSlices$.pipe(
-        map((value) => ({ ...{}, [key]: value }))
-      );
+    if (projectValueFn === undefined && key && slices$) {
+      const slice$ = slices$.pipe(map((value) => ({ ...{}, [key]: value })));
       this.accumulator.nextSliceObservable(slice$);
       return;
     }
 
-    if (
-      typeof projectValueFn === 'function' &&
-      isKeyOf<T>(keyOrInputOrSlice$) &&
-      isObservable(projectOrSlices$)
-    ) {
-      const key = keyOrInputOrSlice$;
-      const slice$ = projectOrSlices$.pipe(
+    if (typeof projectValueFn === 'function' && key && slices$) {
+      const slice$ = slices$.pipe(
         map((value) => ({
           ...{},
           [key]: projectValueFn(this.get(), value as V),
@@ -594,6 +659,71 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
 
   /**
    * @description
+   * Returns a signal of the given key. It's first value is determined by the
+   * current keys value in RxState. Whenever the key gets updated, the signal
+   * will also be updated accordingly.
+   */
+  signal<K extends keyof T>(k: K): Signal<T[K]> {
+    return this.signalStoreProxy[k];
+  }
+
+  /**
+   * @description
+   * Lets you create a computed signal based off of multiple keys stored in RxState.
+   */
+  computed<C>(fn: (slice: SignalStateProxy<T>) => C): Signal<C> {
+    return computed(() => {
+      return fn(this.signalStoreProxy);
+    });
+  }
+
+  /**
+   * @description
+   * Lets you create a computed signal derived from state and rxjs operators.
+   *
+   * @throws If the initial value is not provided and the signal is not sync.
+   * Use startWith() to provide an initial value.
+   *
+   * @param op1 { OperatorFunction<T, A> }
+   * @returns Observable<A>
+   */
+  computedFrom<A = T>(op1: OperatorFunction<T, A>): Signal<A>;
+  /** @internal */
+  computedFrom<A = T, B = A>(
+    op1: OperatorFunction<T, A>,
+    op2: OperatorFunction<A, B>
+  ): Signal<B>;
+  /** @internal */
+  computedFrom<A = T, B = A, C = B>(
+    op1: OperatorFunction<T, A>,
+    op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>
+  ): Signal<C>;
+  /** @internal */
+  computedFrom<A = T, B = A, C = B, D = C>(
+    op1: OperatorFunction<T, A>,
+    op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>,
+    op4: OperatorFunction<C, D>
+  ): Signal<D>;
+  /** @internal */
+  computedFrom<A = T, B = A, C = B, D = C, E = D>(
+    op1: OperatorFunction<T, A>,
+    op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>,
+    op4: OperatorFunction<C, D>,
+    op5: OperatorFunction<D, E>
+  ): Signal<E>;
+  /** @internal */
+  computedFrom<R>(...ops: OperatorFunction<T, unknown>[]): Signal<R> {
+    return toSignal<R>(this.select(...(ops as Parameters<typeof select>)), {
+      injector: this.injector,
+      requireSync: true,
+    });
+  }
+
+  /**
+   * @description
    * Manages side-effects of your state. Provide an `Observable<any>` **side-effect** and an optional
    * `sideEffectFunction`.
    * Subscription handling is done automatically.
@@ -634,6 +764,10 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     const subscription = new Subscription();
     subscription.add(this.accumulator.subscribe());
     subscription.add(this.effectObservable.subscribe());
+    this.signalStoreProxy = createSignalStateProxy<T>(
+      this.$,
+      this.get.bind(this)
+    );
     return subscription;
   }
 }

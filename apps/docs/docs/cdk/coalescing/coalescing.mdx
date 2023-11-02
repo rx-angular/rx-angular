@@ -59,10 +59,10 @@ In RxAngular coalescing is used for merging multiple emissions, streams or calls
 
 The next example shows the effect of coalescing visualized in flame charts.
 
-![coalesceWith - micro taks duration selector](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task.png)
+![coalesceWith - micro tasks duration selector](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task.png)
 _no coalescing vs. coalescing on microtask. visualized in flame charts_
 
-The non-coalesced component has three consequetive heavy computations in the template whilest the coalesced component only has to do the same computation once in order to complete the same job.
+The non-coalesced component has three consecutive heavy computations in the template while the coalesced component only has to do the same computation once in order to complete the same job.
 Even on a small components scale the difference in performance can be significant.
 
 ## Available approaches
@@ -137,7 +137,7 @@ As these situations typically occur across multiple components or are hard to sc
 </div>
 ```
 
-**Event Bubbling of smae event on multiple elements**
+**Event Bubbling of same event on multiple elements**
 
 ```html
 <div (click)="doStuff()">
@@ -205,7 +205,7 @@ from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 By default, the duration in which values get united is derived from a micro task which executes immediately after the synchronous code got executed.
 
 See the diagram for details:
-![coalesceWith - macro taks duration selector](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
+![coalesceWith - macro task duration selector](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing_duration-selector-micro-task-flames.png)
 
 To have more fine-grained control over the duration of coalescing an optional parameter `durationSelector` is provided.
 `durationSelector` is of type `Observable<unknown>` and the first emission of it terminates the coalescing duration.
@@ -249,7 +249,7 @@ from([1, 2, 3]).pipe(coalesceWith()).subscribe(doStuff); // 1 x doStuff logs 3
 ```
 
 It makes sense because we want to render only the last update to the component. To do this, `coalesceWith` maintains a flag for each subscription.
-The wanted bevavior should execute change detection only once per component.
+The wanted behavior should execute change detection only once per component.
 
 This can be achieved by scoping the flag that maintains coalescing to a specific thing. e.g. the component.
 
@@ -269,7 +269,7 @@ The following diagram illustrates change detection in component level:
 ![coalesceWith - multiple components with component scope](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-component-scope.png)
 
 > **⚠ Notice:**
-> Be cautious with globally shared coalescing scopes. It could lead to unwanted behaviour and loss of updates when used incorrectly.
+> Be cautious with globally shared coalescing scopes. It could lead to unwanted behavior and loss of updates when used incorrectly.
 
 ![coalesceWith - multiple components with global scope](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/coalescing/docs/images/rx-angular-cdk-coalescing__coalesceWith-on-component-global-scope.png)
 
@@ -301,7 +301,7 @@ The example below shows multiple components rendering the same or parts of the s
 
 **The different usages are as follows:**
 
-- As operator in the compomponent class
+- As operator in the component class
 - As pipe in the component's template
 - As structural directive in the component's template
 

@@ -2,6 +2,36 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [16.1.1](https://github.com/rx-angular/rx-angular/compare/template@16.1.0...template@16.1.1) (2023-10-20)
+
+
+### Bug Fixes
+
+* **template:** fix view calculation in dynamic-size strategy ([f272801](https://github.com/rx-angular/rx-angular/commit/f272801e261dc929c51f7057a891ae1d592490b7))
+* **template:** properly unsubscribe from scroll event ([3e08100](https://github.com/rx-angular/rx-angular/commit/3e081001b60a0a95c9e4c1ae9eabbf90d9543e7d))
+
+
+
+# [16.1.0](https://github.com/rx-angular/rx-angular/compare/template@16.0.2...template@16.1.0) (2023-08-21)
+
+
+### Features
+
+* **template:** decouple scroll-element from viewport ([9eddb36](https://github.com/rx-angular/rx-angular/commit/9eddb365a6d77a8c7a15a295c640fe151353ba4e))
+
+
+
+## [16.0.2](https://github.com/rx-angular/rx-angular/compare/template@16.0.1...template@16.0.2) (2023-07-17)
+
+
+### Bug Fixes
+
+* **template:** autosize virtual scroll handles updates with trackBy ([5d1034e](https://github.com/rx-angular/rx-angular/commit/5d1034e3a6526f684308bd29fb48dbc21f6daade))
+* **template:** virtual-scroll scrollStrategy dependency error in es2022 ([#1586](https://github.com/rx-angular/rx-angular/issues/1586)) ([45ead14](https://github.com/rx-angular/rx-angular/commit/45ead1435e1a1d881937a2d913252a9f38ed06dc))
+* **template:** virtual-scrolling rxjs 6 compat. autosize update handling ([57588ea](https://github.com/rx-angular/rx-angular/commit/57588ea236baed54086e1a3b9db340722bf7bde6))
+
+
+
 ## [16.0.1](https://github.com/rx-angular/rx-angular/compare/template@16.0.0...template@16.0.1) (2023-06-22)
 
 

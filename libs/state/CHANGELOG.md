@@ -2,6 +2,63 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [16.3.0](https://github.com/rx-angular/rx-angular/compare/state@16.2.0...state@16.3.0) (2023-11-01)
+
+
+### Features
+
+* expose select and get in rxState setup fn ([d04e465](https://github.com/rx-angular/rx-angular/commit/d04e4657a7e0b060895b5298cdc7a7a138474e98))
+
+
+
+# [16.2.0](https://github.com/rx-angular/rx-angular/compare/state@16.1.1...state@16.2.0) (2023-11-01)
+
+
+### Bug Fixes
+
+* build errors ([e8ff6d9](https://github.com/rx-angular/rx-angular/commit/e8ff6d913a6a1a01e9bd4f9356c2649b148664b9))
+* remove eslint comment ([c166c59](https://github.com/rx-angular/rx-angular/commit/c166c59d43fcdc0d33f2790103fc9becc2d336a9))
+
+
+### Features
+
+* added computedFrom impl ([7e80dc9](https://github.com/rx-angular/rx-angular/commit/7e80dc980bd7e9ed192ef7c1f3472f55d261a362))
+* added computedFrom impl ([8e2f578](https://github.com/rx-angular/rx-angular/commit/8e2f5784cfb6b50cd440d37fc1fe30151876541d))
+* **state:** introduce signal APIs for RxState ([d42888d](https://github.com/rx-angular/rx-angular/commit/d42888d2ffeac0808af7538f240698ac5f3bf672))
+* **state:** introduce signal APIs for RxState ([ac4b5dc](https://github.com/rx-angular/rx-angular/commit/ac4b5dc21a8e4a21fd63af63abb455ca7be9daf6))
+
+
+
+## [16.1.1](https://github.com/rx-angular/rx-angular/compare/state@16.1.0...state@16.1.1) (2023-10-20)
+
+
+### Reverts
+
+* make state.get return readonly ([aa3425e](https://github.com/rx-angular/rx-angular/commit/aa3425e42410134f0f6eba13bb289fb79058840c))
+
+
+
+# [16.1.0](https://github.com/rx-angular/rx-angular/compare/state@16.0.0...state@16.1.0) (2023-10-18)
+
+
+### Bug Fixes
+
+* **state:** fix build ([453127c](https://github.com/rx-angular/rx-angular/commit/453127ca395a9ff0c904ed4979c217588aad0e70))
+* **state:** fix rxEffects typing ([bf06d72](https://github.com/rx-angular/rx-angular/commit/bf06d72ec0f562cc12c145d91849e6f7c9480df1))
+* **state:** properly handle undefined ([13502e1](https://github.com/rx-angular/rx-angular/commit/13502e119919398805f8d91284f1099b5431c78a))
+
+
+### Features
+
+* **state:** expose new rxActions functional API ([9b84858](https://github.com/rx-angular/rx-angular/commit/9b84858f4e30ef4e24bc65f786eaeea7f5e62b70))
+* **state:** introduce rxEffects creation function ([226047b](https://github.com/rx-angular/rx-angular/commit/226047bd939645892976f74b5b31987765ef2244))
+* **state:** make sideEffectFn optional in ActionEffects ([22e4576](https://github.com/rx-angular/rx-angular/commit/22e45764ea310802b4c5117844eef72baffd605e))
+* **state:** make state readonly ([3067600](https://github.com/rx-angular/rx-angular/commit/3067600cb7023a2da6e6c6af284a263e9bdf42b3)), closes [#1617](https://github.com/rx-angular/rx-angular/issues/1617) [#1449](https://github.com/rx-angular/rx-angular/issues/1449)
+* **state:** only expose limited set of public API ([e264124](https://github.com/rx-angular/rx-angular/commit/e26412415ad1013791c48e1d59691575b925eb1b))
+* **template:** add `rxState` function ([26a4e0e](https://github.com/rx-angular/rx-angular/commit/26a4e0edb65f4ae658cbc2d700976d3aaacc6a87))
+
+
+
 # [16.0.0](https://github.com/rx-angular/rx-angular/compare/state@15.0.0...state@16.0.0) (2023-06-20)
 
 

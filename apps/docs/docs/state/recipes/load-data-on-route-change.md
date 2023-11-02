@@ -20,8 +20,8 @@ On every URL change fetch users from the back end and deal with loading flags
 })
 export class MyComponent {
    readonly subscription: Subscription;
-   readonly user$ = new BehaviourSubject(null);
-   readonly isLoading$ = new BehaviourSubject(false);
+   readonly user$ = new BehaviorSubject(null);
+   readonly isLoading$ = new BehaviorSubject(false);
 
    constructor(private router: Router,
                private userService: UserService) {

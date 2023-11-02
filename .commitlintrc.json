@@ -13,14 +13,15 @@
         "demos",
         "schematics",
         "ci",
-        "eslint"
+        "eslint",
+        "isr"
       ]
     ],
     "type-empty": [2, "never"],
     "type-enum": [
       2,
       "always",
-      ["fix", "feat", "perf", "docs", "refactor", "test", "chore"]
+      ["fix", "feat", "perf", "docs", "refactor", "test", "chore", "revert"]
     ]
   }
 }

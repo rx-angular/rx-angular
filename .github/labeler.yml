@@ -1,6 +1,7 @@
-⚙️ Chore:
+⚙️ Chore:
   - '.github/*'
   - '.tools/*'
+  - './*'
 
 🃏 Demos:
   - ./apps/demos/*
@@ -17,6 +18,14 @@
 '</> Template':
   - libs/template/*
   - libs/template/**/*
+
+'🚀 ISR':
+  - libs/isr/*
+  - libs/isr/**/*
+
+'📐 ESLint plugin':
+  - libs/eslint-plugin/*
+  - libs/eslint-plugin/**/*
 
 📖 Docs API:
   - libs/**/docs/**/*

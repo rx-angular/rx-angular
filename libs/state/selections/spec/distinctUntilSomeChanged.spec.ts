@@ -1,5 +1,5 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { jestMatcher } from '@test-helpers';
+import { jestMatcher } from '@test-helpers/rx-angular';
 import { mergeMap } from 'rxjs/operators';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { KeyCompareMap } from '@rx-angular/state/selections';

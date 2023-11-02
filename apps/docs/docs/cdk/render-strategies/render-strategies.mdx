@@ -53,7 +53,7 @@ yarn add @rx-angular/cdk
 
 ## Motivation
 
-Angulars change detection is pull-based and implicit.
+Angular's change detection is pull-based and implicit.
 This affects not only the performance but also forces us into specific ways of architecting and thinking.
 
 Render strategies serve as the core of the new change detection system.
@@ -74,12 +74,12 @@ This architecture enables modern features like:
 - [x] Render Callback
 - [x] Performance best practices as default
 
-`@rx-angular/cdk` comes preconfigured with two sets of strategies.
+`@rx-angular/cdk` comes pre-configured with two sets of strategies.
 
 **BasicStrategies**
 
 [BasicStrategies](strategies/basic-strategies.md) wrap modern ivy APIs like `ɵmarkDirty` and `ɵdetectChanges` as well as a strategy to "noop" change detection.
-As a fallback for the migration process or comparison testing, Angulars default change detection behaviour is also provided as a strategy.
+As a fallback for the migration process or comparison testing, Angular's default change detection behavior is also provided as a strategy.
 
 This set aims to get the first option for zone-less rendering (`ɵmarkDirty`), more control on the top-down process, and improve performance drastically by only rendering components that received updates.
 
@@ -149,14 +149,14 @@ yarn add @rx-angular/cdk
 
 ## Configuration
 
-By default, RxAngular render strategies are preconfigured in a way they are still way more performant than native Angular but focusing on being as non-breaking as possible.
+By default, RxAngular render strategies are pre-configured in a way they are still way more performant than native Angular but focusing on being as non-breaking as possible.
 In the majority of cases, you can just drop in the new features, and everything works as before.
 
 You can then partially enable more performance features of RxAngular.
 
-Configurations are done with Angular best practies and based on `InjectionToken`'s.
+Configurations are done with Angular best practices and based on `InjectionToken`'s.
 
-> As all configurtion are controlled by `RxStrategyProvider`, an Angular service, we can apply
+> As all configuration are controlled by `RxStrategyProvider`, an Angular service, we can apply
 > all knowledge of Angular DI on global and local level including all life cycles.
 
 We can configure on the following levels:
@@ -335,7 +335,7 @@ Again, `RxStrategyProvider` needs to get imported, and the scheduling APIs needs
 
 ```typescript
 @Injectable({
-  profidedIn: 'root',
+  providedIn: 'root',
 })
 export class AnyService {
   constructor(
