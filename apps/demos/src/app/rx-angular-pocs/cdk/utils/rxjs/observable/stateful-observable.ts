@@ -55,10 +55,10 @@ export function createAccumulationObservable<T extends object>(
         (state, [slice, stateAccumulator]) => stateAccumulator(state, slice),
         {} as T
       ),
-      tap(
-        (newState) => (compositionObservable.state = newState),
-        (error) => console.error(error)
-      ),
+      tap({
+        next: (newState) => (compositionObservable.state = newState),
+        error: (error) => console.error(error),
+      }),
       catchError((e) => EMPTY)
     ),
     {
