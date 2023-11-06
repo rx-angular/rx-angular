@@ -497,7 +497,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    *
    * @example
    * const profilePicture$ = state.select(
-   *  pluck('profilePicture'),
+   *  map((state) => state.profilePicture),
    *  switchMap(profilePicture => mapImageAsync(profilePicture))
    * );
    * @param op { OperatorFunction<T, A> }
