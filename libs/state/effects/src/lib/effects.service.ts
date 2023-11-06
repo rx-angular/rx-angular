@@ -74,7 +74,7 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
   private static nextId = 0;
   readonly _hooks$ = new Subject<DestroyProp>();
   private readonly observables$ = new Subject<Observable<unknown>>();
-  // we have to use publish here to make it hot (composition happens without subscriber)
+  // we have to use share here to make it hot (composition happens without subscriber)
   private readonly effects$ = this.observables$.pipe(mergeAll(), share());
   private readonly subscription = this.effects$.subscribe();
   onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));

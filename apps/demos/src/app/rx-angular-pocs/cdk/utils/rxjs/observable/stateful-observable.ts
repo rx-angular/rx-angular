@@ -1,10 +1,12 @@
 import {
   BehaviorSubject,
-  ConnectableObservable,
+  connectable,
+  Connectable,
   EMPTY,
   merge,
   Observable,
   queueScheduler,
+  ReplaySubject,
   Subject,
   Subscribable,
   Subscription,
@@ -14,8 +16,6 @@ import {
   distinctUntilChanged,
   mergeAll,
   observeOn,
-  publish,
-  publishReplay,
   scan,
   tap,
   withLatestFrom,
@@ -41,28 +41,35 @@ export function createAccumulationObservable<T extends object>(
   stateSlices = new Subject<Partial<T>>(),
   accumulatorObservable = new BehaviorSubject(defaultAccumulator)
 ): Accumulator<T> {
-  const signal$ = merge(
-    stateObservables.pipe(
-      distinctUntilChanged(),
-      mergeAll(),
-      observeOn(queueScheduler)
+  const signal$ = connectable(
+    merge(
+      stateObservables.pipe(
+        distinctUntilChanged(),
+        mergeAll(),
+        observeOn(queueScheduler)
+      ),
+      stateSlices.pipe(observeOn(queueScheduler))
+    ).pipe(
+      withLatestFrom(accumulatorObservable.pipe(observeOn(queueScheduler))),
+      scan(
+        (state, [slice, stateAccumulator]) => stateAccumulator(state, slice),
+        {} as T
+      ),
+      tap(
+        (newState) => (compositionObservable.state = newState),
+        (error) => console.error(error)
+      ),
+      catchError((e) => EMPTY)
     ),
-    stateSlices.pipe(observeOn(queueScheduler))
-  ).pipe(
-    withLatestFrom(accumulatorObservable.pipe(observeOn(queueScheduler))),
-    scan(
-      (state, [slice, stateAccumulator]) => stateAccumulator(state, slice),
-      {} as T
-    ),
-    tap(
-      (newState) => (compositionObservable.state = newState),
-      (error) => console.error(error)
-    ),
-    // @Notice We catch the error here as it get lost in between `publish` and `publishReplay`. We return empty to
-    catchError((e) => EMPTY),
-    publish()
+    {
+      connector: () => new Subject<T>(),
+      resetOnDisconnect: false,
+    }
   );
-  const state$: Observable<T> = signal$.pipe(publishReplay(1));
+  const state$: Observable<T> = connectable(signal$, {
+    connector: () => new ReplaySubject<T>(1),
+    resetOnDisconnect: false,
+  });
   const compositionObservable: Accumulator<T> = {
     state: {} as T,
     signal$,
@@ -92,10 +99,8 @@ export function createAccumulationObservable<T extends object>(
   }
 
   function subscribe(): Subscription {
-    const sub = (compositionObservable.signal$ as ConnectableObservable<T>).connect();
-    sub.add(
-      (compositionObservable.state$ as ConnectableObservable<T>).connect()
-    );
+    const sub = (compositionObservable.signal$ as Connectable<T>).connect();
+    sub.add((compositionObservable.state$ as Connectable<T>).connect());
     sub.add(() => {
       accumulatorObservable.complete();
       stateObservables.complete();

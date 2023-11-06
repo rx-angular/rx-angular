@@ -42,18 +42,6 @@ export class RxStateParentSubscriptionLessComponent implements OnDestroy {
     });
   }
 
-  /*
-    (this.state$ as any).connect();
-    this.stateSources$.next(this.source1$.pipe(tap(console.log)));
-
-   state$ = this.stateSources$.pipe(
-    map(o => isObservable(o) ? o : of(o)),
-    mergeAll(),
-    scan((state: ComponentState, slices: Partial<ComponentState>) => ({...state, ...slices}), {}),
-    publishReplay(1)
-  );
-  */
-
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
