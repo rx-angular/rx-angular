@@ -6,14 +6,14 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  /* Colors, generated using https://maketintsandshades.com/ */
-  --ifm-color-primary: #dc0030; /* Base color */
-  --ifm-color-primary-dark: #b00026; /* 20% black */
-  --ifm-color-primary-darker: #84001d; /* 40% black */
-  --ifm-color-primary-darkest: #580013; /* 60% black */
-  --ifm-color-primary-light: #e33359; /* 20% white */
-  --ifm-color-primary-lighter: #ea6683; /* 40% white */
-  --ifm-color-primary-lightest: #f199ac; /* 60% white */
+  /* Colors, updated based on the new palette */
+  --ifm-color-primary: #f02abc; /* Base color */
+  --ifm-color-primary-dark: #c02196; /* 20% black */
+  --ifm-color-primary-darker: #901970; /* 40% black */
+  --ifm-color-primary-darkest: #60104b; /* 60% black */
+  --ifm-color-primary-light: #f354c9; /* 20% white */
+  --ifm-color-primary-lighter: #f67fd6; /* 40% white */
+  --ifm-color-primary-lightest: #f9a9e4; /* 60% white */
   --ifm-footer-logo-max-width: 106px;
   /* Code */
   --ifm-code-font-size: 95%;
@@ -22,15 +22,15 @@
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  /* Colors, generated using https://maketintsandshades.com/ */
-  --ifm-color-primary: #e33359; /* Base color */
-  --ifm-color-primary-dark: #cc2e50; /* 10% black */
-  --ifm-color-primary-darker: #b62947; /* 20% black */
-  --ifm-color-primary-darkest: #9f243e; /* 30% black */
+  /* Colors, updated based on the new palette */
+  --ifm-color-primary: #f354c9; /* Base color for dark mode */
+  --ifm-color-primary-dark: #f02abc; /* Same as light mode base color */
+  --ifm-color-primary-darker: #c02196; /* 20% black */
+  --ifm-color-primary-darkest: #901970; /* 40% black */
   /* Primary color used as base color for light colors */
-  --ifm-color-primary-light: #e6476a; /* 10% white */
-  --ifm-color-primary-lighter: #e95c7a; /* 20% white */
-  --ifm-color-primary-lightest: #eb708b; /* 30% white */
+  --ifm-color-primary-light: #f67fd6; /* 20% white */
+  --ifm-color-primary-lighter: #f9a9e4; /* 40% white */
+  --ifm-color-primary-lightest: #fabae9; /* 60% white */
 
   /* Code */
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
