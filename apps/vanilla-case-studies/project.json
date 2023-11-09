@@ -62,25 +62,24 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "browserTarget": "vanilla-case-studies:build"
+        "buildTarget": "vanilla-case-studies:build"
       },
       "configurations": {
         "production": {
-          "browserTarget": "vanilla-case-studies:build:production"
+          "buildTarget": "vanilla-case-studies:build:production"
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "vanilla-case-studies:build"
+        "buildTarget": "vanilla-case-studies:build"
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/vanilla-case-studies/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "apps/vanilla-case-studies/jest.config.ts"
       },
       "outputs": ["{workspaceRoot}/coverage/apps/vanilla-case-studies"]
     }

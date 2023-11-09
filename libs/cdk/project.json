@@ -32,7 +32,6 @@
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/cdk/jest.config.ts",
-        "passWithNoTests": true,
         "codeCoverage": true
       },
       "outputs": ["{workspaceRoot}/coverage/cdk"]

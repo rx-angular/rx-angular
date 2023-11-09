@@ -15,8 +15,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/eslint-plugin"],
       "options": {
-        "jestConfig": "libs/eslint-plugin/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/eslint-plugin/jest.config.ts"
       }
     },
     "build": {

@@ -26,7 +26,6 @@
       "outputs": ["{workspaceRoot}/coverage/isr"],
       "options": {
         "jestConfig": "libs/isr/jest.config.ts",
-        "passWithNoTests": true,
         "codeCoverage": true
       }
     },
