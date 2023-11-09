@@ -155,6 +155,6 @@ describe('Template Migration 1.0.0-beta.30', () => {
 
     tree.create(filePath, fileInput);
 
-    return runner.runSchematicAsync(`update-1.0.0-beta.30`, {}, tree).toPromise();
+    return runner.runSchematic(`update-1.0.0-beta.30`, {}, tree);
   }
 });

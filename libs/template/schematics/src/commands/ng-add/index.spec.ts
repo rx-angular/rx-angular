@@ -5,8 +5,6 @@ import {
 import { join } from 'path';
 import { readJsonInTree } from '../../utils/read-json-in-tree';
 
-
-
 const collectionPath = join(__dirname, '../../../collection.json');
 
 const workspaceOptions = {
@@ -28,28 +26,26 @@ describe('ng-add schematic', () => {
       '@rx-angular/schematics',
       collectionPath
     );
-    appTree = await schematicRunner
-      .runExternalSchematicAsync(
-        '@schematics/angular',
-        'workspace',
-        workspaceOptions
-      )
-      .toPromise();
+    appTree = await schematicRunner.runExternalSchematic(
+      '@schematics/angular',
+      'workspace',
+      workspaceOptions
+    );
 
-    appTree = await schematicRunner
-      .runExternalSchematicAsync(
-        '@schematics/angular',
-        'application',
-        defaultAppOptions,
-        appTree
-      )
-      .toPromise();
+    appTree = await schematicRunner.runExternalSchematic(
+      '@schematics/angular',
+      'application',
+      defaultAppOptions,
+      appTree
+    );
   });
 
   it('should add proper package to dependencies', async () => {
-    const tree = await schematicRunner
-      .runSchematicAsync('ng-add', undefined, appTree)
-      .toPromise();
+    const tree = await schematicRunner.runSchematic(
+      'ng-add',
+      undefined,
+      appTree
+    );
 
     const packageJson = readJsonInTree(tree, 'package.json');
 

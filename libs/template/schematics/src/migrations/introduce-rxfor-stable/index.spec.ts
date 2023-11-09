@@ -48,8 +48,6 @@ describe('Template Migration introduce-rxfor-stable', () => {
 
     tree.create(filePath, fileInput);
 
-    return runner
-      .runSchematicAsync(`introduce-rxfor-stable`, {}, tree)
-      .toPromise();
+    return runner.runSchematic(`introduce-rxfor-stable`, {}, tree);
   }
 });
