@@ -21,7 +21,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   name: path.parse(__filename).name,
   meta: {
     docs: {
-      recommended: 'error',
+      recommended: 'recommended',
       description:
         'Warns against using RxState subscription methods outside constructor.',
     },

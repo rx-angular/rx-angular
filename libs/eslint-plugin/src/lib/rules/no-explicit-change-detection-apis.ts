@@ -34,7 +34,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   name: 'no-explicit-change-detection-apis',
   meta: {
     docs: {
-      recommended: 'error',
+      recommended: 'recommended',
       description: 'Disallow explicit calls of change detection APIs.',
     },
     type: 'problem',

@@ -3,7 +3,7 @@ import * as path from 'path';
 import rule, { MessageIds } from './prefer-no-lodash-clone-deep';
 
 const ruleTester = new TSESLint.RuleTester({
-  parser: path.resolve('./node_modules/@typescript-eslint/parser'),
+  parser: require.resolve('@typescript-eslint/parser'),
 });
 
 const valid: TSESLint.RunTests<MessageIds, never[]>['valid'] = [
