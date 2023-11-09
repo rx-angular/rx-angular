@@ -219,6 +219,7 @@ describe('RxPush used as pipe in the template', () => {
         wrapWithSpace('undefined')
       );
       await unpatchedPromise.resolve();
+      await fixturePushPipeTestComponent.whenStable();
       expect(cdSpy).toBeCalledTimes(1);
       expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
     });
