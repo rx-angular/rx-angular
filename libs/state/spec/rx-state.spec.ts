@@ -163,7 +163,7 @@ describe(rxState, () => {
       expect(count()).toBe(2);
     });
 
-    it('should connect a signal to a key', () => {
+    it('should connect a signal to a key', async () => {
       const counterInput = signal(1337);
       const { component, fixture } = setupComponent<{ count: number }>(
         ({ connect }) => {
@@ -173,6 +173,8 @@ describe(rxState, () => {
       );
       const state = component.state;
 
+      fixture.detectChanges();
+      // TODO @edbzn: Remove detecting changes twice when we have a better solution
       fixture.detectChanges();
 
       expect(state.get('count')).toBe(1337);
@@ -199,6 +201,8 @@ describe(rxState, () => {
       const state = component.state;
 
       fixture.detectChanges();
+      // TODO @edbzn: Remove detecting changes twice when we have a better solution
+      fixture.detectChanges();
 
       expect(state.get('count')).toBe(4);
       expect(fixture.nativeElement.textContent.trim()).toBe('4');
@@ -221,6 +225,8 @@ describe(rxState, () => {
       );
       const state = component.state;
 
+      fixture.detectChanges();
+      // TODO @edbzn: Remove detecting changes twice when we have a better solution
       fixture.detectChanges();
 
       expect(state.get('count')).toBe(1337);
@@ -325,6 +331,7 @@ function setupComponent<State extends { count: number }>(
   });
 
   const fixture = TestBed.createComponent(TestComponent);
+  // fixture.detectChanges()
 
   return {
     fixture,
