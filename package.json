@@ -92,7 +92,7 @@
     "@typescript-eslint/parser": "6.10.0",
     "benchmark": "^2.1.4",
     "cpx": "^1.5.0",
-    "cypress": "^13.0.0",
+    "cypress": "^13.5.0",
     "eslint": "8.46.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-cypress": "2.15.1",
