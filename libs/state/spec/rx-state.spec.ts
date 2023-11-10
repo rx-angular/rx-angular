@@ -163,7 +163,7 @@ describe(rxState, () => {
       expect(count()).toBe(2);
     });
 
-    it('should connect a signal to a key', async () => {
+    it('should connect a signal to a key', () => {
       const counterInput = signal(1337);
       const { component, fixture } = setupComponent<{ count: number }>(
         ({ connect }) => {
@@ -331,7 +331,6 @@ function setupComponent<State extends { count: number }>(
   });
 
   const fixture = TestBed.createComponent(TestComponent);
-  // fixture.detectChanges()
 
   return {
     fixture,
