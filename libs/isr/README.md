@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="460" height="300" src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/apps/docs/static/img/isr-logo.svg" />
+  <img width="460" height="300" src="https://raw.githubusercontent.com/rx-angular/rx-angular/main/apps/docs/static/img/isr-logo.png" />
 </p>
 
 # @rx-angular/isr
