@@ -43,11 +43,11 @@
   padding: 0 var(--ifm-pre-padding);
 }
 
-img[src$='img/logo.png'] {
+img[src$='img/logo.svg'] {
   filter: drop-shadow(5px 5px 3px rgba(0, 0, 0, 0.25));
 }
 
-.navbar__logo img[src$='img/logo.png'] {
+.navbar__logo img[src$='img/logo.svg'] {
   filter: none;
 }
 
