@@ -8,7 +8,7 @@ authors:
   - Karnaukhov-kh
   - LayZeeDK
 tags: [cdk, release, template]
-image: /img/logo.png
+image: /img/logo.svg
 hide_table_of_contents: false
 ---
 

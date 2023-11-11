@@ -14,7 +14,7 @@ const googleTrackingId = 'UA-180240379-1';
 /** @type {import('@docusaurus/types').Config} */
 module.exports = {
   baseUrl: '/',
-  favicon: 'img/logo.png',
+  favicon: 'img/logo.svg',
   /**
    * Even if you don't use internalization, you can use this field to set useful
    * metadata like html lang. For example, if your site is Chinese, you may want
@@ -76,7 +76,7 @@ module.exports = {
         title: 'RxAngular',
         logo: {
           alt: 'RxAngular',
-          src: 'img/logo.png',
+          src: 'img/logo.svg',
         },
         items: [
           {
@@ -127,7 +127,7 @@ module.exports = {
         logo: {
           alt: title,
           href: url,
-          src: 'img/logo.png',
+          src: 'img/logo.svg',
         },
         links: [
           {
@@ -183,7 +183,7 @@ module.exports = {
           },
         ],
       },
-      image: 'img/logo.png',
+      image: 'img/logo.svg',
       colorMode: {
         respectPrefersColorScheme: true,
       },
