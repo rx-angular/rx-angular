@@ -220,7 +220,7 @@ _Example_
 
 ```typescript
 const profilePicture$ = state.select(
-  pluck('profilePicture'),
+  map((state) => state.profilePicture),
   switchMap((profilePicture) => mapImageAsync(profilePicture))
 );
 ```

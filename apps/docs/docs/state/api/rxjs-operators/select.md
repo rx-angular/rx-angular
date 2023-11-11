@@ -35,7 +35,7 @@ _Example_
 ```typescript
 const profilePicture$ = state.pipe(
   select(
-    pluck('profilePicture'),
+    map((state) => state.profilePicture),
     switchMap((profilePicture) => mapImageAsync(profilePicture))
   )
 );
