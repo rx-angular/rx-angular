@@ -1,14 +1,11 @@
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { of, throwError } from 'rxjs';
-import { map, pluck } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   select,
   createAccumulationObservable,
 } from '@rx-angular/state/selections';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   initialPrimitiveState,
   PrimitiveState,
@@ -55,7 +52,7 @@ describe('createAccumulationObservable', () => {
         state.subscribe();
 
         state.nextSlice({ num: 42 });
-        expectObservable(state.signal$.pipe(pluck('num'))).toBe('');
+        expectObservable(state.signal$.pipe(map((s) => s.num))).toBe('');
       });
     });
 
@@ -146,7 +143,9 @@ describe('createAccumulationObservable', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = setupAccumulationObservable<PrimitiveState>({});
         acc.nextSlice({ num: 42 });
-        expectObservable(acc.state$.pipe(pluck('num'))).toBe('s', { s: 42 });
+        expectObservable(acc.state$.pipe(map((s) => s.num))).toBe('s', {
+          s: 42,
+        });
       });
     });
 
@@ -155,11 +154,11 @@ describe('createAccumulationObservable', () => {
         initialState: initialPrimitiveState,
       });
       acc.state$
-        .pipe(pluck('num'))
+        .pipe(map((s) => s.num))
         .subscribe((res) => expect(res).toBe({ s: 42 }));
       acc.nextSlice({ num: 43 });
       acc.state$
-        .pipe(pluck('num'))
+        .pipe(map((s) => s.num))
         .subscribe((res) => expect(res).toBe({ s: 43 }));
     });
   });
@@ -169,7 +168,9 @@ describe('createAccumulationObservable', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = setupAccumulationObservable<PrimitiveState>({});
         acc.nextSliceObservable(of({ num: 42 }));
-        expectObservable(acc.state$.pipe(pluck('num'))).toBe('s', { s: 42 });
+        expectObservable(acc.state$.pipe(map((s) => s.num))).toBe('s', {
+          s: 42,
+        });
       });
     });
 
@@ -178,11 +179,11 @@ describe('createAccumulationObservable', () => {
         initialState: initialPrimitiveState,
       });
       acc.state$
-        .pipe(pluck('num'))
+        .pipe(map((s) => s.num))
         .subscribe((res) => expect(res).toBe({ s: 42 }));
       acc.nextSliceObservable(of({ num: 43 }));
       acc.state$
-        .pipe(pluck('num'))
+        .pipe(map((s) => s.num))
         .subscribe((res) => expect(res).toBe({ s: 42 }));
     });
   });
@@ -200,7 +201,7 @@ describe('createAccumulationObservable', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({});
       testScheduler.run(({ expectObservable }) => {
         acc.nextSlice({ num: 42 });
-        expectObservable(acc.state$.pipe(pluck('num'))).toBe('(a)', {
+        expectObservable(acc.state$.pipe(map((s) => s.num))).toBe('(a)', {
           a: 44,
         });
 

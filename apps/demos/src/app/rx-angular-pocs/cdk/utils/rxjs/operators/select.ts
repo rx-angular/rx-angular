@@ -1,6 +1,10 @@
-import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
-import { pluck } from 'rxjs/operators';
-import { isOperateFnArrayGuard, isStringArrayGuard} from '../../guards';
+import {
+  MonoTypeOperatorFunction,
+  Observable,
+  OperatorFunction,
+  map,
+} from 'rxjs';
+import { isOperateFnArrayGuard, isStringArrayGuard } from '../../guards';
 import { pipeFromArray } from '../../pipe-from-array';
 import { stateful } from './stateful';
 
@@ -26,7 +30,7 @@ export function select<T>(): MonoTypeOperatorFunction<T>;
  * @example
  * const profilePicture$ = state.pipe(
  *   select(
- *    pluck('profilePicture'),
+ *    map((state) => state.profilePicture),
  *    switchMap(profilePicture => mapImageAsync(profilePicture))
  *   )
  * );
@@ -101,27 +105,33 @@ export function select<T, K1 extends keyof T, K2 extends keyof T[K1]>(
 /**
  * @internal
  */
-export function select<T,
+export function select<
+  T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
-  K3 extends keyof T[K1][K2]>(k1: K1, k2: K2, k3: K3): OperatorFunction<T, T[K1][K2][K3]>;
+  K3 extends keyof T[K1][K2]
+>(k1: K1, k2: K2, k3: K3): OperatorFunction<T, T[K1][K2][K3]>;
 /**
  * @internal
  */
-export function select<T,
+export function select<
+  T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
-  K4 extends keyof T[K1][K2][K3]>(k1: K1, k2: K2, k3: K3, k4: K4): OperatorFunction<T, T[K1][K2][K3][K4]>;
+  K4 extends keyof T[K1][K2][K3]
+>(k1: K1, k2: K2, k3: K3, k4: K4): OperatorFunction<T, T[K1][K2][K3][K4]>;
 /**
  * @internal
  */
-export function select<T,
+export function select<
+  T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
-  K5 extends keyof T[K1][K2][K3][K4]>(
+  K5 extends keyof T[K1][K2][K3][K4]
+>(
   k1: K1,
   k2: K2,
   k3: K3,
@@ -131,13 +141,15 @@ export function select<T,
 /**
  * @internal
  */
-export function select<T,
+export function select<
+  T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
   K5 extends keyof T[K1][K2][K3][K4],
-  K6 extends keyof T[K1][K2][K3][K4][K5]>(
+  K6 extends keyof T[K1][K2][K3][K4][K5]
+>(
   k1: K1,
   k2: K2,
   k3: K3,
@@ -156,7 +168,11 @@ export function select<T>(
     if (!opOrMapFn || opOrMapFn.length === 0) {
       return state$.pipe(stateful());
     } else if (isStringArrayGuard(opOrMapFn)) {
-      return state$.pipe(stateful(pluck(...opOrMapFn)));
+      return state$.pipe(
+        stateful(
+          map((state) => opOrMapFn.reduce((acc, key) => acc?.[key], state))
+        )
+      );
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
       return state$.pipe(stateful(pipeFromArray(opOrMapFn)));
     } else {

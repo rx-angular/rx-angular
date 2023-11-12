@@ -54,8 +54,10 @@ export class MovieListComponent {
     connect('movies', this.movieResource.fetchMovies());
   });
 
-  // select a property for the template to consume
+  // select a property for the template to consume as an observable
   movies$ = this.state.select('movies');
+  // select a property for the template to consume as a signal
+  movies = this.state.signal('movies');
 }
 ```
 

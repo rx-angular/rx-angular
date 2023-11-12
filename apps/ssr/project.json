@@ -113,7 +113,27 @@
           "serverTarget": "ssr:server:production"
         }
       }
+    },
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/ssr/cypress.config.ts",
+        "testingType": "e2e",
+        "devServerTarget": "ssr:serve-ssr"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "ssr:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/ssr/**/*.{js,ts}"]
+      }
     }
   },
-  "tags": []
+  "tags": ["type:app"]
 }

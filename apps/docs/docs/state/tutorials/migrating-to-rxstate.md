@@ -126,7 +126,7 @@ export class State<T = any> {
 
 - Data initialization happens inside the `constructor`. We are passing `initialData` of type `T`, and it is set to our `dataSource$`.
 - `get snapshot()` returns the current value from the `dataSource$`.
-- `select <K extends keyof T>(path: K): Observable<T[K]>` accepts key of `T` and returns value of type `T[K]` from `data$` as observable. Selection is done with `map` operator but `pluck` is also an option. We are skipping any additional filtering/sharing logic in this example.
+- `select <K extends keyof T>(path: K): Observable<T[K]>` accepts key of `T` and returns value of type `T[K]` from `data$` as observable.
 - `patch(data: Partial<T>)` accepts data of `Partial<T>` and updates the current value of `dataSource$`.
 
 **Now we can organize `List` component in a more reactive way:**
