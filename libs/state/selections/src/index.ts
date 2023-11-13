@@ -16,6 +16,7 @@ export {
   isStringAndFunctionTupleGuard,
   isStringArrayFunctionAndOptionalObjectTupleGuard,
   isStringArrayGuard,
+  isPartialOfSignalsOrObservablesGuard,
 } from './lib/utils/guards';
 export { pipeFromArray } from './lib/utils/pipe-from-array';
 export { safePluck } from './lib/utils/safe-pluck';

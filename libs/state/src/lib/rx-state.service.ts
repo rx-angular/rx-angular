@@ -13,6 +13,7 @@ import {
   createAccumulationObservable,
   createSideEffectObservable,
   isKeyOf,
+  isPartialOfSignalsOrObservablesGuard,
   KeyCompareMap,
   PickSlice,
   safePluck,
@@ -29,6 +30,7 @@ import {
 } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
+import { convertPartialsToObservable } from './convert-partials-to.observable';
 
 export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
@@ -394,32 +396,53 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
     signal: Signal<V>,
     projectSliceFn: ProjectValueReducer<T, K, V>
   ): void;
+
+  connect<K extends keyof T>(
+    object: Partial<{ [K: string]: Observable<T[K]> | Signal<T[K]> }>
+  ): void;
+
   /**
    * @internal
    */
   connect<K extends keyof T, V extends Partial<T>>(
-    keyOrInputOrSlice$: K | Observable<Partial<T> | V> | Signal<Partial<T> | V>,
+    keyOrInputOrSliceOrPartials$:
+      | K
+      | Observable<Partial<T> | V>
+      | Signal<Partial<T> | V>
+      | Partial<{ [K: string]: Observable<T[K]> | Signal<T[K]> }>,
     projectOrSlices$?:
       | ProjectStateReducer<T, V>
       | Observable<T[K] | V>
       | Signal<T[K] | V>,
     projectValueFn?: ProjectValueReducer<T, K, V>
   ): void {
+    if (
+      isPartialOfSignalsOrObservablesGuard(keyOrInputOrSliceOrPartials$) &&
+      !projectOrSlices$ &&
+      !projectValueFn
+    ) {
+      console.log('isPartialOfSignalsOrObservablesGuard');
+
+      this.accumulator.nextSliceObservable(
+        convertPartialsToObservable(keyOrInputOrSliceOrPartials$, this.injector)
+      );
+      return;
+    }
     let inputOrSlice$: Observable<Partial<T> | V> | undefined;
-    if (!isKeyOf<T>(keyOrInputOrSlice$)) {
-      if (isObservable(keyOrInputOrSlice$)) {
-        inputOrSlice$ = keyOrInputOrSlice$;
+    if (!isKeyOf<T>(keyOrInputOrSliceOrPartials$)) {
+      if (isObservable(keyOrInputOrSliceOrPartials$)) {
+        inputOrSlice$ = keyOrInputOrSliceOrPartials$;
       } else {
         // why can't typescript infer the correct type?
         inputOrSlice$ = toObservable(
-          keyOrInputOrSlice$ as Signal<Partial<T> | V>,
+          keyOrInputOrSliceOrPartials$ as Signal<Partial<T> | V>,
           { injector: this.injector }
         );
       }
     }
     const key: K | null =
-      !inputOrSlice$ && isKeyOf<T>(keyOrInputOrSlice$)
-        ? keyOrInputOrSlice$
+      !inputOrSlice$ && isKeyOf<T>(keyOrInputOrSliceOrPartials$)
+        ? keyOrInputOrSliceOrPartials$
         : null;
     if (
       projectValueFn === undefined &&

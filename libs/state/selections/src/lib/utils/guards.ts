@@ -1,4 +1,5 @@
-import { OperatorFunction } from 'rxjs';
+import { Observable, OperatorFunction, isObservable } from 'rxjs';
+import { isSignal, Signal } from '@angular/core';
 
 export function isPromiseGuard<T>(value: unknown): value is Promise<T> {
   return (
@@ -68,4 +69,31 @@ export function isStringArrayFunctionAndOptionalObjectTupleGuard<R>(
     typeof op[1] === 'function' &&
     (op[2] === undefined || typeof op[2] === 'object')
   );
+}
+function isObject(arg: any): arg is object {
+  return (
+    typeof arg === 'object' &&
+    !Array.isArray(arg) &&
+    arg !== null &&
+    arg !== undefined
+  );
+}
+
+export function isPartialOfSignalsOrObservablesGuard<T, K extends keyof T>(
+  arg: unknown
+): arg is Partial<{ [K: string]: Observable<T[K]> | Signal<T[K]> }> {
+  if (!isObject(arg)) {
+    return false;
+  }
+  for (const key in arg) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (arg.hasOwnProperty(key)) {
+      // @ts-ignore
+      if (!isObservable(arg[key]) && !isSignal(arg[key])) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
