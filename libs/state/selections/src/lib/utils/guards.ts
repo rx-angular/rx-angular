@@ -70,19 +70,11 @@ export function isStringArrayFunctionAndOptionalObjectTupleGuard<R>(
     (op[2] === undefined || typeof op[2] === 'object')
   );
 }
-function isObject(arg: any): arg is object {
-  return (
-    typeof arg === 'object' &&
-    !Array.isArray(arg) &&
-    arg !== null &&
-    arg !== undefined
-  );
-}
 
 export function isPartialOfSignalsOrObservablesGuard<T, K extends keyof T>(
   arg: unknown
 ): arg is Partial<{ [K: string]: Observable<T[K]> | Signal<T[K]> }> {
-  if (!isObject(arg)) {
+  if (!isObjectGuard(arg)) {
     return false;
   }
   for (const key in arg) {
