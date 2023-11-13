@@ -1,4 +1,4 @@
-import { Injector, runInInjectionContext } from '@angular/core';
+import { Injector, runInInjectionContext, signal } from '@angular/core';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RxState } from '../src/lib/rx-state.service';
 import { select } from '@rx-angular/state/selections';
@@ -491,6 +491,29 @@ describe('RxStateService', () => {
           ),
           (sta, newVal) => newVal
         );
+      });
+    });
+
+    it('should connect partial of observables and signals', () => {
+      testScheduler.run(({ expectObservable }) => {
+        const s: { num: number; b: boolean } = { num: 5, b: false };
+        const state = setupState({ initialState: s });
+        const b = signal(true);
+
+        expectObservable(state.$.pipe(map((st) => st))).toBe('(abc)', {
+          a: undefined,
+          b: 43,
+          c: undefined,
+        });
+
+        state.connect({
+          num: scheduled(
+            [{ num: undefined }, { num: 43 }, { num: undefined }],
+            testScheduler
+          ),
+          b,
+        });
+        b.set(false);
       });
     });
 
