@@ -34,7 +34,7 @@ interface TodosState {
 export class TodoComponent extends RxState<TodosState> {
   readonly tasks$ = this.select('tasks');
   readonly counter$ = this.select(
-    pluck('tasks'),
+    map((state) => state.tasks),
     map((tasks) => tasks.length)
   );
   readonly isExpanded$ = this.select('isExpanded');
@@ -72,7 +72,7 @@ interface AllTodosState {
 export class AllTasksComponent extends RxState<AllTodosState> {
   readonly tasks$ = this.select('tasks');
   readonly counter$ = this.select(
-    pluck('tasks'),
+    map((state) => state.tasks),
     map((tasks) => tasks.length)
   );
   readonly isExpanded$ = this.select('isExpanded');
@@ -166,7 +166,7 @@ interface TodosState {
 export class TodoComponent extends RxState<TodosState> {
   readonly tasks$ = this.select('tasks');
   readonly counter$ = this.select(
-    pluck('tasks'),
+    map((state) => state.tasks),
     map((tasks) => tasks.length)
   );
   readonly isExpanded$ = this.select('isExpanded');
@@ -203,7 +203,7 @@ interface AllTodosState {
 export class AllTasksComponent extends RxState<AllTodosState> {
   readonly tasks$ = this.globalState.select('tasks');
   readonly counter$ = this.globalState.select(
-    pluck('tasks'),
+    map((state) => state.tasks),
     map((tasks) => tasks.length)
   );
   readonly isExpanded$ = this.select('isExpanded');

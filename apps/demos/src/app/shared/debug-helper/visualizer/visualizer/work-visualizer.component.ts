@@ -1,52 +1,60 @@
 import { Component, Input } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, pluck, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { Hooks } from '../../hooks';
 
 @Component({
   selector: 'rxa-work-visualizer',
   template: `
     <div class="d-flex w-100">
-      <rxa-dirty-check style="margin-right: 1rem"
-                       [radius]="radius"></rxa-dirty-check>
-      <rxa-renders *ngIf="renderingsOn" [value$]="valuesO$" [radius]="radius"></rxa-renders>
+      <rxa-dirty-check
+        style="margin-right: 1rem"
+        [radius]="radius"
+      ></rxa-dirty-check>
+      <rxa-renders
+        *ngIf="renderingsOn"
+        [value$]="valuesO$"
+        [radius]="radius"
+      ></rxa-renders>
     </div>
     <div class="d-flex flex-wrap w-100">
       <div class="work-child" *ngFor="let child of getChildren()">
-        <div [ngClass]="{filled: child % 2 === 0}" >&nbsp;</div>
+        <div [ngClass]="{ filled: child % 2 === 0 }">&nbsp;</div>
       </div>
     </div>
-    <ng-content select="[visualizerHeader]">
-    </ng-content>
-    <div class="w-100 h-100 d-flex align-items-center justify-content-center flex-grow-1">
-      <ng-content>
-      </ng-content>
+    <ng-content select="[visualizerHeader]"> </ng-content>
+    <div
+      class="w-100 h-100 d-flex align-items-center justify-content-center flex-grow-1"
+    >
+      <ng-content> </ng-content>
     </div>
   `,
   host: {
     '[style.width.px]': 'size',
-    '[class]': 'classNames'
+    '[class]': 'classNames',
   },
-  styles: [`
-    .work-child {
-      position: relative;
-      width: 4px;
-      height: 4px;
-      margin: 0 2px 2px 0;
-      padding: 0px;
-      outline: 1px solid green;
-      background-color: transparent;
-    }
+  styles: [
+    `
+      .work-child {
+        position: relative;
+        width: 4px;
+        height: 4px;
+        margin: 0 2px 2px 0;
+        padding: 0px;
+        outline: 1px solid green;
+        background-color: transparent;
+      }
 
-    .work-child div {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-    }
-    .work-child div.filled {
-      background-color: orange;
-    }
-  `]
+      .work-child div {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .work-child div.filled {
+        background-color: orange;
+      }
+    `,
+  ],
 })
 export class WorkVisualizerComponent extends Hooks {
   @Input()
@@ -61,8 +69,10 @@ export class WorkVisualizerComponent extends Hooks {
     if (type == null) {
       type = 'l-view';
     }
-    this.classNames = [...this.classNames.split(' ').filter(c => c.indexOf('dh-') === -1), 'dh-' + type]
-      .join(' ');
+    this.classNames = [
+      ...this.classNames.split(' ').filter((c) => c.indexOf('dh-') === -1),
+      'dh-' + type,
+    ].join(' ');
   }
 
   @Input()
@@ -85,18 +95,23 @@ export class WorkVisualizerComponent extends Hooks {
         this.renderingsOn = false;
       }
     }
-  };
+  }
 
   @Input() key;
 
-  valuesO$ = defer(() => this.afterViewInit$.pipe(
-    switchMap(() => this.changeO$.pipe(
-      distinctUntilChanged(),
-      switchMap(o$ => !!this.key ? o$.pipe(pluck(this.key)) : o$),
-      distinctUntilChanged(),
-      tap(v => console.log('value', v))
+  valuesO$ = defer(() =>
+    this.afterViewInit$.pipe(
+      switchMap(() =>
+        this.changeO$.pipe(
+          distinctUntilChanged(),
+          switchMap((o$) =>
+            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$
+          ),
+          distinctUntilChanged(),
+          tap((v) => console.log('value', v))
+        )
       )
-    ))
+    )
   );
 
   constructor() {
@@ -110,5 +125,4 @@ export class WorkVisualizerComponent extends Hooks {
     }
     return items;
   }
-
 }
