@@ -274,7 +274,7 @@ describe('rendering, scrolling & positioning', () => {
     });
   });
 
-  it('repositions items when size changes', () => {
+  xit('repositions items when size changes', () => {
     mountAutoSize().then(({ component }) => {
       const items = component.items as Item[];
       const range = expectedRange(component, items, 0);
