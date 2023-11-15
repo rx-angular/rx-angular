@@ -26,7 +26,6 @@ env:
   NX_CLOUD_DISTRIBUTED_EXECUTION: true # this enables DTE
   NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT: 4 # expected number of agents
   NX_BRANCH: ${{ github.event.number || github.ref_name }}
-  NX_SKIP_NX_CACHE: true
 
 jobs:
   dte_agents:
