@@ -67,7 +67,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   name: path.parse(__filename).name,
   meta: {
     docs: {
-      recommended: 'error',
+      recommended: 'recommended',
       description:
         'Detects all layout sensitive apis that may cause style recalculation.',
     },

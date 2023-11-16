@@ -6,7 +6,7 @@ import rule, {
 } from './no-rxstate-subscriptions-outside-constructor';
 
 const ruleTester = new TSESLint.RuleTester({
-  parser: path.resolve('./node_modules/@typescript-eslint/parser'),
+  parser: require.resolve('@typescript-eslint/parser'),
 });
 
 const valid: TSESLint.RunTests<MessageIds, Options>['valid'] = [

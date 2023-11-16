@@ -28,7 +28,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   name: path.parse(__filename).name,
   meta: {
     docs: {
-      recommended: 'error',
+      recommended: 'recommended',
       description: 'Detects Zone critical RxJS operators.',
     },
     type: 'problem',
