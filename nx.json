@@ -69,7 +69,8 @@
       "cache": true
     },
     "publish": {
-      "dependsOn": ["lint", "test", "version", "build"]
+      "dependsOn": ["lint", "test", "version", "build"],
+      "cache": false
     },
     "build-lib": {
       "cache": true
