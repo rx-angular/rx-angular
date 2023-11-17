@@ -1,9 +1,4 @@
-import {
-  ApplicationRef,
-  ChangeDetectorRef,
-  Injectable,
-  ɵdetectChanges,
-} from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Injectable } from '@angular/core';
 
 @Injectable()
 export class CdHelper {
@@ -28,6 +23,6 @@ export class CdHelper {
   }
 
   detectChanges() {
-    ɵdetectChanges((this.cdRef as any).context);
+    this.cdRef.detectChanges();
   }
 }
