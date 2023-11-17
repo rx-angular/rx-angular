@@ -2,6 +2,22 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.0.0](https://github.com/rx-angular/rx-angular/compare/eslint-plugin@1.0.0...eslint-plugin@2.0.0) (2023-11-17)
+
+
+### Features
+
+* **eslint:** migrate to `@typescript-eslint/*` v6 ([52eb431](https://github.com/rx-angular/rx-angular/commit/52eb4310e52388db74bc91a714f4feda05413b23))
+* upgrade to Angular v13 ([76ac5d3](https://github.com/rx-angular/rx-angular/commit/76ac5d3e9dbfaa2de368d7128f4c9aacb094c085))
+
+
+### BREAKING CHANGES
+
+* **eslint:** Minimum `@typescript-eslint/parser` dependency version is now set to `^6.10.0`
+* The required Angular version is now `>=13.0.0`.
+
+
+
 # 1.0.0 (2022-09-13)
 
 
