@@ -39,6 +39,8 @@
     "publish": {
       "command": "npm publish dist/libs/cdk"
     },
+    "version": {},
+    "github": {},
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],

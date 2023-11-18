@@ -31,7 +31,9 @@
     },
     "publish": {
       "command": "npm publish dist/libs/eslint-plugin"
-    }
+    },
+    "version": {},
+    "github": {}
   },
   "tags": ["type:lib"]
 }

@@ -47,6 +47,8 @@
     },
     "publish": {
       "command": "npm publish dist/libs/isr"
-    }
+    },
+    "version": {},
+    "github": {}
   }
 }
