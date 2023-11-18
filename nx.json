@@ -72,6 +72,24 @@
       "dependsOn": ["lint", "test", "version", "build"],
       "cache": false
     },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "noVerify": true,
+        "baseBranch": "main",
+        "tagPrefix": "{projectName}@",
+        "commitMessageFormat": "release({projectName}): {version}",
+        "postTargets": ["github"],
+        "push": true
+      }
+    },
+    "github": {
+      "executor": "@jscutlery/semver:github",
+      "options": {
+        "tag": "{tag}",
+        "notes": "{notes}"
+      }
+    },
     "build-lib": {
       "cache": true
     },

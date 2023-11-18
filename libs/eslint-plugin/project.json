@@ -31,24 +31,6 @@
     },
     "publish": {
       "command": "npm publish dist/libs/eslint-plugin"
-    },
-    "version": {
-      "executor": "@jscutlery/semver:version",
-      "options": {
-        "noVerify": true,
-        "baseBranch": "main",
-        "tagPrefix": "{projectName}@",
-        "commitMessageFormat": "release({projectName}): {version}",
-        "postTargets": ["eslint-plugin:github"],
-        "push": true
-      }
-    },
-    "github": {
-      "executor": "@jscutlery/semver:github",
-      "options": {
-        "tag": "{tag}",
-        "notes": "{notes}"
-      }
     }
   },
   "tags": ["type:lib"]

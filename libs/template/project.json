@@ -40,24 +40,6 @@
     "publish": {
       "command": "npm publish dist/libs/template"
     },
-    "version": {
-      "executor": "@jscutlery/semver:version",
-      "options": {
-        "noVerify": true,
-        "baseBranch": "main",
-        "tagPrefix": "{projectName}@",
-        "commitMessageFormat": "release({projectName}): {version}",
-        "postTargets": ["template:github"],
-        "push": true
-      }
-    },
-    "github": {
-      "executor": "@jscutlery/semver:github",
-      "options": {
-        "tag": "{tag}",
-        "notes": "{notes}"
-      }
-    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],

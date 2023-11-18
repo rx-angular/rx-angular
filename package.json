@@ -71,7 +71,7 @@
     "@angular/language-service": "17.0.3",
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-angular": "^17.3.0",
-    "@jscutlery/semver": "^4.0.0",
+    "@jscutlery/semver": "^4.1.0",
     "@nx-plus/docusaurus": "14.1.0",
     "@nx/angular": "17.1.2",
     "@nx/cypress": "17.1.2",
