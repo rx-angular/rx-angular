@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import {
-  ACCUMULATOR_FN_TOKEN,
+  RX_ACCUMULATOR_FN,
   createAccumulationObservable,
   select,
 } from '@rx-angular/state/selections';
@@ -46,7 +46,7 @@ describe('createAccumulationObservable', () => {
 
   it('should use custom accumulator function', () => {
     const accumulatorSpy = jest.fn((s, sl) => ({ ...s, ...sl }));
-    testBed.overrideProvider(ACCUMULATOR_FN_TOKEN, {
+    testBed.overrideProvider(RX_ACCUMULATOR_FN, {
       useValue: accumulatorSpy,
     });
     testBed.runInInjectionContext(() => {

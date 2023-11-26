@@ -32,13 +32,13 @@ const defaultAccumulator: AccumulationFn = <T>(st: T, sl: Partial<T>): T => {
  * @example
  * providers: [
  *  {
- *   provide: ACCUMULATOR_FN_TOKEN,
+ *   provide: RX_ACCUMULATOR_FN,
  *   useValue: (state, slice) => ({ ...state, ...slice })
  *  }
  * ]
  */
-export const ACCUMULATOR_FN_TOKEN = new InjectionToken<AccumulationFn>(
-  'ACCUMULATOR_FN',
+export const RX_ACCUMULATOR_FN = new InjectionToken<AccumulationFn>(
+  'RX_ACCUMULATOR_FN',
   {
     factory: () => defaultAccumulator,
   }
@@ -48,7 +48,7 @@ export function createAccumulationObservable<T extends object>(
   stateObservables = new Subject<Observable<Partial<T>>>(),
   stateSlices = new Subject<Partial<T>>()
 ): Accumulator<T> {
-  const accumulatorFn = inject(ACCUMULATOR_FN_TOKEN);
+  const accumulatorFn = inject(RX_ACCUMULATOR_FN);
   const accumulatorObservable = new BehaviorSubject(accumulatorFn);
   const signal$ = merge(
     stateObservables.pipe(
