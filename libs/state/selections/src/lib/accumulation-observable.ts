@@ -20,16 +20,36 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { AccumulationFn, Accumulator } from './model';
+import { inject, InjectionToken } from '@angular/core';
 
 const defaultAccumulator: AccumulationFn = <T>(st: T, sl: Partial<T>): T => {
   return { ...st, ...sl };
 };
 
+/**
+ * Injection token for the default accumulator function.
+ *
+ * @example
+ * providers: [
+ *  {
+ *   provide: ACCUMULATOR_FN_TOKEN,
+ *   useValue: (state, slice) => ({ ...state, ...slice })
+ *  }
+ * ]
+ */
+export const ACCUMULATOR_FN_TOKEN = new InjectionToken<AccumulationFn>(
+  'ACCUMULATOR_FN',
+  {
+    factory: () => defaultAccumulator,
+  }
+);
+
 export function createAccumulationObservable<T extends object>(
   stateObservables = new Subject<Observable<Partial<T>>>(),
-  stateSlices = new Subject<Partial<T>>(),
-  accumulatorObservable = new BehaviorSubject(defaultAccumulator)
+  stateSlices = new Subject<Partial<T>>()
 ): Accumulator<T> {
+  const accumulatorFn = inject(ACCUMULATOR_FN_TOKEN);
+  const accumulatorObservable = new BehaviorSubject(accumulatorFn);
   const signal$ = merge(
     stateObservables.pipe(
       distinctUntilChanged(),
