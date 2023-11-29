@@ -421,8 +421,6 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       !projectOrSlices$ &&
       !projectValueFn
     ) {
-      console.log('isPartialOfSignalsOrObservablesGuard');
-
       this.accumulator.nextSliceObservable(
         convertPartialsToObservable(keyOrInputOrSliceOrPartials$, this.injector)
       );
