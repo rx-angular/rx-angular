@@ -87,7 +87,7 @@ We will use `set()` as we already have initial values assigned to the `initCompo
 
 ```typescript
  constructor(...) {
-...
+  ...
   this.set(initComponentState);
 }
 ```
