@@ -14,7 +14,6 @@ export function convertPartialsToObservable<
 ): Observable<Partial<T>> {
   const keys = Object.keys(input);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const observables = keys.map((key) => {
     const obsOrSignal = input[key];
 
@@ -24,6 +23,8 @@ export function convertPartialsToObservable<
     if (isSignal(obsOrSignal)) {
       return toObservable(obsOrSignal, { injector });
     }
+
+    throw new TypeError(`Expected type Observable or Signal for key "${key}"`);
   });
 
   return combineLatest(observables).pipe(
@@ -31,7 +32,6 @@ export function convertPartialsToObservable<
     map((values) => {
       const result: Partial<T> = {} as Partial<T>;
       for (let i = 0; i < keys.length; i++) {
-        // @ts-ignore
         result[keys[i]] = values[i];
       }
       return result;

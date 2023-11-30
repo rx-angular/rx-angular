@@ -30,7 +30,7 @@ import {
 } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
-import { convertPartialsToObservable } from './convert-partials-to.observable';
+import { convertPartialsToObservable } from './convert-partials-to-observable';
 
 export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];
