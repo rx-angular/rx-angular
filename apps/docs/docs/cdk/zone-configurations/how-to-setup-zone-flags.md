@@ -87,7 +87,7 @@ import 'zone.js/dist/zone';
 1. Create file `zone-flags.ts` next to your `polyfills.ts` and insert the following content:
 
 ```typescript
-import { zoneConfig } from '@rx-angular/cdk/zone-flags';
+import { zoneConfig } from '@rx-angular/cdk/zone-configurations';
 
 zoneConfig.global.disable.requestAnimationFrame();
 zoneConfig.global.disable.timers();
@@ -123,7 +123,7 @@ import 'zone.js/dist/zone';
 1. Create file `zone-runtime.ts` parallel to your `polyfills.ts` and insert the following content:
 
 ```typescript
-import { zoneConfig } from '@rx-angular/cdk/zone-flags';
+import { zoneConfig } from '@rx-angular/cdk/zone-configurations';
 
 zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
 ```
