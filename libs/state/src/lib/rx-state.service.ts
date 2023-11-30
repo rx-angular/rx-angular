@@ -414,12 +414,14 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       !projectValueFn
     ) {
       this.accumulator.nextSliceObservable(keyOrInputOrSlice$);
+      return;
     }
 
     if (isSignal(keyOrInputOrSlice$) && !projectOrSlices$ && !projectValueFn) {
       this.accumulator.nextSliceObservable(
         toObservable(keyOrInputOrSlice$, { injector: this.injector })
       );
+      return;
     }
 
     if (
