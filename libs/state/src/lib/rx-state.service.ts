@@ -405,64 +405,102 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       | Signal<T[K] | V>,
     projectValueFn?: ProjectValueReducer<T, K, V>
   ): void {
-    let inputOrSlice$: Observable<Partial<T> | V> | undefined;
-    if (!isKeyOf<T>(keyOrInputOrSlice$)) {
-      if (isObservable(keyOrInputOrSlice$)) {
-        inputOrSlice$ = keyOrInputOrSlice$;
-      } else {
-        // why can't typescript infer the correct type?
-        inputOrSlice$ = toObservable(
-          keyOrInputOrSlice$ as Signal<Partial<T> | V>,
-          { injector: this.injector }
-        );
-      }
-    }
-    const key: K | null =
-      !inputOrSlice$ && isKeyOf<T>(keyOrInputOrSlice$)
-        ? keyOrInputOrSlice$
-        : null;
+    /**
+     * From top to bottom the overloads are handled.
+     */
     if (
-      projectValueFn === undefined &&
-      projectOrSlices$ === undefined &&
-      inputOrSlice$
+      isObservable(keyOrInputOrSlice$) &&
+      !projectOrSlices$ &&
+      !projectValueFn
     ) {
-      this.accumulator.nextSliceObservable(inputOrSlice$);
-      return;
+      this.accumulator.nextSliceObservable(keyOrInputOrSlice$);
     }
 
-    let slices$: Observable<T[K] | V> | null = null;
-    let stateReducer: ProjectStateReducer<T, V> | undefined;
-
-    if (projectOrSlices$) {
-      if (isObservable(projectOrSlices$)) {
-        slices$ = projectOrSlices$;
-      } else if (isSignal(projectOrSlices$)) {
-        slices$ = toObservable(projectOrSlices$, { injector: this.injector });
-      } else {
-        stateReducer = projectOrSlices$;
-      }
+    if (isSignal(keyOrInputOrSlice$) && !projectOrSlices$ && !projectValueFn) {
+      this.accumulator.nextSliceObservable(
+        toObservable(keyOrInputOrSlice$, { injector: this.injector })
+      );
     }
 
     if (
-      inputOrSlice$ &&
-      projectValueFn === undefined &&
-      stateReducer !== undefined
+      isObservable(keyOrInputOrSlice$) &&
+      projectOrSlices$ &&
+      typeof projectOrSlices$ === 'function' &&
+      !projectValueFn
     ) {
-      const slice$ = inputOrSlice$.pipe(
-        map((v) => stateReducer!(this.get(), v as V))
+      const projectionStateFn = projectOrSlices$;
+      const slice$ = keyOrInputOrSlice$.pipe(
+        map((v) => projectionStateFn(this.accumulator.state, v as V))
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
     }
 
-    if (projectValueFn === undefined && key && slices$) {
-      const slice$ = slices$.pipe(map((value) => ({ ...{}, [key]: value })));
+    if (
+      isSignal(keyOrInputOrSlice$) &&
+      projectOrSlices$ &&
+      typeof projectOrSlices$ === 'function' &&
+      !projectValueFn
+    ) {
+      const projectionStateFn = projectOrSlices$;
+      const slice$ = toObservable(keyOrInputOrSlice$, {
+        injector: this.injector,
+      }).pipe(map((v) => projectionStateFn(this.accumulator.state, v as V)));
       this.accumulator.nextSliceObservable(slice$);
       return;
     }
 
-    if (typeof projectValueFn === 'function' && key && slices$) {
-      const slice$ = slices$.pipe(
+    if (
+      isKeyOf<T>(keyOrInputOrSlice$) &&
+      isObservable(projectOrSlices$) &&
+      !projectValueFn
+    ) {
+      const slice$ = projectOrSlices$.pipe(
+        map((value) => ({ ...{}, [keyOrInputOrSlice$]: value }))
+      );
+      this.accumulator.nextSliceObservable(slice$);
+      return;
+    }
+
+    if (
+      isKeyOf<T>(keyOrInputOrSlice$) &&
+      isSignal(projectOrSlices$) &&
+      !projectValueFn
+    ) {
+      const slice$ = toObservable(projectOrSlices$, {
+        injector: this.injector,
+      }).pipe(map((value) => ({ ...{}, [keyOrInputOrSlice$]: value })));
+      this.accumulator.nextSliceObservable(slice$);
+      return;
+    }
+
+    if (
+      projectValueFn &&
+      typeof projectValueFn === 'function' &&
+      isKeyOf<T>(keyOrInputOrSlice$) &&
+      isObservable(projectOrSlices$)
+    ) {
+      const key: K = keyOrInputOrSlice$;
+      const slice$ = projectOrSlices$.pipe(
+        map((value) => ({
+          ...{},
+          [key]: projectValueFn(this.get(), value as V),
+        }))
+      );
+      this.accumulator.nextSliceObservable(slice$);
+      return;
+    }
+
+    if (
+      projectValueFn &&
+      typeof projectValueFn === 'function' &&
+      isKeyOf(keyOrInputOrSlice$) &&
+      isSignal(projectOrSlices$)
+    ) {
+      const key: K = keyOrInputOrSlice$;
+      const slice$ = toObservable(projectOrSlices$, {
+        injector: this.injector,
+      }).pipe(
         map((value) => ({
           ...{},
           [key]: projectValueFn(this.get(), value as V),
