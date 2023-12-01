@@ -317,8 +317,12 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * Any change emitted by the source will get merged into the state.
    */
   connect(signal: Signal<Partial<T>>): void;
+  /**
+   * @description
+   * Connect a Partial of `Signals` or `Observables` to the state `T`.
+   */
   connect<K extends keyof T>(
-    object: Partial<{ [K: string]: Observable<T[K]> | Signal<T[K]> }>
+    partial: Partial<{ [K: string]: Observable<T[K]> | Signal<T[K]> }>
   ): void;
 
   /**
