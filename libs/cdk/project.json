@@ -32,7 +32,6 @@
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/cdk/jest.config.ts",
-        "passWithNoTests": true,
         "codeCoverage": true
       },
       "outputs": ["{workspaceRoot}/coverage/cdk"]
@@ -40,24 +39,8 @@
     "publish": {
       "command": "npm publish dist/libs/cdk"
     },
-    "version": {
-      "executor": "@jscutlery/semver:version",
-      "options": {
-        "noVerify": true,
-        "baseBranch": "main",
-        "tagPrefix": "{projectName}@",
-        "commitMessageFormat": "release({projectName}): {version}",
-        "postTargets": ["cdk:github"],
-        "push": true
-      }
-    },
-    "github": {
-      "executor": "@jscutlery/semver:github",
-      "options": {
-        "tag": "{tag}",
-        "notes": "{notes}"
-      }
-    },
+    "version": {},
+    "github": {},
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],

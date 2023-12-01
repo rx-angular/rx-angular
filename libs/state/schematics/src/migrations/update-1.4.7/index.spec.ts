@@ -111,6 +111,6 @@ describe('state migration update-1.4.7', () => {
 
     tree.create(filePath, fileInput);
 
-    return runner.runSchematicAsync(`update-1.4.7`, {}, tree).toPromise();
+    return runner.runSchematic(`update-1.4.7`, {}, tree);
   }
 });

@@ -432,8 +432,6 @@ describe('cdk migration 1.0.0-beta.1', () => {
 
     tree.create(filePath, fileInput);
 
-    return runner
-      .runSchematicAsync(`update-1.0.0-beta.1`, {}, tree)
-      .toPromise();
+    return runner.runSchematic(`update-1.0.0-beta.1`, {}, tree);
   }
 });

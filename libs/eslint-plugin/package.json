@@ -1,8 +1,12 @@
 {
   "name": "@rx-angular/eslint-plugin",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "peerDependencies": {
     "eslint": ">=8.0.0",
-    "typescript": ">=4.3.5"
+    "typescript": ">=4.3.5",
+    "@typescript-eslint/parser": "^6.10.0"
+  },
+  "dependencies": {
+    "@typescript-eslint/utils": "^6.10.0"
   }
 }

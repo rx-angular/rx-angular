@@ -1,5 +1,5 @@
 import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
-import { map, pluck } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { KeyCompareMap, PickSlice } from '../interfaces';
 import {
   isOperateFnArrayGuard,
@@ -33,7 +33,7 @@ export function select<T>(): MonoTypeOperatorFunction<T>;
  * @example
  * const profilePicture$ = state.pipe(
  *   select(
- *    pluck('profilePicture'),
+ *    map(state => state.profilePicture),
  *    switchMap(profilePicture => mapImageAsync(profilePicture))
  *   )
  * );
@@ -227,7 +227,11 @@ export function select<T extends Record<string, unknown>>(
         stateful(map(opOrMapFn[1]))
       );
     } else if (isStringArrayGuard(opOrMapFn)) {
-      return state$.pipe(stateful(pluck(...opOrMapFn)));
+      return state$.pipe(
+        stateful(
+          map((state) => opOrMapFn.reduce((acc, key) => acc?.[key], state))
+        )
+      );
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
       return state$.pipe(stateful(pipeFromArray(opOrMapFn)));
     } else {

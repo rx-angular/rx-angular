@@ -48,8 +48,6 @@ describe('Template Migration introduce-rxif-stable', () => {
 
     tree.create(filePath, fileInput);
 
-    return runner
-      .runSchematicAsync(`introduce-rxif-stable`, {}, tree)
-      .toPromise();
+    return runner.runSchematic(`introduce-rxif-stable`, {}, tree);
   }
 });

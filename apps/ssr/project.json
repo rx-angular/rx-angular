@@ -56,26 +56,25 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "browserTarget": "ssr:build"
+        "buildTarget": "ssr:build"
       },
       "configurations": {
         "production": {
-          "browserTarget": "ssr:build:production"
+          "buildTarget": "ssr:build:production"
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "ssr:build"
+        "buildTarget": "ssr:build"
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/ssr"],
       "options": {
-        "jestConfig": "apps/ssr/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "apps/ssr/jest.config.ts"
       }
     },
     "server": {
@@ -102,7 +101,7 @@
       }
     },
     "serve-ssr": {
-      "executor": "@nguniversal/builders:ssr-dev-server",
+      "executor": "@angular-devkit/build-angular:ssr-dev-server",
       "options": {
         "browserTarget": "ssr:build",
         "serverTarget": "ssr:server"

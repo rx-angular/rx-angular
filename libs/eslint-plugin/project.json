@@ -15,8 +15,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/eslint-plugin"],
       "options": {
-        "jestConfig": "libs/eslint-plugin/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/eslint-plugin/jest.config.ts"
       }
     },
     "build": {
@@ -29,7 +28,12 @@
         "main": "libs/eslint-plugin/src/index.ts",
         "assets": ["libs/eslint-plugin/*.md"]
       }
-    }
+    },
+    "publish": {
+      "command": "npm publish dist/libs/eslint-plugin"
+    },
+    "version": {},
+    "github": {}
   },
   "tags": ["type:lib"]
 }

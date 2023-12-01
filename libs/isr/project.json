@@ -26,7 +26,6 @@
       "outputs": ["{workspaceRoot}/coverage/isr"],
       "options": {
         "jestConfig": "libs/isr/jest.config.ts",
-        "passWithNoTests": true,
         "codeCoverage": true
       }
     },
@@ -49,23 +48,7 @@
     "publish": {
       "command": "npm publish dist/libs/isr"
     },
-    "version": {
-      "executor": "@jscutlery/semver:version",
-      "options": {
-        "noVerify": true,
-        "baseBranch": "main",
-        "tagPrefix": "{projectName}@",
-        "commitMessageFormat": "release({projectName}): {version}",
-        "postTargets": ["isr:github"],
-        "push": true
-      }
-    },
-    "github": {
-      "executor": "@jscutlery/semver:github",
-      "options": {
-        "tag": "${tag}",
-        "notes": "${notes}"
-      }
-    }
+    "version": {},
+    "github": {}
   }
 }

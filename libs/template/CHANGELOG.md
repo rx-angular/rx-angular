@@ -2,6 +2,25 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [17.0.0](https://github.com/rx-angular/rx-angular/compare/template@16.1.1...template@17.0.0) (2023-11-17)
+
+
+### Bug Fixes
+
+* bump ng-morph to v4.0.3 ([1766127](https://github.com/rx-angular/rx-angular/commit/1766127764326a471b11b4ad4c4f1b67dd12807a))
+
+
+### Features
+
+* bump Angular to v17 ([a814fb6](https://github.com/rx-angular/rx-angular/commit/a814fb66d396410e695e47a72e499a6d1cca213a))
+
+
+### BREAKING CHANGES
+
+* Minimum required `@angular/core` version is now `^17.0.0`
+
+
+
 ## [16.1.1](https://github.com/rx-angular/rx-angular/compare/template@16.1.0...template@16.1.1) (2023-10-20)
 
 

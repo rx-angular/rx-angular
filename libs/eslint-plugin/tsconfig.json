@@ -11,6 +11,8 @@
     }
   ],
   "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitReturns": true,

@@ -2,7 +2,6 @@ import { Injector, runInInjectionContext, signal } from '@angular/core';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RxState } from '../src/lib/rx-state.service';
 import { select } from '@rx-angular/state/selections';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import {
   initialNestedState,
   initialPrimitiveState,
@@ -10,7 +9,7 @@ import {
   PrimitiveState,
 } from '@test-helpers/rx-angular';
 import { of, scheduled, Subject } from 'rxjs';
-import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
+import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { createStateChecker } from './fixtures';
 
@@ -85,7 +84,7 @@ describe('RxStateService', () => {
           state.subscribe();
 
           state.set({ num: 42 });
-          expectObservable(state.$.pipe(pluck('num'))).toBe('');
+          expectObservable(state.$.pipe(map((s) => s.num))).toBe('');
         });
       });
     });

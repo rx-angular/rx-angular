@@ -1,6 +1,6 @@
 import { NgIterable } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 export interface RxListViewComputedContext {
   index: number;
@@ -81,11 +81,17 @@ export class RxDefaultListViewContext<
   }
 
   get index$(): Observable<number> {
-    return this._context$.pipe(pluck('index'), distinctUntilChanged());
+    return this._context$.pipe(
+      map((c) => c.index),
+      distinctUntilChanged()
+    );
   }
 
   get count$(): Observable<number> {
-    return this._context$.pipe(pluck('count'), distinctUntilChanged());
+    return this._context$.pipe(
+      map((s) => s.count),
+      distinctUntilChanged()
+    );
   }
 
   get first$(): Observable<boolean> {
@@ -119,6 +125,8 @@ export class RxDefaultListViewContext<
   }
 
   select = (props: K[]): Observable<any> => {
-    return this.item$.pipe(pluck(...(props as any)));
+    return this.item$.pipe(
+      map((r) => props.reduce((acc, key) => acc?.[key as any], r))
+    );
   };
 }
