@@ -1,15 +1,9 @@
-import {
-  Component,
-  ElementRef,
-  ErrorHandler,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  RxRenderBehavior,
-  RxStrategyProvider,
-} from '@rx-angular/cdk/render-strategies';
+import type { ElementRef, ErrorHandler, QueryList } from '@angular/core';
+import { Component, ViewChildren } from '@angular/core';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import type { RxRenderBehavior } from '@rx-angular/cdk/render-strategies';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
 import { asapScheduler, delay } from 'rxjs';
 import { RxFor } from '../for.directive';

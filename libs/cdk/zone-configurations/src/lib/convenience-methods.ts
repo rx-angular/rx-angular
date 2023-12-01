@@ -1,4 +1,4 @@
-import {
+import type {
   RxZoneConfigConfiguration,
   RxZoneConfigConvenienceMethods,
 } from './model/zone-config.types';

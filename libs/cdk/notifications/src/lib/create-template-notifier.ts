@@ -1,11 +1,5 @@
-import {
-  from,
-  isObservable,
-  NEVER,
-  Observable,
-  ObservableInput,
-  ReplaySubject,
-} from 'rxjs';
+import type { ObservableInput } from 'rxjs';
+import { from, isObservable, NEVER, Observable, ReplaySubject } from 'rxjs';
 import {
   distinctUntilChanged,
   map,
@@ -15,7 +9,8 @@ import {
 } from 'rxjs/operators';
 
 import { rxMaterialize } from './rx-materialize';
-import { RxNotification, RxNotificationKind } from './model';
+import type { RxNotification } from './model';
+import { RxNotificationKind } from './model';
 import { toRxSuspenseNotification } from './notification-transforms';
 
 /**

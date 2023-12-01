@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { ChildActivationEnd, Router } from '@angular/router';
 import { filter, map, take } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
-import { IsrServiceInterface, IsrState } from '@rx-angular/isr/models';
+import type { HttpErrorResponse } from '@angular/common/http';
+import type { IsrServiceInterface, IsrState } from '@rx-angular/isr/models';
 
 const initialState: IsrState = {
   revalidate: null,

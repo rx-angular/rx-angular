@@ -1,16 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  AfterViewInit,
-  Component,
-  Input,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import {
-  initialPrimitiveState,
-  PrimitiveState,
-} from '@test-helpers/rx-angular';
-import { Observable, Subject } from 'rxjs';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import type { AfterViewInit } from '@angular/core';
+import { Component, Input, Output, ViewChild } from '@angular/core';
+import type { PrimitiveState } from '@test-helpers/rx-angular';
+import { initialPrimitiveState } from '@test-helpers/rx-angular';
+import type { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { RxState } from '../src/lib/rx-state.service';
 import { select } from '@rx-angular/state/selections';
 

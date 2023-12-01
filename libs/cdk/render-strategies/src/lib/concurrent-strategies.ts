@@ -1,5 +1,6 @@
-import { NgZone } from '@angular/core';
-import { MonoTypeOperatorFunction, Observable } from 'rxjs';
+import type { NgZone } from '@angular/core';
+import type { MonoTypeOperatorFunction } from 'rxjs';
+import { Observable } from 'rxjs';
 import { filter, mapTo, switchMap } from 'rxjs/operators';
 import {
   cancelCallback,
@@ -8,12 +9,13 @@ import {
   PriorityLevel,
 } from '@rx-angular/cdk/internals/scheduler';
 
-import {
+import type {
   RxCustomStrategyCredentials,
   RxConcurrentStrategyNames,
   RxStrategyCredentials,
 } from './model';
-import { coalescingManager, coalescingObj } from '@rx-angular/cdk/coalescing';
+import type { coalescingObj } from '@rx-angular/cdk/coalescing';
+import { coalescingManager } from '@rx-angular/cdk/coalescing';
 
 // set default to 60fps
 forceFrameRate(60);

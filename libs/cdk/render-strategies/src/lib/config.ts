@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { RX_CONCURRENT_STRATEGIES } from './concurrent-strategies';
-import {
+import type {
   RxCustomStrategyCredentials,
   RxDefaultStrategyNames,
   RxStrategyNames,

@@ -1,4 +1,4 @@
-import { Observable, OperatorFunction } from 'rxjs';
+import type { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { coerceObservable } from './coerceObservable';
 

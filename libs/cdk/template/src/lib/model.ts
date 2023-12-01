@@ -1,4 +1,4 @@
-import {
+import type {
   ChangeDetectorRef,
   EmbeddedViewRef,
   ErrorHandler,
@@ -6,10 +6,10 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
-import { RxNotification } from '@rx-angular/cdk/notifications';
-import { RxStrategies } from '@rx-angular/cdk/render-strategies';
+import type { RxNotification } from '@rx-angular/cdk/notifications';
+import type { RxStrategies } from '@rx-angular/cdk/render-strategies';
 
 export type rxBaseTemplateNames = 'errorTpl' | 'completeTpl' | 'suspenseTpl';
 

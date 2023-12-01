@@ -1,6 +1,7 @@
 import { BehaviorSubject, NEVER, of, throwError } from 'rxjs';
 import { createTemplateNotifier } from './create-template-notifier';
-import { RxNotification, RxNotificationKind } from './model';
+import type { RxNotification } from './model';
+import { RxNotificationKind } from './model';
 
 describe(createTemplateNotifier.name, () => {
   it('should not emit anything when input is NEVER', () => {

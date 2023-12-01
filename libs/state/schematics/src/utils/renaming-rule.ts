@@ -1,11 +1,14 @@
-import { chain, Rule, Tree } from '@angular-devkit/schematics';
+import type { Rule, Tree } from '@angular-devkit/schematics';
+import { chain } from '@angular-devkit/schematics';
+import type {
+  ImportSpecifier,
+  ImportSpecifierStructure,
+  Pattern,
+} from 'ng-morph';
 import {
   addImports,
   createProject,
   getImports,
-  ImportSpecifier,
-  ImportSpecifierStructure,
-  Pattern,
   saveActiveProject,
   setActiveProject,
 } from 'ng-morph';
@@ -43,7 +46,7 @@ export function renamingRule(packageName: Pattern, renames: RenameConfig) {
               .getSourceFile()
               .getFilePath()
               .toString();
-              const key = `${filePath}__${rename.moduleSpecifier}`;
+            const key = `${filePath}__${rename.moduleSpecifier}`;
             const namedImportConfig: ImportConfig = {
               name: rename.namedImport,
             };

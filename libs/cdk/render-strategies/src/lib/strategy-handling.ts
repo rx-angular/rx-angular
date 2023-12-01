@@ -1,13 +1,14 @@
-import { Observable, ReplaySubject } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { map, share, startWith, switchAll } from 'rxjs/operators';
 
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
-import {
+import type {
   RxCustomStrategyCredentials,
-  RxStrategies,
   RxStrategyCredentials,
   RxStrategyNames,
 } from './model';
+import { RxStrategies } from './model';
 
 export interface RxStrategyHandler {
   strategy$: Observable<RxStrategyCredentials>;

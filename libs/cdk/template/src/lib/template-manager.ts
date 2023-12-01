@@ -1,19 +1,20 @@
-import { EmbeddedViewRef, TemplateRef } from '@angular/core';
-import { RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
-import {
+import type { EmbeddedViewRef, TemplateRef } from '@angular/core';
+import type { RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
+import type {
   RxCompleteNotification,
   RxErrorNotification,
   RxNextNotification,
   RxNotification,
-  RxNotificationKind,
   RxSuspenseNotification,
 } from '@rx-angular/cdk/notifications';
+import { RxNotificationKind } from '@rx-angular/cdk/notifications';
+import type { RxRenderWork } from '@rx-angular/cdk/render-strategies';
 import {
   onStrategy,
-  RxRenderWork,
   strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
-import { EMPTY, merge, Observable, of } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { EMPTY, merge, of } from 'rxjs';
 import {
   catchError,
   map,
@@ -21,7 +22,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import {
+import type {
   rxBaseTemplateNames,
   RxRenderAware,
   RxRenderSettings,

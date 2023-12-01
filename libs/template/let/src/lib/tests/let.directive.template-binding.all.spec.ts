@@ -4,21 +4,17 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import {
-  ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
+import type { Observable } from 'rxjs';
 import {
   BehaviorSubject,
   EMPTY,
   interval,
   NEVER,
-  Observable,
   of,
   Subject,
   throwError,

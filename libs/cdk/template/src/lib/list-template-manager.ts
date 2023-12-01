@@ -1,4 +1,4 @@
-import {
+import type {
   EmbeddedViewRef,
   IterableChanges,
   IterableDiffer,
@@ -7,7 +7,8 @@ import {
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
-import { combineLatest, MonoTypeOperatorFunction, Observable, of } from 'rxjs';
+import type { MonoTypeOperatorFunction, Observable } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -15,23 +16,25 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import {
+import type {
   RxStrategyCredentials,
-  onStrategy,
-  strategyHandling,
   RxStrategyNames,
 } from '@rx-angular/cdk/render-strategies';
 import {
+  onStrategy,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
+import type {
   RxListViewComputedContext,
   RxListViewContext,
 } from './list-view-context';
 import { getTemplateHandler } from './list-view-handler';
-import {
+import type {
   RxListTemplateChange,
-  RxListTemplateChangeType,
   RxListTemplateSettings,
   RxRenderSettings,
 } from './model';
+import { RxListTemplateChangeType } from './model';
 import { createErrorHandler } from './render-error';
 import { notifyAllParentsIfNeeded } from './utils';
 

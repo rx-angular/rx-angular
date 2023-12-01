@@ -1,9 +1,9 @@
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import type { ListRange } from '../src/index';
 import {
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
-  ListRange,
   AutoSizeVirtualScrollStrategy,
   RxVirtualScrollWindowDirective,
   RxVirtualScrollElementDirective,
@@ -11,13 +11,12 @@ import {
 import { createOutputSpy, mount } from 'cypress/angular';
 import { By } from '@angular/platform-browser';
 import { DEFAULT_ITEM_SIZE } from '../src/lib/virtual-scroll.config';
+import type { Item, VirtualScrollMountConfig } from './fixtures';
 import {
   defaultMountConfig,
   generateItems,
   getDefaultMountConfig,
   getViewportComponent,
-  Item,
-  VirtualScrollMountConfig,
 } from './fixtures';
 
 interface AutoSizeVirtualScrollMountConfig

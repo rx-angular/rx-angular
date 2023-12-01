@@ -1,9 +1,5 @@
-import {
-  Inject,
-  ModuleWithProviders,
-  NgModule,
-  PLATFORM_ID,
-} from '@angular/core';
+import type { ModuleWithProviders } from '@angular/core';
+import { Inject, NgModule, PLATFORM_ID } from '@angular/core';
 import { HTTP_ERROR_PROVIDER_ISR } from './http-errors.interceptor';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
 import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serialized';

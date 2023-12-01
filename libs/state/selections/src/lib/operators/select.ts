@@ -1,6 +1,10 @@
-import { MonoTypeOperatorFunction, Observable, OperatorFunction } from 'rxjs';
+import type {
+  MonoTypeOperatorFunction,
+  Observable,
+  OperatorFunction,
+} from 'rxjs';
 import { map } from 'rxjs/operators';
-import { KeyCompareMap, PickSlice } from '../interfaces';
+import type { KeyCompareMap, PickSlice } from '../interfaces';
 import {
   isOperateFnArrayGuard,
   isStringAndFunctionTupleGuard,

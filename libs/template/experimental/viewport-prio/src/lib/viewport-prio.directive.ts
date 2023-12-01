@@ -1,15 +1,9 @@
-import {
-  Directive,
-  ElementRef,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Optional,
-} from '@angular/core';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import type { OnDestroy, OnInit } from '@angular/core';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { Directive, Input, ElementRef } from '@angular/core';
+import { type RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceObservableWith } from '@rx-angular/cdk/coercing';
-import { RxNotification } from '@rx-angular/cdk/notifications';
+import type { RxNotification } from '@rx-angular/cdk/notifications';
 import { RxLet } from '@rx-angular/template/let';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';

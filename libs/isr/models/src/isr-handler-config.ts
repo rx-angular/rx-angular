@@ -1,6 +1,6 @@
-import { Provider } from '@angular/core';
-import { CacheHandler, RenderVariant } from './cache-handler';
-import { Request } from 'express';
+import type { Provider } from '@angular/core';
+import type { CacheHandler, RenderVariant } from './cache-handler';
+import type { Request } from 'express';
 
 export interface ISRHandlerConfig {
   /**

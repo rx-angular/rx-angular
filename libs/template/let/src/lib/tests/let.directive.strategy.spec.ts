@@ -1,7 +1,9 @@
 import { Component, NgZone } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { BehaviorSubject, firstValueFrom, Observable, of, Subject } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of, Subject } from 'rxjs';
 
 import { RxLet } from '../let.directive';
 import Spy = jasmine.Spy;

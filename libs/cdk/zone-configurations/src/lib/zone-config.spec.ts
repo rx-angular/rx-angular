@@ -1,6 +1,6 @@
 import { zoneConfig } from './zone-config';
-import { RxZoneFlagsHelperFunctions } from './model/configurations.types';
-import {
+import type { RxZoneFlagsHelperFunctions } from './model/configurations.types';
+import type {
   RxZoneGlobalConfigurations,
   RxZoneTestConfigurations,
   RxZoneRuntimeConfigurations,

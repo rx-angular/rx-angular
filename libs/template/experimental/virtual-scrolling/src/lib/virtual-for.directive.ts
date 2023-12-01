@@ -1,36 +1,39 @@
+import type {
+  DoCheck,
+  EmbeddedViewRef,
+  IterableChanges,
+  IterableDiffer,
+  NgIterable,
+  OnDestroy,
+  OnInit,
+  TrackByFunction,
+} from '@angular/core';
 import {
   ChangeDetectorRef,
   Directive,
-  DoCheck,
-  EmbeddedViewRef,
   ErrorHandler,
   inject,
   Input,
-  IterableChanges,
-  IterableDiffer,
   IterableDiffers,
-  NgIterable,
   NgZone,
-  OnDestroy,
-  OnInit,
   TemplateRef,
-  TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
 import { coerceObservableWith } from '@rx-angular/cdk/coercing';
-import {
-  onStrategy,
+import type {
   RxStrategyCredentials,
   RxStrategyNames,
+} from '@rx-angular/cdk/render-strategies';
+import {
+  onStrategy,
   RxStrategyProvider,
   strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
-import { RxListViewComputedContext } from '@rx-angular/cdk/template';
+import type { RxListViewComputedContext } from '@rx-angular/cdk/template';
+import type { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import {
   isObservable,
-  MonoTypeOperatorFunction,
   NEVER,
-  Observable,
   ReplaySubject,
   Subject,
   of,
@@ -49,16 +52,14 @@ import {
   switchAll,
 } from 'rxjs/operators';
 
+import type { ListRange } from './model';
 import {
-  ListRange,
   RxVirtualForViewContext,
   RxVirtualScrollStrategy,
   RxVirtualViewRepeater,
 } from './model';
-import {
-  createVirtualListTemplateManager,
-  RxVirtualListTemplateManager,
-} from './virtual-list-template-manager';
+import type { RxVirtualListTemplateManager } from './virtual-list-template-manager';
+import { createVirtualListTemplateManager } from './virtual-list-template-manager';
 import {
   DEFAULT_TEMPLATE_CACHE_SIZE,
   RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS,

@@ -1,4 +1,5 @@
-import { isObservable, Observable, of } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { isObservable, of } from 'rxjs';
 
 /**
  * This Observable factory creates an Observable out of a static value or an Observable.

@@ -1,8 +1,8 @@
-import { NgZone } from '@angular/core';
-import { RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
+import type { NgZone } from '@angular/core';
+import type { RxCoalescingOptions } from '@rx-angular/cdk/coalescing';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, take } from 'rxjs/operators';
-import { RxRenderWork, RxStrategyCredentials } from './model';
+import type { RxRenderWork, RxStrategyCredentials } from './model';
 
 /**
  * @internal

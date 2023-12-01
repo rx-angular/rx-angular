@@ -1,13 +1,5 @@
-import {
-  BehaviorSubject,
-  ConnectableObservable,
-  EMPTY,
-  merge,
-  Observable,
-  queueScheduler,
-  Subject,
-  Subscription,
-} from 'rxjs';
+import type { ConnectableObservable, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, EMPTY, merge, queueScheduler, Subject } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -19,7 +11,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { AccumulationFn, Accumulator } from './model';
+import type { AccumulationFn, Accumulator } from './model';
 
 const defaultAccumulator: AccumulationFn = <T>(st: T, sl: Partial<T>): T => {
   return { ...st, ...sl };

@@ -1,6 +1,7 @@
 import { TSESLint } from '@typescript-eslint/utils';
 import * as path from 'path';
-import rule, { MessageIds } from './prefer-no-layout-sensitive-apis';
+import type { MessageIds } from './prefer-no-layout-sensitive-apis';
+import rule from './prefer-no-layout-sensitive-apis';
 
 const ruleTester = new TSESLint.RuleTester({
   parser: require.resolve('@typescript-eslint/parser'),

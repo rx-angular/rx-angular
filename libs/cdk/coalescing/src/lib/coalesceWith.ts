@@ -1,11 +1,10 @@
-import {
+import type {
   MonoTypeOperatorFunction,
-  Observable,
   Observer,
   Subscriber,
-  Subscription,
   Unsubscribable,
 } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { coalescingManager } from './coalescingManager';
 
 /**

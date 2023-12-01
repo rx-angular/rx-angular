@@ -1,6 +1,7 @@
 import { TSESLint } from '@typescript-eslint/utils';
 import * as path from 'path';
-import rule, { MessageIds } from './no-zone-critical-lodash-apis';
+import type { MessageIds } from './no-zone-critical-lodash-apis';
+import rule from './no-zone-critical-lodash-apis';
 
 const ruleTester = new TSESLint.RuleTester({
   parser: require.resolve('@typescript-eslint/parser'),

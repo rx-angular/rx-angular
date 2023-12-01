@@ -1,28 +1,27 @@
-import {
+import type {
   AfterViewInit,
   ChangeDetectorRef,
+  ErrorHandler,
+  OnDestroy,
+} from '@angular/core';
+import {
   Component,
   EmbeddedViewRef,
-  ErrorHandler,
   Input,
-  OnDestroy,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ReplaySubject, Subscription } from 'rxjs';
 import {
   createTemplateNotifier,
   RxNotificationKind,
 } from '../../notifications/src/index';
-import { RxStrategyProvider } from '../../render-strategies/src/index';
-import {
-  createTemplateManager,
-  RxBaseTemplateNames,
-  RxTemplateManager,
-  RxViewContext,
-} from '../src/index';
+import type { RxStrategyProvider } from '../../render-strategies/src/index';
+import type { RxTemplateManager, RxViewContext } from '../src/index';
+import { createTemplateManager, RxBaseTemplateNames } from '../src/index';
 
 @Component({
   selector: 'rx-angular-error-test',

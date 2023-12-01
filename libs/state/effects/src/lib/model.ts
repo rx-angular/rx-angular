@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import type { Observable, Subject } from 'rxjs';
 
 /**
  * Interface to declare name and value of the OnDestroy lifecycle hook
@@ -11,13 +11,13 @@ export interface DestroyProp {
  * Interface to declare names and values of single shot lifecycle hook. e.g. init, afterViewInit, afterContentInit, destroy
  */
 // tslint:disable-next-line:no-empty-interface
-export interface SingleShotProps extends DestroyProp {}
+export type SingleShotProps = DestroyProp;
 
 /**
  * Interface to declare names and values of lifecycle hook. e.g. init, changes, afterViewInit, etc...
  */
 // tslint:disable-next-line:no-empty-interface
-export interface HookProps extends DestroyProp {}
+export type HookProps = DestroyProp;
 
 /**
  * Interface to specify an Observable channel for lifecycle hooks.

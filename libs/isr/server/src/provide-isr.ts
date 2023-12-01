@@ -1,4 +1,5 @@
-import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
+import type { EnvironmentProviders } from '@angular/core';
+import { makeEnvironmentProviders } from '@angular/core';
 import { IsrServerService } from './isr-server.service';
 import { HTTP_ERROR_PROVIDER_ISR } from './http-errors.interceptor';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';

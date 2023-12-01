@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, computed, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import {
   RX_RENDER_STRATEGIES_CONFIG,
   RxStrategyProvider,

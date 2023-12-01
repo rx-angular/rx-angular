@@ -1,4 +1,4 @@
-import { IsrServiceInterface, IsrState } from '@rx-angular/isr/models';
+import type { IsrServiceInterface, IsrState } from '@rx-angular/isr/models';
 
 export function addIsrDataBeforeSerialized(
   isrService: IsrServiceInterface,

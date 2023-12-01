@@ -1,12 +1,11 @@
-import {
+import type {
   AfterViewInit,
-  Directive,
-  ElementRef,
-  Input,
   OnChanges,
   OnDestroy,
   SimpleChanges,
 } from '@angular/core';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { Directive, Input, ElementRef } from '@angular/core';
 import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import {
   focusEvents,

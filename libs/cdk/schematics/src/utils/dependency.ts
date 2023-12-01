@@ -1,4 +1,2 @@
-import {
-  NodeDependency,
-} from '@schematics/angular/utility/dependencies';
+import type { NodeDependency } from '@schematics/angular/utility/dependencies';
 export type Dependency = Omit<NodeDependency, 'version'>;

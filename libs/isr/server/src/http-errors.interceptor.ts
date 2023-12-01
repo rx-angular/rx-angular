@@ -1,13 +1,15 @@
-import { Injectable, Provider } from '@angular/core';
-import {
-  HTTP_INTERCEPTORS,
+import type { Provider } from '@angular/core';
+import { Injectable } from '@angular/core';
+import type {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
-import { IsrService } from '@rx-angular/isr/browser';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import type { Observable } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
+import type { IsrService } from '@rx-angular/isr/browser';
 
 @Injectable()
 export class HttpErrorsInterceptor implements HttpInterceptor {

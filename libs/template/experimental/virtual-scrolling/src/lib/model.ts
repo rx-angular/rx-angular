@@ -1,5 +1,4 @@
-import {
-  Directive,
+import type {
   ElementRef,
   EmbeddedViewRef,
   NgIterable,
@@ -7,8 +6,10 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
+import { Directive } from '@angular/core';
 import { RxDefaultListViewContext } from '@rx-angular/cdk/template';
-import { Observable, Subject } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
 type CreateViewContext<Implicit, Context, ComputedContext> = (
   value: Implicit,

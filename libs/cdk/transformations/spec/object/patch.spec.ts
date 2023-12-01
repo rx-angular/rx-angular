@@ -1,8 +1,7 @@
+import type { NestedState, PrimitiveState } from '@test-helpers/rx-angular';
 import {
   initialNestedState,
   initialPrimitiveState,
-  NestedState,
-  PrimitiveState,
 } from '@test-helpers/rx-angular';
 import { patch } from '@rx-angular/cdk/transformations';
 

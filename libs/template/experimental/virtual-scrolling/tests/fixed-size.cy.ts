@@ -1,22 +1,21 @@
 import { Subject } from 'rxjs';
+import type { ListRange } from '../src/index';
 import {
   FixedSizeVirtualScrollStrategy,
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
-  ListRange,
   RxVirtualScrollWindowDirective,
   RxVirtualScrollElementDirective,
 } from '../src/index';
 import { createOutputSpy, mount } from 'cypress/angular';
 import { By } from '@angular/platform-browser';
+import type { Item, VirtualScrollMountConfig } from './fixtures';
 import {
   defaultItemLength,
   defaultMountConfig,
   generateItems,
   getDefaultMountConfig,
   getViewportComponent,
-  Item,
-  VirtualScrollMountConfig,
 } from './fixtures';
 
 const defaultItemTemplate = `{{ item.id }}`;

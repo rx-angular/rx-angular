@@ -1,5 +1,6 @@
 import { isPlatformServer } from '@angular/common';
-import { Component, Inject, NgZone, OnInit, PLATFORM_ID } from '@angular/core';
+import type { OnInit } from '@angular/core';
+import { Component, Inject, NgZone, PLATFORM_ID } from '@angular/core';
 import { rxState } from '@rx-angular/state';
 import { RxFor } from '@rx-angular/template/for';
 import { RxLet } from '@rx-angular/template/let';

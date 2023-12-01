@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import type { Request } from 'express';
 
 /**
  * CacheISRConfig is the configuration object that is used to store the

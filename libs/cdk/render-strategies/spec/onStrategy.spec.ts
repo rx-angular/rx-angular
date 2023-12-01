@@ -1,9 +1,9 @@
 import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers/rx-angular';
+import type { RxStrategyCredentials } from '@rx-angular/cdk/render-strategies';
 import {
   onStrategy,
   RX_NATIVE_STRATEGIES,
-  RxStrategyCredentials,
 } from '@rx-angular/cdk/render-strategies';
 import { animationFrameScheduler, observeOn, tap } from 'rxjs';
 

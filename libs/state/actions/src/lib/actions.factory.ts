@@ -1,7 +1,8 @@
-import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
-import { Subject } from 'rxjs';
+import type { ErrorHandler, OnDestroy } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
+import type { Subject } from 'rxjs';
 import { actionProxyHandler } from './proxy';
-import { Actions, ActionTransforms, EffectMap, RxActions } from './types';
+import type { Actions, ActionTransforms, EffectMap, RxActions } from './types';
 
 type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
 

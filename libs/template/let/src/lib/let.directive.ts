@@ -1,3 +1,9 @@
+import type {
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import {
   ChangeDetectorRef,
   Directive,
@@ -5,38 +11,32 @@ import {
   inject,
   Input,
   NgZone,
-  OnChanges,
-  OnDestroy,
-  OnInit,
   Output,
-  SimpleChanges,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import type { RxNotification } from '@rx-angular/cdk/notifications';
 import {
   createTemplateNotifier,
-  RxNotification,
   RxNotificationKind,
 } from '@rx-angular/cdk/notifications';
-import {
-  RxStrategyNames,
-  RxStrategyProvider,
-} from '@rx-angular/cdk/render-strategies';
-import {
-  createTemplateManager,
-  RxBaseTemplateNames,
+import type { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import type {
   RxTemplateManager,
   RxViewContext,
 } from '@rx-angular/cdk/template';
+import {
+  createTemplateManager,
+  RxBaseTemplateNames,
+} from '@rx-angular/cdk/template';
 
+import type { NextObserver, Observable, ObservableInput } from 'rxjs';
 import {
   defer,
   merge,
   NEVER,
-  NextObserver,
-  Observable,
-  ObservableInput,
   ReplaySubject,
   Subject,
   Subscription,

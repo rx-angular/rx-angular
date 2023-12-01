@@ -1,4 +1,4 @@
-import { TSESLint } from '@typescript-eslint/utils';
+import type { TSESLint } from '@typescript-eslint/utils';
 
 export default {
   parser: '@typescript-eslint/parser',

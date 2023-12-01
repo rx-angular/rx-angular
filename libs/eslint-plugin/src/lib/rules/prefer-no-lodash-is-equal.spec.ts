@@ -1,6 +1,7 @@
 import { TSESLint } from '@typescript-eslint/utils';
 import * as path from 'path';
-import rule, { MessageIds } from './prefer-no-lodash-is-equal';
+import type { MessageIds } from './prefer-no-lodash-is-equal';
+import rule from './prefer-no-lodash-is-equal';
 
 const ruleTester = new TSESLint.RuleTester({
   parser: require.resolve('@typescript-eslint/parser'),

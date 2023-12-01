@@ -1,4 +1,11 @@
-import { CreateFileAction, noop, OverwriteFileAction, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type {
+  CreateFileAction,
+  OverwriteFileAction,
+  Rule,
+  SchematicContext,
+  Tree,
+} from '@angular-devkit/schematics';
+import { noop } from '@angular-devkit/schematics';
 import * as path from 'path';
 import { from } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators';

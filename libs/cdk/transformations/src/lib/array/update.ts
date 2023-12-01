@@ -1,4 +1,4 @@
-import { ComparableData } from '../interfaces/comparable-data-type';
+import type { ComparableData } from '../interfaces/comparable-data-type';
 import { valuesComparer } from '../_internals/valuesComparer.util';
 
 /**

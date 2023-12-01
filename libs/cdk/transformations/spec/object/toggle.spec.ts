@@ -1,8 +1,6 @@
 import { toggle } from '@rx-angular/cdk/transformations';
-import {
-  initialPrimitiveState,
-  PrimitiveState,
-} from '@test-helpers/rx-angular';
+import type { PrimitiveState } from '@test-helpers/rx-angular';
+import { initialPrimitiveState } from '@test-helpers/rx-angular';
 
 let primitiveState: PrimitiveState;
 

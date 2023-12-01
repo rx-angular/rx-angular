@@ -2,13 +2,8 @@
 
 import { ɵglobal } from '@angular/core';
 import { enableIsInputPending } from './schedulerFeatureFlags';
-import {
-  peek,
-  pop,
-  push,
-  ReactSchedulerTask,
-  SchedulerTaskZone,
-} from './schedulerMinHeap';
+import type { ReactSchedulerTask, SchedulerTaskZone } from './schedulerMinHeap';
+import { peek, pop, push } from './schedulerMinHeap';
 
 import { PriorityLevel } from './schedulerPriorities';
 

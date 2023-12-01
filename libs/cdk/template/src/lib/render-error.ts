@@ -1,4 +1,4 @@
-import { ErrorHandler } from '@angular/core';
+import type { ErrorHandler } from '@angular/core';
 
 /** @internal **/
 export type RxRenderError<T> = [Error, T];
@@ -17,9 +17,7 @@ export function isRxRenderError<T>(e: any): e is RxRenderError<T> {
 }
 
 /** @internal **/
-export function createErrorHandler(
-  _handler?: ErrorHandler
-): ErrorHandler {
+export function createErrorHandler(_handler?: ErrorHandler): ErrorHandler {
   const _handleError = _handler
     ? (e) => _handler.handleError(e)
     : console.error;

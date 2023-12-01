@@ -5,7 +5,8 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { EMPTY, interval, NEVER, Observable, of } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { EMPTY, interval, NEVER, of } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RxLet } from '../let.directive';
 import { take } from 'rxjs/operators';

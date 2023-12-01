@@ -1,4 +1,4 @@
-import { CompareFn } from './compare-fn';
+import type { CompareFn } from './compare-fn';
 
 /**
  * @description

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
-import { Observable, of, Subject } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { RxLet } from '../let.directive';
 
 @Component({

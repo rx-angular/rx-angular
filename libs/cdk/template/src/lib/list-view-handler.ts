@@ -1,11 +1,11 @@
-import {
+import type {
   RxListTemplateChange,
   RxListTemplateChanges,
-  RxListTemplateChangeType,
   RxListTemplateSettings,
 } from './model';
-import { EmbeddedViewRef, IterableChanges } from '@angular/core';
-import { RxListViewContext } from './list-view-context';
+import { RxListTemplateChangeType } from './model';
+import type { EmbeddedViewRef, IterableChanges } from '@angular/core';
+import type { RxListViewContext } from './list-view-context';
 import { createEmbeddedView } from './utils';
 
 /**

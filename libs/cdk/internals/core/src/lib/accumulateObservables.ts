@@ -1,7 +1,8 @@
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
-import { combineLatest, from, Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { combineLatest, from } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
-import {
+import type {
   ArrayReducerFn,
   ExtractObservableValue,
   NotEmpty,
@@ -94,6 +95,6 @@ export function accumulateObservables<T extends ObservableMap & NotEmpty<T>>(
       values.reduce(getEntriesToObjectReducerFn(keys), {} as any)
     ),
     // by using shareReplay we share the last composition work done to create the accumulated object
-    shareReplay({refCount: true, bufferSize: 1})
+    shareReplay({ refCount: true, bufferSize: 1 })
   );
 }

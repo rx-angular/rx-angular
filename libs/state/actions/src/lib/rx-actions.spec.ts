@@ -1,9 +1,10 @@
 import { tap } from 'rxjs/operators';
 import { rxActions } from './rx-actions';
 import { debounceTime, isObservable } from 'rxjs';
-import { Component, ErrorHandler, Provider } from '@angular/core';
+import type { Provider } from '@angular/core';
+import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ActionTransforms } from '@rx-angular/state/actions';
+import type { ActionTransforms } from '@rx-angular/state/actions';
 
 describe('actions fn', () => {
   it('should get created properly', () => {

@@ -1,4 +1,5 @@
-import { noop, UnaryFunction } from 'rxjs';
+import type { UnaryFunction } from 'rxjs';
+import { noop } from 'rxjs';
 
 export function pipeFromArray<T, R>(
   fns: Array<UnaryFunction<T, R>>

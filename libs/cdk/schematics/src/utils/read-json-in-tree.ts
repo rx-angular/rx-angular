@@ -1,4 +1,4 @@
-import { Tree } from '@angular-devkit/schematics';
+import type { Tree } from '@angular-devkit/schematics';
 
 export function readJsonInTree<T = any>(host: Tree, path: string): T {
   if (!host.exists(path)) {

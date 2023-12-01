@@ -3,7 +3,7 @@ import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import {
+import type {
   RxCustomStrategyCredentials,
   RxNativeStrategyNames,
   RxStrategyCredentials,

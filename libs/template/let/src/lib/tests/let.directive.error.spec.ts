@@ -7,7 +7,8 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
-import { Observable, of, throwError } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';

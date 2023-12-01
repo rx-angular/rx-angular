@@ -1,34 +1,34 @@
+import type { OnDestroy, Signal } from '@angular/core';
 import {
   computed,
   inject,
   Injectable,
   Injector,
   isSignal,
-  OnDestroy,
-  Signal,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import {
+import type {
   AccumulationFn,
+  KeyCompareMap,
+  PickSlice,
+} from '@rx-angular/state/selections';
+import {
   createAccumulationObservable,
   createSideEffectObservable,
   isKeyOf,
-  KeyCompareMap,
-  PickSlice,
   safePluck,
   select,
 } from '@rx-angular/state/selections';
-import {
-  EMPTY,
-  isObservable,
+import type {
   Observable,
   OperatorFunction,
   Subscribable,
-  Subscription,
   Unsubscribable,
 } from 'rxjs';
+import { EMPTY, isObservable, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
+import type { SignalStateProxy } from './signal-state-proxy';
+import { createSignalStateProxy } from './signal-state-proxy';
 
 export type ProjectStateFn<T> = (oldState: T) => Partial<T>;
 export type ProjectValueFn<T, K extends keyof T> = (oldState: T) => T[K];

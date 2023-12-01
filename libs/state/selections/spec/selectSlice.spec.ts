@@ -1,11 +1,13 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers/rx-angular';
-import { Observable, of } from 'rxjs';
-import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
+import type { Observable } from 'rxjs';
+import { of } from 'rxjs';
+import type { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 import { map, mergeMap } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { KeyCompareMap, selectSlice } from '@rx-angular/state/selections';
+import type { KeyCompareMap } from '@rx-angular/state/selections';
+import { selectSlice } from '@rx-angular/state/selections';
 
 let testScheduler: TestScheduler;
 

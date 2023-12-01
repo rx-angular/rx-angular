@@ -1,5 +1,6 @@
-import { NgIterable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import type { NgIterable } from '@angular/core';
+import type { Observable } from 'rxjs';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
 export interface RxListViewComputedContext {

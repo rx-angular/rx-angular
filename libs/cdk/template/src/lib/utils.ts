@@ -1,22 +1,14 @@
-import {
+import type {
   ChangeDetectorRef,
   EmbeddedViewRef,
   NgZone,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import {
-  onStrategy,
-  RxStrategyCredentials,
-} from '@rx-angular/cdk/render-strategies';
-import {
-  BehaviorSubject,
-  concat,
-  MonoTypeOperatorFunction,
-  Observable,
-  of,
-  Subject,
-} from 'rxjs';
+import type { RxStrategyCredentials } from '@rx-angular/cdk/render-strategies';
+import { onStrategy } from '@rx-angular/cdk/render-strategies';
+import type { MonoTypeOperatorFunction, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, concat, of } from 'rxjs';
 import { ignoreElements, switchMap } from 'rxjs/operators';
 
 /**

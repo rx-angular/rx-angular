@@ -1,9 +1,5 @@
-import {
-  isDefined,
-  isKeyOf,
-  isObjectGuard,
-  OnlyKeysOfSpecificType,
-} from '../_internals/guards';
+import type { OnlyKeysOfSpecificType } from '../_internals/guards';
+import { isDefined, isKeyOf, isObjectGuard } from '../_internals/guards';
 
 /**
  * @description

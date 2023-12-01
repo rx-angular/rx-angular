@@ -4,8 +4,9 @@ import {
   ErrorHandler,
   inject,
 } from '@angular/core';
-import { from, Subscription } from 'rxjs';
-import { SideEffectFnOrObserver, SideEffectObservable } from './types';
+import type { Subscription } from 'rxjs';
+import { from } from 'rxjs';
+import type { SideEffectFnOrObserver, SideEffectObservable } from './types';
 
 interface RxEffects {
   register<T>(

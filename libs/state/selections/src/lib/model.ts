@@ -1,4 +1,4 @@
-import { Observable, Subscribable, Subscription } from 'rxjs';
+import type { Observable, Subscribable, Subscription } from 'rxjs';
 
 export type AccumulationFn = <T>(st: T, sl: Partial<T>) => T;
 

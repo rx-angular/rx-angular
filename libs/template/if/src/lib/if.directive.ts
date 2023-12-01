@@ -1,12 +1,14 @@
+import type {
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import {
   ChangeDetectorRef,
   Directive,
   Input,
   NgZone,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
   TemplateRef,
   ViewContainerRef,
   inject,
@@ -16,30 +18,15 @@ import {
   RxNotificationKind,
   createTemplateNotifier,
 } from '@rx-angular/cdk/notifications';
-import {
-  RxStrategyNames,
-  RxStrategyProvider,
-} from '@rx-angular/cdk/render-strategies';
-import {
-  RxTemplateManager,
-  createTemplateManager,
-} from '@rx-angular/cdk/template';
-import {
-  NEVER,
-  NextObserver,
-  Observable,
-  ObservableInput,
-  ReplaySubject,
-  Subject,
-  Subscription,
-  merge,
-} from 'rxjs';
+import type { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import type { RxTemplateManager } from '@rx-angular/cdk/template';
+import { createTemplateManager } from '@rx-angular/cdk/template';
+import type { NextObserver, Observable, ObservableInput } from 'rxjs';
+import { NEVER, ReplaySubject, Subject, Subscription, merge } from 'rxjs';
 import { filter, map, mergeAll } from 'rxjs/operators';
-import {
-  RxIfTemplateNames,
-  RxIfViewContext,
-  rxIfTemplateNames,
-} from './model/index';
+import type { RxIfViewContext, rxIfTemplateNames } from './model/index';
+import { RxIfTemplateNames } from './model/index';
 
 /**
  * @Directive IfDirective

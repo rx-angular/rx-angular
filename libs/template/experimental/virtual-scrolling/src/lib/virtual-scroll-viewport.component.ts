@@ -1,13 +1,11 @@
 import { NgIf } from '@angular/common';
+import type { AfterContentInit, AfterViewInit, OnDestroy } from '@angular/core';
 import {
-  AfterContentInit,
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ContentChild,
   ElementRef,
   inject,
-  OnDestroy,
   Output,
   ViewChild,
   ViewEncapsulation,

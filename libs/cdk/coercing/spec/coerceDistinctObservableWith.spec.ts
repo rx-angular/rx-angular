@@ -1,11 +1,5 @@
-import {
-  concatAll,
-  exhaustAll,
-  mergeAll,
-  Observable,
-  Subject,
-  take,
-} from 'rxjs';
+import type { Observable } from 'rxjs';
+import { concatAll, exhaustAll, mergeAll, Subject, take } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 
 import { jestMatcher } from '@test-helpers/rx-angular';

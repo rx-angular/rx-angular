@@ -1,6 +1,6 @@
 import { ɵglobal } from '@angular/core';
+import type { RxZoneFlagsHelperFunctions } from './model/configurations.types';
 import {
-  RxZoneFlagsHelperFunctions,
   zoneGlobalDisableConfigurationsKeys,
   zoneGlobalEventsConfigurationsKeys,
   zoneGlobalSettingsConfigurationsKeys,
@@ -8,8 +8,8 @@ import {
   zoneTestDisableConfigurationsKeys,
   zoneTestSettingsConfigurationsKeys,
 } from './model/configurations.types';
-import { RxZoneGlobalConfigurations } from './model/zone.configurations.api';
-import {
+import type { RxZoneGlobalConfigurations } from './model/zone.configurations.api';
+import type {
   RxZoneConfigConfiguration,
   RxZoneConfig,
   RxGlobalDisableConfigurationMethods,

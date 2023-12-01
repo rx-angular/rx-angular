@@ -1,9 +1,10 @@
-import { Observable, Subject } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { mergeAll, share } from 'rxjs/operators';
 
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 
-import { RxNotification } from './model';
+import type { RxNotification } from './model';
 
 /**
  * @internal

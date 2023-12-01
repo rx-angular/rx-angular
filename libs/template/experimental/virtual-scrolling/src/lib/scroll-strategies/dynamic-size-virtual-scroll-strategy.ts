@@ -1,19 +1,13 @@
-import {
-  Directive,
-  inject,
-  Input,
+import type {
   NgIterable,
   OnChanges,
   OnDestroy,
   SimpleChanges,
 } from '@angular/core';
+import { Directive, inject, Input } from '@angular/core';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
-import {
-  combineLatest,
-  MonoTypeOperatorFunction,
-  ReplaySubject,
-  Subject,
-} from 'rxjs';
+import type { MonoTypeOperatorFunction } from 'rxjs';
+import { combineLatest, ReplaySubject, Subject } from 'rxjs';
 import {
   distinctUntilChanged,
   map,
@@ -23,12 +17,12 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import {
+import type {
   ListRange,
-  RxVirtualScrollStrategy,
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
 } from '../model';
+import { RxVirtualScrollStrategy } from '../model';
 import {
   calculateVisibleContainerSize,
   parseScrollTopBoundaries,

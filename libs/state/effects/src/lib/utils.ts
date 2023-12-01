@@ -1,6 +1,6 @@
-import { MonoTypeOperatorFunction, Observable } from 'rxjs';
+import type { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { filter, map, shareReplay, take, takeUntil } from 'rxjs/operators';
-import { HookProps, OnDestroy$, SingleShotProps } from './model';
+import type { HookProps, OnDestroy$, SingleShotProps } from './model';
 
 export function isSingleShotHookNameGuard<T>(
   name: unknown

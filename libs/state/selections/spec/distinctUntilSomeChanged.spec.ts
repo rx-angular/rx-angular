@@ -2,10 +2,11 @@
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { mergeMap } from 'rxjs/operators';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { KeyCompareMap } from '@rx-angular/state/selections';
+import type { KeyCompareMap } from '@rx-angular/state/selections';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
-import { Observable, of } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 
 let testScheduler: TestScheduler;

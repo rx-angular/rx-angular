@@ -1,4 +1,4 @@
-import { NgIterable } from '@angular/core';
+import type { NgIterable } from '@angular/core';
 import { RxDefaultListViewContext } from '@rx-angular/cdk/template';
 
 export class RxForViewContext<

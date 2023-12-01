@@ -1,14 +1,7 @@
-import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
-import {
-  EMPTY,
-  from,
-  Observable,
-  ObservableInput,
-  PartialObserver,
-  pipe,
-  Subject,
-  Subscription,
-} from 'rxjs';
+import type { ErrorHandler, OnDestroy } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
+import type { Observable, ObservableInput, PartialObserver } from 'rxjs';
+import { EMPTY, from, pipe, Subject, Subscription } from 'rxjs';
 import {
   catchError,
   filter,
@@ -18,7 +11,7 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
-import { DestroyProp, OnDestroy$ } from './model';
+import type { DestroyProp, OnDestroy$ } from './model';
 import { toHook, untilDestroyed } from './utils';
 
 /**

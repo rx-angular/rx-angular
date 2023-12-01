@@ -1,41 +1,36 @@
+import type {
+  DoCheck,
+  EmbeddedViewRef,
+  NgIterable,
+  OnDestroy,
+  OnInit,
+  TrackByFunction,
+} from '@angular/core';
 import {
   ChangeDetectorRef,
   Directive,
-  DoCheck,
-  EmbeddedViewRef,
   ErrorHandler,
   inject,
   Input,
   IterableDiffers,
-  NgIterable,
   NgZone,
-  OnDestroy,
-  OnInit,
   TemplateRef,
-  TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
 import {
   coerceDistinctWith,
   coerceObservableWith,
 } from '@rx-angular/cdk/coercing';
-import {
-  RxStrategyNames,
-  RxStrategyProvider,
-} from '@rx-angular/cdk/render-strategies';
-import {
-  createListTemplateManager,
+import type { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import type {
   RxListManager,
   RxListViewComputedContext,
 } from '@rx-angular/cdk/template';
+import { createListTemplateManager } from '@rx-angular/cdk/template';
 
-import {
-  isObservable,
-  Observable,
-  ReplaySubject,
-  Subject,
-  Subscription,
-} from 'rxjs';
+import type { Observable, Subject } from 'rxjs';
+import { isObservable, ReplaySubject, Subscription } from 'rxjs';
 import { shareReplay, switchAll } from 'rxjs/operators';
 import { RxForViewContext } from './for-view-context';
 

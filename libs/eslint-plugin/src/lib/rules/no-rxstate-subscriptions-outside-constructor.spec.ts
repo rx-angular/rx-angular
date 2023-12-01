@@ -1,9 +1,10 @@
 import { TSESLint } from '@typescript-eslint/utils';
 import * as path from 'path';
-import rule, {
+import type {
   MessageIds,
   Options,
 } from './no-rxstate-subscriptions-outside-constructor';
+import rule from './no-rxstate-subscriptions-outside-constructor';
 
 const ruleTester = new TSESLint.RuleTester({
   parser: require.resolve('@typescript-eslint/parser'),

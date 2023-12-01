@@ -1,18 +1,19 @@
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
 import { CacheRegeneration } from './cache-regeneration';
 import { ISRLogger } from './isr-logger';
-import {
-  CacheHandler,
+import type {
   CacheISRConfig,
   InvalidateConfig,
   ISRHandlerConfig,
   RenderConfig,
   ServeFromCacheConfig,
 } from '@rx-angular/isr/models';
+import { CacheHandler } from '@rx-angular/isr/models';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
-import { renderUrl, RenderUrlConfig } from './utils/render-url';
-import { RenderVariant, VariantRebuildItem } from '@rx-angular/isr/models';
+import type { RenderUrlConfig } from './utils/render-url';
+import { renderUrl } from './utils/render-url';
+import type { RenderVariant, VariantRebuildItem } from '@rx-angular/isr/models';
 
 export class ISRHandler {
   protected cache!: CacheHandler;

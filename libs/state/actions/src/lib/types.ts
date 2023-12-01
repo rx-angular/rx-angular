@@ -1,4 +1,4 @@
-import { Observable, OperatorFunction, Subject, Subscription } from 'rxjs';
+import type { Observable, OperatorFunction, Subject, Subscription } from 'rxjs';
 
 export type ValuesOf<O> = O[keyof O];
 // type Keys = KeysOf<{ a: string, b: number }>; // "a" | "b"

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RxNotificationKind } from '@rx-angular/cdk/notifications';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import type { RxNotificationKind } from '@rx-angular/cdk/notifications';
+import type { Observable } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 // eslint-disable-next-line @angular-eslint/component-selector
 @Component({ selector: 'test-cmp', template: '' })

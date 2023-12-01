@@ -1,25 +1,15 @@
-import {
-  ChangeDetectorRef,
-  Inject,
-  Injectable,
-  NgZone,
-  Optional
-} from '@angular/core';
-import {
-  BehaviorSubject,
-  fromEvent,
-  MonoTypeOperatorFunction,
-  Observable
-} from 'rxjs';
+import type { ChangeDetectorRef, NgZone } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
+import type { MonoTypeOperatorFunction, Observable } from 'rxjs';
+import { BehaviorSubject, fromEvent } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
-import {
-  mergeDefaultConfig, RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG
-} from './config';
-import {
+import type { RxRenderStrategiesConfig } from './config';
+import { mergeDefaultConfig, RX_RENDER_STRATEGIES_CONFIG } from './config';
+import type {
   RxStrategies,
   RxStrategyCredentials,
   RxStrategyNames,
-  ScheduleOnStrategyOptions
+  ScheduleOnStrategyOptions,
 } from './model';
 import { onStrategy } from './onStrategy';
 

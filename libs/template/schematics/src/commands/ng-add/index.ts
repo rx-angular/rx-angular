@@ -1,16 +1,10 @@
-import {
-  chain,
-  Rule,
-  SchematicContext,
-  Tree,
-} from '@angular-devkit/schematics';
-import {
-  NodeDependencyType,
-} from '@schematics/angular/utility/dependencies';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { chain } from '@angular-devkit/schematics';
+import { NodeDependencyType } from '@schematics/angular/utility/dependencies';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 
-import { Dependency } from '../../utils/dependency';
+import type { Dependency } from '../../utils/dependency';
 import { getLatestNodeVersion } from '../../utils/get-latest-node-version';
 
 const dependencies: Dependency[] = [

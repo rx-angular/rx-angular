@@ -1,4 +1,4 @@
-import { OperatorFunction } from 'rxjs';
+import type { OperatorFunction } from 'rxjs';
 
 export function isPromiseGuard<T>(value: unknown): value is Promise<T> {
   return (

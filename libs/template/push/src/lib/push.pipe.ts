@@ -1,31 +1,29 @@
+import type { OnDestroy, PipeTransform } from '@angular/core';
 import {
   ChangeDetectorRef,
   NgZone,
-  OnDestroy,
   Pipe,
-  PipeTransform,
   inject,
   untracked,
 } from '@angular/core';
+import type { RxNotification } from '@rx-angular/cdk/notifications';
 import {
-  RxNotification,
   RxNotificationKind,
   createTemplateNotifier,
 } from '@rx-angular/cdk/notifications';
+import type { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import {
-  RxStrategyNames,
   RxStrategyProvider,
   strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
-import {
+import type {
   MonoTypeOperatorFunction,
   NextObserver,
-  Observable,
   ObservableInput,
   OperatorFunction,
-  Subscription,
   Unsubscribable,
 } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {
   filter,
   shareReplay,

@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Provider } from '@angular/core';
+import type { Provider } from '@angular/core';
 import { ɵSERVER_CONTEXT as SERVER_CONTEXT } from '@angular/platform-server';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 export interface RenderUrlConfig {
   req: Request;

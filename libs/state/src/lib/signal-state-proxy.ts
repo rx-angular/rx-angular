@@ -1,12 +1,7 @@
-import {
-  DestroyRef,
-  inject,
-  signal,
-  Signal,
-  WritableSignal,
-} from '@angular/core';
+import type { Signal, WritableSignal } from '@angular/core';
+import { DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { select } from '@rx-angular/state/selections';
 
 export type SignalStateProxy<State extends object> = {

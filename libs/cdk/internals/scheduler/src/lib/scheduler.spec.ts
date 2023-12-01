@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 // https://github.com/facebook/react/blob/master/packages/scheduler/src/__tests__/SchedulerDOM-test.js
 import { ɵglobal } from '@angular/core';
 

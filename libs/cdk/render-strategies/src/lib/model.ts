@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, NgZone } from '@angular/core';
-import { coalescingObj } from '@rx-angular/cdk/coalescing';
-import { RxNotification } from '@rx-angular/cdk/notifications';
-import { Observable } from 'rxjs';
+import type { ChangeDetectorRef, NgZone } from '@angular/core';
+import type { coalescingObj } from '@rx-angular/cdk/coalescing';
+import type { RxNotification } from '@rx-angular/cdk/notifications';
+import type { Observable } from 'rxjs';
 
 export interface ScheduleOnStrategyOptions {
   scope?: {};

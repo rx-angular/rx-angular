@@ -4,10 +4,12 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
-import { EMPTY, Observable, of } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 
 import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';

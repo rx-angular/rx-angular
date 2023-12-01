@@ -1,9 +1,9 @@
+import type { Observable } from 'rxjs';
 import {
   BehaviorSubject,
   concatAll,
   exhaustAll,
   mergeAll,
-  Observable,
   of,
   ReplaySubject,
   Subject,

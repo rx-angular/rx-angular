@@ -1,4 +1,4 @@
-import { BenchmarkSuite } from '../../utils';
+import type { BenchmarkSuite } from '../../utils';
 
 export const oneOfSuite: BenchmarkSuite = {
   testSet: {
@@ -7,8 +7,8 @@ export const oneOfSuite: BenchmarkSuite = {
     expression: expression,
     'Array#includes2': arrayIncludes2,
     'Object#prop2': objectProperty2,
-    expression2: expression2
-  }
+    expression2: expression2,
+  },
 };
 
 function arrayIncludes() {
@@ -19,15 +19,15 @@ function objectProperty() {
   const obj: any = {
     string: true,
     symbol: true,
-    number: true
+    number: true,
   };
   obj[typeof 'test'];
 }
 
 function expression() {
   typeof 'test' === 'string' ||
-  typeof 'test' === 'symbol' ||
-  typeof 'test' === 'number';
+    typeof 'test' === 'symbol' ||
+    typeof 'test' === 'number';
 }
 
 const arr = ['string', 'symbol', 'number'];
@@ -39,7 +39,7 @@ function arrayIncludes2() {
 const obj: any = {
   string: true,
   symbol: true,
-  number: true
+  number: true,
 };
 
 function objectProperty2() {

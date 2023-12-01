@@ -1,21 +1,20 @@
 import { Subject } from 'rxjs';
+import type { ListRange } from '../src/index';
 import {
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
-  ListRange,
   DynamicSizeVirtualScrollStrategy,
   RxVirtualScrollElementDirective,
   RxVirtualScrollWindowDirective,
 } from '../src/index';
 import { createOutputSpy, mount } from 'cypress/angular';
 import { By } from '@angular/platform-browser';
+import type { Item, VirtualScrollMountConfig } from './fixtures';
 import {
   defaultMountConfig,
   generateItems,
   getDefaultMountConfig,
   getViewportComponent,
-  Item,
-  VirtualScrollMountConfig,
 } from './fixtures';
 
 interface DynamicVirtualScrollMountConfig

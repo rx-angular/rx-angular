@@ -1,6 +1,13 @@
-import { ErrorHandler } from '@angular/core';
-import { merge, OperatorFunction, Subject } from 'rxjs';
-import { EffectMap, KeysOf, RxActions, SubjectMap, ValuesOf } from './types';
+import type { ErrorHandler } from '@angular/core';
+import type { OperatorFunction } from 'rxjs';
+import { merge, Subject } from 'rxjs';
+import type {
+  EffectMap,
+  KeysOf,
+  RxActions,
+  SubjectMap,
+  ValuesOf,
+} from './types';
 
 /**
  * @internal
