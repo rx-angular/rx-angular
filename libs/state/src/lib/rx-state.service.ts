@@ -434,7 +434,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       const slice$ = keyOrInputOrSlice$.pipe(
         map((v) => projectionStateFn(this.accumulator.state, v as V))
       );
-      this.accumulator.nextSliceObservable(slice$);
+      this.accumulator.nextSliceObservable(slice$ as Observable<V>);
       return;
     }
 
@@ -448,7 +448,7 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
       const slice$ = toObservable(keyOrInputOrSlice$, {
         injector: this.injector,
       }).pipe(map((v) => projectionStateFn(this.accumulator.state, v as V)));
-      this.accumulator.nextSliceObservable(slice$);
+      this.accumulator.nextSliceObservable(slice$ as Observable<V>);
       return;
     }
 
