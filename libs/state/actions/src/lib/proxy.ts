@@ -71,7 +71,11 @@ export function actionProxyHandler<T extends object, U extends object>({
 
       // the user wants to get a single EventEmitter and trigger a side effect on event emission
       if (prop.toString().startsWith('on')) {
-        const propName = prop.toString().slice(2).toLowerCase() as KeysOfT;
+        // we need to first remove the 'on' from the the prop name
+        const slicedPropName = prop.toString().slice(2);
+        // now convert the slicedPropName to camelcase
+        const propName = (slicedPropName.charAt(0).toLowerCase() +
+          slicedPropName.slice(1)) as KeysOfT;
         return (
           behaviour: OperatorFunction<T[KeysOfT], T[KeysOfT]>,
           sf: (v: T[KeysOfT]) => void

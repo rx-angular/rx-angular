@@ -90,11 +90,17 @@ describe('actions fn', () => {
     const t = { se: () => void 0 };
     const dummyBehaviour = (o$) => o$;
     const spyT = jest.fn((_: any) => void 0);
+    const spyF = jest.fn((_: any) => void 0);
 
-    const sub = component.actions.onProp(dummyBehaviour, spyT);
+    component.actions.onProp(dummyBehaviour, spyT);
     component.actions.prop('p');
     expect(spyT).toBeCalledTimes(1);
     expect(spyT).toBeCalledWith('p');
+
+    component.actions.onLongPropName(dummyBehaviour, spyF);
+    component.actions.longPropName('p');
+    expect(spyF).toBeCalledTimes(1);
+    expect(spyF).toBeCalledWith('p');
   });
 
   it('should apply behaviour to trigger', () => {
@@ -200,7 +206,13 @@ describe('actions fn', () => {
   });
 });
 
-type Actions = { prop: string; prop2: string; search: string; resize: number };
+type Actions = {
+  prop: string;
+  prop2: string;
+  search: string;
+  resize: number;
+  longPropName: string;
+};
 function setupComponent<
   Actions extends object,
   Transforms extends ActionTransforms<Actions> = {}
