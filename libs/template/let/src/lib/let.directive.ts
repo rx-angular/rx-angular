@@ -39,6 +39,7 @@ import {
   ObservableInput,
   ReplaySubject,
   Subject,
+  Subscribable,
   Subscription,
 } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -130,7 +131,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param { ObservableInput<U> | U | null | undefined } rxLet
    */
-  @Input() rxLet: ObservableInput<U> | U | null | undefined;
+  @Input() rxLet: ObservableInput<U> | Subscribable<U> | U | null | undefined;
 
   /**
    * @description

@@ -5,6 +5,7 @@ import {
   Observable,
   ObservableInput,
   ReplaySubject,
+  Subscribable,
 } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -91,11 +92,13 @@ const handleSuspenseAndLastValueInNotifications = <T>() => {
  */
 export function createTemplateNotifier<U>(): {
   values$: Observable<RxNotification<U>>;
-  next(observable: ObservableInput<U> | U): void;
+  next(observable: ObservableInput<U> | U | Subscribable<U>): void;
   withInitialSuspense(withInitialSuspense: boolean): void;
 } {
   // A Subject driven from the outside, it can contain Observables, static values null and undefined on purpose of from unassigned properties
-  const observablesSubject = new ReplaySubject<ObservableInput<U> | U>(1);
+  const observablesSubject = new ReplaySubject<
+    ObservableInput<U> | U | Subscribable<U>
+  >(1);
 
   let emittedValueOnce = false;
 
@@ -121,7 +124,7 @@ export function createTemplateNotifier<U>(): {
   );
 
   return {
-    next(observable: ObservableInput<U> | U) {
+    next(observable: ObservableInput<U> | U | Subscribable<U>) {
       observablesSubject.next(observable);
     },
     withInitialSuspense(withInitialSuspense: boolean) {
