@@ -8,6 +8,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { select } from '@rx-angular/state/selections';
+import { RxState } from './rx-state.service';
 
 export type SignalStateProxy<State extends object> = {
   [K in keyof State]: Signal<State[K]>;
@@ -15,7 +16,7 @@ export type SignalStateProxy<State extends object> = {
 
 export function createSignalStateProxy<State extends object>(
   state$: Observable<State>,
-  stateFn: <K extends keyof State>(k: K) => State[K]
+  stateFn: RxState<State>['get']
 ) {
   const destroyRef = inject(DestroyRef);
 
@@ -23,15 +24,17 @@ export function createSignalStateProxy<State extends object>(
   return new Proxy<SignalStateProxy<State>>(signalState, {
     get<K extends keyof State>(
       target: SignalStateProxy<State>,
-      p: K | string | symbol
+      key: string // nested.state.key.to.get
     ): Signal<State[K]> {
-      let _signal = target[p as K];
+      const keyFields = key.split('.'); // ['nested', 'state', 'key', 'to', 'get']
+      let _signal = target[key];
       if (!_signal) {
-        const val = stateFn(p as K);
+        // get initial value from stateFn
+        const val = stateFn(...(keyFields as [K])); // get the value from the stateFn; TODO: fix types
         _signal = signal(val);
-        target[p as K] = _signal;
+        target[key] = _signal;
         state$
-          .pipe(select(p as K), takeUntilDestroyed(destroyRef))
+          .pipe(select(...(keyFields as [any])), takeUntilDestroyed(destroyRef))
           .subscribe((val) => (_signal as WritableSignal<State[K]>).set(val));
       }
       return _signal;

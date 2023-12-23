@@ -148,6 +148,46 @@ describe(rxState, () => {
       expect(count === count2).toBe(true);
     });
 
+    it('should create a signal from multiple nested keys', () => {
+      const { component } = setupComponent<NestedStateInterface>(({ set }) => {
+        set({
+          count: 1337,
+          depth1: {
+            depth2: {
+              depth3: {
+                depth4: {
+                  depth5: {
+                    test: 'works',
+                  },
+                },
+              },
+            },
+          },
+        });
+      });
+
+      const state = component.state;
+      const nestedSignal = state.signal(
+        'depth1',
+        'depth2',
+        'depth3',
+        'depth4',
+        'depth5',
+        'test'
+      );
+
+      expect(isSignal(nestedSignal)).toBe(true);
+      expect(nestedSignal()).toBe('works');
+
+      state.set({
+        depth1: {
+          depth2: { depth3: { depth4: { depth5: { test: 'works2' } } } },
+        },
+      });
+
+      expect(nestedSignal()).toBe('works2');
+    });
+
     it('signal should get updated', () => {
       const { component } = setupComponent<{ count: number }>(({ set }) => {
         set({ count: 1337 });
@@ -335,5 +375,20 @@ function setupComponent<State extends { count: number }>(
   return {
     fixture,
     component: fixture.componentInstance,
+  };
+}
+
+interface NestedStateInterface {
+  count: number;
+  depth1: {
+    depth2: {
+      depth3: {
+        depth4: {
+          depth5: {
+            test: string;
+          };
+        };
+      };
+    };
   };
 }
