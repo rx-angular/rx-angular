@@ -2,7 +2,7 @@
   "retryOn429": true,
   "httpHeaders": [
     {
-      "urls": ["https://ngrx.io/"],
+      "urls": ["https://ngrx.io/", "https://www.reddit.com"],
       "headers": {
         "Accept-Encoding": "zstd, br, gzip, deflate"
       }
