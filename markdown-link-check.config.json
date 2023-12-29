@@ -13,6 +13,9 @@
   "ignorePatterns": [
     {
       "pattern": "^https://ngrx.io/"
+    },
+    {
+      "pattern": "^https://www.reddit.com/"
     }
   ]
 }
