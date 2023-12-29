@@ -103,6 +103,7 @@ export function unpatchEventListener(
  * Included Features:
  *  - by default un-patch all registered listeners of the host it is applied on
  *  - un-patch only a specified set of registered event listeners
+ *  - un-patch all events listeners except a specified set
  *  - works zone independent (it directly checks the widow for patched APIs and un-patches them without the use of `runOutsideZone` which brings more performance)
  *  - Not interfering with any logic executed by the registered callback
  *
@@ -142,7 +143,17 @@ export class RxUnpatch implements OnChanges, AfterViewInit, OnDestroy {
 
   ngOnChanges({ events }: SimpleChanges): void {
     if (events && Array.isArray(this.events)) {
-      this.events$.next(this.events);
+      const negatedEvents = this.events
+        .filter((event) => event.startsWith('!'))
+        .map((event) => event.replace('!', ''));
+
+      const nextEvents = negatedEvents.length
+        ? zonePatchedEvents.filter(
+            (zonePatchedEvent) => !negatedEvents.includes(zonePatchedEvent)
+          )
+        : this.events;
+
+      this.events$.next(nextEvents);
     }
   }
 
