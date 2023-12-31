@@ -7,8 +7,11 @@ import {
   ContentChild,
   ElementRef,
   inject,
+  Input,
   OnDestroy,
+  OnInit,
   Output,
+  Renderer2,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -86,7 +89,8 @@ export class RxVirtualScrollViewportComponent
     RxVirtualScrollViewport,
     AfterViewInit,
     AfterContentInit,
-    OnDestroy
+    OnDestroy,
+    OnInit
 {
   private elementRef = inject(ElementRef<HTMLElement>);
   private scrollStrategy = inject(RxVirtualScrollStrategy<unknown>, {
@@ -120,6 +124,18 @@ export class RxVirtualScrollViewportComponent
   /**
    * @description
    *
+   * The reason for this input is to allow the passing of required external
+   * attributes for the runway <div> tag. It's very beneficial when integrating
+   * with other solutions, like scrollbars libs, which style and customize
+   * native scrollbars, and it's required to finally show only styled ones
+   * and protect flickering when custom ones replace native ones.
+   */
+  @Input()
+  viewportAttrs: Array<{name: string; value?: string}> = [];
+
+  /**
+   * @description
+   *
    * The range to be rendered by `*rxVirtualFor`. This value is determined by the
    * provided `RxVirtualScrollStrategy`. It gives the user information about the
    * range of items being actually rendered to the DOM.
@@ -144,7 +160,9 @@ export class RxVirtualScrollViewportComponent
   private contentSize = 0;
 
   /** @internal */
-  constructor() {
+  constructor(
+    private _renderer: Renderer2
+  ) {
     if (NG_DEV_MODE && !this.scrollStrategy) {
       throw Error(
         'Error: rx-virtual-scroll-viewport requires an `RxVirtualScrollStrategy` to be set.'
@@ -168,6 +186,12 @@ export class RxVirtualScrollViewportComponent
         takeUntil(this.destroy$)
       )
       .subscribe(this._containerRect$);
+  }
+
+  ngOnInit() {
+    this.viewportAttrs.forEach(attr => this._renderer.setAttribute(
+      this.runway.nativeElement, attr.name, attr.value ? attr.value : ''
+    ));
   }
 
   ngAfterViewInit() {
