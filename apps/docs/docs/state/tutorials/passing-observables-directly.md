@@ -65,6 +65,7 @@ If we compare the number of change detections with the above example where we pa
 In a real life application only a view of those changes at the right place gives a big impact in performance.
 
 #### Be careful, passing an Observable as Input does not come without risks
+
 If you override the initial reference with a new Observable, the initial Observable is still connected to state and emissisions of this Observable will still affect state and eventually leading to unexpected changes in your component's view.
 
 As a best practice only pass Observables as Inputs, if the reference is not changing.
