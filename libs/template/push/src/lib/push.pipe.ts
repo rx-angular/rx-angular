@@ -91,8 +91,6 @@ export class RxPush implements PipeTransform, OnDestroy {
   /** @internal */
   private strategyProvider = inject(RxStrategyProvider);
   /** @internal */
-  private cdRef = inject(ChangeDetectorRef);
-  /** @internal */
   private ngZone = inject(NgZone);
   /**
    * @internal
@@ -118,6 +116,8 @@ export class RxPush implements PipeTransform, OnDestroy {
   private patchZone: false | NgZone;
   /** @internal */
   private _renderCallback: NextObserver<any>;
+
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   transform<U>(
     potentialObservable: null,
