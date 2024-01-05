@@ -74,7 +74,7 @@
       "executor": "@jscutlery/semver:version",
       "options": {
         "noVerify": true,
-        "baseBranch": "main",
+        "baseBranch": "backport-push-pipe-cd-fix",
         "tagPrefix": "{projectName}@",
         "commitMessageFormat": "release({projectName}): {version}",
         "postTargets": ["template:github"],
