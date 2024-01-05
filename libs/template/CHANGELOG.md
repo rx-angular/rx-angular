@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [17.0.1](https://github.com/rx-angular/rx-angular/compare/template@17.0.0...template@17.0.1) (2024-01-05)
+
+
+### Bug Fixes
+
+* **template:** use correct CdRef instance in RxPush. fixes [#1606](https://github.com/rx-angular/rx-angular/issues/1606) ([b53aea4](https://github.com/rx-angular/rx-angular/commit/b53aea4acf5aa972889b785eeaf5337dbe964777))
+
+
+
 # [17.0.0](https://github.com/rx-angular/rx-angular/compare/template@16.1.1...template@17.0.0) (2023-11-17)
 
 
