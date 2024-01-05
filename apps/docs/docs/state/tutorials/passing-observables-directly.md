@@ -62,7 +62,7 @@ In the child's `@Input` binding the `connect` method get used to forward the val
 This in turn triggers another re-rendering, and the value get displayed in the child component.
 
 If we compare the number of change detections with the above example where we passed the single values we save 1 rendering per emission.
-In a real life application only a view of those changes at the right place gives a big impact in performance.
+In a real life application only a few of those changes at the right place gives a big impact in performance.
 
 #### Be careful, passing an Observable as Input does not come without risks
 
