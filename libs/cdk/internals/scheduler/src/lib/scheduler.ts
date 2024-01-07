@@ -18,6 +18,10 @@ import { PriorityLevel } from './schedulerPriorities';
  */
 declare const ngDevMode: boolean;
 
+const isPostTaskSupported =
+  typeof ɵglobal.scheduler !== 'undefined' &&
+  typeof ɵglobal.scheduler.postTask === 'function';
+
 let getCurrentTime: () => number;
 const hasPerformanceNow =
   typeof ɵglobal.performance === 'object' &&
@@ -561,7 +565,9 @@ if (typeof setImmediate === 'function') {
 
 function requestHostCallback(callback) {
   scheduledHostCallback = callback;
-  if (!isMessageLoopRunning) {
+  if (isPostTaskSupported) {
+    ɵglobal.scheduler.postTask(performWorkUntilDeadline);
+  } else if (!isMessageLoopRunning) {
     isMessageLoopRunning = true;
     schedulePerformWorkUntilDeadline();
   }
