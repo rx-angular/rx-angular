@@ -1,4 +1,4 @@
-export const enum PriorityLevel {
+export enum PriorityLevel {
   NoPriority,
   ImmediatePriority,
   UserBlockingPriority,
