@@ -36,7 +36,8 @@ export type RxConcurrentStrategyNames =
   | 'userBlocking'
   | 'normal'
   | 'low'
-  | 'idle';
+  | 'idle'
+  | 'userVisible';
 export type RxDefaultStrategyNames =
   | RxNativeStrategyNames
   | RxConcurrentStrategyNames;

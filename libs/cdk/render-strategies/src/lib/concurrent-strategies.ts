@@ -2,6 +2,8 @@ import { NgZone } from '@angular/core';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { filter, mapTo, switchMap } from 'rxjs/operators';
 import {
+  cancelCallback,
+  scheduleCallback,
   unstable_cancelCallback,
   unstable_scheduleCallback,
   PriorityLevel,
@@ -89,7 +91,55 @@ const idleStrategy: RxStrategyCredentials = {
   },
 };
 
+const postTaskUserVisibleStrategy: RxStrategyCredentials = {
+  name: 'userVisible',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: ({ work, scope, ngZone }) => {
+    return (o$) =>
+      o$.pipe(
+        scheduleOnPostTaskQueue(work, {
+          ngZone,
+          priority: PriorityLevel.IdlePriority,
+          scope,
+        })
+      );
+  },
+};
+
 function scheduleOnQueue<T>(
+  work: (...args: any[]) => void,
+  options: {
+    priority: PriorityLevel;
+    scope: coalescingObj;
+    delay?: number;
+    ngZone: NgZone;
+  }
+): MonoTypeOperatorFunction<T> {
+  const scope = (options.scope as Record<string, unknown>) || {};
+  return (o$: Observable<T>): Observable<T> =>
+    o$.pipe(
+      filter(() => !coalescingManager.isCoalescing(scope)),
+      switchMap((v) =>
+        new Observable<T>((subscriber) => {
+          coalescingManager.add(scope);
+          const task = scheduleCallback(
+            options.priority,
+            () => {
+              work();
+              coalescingManager.remove(scope);
+              subscriber.next(v);
+            },
+            { delay: options.delay }
+          );
+          return () => {
+            coalescingManager.remove(scope);
+            cancelCallback(task);
+          };
+        }).pipe(mapTo(v))
+      )
+    );
+}
+function scheduleOnPostTaskQueue<T>(
   work: (...args: any[]) => void,
   options: {
     priority: PriorityLevel;
@@ -131,4 +181,5 @@ export const RX_CONCURRENT_STRATEGIES: RxConcurrentStrategies = {
   normal: normalStrategy,
   low: lowStrategy,
   idle: idleStrategy,
+  userVisible: postTaskUserVisibleStrategy,
 };
