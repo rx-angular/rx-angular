@@ -1,4 +1,3 @@
-import { ɵglobal } from '@angular/core';
 import {
   RxZoneFlagsHelperFunctions,
   zoneGlobalDisableConfigurationsKeys,
@@ -75,7 +74,7 @@ const reduceToObject = <T>(methodsArray: any[]): T => {
  *
  */
 function createZoneFlagsConfigurator(): RxZoneConfig {
-  const cfg = ɵglobal as unknown as RxZoneGlobalConfigurations;
+  const cfg = globalThis as unknown as RxZoneGlobalConfigurations;
   const configProps = [
     ...[
       ...zoneGlobalDisableConfigurationsKeys,
