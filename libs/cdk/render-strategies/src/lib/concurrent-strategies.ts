@@ -2,9 +2,8 @@ import { NgZone } from '@angular/core';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { filter, mapTo, switchMap } from 'rxjs/operators';
 import {
-  cancelCallback,
-  scheduleCallback,
-  forceFrameRate,
+  unstable_cancelCallback,
+  unstable_scheduleCallback,
   PriorityLevel,
 } from '@rx-angular/cdk/internals/scheduler';
 
@@ -14,9 +13,6 @@ import {
   RxStrategyCredentials,
 } from './model';
 import { coalescingManager, coalescingObj } from '@rx-angular/cdk/coalescing';
-
-// set default to 60fps
-forceFrameRate(60);
 
 const immediateStrategy: RxStrategyCredentials = {
   name: 'immediate',
@@ -109,18 +105,18 @@ function scheduleOnQueue<T>(
       switchMap((v) =>
         new Observable<T>((subscriber) => {
           coalescingManager.add(scope);
-          const task = scheduleCallback(
+          const task = unstable_scheduleCallback(
             options.priority,
             () => {
               work();
               coalescingManager.remove(scope);
               subscriber.next(v);
             },
-            { delay: options.delay, ngZone: options.ngZone }
+            { delay: options.delay }
           );
           return () => {
             coalescingManager.remove(scope);
-            cancelCallback(task);
+            unstable_cancelCallback(task);
           };
         }).pipe(mapTo(v))
       )
