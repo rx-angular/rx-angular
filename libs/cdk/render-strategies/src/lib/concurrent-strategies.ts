@@ -92,7 +92,37 @@ const idleStrategy: RxStrategyCredentials = {
 };
 
 const postTaskUserVisibleStrategy: RxStrategyCredentials = {
-  name: 'userVisible',
+  name: 'postTaskUserVisible',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: ({ work, scope, ngZone }) => {
+    return (o$) =>
+      o$.pipe(
+        scheduleOnPostTaskQueue(work, {
+          ngZone,
+          priority: PriorityLevel.NormalPriority,
+          scope,
+        })
+      );
+  },
+};
+
+const postTaskUserBlockingStrategy: RxStrategyCredentials = {
+  name: 'postTaskUserBlocking',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: ({ work, scope, ngZone }) => {
+    return (o$) =>
+      o$.pipe(
+        scheduleOnPostTaskQueue(work, {
+          ngZone,
+          priority: PriorityLevel.UserBlockingPriority,
+          scope,
+        })
+      );
+  },
+};
+
+const postTaskBackgroundStrategy: RxStrategyCredentials = {
+  name: 'postTaskBackground',
   work: (cdRef) => cdRef.detectChanges(),
   behavior: ({ work, scope, ngZone }) => {
     return (o$) =>
@@ -181,5 +211,7 @@ export const RX_CONCURRENT_STRATEGIES: RxConcurrentStrategies = {
   normal: normalStrategy,
   low: lowStrategy,
   idle: idleStrategy,
-  userVisible: postTaskUserVisibleStrategy,
+  postTaskUserVisible: postTaskUserVisibleStrategy,
+  postTaskUserBlocking: postTaskUserBlockingStrategy,
+  postTaskBackground: postTaskBackgroundStrategy,
 };

@@ -37,7 +37,9 @@ export type RxConcurrentStrategyNames =
   | 'normal'
   | 'low'
   | 'idle'
-  | 'userVisible';
+  | 'postTaskUserVisible'
+  | 'postTaskUserBlocking'
+  | 'postTaskBackground';
 export type RxDefaultStrategyNames =
   | RxNativeStrategyNames
   | RxConcurrentStrategyNames;
