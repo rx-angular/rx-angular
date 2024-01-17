@@ -264,7 +264,7 @@ import { rxActions } from '@rx-angular/state/actions';
 
 @Component({
   template: `
-    <input name="name" (input)="ui.greet()" />
+    <input name="name" (input)="ui.greet($event.target.value)" />
     <div>{{ ui.greet$ | async }}</div>
   `,
   /**/
