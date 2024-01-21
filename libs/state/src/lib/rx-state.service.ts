@@ -30,21 +30,21 @@ import {
 import { catchError, map, tap } from 'rxjs/operators';
 import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
 
-export type ProjectStateFn<TType> = (oldState: TType) => Partial<TType>;
+export type ProjectStateFn<Type> = (oldState: Type) => Partial<Type>;
 
-export type ProjectValueFn<TType, TKey extends keyof TType> = (
-  oldState: TType
-) => TType[TKey];
+export type ProjectValueFn<Type, Key extends keyof Type> = (
+  oldState: Type
+) => Type[Key];
 
-export type ProjectStateReducer<TType, TValue> = (
-  oldState: TType,
-  value: TValue
-) => Partial<TType>;
+export type ProjectStateReducer<Type, Value> = (
+  oldState: Type,
+  value: Value
+) => Partial<Type>;
 
-export type ProjectValueReducer<TType, TKey extends keyof TType, TValue> = (
-  oldState: TType,
-  value: TValue
-) => TType[TKey];
+export type ProjectValueReducer<Type, Key extends keyof Type, Value> = (
+  oldState: Type,
+  value: Value
+) => Type[Key];
 
 /**
  * @description
@@ -66,24 +66,24 @@ export type ProjectValueReducer<TType, TKey extends keyof TType, TValue> = (
  * @docsPage RxState
  */
 @Injectable()
-export class RxState<TType extends object>
-  implements OnDestroy, Subscribable<TType>
+export class RxState<State extends object>
+  implements OnDestroy, Subscribable<State>
 {
   private subscription = new Subscription();
 
-  private accumulator = createAccumulationObservable<TType>();
+  private accumulator = createAccumulationObservable<State>();
   private effectObservable = createSideEffectObservable();
 
   private readonly injector = inject(Injector);
 
-  private signalStoreProxy: SignalStateProxy<TType>;
+  private signalStoreProxy: SignalStateProxy<State>;
 
   /**
    * @description
-   * The unmodified state exposed as `Observable<TType>`. It is not shared, distinct or gets replayed.
+   * The unmodified state exposed as `Observable<State>`. It is not shared, distinct or gets replayed.
    * Use the `$` property if you want to read the state without having applied {@link stateful} to it.
    */
-  readonly $: Observable<TType> = this.accumulator.signal$;
+  readonly $: Observable<State> = this.accumulator.signal$;
 
   /**
    * @internal
@@ -129,9 +129,9 @@ export class RxState<TType extends object>
    *   doStuff();
    * }
    *
-   * @return TType
+   * @return State
    */
-  get(): TType;
+  get(): State;
 
   /**
    * @description
@@ -145,114 +145,110 @@ export class RxState<TType extends object>
    * // Access a nested property
    * const foo = state.get('bar', 'foo');
    *
-   * @param {TKeyOne} keyOne
-   * @return TType[TKeyOne]
+   * @param {KeyA} keyA
+   * @return State[KeyA]
    */
-  get<TKeyOne extends keyof TType>(keyOne: TKeyOne): TType[TKeyOne];
+  get<KeyA extends keyof State>(keyA: KeyA): State[KeyA];
 
   /** @internal **/
-  get<TKeyOne extends keyof TType, TKeyTwo extends keyof TType[TKeyOne]>(
-    keyOne: TKeyOne,
-    keyTwo: TKeyTwo
-  ): TType[TKeyOne][TKeyTwo];
+  get<KeyA extends keyof State, KeyB extends keyof State[KeyA]>(
+    keyA: KeyA,
+    keyB: KeyB
+  ): State[KeyA][KeyB];
 
   /** @internal **/
   get<
-    TKeyOne extends keyof TType,
-    TKeyTwo extends keyof TType[TKeyOne],
-    TKeyThree extends keyof TType[TKeyOne][TKeyTwo]
+    KeyA extends keyof State,
+    KeyB extends keyof State[KeyA],
+    KeyC extends keyof State[KeyA][KeyB]
+  >(keyA: KeyA, keyB: KeyB, keyC: KeyC): State[KeyA][KeyB][KeyC];
+
+  /** @internal **/
+  get<
+    KeyA extends keyof State,
+    KeyB extends keyof State[KeyA],
+    KeyC extends keyof State[KeyA][KeyB],
+    KeyD extends keyof State[KeyA][KeyB][KeyC]
   >(
-    keyOne: TKeyOne,
-    keyTwo: TKeyTwo,
-    keyThree: TKeyThree
-  ): TType[TKeyOne][TKeyTwo][TKeyThree];
+    keyA: KeyA,
+    keyB: KeyB,
+    keyC: KeyC,
+    keyD: KeyD
+  ): State[KeyA][KeyB][KeyC][KeyD];
 
   /** @internal **/
   get<
-    TKeyOne extends keyof TType,
-    TKeyTwo extends keyof TType[TKeyOne],
-    TKeyThree extends keyof TType[TKeyOne][TKeyTwo],
-    TKeyFour extends keyof TType[TKeyOne][TKeyTwo][TKeyThree]
+    KeyA extends keyof State,
+    KeyB extends keyof State[KeyA],
+    KeyC extends keyof State[KeyA][KeyB],
+    KeyD extends keyof State[KeyA][KeyB][KeyC],
+    KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD]
   >(
-    keyOne: TKeyOne,
-    keyTwo: TKeyTwo,
-    keyThree: TKeyThree,
-    keyFour: TKeyFour
-  ): TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour];
+    keyA: KeyA,
+    keyB: KeyB,
+    keyC: KeyC,
+    keyD: KeyD,
+    keyE: KeyE
+  ): State[KeyA][KeyB][KeyC][KeyD][KeyE];
 
   /** @internal **/
   get<
-    TKeyOne extends keyof TType,
-    TKeyTwo extends keyof TType[TKeyOne],
-    TKeyThree extends keyof TType[TKeyOne][TKeyTwo],
-    TKeyFour extends keyof TType[TKeyOne][TKeyTwo][TKeyThree],
-    TKeyFive extends keyof TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour]
+    KeyA extends keyof State,
+    KeyB extends keyof State[KeyA],
+    KeyC extends keyof State[KeyA][KeyB],
+    KeyD extends keyof State[KeyA][KeyB][KeyC],
+    KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD],
+    KeyF extends keyof State[KeyA][KeyB][KeyC][KeyD][KeyE]
   >(
-    keyOne: TKeyOne,
-    keyTwo: TKeyTwo,
-    keyThree: TKeyThree,
-    keyFour: TKeyFour,
-    keyFive: TKeyFive
-  ): TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour][TKeyFive];
+    keyA: KeyA,
+    keyB: KeyB,
+    keyC: KeyC,
+    keyD: KeyD,
+    keyE: KeyE,
+    keyF: KeyF
+  ): State[KeyA][KeyB][KeyC][KeyD][KeyE][KeyF];
 
   /** @internal **/
   get<
-    TKeyOne extends keyof TType,
-    TKeyTwo extends keyof TType[TKeyOne],
-    TKeyThree extends keyof TType[TKeyOne][TKeyTwo],
-    TKeyFour extends keyof TType[TKeyOne][TKeyTwo][TKeyThree],
-    TKeyFive extends keyof TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour],
-    TKeySix extends keyof TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour][TKeyFive]
-  >(
-    keyOne: TKeyOne,
-    keyTwo: TKeyTwo,
-    keyThree: TKeyThree,
-    keyFour: TKeyFour,
-    keyFive: TKeyFive,
-    keySix: TKeySix
-  ): TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour][TKeyFive][TKeySix];
-
-  /** @internal **/
-  get<
-    TKeyOne extends keyof TType,
-    TKeyTwo extends keyof TType[TKeyOne],
-    TKeyThree extends keyof TType[TKeyOne][TKeyTwo],
-    TKeyFour extends keyof TType[TKeyOne][TKeyTwo][TKeyThree],
-    TKeyFive extends keyof TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour],
-    TKeySix extends keyof TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour][TKeyFive]
+    KeyA extends keyof State,
+    KeyB extends keyof State[KeyA],
+    KeyC extends keyof State[KeyA][KeyB],
+    KeyD extends keyof State[KeyA][KeyB][KeyC],
+    KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD],
+    KeyF extends keyof State[KeyA][KeyB][KeyC][KeyD][KeyE]
   >(
     ...keys:
-      | [TKeyOne]
-      | [TKeyOne, TKeyTwo]
-      | [TKeyOne, TKeyTwo, TKeyThree]
-      | [TKeyOne, TKeyTwo, TKeyThree, TKeyFour]
-      | [TKeyOne, TKeyTwo, TKeyThree, TKeyFour, TKeyFive]
-      | [TKeyOne, TKeyTwo, TKeyThree, TKeyFour, TKeyFive, TKeySix]
+      | [KeyA]
+      | [KeyA, KeyB]
+      | [KeyA, KeyB, KeyC]
+      | [KeyA, KeyB, KeyC, KeyD]
+      | [KeyA, KeyB, KeyC, KeyD, KeyE]
+      | [KeyA, KeyB, KeyC, KeyD, KeyE, KeyF]
   ):
-    | TType
-    | TType[TKeyOne]
-    | TType[TKeyOne][TKeyTwo]
-    | TType[TKeyOne][TKeyTwo][TKeyThree]
-    | TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour]
-    | TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour][TKeyFive]
-    | TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour][TKeyFive][TKeySix] {
+    | State
+    | State[KeyA]
+    | State[KeyA][KeyB]
+    | State[KeyA][KeyB][KeyC]
+    | State[KeyA][KeyB][KeyC][KeyD]
+    | State[KeyA][KeyB][KeyC][KeyD][KeyE]
+    | State[KeyA][KeyB][KeyC][KeyD][KeyE][KeyF] {
     const hasStateAnyKeys = Object.keys(this.accumulator.state).length > 0;
     if (!!keys && keys.length) {
       return safePluck(this.accumulator.state, keys);
     } else {
       return hasStateAnyKeys
         ? this.accumulator.state
-        : (undefined as unknown as TType);
+        : (undefined as unknown as State);
     }
   }
 
   /**
    * @description
    * Manipulate one or many properties of the state by providing
-   * a `Partial<TType>`state or a `ProjectionFunction<TType>`.
+   * a `Partial<State>`state or a `ProjectionFunction<State>`.
    *
    * @example
-   * // Update one or many properties of the state by providing a `Partial<TType>`
+   * // Update one or many properties of the state by providing a `Partial<State>`
    *
    * const partialState = {
    *   foo: 'bar',
@@ -260,40 +256,40 @@ export class RxState<TType extends object>
    * };
    * state.set(partialState);
    *
-   * // Update one or many properties of the state by providing a `ProjectionFunction<TType>`
+   * // Update one or many properties of the state by providing a `ProjectionFunction<State>`
    *
    * const reduceFn = oldState => ({
    *   bar: oldState.bar + 5
    * });
    * state.set(reduceFn);
    *
-   * @param {Partial<TType>|ProjectStateFn<Ttype>} stateOrProjectState
+   * @param {Partial<State>|ProjectStateFn<State>} stateOrProjectState
    * @return void
    */
-  set(stateOrProjectState: Partial<TType> | ProjectStateFn<TType>): void;
+  set(stateOrProjectState: Partial<State> | ProjectStateFn<State>): void;
 
   /**
    * @description
-   * Manipulate a single property of the state by the property name and a `ProjectionFunction<TType>`.
+   * Manipulate a single property of the state by the property name and a `ProjectionFunction<State>`.
    *
    * @example
    * const reduceFn = oldState => oldState.bar + 5;
    * state.set('bar', reduceFn);
    *
-   * @param {TKey} key
-   * @param {ProjectValueFn<TType, TKey>} projectSlice
+   * @param {Key} key
+   * @param {ProjectValueFn<State, Key>} projectSlice
    * @return void
    */
-  set<TKey extends keyof TType, TObject>(
-    key: TKey,
-    projectSlice: ProjectValueFn<TType, TKey>
+  set<Key extends keyof State, Object>(
+    key: Key,
+    projectSlice: ProjectValueFn<State, Key>
   ): void;
   /**
    * @internal
    */
-  set<TKey extends keyof TType>(
-    keyOrStateOrProjectState: Partial<TType> | ProjectStateFn<TType> | TKey,
-    stateOrSliceProjectFn?: ProjectValueFn<TType, TKey>
+  set<Key extends keyof State>(
+    keyOrStateOrProjectState: Partial<State> | ProjectStateFn<State> | Key,
+    stateOrSliceProjectFn?: ProjectValueFn<State, Key>
   ): void {
     if (
       typeof keyOrStateOrProjectState === 'object' &&
@@ -314,10 +310,10 @@ export class RxState<TType extends object>
     }
 
     if (
-      isKeyOf<TType>(keyOrStateOrProjectState) &&
+      isKeyOf<State>(keyOrStateOrProjectState) &&
       typeof stateOrSliceProjectFn === 'function'
     ) {
-      const state: Partial<TType> = {};
+      const state: Partial<State> = {};
       state[keyOrStateOrProjectState] = stateOrSliceProjectFn(
         this.accumulator.state
       );
@@ -330,7 +326,7 @@ export class RxState<TType extends object>
 
   /**
    * @description
-   * Connect an `Observable<Partial<TType>>` to the state `TType`.
+   * Connect an `Observable<Partial<State>>` to the state `State`.
    * Any change emitted by the source will get merged into the state.
    * Subscription handling is done automatically.
    *
@@ -352,24 +348,24 @@ export class RxState<TType extends object>
    * // every 250ms the properties bar and foo get updated due to the emission of sliceToAdd$. Bar will increase by
    * // 5 due to the projectionFunction
    *
-   *  @param {Observable<Partial<TType>>} inputOrSlice$
+   *  @param {Observable<Partial<State>>} inputOrSlice$
    *  @return void
    */
-  connect(inputOrSlice$: Observable<Partial<TType>>): void;
+  connect(inputOrSlice$: Observable<Partial<State>>): void;
 
   /**
    * @description
-   * Connect a `Signal<Partial<TType>>` to the state `TType`.
+   * Connect a `Signal<Partial<State>>` to the state `State`.
    * Any change emitted by the source will get merged into the state.
    *
-   *  @param {Signal<Partial<TType>>} signal
+   *  @param {Signal<Partial<State>>} signal
    *  @return void
    */
-  connect(signal: Signal<Partial<TType>>): void;
+  connect(signal: Signal<Partial<State>>): void;
 
   /**
    * @description
-   * Connect an `Observable<TValue>` to the state `TType`.
+   * Connect an `Observable<Value>` to the state `State`.
    * Any change emitted by the source will get forwarded to project function and merged into the state.
    * Subscription handling is done automatically.
    *
@@ -379,34 +375,34 @@ export class RxState<TType extends object>
    * const sliceToAdd$ = interval(250);
    * state.connect(sliceToAdd$, (type, value) => ({bar: value}));
    * // every 250ms the property bar get updated due to the emission of sliceToAdd$
-   * @param {Observable<TValue>} inputOrSlice$
-   * @param {ProjectStateReducer<TType, TValue>} projectFn
+   * @param {Observable<Value>} inputOrSlice$
+   * @param {ProjectStateReducer<State, Value>} projectFn
    * @return void
    */
-  connect<TValue>(
-    inputOrSlice$: Observable<TValue>,
-    projectFn: ProjectStateReducer<TType, TValue>
+  connect<Value>(
+    inputOrSlice$: Observable<Value>,
+    projectFn: ProjectStateReducer<State, Value>
   ): void;
 
   /**
    * @description
-   * Connect a `Signal<TValue>` to the state `TType`.
+   * Connect a `Signal<Value>` to the state `State`.
    * Any change emitted by the source will get forwarded to the project function and merged into the state.
    *
    * You have to provide a `projectionFunction` to access the current state object and do custom mappings.
-   * @param {Signal<TValue>} signal
-   * @param {ProjectStateReducer<TType, TValue>} projectFn
+   * @param {Signal<Value>} signal
+   * @param {ProjectStateReducer<State, Value>} projectFn
    * @return void
    */
-  connect<TValue>(
-    signal: Signal<TValue>,
-    projectFn: ProjectStateReducer<TType, TValue>
+  connect<Value>(
+    signal: Signal<Value>,
+    projectFn: ProjectStateReducer<State, Value>
   ): void;
 
   /**
    *
    * @description
-   * Connect an `Observable<TType[TKey]>` source to a specific property `TKey` in the state `TType`.
+   * Connect an `Observable<State[Key]>` source to a specific property `Key` in the state `State`.
    * Any emitted change will update this specific property in the state.
    * Subscription handling is done automatically.
    *
@@ -414,34 +410,31 @@ export class RxState<TType extends object>
    * const myTimer$ = interval(250);
    * state.connect('timer', myTimer$);
    * // every 250ms the property timer will get updated
-   * @param {Tkey} key
-   * @param {Observable<TType[TKey]>} slice$
+   * @param {Key} key
+   * @param {Observable<State[Key]>} slice$
    *
    * @return void
    */
-  connect<TKey extends keyof TType>(
-    key: TKey,
-    slice$: Observable<TType[TKey]>
+  connect<Key extends keyof State>(
+    key: Key,
+    slice$: Observable<State[Key]>
   ): void;
 
   /**
    *
    * @description
-   * Connect a `Signal<TType[TKey]>` source to a specific property `TKey` in the state `TType`.
+   * Connect a `Signal<State[Key]>` source to a specific property `Key` in the state `State`.
    * Any emitted change will update this specific property in the state.
-   * @param {Tkey} key
-   * @param {Signal<TType[TKey]>} signal
+   * @param {Key} key
+   * @param {Signal<State[Key]>} signal
    *
    * @return void
    */
-  connect<TKey extends keyof TType>(
-    key: TKey,
-    signal: Signal<TType[TKey]>
-  ): void;
+  connect<Key extends keyof State>(key: Key, signal: Signal<State[Key]>): void;
 
   /**
    * @description
-   * Connect an `Observable<TValue>` source to a specific property in the state. Additionally, you can provide a
+   * Connect an `Observable<Value>` source to a specific property in the state. Additionally, you can provide a
    * `projectionFunction` to access the current state object on every emission of your connected `Observable`.
    * Any change emitted by the source will get merged into the state.
    * Subscription handling is done automatically.
@@ -450,50 +443,50 @@ export class RxState<TType extends object>
    * const myTimer$ = interval(250);
    * state.connect('timer', myTimer$, (state, timerChange) => state.timer += timerChange);
    * // every 250ms the property timer will get updated
-   * @param {Tkey} key
-   * @param {Observable<TValue>} input$
-   * @param {ProjectValueReducer<TType, TKey, TValue>} projectSliceFn
+   * @param {Key} key
+   * @param {Observable<Value>} input$
+   * @param {ProjectValueReducer<State, Key, Value>} projectSliceFn
    *
    * @return void
    */
-  connect<TKey extends keyof TType, TValue>(
-    key: TKey,
-    input$: Observable<TValue>,
-    projectSliceFn: ProjectValueReducer<TType, TKey, TValue>
+  connect<Key extends keyof State, Value>(
+    key: Key,
+    input$: Observable<Value>,
+    projectSliceFn: ProjectValueReducer<State, Key, Value>
   ): void;
 
   /**
    *
    * @description
-   * Connect a `Signal<TValue>` source to a specific property in the state. Additionally, you can provide a
+   * Connect a `Signal<Value>` source to a specific property in the state. Additionally, you can provide a
    * `projectionFunction` to access the current state object on every emission of your connected `Observable`.
    * Any change emitted by the source will get merged into the state.
    * Subscription handling is done automatically.
-   * @param {Tkey} key
-   * @param {Signal<TValue>} signal
-   * @param {ProjectValueReducer<TType, TKey, TValue>} projectSliceFn
+   * @param {Key} key
+   * @param {Signal<Value>} signal
+   * @param {ProjectValueReducer<State, Key, Value>} projectSliceFn
    *
    * @return void
    */
-  connect<TKey extends keyof TType, TValue>(
-    key: TKey,
-    signal: Signal<TValue>,
-    projectSliceFn: ProjectValueReducer<TType, TKey, TValue>
+  connect<Key extends keyof State, Value>(
+    key: Key,
+    signal: Signal<Value>,
+    projectSliceFn: ProjectValueReducer<State, Key, Value>
   ): void;
 
   /**
    * @internal
    */
-  connect<TKey extends keyof TType, TValue extends Partial<TType>>(
+  connect<Key extends keyof State, Value extends Partial<State>>(
     keyOrInputOrSlice$:
-      | TKey
-      | Observable<Partial<TType> | TValue>
-      | Signal<Partial<TType> | TValue>,
+      | Key
+      | Observable<Partial<State> | Value>
+      | Signal<Partial<State> | Value>,
     projectOrSlices$?:
-      | ProjectStateReducer<TType, TValue>
-      | Observable<TType[TKey] | TValue>
-      | Signal<TType[TKey] | TValue>,
-    projectValueFn?: ProjectValueReducer<TType, TKey, TValue>
+      | ProjectStateReducer<State, Value>
+      | Observable<State[Key] | Value>
+      | Signal<State[Key] | Value>,
+    projectValueFn?: ProjectValueReducer<State, Key, Value>
   ): void {
     /**
      * From top to bottom the overloads are handled.
@@ -522,9 +515,9 @@ export class RxState<TType extends object>
     ) {
       const projectionStateFn = projectOrSlices$;
       const slice$ = keyOrInputOrSlice$.pipe(
-        map((v) => projectionStateFn(this.accumulator.state, v as TValue))
+        map((v) => projectionStateFn(this.accumulator.state, v as Value))
       );
-      this.accumulator.nextSliceObservable(slice$ as Observable<TValue>);
+      this.accumulator.nextSliceObservable(slice$ as Observable<Value>);
       return;
     }
 
@@ -538,14 +531,14 @@ export class RxState<TType extends object>
       const slice$ = toObservable(keyOrInputOrSlice$, {
         injector: this.injector,
       }).pipe(
-        map((v) => projectionStateFn(this.accumulator.state, v as TValue))
+        map((v) => projectionStateFn(this.accumulator.state, v as Value))
       );
-      this.accumulator.nextSliceObservable(slice$ as Observable<TValue>);
+      this.accumulator.nextSliceObservable(slice$ as Observable<Value>);
       return;
     }
 
     if (
-      isKeyOf<TType>(keyOrInputOrSlice$) &&
+      isKeyOf<State>(keyOrInputOrSlice$) &&
       isObservable(projectOrSlices$) &&
       !projectValueFn
     ) {
@@ -557,7 +550,7 @@ export class RxState<TType extends object>
     }
 
     if (
-      isKeyOf<TType>(keyOrInputOrSlice$) &&
+      isKeyOf<State>(keyOrInputOrSlice$) &&
       isSignal(projectOrSlices$) &&
       !projectValueFn
     ) {
@@ -571,14 +564,14 @@ export class RxState<TType extends object>
     if (
       projectValueFn &&
       typeof projectValueFn === 'function' &&
-      isKeyOf<TType>(keyOrInputOrSlice$) &&
+      isKeyOf<State>(keyOrInputOrSlice$) &&
       isObservable(projectOrSlices$)
     ) {
-      const key: TKey = keyOrInputOrSlice$;
+      const key: Key = keyOrInputOrSlice$;
       const slice$ = projectOrSlices$.pipe(
         map((value) => ({
           ...{},
-          [key]: projectValueFn(this.get(), value as TValue),
+          [key]: projectValueFn(this.get(), value as Value),
         }))
       );
       this.accumulator.nextSliceObservable(slice$);
@@ -591,13 +584,13 @@ export class RxState<TType extends object>
       isKeyOf(keyOrInputOrSlice$) &&
       isSignal(projectOrSlices$)
     ) {
-      const key: TKey = keyOrInputOrSlice$;
+      const key: Key = keyOrInputOrSlice$;
       const slice$ = toObservable(projectOrSlices$, {
         injector: this.injector,
       }).pipe(
         map((value) => ({
           ...{},
-          [key]: projectValueFn(this.get(), value as TValue),
+          [key]: projectValueFn(this.get(), value as Value),
         }))
       );
       this.accumulator.nextSliceObservable(slice$);
@@ -609,7 +602,7 @@ export class RxState<TType extends object>
 
   /**
    * @description
-   * Returns the state as cached and distinct `Observable<TType>`.
+   * Returns the state as cached and distinct `Observable<Type>`.
    * This way you don't have to think about
    * **late subscribers**, **multiple subscribers** or **multiple emissions** of the same value
    *
@@ -619,11 +612,11 @@ export class RxState<TType extends object>
    *
    * @returns Observable<TType>
    */
-  select(): Observable<TType>;
+  select(): Observable<State>;
 
   /**
    * @description
-   * Returns the state as cached and distinct `Observable<TTypeA>`. Accepts arbitrary
+   * Returns the state as cached and distinct `Observable<TypeA>`. Accepts arbitrary
    * [rxjs operators](https://rxjs-dev.firebaseapp.com/guide/operators)
    * to enrich the selection with reactive composition.
    *
@@ -632,61 +625,59 @@ export class RxState<TType extends object>
    *  map((state) => state.profilePicture),
    *  switchMap(profilePicture => mapImageAsync(profilePicture))
    * );
-   * @param op { OperatorFunction<TType, TTypeA> }
-   * @returns Observable<TTypeA>
+   * @param op { OperatorFunction<Type, TypeA> }
+   * @returns Observable<TypeA>
    */
-  select<TTypeA = TType>(
-    op: OperatorFunction<TType, TTypeA>
-  ): Observable<TTypeA>;
+  select<TypeA = State>(op: OperatorFunction<State, TypeA>): Observable<TypeA>;
 
   /**
    * @internal
    */
-  select<TTypeA = TType, TTypeB = TTypeA>(
-    op1: OperatorFunction<TType, TTypeA>,
-    op2: OperatorFunction<TTypeA, TTypeB>
-  ): Observable<TTypeB>;
+  select<TypeA = State, TypeB = TypeA>(
+    op1: OperatorFunction<State, TypeA>,
+    op2: OperatorFunction<TypeA, TypeB>
+  ): Observable<TypeB>;
 
   /**
    * @internal
    */
-  select<TTypeA = TType, TTypeB = TTypeA, TTypeC = TTypeB>(
-    op1: OperatorFunction<TType, TTypeA>,
-    op2: OperatorFunction<TTypeA, TTypeB>,
-    op3: OperatorFunction<TTypeB, TTypeC>
-  ): Observable<TTypeC>;
+  select<TypeA = State, TypeB = TypeA, TypeC = TypeB>(
+    op1: OperatorFunction<State, TypeA>,
+    op2: OperatorFunction<TypeA, TypeB>,
+    op3: OperatorFunction<TypeB, TypeC>
+  ): Observable<TypeC>;
 
   /**
    * @internal
    */
-  select<TTypeA = TType, TTypeB = TTypeA, TTypeC = TTypeB, TTypeD = TTypeC>(
-    op1: OperatorFunction<TType, TTypeA>,
-    op2: OperatorFunction<TTypeA, TTypeB>,
-    op3: OperatorFunction<TTypeB, TTypeC>,
-    op4: OperatorFunction<TTypeC, TTypeD>
-  ): Observable<TTypeD>;
+  select<TypeA = State, TypeB = TypeA, TypeC = TypeB, TypeD = TypeC>(
+    op1: OperatorFunction<State, TypeA>,
+    op2: OperatorFunction<TypeA, TypeB>,
+    op3: OperatorFunction<TypeB, TypeC>,
+    op4: OperatorFunction<TypeC, TypeD>
+  ): Observable<TypeD>;
 
   /**
    * @internal
    */
   select<
-    TTypeA = TType,
-    TTypeB = TTypeA,
-    TTypeC = TTypeB,
-    TTypeD = TTypeC,
-    TTypeE = TTypeD
+    TypeA = State,
+    TypeB = TypeA,
+    TypeC = TypeB,
+    TypeD = TypeC,
+    TypeE = TypeD
   >(
-    op1: OperatorFunction<TType, TTypeA>,
-    op2: OperatorFunction<TTypeA, TTypeB>,
-    op3: OperatorFunction<TTypeB, TTypeC>,
-    op4: OperatorFunction<TTypeC, TTypeD>,
-    op5: OperatorFunction<TTypeD, TTypeE>
-  ): Observable<TTypeE>;
+    op1: OperatorFunction<State, TypeA>,
+    op2: OperatorFunction<TypeA, TypeB>,
+    op3: OperatorFunction<TypeB, TypeC>,
+    op4: OperatorFunction<TypeC, TypeD>,
+    op5: OperatorFunction<TypeD, TypeE>
+  ): Observable<TypeE>;
 
   /**
    * @description
    * Transform a slice of the state by providing keys and map function.
-   * Returns result of applying function to state slice as cached and distinct `Observable<VALUE>`.
+   * Returns result of applying function to state slice as cached and distinct `Observable<Value>`.
    *
    * @example
    * // Project state slice
@@ -695,41 +686,41 @@ export class RxState<TType extends object>
    *   ({ query, results }) => `${results.length} results found for "${query}"`
    * );
    *
-   * @param {TKey[]} keys
-   * @param {(slice: PickSlice<TType, TKey>) => TValue} fn
-   * @param {KeyCompareMap<Pick<TType, TKey>>} keyCompareMap
+   * @param {Key[]} keys
+   * @param {(slice: PickSlice<Type, Key>) => Value} fn
+   * @param {KeyCompareMap<Pick<Type, Key>>} keyCompareMap
    *
-   * @return Observable<VALUE>
+   * @return Observable<Value>
    */
-  select<TKey extends keyof TType, TValue>(
-    keys: TKey[],
-    fn: (slice: PickSlice<TType, TKey>) => TValue,
-    keyCompareMap?: KeyCompareMap<Pick<TType, TKey>>
-  ): Observable<TValue>;
+  select<Key extends keyof State, Value>(
+    keys: Key[],
+    fn: (slice: PickSlice<State, Key>) => Value,
+    keyCompareMap?: KeyCompareMap<Pick<State, Key>>
+  ): Observable<Value>;
 
   /**
    * @description
    * Transform a single property of the state by providing a key and map function.
-   * Returns result of applying function to state property as cached and distinct `Observable<V>`.
+   * Returns result of applying function to state property as cached and distinct `Observable<Value>`.
    *
    * @example
    * // Project state based on single property
    * const foo$ = state.select('bar', bar => `bar equals ${bar}`);
    *
-   * @param {TKey} key
-   * @param {(val: TType[TKey]) => TValue} fn
+   * @param {Key} key
+   * @param {(val: Type[Key]) => Value} fn
    *
-   * @return Observable<TValue>
+   * @return Observable<Value>
    */
-  select<TKey extends keyof TType, TValue>(
-    key: TKey,
-    fn: (val: TType[TKey]) => TValue
-  ): Observable<TValue>;
+  select<Key extends keyof State, Value>(
+    key: Key,
+    fn: (val: State[Key]) => Value
+  ): Observable<Value>;
 
   /**
    * @description
    * Access a single property of the state by providing keys.
-   * Returns a single property of the state as cached and distinct `Observable<TYPE[KEY_1]>`.
+   * Returns a single property of the state as cached and distinct `Observable<State[KeyA]>`.
    *
    * @example
    * // Access a single property
@@ -740,98 +731,92 @@ export class RxState<TType extends object>
    *
    * const foo$ = state.select('bar', 'foo');
    *
-   * @return Observable<TType[TKeyOne]>
+   * @return Observable<Type[KeyA]>
    */
-  select<TKeyOne extends keyof TType>(k1: TKeyOne): Observable<TType[TKeyOne]>;
+  select<KeyA extends keyof State>(keyA: KeyA): Observable<State[KeyA]>;
 
   /**
    * @internal
    */
-  select<TKeyOne extends keyof TType, TKeyTwo extends keyof TType[TKeyOne]>(
-    k1: TKeyOne,
-    k2: TKeyTwo
-  ): Observable<TType[TKeyOne][TKeyTwo]>;
-
-  /**
-   * @internal
-   */
-  select<
-    TKeyOne extends keyof TType,
-    TKeyTwo extends keyof TType[TKeyOne],
-    TKeyThree extends keyof TType[TKeyOne][TKeyTwo]
-  >(
-    k1: TKeyOne,
-    k2: TKeyTwo,
-    k3: TKeyThree
-  ): Observable<TType[TKeyOne][TKeyTwo][TKeyThree]>;
+  select<KeyA extends keyof State, KeyB extends keyof State[KeyA]>(
+    keyA: KeyA,
+    keyB: KeyB
+  ): Observable<State[KeyA][KeyB]>;
 
   /**
    * @internal
    */
   select<
-    TKeyOne extends keyof TType,
-    TKeyTwo extends keyof TType[TKeyOne],
-    TKeyThree extends keyof TType[TKeyOne][TKeyTwo],
-    TKeyFour extends keyof TType[TKeyOne][TKeyTwo][TKeyThree]
-  >(
-    k1: TKeyOne,
-    k2: TKeyTwo,
-    k3: TKeyThree,
-    k4: TKeyFour
-  ): Observable<TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour]>;
+    KeyA extends keyof State,
+    KeyB extends keyof State[KeyA],
+    KeyC extends keyof State[KeyA][KeyB]
+  >(keyA: KeyA, keyB: KeyB, keyC: KeyC): Observable<State[KeyA][KeyB][KeyC]>;
 
   /**
    * @internal
    */
   select<
-    TKeyOne extends keyof TType,
-    TKeyTwo extends keyof TType[TKeyOne],
-    TKeyThree extends keyof TType[TKeyOne][TKeyTwo],
-    TKeyFour extends keyof TType[TKeyOne][TKeyTwo][TKeyThree],
-    TKeyFive extends keyof TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour]
+    KeyA extends keyof State,
+    KeyB extends keyof State[KeyA],
+    KeyC extends keyof State[KeyA][KeyB],
+    KeyD extends keyof State[KeyA][KeyB][KeyC]
   >(
-    k1: TKeyOne,
-    k2: TKeyTwo,
-    k3: TKeyThree,
-    k4: TKeyFour,
-    k5: TKeyFive
-  ): Observable<TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour][TKeyFive]>;
+    keyA: KeyA,
+    keyB: KeyB,
+    keyC: KeyC,
+    keyD: KeyD
+  ): Observable<State[KeyA][KeyB][KeyC][KeyD]>;
 
   /**
    * @internal
    */
   select<
-    TKeyOne extends keyof TType,
-    TKeyTwo extends keyof TType[TKeyOne],
-    TKeyThree extends keyof TType[TKeyOne][TKeyTwo],
-    TKeyFour extends keyof TType[TKeyOne][TKeyTwo][TKeyThree],
-    TKeyFive extends keyof TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour],
-    TKeySix extends keyof TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour][TKeyFive]
+    KeyA extends keyof State,
+    KeyB extends keyof State[KeyA],
+    KeyC extends keyof State[KeyA][KeyB],
+    KeyD extends keyof State[KeyA][KeyB][KeyC],
+    KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD]
   >(
-    k1: TKeyOne,
-    k2: TKeyTwo,
-    k3: TKeyThree,
-    k4: TKeyFour,
-    k5: TKeyFive,
-    k6: TKeySix
-  ): Observable<
-    TType[TKeyOne][TKeyTwo][TKeyThree][TKeyFour][TKeyFive][TKeySix]
-  >;
+    keyA: KeyA,
+    keyB: KeyB,
+    keyC: KeyC,
+    keyD: KeyD,
+    keyE: KeyE
+  ): Observable<State[KeyA][KeyB][KeyC][KeyD][KeyE]>;
 
   /**
    * @internal
    */
-  select<TReturn>(
+  select<
+    KeyA extends keyof State,
+    KeyB extends keyof State[KeyA],
+    KeyC extends keyof State[KeyA][KeyB],
+    KeyD extends keyof State[KeyA][KeyB][KeyC],
+    KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD],
+    KeyF extends keyof State[KeyA][KeyB][KeyC][KeyD][KeyE]
+  >(
+    keyA: KeyA,
+    keyB: KeyB,
+    keyC: KeyC,
+    keyD: KeyD,
+    keyE: KeyE,
+    keyF: KeyF
+  ): Observable<State[KeyA][KeyB][KeyC][KeyD][KeyE][KeyF]>;
+
+  /**
+   * @internal
+   */
+  select<Return>(
     ...args:
-      | OperatorFunction<TType, unknown>[]
+      | OperatorFunction<State, unknown>[]
       | string[]
       | [k: string, fn: (val: unknown) => unknown]
       | [
           keys: string[],
           fn: (slice: unknown) => unknown,
-          keyCompareMap?: KeyCompareMap<TType>
+          keyCompareMap?: KeyCompareMap<State>
         ]
-  ): Observable<TType | TReturn> {
+  ): Observable<State | Return> {
     return this.accumulator.state$.pipe(
       select(...(args as Parameters<typeof select>))
     );
@@ -842,11 +827,11 @@ export class RxState<TType extends object>
    * Returns a signal of the given key. It's first value is determined by the
    * current keys value in RxState. Whenever the key gets updated, the signal
    * will also be updated accordingly.
-   * @param {TKey} key
+   * @param {Key} key
    *
-   * @return Signal<TType[TKey]>
+   * @return Signal<State[Key]>
    */
-  signal<TKey extends keyof TType>(key: TKey): Signal<TType[TKey]> {
+  signal<Key extends keyof State>(key: Key): Signal<State[Key]> {
     return this.signalStoreProxy[key];
   }
 
@@ -854,12 +839,12 @@ export class RxState<TType extends object>
    * @description
    * Lets you create a computed signal based off multiple keys stored in RxState.
    *
-   * @param {(slice: SignalStateProxy<TType>) => COMPUTED_TYPE} fn
-   * @return Signal<TComputedType>
+   * @param {(slice: SignalStateProxy<Type>) => ComputedType} fn
+   * @return Signal<ComputedType>
    */
-  computed<TComputedType>(
-    fn: (slice: SignalStateProxy<TType>) => TComputedType
-  ): Signal<TComputedType> {
+  computed<ComputedType>(
+    fn: (slice: SignalStateProxy<State>) => ComputedType
+  ): Signal<ComputedType> {
     return computed(() => {
       return fn(this.signalStoreProxy);
     });
@@ -872,65 +857,55 @@ export class RxState<TType extends object>
    * @throws If the initial value is not provided and the signal is not sync.
    * Use startWith() to provide an initial value.
    *
-   // * @param op1 { OperatorFunction<TType, TTypeA> }
-   // * @returns Signal<TTypeA>
+   // * @param op1 { OperatorFunction<Type, TypeA> }
+   // * @returns Signal<TypeA>
    */
-  computedFrom<TTypeA = TType>(
-    op1: OperatorFunction<TType, TTypeA>
-  ): Signal<TTypeA>;
+  computedFrom<TypeA = State>(
+    op1: OperatorFunction<State, TypeA>
+  ): Signal<TypeA>;
 
   /** @internal */
-  computedFrom<TTypeA = TType, TTypeB = TTypeA>(
-    op1: OperatorFunction<TType, TTypeA>,
-    op2: OperatorFunction<TTypeA, TTypeB>
-  ): Signal<TTypeB>;
+  computedFrom<TypeA = State, TypeB = TypeA>(
+    op1: OperatorFunction<State, TypeA>,
+    op2: OperatorFunction<TypeA, TypeB>
+  ): Signal<TypeB>;
 
   /** @internal */
-  computedFrom<TTypeA = TType, TTypeB = TTypeA, TTypeC = TTypeB>(
-    op1: OperatorFunction<TType, TTypeA>,
-    op2: OperatorFunction<TTypeA, TTypeB>,
-    op3: OperatorFunction<TTypeB, TTypeC>
-  ): Signal<TTypeC>;
+  computedFrom<TypeA = State, TypeB = TypeA, TypeC = TypeB>(
+    op1: OperatorFunction<State, TypeA>,
+    op2: OperatorFunction<TypeA, TypeB>,
+    op3: OperatorFunction<TypeB, TypeC>
+  ): Signal<TypeC>;
 
   /** @internal */
-  computedFrom<
-    TTypeA = TType,
-    TTypeB = TTypeA,
-    TTypeC = TTypeB,
-    TTypeD = TTypeC
-  >(
-    op1: OperatorFunction<TType, TTypeA>,
-    op2: OperatorFunction<TTypeA, TTypeB>,
-    op3: OperatorFunction<TTypeB, TTypeC>,
-    op4: OperatorFunction<TTypeC, TTypeD>
-  ): Signal<TTypeD>;
+  computedFrom<TypeA = State, TypeB = TypeA, TypeC = TypeB, TypeD = TypeC>(
+    op1: OperatorFunction<State, TypeA>,
+    op2: OperatorFunction<TypeA, TypeB>,
+    op3: OperatorFunction<TypeB, TypeC>,
+    op4: OperatorFunction<TypeC, TypeD>
+  ): Signal<TypeD>;
 
   /** @internal */
   computedFrom<
-    TTypeA = TType,
-    TTypeB = TTypeA,
-    TTypeC = TTypeB,
-    TTypeD = TTypeC,
-    TTypeE = TTypeD
+    TypeA = State,
+    TypeB = TypeA,
+    TypeC = TypeB,
+    TypeD = TypeC,
+    TypeE = TypeD
   >(
-    op1: OperatorFunction<TType, TTypeA>,
-    op2: OperatorFunction<TTypeA, TTypeB>,
-    op3: OperatorFunction<TTypeB, TTypeC>,
-    op4: OperatorFunction<TTypeC, TTypeD>,
-    op5: OperatorFunction<TTypeD, TTypeE>
-  ): Signal<TTypeE>;
+    op1: OperatorFunction<State, TypeA>,
+    op2: OperatorFunction<TypeA, TypeB>,
+    op3: OperatorFunction<TypeB, TypeC>,
+    op4: OperatorFunction<TypeC, TypeD>,
+    op5: OperatorFunction<TypeD, TypeE>
+  ): Signal<TypeE>;
 
   /** @internal */
-  computedFrom<TReturn>(
-    ...ops: OperatorFunction<TType, unknown>[]
-  ): Signal<TReturn> {
-    return toSignal<TReturn>(
-      this.select(...(ops as Parameters<typeof select>)),
-      {
-        injector: this.injector,
-        requireSync: true,
-      }
-    );
+  computedFrom<Type>(...ops: OperatorFunction<State, unknown>[]): Signal<Type> {
+    return toSignal<Type>(this.select(...(ops as Parameters<typeof select>)), {
+      injector: this.injector,
+      requireSync: true,
+    });
   }
 
   /**
@@ -951,14 +926,14 @@ export class RxState<TType extends object>
    * const localStorageEffectFn = changes => storeChanges(changes);
    * state.hold(changes$, localStorageEffectFn);
    *
-   * @param {Observable<TSideEffect>} obsOrObsWithSideEffect
+   * @param {Observable<SideEffect>} obsOrObsWithSideEffect
    * @param {function} [sideEffectFn]
    *
    * @return void
    */
-  hold<TSideEffect>(
-    obsOrObsWithSideEffect: Observable<TSideEffect>,
-    sideEffectFn?: (arg: TSideEffect) => void
+  hold<SideEffect>(
+    obsOrObsWithSideEffect: Observable<SideEffect>,
+    sideEffectFn?: (arg: SideEffect) => void
   ): void {
     const sideEffect = obsOrObsWithSideEffect.pipe(catchError((e) => EMPTY));
     if (typeof sideEffectFn === 'function') {
@@ -977,7 +952,7 @@ export class RxState<TType extends object>
     const subscription = new Subscription();
     subscription.add(this.accumulator.subscribe());
     subscription.add(this.effectObservable.subscribe());
-    this.signalStoreProxy = createSignalStateProxy<TType>(
+    this.signalStoreProxy = createSignalStateProxy<State>(
       this.$,
       this.get.bind(this)
     );

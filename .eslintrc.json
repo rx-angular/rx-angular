@@ -64,8 +64,7 @@
           "error",
           {
             "selector": "typeParameter",
-            "format": ["PascalCase"],
-            "prefix": ["T"]
+            "format": ["PascalCase"]
           }
         ]
       }
