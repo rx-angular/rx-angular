@@ -1,0 +1,88 @@
+{
+  "name": "ssr-isr",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/ssr-isr/src",
+  "tags": ["type:app"],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/ssr-isr",
+        "index": "apps/ssr-isr/src/index.html",
+        "browser": "apps/ssr-isr/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/ssr-isr/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": ["apps/ssr-isr/src/favicon.ico", "apps/ssr-isr/src/assets"],
+        "styles": ["apps/ssr-isr/src/styles.scss"],
+        "scripts": [],
+        "server": "apps/ssr-isr/src/main.server.ts",
+        "prerender": true,
+        "ssr": {
+          "entry": "apps/ssr-isr/server.ts"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx build ssr-isr --configuration=development --watch",
+          "node --watch dist/apps/ssr-isr/server/server.mjs"
+        ],
+        "parallel": false
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "ssr-isr:build:production"
+        },
+        "development": {
+          "buildTarget": "ssr-isr:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "ssr-isr:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/ssr-isr/**/*.ts", "apps/ssr-isr/**/*.html"]
+      }
+    }
+  }
+}
