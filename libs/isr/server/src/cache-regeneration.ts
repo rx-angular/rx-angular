@@ -8,6 +8,7 @@ import { renderUrl } from './utils/render-url';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
 import { Request, Response } from 'express';
 import { ISRLogger } from './isr-logger';
+import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
 
 export class CacheRegeneration {
   // TODO: make this pluggable because on serverless environments we can't share memory between functions
@@ -17,7 +18,10 @@ export class CacheRegeneration {
   constructor(
     public isrConfig: ISRHandlerConfig,
     public cache: CacheHandler,
-    public indexHtml: string
+    public indexHtml: string,
+    public commonEngine?: CommonEngine,
+    public bootstrap?: CommonEngineRenderOptions['bootstrap'],
+    public browserDistFolder?: string
   ) {}
 
   async regenerate(
@@ -40,27 +44,34 @@ export class CacheRegeneration {
 
     this.urlsOnHold.push(url);
 
-    renderUrl({ req, res, url, indexHtml: this.indexHtml, providers }).then(
-      (html) => {
-        const { errors } = getRouteISRDataFromHTML(html);
+    renderUrl({
+      req,
+      res,
+      url,
+      indexHtml: this.indexHtml,
+      providers,
+      commonEngine: this.commonEngine,
+      bootstrap: this.bootstrap,
+      browserDistFolder: this.browserDistFolder,
+    }).then((html) => {
+      const { errors } = getRouteISRDataFromHTML(html);
 
-        // if there are errors, don't add the page to cache
-        if (errors?.length) {
-          // remove url from urlsOnHold because we want to try to regenerate it again
-          this.urlsOnHold = this.urlsOnHold.filter((x) => x !== url);
-          logger.log('💥 ERROR: Url: ' + url + ' was not regenerated!', errors);
-          return;
-        }
-
-        // add the regenerated page to cache
-        this.cache
-          .add(req.url, html, { revalidate, buildId: this.isrConfig.buildId })
-          .then(() => {
-            // remove from urlsOnHold because we are done
-            this.urlsOnHold = this.urlsOnHold.filter((x) => x !== url);
-            logger.log('Url: ' + url + ' was regenerated!');
-          });
+      // if there are errors, don't add the page to cache
+      if (errors?.length) {
+        // remove url from urlsOnHold because we want to try to regenerate it again
+        this.urlsOnHold = this.urlsOnHold.filter((x) => x !== url);
+        logger.log('💥 ERROR: Url: ' + url + ' was not regenerated!', errors);
+        return;
       }
-    );
+
+      // add the regenerated page to cache
+      this.cache
+        .add(req.url, html, { revalidate, buildId: this.isrConfig.buildId })
+        .then(() => {
+          // remove from urlsOnHold because we are done
+          this.urlsOnHold = this.urlsOnHold.filter((x) => x !== url);
+          logger.log('Url: ' + url + ' was regenerated!');
+        });
+    });
   }
 }

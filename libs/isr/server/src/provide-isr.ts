@@ -1,6 +1,9 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
 import { IsrServerService } from './isr-server.service';
-import { HTTP_ERROR_PROVIDER_ISR } from './http-errors.interceptor';
+import {
+  HTTP_ERROR_PROVIDER_ISR,
+  httpErrorInterceptorISR,
+} from './http-errors.interceptor';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
 import { DOCUMENT, isPlatformServer } from '@angular/common';
 import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serialized';
@@ -62,3 +65,20 @@ export const provideISR = (): EnvironmentProviders => {
     },
   ]);
 };
+
+/**
+ * @description
+ * This function registers the providers needed for ISR to work.
+ *
+ * @usage
+ * ```ts
+ * import { isrHttpInterceptors } from '@rx-angular/isr/server';
+ *
+ * providers: [
+ *   provideHttpClient(
+ *     withInterceptors(isrHttpInterceptors)
+ *   )
+ * ]
+ * ```
+ */
+export const isrHttpInterceptors = [httpErrorInterceptorISR];

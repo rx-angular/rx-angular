@@ -19,7 +19,9 @@
     "format:check": "nx format:check",
     "generate-typescript-docs": "ts-node -P tools/tsconfig.tools.json tools/scripts/docs/generate-typescript-docs.ts",
     "tracerbench": "tracerbench compare --controlURL http://localhost:4200/rx-angular/demos --experimentURL http://localhost:4242/rx-angular/demos --markers startRouting,endRouting --headless --report",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "ssr:isr:dev": "nx build ssr-isr --configuration=development --watch",
+    "ssr:isr:serve": "node dist/apps/ssr-isr/server/server.mjs"
   },
   "lint-staged": {
     "**/!(images)/**/*.{ts,js,html}": [
