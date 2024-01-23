@@ -49,16 +49,6 @@
       },
       "defaultConfiguration": "production"
     },
-    "serve-ssr": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "nx build ssr-isr --configuration=development --watch",
-          "node --watch dist/apps/ssr-isr/server/server.mjs"
-        ],
-        "parallel": false
-      }
-    },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
