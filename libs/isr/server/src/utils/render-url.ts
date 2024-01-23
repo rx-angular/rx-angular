@@ -1,6 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Provider } from '@angular/core';
+import { Provider, StaticProvider } from '@angular/core';
 import { ɵSERVER_CONTEXT as SERVER_CONTEXT } from '@angular/platform-server';
+import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
 import { Request, Response } from 'express';
 
 export interface RenderUrlConfig {
@@ -9,6 +10,10 @@ export interface RenderUrlConfig {
   url: string;
   indexHtml: string;
   providers?: Provider[];
+
+  commonEngine?: CommonEngine;
+  bootstrap?: CommonEngineRenderOptions['bootstrap'];
+  browserDistFolder?: string;
 }
 
 const EXTRA_PROVIDERS: Provider[] = [
@@ -17,7 +22,18 @@ const EXTRA_PROVIDERS: Provider[] = [
 
 // helper method that generates html of an url
 export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
-  const { req, res, url, indexHtml, providers } = options;
+  const {
+    req,
+    res,
+    url,
+    indexHtml,
+    providers,
+    commonEngine,
+    bootstrap,
+    browserDistFolder,
+  } = options;
+
+  const { protocol, originalUrl, baseUrl, headers } = req;
 
   // we need to override url of req with the one we have in parameters
   req.url = url;
@@ -25,7 +41,7 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
 
   const BASE_URL_PROVIDER: Provider = {
     provide: APP_BASE_HREF,
-    useValue: req.baseUrl,
+    useValue: baseUrl,
   };
 
   return new Promise((resolve, reject) => {
@@ -33,15 +49,32 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
       ? [...providers, ...EXTRA_PROVIDERS] // if providers are provided, we add them to the list
       : [...EXTRA_PROVIDERS, BASE_URL_PROVIDER]; // if not, we add the default providers
 
-    res.render(
-      indexHtml,
-      { req, providers: allProviders },
-      async (err: Error, html: string) => {
-        if (err) {
+    if (commonEngine) {
+      commonEngine
+        .render({
+          bootstrap,
+          documentFilePath: indexHtml,
+          url: `${protocol}://${headers.host}${originalUrl}`,
+          publicPath: browserDistFolder,
+          providers: [...allProviders] as StaticProvider[], // we need to cast to StaticProvider[] because of a bug in the types
+        })
+        .then((html) => {
+          resolve(html);
+        })
+        .catch((err) => {
           reject(err);
+        });
+    } else {
+      res.render(
+        indexHtml,
+        { req, providers: allProviders },
+        async (err: Error, html: string) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(html);
         }
-        resolve(html);
-      }
-    );
+      );
+    }
   });
 };

@@ -9,6 +9,6 @@ export { IsrServerService } from './isr-server.service';
 
 export { ISRHandler } from './isr-handler';
 
-export { provideISR } from './provide-isr';
+export { provideISR, isrHttpInterceptors } from './provide-isr';
 
 export { IsrModule } from './isr.module';

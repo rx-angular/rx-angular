@@ -42,7 +42,10 @@ export class ISRHandler {
     this.cacheRegeneration = new CacheRegeneration(
       this.config,
       this.cache,
-      config.indexHtml
+      config.indexHtml,
+      config.commonEngine,
+      config.bootstrap,
+      config.browserDistFolder
     );
   }
 
@@ -95,6 +98,9 @@ export class ISRHandler {
           url,
           indexHtml,
           providers: config?.providers,
+          bootstrap: this.config.bootstrap,
+          commonEngine: this.config.commonEngine,
+          browserDistFolder: this.config.browserDistFolder,
         });
 
         // get revalidate data in order to set it to cache data
@@ -241,6 +247,9 @@ export class ISRHandler {
       url: req.url,
       indexHtml: this.config.indexHtml,
       providers: config?.providers,
+      bootstrap: this.config.bootstrap,
+      commonEngine: this.config.commonEngine,
+      browserDistFolder: this.config.browserDistFolder,
     };
 
     renderUrl(renderUrlConfig).then(async (html) => {

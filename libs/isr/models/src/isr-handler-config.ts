@@ -1,6 +1,7 @@
 import { Provider } from '@angular/core';
 import { CacheHandler, RenderVariant } from './cache-handler';
 import { Request } from 'express';
+import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
 
 export interface ISRHandlerConfig {
   /**
@@ -24,6 +25,30 @@ export interface ISRHandlerConfig {
    * the default `In-Memory Cache Handler` will be used.
    */
   cache?: CacheHandler;
+
+  /**
+   * An instance of a common engine. This engine is responsible for
+   * rendering the HTML of the application.
+   */
+  commonEngine?: CommonEngine;
+
+  /**
+   * The bootstrap function of the application. This function is responsible for
+   * bootstrapping the application. If not provided, defaults to null.
+   */
+  bootstrap?: CommonEngineRenderOptions['bootstrap'];
+
+  /**
+   * The path to the server  dist folder. This folder contains the server bundle
+   * of the application. If not provided, defaults to null.
+   */
+  serverDistFolder?: string;
+
+  /**
+   * The path to the browser dist folder. This folder contains the browser bundle
+   * of the application. If not provided, defaults to null.
+   */
+  browserDistFolder?: string;
 
   /**
    * The build ID of the application. This value is used to generate unique cache keys.
