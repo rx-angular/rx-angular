@@ -9,7 +9,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { IsrServerService } from '@rx-angular/isr/server';
+import { IsrServerService } from './isr-server.service';
 
 export const httpErrorInterceptorISR: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
