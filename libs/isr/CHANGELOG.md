@@ -2,6 +2,16 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [17.1.0](https://github.com/rx-angular/rx-angular/compare/isr@17.0.0...isr@17.1.0) (2024-02-05)
+
+
+### Features
+
+* add ssr-isr app for testing ([7857591](https://github.com/rx-angular/rx-angular/commit/7857591719c3237cf8988ca1bdf3356d86594230))
+* update isr to be used with application builder ([bf36e07](https://github.com/rx-angular/rx-angular/commit/bf36e0707d409e9331cc44f5545854e81cd441af))
+
+
+
 # [17.0.0](https://github.com/rx-angular/rx-angular/compare/isr@16.0.0...isr@17.0.0) (2023-11-17)
 
 
