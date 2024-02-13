@@ -33,6 +33,7 @@ import {
 import {
   calculateVisibleContainerSize,
   parseScrollTopBoundaries,
+  toBoolean,
   unpatchedAnimationFrameTick,
 } from '../util';
 import {
@@ -91,6 +92,14 @@ export class FixedSizeVirtualScrollStrategy<
   }
 
   private _itemSize = DEFAULT_ITEM_SIZE;
+
+  /**
+   * @description
+   * When enabled, the scroll strategy stops removing views from the viewport,
+   * instead it only adds views. This setting can be changed on the fly. Views will be added in both directions
+   * according to the user interactions.
+   */
+  @Input({ transform: toBoolean }) appendOnly = false;
 
   /**
    * @description
@@ -284,6 +293,10 @@ export class FixedSizeVirtualScrollStrategy<
                   this.itemSize
               )
             );
+          }
+          if (this.appendOnly) {
+            range.start = Math.min(this._renderedRange.start, range.start);
+            range.end = Math.max(this._renderedRange.end, range.end);
           }
           this.scrolledIndex = Math.floor(this.scrollTop / this.itemSize);
           return range;

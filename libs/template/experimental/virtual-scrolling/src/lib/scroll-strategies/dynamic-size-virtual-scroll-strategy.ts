@@ -31,6 +31,7 @@ import {
 import {
   calculateVisibleContainerSize,
   parseScrollTopBoundaries,
+  toBoolean,
   unpatchedMicroTask,
 } from '../util';
 import {
@@ -98,6 +99,14 @@ export class DynamicSizeVirtualScrollStrategy<
    */
   @Input() runwayItemsOpposite =
     this.defaults?.runwayItemsOpposite ?? DEFAULT_RUNWAY_ITEMS_OPPOSITE;
+
+  /**
+   * @description
+   * When enabled, the scroll strategy stops removing views from the viewport,
+   * instead it only adds views. This setting can be changed on the fly. Views will be added in both directions
+   * according to the user interactions.
+   */
+  @Input({ transform: toBoolean }) appendOnly = false;
 
   /**
    * @description
@@ -353,6 +362,10 @@ export class DynamicSizeVirtualScrollStrategy<
               length,
               this.lastScreenItem.index + this.runwayItems
             );
+          }
+          if (this.appendOnly) {
+            range.start = Math.min(this._renderedRange.start, range.start);
+            range.end = Math.max(this._renderedRange.end, range.end);
           }
           return range;
         })
