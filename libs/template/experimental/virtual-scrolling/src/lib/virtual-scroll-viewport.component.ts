@@ -228,7 +228,9 @@ export class RxVirtualScrollViewportComponent
     if (this.scrollElement) {
       this.elementRef.nativeElement.style.height = `${size}px`;
     } else {
-      this.scrollSentinel.nativeElement.style.transform = `translate(0, ${size}px)`;
+      this.scrollSentinel.nativeElement.style.transform = `translate(0, ${
+        size - 1
+      }px)`;
     }
   }
 }
