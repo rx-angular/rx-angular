@@ -14,6 +14,7 @@ import {
   merge,
   MonoTypeOperatorFunction,
   Observable,
+  pairwise,
   ReplaySubject,
   Subject,
 } from 'rxjs';
@@ -142,6 +143,23 @@ export class AutoSizeVirtualScrollStrategy<
     options?: ResizeObserverOptions;
     extractSize?: (entry: ResizeObserverEntry) => number;
   };
+
+  /**
+   * @description
+   * When enabled, the autosized scroll strategy attaches a `ResizeObserver`
+   * to every view within the given renderedRange. If your views receive
+   * dimension changes that are not caused by list updates, this is a way to
+   * still track height changes. This also applies to resize events of the whole
+   * document.
+   */
+  @Input()
+  set withResizeObserver(input: boolean) {
+    this._withResizeObserver = input != null && `${input}` !== 'false';
+  }
+  get withResizeObserver(): boolean {
+    return this._withResizeObserver;
+  }
+  private _withResizeObserver = true;
 
   /**
    * @description
@@ -358,6 +376,15 @@ export class AutoSizeVirtualScrollStrategy<
     // the IterableDiffer approach, especially on move operations
     const itemCache = new Map<any, { item: T; index: number }>();
     const trackBy = this.viewRepeater!._trackBy ?? ((i, item) => item);
+    this.renderedRange$
+      .pipe(pairwise(), this.until$())
+      .subscribe(([oldRange, newRange]) => {
+        for (let i = oldRange.start; i < oldRange.end; i++) {
+          if (i < newRange.start || i >= newRange.end) {
+            this._virtualItems[i].position = undefined;
+          }
+        }
+      });
     this.viewRepeater!.values$.pipe(
       this.until$(),
       tap((values) => {
@@ -388,7 +415,11 @@ export class AutoSizeVirtualScrollStrategy<
             // todo: properly determine update (Object.is?)
             virtualItems[i] = this._virtualItems[i];
             // if index is not part of rendered range, remove cache
-            if (i < this.renderedRange.start || i >= this.renderedRange.end) {
+            if (
+              !this.withResizeObserver ||
+              i < this.renderedRange.start ||
+              i >= this.renderedRange.end
+            ) {
               virtualItems[i].cached = false;
             }
             itemCache.set(id, { item: dataArr[i], index: i });
@@ -650,22 +681,11 @@ export class AutoSizeVirtualScrollStrategy<
       })
     );
     const positionByResizeObserver$ = viewsToObserve$.pipe(
+      filter(() => this.withResizeObserver),
       groupBy((viewRef) => viewRef),
       mergeMap((o$) =>
         o$.pipe(
-          exhaustMap((viewRef) =>
-            this.observeViewSize$(viewRef).pipe(
-              finalize(() => {
-                if (
-                  this._virtualItems[viewRef.context.index]?.position !==
-                  undefined
-                ) {
-                  this._virtualItems[viewRef.context.index].position =
-                    undefined;
-                }
-              })
-            )
-          ),
+          exhaustMap((viewRef) => this.observeViewSize$(viewRef)),
           tap(([index, viewIndex]) => {
             this.calcAnchorScrollTop();
             let position = this.calcInitialPosition(index);
