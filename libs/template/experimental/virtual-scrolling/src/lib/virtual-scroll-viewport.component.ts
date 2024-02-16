@@ -7,13 +7,15 @@ import {
   ContentChild,
   ElementRef,
   inject,
+  Input,
   OnDestroy,
   Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { defer, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
+
 import {
   RxVirtualScrollElement,
   RxVirtualScrollStrategy,
@@ -92,6 +94,8 @@ export class RxVirtualScrollViewportComponent
     optional: true,
   });
   protected scrollElement = inject(RxVirtualScrollElement, { optional: true });
+
+  @Input() initialScrollIndex = 0;
 
   /** @internal */
   @ViewChild('sentinel')
@@ -176,6 +180,17 @@ export class RxVirtualScrollViewportComponent
         this.contentSize = size;
         this.updateContentSize(size);
       });
+    if (this.initialScrollIndex != null && this.initialScrollIndex > 0) {
+      this.scrollStrategy.contentSize$
+        .pipe(
+          filter((size) => size > 0),
+          take(1),
+          takeUntil(this.destroy$)
+        )
+        .subscribe(() => {
+          this.scrollToIndex(this.initialScrollIndex);
+        });
+    }
   }
 
   /** @internal */
