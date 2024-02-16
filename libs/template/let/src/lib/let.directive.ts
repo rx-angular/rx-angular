@@ -103,9 +103,6 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
   /** @internal */
   private ngZone = inject(NgZone);
   /** @internal */
-  private nextTemplateRef =
-    inject<TemplateRef<RxLetViewContext<U>>>(TemplateRef);
-  /** @internal */
   private viewContainerRef = inject(ViewContainerRef);
   /** @internal */
   private errorHandler = inject(ErrorHandler);
@@ -525,6 +522,8 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
     return true;
   }
 
+  constructor(private templateRef: TemplateRef<RxLetViewContext<U>>) {}
+
   /** @internal */
   ngOnInit() {
     this.subscription.add(
@@ -618,7 +617,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
 
     this.templateManager.addTemplateRef(
       RxLetTemplateNames.next,
-      this.nextTemplateRef
+      this.templateRef
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
   }
