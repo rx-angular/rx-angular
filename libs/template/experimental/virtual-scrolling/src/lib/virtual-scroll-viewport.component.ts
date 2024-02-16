@@ -95,6 +95,13 @@ export class RxVirtualScrollViewportComponent
   });
   protected scrollElement = inject(RxVirtualScrollElement, { optional: true });
 
+  /**
+   * @description
+   *
+   * Sets the first view to be visible to the user.
+   * The viewport waits for the data to arrive and scrolls to the given index immediately.
+   *
+   * */
   @Input() initialScrollIndex = 0;
 
   /** @internal */
