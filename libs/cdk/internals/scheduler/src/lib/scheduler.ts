@@ -2,7 +2,6 @@
 
 import { ɵglobal } from '@angular/core';
 
-import { enableIsInputPending } from './schedulerFeatureFlags';
 import {
   peek,
   pop,

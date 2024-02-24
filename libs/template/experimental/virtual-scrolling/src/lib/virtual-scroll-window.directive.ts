@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import { Directive, ElementRef, inject } from '@angular/core';
-import { Observable } from 'rxjs';
 
 import { RxVirtualScrollElement } from './model';
 import { unpatchedScroll } from './util';

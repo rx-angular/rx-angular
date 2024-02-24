@@ -1,12 +1,5 @@
 import { AsyncPipe, DOCUMENT } from '@angular/common';
-import {
-  Component,
-  Inject,
-  inject,
-  Injectable,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, Inject, inject, Injectable, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { exhaustMap, Observable, of, Subject } from 'rxjs';

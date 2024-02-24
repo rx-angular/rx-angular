@@ -1,12 +1,4 @@
-import {
-  EMPTY,
-  from,
-  ObservableInput,
-  PartialObserver,
-  pipe,
-  Subject,
-  Subscription,
-} from 'rxjs';
+import { ObservableInput, PartialObserver } from 'rxjs';
 
 export type SideEffectObservable<T> = ObservableInput<T>;
 export type SideEffectFnOrObserver<T> =

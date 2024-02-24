@@ -4,7 +4,6 @@ import { map, share, startWith, switchAll } from 'rxjs/operators';
 
 import {
   RxCustomStrategyCredentials,
-  RxStrategies,
   RxStrategyCredentials,
   RxStrategyNames,
 } from './model';
