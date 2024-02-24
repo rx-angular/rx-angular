@@ -2,7 +2,6 @@ import { NgIterable } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { Observable } from 'rxjs';
-
 import { RxVirtualScrollViewportComponent } from '../src/index';
 import {
   DEFAULT_ITEM_SIZE,

@@ -11,7 +11,6 @@ import {
   take,
 } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-
 import { coerceAllFactory } from '../src/lib/coerce-all-factory';
 
 function createInputStream(

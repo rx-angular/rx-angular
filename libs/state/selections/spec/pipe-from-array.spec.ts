@@ -1,5 +1,4 @@
 import { map } from 'rxjs/operators';
-
 import { pipeFromArray } from '../src/lib/utils/pipe-from-array';
 
 describe('pipeFromArray', () => {

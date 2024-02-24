@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { Observable, of, Subject, tap, timer } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-
 import { rxEffects, RxEffectsSetupFn } from './rx-effects';
 
 describe(rxEffects, () => {

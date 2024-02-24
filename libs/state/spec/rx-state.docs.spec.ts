@@ -6,7 +6,6 @@ import { By } from '@angular/platform-browser';
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { map, merge, Subject } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-
 import { rxState } from '../src/lib/rx-state';
 
 @Component({

@@ -10,7 +10,6 @@ import {
 import { of, scheduled, Subject } from 'rxjs';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-
 import { RxState } from '../src/lib/rx-state.service';
 import { createStateChecker } from './fixtures';
 

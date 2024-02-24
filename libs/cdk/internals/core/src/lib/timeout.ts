@@ -1,6 +1,5 @@
 import { Observable, Subscriber } from 'rxjs';
 import { concatMap, mapTo } from 'rxjs/operators';
-
 import { getZoneUnPatchedApi } from './get-zone-unpatched-api';
 
 /**

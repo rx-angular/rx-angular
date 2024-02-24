@@ -13,7 +13,6 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-
 import { RxNotification, RxNotificationKind } from './model';
 import { toRxSuspenseNotification } from './notification-transforms';
 import { rxMaterialize } from './rx-materialize';

@@ -12,7 +12,6 @@ import {
   PrimitiveState,
 } from '@test-helpers/rx-angular';
 import { Observable, Subject } from 'rxjs';
-
 import { RxState } from '../src/lib/rx-state.service';
 
 const initialChildState = { str: 'initialChildState' };

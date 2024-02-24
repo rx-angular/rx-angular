@@ -4,7 +4,6 @@ import { ENVIRONMENT_INITIALIZER } from '@angular/core';
 import { PLATFORM_ID } from '@angular/core';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
 import { IsrService } from '@rx-angular/isr/browser';
-
 import {
   HTTP_ERROR_PROVIDER_ISR,
   httpErrorInterceptorISR,

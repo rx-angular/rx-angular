@@ -23,7 +23,6 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
-
 import {
   ListRange,
   RxVirtualForViewContext,

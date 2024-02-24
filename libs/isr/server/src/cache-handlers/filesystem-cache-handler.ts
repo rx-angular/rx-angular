@@ -1,12 +1,10 @@
-import * as fs from 'node:fs';
-import { join } from 'node:path';
-
 import {
   CacheData,
   CacheHandler,
   CacheISRConfig,
 } from '@rx-angular/isr/models';
-
+import * as fs from 'node:fs';
+import { join } from 'node:path';
 import { getRouteISRDataFromHTML } from '../utils/get-isr-options';
 
 export interface FileSystemCacheOptions {

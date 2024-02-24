@@ -3,7 +3,6 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { selectSlice } from '@rx-angular/state/selections';
 import { delay, of, pipe, startWith } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-
 import { rxState, RxStateSetupFn } from '../src/lib/rx-state';
 import { RxState } from '../src/lib/rx-state.service';
 

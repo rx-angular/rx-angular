@@ -4,7 +4,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { exhaustMap, Observable, of, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-
 import { rxActions } from './rx-actions';
 
 @Injectable()

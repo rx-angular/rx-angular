@@ -35,7 +35,6 @@ import {
   Subscription,
 } from 'rxjs';
 import { filter, map, mergeAll } from 'rxjs/operators';
-
 import {
   RxIfTemplateNames,
   rxIfTemplateNames,

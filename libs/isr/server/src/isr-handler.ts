@@ -8,7 +8,6 @@ import {
 } from '@rx-angular/isr/models';
 import { RenderVariant, VariantRebuildItem } from '@rx-angular/isr/models';
 import { NextFunction, Request, Response } from 'express';
-
 import { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
 import { CacheRegeneration } from './cache-regeneration';
 import { ISRLogger } from './isr-logger';

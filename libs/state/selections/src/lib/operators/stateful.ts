@@ -1,6 +1,5 @@
 import { Observable, OperatorFunction } from 'rxjs';
 import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
-
 import { NonUndefined } from '../interfaces';
 import { isOperateFnArrayGuard } from '../utils/guards';
 import { pipeFromArray } from '../utils/pipe-from-array';

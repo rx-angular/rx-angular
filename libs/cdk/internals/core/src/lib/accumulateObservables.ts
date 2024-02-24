@@ -1,7 +1,6 @@
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import { combineLatest, from, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay } from 'rxjs/operators';
-
 import { getZoneUnPatchedApi } from './get-zone-unpatched-api';
 import {
   ArrayReducerFn,

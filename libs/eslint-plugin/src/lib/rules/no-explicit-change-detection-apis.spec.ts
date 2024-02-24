@@ -1,6 +1,5 @@
 import { TSESLint } from '@typescript-eslint/utils';
 import * as path from 'path';
-
 import rule, { MessageIds } from './no-explicit-change-detection-apis';
 
 const ruleTester = new TSESLint.RuleTester({

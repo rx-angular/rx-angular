@@ -1,5 +1,4 @@
 import { TSESLint } from '@typescript-eslint/utils';
-
 import noExplicitChangeDetectionApis from './no-explicit-change-detection-apis';
 import noRxstateImperativeInReactive from './no-rxstate-imperative-in-reactive';
 import noRxstateSubscriptionsOutsideConstructor from './no-rxstate-subscriptions-outside-constructor';

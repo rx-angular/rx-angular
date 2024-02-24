@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
 import { EMPTY, NEVER, of } from 'rxjs';
-
 import { RxPush } from '../push.pipe';
 import { MockChangeDetectorRef } from './fixtures';
 

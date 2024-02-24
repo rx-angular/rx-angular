@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { ActionTransforms } from '@rx-angular/state/actions';
 import { isObservable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-
 import { rxActions } from './rx-actions';
 
 describe('actions fn', () => {

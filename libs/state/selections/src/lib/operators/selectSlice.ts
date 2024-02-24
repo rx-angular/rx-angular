@@ -1,6 +1,5 @@
 import { Observable, OperatorFunction } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-
 import { KeyCompareMap, PickSlice } from '../interfaces/index';
 import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
 

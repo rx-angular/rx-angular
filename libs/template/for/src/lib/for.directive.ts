@@ -36,7 +36,6 @@ import {
   Subscription,
 } from 'rxjs';
 import { shareReplay, switchAll } from 'rxjs/operators';
-
 import { RxForViewContext } from './for-view-context';
 
 /**

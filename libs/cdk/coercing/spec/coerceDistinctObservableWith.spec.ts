@@ -8,7 +8,6 @@ import {
   take,
 } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-
 import { coerceDistinctWith } from '../src/lib/coerceDistinctObservableWith';
 
 function createInputStream(

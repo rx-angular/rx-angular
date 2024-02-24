@@ -14,7 +14,6 @@ import {
 import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
 import { asapScheduler, EMPTY, NEVER, Observable, of, timer } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-
 import { RxPush } from '../push.pipe';
 
 function wrapWithSpace(str: string): string {

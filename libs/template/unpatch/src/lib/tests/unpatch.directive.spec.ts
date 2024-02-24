@@ -2,7 +2,6 @@
 import { ApplicationRef, Component, NgZone } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { RxUnpatch } from '../unpatch.directive';
 
 describe(RxUnpatch.name, () => {

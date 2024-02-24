@@ -4,7 +4,6 @@ import {
   ErrorHandler,
   inject,
 } from '@angular/core';
-
 import { actionProxyHandler } from './proxy';
 import {
   Actions,

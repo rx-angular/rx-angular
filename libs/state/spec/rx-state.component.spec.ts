@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { select } from '@rx-angular/state/selections';
 import { PrimitiveState } from '@test-helpers/rx-angular';
 import { Observable, Subject } from 'rxjs';
-
 import { RxState } from '../src/lib/rx-state.service';
 import { createStateChecker } from './fixtures';
 

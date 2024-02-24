@@ -1,7 +1,6 @@
 import { Provider } from '@angular/core';
 import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
 import { Request } from 'express';
-
 import { CacheHandler, RenderVariant } from './cache-handler';
 
 export interface ISRHandlerConfig {

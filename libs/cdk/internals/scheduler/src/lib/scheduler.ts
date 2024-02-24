@@ -1,7 +1,6 @@
 // see https://github.com/facebook/react/blob/main/packages/scheduler/src/forks/Scheduler.js
 
 import { ɵglobal } from '@angular/core';
-
 import {
   peek,
   pop,

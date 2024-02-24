@@ -19,7 +19,6 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-
 import { AccumulationFn, Accumulator } from './model';
 
 const defaultAccumulator: AccumulationFn = <T>(st: T, sl: Partial<T>): T => {

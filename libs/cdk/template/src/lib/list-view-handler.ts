@@ -1,5 +1,4 @@
 import { EmbeddedViewRef, IterableChanges } from '@angular/core';
-
 import { RxListViewContext } from './list-view-context';
 import {
   RxListTemplateChange,

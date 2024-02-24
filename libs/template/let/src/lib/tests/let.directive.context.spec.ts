@@ -23,7 +23,6 @@ import {
   throwError,
 } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
-
 import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 

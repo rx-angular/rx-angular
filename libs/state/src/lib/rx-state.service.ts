@@ -28,7 +28,6 @@ import {
   Unsubscribable,
 } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-
 import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
 
 export type ProjectStateFn<T> = (oldState: T) => Partial<T>;

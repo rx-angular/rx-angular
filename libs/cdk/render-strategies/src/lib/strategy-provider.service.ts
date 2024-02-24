@@ -12,7 +12,6 @@ import {
   Observable,
 } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
-
 import {
   mergeDefaultConfig,
   RX_RENDER_STRATEGIES_CONFIG,

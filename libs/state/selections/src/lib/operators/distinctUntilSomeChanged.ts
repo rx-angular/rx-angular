@@ -1,6 +1,5 @@
 import { MonoTypeOperatorFunction } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-
 import { CompareFn, KeyCompareMap } from '../interfaces/index';
 import { safePluck } from '../utils/safe-pluck';
 

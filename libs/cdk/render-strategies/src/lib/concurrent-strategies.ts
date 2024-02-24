@@ -8,7 +8,6 @@ import {
 } from '@rx-angular/cdk/internals/scheduler';
 import { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { filter, mapTo, switchMap } from 'rxjs/operators';
-
 import {
   RxConcurrentStrategyNames,
   RxCustomStrategyCredentials,

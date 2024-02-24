@@ -1,6 +1,5 @@
 import { ESLintUtils, TSESTree } from '@typescript-eslint/utils';
 import * as path from 'path';
-
 import { docsUrl } from '../utils/docs';
 import { rxstateMethodCallExpression } from '../utils/selectors';
 

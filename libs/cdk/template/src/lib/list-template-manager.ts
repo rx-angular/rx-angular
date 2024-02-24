@@ -21,7 +21,6 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-
 import {
   RxListViewComputedContext,
   RxListViewContext,

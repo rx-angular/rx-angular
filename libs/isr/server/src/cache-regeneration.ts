@@ -6,7 +6,6 @@ import {
   ISRHandlerConfig,
 } from '@rx-angular/isr/models';
 import { Request, Response } from 'express';
-
 import { ISRLogger } from './isr-logger';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
 import { renderUrl } from './utils/render-url';

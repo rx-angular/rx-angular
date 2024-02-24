@@ -1,5 +1,4 @@
 import { assertInInjectionContext, DestroyRef, inject } from '@angular/core';
-
 import { RxState as LegacyState } from './rx-state.service';
 
 export type RxState<T extends object> = Pick<

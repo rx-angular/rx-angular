@@ -1,6 +1,5 @@
 import { Notification, OperatorFunction } from 'rxjs';
 import { map, materialize, tap } from 'rxjs/operators';
-
 import { RxNotification, RxNotificationKind } from './model';
 
 export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {

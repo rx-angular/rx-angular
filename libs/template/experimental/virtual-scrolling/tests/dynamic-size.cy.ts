@@ -1,7 +1,6 @@
 import { By } from '@angular/platform-browser';
 import { createOutputSpy, mount } from 'cypress/angular';
 import { Subject } from 'rxjs';
-
 import {
   DynamicSizeVirtualScrollStrategy,
   ListRange,

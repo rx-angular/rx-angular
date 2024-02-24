@@ -1,6 +1,5 @@
 import { ErrorHandler } from '@angular/core';
 import { merge, OperatorFunction, Subject } from 'rxjs';
-
 import { EffectMap, KeysOf, RxActions, SubjectMap, ValuesOf } from './types';
 
 /**

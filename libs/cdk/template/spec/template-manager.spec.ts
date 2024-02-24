@@ -6,7 +6,6 @@ import { RxTemplateManager } from '@rx-angular/cdk/template';
 import { mockConsole } from '@test-helpers/rx-angular';
 import { of, ReplaySubject, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
-
 import {
   createTestComponent,
   DEFAULT_TEMPLATE,

@@ -1,10 +1,8 @@
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { CommonEngine } from '@angular/ssr';
 import { ISRHandler } from '@rx-angular/isr/server';
 import express from 'express';
-
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import bootstrap from './src/main.server';
 // import { FileSystemCacheHandler } from '@rx-angular/isr/server';
 

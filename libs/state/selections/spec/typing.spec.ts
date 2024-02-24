@@ -1,5 +1,4 @@
 import { from, of } from 'rxjs';
-
 import {
   isDefined,
   isIterableGuard,

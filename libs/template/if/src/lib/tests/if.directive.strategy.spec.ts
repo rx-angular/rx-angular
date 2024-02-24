@@ -1,7 +1,6 @@
 import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-
 import { RxIf } from '../if.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 

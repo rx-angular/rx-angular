@@ -9,7 +9,6 @@ import {
 } from '@angular/common/http';
 import { inject, Injectable, Provider } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-
 import { IsrServerService } from './isr-server.service';
 
 export const httpErrorInterceptorISR: HttpInterceptorFn = (

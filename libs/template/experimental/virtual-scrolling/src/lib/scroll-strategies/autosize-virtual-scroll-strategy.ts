@@ -31,7 +31,6 @@ import {
   takeWhile,
   tap,
 } from 'rxjs/operators';
-
 import {
   ListRange,
   RxVirtualForViewContext,
