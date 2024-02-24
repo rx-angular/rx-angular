@@ -1,7 +1,7 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nx", "simple-import-sort"],
+  "plugins": ["@nx", "simple-import-sort", "unused-imports"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -36,7 +36,9 @@
           }
         ],
         "simple-import-sort/imports": "error",
-        "simple-import-sort/exports": "error"
+        "simple-import-sort/exports": "error",
+        "no-unused-vars": "off",
+        "unused-imports/no-unused-imports": "error"
       }
     },
     {
