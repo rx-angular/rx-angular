@@ -1,10 +1,10 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { stateful } from '@rx-angular/state/selections';
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { stateful } from '@rx-angular/state/selections';
 
 let testScheduler: TestScheduler;
 

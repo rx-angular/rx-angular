@@ -1,5 +1,6 @@
 import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
 import { Subject } from 'rxjs';
+
 import { actionProxyHandler } from './proxy';
 import { Actions, ActionTransforms, EffectMap, RxActions } from './types';
 

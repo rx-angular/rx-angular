@@ -1,17 +1,18 @@
 import {
+  assertInInjectionContext,
+  DestroyRef,
+  ErrorHandler,
+  inject,
+} from '@angular/core';
+
+import { actionProxyHandler } from './proxy';
+import {
   Actions,
   ActionTransforms,
   EffectMap,
   RxActions,
   SubjectMap,
 } from './types';
-import {
-  assertInInjectionContext,
-  DestroyRef,
-  ErrorHandler,
-  inject,
-} from '@angular/core';
-import { actionProxyHandler } from './proxy';
 
 /**
  * Manage events in components and services in a single place

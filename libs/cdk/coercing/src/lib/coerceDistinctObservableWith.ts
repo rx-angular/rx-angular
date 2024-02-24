@@ -1,5 +1,6 @@
 import { Observable, OperatorFunction } from 'rxjs';
 import { distinctUntilChanged, switchAll } from 'rxjs/operators';
+
 import { coerceObservableWith } from './coerceObservableWith';
 
 /**

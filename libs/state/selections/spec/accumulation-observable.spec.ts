@@ -1,15 +1,15 @@
-import { jestMatcher } from '@test-helpers/rx-angular';
-import { of, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { TestScheduler } from 'rxjs/testing';
 import {
-  select,
   createAccumulationObservable,
+  select,
 } from '@rx-angular/state/selections';
+import { jestMatcher } from '@test-helpers/rx-angular';
 import {
   initialPrimitiveState,
   PrimitiveState,
 } from '@test-helpers/rx-angular';
+import { of, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { TestScheduler } from 'rxjs/testing';
 
 function setupAccumulationObservable<T extends object>(cfg: {
   initialState?: T;

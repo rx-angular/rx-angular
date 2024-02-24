@@ -1,14 +1,15 @@
 import { Provider } from '@angular/core';
+import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
 import {
   CacheData,
   CacheHandler,
   ISRHandlerConfig,
 } from '@rx-angular/isr/models';
-import { renderUrl } from './utils/render-url';
-import { getRouteISRDataFromHTML } from './utils/get-isr-options';
 import { Request, Response } from 'express';
+
 import { ISRLogger } from './isr-logger';
-import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
+import { getRouteISRDataFromHTML } from './utils/get-isr-options';
+import { renderUrl } from './utils/render-url';
 
 export class CacheRegeneration {
   // TODO: make this pluggable because on serverless environments we can't share memory between functions

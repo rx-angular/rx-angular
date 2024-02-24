@@ -1,28 +1,28 @@
 export {
-  focusEvents,
-  mouseEvents,
-  wheelEvents,
-  inputEvents,
-  formControlsEvents,
-  keyboardEvents,
-  vrEvents,
-  mSGestureEvents,
-  printEvents,
-  networkEvents,
+  allEvents,
   audioEvents,
   compositionEvents,
-  touchEvents,
+  focusEvents,
+  formControlsEvents,
   globalEvents,
+  inputEvents,
+  keyboardEvents,
+  mouseEvents,
+  mSGestureEvents,
+  networkEvents,
+  printEvents,
+  touchEvents,
+  vrEvents,
   websocketEvents,
-  xhrEvents,
+  wheelEvents,
   windowEvents,
-  allEvents,
+  xhrEvents,
 } from './lib/event-names';
-export { EventTarget } from './lib/model/zone.api.extensions';
 export { RxZoneFlagsHelperFunctions } from './lib/model/configurations.types';
+export { EventTarget } from './lib/model/zone.api.extensions';
 export {
   RxZoneGlobalConfigurations,
-  RxZoneTestConfigurations,
   RxZoneRuntimeConfigurations,
+  RxZoneTestConfigurations,
 } from './lib/model/zone.configurations.api';
 export { zoneConfig } from './lib/zone-config';

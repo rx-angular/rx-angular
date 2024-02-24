@@ -1,10 +1,10 @@
 export {
+  cancelAnimationFrame,
+  clearInterval,
+  clearTimeout,
   Promise,
   requestAnimationFrame,
-  cancelAnimationFrame,
   setInterval,
-  clearInterval,
   setTimeout,
-  clearTimeout,
   unpatchAddEventListener,
 } from './browser';

@@ -5,6 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { from, Subscription } from 'rxjs';
+
 import { SideEffectFnOrObserver, SideEffectObservable } from './types';
 
 interface RxEffects {

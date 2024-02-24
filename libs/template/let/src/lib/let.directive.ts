@@ -29,7 +29,6 @@ import {
   RxTemplateManager,
   RxViewContext,
 } from '@rx-angular/cdk/template';
-
 import {
   defer,
   merge,

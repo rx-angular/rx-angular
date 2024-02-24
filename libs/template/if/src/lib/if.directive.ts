@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Directive,
+  inject,
   Input,
   NgZone,
   OnChanges,
@@ -9,22 +10,22 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
-  inject,
 } from '@angular/core';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
-  RxNotificationKind,
   createTemplateNotifier,
+  RxNotificationKind,
 } from '@rx-angular/cdk/notifications';
 import {
   RxStrategyNames,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import {
-  RxTemplateManager,
   createTemplateManager,
+  RxTemplateManager,
 } from '@rx-angular/cdk/template';
 import {
+  merge,
   NEVER,
   NextObserver,
   Observable,
@@ -32,13 +33,13 @@ import {
   ReplaySubject,
   Subject,
   Subscription,
-  merge,
 } from 'rxjs';
 import { filter, map, mergeAll } from 'rxjs/operators';
+
 import {
   RxIfTemplateNames,
-  RxIfViewContext,
   rxIfTemplateNames,
+  RxIfViewContext,
 } from './model/index';
 
 /**

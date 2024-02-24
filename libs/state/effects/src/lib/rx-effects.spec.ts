@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Observable, of, Subject, tap, timer } from 'rxjs';
-import { rxEffects, RxEffectsSetupFn } from './rx-effects';
-import { TestScheduler } from 'rxjs/testing';
 import { jestMatcher } from '@test-helpers/rx-angular';
+import { Observable, of, Subject, tap, timer } from 'rxjs';
+import { TestScheduler } from 'rxjs/testing';
+
+import { rxEffects, RxEffectsSetupFn } from './rx-effects';
 
 describe(rxEffects, () => {
   it('should register an observable', () => {

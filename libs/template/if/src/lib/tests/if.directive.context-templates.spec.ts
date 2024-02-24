@@ -17,6 +17,7 @@ import {
   throwError,
 } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
+
 import { RxIf } from '../if.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 

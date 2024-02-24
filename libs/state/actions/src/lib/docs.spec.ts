@@ -1,5 +1,4 @@
 import { AsyncPipe, DOCUMENT } from '@angular/common';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   Component,
   Inject,
@@ -8,10 +7,12 @@ import {
   Output,
   signal,
 } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { take } from 'rxjs/operators';
-import { rxActions } from './rx-actions';
 import { exhaustMap, Observable, of, Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
+
+import { rxActions } from './rx-actions';
 
 @Injectable()
 class AuthService {

@@ -1,5 +1,6 @@
-import { RxState } from '../src/lib/rx-state.service';
 import { take } from 'rxjs/operators';
+
+import { RxState } from '../src/lib/rx-state.service';
 
 export function setupState<T extends object>(cfg: { initialState?: T }) {
   const { initialState } = { ...cfg };

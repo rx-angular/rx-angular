@@ -6,6 +6,7 @@ import {
   CacheHandler,
   CacheISRConfig,
 } from '@rx-angular/isr/models';
+
 import { getRouteISRDataFromHTML } from '../utils/get-isr-options';
 
 export interface FileSystemCacheOptions {

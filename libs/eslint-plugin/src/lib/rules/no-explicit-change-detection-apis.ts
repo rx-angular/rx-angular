@@ -3,6 +3,7 @@ import {
   ESLintUtils,
   TSESTree,
 } from '@typescript-eslint/utils';
+
 import { docsUrl } from '../utils/docs';
 import { isKeyof } from '../utils/guards';
 import { namesToRegex } from '../utils/regex';

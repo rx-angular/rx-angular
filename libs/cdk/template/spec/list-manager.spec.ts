@@ -1,4 +1,5 @@
 import 'jest-preset-angular/setup-jest'; // TODO: move this into test-setup when zone-config.spec is in its own lib
+
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -14,6 +15,7 @@ import {
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   createListTemplateManager,
   RxDefaultListViewContext,
@@ -21,7 +23,6 @@ import {
   RxListViewComputedContext,
   RxListViewContext,
 } from '@rx-angular/cdk/template';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
 import { ReplaySubject } from 'rxjs';
 

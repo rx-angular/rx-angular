@@ -27,26 +27,26 @@ import {
 } from '@rx-angular/cdk/render-strategies';
 import { RxListViewComputedContext } from '@rx-angular/cdk/template';
 import {
+  combineLatest,
+  concat,
   isObservable,
   MonoTypeOperatorFunction,
   NEVER,
   Observable,
+  of,
   ReplaySubject,
   Subject,
-  of,
-  combineLatest,
-  concat,
 } from 'rxjs';
 import {
-  shareReplay,
-  switchMap,
-  takeUntil,
   catchError,
   distinctUntilChanged,
-  map,
   ignoreElements,
-  tap,
+  map,
+  shareReplay,
   switchAll,
+  switchMap,
+  takeUntil,
+  tap,
 } from 'rxjs/operators';
 
 import {

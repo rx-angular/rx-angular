@@ -1,6 +1,6 @@
-export {
-  RxIfViewContext,
-  rxIfTemplateNames,
-  RxIfTemplateNames,
-} from './lib/model/index';
 export { RxIf } from './lib/if.directive';
+export {
+  RxIfTemplateNames,
+  rxIfTemplateNames,
+  RxIfViewContext,
+} from './lib/model/index';

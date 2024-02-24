@@ -1,4 +1,3 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   AfterViewInit,
   Component,
@@ -6,13 +5,15 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { select } from '@rx-angular/state/selections';
 import {
   initialPrimitiveState,
   PrimitiveState,
 } from '@test-helpers/rx-angular';
 import { Observable, Subject } from 'rxjs';
+
 import { RxState } from '../src/lib/rx-state.service';
-import { select } from '@rx-angular/state/selections';
 
 const initialChildState = { str: 'initialChildState' };
 
