@@ -151,8 +151,6 @@ export class RxVirtualScrollViewportComponent
   /** @internal */
   private readonly destroy$ = new Subject<void>();
 
-  private contentSize = 0;
-
   /** @internal */
   constructor() {
     if (NG_DEV_MODE && !this.scrollStrategy) {
@@ -184,7 +182,6 @@ export class RxVirtualScrollViewportComponent
     this.scrollStrategy.contentSize$
       .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((size) => {
-        this.contentSize = size;
         this.updateContentSize(size);
       });
     if (this.initialScrollIndex != null && this.initialScrollIndex > 0) {
