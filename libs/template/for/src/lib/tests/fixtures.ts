@@ -8,8 +8,7 @@ export function setThis(arg: any) {
   thisArg = arg;
 }
 
-// eslint-disable-next-line @angular-eslint/component-selector
-@Component({ selector: 'test-cmp', template: '' })
+@Component({ selector: 'rx-test-cmp', template: '' })
 export class TestComponent {
   value: any;
   items: any[] = [1, 2];

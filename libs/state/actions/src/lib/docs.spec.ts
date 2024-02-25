@@ -270,8 +270,7 @@ describe('unsubscribing from events programmatically', () => {
     <input name="name" #input (input)="ui.greet(input.value)" />
     <div>{{ ui.greet$ | async }}</div>
   `,
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'app-greet',
+  selector: 'rx-app-greet',
   standalone: true,
   imports: [AsyncPipe],
 })

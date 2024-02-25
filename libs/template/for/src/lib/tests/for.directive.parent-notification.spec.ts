@@ -16,8 +16,7 @@ import { RxFor } from '../for.directive';
 import { TestComponent } from './fixtures';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'test-cmp',
+  selector: 'rx-test-cmp',
   template: `<div>
     <span
       #listChild
