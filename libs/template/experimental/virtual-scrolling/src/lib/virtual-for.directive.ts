@@ -26,6 +26,7 @@ import {
   strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
 import { RxListViewComputedContext } from '@rx-angular/cdk/template';
+import { Promise } from '@rx-angular/cdk/zone-less/browser';
 import {
   combineLatest,
   concat,
@@ -54,7 +55,6 @@ import {
   RxVirtualScrollStrategy,
   RxVirtualViewRepeater,
 } from './model';
-import { unpatchedMicroTask } from './util';
 import {
   createVirtualListTemplateManager,
   RxVirtualListTemplateManager,
@@ -63,7 +63,6 @@ import {
   DEFAULT_TEMPLATE_CACHE_SIZE,
   RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS,
 } from './virtual-scroll.config';
-import { coalesceWith } from '@rx-angular/cdk/coalescing';
 
 /**
  * @description Will be provided through Terser global definitions by Angular CLI
@@ -608,11 +607,14 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       updateViewContext: this.updateViewContext.bind(this),
       templateCacheSize: this.templateCacheSize,
     });
-    this.render()
-      .pipe(takeUntil(this._destroy$))
-      .subscribe((v) => {
-        this._renderCallback?.next(v as U);
-      });
+    // let the scroll strategy initialize before
+    Promise.resolve().then(() => {
+      this.render()
+        .pipe(takeUntil(this._destroy$))
+        .subscribe((v) => {
+          this._renderCallback?.next(v as U);
+        });
+    });
   }
 
   /** @internal */
@@ -642,10 +644,6 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       this.scrollStrategy.renderedRange$,
       this.strategyHandler.strategy$.pipe(distinctUntilChanged()),
     ]).pipe(
-      // move calculation to next microtask so that
-      // scroll-strategies can adjust themselves before calculating
-      // the new views to display
-      coalesceWith(unpatchedMicroTask()),
       // map iterable to latest diff
       switchMap(([items, range, strategy]) => {
         const iterable = items.slice(range.start, range.end);
