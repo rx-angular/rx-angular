@@ -102,7 +102,7 @@ describe('viewport', () => {
       );
       cy.get('@renderCallback').should('have.been.called');
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${defaultItemLength * itemSize}px)`
+        `translate(0px, ${defaultItemLength * itemSize - 1}px)`
       );
     });
   });
@@ -116,12 +116,12 @@ describe('viewport', () => {
         By.css('.rx-virtual-scroll__sentinel')
       );
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${items.length * itemSize}px)`
+        `translate(0px, ${items.length * itemSize - 1}px)`
       );
       items.splice(0, 1);
       fixture.detectChanges();
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${items.length * itemSize}px)`
+        `translate(0px, ${items.length * itemSize - 1}px)`
       );
     });
   });

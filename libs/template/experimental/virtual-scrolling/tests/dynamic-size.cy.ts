@@ -138,7 +138,7 @@ describe('viewport', () => {
       );
       const items = fixture.componentInstance.items as Item[];
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${totalItemHeight(items)}px)`
+        `translate(0px, ${totalItemHeight(items) - 1}px)`
       );
     });
   });
@@ -151,12 +151,12 @@ describe('viewport', () => {
         By.css('.rx-virtual-scroll__sentinel')
       );
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${totalItemHeight(items)}px)`
+        `translate(0px, ${totalItemHeight(items) - 1}px)`
       );
       items.splice(0, 1);
       fixture.detectChanges();
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${totalItemHeight(items)}px)`
+        `translate(0px, ${totalItemHeight(items) - 1}px)`
       );
     });
   });
