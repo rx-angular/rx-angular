@@ -603,7 +603,6 @@ export class RxIf<T = unknown>
   }
 
   /** @internal */
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   public static rxIfUseIfTypeGuard: void;
 
   /**
@@ -614,7 +613,6 @@ export class RxIf<T = unknown>
    * to `ngIf` should be narrowed in some way. For `NgIf`, the binding expression itself is used to
    * narrow its type, which allows the strictNullChecks feature of TypeScript to work with `NgIf`.
    */
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   static ngTemplateGuard_rxIf: 'binding';
 
   /**
@@ -623,7 +621,6 @@ export class RxIf<T = unknown>
    * The presence of this method is a signal to the Ivy template type-check compiler that the
    * `NgIf` structural directive renders its template with a specific context type.
    */
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   static ngTemplateContextGuard<T>(
     dir: RxIf<T>,
     ctx: any

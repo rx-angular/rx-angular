@@ -495,7 +495,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /** @internal */
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   static ngTemplateContextGuard<
     T,
     U extends NgIterable<T> = NgIterable<T>,
