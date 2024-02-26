@@ -77,8 +77,6 @@ export class RxIf<T = unknown>
   /** @internal */
   private ngZone = inject(NgZone);
   /** @internal */
-  private templateRef = inject<TemplateRef<RxIfViewContext<T>>>(TemplateRef);
-  /** @internal */
   private viewContainerRef = inject(ViewContainerRef);
 
   /** @internal */
@@ -488,6 +486,8 @@ export class RxIf<T = unknown>
   private get thenTemplate(): TemplateRef<RxIfViewContext<T>> {
     return this.then ? this.then : this.templateRef;
   }
+
+  constructor(private readonly templateRef: TemplateRef<RxIfViewContext<T>>) {}
 
   /** @internal */
   ngOnInit() {

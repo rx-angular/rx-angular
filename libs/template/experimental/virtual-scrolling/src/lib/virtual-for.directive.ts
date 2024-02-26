@@ -200,9 +200,6 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   private readonly iterableDiffers = inject(IterableDiffers);
   private readonly cdRef = inject(ChangeDetectorRef);
   private readonly ngZone = inject(NgZone);
-  private readonly templateRef = inject(
-    TemplateRef<RxVirtualForViewContext<T, U>>
-  );
   readonly viewContainer = inject(ViewContainerRef);
   private readonly strategyProvider = inject(RxStrategyProvider);
   private readonly errorHandler = inject(ErrorHandler);
@@ -594,6 +591,10 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   ): ctx is RxVirtualForViewContext<T, U, RxListViewComputedContext, K> {
     return true;
   }
+
+  constructor(
+    private readonly templateRef: TemplateRef<RxVirtualForViewContext<T, U>>
+  ) {}
 
   /** @internal */
   ngOnInit() {

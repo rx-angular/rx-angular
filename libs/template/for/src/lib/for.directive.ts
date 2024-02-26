@@ -89,9 +89,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   private ngZone = inject(NgZone);
   /** @internal */
-  private templateRef =
-    inject<TemplateRef<RxForViewContext<T, U>>>(TemplateRef);
-  /** @internal */
   private viewContainerRef = inject(ViewContainerRef);
   /** @internal */
   private strategyProvider = inject(RxStrategyProvider);
@@ -433,6 +430,10 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   _trackBy: TrackByFunction<T>;
   /** @internal */
   _distinctBy = (a: T, b: T) => a === b;
+
+  constructor(
+    private readonly templateRef: TemplateRef<RxForViewContext<T, U>>
+  ) {}
 
   /** @internal */
   ngOnInit() {
