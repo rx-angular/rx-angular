@@ -1,4 +1,7 @@
-export { createAccumulationObservable } from './lib/accumulation-observable';
+export {
+  createAccumulationObservable,
+  RX_ACCUMULATOR_FN,
+} from './lib/accumulation-observable';
 export { CompareFn, KeyCompareMap, PickSlice } from './lib/interfaces/index';
 export { AccumulationFn, Accumulator } from './lib/model';
 export {
