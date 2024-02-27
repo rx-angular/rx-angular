@@ -97,7 +97,6 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
   ],
   standalone: true,
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class AutoSizeVirtualScrollStrategy<
     T,
     U extends NgIterable<T> = NgIterable<T>

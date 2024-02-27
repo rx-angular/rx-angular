@@ -93,7 +93,6 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  * @publicApi
  */
 @Directive({ selector: '[rxLet]', standalone: true })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
   /** @internal */
   private strategyProvider = inject(RxStrategyProvider);

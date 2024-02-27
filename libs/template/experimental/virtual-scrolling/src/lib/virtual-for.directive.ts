@@ -191,7 +191,6 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
   providers: [{ provide: RxVirtualViewRepeater, useExisting: RxVirtualFor }],
   standalone: true,
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements RxVirtualViewRepeater<T>, OnInit, DoCheck, OnDestroy
 {

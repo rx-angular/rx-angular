@@ -76,7 +76,6 @@ const defaultItemSize = () => DEFAULT_ITEM_SIZE;
   ],
   standalone: true,
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class DynamicSizeVirtualScrollStrategy<
     T,
     U extends NgIterable<T> = NgIterable<T>
