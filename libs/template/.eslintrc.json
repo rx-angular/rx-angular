@@ -9,14 +9,8 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "type": "attribute",
-            "prefix": "rx",
-            "style": "camelCase"
-          }
-        ],
+        "@angular-eslint/directive-selector": "off",
+        "@angular-eslint/directive-class-suffix": "off",
         "@angular-eslint/component-selector": [
           "error",
           {
