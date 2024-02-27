@@ -65,7 +65,6 @@ import {
   ],
   standalone: true,
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class FixedSizeVirtualScrollStrategy<
     T,
     U extends NgIterable<T> = NgIterable<T>
