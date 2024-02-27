@@ -86,7 +86,6 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
  * @publicApi
  */
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[autosize]',
   providers: [
     {

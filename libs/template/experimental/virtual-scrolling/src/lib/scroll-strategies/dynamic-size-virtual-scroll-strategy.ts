@@ -66,7 +66,6 @@ const defaultItemSize = () => DEFAULT_ITEM_SIZE;
  * @publicApi
  */
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[dynamic]',
   providers: [
     {

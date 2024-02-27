@@ -56,7 +56,6 @@ import {
  * @publicApi
  */
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[itemSize]',
   providers: [
     {

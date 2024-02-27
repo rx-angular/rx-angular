@@ -116,7 +116,6 @@ export function unpatchEventListener(
  *
  * @publicApi
  */
-// eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: '[unpatch]', standalone: true })
 /**
  * @todo: add prefix [rxUnpatch]

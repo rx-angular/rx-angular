@@ -4,7 +4,6 @@ import { RxVirtualScrollElement } from './model';
 import { unpatchedScroll } from './util';
 
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[scrollWindow]',
   providers: [
     {
