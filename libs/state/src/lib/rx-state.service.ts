@@ -703,7 +703,65 @@ export class RxState<T extends object> implements OnDestroy, Subscribable<T> {
    * current keys value in RxState. Whenever the key gets updated, the signal
    * will also be updated accordingly.
    */
-  signal<K extends keyof T>(k: K): Signal<T[K]> {
+  signal<K1 extends keyof T>(k1: K1): Signal<T[K1]>;
+  /**
+   * @internal
+   */
+  signal<K1 extends keyof T, K2 extends keyof T[K1]>(
+    k1: K1,
+    k2: K2
+  ): Signal<T[K1][K2]>;
+  /**
+   * @internal
+   */
+  signal<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2]
+  >(k1: K1, k2: K2, k3: K3): Signal<T[K1][K2][K3]>;
+  /**
+   * @internal
+   */
+  signal<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3]
+  >(k1: K1, k2: K2, k3: K3, k4: K4): Signal<T[K1][K2][K3][K4]>;
+  /**
+   * @internal
+   */
+  signal<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4]
+  >(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5): Signal<T[K1][K2][K3][K4][K5]>;
+  /**
+   * @internal
+   */
+  signal<
+    K1 extends keyof T,
+    K2 extends keyof T[K1],
+    K3 extends keyof T[K1][K2],
+    K4 extends keyof T[K1][K2][K3],
+    K5 extends keyof T[K1][K2][K3][K4],
+    K6 extends keyof T[K1][K2][K3][K4][K5]
+  >(
+    k1: K1,
+    k2: K2,
+    k3: K3,
+    k4: K4,
+    k5: K5,
+    k6: K6
+  ): Signal<T[K1][K2][K3][K4][K5][K6]>;
+
+  /**
+   * @internal
+   */
+  signal<R>(...args: string[]): Signal<R> {
+    const k = args.join('.');
     return this.signalStoreProxy[k];
   }
 
