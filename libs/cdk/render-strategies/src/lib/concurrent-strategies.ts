@@ -4,7 +4,8 @@ import { filter, mapTo, switchMap } from 'rxjs/operators';
 import {
   cancelCallback,
   scheduleCallback,
-  forceFrameRate,
+  unstable_cancelCallback,
+  unstable_scheduleCallback,
   PriorityLevel,
 } from '@rx-angular/cdk/internals/scheduler';
 
@@ -14,9 +15,6 @@ import {
   RxStrategyCredentials,
 } from './model';
 import { coalescingManager, coalescingObj } from '@rx-angular/cdk/coalescing';
-
-// set default to 60fps
-forceFrameRate(60);
 
 const immediateStrategy: RxStrategyCredentials = {
   name: 'immediate',
@@ -93,6 +91,51 @@ const idleStrategy: RxStrategyCredentials = {
   },
 };
 
+const postTaskUserVisibleStrategy: RxStrategyCredentials = {
+  name: 'postTaskUserVisible',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: ({ work, scope, ngZone }) => {
+    return (o$) =>
+      o$.pipe(
+        scheduleOnPostTaskQueue(work, {
+          ngZone,
+          priority: PriorityLevel.NormalPriority,
+          scope,
+        })
+      );
+  },
+};
+
+const postTaskUserBlockingStrategy: RxStrategyCredentials = {
+  name: 'postTaskUserBlocking',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: ({ work, scope, ngZone }) => {
+    return (o$) =>
+      o$.pipe(
+        scheduleOnPostTaskQueue(work, {
+          ngZone,
+          priority: PriorityLevel.UserBlockingPriority,
+          scope,
+        })
+      );
+  },
+};
+
+const postTaskBackgroundStrategy: RxStrategyCredentials = {
+  name: 'postTaskBackground',
+  work: (cdRef) => cdRef.detectChanges(),
+  behavior: ({ work, scope, ngZone }) => {
+    return (o$) =>
+      o$.pipe(
+        scheduleOnPostTaskQueue(work, {
+          ngZone,
+          priority: PriorityLevel.IdlePriority,
+          scope,
+        })
+      );
+  },
+};
+
 function scheduleOnQueue<T>(
   work: (...args: any[]) => void,
   options: {
@@ -116,11 +159,44 @@ function scheduleOnQueue<T>(
               coalescingManager.remove(scope);
               subscriber.next(v);
             },
-            { delay: options.delay, ngZone: options.ngZone }
+            { delay: options.delay }
           );
           return () => {
             coalescingManager.remove(scope);
             cancelCallback(task);
+          };
+        }).pipe(mapTo(v))
+      )
+    );
+}
+function scheduleOnPostTaskQueue<T>(
+  work: (...args: any[]) => void,
+  options: {
+    priority: PriorityLevel;
+    scope: coalescingObj;
+    delay?: number;
+    ngZone: NgZone;
+  }
+): MonoTypeOperatorFunction<T> {
+  const scope = (options.scope as Record<string, unknown>) || {};
+  return (o$: Observable<T>): Observable<T> =>
+    o$.pipe(
+      filter(() => !coalescingManager.isCoalescing(scope)),
+      switchMap((v) =>
+        new Observable<T>((subscriber) => {
+          coalescingManager.add(scope);
+          const task = unstable_scheduleCallback(
+            options.priority,
+            () => {
+              work();
+              coalescingManager.remove(scope);
+              subscriber.next(v);
+            },
+            { delay: options.delay }
+          );
+          return () => {
+            coalescingManager.remove(scope);
+            unstable_cancelCallback(task);
           };
         }).pipe(mapTo(v))
       )
@@ -135,4 +211,7 @@ export const RX_CONCURRENT_STRATEGIES: RxConcurrentStrategies = {
   normal: normalStrategy,
   low: lowStrategy,
   idle: idleStrategy,
+  postTaskUserVisible: postTaskUserVisibleStrategy,
+  postTaskUserBlocking: postTaskUserBlockingStrategy,
+  postTaskBackground: postTaskBackgroundStrategy,
 };
