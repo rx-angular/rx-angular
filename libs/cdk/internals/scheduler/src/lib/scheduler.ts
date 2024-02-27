@@ -1,7 +1,6 @@
 // see https://github.com/facebook/react/blob/main/packages/scheduler/src/forks/Scheduler.js
 
 import { ɵglobal } from '@angular/core';
-import { enableIsInputPending } from './schedulerFeatureFlags';
 import {
   peek,
   pop,
@@ -53,9 +52,6 @@ const timerQueue = [];
 // Incrementing id counter. Used to maintain insertion order.
 let taskIdCounter = 1;
 
-// Pausing the scheduler is useful for debugging.
-let isSchedulerPaused = false;
-
 let currentTask: ReactSchedulerTask = null;
 let currentPriorityLevel = PriorityLevel.NormalPriority;
 
@@ -71,18 +67,10 @@ const clearTimeout = ɵglobal.clearTimeout;
 const setImmediate = ɵglobal.setImmediate; // IE and Node.js + jsdom
 const messageChannel = ɵglobal.MessageChannel;
 
-const isInputPending =
-  typeof ɵglobal.navigator !== 'undefined' &&
-  ɵglobal.navigator.scheduling !== undefined &&
-  ɵglobal.navigator.scheduling.isInputPending !== undefined
-    ? ɵglobal.navigator.scheduling.isInputPending.bind(
-        ɵglobal.navigator.scheduling
-      )
-    : null;
-
 const defaultZone = {
   run: (fn) => fn(),
 };
+
 function advanceTimers(currentTime) {
   // Check for tasks that are no longer delayed and add them to the queue.
   let timer = peek(timerQueue);
@@ -216,75 +204,12 @@ function workLoop(
   }
 }
 
-function runWithPriority(priorityLevel, eventHandler) {
-  switch (priorityLevel) {
-    case PriorityLevel.ImmediatePriority:
-    case PriorityLevel.UserBlockingPriority:
-    case PriorityLevel.NormalPriority:
-    case PriorityLevel.LowPriority:
-    case PriorityLevel.IdlePriority:
-      break;
-    default:
-      priorityLevel = PriorityLevel.NormalPriority;
-  }
-
-  const previousPriorityLevel = currentPriorityLevel;
-  currentPriorityLevel = priorityLevel;
-
-  try {
-    return eventHandler();
-  } finally {
-    currentPriorityLevel = previousPriorityLevel;
-  }
-}
-
-function next(eventHandler) {
-  let priorityLevel;
-  switch (currentPriorityLevel) {
-    case PriorityLevel.ImmediatePriority:
-    case PriorityLevel.UserBlockingPriority:
-    case PriorityLevel.NormalPriority:
-      // Shift down to normal priority
-      priorityLevel = PriorityLevel.NormalPriority;
-      break;
-    default:
-      // Anything lower than normal priority should remain at the current level.
-      priorityLevel = currentPriorityLevel;
-      break;
-  }
-
-  const previousPriorityLevel = currentPriorityLevel;
-  currentPriorityLevel = priorityLevel;
-
-  try {
-    return eventHandler();
-  } finally {
-    currentPriorityLevel = previousPriorityLevel;
-  }
-}
-
-function wrapCallback(callback: VoidFunction) {
-  const parentPriorityLevel = currentPriorityLevel;
-  return () => {
-    // This is a fork of runWithPriority, inlined for performance.
-    const previousPriorityLevel = currentPriorityLevel;
-    currentPriorityLevel = parentPriorityLevel;
-
-    try {
-      // eslint-disable-next-line prefer-rest-params
-      return callback.apply(this, arguments);
-    } finally {
-      currentPriorityLevel = previousPriorityLevel;
-    }
-  };
-}
-
 interface ScheduleCallbackOptions {
   delay?: number;
   ngZone?: SchedulerTaskZone;
 }
 
-function scheduleCallback(
+export function scheduleCallback(
   priorityLevel: PriorityLevel,
   callback: VoidFunction,
   options?: ScheduleCallbackOptions
@@ -364,31 +289,11 @@ function scheduleCallback(
   return newTask;
 }
 
-function pauseExecution() {
-  isSchedulerPaused = true;
-}
-
-function continueExecution() {
-  isSchedulerPaused = false;
-  if (!isHostCallbackScheduled && !isPerformingWork) {
-    isHostCallbackScheduled = true;
-    requestHostCallback(flushWork);
-  }
-}
-
-function getFirstCallbackNode() {
-  return peek(taskQueue);
-}
-
-function cancelCallback(task) {
+export function cancelCallback(task) {
   // Null out the callback to indicate the task has been canceled. (Can't
   // remove from the queue because you can't remove arbitrary nodes from an
   // array based heap, only the first one.)
   task.callback = null;
-}
-
-function getCurrentPriorityLevel() {
-  return currentPriorityLevel;
 }
 
 let isMessageLoopRunning = false;
@@ -400,10 +305,6 @@ let taskTimeoutID = -1;
 // It does not attempt to align with frame boundaries, since most tasks don't
 // need to be frame aligned; for those that do, use requestAnimationFrame.
 let yieldInterval = 16;
-
-// TODO: Make this configurable
-// TODO: Adjust this based on priority?
-const maxYieldInterval = 300;
 let needsPaint = false;
 let queueStartTime = -1;
 
@@ -419,59 +320,15 @@ function shouldYieldToHost() {
     return false;
   }
 
-  // The main thread has been blocked for a non-negligible amount of time. We
-  // may want to yield control of the main thread, so the browser can perform
-  // high priority tasks. The main ones are painting and user input. If there's
-  // a pending paint or a pending input, then we should yield. But if there's
-  // neither, then we can yield less often while remaining responsive. We'll
-  // eventually yield regardless, since there could be a pending paint that
-  // wasn't accompanied by a call to `requestPaint`, or other main thread tasks
-  // like network events.
-
-  // we don't support isInputPending currently
-  /*if (enableIsInputPending) {
-    if (needsPaint) {
-      // There's a pending paint (signaled by `requestPaint`). Yield now.
-      return true;
-    }
-    if (timeElapsed < continuousInputInterval) {
-      // We haven't blocked the thread for that long. Only yield if there's a
-      // pending discrete input (e.g. click). It's OK if there's pending
-      // continuous input (e.g. mouseover).
-      if (isInputPending !== null) {
-        return isInputPending();
-      }
-    } else if (timeElapsed < maxInterval) {
-      // Yield if there's either a pending discrete or continuous input.
-      if (isInputPending !== null) {
-        return isInputPending(continuousOptions);
-      }
-    } else {
-      // We've blocked the thread for a long time. Even if there's no pending
-      // input, there may be some other scheduled work that we don't know about,
-      // like a network event. Yield now.
-      return true;
-    }
-  }*/
-
   // `isInputPending` isn't available. Yield now.
   return true;
 }
 
 function requestPaint() {
   needsPaint = true;
-  // we don't support isInputPending currently
-  /*if (
-    enableIsInputPending &&
-    navigator !== undefined &&
-    (navigator as any).scheduling !== undefined &&
-    (navigator as any).scheduling.isInputPending !== undefined
-  ) {
-    needsPaint = true;
-  }*/
 }
 
-function forceFrameRate(fps) {
+export function forceFrameRate(fps) {
   if (fps < 0 || fps > 125) {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       console.error(
@@ -577,21 +434,3 @@ function cancelHostTimeout() {
   clearTimeout(taskTimeoutID);
   taskTimeoutID = -1;
 }
-
-const _requestPaint = requestPaint;
-
-export {
-  runWithPriority,
-  next,
-  scheduleCallback,
-  cancelCallback,
-  wrapCallback,
-  getCurrentPriorityLevel,
-  shouldYieldToHost as shouldYield,
-  _requestPaint as requestPaint,
-  continueExecution,
-  pauseExecution,
-  getFirstCallbackNode,
-  getCurrentTime as now,
-  forceFrameRate as forceFrameRate,
-};

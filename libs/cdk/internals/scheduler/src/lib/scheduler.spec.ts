@@ -17,9 +17,7 @@ describe('Scheduler', () => {
 
   const NormalPriority = 3;
   let scheduleCallback: typeof import('./scheduler').scheduleCallback;
-  let requestPaint: typeof import('./scheduler').requestPaint;
   let cancelCallback: typeof import('./scheduler').cancelCallback;
-  let shouldYield: typeof import('./scheduler').shouldYield;
 
   describe.each([['Browser'], ['Node'], ['NonBrowser']])('%p', (env) => {
     beforeEach(() => {
@@ -43,9 +41,7 @@ describe('Scheduler', () => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const Scheduler = require('./scheduler');
       scheduleCallback = Scheduler.scheduleCallback;
-      requestPaint = Scheduler.requestPaint;
       cancelCallback = Scheduler.cancelCallback;
-      shouldYield = Scheduler.shouldYield;
     });
 
     afterEach(() => {
@@ -74,33 +70,6 @@ describe('Scheduler', () => {
       runtime.assertLog([LogEvent.MessageEvent, LogEvent.Task]);
     });
 
-    it('task with continuation', () => {
-      let now: number;
-      scheduleCallback(NormalPriority, () => {
-        runtime.log(LogEvent.Task);
-        while (!shouldYield()) {
-          runtime.advanceTime(1);
-        }
-        now = performance.now();
-        runtime.log(`Yield at ${now}ms`);
-        return () => {
-          runtime.log(LogEvent.Continuation);
-        };
-      });
-      runtime.assertLog([schedulingMessageEvent]);
-
-      runtime.fireMessageEvent();
-      runtime.assertLog([
-        LogEvent.MessageEvent,
-        LogEvent.Task,
-        `Yield at ${now}ms`,
-        schedulingMessageEvent,
-      ]);
-
-      runtime.fireMessageEvent();
-      runtime.assertLog([LogEvent.MessageEvent, LogEvent.Continuation]);
-    });
-
     it('multiple tasks', () => {
       scheduleCallback(NormalPriority, () => {
         runtime.log('A');
@@ -111,26 +80,6 @@ describe('Scheduler', () => {
       runtime.assertLog([schedulingMessageEvent]);
       runtime.fireMessageEvent();
       runtime.assertLog([LogEvent.MessageEvent, 'A', 'B']);
-    });
-
-    it('request paint ', () => {
-      scheduleCallback(NormalPriority, () => {
-        runtime.log('A');
-        requestPaint();
-      });
-      scheduleCallback(NormalPriority, () => {
-        runtime.log('B');
-      });
-      runtime.assertLog([schedulingMessageEvent]);
-      runtime.fireMessageEvent();
-      runtime.assertLog([
-        LogEvent.MessageEvent,
-        'A',
-        // A forced paint
-        schedulingMessageEvent,
-      ]);
-      runtime.fireMessageEvent();
-      runtime.assertLog([LogEvent.MessageEvent, 'B']);
     });
 
     it('multiple tasks with a yield in between', () => {
