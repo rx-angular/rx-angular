@@ -117,9 +117,6 @@ export function unpatchEventListener(
  * @publicApi
  */
 @Directive({ selector: '[unpatch]', standalone: true })
-/**
- * @todo: add prefix [rxUnpatch]
- */
 export class RxUnpatch implements OnChanges, AfterViewInit, OnDestroy {
   /**
    * @description
