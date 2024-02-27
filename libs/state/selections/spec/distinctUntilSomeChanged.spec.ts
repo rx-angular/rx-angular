@@ -1,8 +1,8 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { KeyCompareMap } from '@rx-angular/state/selections';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
