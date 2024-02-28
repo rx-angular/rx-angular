@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Directive,
+  inject,
   Input,
   NgZone,
   OnChanges,
@@ -9,22 +10,22 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewContainerRef,
-  inject,
 } from '@angular/core';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
-  RxNotificationKind,
   createTemplateNotifier,
+  RxNotificationKind,
 } from '@rx-angular/cdk/notifications';
 import {
   RxStrategyNames,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import {
-  RxTemplateManager,
   createTemplateManager,
+  RxTemplateManager,
 } from '@rx-angular/cdk/template';
 import {
+  merge,
   NEVER,
   NextObserver,
   Observable,
@@ -32,13 +33,12 @@ import {
   ReplaySubject,
   Subject,
   Subscription,
-  merge,
 } from 'rxjs';
 import { filter, map, mergeAll } from 'rxjs/operators';
 import {
   RxIfTemplateNames,
-  RxIfViewContext,
   rxIfTemplateNames,
+  RxIfViewContext,
 } from './model/index';
 
 /**
@@ -66,7 +66,6 @@ import {
   selector: '[rxIf]',
   standalone: true,
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxIf<T = unknown>
   implements OnInit, OnChanges, OnDestroy, OnChanges
 {
@@ -603,7 +602,6 @@ export class RxIf<T = unknown>
   }
 
   /** @internal */
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   public static rxIfUseIfTypeGuard: void;
 
   /**
@@ -614,7 +612,6 @@ export class RxIf<T = unknown>
    * to `ngIf` should be narrowed in some way. For `NgIf`, the binding expression itself is used to
    * narrow its type, which allows the strictNullChecks feature of TypeScript to work with `NgIf`.
    */
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   static ngTemplateGuard_rxIf: 'binding';
 
   /**
@@ -623,7 +620,6 @@ export class RxIf<T = unknown>
    * The presence of this method is a signal to the Ivy template type-check compiler that the
    * `NgIf` structural directive renders its template with a specific context type.
    */
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   static ngTemplateContextGuard<T>(
     dir: RxIf<T>,
     ctx: any

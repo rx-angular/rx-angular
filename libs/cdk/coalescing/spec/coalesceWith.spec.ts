@@ -1,4 +1,4 @@
-import { mergeMapTo, share } from 'rxjs/operators';
+import { jestMatcher, mockConsole } from '@test-helpers/rx-angular';
 import {
   asapScheduler,
   concat,
@@ -10,7 +10,7 @@ import {
   scheduled,
   timer,
 } from 'rxjs';
-import { jestMatcher, mockConsole } from '@test-helpers/rx-angular';
+import { mergeMapTo, share } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { coalesceWith } from '../src/lib/coalesceWith';
 

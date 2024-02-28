@@ -7,9 +7,9 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import { RxNotification } from '@rx-angular/cdk/notifications';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { RxLet } from '@rx-angular/template/let';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { filter, map, mergeAll, withLatestFrom } from 'rxjs/operators';
@@ -48,11 +48,6 @@ const observerSupported = () =>
     : false;
 
 @Directive({
-  /**
-   * @todo: use camelcase for directive selector.
-   * @todo: deprecate [viewport-prio] + add camelcase support.
-   */
-  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[viewport-prio]',
   standalone: true,
 })

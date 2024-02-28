@@ -9,7 +9,6 @@ import {
   saveActiveProject,
   setActiveProject,
 } from 'ng-morph';
-
 import { formatFiles } from './format-files';
 
 type ImportConfig = Pick<ImportSpecifierStructure, 'alias' | 'name'>;
@@ -43,7 +42,7 @@ export function renamingRule(packageName: Pattern, renames: RenameConfig) {
               .getSourceFile()
               .getFilePath()
               .toString();
-              const key = `${filePath}__${rename.moduleSpecifier}`;
+            const key = `${filePath}__${rename.moduleSpecifier}`;
             const namedImportConfig: ImportConfig = {
               name: rename.namedImport,
             };

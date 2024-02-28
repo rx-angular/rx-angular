@@ -1,18 +1,16 @@
 export {
+  CacheData,
   CacheHandler,
   CacheISRConfig,
   CacheISRConfig as ISROptions,
-  CacheData,
   RenderVariant,
   VariantRebuildItem,
 } from './cache-handler';
-
 export {
-  ISRHandlerConfig,
   InvalidateConfig,
+  ISRHandlerConfig,
   RenderConfig,
-  ServeFromCacheConfig,
   RouteISRConfig,
+  ServeFromCacheConfig,
 } from './isr-handler-config';
-
 export { IsrServiceInterface, IsrState } from './isr-service.interface';

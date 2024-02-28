@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import { defer, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
-
 import {
   RxVirtualScrollElement,
   RxVirtualScrollStrategy,

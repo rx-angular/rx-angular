@@ -1,16 +1,16 @@
 import {
   ChangeDetectorRef,
+  inject,
   NgZone,
   OnDestroy,
   Pipe,
   PipeTransform,
-  inject,
   untracked,
 } from '@angular/core';
 import {
+  createTemplateNotifier,
   RxNotification,
   RxNotificationKind,
-  createTemplateNotifier,
 } from '@rx-angular/cdk/notifications';
 import {
   RxStrategyNames,

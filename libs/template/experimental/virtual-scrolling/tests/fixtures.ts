@@ -1,15 +1,8 @@
 import { NgIterable } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { createOutputSpy, mount } from 'cypress/angular';
-import { Observable, Subject } from 'rxjs';
-import {
-  FixedSizeVirtualScrollStrategy,
-  ListRange,
-  RxVirtualFor,
-  RxVirtualScrollViewportComponent,
-} from '../src/index';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
-
+import { Observable } from 'rxjs';
+import { RxVirtualScrollViewportComponent } from '../src/index';
 import {
   DEFAULT_ITEM_SIZE,
   DEFAULT_RUNWAY_ITEMS,

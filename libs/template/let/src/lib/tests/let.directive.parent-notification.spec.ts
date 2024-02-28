@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { Observable, ReplaySubject, Subject, asapScheduler, delay } from 'rxjs';
+import { asapScheduler, delay, Observable, ReplaySubject, Subject } from 'rxjs';
 import { RxLet } from '../let.directive';
 
 @Component({

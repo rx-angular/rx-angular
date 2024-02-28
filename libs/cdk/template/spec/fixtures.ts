@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  EmbeddedViewRef,
   ErrorHandler,
   Input,
   OnDestroy,

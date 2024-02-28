@@ -12,7 +12,7 @@ import {
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
-import { EMPTY, NEVER, Observable, asapScheduler, of, timer } from 'rxjs';
+import { asapScheduler, EMPTY, NEVER, Observable, of, timer } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { RxPush } from '../push.pipe';
 

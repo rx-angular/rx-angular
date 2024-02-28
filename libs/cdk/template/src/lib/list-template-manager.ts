@@ -7,6 +7,12 @@ import {
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
+import {
+  onStrategy,
+  RxStrategyCredentials,
+  RxStrategyNames,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
 import { combineLatest, MonoTypeOperatorFunction, Observable, of } from 'rxjs';
 import {
   catchError,
@@ -15,12 +21,6 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import {
-  RxStrategyCredentials,
-  onStrategy,
-  strategyHandling,
-  RxStrategyNames,
-} from '@rx-angular/cdk/render-strategies';
 import {
   RxListViewComputedContext,
   RxListViewContext,

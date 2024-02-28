@@ -1,3 +1,4 @@
+import { jestMatcher } from '@test-helpers/rx-angular';
 import {
   concatAll,
   exhaustAll,
@@ -7,9 +8,6 @@ import {
   take,
 } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-
-import { jestMatcher } from '@test-helpers/rx-angular';
-
 import { coerceDistinctWith } from '../src/lib/coerceDistinctObservableWith';
 
 function createInputStream(

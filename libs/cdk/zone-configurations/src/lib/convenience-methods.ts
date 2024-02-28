@@ -1,8 +1,8 @@
+import { xhrEvents } from './event-names';
 import {
   RxZoneConfigConfiguration,
   RxZoneConfigConvenienceMethods,
 } from './model/zone-config.types';
-import { xhrEvents } from './event-names';
 
 export const convenienceMethods = (
   config: RxZoneConfigConfiguration

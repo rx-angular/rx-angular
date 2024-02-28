@@ -1,3 +1,4 @@
+import { jestMatcher } from '@test-helpers/rx-angular';
 import {
   BehaviorSubject,
   concatAll,
@@ -10,9 +11,6 @@ import {
   take,
 } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-
-import { jestMatcher } from '@test-helpers/rx-angular';
-
 import { coerceAllFactory } from '../src/lib/coerce-all-factory';
 
 function createInputStream(

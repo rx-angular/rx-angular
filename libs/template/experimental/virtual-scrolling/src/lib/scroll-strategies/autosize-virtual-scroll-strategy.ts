@@ -31,7 +31,6 @@ import {
   takeWhile,
   tap,
 } from 'rxjs/operators';
-
 import {
   ListRange,
   RxVirtualForViewContext,
@@ -87,7 +86,6 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
  * @publicApi
  */
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[autosize]',
   providers: [
     {
@@ -98,7 +96,6 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
   ],
   standalone: true,
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class AutoSizeVirtualScrollStrategy<
     T,
     U extends NgIterable<T> = NgIterable<T>

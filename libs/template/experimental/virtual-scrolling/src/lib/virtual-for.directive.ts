@@ -27,28 +27,27 @@ import {
 } from '@rx-angular/cdk/render-strategies';
 import { RxListViewComputedContext } from '@rx-angular/cdk/template';
 import {
+  combineLatest,
+  concat,
   isObservable,
   MonoTypeOperatorFunction,
   NEVER,
   Observable,
+  of,
   ReplaySubject,
   Subject,
-  of,
-  combineLatest,
-  concat,
 } from 'rxjs';
 import {
-  shareReplay,
-  switchMap,
-  takeUntil,
   catchError,
   distinctUntilChanged,
-  map,
   ignoreElements,
-  tap,
+  map,
+  shareReplay,
   switchAll,
+  switchMap,
+  takeUntil,
+  tap,
 } from 'rxjs/operators';
-
 import {
   ListRange,
   RxVirtualForViewContext,
@@ -192,7 +191,6 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
   providers: [{ provide: RxVirtualViewRepeater, useExisting: RxVirtualFor }],
   standalone: true,
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements RxVirtualViewRepeater<T>, OnInit, DoCheck, OnDestroy
 {

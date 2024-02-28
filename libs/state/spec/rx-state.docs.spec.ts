@@ -1,12 +1,12 @@
+import { AsyncPipe } from '@angular/common';
+import { Component, Injectable } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { rxState } from '../src/lib/rx-state';
-import { Component, Injectable } from '@angular/core';
-import { Subject, map, merge } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
-import { TestScheduler } from 'rxjs/testing';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers/rx-angular';
+import { map, merge, Subject } from 'rxjs';
+import { TestScheduler } from 'rxjs/testing';
+import { rxState } from '../src/lib/rx-state';
 
 @Component({
   selector: 'rx-counter',

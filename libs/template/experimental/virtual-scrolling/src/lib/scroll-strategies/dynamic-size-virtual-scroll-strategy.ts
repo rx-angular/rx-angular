@@ -22,7 +22,6 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
-
 import {
   ListRange,
   RxVirtualScrollStrategy,
@@ -67,7 +66,6 @@ const defaultItemSize = () => DEFAULT_ITEM_SIZE;
  * @publicApi
  */
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[dynamic]',
   providers: [
     {
@@ -77,7 +75,6 @@ const defaultItemSize = () => DEFAULT_ITEM_SIZE;
   ],
   standalone: true,
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class DynamicSizeVirtualScrollStrategy<
     T,
     U extends NgIterable<T> = NgIterable<T>

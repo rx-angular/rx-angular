@@ -4,12 +4,9 @@ import {
   SchematicContext,
   Tree,
 } from '@angular-devkit/schematics';
-import {
-  NodeDependencyType,
-} from '@schematics/angular/utility/dependencies';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { NodeDependencyType } from '@schematics/angular/utility/dependencies';
 import { addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
-
 import { Dependency } from '../../utils/dependency';
 import { getLatestNodeVersion } from '../../utils/get-latest-node-version';
 

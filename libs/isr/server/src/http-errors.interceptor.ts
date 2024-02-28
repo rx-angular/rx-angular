@@ -1,4 +1,3 @@
-import { Injectable, Provider, inject } from '@angular/core';
 import {
   HTTP_INTERCEPTORS,
   HttpEvent,
@@ -8,6 +7,7 @@ import {
   HttpInterceptorFn,
   HttpRequest,
 } from '@angular/common/http';
+import { inject, Injectable, Provider } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { IsrServerService } from './isr-server.service';
 

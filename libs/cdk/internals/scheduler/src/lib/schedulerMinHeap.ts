@@ -1,4 +1,3 @@
-import { NgZone } from '@angular/core';
 import { PriorityLevel } from './schedulerPriorities';
 
 type Heap = Array<ReactSchedulerTask>;

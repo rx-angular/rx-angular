@@ -1,9 +1,9 @@
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { mockConsole } from '@test-helpers/rx-angular';
-import { RxActionFactory } from './actions.factory';
-import { isObservable } from 'rxjs';
 import { Component, ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { mockConsole } from '@test-helpers/rx-angular';
+import { isObservable } from 'rxjs';
+import { RxActionFactory } from './actions.factory';
 
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({

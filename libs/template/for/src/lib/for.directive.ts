@@ -28,7 +28,6 @@ import {
   RxListManager,
   RxListViewComputedContext,
 } from '@rx-angular/cdk/template';
-
 import {
   isObservable,
   Observable,
@@ -78,7 +77,6 @@ declare const ngDevMode: boolean;
   selector: '[rxFor][rxForOf]',
   standalone: true,
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, DoCheck, OnDestroy
 {
@@ -497,7 +495,6 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /** @internal */
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   static ngTemplateContextGuard<
     T,
     U extends NgIterable<T> = NgIterable<T>,

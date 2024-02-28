@@ -116,12 +116,7 @@ export function unpatchEventListener(
  *
  * @publicApi
  */
-// eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: '[unpatch]', standalone: true })
-/**
- * @todo: add prefix [rxUnpatch]
- */
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class RxUnpatch implements OnChanges, AfterViewInit, OnDestroy {
   /**
    * @description

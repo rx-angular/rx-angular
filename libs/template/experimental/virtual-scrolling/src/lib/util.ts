@@ -1,9 +1,9 @@
+import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import {
   cancelAnimationFrame,
   Promise,
   requestAnimationFrame,
 } from '@rx-angular/cdk/zone-less/browser';
-import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import { from, Observable } from 'rxjs';
 
 export function unpatchedAnimationFrameTick(): Observable<void> {

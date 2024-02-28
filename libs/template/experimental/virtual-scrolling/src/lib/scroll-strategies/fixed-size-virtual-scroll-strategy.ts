@@ -23,7 +23,6 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
-
 import {
   ListRange,
   RxVirtualForViewContext,
@@ -57,7 +56,6 @@ import {
  * @publicApi
  */
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'rx-virtual-scroll-viewport[itemSize]',
   providers: [
     {
@@ -67,7 +65,6 @@ import {
   ],
   standalone: true,
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class FixedSizeVirtualScrollStrategy<
     T,
     U extends NgIterable<T> = NgIterable<T>

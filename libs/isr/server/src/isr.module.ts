@@ -1,15 +1,15 @@
+import { DOCUMENT, isPlatformServer } from '@angular/common';
 import {
   Inject,
   ModuleWithProviders,
   NgModule,
   PLATFORM_ID,
 } from '@angular/core';
-import { HTTP_ERROR_PROVIDER_ISR } from './http-errors.interceptor';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
-import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serialized';
-import { DOCUMENT, isPlatformServer } from '@angular/common';
 import { IsrService } from '@rx-angular/isr/browser';
+import { HTTP_ERROR_PROVIDER_ISR } from './http-errors.interceptor';
 import { IsrServerService } from './isr-server.service';
+import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serialized';
 
 @NgModule({ providers: [IsrService] })
 export class IsrModule {

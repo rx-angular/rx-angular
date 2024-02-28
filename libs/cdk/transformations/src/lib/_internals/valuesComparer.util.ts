@@ -1,6 +1,6 @@
+import { isKeyOf } from '../_internals/guards';
 import { CompareFn } from '../interfaces/comparable-data-type';
 import { ComparableData } from '../interfaces/comparable-data-type';
-import { isKeyOf } from '../_internals/guards';
 
 const defaultCompareFn = <T>(a: T, b: T) => a === b;
 
@@ -9,7 +9,6 @@ export function valuesComparer<T>(
   incoming: T,
   compare?: ComparableData<T>
 ): boolean {
-
   if (isKeyOf<T>(compare)) {
     return original[compare] === incoming[compare];
   }

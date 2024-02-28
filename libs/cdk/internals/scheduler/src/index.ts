@@ -1,6 +1,6 @@
-export * from './lib/schedulerPriorities';
 export {
   cancelCallback,
-  scheduleCallback,
   forceFrameRate,
+  scheduleCallback,
 } from './lib/scheduler';
+export * from './lib/schedulerPriorities';

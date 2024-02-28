@@ -1,6 +1,5 @@
 import { EmbeddedViewRef, IterableChanges, ViewRef } from '@angular/core';
 import { RxListViewContext } from '@rx-angular/cdk/template';
-
 import { TemplateSettings } from './model';
 
 export interface RxVirtualListChange<T, C> {
