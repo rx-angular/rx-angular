@@ -14,6 +14,7 @@ import {
   merge,
   MonoTypeOperatorFunction,
   Observable,
+  pairwise,
   ReplaySubject,
   Subject,
 } from 'rxjs';
@@ -41,6 +42,7 @@ import {
 import {
   calculateVisibleContainerSize,
   parseScrollTopBoundaries,
+  toBoolean,
   unpatchedMicroTask,
 } from '../util';
 import { RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS } from '../virtual-scroll.config';
@@ -145,6 +147,31 @@ export class AutoSizeVirtualScrollStrategy<
 
   /**
    * @description
+   * When enabled, the autosized scroll strategy attaches a `ResizeObserver`
+   * to every view within the given renderedRange. If your views receive
+   * dimension changes that are not caused by list updates, this is a way to
+   * still track height changes. This also applies to resize events of the whole
+   * document.
+   */
+  @Input()
+  set withResizeObserver(input: boolean) {
+    this._withResizeObserver = input != null && `${input}` !== 'false';
+  }
+  get withResizeObserver(): boolean {
+    return this._withResizeObserver;
+  }
+  private _withResizeObserver = true;
+
+  /**
+   * @description
+   * When enabled, the scroll strategy stops removing views from the viewport,
+   * instead it only adds views. This setting can be changed on the fly. Views will be added in both directions
+   * according to the user interactions.
+   */
+  @Input({ transform: toBoolean }) appendOnly = false;
+
+  /**
+   * @description
    * When enabled, the autosized scroll strategy removes css styles that
    * prevent the scrollbar from being in sync with the input device.
    * Use with caution, as this can lead to extremely weird scroll behavior
@@ -182,7 +209,7 @@ export class AutoSizeVirtualScrollStrategy<
   }
 
   /** @internal */
-  private readonly _renderedRange$ = new ReplaySubject<ListRange>(1);
+  private readonly _renderedRange$ = new Subject<ListRange>();
   /** @internal */
   readonly renderedRange$ = this._renderedRange$.asObservable();
   /** @internal */
@@ -358,6 +385,15 @@ export class AutoSizeVirtualScrollStrategy<
     // the IterableDiffer approach, especially on move operations
     const itemCache = new Map<any, { item: T; index: number }>();
     const trackBy = this.viewRepeater!._trackBy ?? ((i, item) => item);
+    this.renderedRange$
+      .pipe(pairwise(), this.until$())
+      .subscribe(([oldRange, newRange]) => {
+        for (let i = oldRange.start; i < oldRange.end; i++) {
+          if (i < newRange.start || i >= newRange.end) {
+            this._virtualItems[i].position = undefined;
+          }
+        }
+      });
     this.viewRepeater!.values$.pipe(
       this.until$(),
       tap((values) => {
@@ -388,7 +424,11 @@ export class AutoSizeVirtualScrollStrategy<
             // todo: properly determine update (Object.is?)
             virtualItems[i] = this._virtualItems[i];
             // if index is not part of rendered range, remove cache
-            if (i < this.renderedRange.start || i >= this.renderedRange.end) {
+            if (
+              !this.withResizeObserver ||
+              i < this.renderedRange.start ||
+              i >= this.renderedRange.end
+            ) {
               virtualItems[i].cached = false;
             }
             itemCache.set(id, { item: dataArr[i], index: i });
@@ -406,6 +446,23 @@ export class AutoSizeVirtualScrollStrategy<
           });
         }
         existingIds.clear();
+        if (dataLength < this._renderedRange.end) {
+          const rangeDiff = this._renderedRange.end - this._renderedRange.start;
+          const anchorDiff = this.anchorItem.index - this._renderedRange.start;
+          this._renderedRange.end = Math.min(
+            dataLength,
+            this._renderedRange.end
+          );
+          this._renderedRange.start = Math.max(
+            0,
+            this._renderedRange.end - rangeDiff
+          );
+          // this.anchorItem.offset = 0;
+          this.anchorItem.index = Math.max(
+            0,
+            this._renderedRange.start + anchorDiff
+          );
+        }
         this.contentLength = dataLength;
         this.contentSize = size;
       }),
@@ -507,6 +564,10 @@ export class AutoSizeVirtualScrollStrategy<
               this.contentLength,
               this.lastScreenItem.index + this.runwayItems
             );
+          }
+          if (this.appendOnly) {
+            range.start = Math.min(this._renderedRange.start, range.start);
+            range.end = Math.max(this._renderedRange.end, range.end);
           }
           return range;
         })
@@ -650,22 +711,11 @@ export class AutoSizeVirtualScrollStrategy<
       })
     );
     const positionByResizeObserver$ = viewsToObserve$.pipe(
+      filter(() => this.withResizeObserver),
       groupBy((viewRef) => viewRef),
       mergeMap((o$) =>
         o$.pipe(
-          exhaustMap((viewRef) =>
-            this.observeViewSize$(viewRef).pipe(
-              finalize(() => {
-                if (
-                  this._virtualItems[viewRef.context.index]?.position !==
-                  undefined
-                ) {
-                  this._virtualItems[viewRef.context.index].position =
-                    undefined;
-                }
-              })
-            )
-          ),
+          exhaustMap((viewRef) => this.observeViewSize$(viewRef)),
           tap(([index, viewIndex]) => {
             this.calcAnchorScrollTop();
             let position = this.calcInitialPosition(index);

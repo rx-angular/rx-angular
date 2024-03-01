@@ -7,13 +7,14 @@ import {
   ContentChild,
   ElementRef,
   inject,
+  Input,
   OnDestroy,
   Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { defer, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
 import {
   RxVirtualScrollElement,
   RxVirtualScrollStrategy,
@@ -93,6 +94,15 @@ export class RxVirtualScrollViewportComponent
   });
   protected scrollElement = inject(RxVirtualScrollElement, { optional: true });
 
+  /**
+   * @description
+   *
+   * Sets the first view to be visible to the user.
+   * The viewport waits for the data to arrive and scrolls to the given index immediately.
+   *
+   * */
+  @Input() initialScrollIndex = 0;
+
   /** @internal */
   @ViewChild('sentinel')
   private scrollSentinel!: ElementRef<HTMLElement>;
@@ -140,8 +150,6 @@ export class RxVirtualScrollViewportComponent
   /** @internal */
   private readonly destroy$ = new Subject<void>();
 
-  private contentSize = 0;
-
   /** @internal */
   constructor() {
     if (NG_DEV_MODE && !this.scrollStrategy) {
@@ -173,9 +181,19 @@ export class RxVirtualScrollViewportComponent
     this.scrollStrategy.contentSize$
       .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((size) => {
-        this.contentSize = size;
         this.updateContentSize(size);
       });
+    if (this.initialScrollIndex != null && this.initialScrollIndex > 0) {
+      this.scrollStrategy.contentSize$
+        .pipe(
+          filter((size) => size > 0),
+          take(1),
+          takeUntil(this.destroy$)
+        )
+        .subscribe(() => {
+          this.scrollToIndex(this.initialScrollIndex);
+        });
+    }
   }
 
   /** @internal */
@@ -228,7 +246,9 @@ export class RxVirtualScrollViewportComponent
     if (this.scrollElement) {
       this.elementRef.nativeElement.style.height = `${size}px`;
     } else {
-      this.scrollSentinel.nativeElement.style.transform = `translate(0, ${size}px)`;
+      this.scrollSentinel.nativeElement.style.transform = `translate(0, ${
+        size - 1
+      }px)`;
     }
   }
 }

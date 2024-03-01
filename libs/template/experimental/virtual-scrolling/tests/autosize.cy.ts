@@ -176,7 +176,7 @@ describe('viewport', () => {
       );
       const initialHeight = items.length * component.tombstoneSize;
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${initialHeight}px)`
+        `translate(0px, ${initialHeight - 1}px)`
       );
       cy.get('@viewRange').should('have.been.calledWith', initialRange);
       cy.get('@renderCallback')
@@ -197,7 +197,7 @@ describe('viewport', () => {
             .then(() => {
               expect(
                 (sentinel.nativeElement as HTMLElement).style.transform
-              ).eq(`translate(0px, ${runwayHeight}px)`);
+              ).eq(`translate(0px, ${runwayHeight - 1}px)`);
             });
         });
     });
@@ -228,12 +228,12 @@ describe('viewport', () => {
           items.push(...generateItems(1));
           fixture.detectChanges();
           expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-            `translate(0px, ${runwayHeight + component.tombstoneSize}px)`
+            `translate(0px, ${runwayHeight + component.tombstoneSize - 1}px)`
           );
           items.splice(100, 1);
           fixture.detectChanges();
           expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-            `translate(0px, ${runwayHeight}px)`
+            `translate(0px, ${runwayHeight - 1}px)`
           );
         });
     });

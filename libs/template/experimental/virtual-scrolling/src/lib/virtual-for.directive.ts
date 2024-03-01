@@ -26,6 +26,7 @@ import {
   strategyHandling,
 } from '@rx-angular/cdk/render-strategies';
 import { RxListViewComputedContext } from '@rx-angular/cdk/template';
+import { Promise } from '@rx-angular/cdk/zone-less/browser';
 import {
   combineLatest,
   concat,
@@ -606,11 +607,14 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       updateViewContext: this.updateViewContext.bind(this),
       templateCacheSize: this.templateCacheSize,
     });
-    this.render()
-      .pipe(takeUntil(this._destroy$))
-      .subscribe((v) => {
-        this._renderCallback?.next(v as U);
-      });
+    // let the scroll strategy initialize before
+    Promise.resolve().then(() => {
+      this.render()
+        .pipe(takeUntil(this._destroy$))
+        .subscribe((v) => {
+          this._renderCallback?.next(v as U);
+        });
+    });
   }
 
   /** @internal */

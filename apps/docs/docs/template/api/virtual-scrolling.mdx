@@ -197,6 +197,28 @@ export class AnyComponent {
 
 > 💡 See examples for other scroll strategies [here](#rxvirtualscrollstrategy)
 
+### appendOnly mode
+
+Append items to the list as the user scrolls without removing rendered views. The appendOnly input ensures views that are already rendered persist in the DOM after they scroll out of view.
+
+This might be useful when integrating with the [`@angular/cdk/drag-drop`](https://material.angular.io/cdk/drag-drop/overview) package.
+
+```html
+<rx-virtual-scroll-viewport [itemSize]="50" appendOnly>
+  <div class="hero" *rxVirtualFor="let hero of heroes; trackBy: 'id'">
+    <div>
+      <div><strong>{{ hero.name }}</strong></div>
+      <div>{{ hero.id }}</div>
+      <div>{{ hero.description }}</div>
+    </div>
+  </div>
+</rx-virtual-scroll-viewport>
+```
+
+> 💡 the [appendOnly] input reacts to changes, you can toggle it on runtime
+
+> 💡 see the [angular/cdk implementation](https://material.angular.io/cdk/scrolling/overview#append-only-mode)
+
 ### Using `trackBy` shortcut to reduce boilerplate
 
 The `trackBy` input either takes a `keyof T` or the regular `TrackByFunction` (`(index: number, item: T) => any`) as a value.
@@ -486,6 +508,12 @@ Container component comparable to CdkVirtualScrollViewport acting as viewport fo
 Its main purpose is to implement the `RxVirtualScrollViewport` interface as well as maintaining the scroll runways'
 height in order to give the provided `RxVirtualScrollStrategy` room to position items. Furthermore, it will gather and forward
 all events to the consumer of `rxVirtualFor`.
+
+#### Inputs
+
+| Output               | Type     | description                                                                                                                          |
+| -------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `initialScrollIndex` | `number` | Sets the first view to be visible to the user. The viewport waits for the data to arrive and scrolls to the given index immediately. |
 
 #### Outputs
 

@@ -274,40 +274,48 @@ export function createVirtualListTemplateManager<
         changedIdxs.add(item);
         listChanges.push([
           itemIndex,
-          () => {
-            const view = _updateView(
-              item,
+          () =>
+            maybeUpdateView(
               itemIndex,
               count,
-              itemIndex + adjustIndexWith
-            );
-            return {
-              view,
-              index: itemIndex,
-              item,
-            };
-          },
+              itemIndex + adjustIndexWith,
+              item
+            ),
         ]);
       }
     }
-    if (itemCount !== count && changedIdxs.size < items.length) {
+    if (changedIdxs.size < items.length) {
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         if (!changedIdxs.has(item)) {
           listChanges.push([
             i,
-            () => {
-              const view = _updateView(item, i, count, i + adjustIndexWith);
-              return {
-                view,
-                index: i,
-                item,
-              };
-            },
+            () => maybeUpdateView(i, count, i + adjustIndexWith, item),
           ]);
         }
       }
     }
     return [listChanges, notifyParent];
+  }
+
+  function maybeUpdateView(
+    viewIndex: number,
+    count: number,
+    itemIndex: number,
+    item: T
+  ) {
+    const view = <EmbeddedViewRef<C>>viewContainerRef.get(viewIndex);
+    if (view.context.count !== count || view.context.index !== itemIndex) {
+      return {
+        view: _updateView(item, viewIndex, count, itemIndex),
+        index: viewIndex,
+        item,
+      };
+    }
+    return {
+      index: viewIndex,
+      view,
+      item,
+    };
   }
 }

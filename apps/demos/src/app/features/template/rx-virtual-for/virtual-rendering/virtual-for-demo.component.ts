@@ -127,6 +127,8 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
         </div>
       </div>
       <rxa-array-provider
+        numberOfItems="1000"
+        [initialNumberOfItems]="1000"
         [unpatched]="[]"
         [buttons]="true"
       ></rxa-array-provider>
@@ -134,16 +136,31 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
         <div class="w-50" *rxIf="showRxa$">
           <h2 class="mat-subheading-2">*rxVirtualFor</h2>
           <div class="d-flex">
-            <input
-              style="width: 200px"
-              matInput
-              #scrollToInput
-              placeholder="scrollToIndex"
-              type="number"
-            />
-            <button mat-button (click)="scrollToIndex(scrollToInput.value)">
-              ScrollTo
-            </button>
+            <div class="d-flex">
+              <input
+                style="width: 200px"
+                matInput
+                #scrollToInput
+                placeholder="scrollToIndex"
+                type="number"
+              />
+              <button mat-button (click)="scrollToIndex(scrollToInput.value)">
+                ScrollTo
+              </button>
+            </div>
+            <div class="d-flex">
+              <input
+                style="width: 200px"
+                matInput
+                #initialScrollToInput
+                [value]="initialScrollTo"
+                (change)="
+                  setInitialScrollTo(initialScrollToInput.valueAsNumber)
+                "
+                placeholder="initialScrollTo"
+                type="number"
+              />
+            </div>
           </div>
           <h2 class="mat-subheading-1">Stats</h2>
           <div class="stats">
@@ -166,6 +183,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
             <rx-virtual-scroll-viewport
               (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
               *ngIf="state.scrollStrategy === 'fixed'"
+              [initialScrollIndex]="initialScrollTo"
               [itemSize]="itemSize"
               [runwayItemsOpposite]="state.runwayItemsOpposite"
               [runwayItems]="state.runwayItems"
@@ -189,6 +207,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
               *ngIf="state.scrollStrategy === 'auto'"
               (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
               autosize
+              [initialScrollIndex]="initialScrollTo"
               withSyncScrollbar
               [resizeObserverConfig]="{
                 extractSize: extractSize
@@ -376,7 +395,7 @@ export class VirtualForDemoComponent implements OnInit, AfterViewInit {
   strategy$ = new Subject<RxStrategyNames<string>>();
   scrollStrategy$ = this.state.select('scrollStrategy');
   rxVirtualForState$ = this.state.select();
-  components$ = new BehaviorSubject<'cdk' | 'rxa' | 'both'>('both');
+  components$ = new BehaviorSubject<'cdk' | 'rxa' | 'both'>('rxa');
 
   showRxa$ = this.components$.pipe(
     map((components) => components === 'rxa' || components === 'both')
@@ -433,6 +452,8 @@ export class VirtualForDemoComponent implements OnInit, AfterViewInit {
     item: TestItem & { tmpl: TemplateRef<any>; content: string }
   ): number => item.id;
 
+  initialScrollTo = parseInt(localStorage.getItem('vs-initialScrollTo') ?? '0');
+
   constructor(
     public state: RxState<{
       data: any[];
@@ -451,6 +472,7 @@ export class VirtualForDemoComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
+    this.arrayProvider.addItemsImmutable(1000);
     this.state.connect(
       'data',
       this.arrayProvider.array$.pipe(
@@ -469,6 +491,11 @@ export class VirtualForDemoComponent implements OnInit, AfterViewInit {
         )
       )
     );
+  }
+
+  setInitialScrollTo(index: number) {
+    localStorage.setItem('vs-initialScrollTo', index.toString());
+    this.initialScrollTo = index;
   }
 
   scrollToIndex(index: string): void {

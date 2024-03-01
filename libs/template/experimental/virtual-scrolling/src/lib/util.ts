@@ -6,6 +6,10 @@ import {
 } from '@rx-angular/cdk/zone-less/browser';
 import { from, Observable } from 'rxjs';
 
+export function toBoolean(input: null | boolean | string | undefined): boolean {
+  return input != null && `${input}` !== 'false';
+}
+
 export function unpatchedAnimationFrameTick(): Observable<void> {
   return new Observable<void>((observer) => {
     const tick = requestAnimationFrame(() => {
