@@ -1,4 +1,4 @@
-import { toDictionary } from '@rx-angular/cdk/transformations';
+import { toDictionary } from '../../src/lib/array/toDictionary';
 
 interface Creature {
   id: number;

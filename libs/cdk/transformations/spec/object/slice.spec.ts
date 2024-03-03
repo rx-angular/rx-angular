@@ -1,8 +1,8 @@
-import { slice } from '@rx-angular/cdk/transformations';
 import {
   initialPrimitiveState,
   PrimitiveState,
 } from '@test-helpers/rx-angular';
+import { slice } from '../../src/lib/object/slice';
 
 let primitiveState: PrimitiveState;
 

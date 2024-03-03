@@ -1,4 +1,4 @@
-import { insert } from '@rx-angular/cdk/transformations';
+import { insert } from '../../src';
 
 interface Creature {
   id: number;

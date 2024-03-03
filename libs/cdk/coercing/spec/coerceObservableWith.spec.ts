@@ -1,7 +1,7 @@
-import { coerceObservableWith } from '@rx-angular/cdk/coercing';
 import { jestMatcher, mockConsole } from '@test-helpers/rx-angular';
 import { of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
+import { coerceObservableWith } from '../src/lib/coerceObservableWith';
 
 describe('coerceObservableWith', () => {
   beforeAll(() => mockConsole());

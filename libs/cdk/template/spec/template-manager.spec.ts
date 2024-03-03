@@ -2,10 +2,10 @@ import { ErrorHandler, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { RxTemplateManager } from '@rx-angular/cdk/template';
 import { mockConsole } from '@test-helpers/rx-angular';
 import { of, ReplaySubject, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { RxTemplateManager } from '../src/lib/template-manager';
 import {
   createTestComponent,
   DEFAULT_TEMPLATE,

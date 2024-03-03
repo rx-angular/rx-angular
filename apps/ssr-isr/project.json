@@ -69,10 +69,7 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/ssr-isr/**/*.ts", "apps/ssr-isr/**/*.html"]
-      }
+      "outputs": ["{options.outputFile}"]
     },
     "e2e": {
       "executor": "@nx/cypress:cypress",

@@ -1,7 +1,3 @@
-import {
-  createAccumulationObservable,
-  select,
-} from '@rx-angular/state/selections';
 import { jestMatcher } from '@test-helpers/rx-angular';
 import {
   initialPrimitiveState,
@@ -10,6 +6,8 @@ import {
 import { of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
+import { select } from '../src';
+import { createAccumulationObservable } from '../src/lib/accumulation-observable';
 
 function setupAccumulationObservable<T extends object>(cfg: {
   initialState?: T;

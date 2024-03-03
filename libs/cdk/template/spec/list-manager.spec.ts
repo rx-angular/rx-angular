@@ -15,15 +15,17 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import {
-  createListTemplateManager,
-  RxDefaultListViewContext,
-  RxListManager,
-  RxListViewComputedContext,
-  RxListViewContext,
-} from '@rx-angular/cdk/template';
 import { mockConsole } from '@test-helpers/rx-angular';
 import { ReplaySubject } from 'rxjs';
+import {
+  createListTemplateManager,
+  RxListManager,
+} from '../src/lib/list-template-manager';
+import {
+  RxDefaultListViewContext,
+  RxListViewComputedContext,
+  RxListViewContext,
+} from '../src/lib/list-view-context';
 
 @Component({
   selector: 'rx-angular-error-test',

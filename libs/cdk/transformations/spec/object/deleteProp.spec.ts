@@ -1,8 +1,8 @@
-import { deleteProp } from '@rx-angular/cdk/transformations';
 import {
   initialPrimitiveState,
   PrimitiveState,
 } from '@test-helpers/rx-angular';
+import { deleteProp } from '../../src/lib/object/deleteProp';
 
 let primitiveState: PrimitiveState;
 

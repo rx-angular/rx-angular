@@ -1,4 +1,4 @@
-import { update } from '@rx-angular/cdk/transformations';
+import { update } from '../../src/lib/array/update';
 
 interface Creature {
   id: number;

@@ -31,19 +31,7 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": [
-          "libs/isr/**/*.ts",
-          "libs/isr/**/*.html",
-          "libs/isr/browser/**/*.ts",
-          "libs/isr/browser/**/*.html",
-          "libs/isr/models/**/*.ts",
-          "libs/isr/models/**/*.html",
-          "libs/isr/server/**/*.ts",
-          "libs/isr/server/**/*.html"
-        ]
-      }
+      "outputs": ["{options.outputFile}"]
     },
     "publish": {
       "command": "npm publish dist/libs/isr"

@@ -44,10 +44,7 @@
     "github": {},
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["libs/template/**/*.ts"]
-      }
+      "outputs": ["{options.outputFile}"]
     },
     "component-test": {
       "executor": "@nx/cypress:cypress",

@@ -128,10 +128,7 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/ssr/**/*.{js,ts}"]
-      }
+      "outputs": ["{options.outputFile}"]
     }
   },
   "tags": ["type:app"]

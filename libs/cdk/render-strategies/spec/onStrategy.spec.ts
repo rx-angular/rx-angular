@@ -1,11 +1,9 @@
-import {
-  onStrategy,
-  RX_NATIVE_STRATEGIES,
-  RxStrategyCredentials,
-} from '@rx-angular/cdk/render-strategies';
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { animationFrameScheduler, observeOn, tap } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
+import { RxStrategyCredentials } from '../src/lib/model';
+import { RX_NATIVE_STRATEGIES } from '../src/lib/native-strategies';
+import { onStrategy } from '../src/lib/onStrategy';
 
 describe('onStrategy', () => {
   let testScheduler: TestScheduler;

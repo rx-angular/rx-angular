@@ -1,4 +1,4 @@
-import { upsert } from '@rx-angular/cdk/transformations';
+import { upsert } from '../../src/lib/array/upsert';
 
 interface Creature {
   id: number;

@@ -61,10 +61,7 @@
     "github": {},
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["libs/state/**/*.ts"]
-      }
+      "outputs": ["{options.outputFile}"]
     }
   },
   "tags": ["type:lib", "state"]

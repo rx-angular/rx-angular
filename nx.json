@@ -60,10 +60,6 @@
       "inputs": ["default", "^production"],
       "cache": true
     },
-    "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
-      "cache": true
-    },
     "component-test": {
       "inputs": ["default", "^production"],
       "cache": true
@@ -105,6 +101,10 @@
           "codeCoverage": true
         }
       }
+    },
+    "@nx/eslint:lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
     }
   },
   "nxCloudAccessToken": "OTg2OGFkNmMtNzA5Zi00MjBiLWFhMmQtOGYwNTQ1MjM1ZjQ3fHJlYWQtd3JpdGU=",

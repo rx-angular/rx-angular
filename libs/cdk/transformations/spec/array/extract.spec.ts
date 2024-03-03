@@ -1,4 +1,4 @@
-import { extract } from '@rx-angular/cdk/transformations';
+import { extract } from '../../src';
 
 interface Creature {
   id?: number;
