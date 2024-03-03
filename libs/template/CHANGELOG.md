@@ -2,6 +2,25 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [17.1.0](https://github.com/rx-angular/rx-angular/compare/template@17.0.1...template@17.1.0) (2024-03-03)
+
+
+### Bug Fixes
+
+* **template:** adjust rendered range to value changes ([a9df89a](https://github.com/rx-angular/rx-angular/commit/a9df89a2e2996d2dda6b307c72e01f1fc06ce9f0))
+* **template:** properly calculate diff on update ([ce31fc5](https://github.com/rx-angular/rx-angular/commit/ce31fc520f1bb63aedc0ad52290cc82f0e74d696))
+* **template:** properly size the virtual viewport container ([13282c5](https://github.com/rx-angular/rx-angular/commit/13282c5c89974d013b883208cd2aae507fe52b1f))
+* **template:** use constructor injection for templateRef. fixes [#1616](https://github.com/rx-angular/rx-angular/issues/1616) ([25eed84](https://github.com/rx-angular/rx-angular/commit/25eed84f9252b88b732cf7f99277fdf3c46d2822))
+
+
+### Features
+
+* **template:** add a flag to disable the resizeObserver on autosize ([8091b2b](https://github.com/rx-angular/rx-angular/commit/8091b2b1790ca29d9cbece3701c4a89c13eaea28))
+* **template:** add appendOnly mode to virtual scroll strategies ([1c087fb](https://github.com/rx-angular/rx-angular/commit/1c087fb82c80010385f2552b5c7bb1ab729f36f5))
+* **template:** implement initialScrollIndex ([a81e209](https://github.com/rx-angular/rx-angular/commit/a81e20972e7b87288579ee10a9e53f134371e812))
+
+
+
 ## [17.0.1](https://github.com/rx-angular/rx-angular/compare/template@17.0.0...template@17.0.1) (2024-01-05)
 
 
