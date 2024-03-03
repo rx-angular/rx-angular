@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [17.0.1](https://github.com/rx-angular/rx-angular/compare/cdk@17.0.0...cdk@17.0.1) (2024-03-03)
+
+
+### Bug Fixes
+
+* **cdk:** use `globalThis` instead of `ɵglobal` in zone-config ([384c423](https://github.com/rx-angular/rx-angular/commit/384c423f999bf770a46d1d015506234abaad03a6)), closes [#1670](https://github.com/rx-angular/rx-angular/issues/1670)
+
+
+
 # [17.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@16.0.0...cdk@17.0.0) (2023-11-17)
 
 
