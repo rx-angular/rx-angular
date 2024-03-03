@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [17.0.1](https://github.com/rx-angular/rx-angular/compare/state@17.0.0...state@17.0.1) (2024-03-03)
+
+
+### Bug Fixes
+
+* **state:** shorthand camelCase support for side effects ([c0b88e4](https://github.com/rx-angular/rx-angular/commit/c0b88e4ab51c530df887f190cc29eceee51e39f2))
+
+
+
 # [17.0.0](https://github.com/rx-angular/rx-angular/compare/state@16.3.0...state@17.0.0) (2023-11-17)
 
 
