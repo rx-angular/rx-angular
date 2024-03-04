@@ -15,7 +15,9 @@ Both ways can reduce the usage of pipes the `async` pipe (or any other pipe).
 **With `async` pipe**
 
 ```html
-<ng-container> {{ n | async }} {{ n | async}} {{ n | async}} </ng-container>
+<ng-container *ngIf="num$ as n">
+  {{ n | async }} {{ n | async}} {{ n | async}}
+</ng-container>
 ```
 
 **With `*rxLet` directive**
