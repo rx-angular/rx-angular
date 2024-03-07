@@ -68,7 +68,14 @@
         "@typescript-eslint/no-explicit-any": "warn",
         "prefer-rest-params": "warn",
         "no-prototype-builtins": "warn",
-        "no-empty": "warn"
+        "no-empty": "warn",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "typeParameter",
+            "format": ["PascalCase"]
+          }
+        ]
       }
     },
     {
