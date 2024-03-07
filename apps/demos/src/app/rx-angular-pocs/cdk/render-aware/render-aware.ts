@@ -1,13 +1,25 @@
 import { ChangeDetectorRef } from '@angular/core';
-import { RxCustomStrategyCredentials, RxStrategyCredentials, strategyHandling } from '@rx-angular/cdk/render-strategies';
-import { ConnectableObservable, EMPTY, isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import {
+  RxCustomStrategyCredentials,
+  RxStrategyCredentials,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
+import {
+  Connectable,
+  connectable,
+  EMPTY,
+  isObservable,
+  Observable,
+  of,
+  ReplaySubject,
+  Subject,
+} from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
   map,
-  merge as mergeWith,
+  mergeWith,
   mergeAll,
-  publishReplay,
   switchAll,
 } from 'rxjs/operators';
 
@@ -39,34 +51,33 @@ export function createRenderAware<U>(cfg: {
   getCdRef: (k: RxNotification<U>) => ChangeDetectorRef;
   getContext: (k?: RxNotification<U>) => any;
 }): RenderAware<U | undefined | null> {
-
   const strategyName$ = new ReplaySubject<Observable<string>>(1);
   const strategyHandling$ = strategyHandling(
     cfg.defaultStrategyName,
     cfg.strategies
   );
   const templateTriggerSubject = new Subject<Observable<RxNotification<U>>>();
-  const templateTrigger$ = templateTriggerSubject.pipe(
-    mergeAll()
-  );
+  const templateTrigger$ = templateTriggerSubject.pipe(mergeAll());
 
   const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
-  const renderingEffect$ =
+  const renderingEffect$ = connectable(
     observablesFromTemplate$.pipe(
-      map(o => isObservable(o) ? o : of(o)),
+      map((o) => (isObservable(o) ? o : of(o))),
       distinctUntilChanged(),
       switchAll(),
       distinctUntilChanged(),
       rxMaterialize(),
       mergeWith(templateTrigger$ || EMPTY),
-      /*observeTemplateByNotificationKind(cfg.templateObserver),
-      applyStrategy(strategy$, cfg.getContext, cfg.getCdRef),*/
-      catchError(e => {
+      catchError((e) => {
         console.error(e);
         return EMPTY;
-      }),
-      publishReplay()
-    );
+      })
+    ),
+    {
+      connector: () => new ReplaySubject(),
+      resetOnDisconnect: false,
+    }
+  );
 
   return {
     strategy$: strategyHandling$.strategy$,
@@ -80,8 +91,8 @@ export function createRenderAware<U>(cfg: {
       templateTriggerSubject.next(trigger$);
     },
     subscribe: () => {
-      return (renderingEffect$ as ConnectableObservable<any>).connect();
+      return (renderingEffect$ as Connectable<any>).connect();
     },
-    rendered$: renderingEffect$ as any
+    rendered$: renderingEffect$ as any,
   };
 }
