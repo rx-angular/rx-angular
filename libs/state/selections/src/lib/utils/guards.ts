@@ -69,3 +69,13 @@ export function isStringArrayFunctionAndOptionalObjectTupleGuard<R>(
     (op[2] === undefined || typeof op[2] === 'object')
   );
 }
+
+export function isStringArrayWithoutFunctionAndOptionalTupleGuard<R>(
+  op: unknown[]
+): op is [strs: string[], fn: (val: any) => R, obj?: object] {
+  return (
+    typeof op[1] === 'undefined' &&
+    isStringArrayGuard(op[0] as any) &&
+    op[2] === undefined
+  );
+}

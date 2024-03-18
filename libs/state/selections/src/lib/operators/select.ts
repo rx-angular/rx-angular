@@ -6,6 +6,7 @@ import {
   isStringAndFunctionTupleGuard,
   isStringArrayFunctionAndOptionalObjectTupleGuard,
   isStringArrayGuard,
+  isStringArrayWithoutFunctionAndOptionalTupleGuard,
 } from '../utils/guards';
 import { pipeFromArray } from '../utils/pipe-from-array';
 import { selectSlice } from './selectSlice';
@@ -99,7 +100,7 @@ export function select<T, A, B, C, D, E>(
  */
 export function select<T extends object, K extends keyof T, R>(
   keys: K[],
-  fn: (slice: PickSlice<T, K>) => R,
+  fn?: (slice: PickSlice<T, K>) => R,
   keyCompareMap?: KeyCompareMap<Pick<T, K>>
 ): OperatorFunction<T, R>;
 
@@ -209,7 +210,7 @@ export function select<T extends Record<string, unknown>>(
     | [k: string, fn: (val: unknown) => unknown]
     | [
         keys: string[],
-        fn: (slice: unknown) => unknown,
+        fn?: (slice: unknown) => unknown,
         keyCompareMap?: KeyCompareMap<T>
       ]
 ): OperatorFunction<T, unknown> {
@@ -222,7 +223,7 @@ export function select<T extends Record<string, unknown>>(
       return state$.pipe(
         selectSlice<T & object, keyof T>(
           opOrMapFn[0] as (keyof T)[],
-          opOrMapFn[2]
+          opOrMapFn[2] as KeyCompareMap<{ [P in keyof T]: (T & object)[P] }>
         ),
         stateful(map(opOrMapFn[1]))
       );
@@ -234,6 +235,26 @@ export function select<T extends Record<string, unknown>>(
       );
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
       return state$.pipe(stateful(pipeFromArray(opOrMapFn)));
+    } else if (isStringArrayWithoutFunctionAndOptionalTupleGuard(opOrMapFn)) {
+      return state$.pipe(
+        selectSlice<T & object, keyof T>(
+          opOrMapFn[0] as (keyof T)[],
+          opOrMapFn[2] as KeyCompareMap<{ [P in keyof T]: (T & object)[P] }>
+        ),
+        stateful(
+          map((pickSlice) => {
+            // @ts-ignore
+            return opOrMapFn[0].reduce(
+              (acc: { [key: keyof T]: T }, key: keyof T) => {
+                // @ts-ignore
+                acc[key] = pickSlice[key as keyof T];
+                return acc;
+              },
+              {}
+            );
+          })
+        )
+      );
     } else {
       throw new Error('wrong params passed to select');
     }
