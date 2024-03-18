@@ -242,9 +242,9 @@ export function select<T extends Record<string, unknown>>(
           opOrMapFn[2] as KeyCompareMap<{ [P in keyof T]: (T & object)[P] }>
         ),
         stateful(
-          map((pickSlice) => {
-            // @ts-ignore
+          map((pickSlice: PickSlice<T & Object, keyof T>) => {
             return opOrMapFn[0].reduce(
+              // @ts-ignore
               (acc: { [key: keyof T]: T }, key: keyof T) => {
                 // @ts-ignore
                 acc[key] = pickSlice[key as keyof T];
