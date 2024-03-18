@@ -262,6 +262,18 @@ describe('RxStateService', () => {
         });
       });
 
+      it('should return mapped slice with default function if no one provided', () => {
+        testScheduler.run(({ expectObservable }) => {
+          const state = setupState({ initialState: initialPrimitiveState });
+          expectObservable(state.select(['num', 'str'])).toBe('s', {
+            s: {
+              num: 42,
+              str: 'str',
+            },
+          });
+        });
+      });
+
       it('should return mapped slice on select with keys, function and key compare map', () => {
         testScheduler.run(({ expectObservable }) => {
           const state = setupState({
