@@ -20,6 +20,8 @@
     "generate-typescript-docs": "ts-node -P tools/tsconfig.tools.json tools/scripts/docs/generate-typescript-docs.ts",
     "tracerbench": "tracerbench compare --controlURL http://localhost:4200/rx-angular/demos --experimentURL http://localhost:4242/rx-angular/demos --markers startRouting,endRouting --headless --report",
     "postinstall": "husky install",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable",
     "ssr:isr:dev": "nx build ssr-isr --configuration=development --watch",
     "ssr:isr:serve": "node dist/apps/ssr-isr/server/server.mjs"
   },
@@ -105,7 +107,7 @@
     "eslint-plugin-cypress": "2.15.1",
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "express": "4.18.2",
-    "husky": "^8.0.3",
+    "husky": "^9.0.11",
     "jest": "^29.4.1",
     "jest-environment-jsdom": "29.5.0",
     "jest-preset-angular": "14.0.3",
