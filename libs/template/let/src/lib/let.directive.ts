@@ -449,6 +449,8 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    * }
    *
    * @param boolean
+   *
+   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content queries
    */
   @Input('rxLetParent') renderParent = this.strategyProvider.config.parent;
 

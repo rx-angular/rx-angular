@@ -369,6 +369,8 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * }
    *
    * @param renderParent
+   *
+   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content queries
    */
   @Input('rxVirtualForParent') renderParent = false;
 
