@@ -15,7 +15,7 @@ import { RxIf } from '../if.directive';
       *rxIf="
         value$;
         strategy: strategy;
-        parent: true;
+        parent: false;
         renderCallback: rendered$
       "
     >
