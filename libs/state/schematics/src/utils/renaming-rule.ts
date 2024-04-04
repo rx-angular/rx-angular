@@ -9,7 +9,6 @@ import {
   saveActiveProject,
   setActiveProject,
 } from 'ng-morph';
-import { formatFiles } from './format-files';
 
 type ImportConfig = Pick<ImportSpecifierStructure, 'alias' | 'name'>;
 type RenameConfig = Record<string, string | [string, string]>;
@@ -20,6 +19,9 @@ export function renamingRule(packageName: Pattern, renames: RenameConfig) {
   return (): Rule => {
     return chain([
       (tree: Tree) => {
+        console.log(
+          'Migration schematics might cause your code to be formatted incorrectly. Make sure to run your formatter of choice after the migration.',
+        );
         setActiveProject(createProject(tree, '/', ['**/*.ts']));
 
         const imports = getImports('**/*.ts', {
@@ -79,7 +81,6 @@ export function renamingRule(packageName: Pattern, renames: RenameConfig) {
 
         saveActiveProject();
       },
-      formatFiles(),
     ]);
   };
 }
@@ -87,7 +88,7 @@ export function renamingRule(packageName: Pattern, renames: RenameConfig) {
 function renameReferences(
   importSpecifier: ImportSpecifier,
   oldName: string,
-  newName: string
+  newName: string,
 ) {
   importSpecifier
     .getNameNode()

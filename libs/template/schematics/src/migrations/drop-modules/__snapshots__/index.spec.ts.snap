@@ -1,53 +1,59 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Template Migration drop-modules should replace LetDirective with RxLet 1`] = `
-"import { RxLet } from '@rx-angular/template/let';
+"import { RxLet } from "@rx-angular/template/let";
 
-import { Component } from '@angular/core';
+      import { Component } from '@angular/core';
 
-@Component({
-  imports: [RxLet],
-})
-export class Component {}
-"
-`;
-
-exports[`Template Migration drop-modules should should replace modules with standalone 1`] = `
-"import { RxIf } from '@rx-angular/template/if';
-import { RxPush } from '@rx-angular/template/push';
-import { RxUnpatch } from '@rx-angular/template/unpatch';
-import { RxFor } from '@rx-angular/template/for';
-import { RxLet } from '@rx-angular/template/let';
-
-import { Component } from '@angular/core';
-
-@Component({
-  imports: [RxLet, RxFor, RxUnpatch, RxPush, RxIf],
-})
-export class Component {}
-"
-`;
-
-exports[`Template Migration drop-modules should replace UnpatchDirective with RxUnpatch 1`] = `
-"import { RxUnpatch } from '@rx-angular/template/unpatch';
-
-import { Component } from '@angular/core';
-
-@Component({
-  imports: [RxUnpatch],
-})
-export class Component {}
-"
+      @Component({
+        imports: [RxLet]
+      })
+      export class Component { }
+  "
 `;
 
 exports[`Template Migration drop-modules should replace PushPipe with RxPush 1`] = `
-"import { RxPush } from '@rx-angular/template/push';
+"import { RxPush } from "@rx-angular/template/push";
 
-import { Component } from '@angular/core';
+      import { Component } from '@angular/core';
 
-@Component({
-  imports: [RxPush],
-})
-export class Component {}
-"
+      @Component({
+        imports: [RxPush]
+      })
+      export class Component { }
+  "
+`;
+
+exports[`Template Migration drop-modules should replace UnpatchDirective with RxUnpatch 1`] = `
+"import { RxUnpatch } from "@rx-angular/template/unpatch";
+
+      import { Component } from '@angular/core';
+
+      @Component({
+        imports: [RxUnpatch]
+      })
+      export class Component { }
+  "
+`;
+
+exports[`Template Migration drop-modules should should replace modules with standalone 1`] = `
+"import { RxIf } from "@rx-angular/template/if";
+import { RxPush } from "@rx-angular/template/push";
+import { RxUnpatch } from "@rx-angular/template/unpatch";
+import { RxFor } from "@rx-angular/template/for";
+import { RxLet } from "@rx-angular/template/let";
+
+      import { Component } from '@angular/core';
+
+      @Component({
+        imports: [
+          RxLet,
+          RxFor,
+          RxUnpatch,
+          RxPush,
+          RxIf
+        ]
+      })
+      export class Component { }
+  "
 `;
