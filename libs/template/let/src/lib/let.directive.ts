@@ -443,6 +443,8 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    * }
    *
    * @param boolean
+   *
+   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content queries
    */
   @Input('rxLetParent') renderParent = this.strategyProvider.config.parent;
 
@@ -483,7 +485,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
   private observablesHandler = createTemplateNotifier<U>();
   /** @internal */
   private strategyHandler = coerceAllFactory<string>(
-    () => new ReplaySubject<RxStrategyNames>(1)
+    () => new ReplaySubject<RxStrategyNames>(1),
   );
   /** @internal */
   private triggerHandler = new ReplaySubject<RxNotificationKind>(1);
@@ -515,7 +517,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
   /** @internal */
   static ngTemplateContextGuard<U>(
     dir: RxLet<U>,
-    ctx: unknown | null | undefined
+    ctx: unknown | null | undefined,
   ): ctx is RxLetViewContext<U> {
     return true;
   }
@@ -530,7 +532,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
         .subscribe((n) => {
           this.rendered$.next(n);
           this._renderObserver?.next(n);
-        })
+        }),
     );
     this.subscription.add(
       merge(
@@ -540,10 +542,10 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
           NEVER,
         this.completeTrigger?.pipe(map(() => RxNotificationKind.Complete)) ||
           NEVER,
-        this.errorTrigger?.pipe(map(() => RxNotificationKind.Error)) || NEVER
+        this.errorTrigger?.pipe(map(() => RxNotificationKind.Error)) || NEVER,
       )
         .pipe(filter((v) => !!v))
-        .subscribe((t) => this.triggerHandler.next(t))
+        .subscribe((t) => this.triggerHandler.next(t)),
     );
   }
 
@@ -556,14 +558,14 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
     if (changes.complete) {
       this.templateManager.addTemplateRef(
         RxLetTemplateNames.complete,
-        this.complete
+        this.complete,
       );
     }
 
     if (changes.suspense) {
       this.templateManager.addTemplateRef(
         RxLetTemplateNames.suspense,
-        this.suspense
+        this.suspense,
       );
       this.observablesHandler.withInitialSuspense(!!this.suspense);
     }
@@ -615,7 +617,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
 
     this.templateManager.addTemplateRef(
       RxLetTemplateNames.next,
-      this.templateRef
+      this.templateRef,
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
   }

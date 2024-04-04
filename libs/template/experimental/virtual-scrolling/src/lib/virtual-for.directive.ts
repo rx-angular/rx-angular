@@ -235,7 +235,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       | Observable<(U & NgIterable<T>) | undefined | null>
       | (U & NgIterable<T>)
       | null
-      | undefined
+      | undefined,
   ) {
     if (!isObservable(potentialObservable)) {
       this.staticValue = potentialObservable;
@@ -262,7 +262,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   private strategyHandler = strategyHandling(
     this.strategyProvider.primaryStrategy,
-    this.strategyProvider.strategies
+    this.strategyProvider.strategies,
   );
   /**
    * @description
@@ -309,7 +309,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    */
   @Input('rxVirtualForStrategy')
   set strategy(
-    strategyName: RxStrategyNames<string> | Observable<RxStrategyNames<string>>
+    strategyName: RxStrategyNames<string> | Observable<RxStrategyNames<string>>,
   ) {
     this.strategyHandler.next(strategyName);
   }
@@ -356,6 +356,8 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * }
    *
    * @param renderParent
+   *
+   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content queries
    */
   @Input('rxVirtualForParent') renderParent = false;
 
@@ -466,8 +468,8 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     ) {
       throw new Error(
         `trackBy must be typeof function or keyof T, but received ${JSON.stringify(
-          trackByFnOrKey
-        )}.`
+          trackByFnOrKey,
+        )}.`,
       );
     }
     if (trackByFnOrKey == null) {
@@ -523,7 +525,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param renderCallback
    */
   @Input('rxVirtualForRenderCallback') set renderCallback(
-    renderCallback: Subject<U>
+    renderCallback: Subject<U>,
   ) {
     this._renderCallback = renderCallback;
   }
@@ -561,7 +563,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   readonly values$ = this.observables$.pipe(
     coerceObservableWith(),
     switchAll(),
-    shareReplay({ bufferSize: 1, refCount: true })
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   /** @internal */
@@ -583,16 +585,16 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   static ngTemplateContextGuard<
     T,
     U extends NgIterable<T> = NgIterable<T>,
-    K = keyof T
+    K = keyof T,
   >(
     dir: RxVirtualFor<T, U>,
-    ctx: any
+    ctx: any,
   ): ctx is RxVirtualForViewContext<T, U, RxListViewComputedContext, K> {
     return true;
   }
 
   constructor(
-    private readonly templateRef: TemplateRef<RxVirtualForViewContext<T, U>>
+    private readonly templateRef: TemplateRef<RxVirtualForViewContext<T, U>>,
   ) {}
 
   /** @internal */
@@ -637,9 +639,9 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
           Array.isArray(values)
             ? values
             : values != null
-            ? Array.from(values)
-            : []
-        )
+              ? Array.from(values)
+              : [],
+        ),
       ),
       this.scrollStrategy.renderedRange$,
       this.strategyHandler.strategy$.pipe(distinctUntilChanged()),
@@ -667,7 +669,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
           changes,
           iterable,
           items.length,
-          range.start
+          range.start,
         );
         const updates = listChanges[0].sort((a, b) => a[0] - b[0]);
         const indicesToPosition = new Set<number>();
@@ -685,7 +687,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
                 this.viewRendered$.next(update as any);
               }
             },
-            { ngZone: this.patchZone ? this.ngZone : undefined }
+            { ngZone: this.patchZone ? this.ngZone : undefined },
           );
         });
         this.partiallyFinished = true;
@@ -693,7 +695,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
         this.renderingStart$.next(indicesToPosition);
         return combineLatest(
           // emit after all changes are rendered
-          work$.length > 0 ? work$ : [of(iterable)]
+          work$.length > 0 ? work$ : [of(iterable)],
         ).pipe(
           tap(() => {
             this.templateManager.setItemCount(items.length);
@@ -719,16 +721,16 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
                     {
                       ngZone: this.patchZone ? this.ngZone : undefined,
                       scope: (this.cdRef as any).context || this.cdRef,
-                    }
-                  ).pipe(ignoreElements())
-                )
+                    },
+                  ).pipe(ignoreElements()),
+                ),
               )
             : (o$) => o$,
           this.handleError(),
-          map(() => iterable)
+          map(() => iterable),
         );
       }),
-      this.handleError()
+      this.handleError(),
     );
   }
 
@@ -739,7 +741,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
           this.partiallyFinished = false;
           this.errorHandler.handleError(err);
           return of(null);
-        })
+        }),
       );
   }
 
@@ -755,12 +757,12 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   private createViewContext(
     item: T,
-    computedContext: RxListViewComputedContext
+    computedContext: RxListViewComputedContext,
   ): RxVirtualForViewContext<T, U, RxListViewComputedContext> {
     return new RxVirtualForViewContext(
       item,
       this.values! as U,
-      computedContext
+      computedContext,
     );
   }
 
@@ -770,7 +772,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     view: EmbeddedViewRef<
       RxVirtualForViewContext<T, U, RxListViewComputedContext>
     >,
-    computedContext?: RxListViewComputedContext
+    computedContext?: RxListViewComputedContext,
   ): void {
     view.context.updateContext(computedContext!);
     view.context.$implicit = item;
