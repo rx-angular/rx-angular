@@ -237,22 +237,9 @@ export function select<T extends Record<string, unknown>>(
       return state$.pipe(stateful(pipeFromArray(opOrMapFn)));
     } else if (isStringArrayWithoutFunctionAndOptionalTupleGuard(opOrMapFn)) {
       return state$.pipe(
-        selectSlice<T & object, keyof T>(
+        selectSlice(
           opOrMapFn[0] as (keyof T)[],
           opOrMapFn[2] as KeyCompareMap<{ [P in keyof T]: (T & object)[P] }>
-        ),
-        stateful(
-          map((pickSlice: PickSlice<T & Object, keyof T>) => {
-            return opOrMapFn[0].reduce(
-              // @ts-ignore
-              (acc: { [key: keyof T]: T }, key: keyof T) => {
-                // @ts-ignore
-                acc[key] = pickSlice[key as keyof T];
-                return acc;
-              },
-              {}
-            );
-          })
         )
       );
     } else {
