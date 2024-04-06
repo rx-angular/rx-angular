@@ -102,6 +102,25 @@ export class RxState<State extends object>
   /**
    * @description
    *
+   * Return RxState in ReadOnly mode exposing only get() and select() methods.
+   * This can be helpful when you don't want other's to write in your state.
+   *
+   * @example
+   * ```typescript
+   * const readOnlyState = state.asReadOnly();
+   * const getNum = state.get('num');
+   * const selectNum$ = state.select('num');
+   * ```
+   *
+   * @return Pick<RxState<State>, 'get' | 'select'>
+   */
+  asReadOnly(): Pick<RxState<State>, 'get' | 'select'> {
+    return this as Pick<RxState<State>, 'get' | 'select'>;
+  }
+
+  /**
+   * @description
+   *
    * Allows to customize state accumulation function.
    * This can be helpful to implement deep updates and tackle other immutability problems in a custom way.
    * @example

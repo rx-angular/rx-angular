@@ -139,25 +139,33 @@ describe('RxStateService', () => {
     it('should return undefined as initial value', () => {
       const state = setupState({ initialState: undefined });
       const val = state.get();
+      const readOnlyVal = state.asReadOnly().get();
       expect(val).toEqual(undefined);
+      expect(readOnlyVal).toEqual(undefined);
     });
 
     it('should return undefined for an undefined property', () => {
       const state = setupState<{ num: number }>({ initialState: undefined });
       const val = state.get('num');
+      const readOnlyVal = state.asReadOnly().get('num');
       expect(val).toEqual(undefined);
+      expect(readOnlyVal).toEqual(undefined);
     });
 
     it('should return value when keys are provided as params', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       const val = state.get('num');
+      const readOnlyVal = state.asReadOnly().get('num');
       expect(val).toEqual(initialPrimitiveState.num);
+      expect(readOnlyVal).toEqual(initialPrimitiveState.num);
     });
 
     it('should return whole state object when no keys provided', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       const val = state.get();
+      const readOnlyVal = state.asReadOnly().get();
       expect(val.num).toEqual(initialPrimitiveState.num);
+      expect(readOnlyVal.num).toEqual(initialPrimitiveState.num);
     });
   });
 
@@ -166,6 +174,7 @@ describe('RxStateService', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({ initialState: undefined });
         expectObservable(state.select()).toBe('-');
+        expectObservable(state.asReadOnly().select()).toBe('-');
       });
     });
 
@@ -175,14 +184,18 @@ describe('RxStateService', () => {
         expectObservable(state.select()).toBe('s', {
           s: initialPrimitiveState,
         });
+        expectObservable(state.asReadOnly().select()).toBe('s', {
+          s: initialPrimitiveState,
+        });
       });
     });
 
     it('should throw with wrong params', () => {
       const state = setupState({ initialState: initialPrimitiveState });
-
-      expect(() => state.select(true as any)).toThrowError(
-        'wrong params passed to select'
+      const errorMessage = 'wrong params passed to select';
+      expect(() => state.select(true as any)).toThrowError(errorMessage);
+      expect(() => state.asReadOnly().select(true as any)).toThrowError(
+        errorMessage
       );
     });
 
@@ -191,6 +204,7 @@ describe('RxStateService', () => {
         testScheduler.run(({ expectObservable }) => {
           const state = setupState({});
           expectObservable(state.select()).toBe('');
+          expectObservable(state.asReadOnly().select()).toBe('');
         });
       });
 
@@ -202,6 +216,9 @@ describe('RxStateService', () => {
 
             state.set({ num: 42 });
             expectObservable(state.select('num')).toBe('s', { s: 42 });
+            expectObservable(state.asReadOnly().select('num')).toBe('s', {
+              s: 42,
+            });
           });
         });
       });
