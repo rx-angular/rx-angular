@@ -6,7 +6,6 @@ import {
   isStringAndFunctionTupleGuard,
   isStringArrayFunctionAndOptionalObjectTupleGuard,
   isStringArrayGuard,
-  isStringArrayWithoutFunctionAndOptionalTupleGuard,
 } from '../utils/guards';
 import { pipeFromArray } from '../utils/pipe-from-array';
 import { selectSlice } from './selectSlice';
@@ -220,13 +219,16 @@ export function select<T extends Record<string, unknown>>(
     } else if (isStringAndFunctionTupleGuard(opOrMapFn)) {
       return state$.pipe(stateful(map((s) => opOrMapFn[1](s[opOrMapFn[0]]))));
     } else if (isStringArrayFunctionAndOptionalObjectTupleGuard(opOrMapFn)) {
-      return state$.pipe(
-        selectSlice<T & object, keyof T>(
-          opOrMapFn[0] as (keyof T)[],
-          opOrMapFn[2] as KeyCompareMap<{ [P in keyof T]: (T & object)[P] }>
-        ),
-        stateful(map(opOrMapFn[1]))
-      );
+      const selectedState$: Observable<PickSlice<T & object, keyof T>> =
+        state$.pipe(
+          selectSlice<T & object, keyof T>(
+            opOrMapFn[0] as (keyof T)[],
+            opOrMapFn[2] as KeyCompareMap<{ [P in keyof T]: (T & object)[P] }>
+          )
+        );
+      return typeof opOrMapFn[1] === 'undefined'
+        ? selectedState$
+        : selectedState$.pipe(stateful(map(opOrMapFn[1])));
     } else if (isStringArrayGuard(opOrMapFn)) {
       return state$.pipe(
         stateful(
@@ -235,13 +237,6 @@ export function select<T extends Record<string, unknown>>(
       );
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
       return state$.pipe(stateful(pipeFromArray(opOrMapFn)));
-    } else if (isStringArrayWithoutFunctionAndOptionalTupleGuard(opOrMapFn)) {
-      return state$.pipe(
-        selectSlice(
-          opOrMapFn[0] as (keyof T)[],
-          opOrMapFn[2] as KeyCompareMap<{ [P in keyof T]: (T & object)[P] }>
-        )
-      );
     } else {
       throw new Error('wrong params passed to select');
     }
