@@ -14,6 +14,7 @@ export interface RenderUrlConfig {
   commonEngine?: CommonEngine;
   bootstrap?: CommonEngineRenderOptions['bootstrap'];
   browserDistFolder?: string;
+  inlineCriticalCss?: boolean;
 }
 
 const EXTRA_PROVIDERS: Provider[] = [
@@ -31,6 +32,7 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
     commonEngine,
     bootstrap,
     browserDistFolder,
+    inlineCriticalCss,
   } = options;
 
   const { protocol, originalUrl, baseUrl, headers } = req;
@@ -56,6 +58,7 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
           documentFilePath: indexHtml,
           url: `${protocol}://${headers.host}${originalUrl}`,
           publicPath: browserDistFolder,
+          inlineCriticalCss: inlineCriticalCss ?? true,
           providers: [...allProviders] as StaticProvider[], // we need to cast to StaticProvider[] because of a bug in the types
         })
         .then((html) => {
@@ -73,7 +76,7 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
             reject(err);
           }
           resolve(html);
-        }
+        },
       );
     }
   });
