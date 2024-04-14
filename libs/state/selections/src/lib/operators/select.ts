@@ -99,7 +99,7 @@ export function select<T, A, B, C, D, E>(
  */
 export function select<T extends object, K extends keyof T, R>(
   keys: K[],
-  fn: (slice: PickSlice<T, K>) => R,
+  fn?: (slice: PickSlice<T, K>) => R,
   keyCompareMap?: KeyCompareMap<Pick<T, K>>
 ): OperatorFunction<T, R>;
 
@@ -209,7 +209,7 @@ export function select<T extends Record<string, unknown>>(
     | [k: string, fn: (val: unknown) => unknown]
     | [
         keys: string[],
-        fn: (slice: unknown) => unknown,
+        fn?: (slice: unknown) => unknown,
         keyCompareMap?: KeyCompareMap<T>
       ]
 ): OperatorFunction<T, unknown> {
@@ -219,13 +219,16 @@ export function select<T extends Record<string, unknown>>(
     } else if (isStringAndFunctionTupleGuard(opOrMapFn)) {
       return state$.pipe(stateful(map((s) => opOrMapFn[1](s[opOrMapFn[0]]))));
     } else if (isStringArrayFunctionAndOptionalObjectTupleGuard(opOrMapFn)) {
-      return state$.pipe(
-        selectSlice<T & object, keyof T>(
-          opOrMapFn[0] as (keyof T)[],
-          opOrMapFn[2]
-        ),
-        stateful(map(opOrMapFn[1]))
-      );
+      const selectedState$: Observable<PickSlice<T & object, keyof T>> =
+        state$.pipe(
+          selectSlice<T & object, keyof T>(
+            opOrMapFn[0] as (keyof T)[],
+            opOrMapFn[2] as KeyCompareMap<{ [P in keyof T]: (T & object)[P] }>
+          )
+        );
+      return typeof opOrMapFn[1] === 'undefined'
+        ? selectedState$
+        : selectedState$.pipe(stateful(map(opOrMapFn[1])));
     } else if (isStringArrayGuard(opOrMapFn)) {
       return state$.pipe(
         stateful(

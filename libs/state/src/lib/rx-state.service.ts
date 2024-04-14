@@ -694,7 +694,7 @@ export class RxState<State extends object>
    */
   select<Key extends keyof State, Value>(
     keys: Key[],
-    fn: (slice: PickSlice<State, Key>) => Value,
+    fn?: (slice: PickSlice<State, Key>) => Value,
     keyCompareMap?: KeyCompareMap<Pick<State, Key>>
   ): Observable<Value>;
 
@@ -813,7 +813,7 @@ export class RxState<State extends object>
       | [k: string, fn: (val: unknown) => unknown]
       | [
           keys: string[],
-          fn: (slice: unknown) => unknown,
+          fn?: (slice: unknown) => unknown,
           keyCompareMap?: KeyCompareMap<State>
         ]
   ): Observable<State | Return> {
