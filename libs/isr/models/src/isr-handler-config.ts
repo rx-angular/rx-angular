@@ -51,6 +51,12 @@ export interface ISRHandlerConfig {
   browserDistFolder?: string;
 
   /**
+   * Reduce render blocking requests by inlining critical CSS.
+   * If not provided, defaults to true.
+   */
+  inlineCriticalCss?: boolean;
+
+  /**
    * The build ID of the application. This value is used to generate unique cache keys.
    * If not provided, defaults to null.
    */
