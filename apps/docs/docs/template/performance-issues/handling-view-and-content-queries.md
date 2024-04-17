@@ -1,5 +1,40 @@
 # Handling view and content queries (`parent`)
 
+## Deprecation Note
+
+:::warning
+
+The `parent` flag being true is not needed anymore with the new [signal based view queries](https://angular.io/guide/signal-queries).
+
+The flag itself is deprecated now and will be removed in future versions.
+
+However, for the time being: if you are already using the signal queries, you definitely want to set the `parent` flag to be false. We highly recommend doing so, as it reduces the amount of
+change detection cycles significantly, thus improving the runtime performance of your apps.
+
+You can do so by providing a custom `RxRenderStrategiesConfig`, see the following example:
+
+```typescript
+// import
+import { RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+
+// create configuration with parent flag to be false
+const rxaConfig: RxRenderStrategiesConfig<string> = {
+  parent: false,
+};
+
+// provide it, in best case on root level
+{
+  providers: [
+    {
+      provide: RX_RENDER_STRATEGIES_CONFIG,
+      useValue: rxaConfig,
+    },
+  ];
+}
+```
+
+:::
+
 ## ViewChild example (rxLet)
 
 Structural directives maintain `EmbeddedViews` within a components' template.
