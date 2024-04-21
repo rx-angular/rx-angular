@@ -1,12 +1,17 @@
 import { signal } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  waitForAsync,
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { startWith, tap, throwError } from 'rxjs';
 import { RxIf } from '../if.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 
-fdescribe('rxIf directive signal values', () => {
+describe('rxIf directive signal values', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   function getComponent(): TestComponent {
@@ -69,40 +74,44 @@ fdescribe('rxIf directive signal values', () => {
   }));
 
   it('should toggle node when condition changes', waitForAsync(() => {
-    const template = '<span *rxIf="booleanConditionSignal()">hello</span>';
-    fixture = createTestComponent(template);
+    fixture = createTestComponent(`
+      <span *rxIf="booleanConditionSignal()">hello</span>
+    `);
+
     getComponent().booleanConditionSignal.set(false);
     fixture.detectChanges();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(0);
     expect(fixture.nativeElement.textContent).toBe('');
 
     getComponent().booleanConditionSignal.set(true);
-    TestBed.flushEffects(); // template effect should run
-    // TODO: fix this as it doesn't work
+    fixture.detectChanges();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(1);
     expect(fixture.nativeElement.textContent).toBe('hello');
 
     getComponent().booleanConditionSignal.set(false);
-    TestBed.flushEffects(); // template effect should run
-    // TODO: fix this as it doesn't work
+    fixture.detectChanges();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(0);
     expect(fixture.nativeElement.textContent).toBe('');
   }));
 
-  it('should toggle node with not called signal when condition changes', waitForAsync(() => {
+  it('should toggle node with not called signal when condition changes', fakeAsync(() => {
     fixture = createTestComponent(`
-      <span *rxIf="booleanSignalCondition">hello</span>
+      <span *rxIf="booleanConditionSignal">hello</span>
     `);
+    // this is needed here in order to register the effect
+    // otherwise the effect will not be registered and the signal change will not be detected
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(1);
+    expect(fixture.nativeElement.textContent).toBe('hello');
 
     getComponent().booleanConditionSignal.set(false);
     TestBed.flushEffects();
-    // TODO: fix this as it doesn't work
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(0);
     expect(fixture.nativeElement.textContent).toBe('');
 
     getComponent().booleanConditionSignal.set(true);
     TestBed.flushEffects();
-    // TODO: fix this as it doesn't work
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(1);
     expect(fixture.nativeElement.textContent).toBe('hello');
 
@@ -221,8 +230,8 @@ fdescribe('rxIf directive signal values', () => {
 
     it('should support removing the then/else templates', () => {
       const template = `<span *rxIf="booleanConditionSignal;
-            then: nestedBooleanCondition ? tplRef : null;
-            else: nestedBooleanCondition ? tplRef : null"></span>
+            then: nestedBooleanSignal() ? tplRef : null;
+            else: nestedBooleanSignal() ? tplRef : null"></span>
         <ng-template #tplRef>Template</ng-template>`;
 
       fixture = createTestComponent(template);
@@ -230,22 +239,22 @@ fdescribe('rxIf directive signal values', () => {
       // then template
       comp.booleanConditionSignal.set(true);
 
-      comp.nestedBooleanCondition = true;
+      comp.nestedBooleanSignal.set(true);
       fixture.detectChanges();
       expect(fixture.nativeElement.textContent).toBe('Template');
 
-      comp.nestedBooleanCondition = false;
+      comp.nestedBooleanSignal.set(false);
       fixture.detectChanges();
       expect(fixture.nativeElement.textContent).toBe('');
 
       // else template
       comp.booleanConditionSignal.set(true);
 
-      comp.nestedBooleanCondition = true;
+      comp.nestedBooleanSignal.set(true);
       fixture.detectChanges();
       expect(fixture.nativeElement.textContent).toBe('Template');
 
-      comp.nestedBooleanCondition = false;
+      comp.nestedBooleanSignal.set(false);
       fixture.detectChanges();
       expect(fixture.nativeElement.textContent).toBe('');
     });

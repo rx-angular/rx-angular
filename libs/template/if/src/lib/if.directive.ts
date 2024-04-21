@@ -491,7 +491,10 @@ export class RxIf<T = unknown>
     return this.then ? this.then : this.templateRef;
   }
 
-  /** @internal */
+  /**
+   * We will store a signal inside a signal in order to listen to both value changes, and reference changes.
+   * @internal
+   */
   private currentRxIfSignal = signal<Signal<T> | undefined>(undefined);
 
   constructor(private readonly templateRef: TemplateRef<RxIfViewContext<T>>) {
@@ -565,10 +568,11 @@ export class RxIf<T = unknown>
     }
     if (changes.rxIf) {
       if (isSignal(this.rxIf)) {
-        // send value synchronously
-        this.templateNotifier.next(this.rxIf());
         // add to currentRxIfSignal so we can listen to changes
         this.currentRxIfSignal.set(this.rxIf);
+
+        // send value synchronously
+        this.templateNotifier.next(this.rxIf());
       } else {
         this.templateNotifier.next(this.rxIf);
       }
