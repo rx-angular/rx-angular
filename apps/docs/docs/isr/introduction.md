@@ -23,7 +23,7 @@ function, the IsrService will start to listen to route changes on the server-sid
 
 The moment the route is set and won't change anymore, we grab the route data and attach them in the HTML as JSON.
 
-Then, the moment the server-side rendering is about to finish, we read the rendered html and grab the route data from it using regex. We parse the JSON, and now we now if we need to cache the page or not.
+Then, the moment the server-side rendering is about to finish, we read the rendered html and grab the route data from it using regex. We parse the JSON, and now we know if we need to cache the page or not.
 
 If we need to cache the page, we save it in the cache and serve it to the user. If we
 don’t need to cache the page, we just serve it to the user.
