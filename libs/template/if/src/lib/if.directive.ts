@@ -499,7 +499,7 @@ export class RxIf<T = unknown>
 
   constructor(private readonly templateRef: TemplateRef<RxIfViewContext<T>>) {
     effect(() => {
-      if (isSignal(this.currentRxIfSignal())) {
+      if (this.currentRxIfSignal() !== undefined) {
         const rxIfValue = this.currentRxIfSignal()();
         untracked(() => this.templateNotifier.next(rxIfValue));
       }
