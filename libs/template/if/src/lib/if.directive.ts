@@ -1,14 +1,19 @@
 import {
   ChangeDetectorRef,
   Directive,
+  effect,
   inject,
   Input,
+  isSignal,
   NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
+  Signal,
+  signal,
   SimpleChanges,
   TemplateRef,
+  untracked,
   ViewContainerRef,
 } from '@angular/core';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
@@ -107,7 +112,7 @@ export class RxIf<T = unknown>
    *
    * @param { ObservableInput<T> | T } rxIf
    */
-  @Input() rxIf: ObservableInput<T> | T;
+  @Input() rxIf: ObservableInput<T> | Signal<T> | T;
 
   /**
    * @description
@@ -477,7 +482,7 @@ export class RxIf<T = unknown>
   /** @internal */
   private readonly strategyHandler = coerceAllFactory<RxStrategyNames>(
     () => new ReplaySubject<RxStrategyNames | Observable<RxStrategyNames>>(1),
-    mergeAll()
+    mergeAll(),
   );
   /** @internal */
   private readonly rendered$ = new Subject<void>();
@@ -486,7 +491,17 @@ export class RxIf<T = unknown>
     return this.then ? this.then : this.templateRef;
   }
 
-  constructor(private readonly templateRef: TemplateRef<RxIfViewContext<T>>) {}
+  /** @internal */
+  private currentRxIfSignal = signal<Signal<T> | undefined>(undefined);
+
+  constructor(private readonly templateRef: TemplateRef<RxIfViewContext<T>>) {
+    effect(() => {
+      if (isSignal(this.currentRxIfSignal())) {
+        const rxIfValue = this.currentRxIfSignal()();
+        untracked(() => this.templateNotifier.next(rxIfValue));
+      }
+    });
+  }
 
   /** @internal */
   ngOnInit() {
@@ -498,10 +513,10 @@ export class RxIf<T = unknown>
           NEVER,
         this.completeTrigger?.pipe(map(() => RxNotificationKind.Complete)) ||
           NEVER,
-        this.errorTrigger?.pipe(map(() => RxNotificationKind.Error)) || NEVER
+        this.errorTrigger?.pipe(map(() => RxNotificationKind.Error)) || NEVER,
       )
         .pipe(filter((v) => !!v))
-        .subscribe((t) => this.triggerHandler.next(t))
+        .subscribe((t) => this.triggerHandler.next(t)),
     );
     this.subscription.add(
       this.templateManager
@@ -509,7 +524,7 @@ export class RxIf<T = unknown>
         .subscribe((n) => {
           this.rendered$.next(n);
           this._renderObserver?.next(n);
-        })
+        }),
     );
   }
 
@@ -522,7 +537,7 @@ export class RxIf<T = unknown>
     if (changes.then && !changes.then.firstChange) {
       this.templateManager.addTemplateRef(
         RxIfTemplateNames.then,
-        this.thenTemplate
+        this.thenTemplate,
       );
     }
 
@@ -533,14 +548,14 @@ export class RxIf<T = unknown>
     if (changes.complete) {
       this.templateManager.addTemplateRef(
         RxIfTemplateNames.complete,
-        this.complete
+        this.complete,
       );
     }
 
     if (changes.suspense) {
       this.templateManager.addTemplateRef(
         RxIfTemplateNames.suspense,
-        this.suspense
+        this.suspense,
       );
       this.templateNotifier.withInitialSuspense(!!this.suspense);
     }
@@ -549,7 +564,14 @@ export class RxIf<T = unknown>
       this.templateManager.addTemplateRef(RxIfTemplateNames.error, this.error);
     }
     if (changes.rxIf) {
-      this.templateNotifier.next(this.rxIf);
+      if (isSignal(this.rxIf)) {
+        // send value synchronously
+        this.templateNotifier.next(this.rxIf());
+        // add to currentRxIfSignal so we can listen to changes
+        this.currentRxIfSignal.set(this.rxIf);
+      } else {
+        this.templateNotifier.next(this.rxIf);
+      }
     }
   }
 
@@ -564,8 +586,8 @@ export class RxIf<T = unknown>
       return value
         ? RxIfTemplateNames.then
         : this.else
-        ? RxIfTemplateNames.else
-        : undefined;
+          ? RxIfTemplateNames.else
+          : undefined;
     };
     this.templateManager = createTemplateManager<
       T,
@@ -596,7 +618,7 @@ export class RxIf<T = unknown>
     });
     this.templateManager.addTemplateRef(
       RxIfTemplateNames.then,
-      this.thenTemplate
+      this.thenTemplate,
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
   }
@@ -622,7 +644,7 @@ export class RxIf<T = unknown>
    */
   static ngTemplateContextGuard<T>(
     dir: RxIf<T>,
-    ctx: any
+    ctx: any,
   ): ctx is RxIfViewContext<Exclude<T, false | 0 | '' | null | undefined>> {
     return true;
   }
