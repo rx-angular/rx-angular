@@ -77,27 +77,37 @@ fdescribe('rxIf directive signal values', () => {
     expect(fixture.nativeElement.textContent).toBe('');
 
     getComponent().booleanConditionSignal.set(true);
+    TestBed.flushEffects(); // template effect should run
+    // TODO: fix this as it doesn't work
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(1);
     expect(fixture.nativeElement.textContent).toBe('hello');
 
     getComponent().booleanConditionSignal.set(false);
+    TestBed.flushEffects(); // template effect should run
+    // TODO: fix this as it doesn't work
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(0);
     expect(fixture.nativeElement.textContent).toBe('');
   }));
 
-  it('should toggle node with not called signal  when condition changes', waitForAsync(() => {
-    const template = '<span *rxIf="booleanSignalCondition">hello</span>';
-    fixture = createTestComponent(template);
+  it('should toggle node with not called signal when condition changes', waitForAsync(() => {
+    fixture = createTestComponent(`
+      <span *rxIf="booleanSignalCondition">hello</span>
+    `);
+
     getComponent().booleanConditionSignal.set(false);
-    fixture.detectChanges();
+    TestBed.flushEffects();
+    // TODO: fix this as it doesn't work
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(0);
     expect(fixture.nativeElement.textContent).toBe('');
 
     getComponent().booleanConditionSignal.set(true);
+    TestBed.flushEffects();
+    // TODO: fix this as it doesn't work
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(1);
     expect(fixture.nativeElement.textContent).toBe('hello');
 
     getComponent().booleanConditionSignal.set(false);
+    TestBed.flushEffects();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(0);
     expect(fixture.nativeElement.textContent).toBe('');
   }));
@@ -114,18 +124,22 @@ fdescribe('rxIf directive signal values', () => {
     expect(fixture.nativeElement.textContent).toBe('');
 
     getComponent().booleanConditionSignal.set(true);
+    TestBed.flushEffects();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(1);
     expect(fixture.nativeElement.textContent).toBe('hello');
 
     getComponent().nestedBooleanSignal.set(false);
+    TestBed.flushEffects();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(0);
     expect(fixture.nativeElement.textContent).toBe('');
 
     getComponent().nestedBooleanSignal.set(true);
+    TestBed.flushEffects();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(1);
     expect(fixture.nativeElement.textContent).toBe('hello');
 
     getComponent().booleanConditionSignal.set(false);
+    TestBed.flushEffects();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(0);
     expect(fixture.nativeElement.textContent).toBe('');
   }));
@@ -142,11 +156,13 @@ fdescribe('rxIf directive signal values', () => {
     expect(fixture.nativeElement.textContent).toEqual('hello1hello2');
 
     getComponent().booleanConditionSignal.set(false);
+    TestBed.flushEffects();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(1);
     expect(fixture.nativeElement.textContent).toBe('hello2');
 
     getComponent().booleanConditionSignal.set(true);
     getComponent().nestedBooleanSignal.set(false);
+    TestBed.flushEffects();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(1);
     expect(fixture.nativeElement.textContent).toBe('hello1');
   }));
@@ -163,6 +179,7 @@ fdescribe('rxIf directive signal values', () => {
     expect(fixture.nativeElement.textContent).toBe('hello');
 
     getComponent().numberConditionSignal.set(2);
+    TestBed.flushEffects();
     els = fixture.debugElement.queryAll(By.css('span'));
     expect(els.length).toEqual(1);
     expect(els[0].nativeElement.classList.contains('marker')).toBe(true);
@@ -182,6 +199,7 @@ fdescribe('rxIf directive signal values', () => {
       expect(fixture.nativeElement.textContent).toBe('TRUE');
 
       getComponent().booleanConditionSignal.set(false);
+      TestBed.flushEffects();
       expect(fixture.nativeElement.textContent).toBe('FALSE');
     }));
 
@@ -197,6 +215,7 @@ fdescribe('rxIf directive signal values', () => {
       expect(fixture.nativeElement.textContent).toBe('THEN');
 
       getComponent().booleanConditionSignal.set(false);
+      TestBed.flushEffects();
       expect(fixture.nativeElement.textContent).toBe('ELSE');
     }));
 
@@ -243,6 +262,7 @@ fdescribe('rxIf directive signal values', () => {
       expect(fixture.nativeElement.textContent).toBe('TRUE');
 
       getComponent().booleanConditionSignal.set(false);
+      TestBed.flushEffects();
       expect(fixture.nativeElement.textContent).toBe('FALSE1');
 
       getComponent().nestedBooleanCondition = false;
@@ -261,20 +281,27 @@ fdescribe('rxIf directive signal values', () => {
       expect(fixture.nativeElement.textContent).toBe('true');
 
       getComponent().booleanConditionSignal.set(false);
+      TestBed.flushEffects();
       expect(fixture.nativeElement.textContent).toBe('false');
     }));
 
     it('should support binding to variable using as', waitForAsync(() => {
-      const template =
-        '<span *rxIf="booleanConditionSignal as v; else: elseBlock">{{v}}</span>' +
-        '<ng-template #elseBlock let-v>{{v}}</ng-template>';
-
-      fixture = createTestComponent(template);
+      fixture = createTestComponent(`
+         <span *rxIf="booleanConditionSignal as v; else: elseBlock">{{v}}</span>
+         <ng-template #elseBlock let-v>{{v}}</ng-template>
+      `);
 
       fixture.detectChanges();
       expect(fixture.nativeElement.textContent).toBe('true');
 
       getComponent().booleanConditionSignal.set(false);
+
+      // TODO: discuss this
+      // because we are using effects, we need to flush them
+      // is this a breaking change?
+      // We can't have synchronous effects ?? as that would break the "glitch-free" feature they provide
+      TestBed.flushEffects();
+
       expect(fixture.nativeElement.textContent).toBe('false');
     }));
   });
