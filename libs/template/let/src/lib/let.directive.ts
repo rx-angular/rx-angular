@@ -534,8 +534,8 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
   constructor(private templateRef: TemplateRef<RxLetViewContext<U>>) {
     effect(() => {
       if (this.currentRxLetSignal() !== undefined) {
-        const rxIfValue = this.currentRxLetSignal()();
-        untracked(() => this.observablesHandler.next(rxIfValue));
+        const rxLetValue = this.currentRxLetSignal()();
+        untracked(() => this.observablesHandler.next(rxLetValue));
       }
     });
   }
