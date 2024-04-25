@@ -72,7 +72,7 @@ https://github.com/angular/angular/blob/master/packages/elements/src/utils.ts#L1
 A simple way to schedule work is using `setTimeout`.
 
 ```typescript
-function work(): viod {
+function work(): void {
   console.log('work done!');
 }
 
@@ -134,7 +134,7 @@ This scenario gets to a problem depending on:
 ![concurrent scheduling - abstract diagram](https://user-images.githubusercontent.com/10064416/145228577-6b8f0bb7-6547-4835-aecc-13d7e07baf02.png)
 
 Concurrent scheduling is a marketing term and simply means that there is a mechanism in place that knows how much time is spent in the current task.
-This number is called frame budget and measured in milliseconds. As a result of this technique we're getting prioritized user-centric scheduling behavior's.
+This number is called frame budget and measured in milliseconds. As a result of this technique we're getting prioritized user-centric scheduling behaviour's.
 
 This enables:
 
@@ -159,7 +159,7 @@ Instead all remaining work will get executed as fast as possible. This means in 
 ![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/146287356-023836c8-a697-4640-a4ae-7d567bc02bf0.png)
 Every strategy has a different render deadline. Strategies are designed from the perspective of how important the work is for the user. see: [RAIL model](https://web.dev/rail/)
 
-What concurrent scheduling does under the hood is is chunking up work in cycles of scheduling, prioritization and execution based on different settings.
+What concurrent scheduling does under the hood is chunking up work in cycles of scheduling, prioritization and execution based on different settings.
 
 ![Render Strategies - task flow](https://user-images.githubusercontent.com/10064416/146287195-89e22ed8-12ba-4099-9379-430a41469b9c.png)
 
@@ -427,7 +427,7 @@ This strategy is especially useful for logic meant to run in the background. Goo
 
     <button id="addItem" (click)="openCreateItemPopup()">Create new item</button>
 
-    <div id="background-indicator>Background sync</div>
+    <div id="background-indicator">Background sync</div>
   `,
 })
 export class ItemsListComponent {
