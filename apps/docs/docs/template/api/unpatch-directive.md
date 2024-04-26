@@ -18,7 +18,7 @@ The current way of binding events to DOM:
 ```
 
 The problem is that every event registered via `()`, e.g. `(mousemove)` (or custom `@Output()`)
-marks the component and all its ancestors as dirty and re-renders the whole component tree. [read more about this here](../performance-issues/rendering-issues-in-angular.md)
+marks the component and all its ancestors as dirty and re-renders the whole component tree. [Read more about this here](../performance-issues/rendering-issues-in-angular.md)
 
 So even if your eventListener is not related to any change at all, your app will re-render the whole component tree.
 This can lead to very bad user experiences, especially if you work with frequently fired events such as `mousemove`.
@@ -45,7 +45,7 @@ Included Features:
 
 - by default un-patch all registered listeners of the host it is applied on
 - un-patch only a specified set of registered event listeners
-- works zone independent (it directly checks the widow for patched APIs and un-patches them without the use of `runOutsideZone` which brings more performance)
+- works zone independent (it directly checks the window for patched APIs and un-patches them without the use of `runOutsideZone` which brings more performance)
 - Not interfering with any logic executed by the registered callback
 
 ## Current list of unpatched events
