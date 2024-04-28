@@ -67,7 +67,7 @@ Use the `$` property if you want to read the state without having applied [state
 
 ## asReadOnly
 
-##### typeof: Pick&#60;RxState&#60;State&#62, 'get' | 'select' | 'computed' | 'signal'&#62
+##### typeof: Pick&#60;RxState&#60;State&#62;, 'get' | 'select' | 'computed' | 'signal'&#62;
 
 Return RxState in ReadOnly mode that is exposing
 get(), select(), computed() and signal() methods.
