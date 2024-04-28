@@ -106,7 +106,7 @@ export class RxState<State extends object>
    *
    * Return RxState in ReadOnly mode exposing only methods for reading state
    * get(), select(), computed() and signal() methods.
-   * This can be helpful when you don't want other's to write in your state.
+   * This can be helpful when you don't want others to write in your state.
    *
    * @example
    * ```typescript

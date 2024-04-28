@@ -67,11 +67,11 @@ Use the `$` property if you want to read the state without having applied [state
 
 ## asReadOnly
 
-##### typeof: Pick<RxState<State>, 'get' | 'select' | 'computed' | 'signal'>
+##### typeof: Pick&#60;RxState&#60;State&#62, 'get' | 'select' | 'computed' | 'signal'&#62
 
 Return RxState in ReadOnly mode that is exposing
 get(), select(), computed() and signal() methods.
-This can be helpful when you don't want other's to write in your state.
+This can be helpful when you don't want others to write in your state.
 
 ```typescript
 const readOnlyState = state.asReadOnly();
