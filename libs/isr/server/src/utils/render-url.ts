@@ -35,7 +35,7 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
     inlineCriticalCss,
   } = options;
 
-  const { protocol, originalUrl, baseUrl, headers } = req;
+  const { protocol, baseUrl, headers } = req;
 
   // we need to override url of req with the one we have in parameters
   req.url = url;
@@ -56,7 +56,7 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
         .render({
           bootstrap,
           documentFilePath: indexHtml,
-          url: `${protocol}://${headers.host}${originalUrl}`,
+          url: `${protocol}://${headers.host}${req.url}`,
           publicPath: browserDistFolder,
           inlineCriticalCss: inlineCriticalCss ?? true,
           providers: [...allProviders] as StaticProvider[], // we need to cast to StaticProvider[] because of a bug in the types
