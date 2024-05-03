@@ -46,6 +46,8 @@ export type ProjectValueReducer<Type, Key extends keyof Type, Value> = (
   value: Value
 ) => Type[Key];
 
+export type ReadOnly = 'get' | 'select' | 'computed' | 'signal';
+
 /**
  * @description
  * RxState is a light-weight reactive state management service for managing local state in angular.
@@ -97,6 +99,31 @@ export class RxState<State extends object>
    */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  /**
+   * @description
+   *
+   * Return RxState in ReadOnly mode exposing only methods for reading state
+   * get(), select(), computed() and signal() methods.
+   * This can be helpful when you don't want others to write in your state.
+   *
+   * @example
+   * ```typescript
+   * const readOnlyState = state.asReadOnly();
+   * const getNum = state.get('num');
+   * const selectNum$ = state.select('num');
+   * ```
+   *
+   * @return Pick<RxState<State>, ReadOnly>
+   */
+  asReadOnly(): Pick<RxState<State>, ReadOnly> {
+    return {
+      get: this.get.bind(this),
+      select: this.select.bind(this),
+      computed: this.computed.bind(this),
+      signal: this.signal.bind(this),
+    };
   }
 
   /**

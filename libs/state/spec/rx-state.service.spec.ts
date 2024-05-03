@@ -8,10 +8,14 @@ import {
   PrimitiveState,
 } from '@test-helpers/rx-angular';
 import { of, scheduled, Subject } from 'rxjs';
+import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { RxState } from '../src/lib/rx-state.service';
+import { ReadOnly } from '../src/lib/rx-state.service';
 import { createStateChecker } from './fixtures';
+
+type ReadOnlyPrimitiveState = Pick<RxState<PrimitiveState>, ReadOnly>;
 
 function setupState<T extends object>(cfg: { initialState?: T } = {}) {
   const { initialState } = { ...cfg };
@@ -139,25 +143,33 @@ describe('RxStateService', () => {
     it('should return undefined as initial value', () => {
       const state = setupState({ initialState: undefined });
       const val = state.get();
+      const readOnlyVal = state.asReadOnly().get();
       expect(val).toEqual(undefined);
+      expect(readOnlyVal).toEqual(undefined);
     });
 
     it('should return undefined for an undefined property', () => {
       const state = setupState<{ num: number }>({ initialState: undefined });
       const val = state.get('num');
+      const readOnlyVal = state.asReadOnly().get('num');
       expect(val).toEqual(undefined);
+      expect(readOnlyVal).toEqual(undefined);
     });
 
     it('should return value when keys are provided as params', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       const val = state.get('num');
+      const readOnlyVal = state.asReadOnly().get('num');
       expect(val).toEqual(initialPrimitiveState.num);
+      expect(readOnlyVal).toEqual(initialPrimitiveState.num);
     });
 
     it('should return whole state object when no keys provided', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       const val = state.get();
+      const readOnlyVal = state.asReadOnly().get();
       expect(val.num).toEqual(initialPrimitiveState.num);
+      expect(readOnlyVal.num).toEqual(initialPrimitiveState.num);
     });
   });
 
@@ -166,6 +178,7 @@ describe('RxStateService', () => {
       testScheduler.run(({ expectObservable }) => {
         const state = setupState({ initialState: undefined });
         expectObservable(state.select()).toBe('-');
+        expectObservable(state.asReadOnly().select()).toBe('-');
       });
     });
 
@@ -175,14 +188,18 @@ describe('RxStateService', () => {
         expectObservable(state.select()).toBe('s', {
           s: initialPrimitiveState,
         });
+        expectObservable(state.asReadOnly().select()).toBe('s', {
+          s: initialPrimitiveState,
+        });
       });
     });
 
     it('should throw with wrong params', () => {
       const state = setupState({ initialState: initialPrimitiveState });
-
-      expect(() => state.select(true as any)).toThrowError(
-        'wrong params passed to select'
+      const errorMessage = 'wrong params passed to select';
+      expect(() => state.select(true as any)).toThrowError(errorMessage);
+      expect(() => state.asReadOnly().select(true as any)).toThrowError(
+        errorMessage
       );
     });
 
@@ -191,6 +208,7 @@ describe('RxStateService', () => {
         testScheduler.run(({ expectObservable }) => {
           const state = setupState({});
           expectObservable(state.select()).toBe('');
+          expectObservable(state.asReadOnly().select()).toBe('');
         });
       });
 
@@ -202,6 +220,9 @@ describe('RxStateService', () => {
 
             state.set({ num: 42 });
             expectObservable(state.select('num')).toBe('s', { s: 42 });
+            expectObservable(state.asReadOnly().select('num')).toBe('s', {
+              s: 42,
+            });
           });
         });
       });
@@ -354,6 +375,16 @@ describe('RxStateService', () => {
         state.select().subscribe((s) => expect(s).toBe(initialPrimitiveState));
         state.set('num', (s) => s.num + 1);
         state.select().subscribe((s) => expect(s).toBe({ num: 43 }));
+      });
+    });
+    describe('with read only state', () => {
+      it('should throw error when trying to call set from readOnlyState', () => {
+        const readOnlyState: ReadOnlyPrimitiveState = setupState({
+          initialState: initialPrimitiveState,
+        }).asReadOnly();
+        expect((): void => {
+          readOnlyState['set']('num', (state: PrimitiveState) => state.num + 1);
+        }).toThrowError('readOnlyState.set is not a function');
       });
     });
   });
@@ -580,6 +611,24 @@ describe('RxStateService', () => {
         state.ngOnDestroy();
       });
     });
+
+    it('should throw error when trying to call connect from readOnlyState', () => {
+      testScheduler.run(() => {
+        const s: { num: number | undefined } = { num: 0 };
+        const readOnlyState: ReadOnlyPrimitiveState = setupState({
+          initialState: s,
+        }).asReadOnly();
+        expect((): void => {
+          readOnlyState['connect'](
+            scheduled(
+              [{ num: undefined }, { num: 43 }, { num: undefined }],
+              testScheduler
+            ),
+            (o, n) => n
+          );
+        }).toThrowError('readOnlyState.connect is not a function');
+      });
+    });
   });
 
   describe('setAccumulator', () => {
@@ -640,6 +689,22 @@ describe('RxStateService', () => {
       expect(numAcc1Calls).toBe(1);
       expect(numAcc2Calls).toBe(1);
     });
+    it('should throw error when trying to call setAccumulator from readOnlyState', () => {
+      let numAccCalls = 0;
+      const customAcc = <T>(s: T, sl: Partial<T>) => {
+        ++numAccCalls;
+        return {
+          ...s,
+          ...sl,
+        };
+      };
+      const readOnlyState: ReadOnlyPrimitiveState = setupState({
+        initialState: initialPrimitiveState,
+      }).asReadOnly();
+      expect((): void => {
+        readOnlyState['setAccumulator'](customAcc);
+      }).toThrowError('readOnlyState.setAccumulator is not a function');
+    });
   });
 
   describe('hold', () => {
@@ -665,5 +730,22 @@ describe('RxStateService', () => {
       state.hold(of(1, 2, 3), effect);
       expect(calls).toBe(3);
     }));
+
+    it('should throw error when trying to call hold from readOnlyState', () => {
+      testScheduler.run(({ cold, expectSubscriptions }) => {
+        const readOnlyState: ReadOnlyPrimitiveState = setupState({
+          initialState: initialPrimitiveState,
+        }).asReadOnly();
+        const test$: ColdObservable<number> = cold('(abc)', {
+          a: 1,
+          b: 2,
+          c: 3,
+        });
+        const stop: Subject<void> = new Subject();
+        expect((): void => {
+          readOnlyState['hold'](test$.pipe(takeUntil(stop)));
+        }).toThrowError('readOnlyState.hold is not a function');
+      });
+    });
   });
 });
