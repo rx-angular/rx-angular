@@ -1,9 +1,9 @@
 import {
   ChangeDetectorRef,
   Directive,
-  effect,
   ErrorHandler,
   inject,
+  Injector,
   Input,
   isSignal,
   NgZone,
@@ -12,12 +12,11 @@ import {
   OnInit,
   Output,
   Signal,
-  signal,
   SimpleChanges,
   TemplateRef,
-  untracked,
   ViewContainerRef,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
@@ -103,6 +102,8 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
   private strategyProvider = inject(RxStrategyProvider);
   /** @internal */
   private cdRef = inject(ChangeDetectorRef);
+
+  private injector = inject(Injector);
   /** @internal */
   private ngZone = inject(NgZone);
   /** @internal */
@@ -400,7 +401,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    *   }
    * }
    *
-   * @param {Subject<U>} renderCallback
+   * @param callback
    */
   @Input('rxLetRenderCallback')
   set renderCallback(callback: NextObserver<U>) {
@@ -525,20 +526,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
     return true;
   }
 
-  /**
-   * We will store a signal inside a signal in order to listen to both value changes, and reference changes.
-   * @internal
-   */
-  private currentRxLetSignal = signal<Signal<U> | undefined>(undefined);
-
-  constructor(private templateRef: TemplateRef<RxLetViewContext<U>>) {
-    effect(() => {
-      if (this.currentRxLetSignal() !== undefined) {
-        const rxLetValue = this.currentRxLetSignal()();
-        untracked(() => this.observablesHandler.next(rxLetValue));
-      }
-    });
-  }
+  constructor(private templateRef: TemplateRef<RxLetViewContext<U>>) {}
 
   /** @internal */
   ngOnInit() {
@@ -592,10 +580,9 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
 
     if (changes.rxLet) {
       if (isSignal(this.rxLet)) {
-        this.currentRxLetSignal.set(this.rxLet);
-
-        // set the initial value synchronously
-        this.observablesHandler.next(this.rxLet());
+        this.observablesHandler.next(
+          toObservable(this.rxLet, { injector: this.injector }),
+        );
       } else {
         this.observablesHandler.next(this.rxLet);
       }

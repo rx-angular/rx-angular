@@ -65,8 +65,7 @@ describe('LetDirective with signals as values', () => {
   it('should render undefined as value when initially signal(undefined) was passed (as undefined was emitted)', () => {
     letDirectiveTestComponent.value = signal(undefined);
     fixtureLetDirectiveTestComponent.detectChanges();
-    // TODO: discuss why this is different from the observable version, the signal version does not render the value as 'undefined'
-    expect(componentNativeElement.textContent).toBe('');
+    expect(componentNativeElement.textContent).toBe('undefined');
   });
 
   it('should render null as value when initially signal(null) was passed (as null was emitted)', () => {
@@ -91,10 +90,13 @@ describe('LetDirective with signals as values', () => {
   });
 
   it('should render new value as value when a new signal was passed', () => {
+    TestBed.flushEffects();
     letDirectiveTestComponent.value = signal(42);
     fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('42');
     letDirectiveTestComponent.value = signal(45);
+    fixtureLetDirectiveTestComponent.detectChanges();
+    TestBed.flushEffects();
     fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('45');
   });
@@ -119,7 +121,7 @@ describe('LetDirective with signals as values', () => {
       });
 
     fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('');
+    expect(componentNativeElement.textContent).toBe('undefined');
     tick(1000);
     fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('0');

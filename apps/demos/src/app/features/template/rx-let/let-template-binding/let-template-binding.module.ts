@@ -14,12 +14,14 @@ import { RxLet } from '@rx-angular/template/let';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ToStringPipe } from './to-string.pipe';
+import { LetTemplateBindingSignalExampleComponent } from './examples/let-template-binding-signal-example.component';
 
 const DECLARATIONS = [
   ToStringPipe,
   LetTemplateBindingComponent,
   LetTemplateBindingHttpExampleComponent,
   LetTemplateBindingSubjectExampleComponent,
+  LetTemplateBindingSignalExampleComponent,
 ];
 
 @NgModule({

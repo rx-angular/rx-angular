@@ -570,9 +570,6 @@ export class RxIf<T = unknown>
       if (isSignal(this.rxIf)) {
         // add to currentRxIfSignal so we can listen to changes
         this.currentRxIfSignal.set(this.rxIf);
-
-        // send value synchronously
-        this.templateNotifier.next(this.rxIf());
       } else {
         this.templateNotifier.next(this.rxIf);
       }
