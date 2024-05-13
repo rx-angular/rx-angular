@@ -19,15 +19,21 @@ import {
   select,
 } from '@rx-angular/state/selections';
 import {
+  BehaviorSubject,
   EMPTY,
   isObservable,
   Observable,
   OperatorFunction,
+  Subject,
   Subscribable,
   Subscription,
   Unsubscribable,
 } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import {
+  RX_ACCUMULATOR_FN,
+  RX_STATE_SCHEDULER,
+} from './provide-rx-state-config';
 import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
 
 export type ProjectStateFn<Type> = (oldState: Type) => Partial<Type>;
@@ -73,8 +79,18 @@ export class RxState<State extends object>
 {
   private subscription = new Subscription();
 
-  private accumulator = createAccumulationObservable<State>();
-  private effectObservable = createSideEffectObservable();
+  protected scheduler = inject(RX_STATE_SCHEDULER, { optional: true });
+
+  private accumulator = createAccumulationObservable<State>(
+    new Subject<Observable<Partial<State>>>(),
+    new Subject<Partial<State>>(),
+    new BehaviorSubject(inject(RX_ACCUMULATOR_FN)),
+    this.scheduler === 'sync' ? null : this.scheduler,
+  );
+  private effectObservable = createSideEffectObservable(
+    new Subject<Observable<State>>(),
+    this.scheduler === 'sync' ? null : this.scheduler,
+  );
 
   private readonly injector = inject(Injector);
 

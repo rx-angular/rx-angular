@@ -1,6 +1,6 @@
 export {
   createAccumulationObservable,
-  RX_ACCUMULATOR_FN,
+  defaultAccumulator,
 } from './lib/accumulation-observable';
 export { CompareFn, KeyCompareMap, PickSlice } from './lib/interfaces/index';
 export { AccumulationFn, Accumulator } from './lib/model';
@@ -9,7 +9,7 @@ export {
   select,
   selectSlice,
   stateful,
-} from './lib/operators/index';
+} from './lib/operators';
 export { createSideEffectObservable } from './lib/side-effect-observable';
 export {
   isDefined,

@@ -1,5 +1,9 @@
 import { InjectionToken, Provider } from '@angular/core';
-import { AccumulationFn, RX_ACCUMULATOR_FN } from '../../selections/src';
+import {
+  AccumulationFn,
+  defaultAccumulator,
+} from '@rx-angular/state/selections';
+import { queueScheduler, SchedulerLike } from 'rxjs';
 
 export const enum RX_STATE_CONFIGS {
   Scheduler,
@@ -13,6 +17,25 @@ interface RxStateConfigFn {
 
 /**
  * Injection token for the default accumulator function.
+ *
+ * @example
+ * providers: [
+ *  {
+ *   provide: RX_ACCUMULATOR_FN,
+ *   useValue: (state, slice) => ({ ...state, ...slice })
+ *  }
+ * ]
+ */
+export const RX_ACCUMULATOR_FN = new InjectionToken<AccumulationFn>(
+  'RX_ACCUMULATOR_FN',
+  {
+    providedIn: 'root',
+    factory: () => defaultAccumulator,
+  },
+);
+
+/**
+ * Injection token for the default accumulator function.
  * @param fn
  */
 export function withAccumulatorFn(fn: AccumulationFn): RxStateConfigFn {
@@ -22,11 +45,11 @@ export function withAccumulatorFn(fn: AccumulationFn): RxStateConfigFn {
   };
 }
 
-export const RX_STATE_SCHEDULER = new InjectionToken<any>(
+export const RX_STATE_SCHEDULER = new InjectionToken<SchedulerLike | 'sync'>(
   'RX_STATE_SCHEDULER',
   {
     providedIn: 'root',
-    factory: () => undefined,
+    factory: () => queueScheduler,
   },
 );
 
@@ -35,11 +58,22 @@ export const RX_STATE_SCHEDULER = new InjectionToken<any>(
  * @param fn
  */
 export function withScheduler(
-  scheduler: any /* TODO: add type here*/,
+  scheduler: SchedulerLike | 'sync',
 ): RxStateConfigFn {
   return {
     kind: RX_STATE_CONFIGS.Scheduler,
     providers: [{ provide: RX_STATE_SCHEDULER, useValue: scheduler }],
+  };
+}
+
+/**
+ * Injection token for the default scheduler for rxState.
+ * @param fn
+ */
+export function withSyncScheduler(): RxStateConfigFn {
+  return {
+    kind: RX_STATE_CONFIGS.Scheduler,
+    providers: [{ provide: RX_STATE_SCHEDULER, useValue: 'sync' }],
   };
 }
 
