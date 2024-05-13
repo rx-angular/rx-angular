@@ -4,6 +4,9 @@ sidebar_position: 3
 title: 'RxIf'
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ## Motivation
 
 In order to switch a template based on an observable condition, developers are forced to use
@@ -24,22 +27,66 @@ pipe in addition.
 This enables `rxIf` to completely operate on its own without having to interact with `NgZone`
 or triggering global change detection.
 
-**Example usage**
+<Tabs>
+
+<TabItem value="signal" label="Usage with signals">
 
 ```html
-<!-- some.component.html -->
-<app-item *rxIf="show$"><app-item></app-item></app-item>
+<app-item *rxIf="show">
+  <app-item-child />
+</app-item>
 ```
 
 ```ts
-// some.component.ts
-@Component({
-  /**/
-})
+@Component()
 export class SomeComponent {
-  show$ = new BehaviorSubject<boolean>(true);
+  show = signal(true);
 }
 ```
+
+</TabItem>
+
+<TabItem value="obs" label="Usage with observables">
+
+```html
+<app-item *rxIf="show$">
+  <app-item-child />
+</app-item>
+```
+
+```ts
+@Component()
+export class SomeComponent {
+  show$ = new BehaviorSubject(true);
+}
+```
+
+</TabItem>
+
+<TabItem value="static" label="Usage with static values">
+
+```html
+<app-item *rxIf="show">
+  <app-item-child />
+</app-item>
+
+<!-- this also works! -->
+<app-item *rxIf="showSignal()">
+  <app-item-child />
+</app-item>
+```
+
+```ts
+@Component()
+export class SomeComponent {
+  show = true;
+  showSignal = signal(true);
+}
+```
+
+</TabItem>
+
+</Tabs>
 
 ## Concepts
 
@@ -69,9 +116,9 @@ export class SomeComponent {
 
 **Value**
 
-| Input  | Type                                    | description                                                       |
-| ------ | --------------------------------------- | ----------------------------------------------------------------- |
-| `rxIf` | `boolean` or `ObservableInput<boolean>` | The Observable or value to be bound to the context of a template. |
+| Input  | Type                                                         | description                                                                   |
+| ------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| `rxIf` | `boolean` or `ObservableInput<boolean>` or `Signal<boolean>` | The observable, or signal, or value to be bound to the context of a template. |
 
 **Contextual state**
 
@@ -96,10 +143,6 @@ export class SomeComponent {
 | `parent`         | `boolean`                                          | _default: `true`_ if set to `false`, the `RxIf` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
 | `strategy`       | `Observable<RxStrategyNames>` or `RxStrategyNames` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                            |
 | `renderCallback` | `Subject<boolean>`                                 | giving the developer the exact timing when the `RxIf` created, or removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                                    |
-
-### Outputs
-
-n/a
 
 ## Setup
 
@@ -131,18 +174,16 @@ export class AnyComponent {}
 
 The `*rxIf` directive makes it easy to work with reactive data streams in the template.
 
-```html
-<!-- some.component.html -->
-<app-item *rxIf="show$"><app-item></app-item></app-item>
-```
-
 ```ts
-// some.component.ts
 @Component({
-  /**/
+  template: `
+    <app-item *rxIf="show$">
+      <app-item-child />
+    </app-item>
+  `,
 })
 export class SomeComponent {
-  show$ = new BehaviorSubject<boolean>(true);
+  show$ = new BehaviorSubject(true);
 }
 ```
 
@@ -171,9 +212,7 @@ You can use them like this:
 **Context Variables on then template**
 
 ```html
-<ng-container
-  *rxIf="customer$; let customer; let s = suspense; let e = error, let c = complete"
->
+<ng-container *rxIf="customer$; let customer; let s = suspense; let e = error, let c = complete">
   <loader *ngIf="s"></loader>
   <error *ngIf="e"></error>
   <complete *ngIf="c"></complete>
@@ -185,9 +224,7 @@ You can use them like this:
 **Context Variables on else template**
 
 ```html
-<ng-container
-  *rxIf="show$; else: nope; let s = suspense; let e = error, let c = complete"
->
+<ng-container *rxIf="show$; else: nope; let s = suspense; let e = error, let c = complete">
   <loader *ngIf="s"></loader>
   <error *ngIf="e"></error>
   <complete *ngIf="c"></complete>
@@ -321,9 +358,7 @@ e.g. from the complete template back to the value display
 @Component({
   selector: 'app-root',
   template: `
-    <ng-container
-      *rxIf="show$; complete: complete; completeTrg: completeTrigger$"
-    >
+    <ng-container *rxIf="show$; complete: complete; completeTrg: completeTrigger$">
       <item></item>
     </ng-container>
     <ng-template #complete>✔</ng-template>
@@ -345,9 +380,7 @@ e.g. from the complete template back to the value display
   selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
-    <ng-container
-      *rxIf="show$; suspense: suspense; suspenseTrg: suspenseTrigger$"
-    >
+    <ng-container *rxIf="show$; suspense: suspense; suspenseTrg: suspenseTrigger$">
       <list></list>
     </ng-container>
     <ng-template #suspense>loading...</ng-template>
@@ -494,9 +527,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 ```ts
 @Component({
   selector: 'app-root',
-  template: `
-    <div *rxIf="enabled$; patchZone: false" (drag)="itemDrag($event)"></div>
-  `,
+  template: ` <div *rxIf="enabled$; patchZone: false" (drag)="itemDrag($event)"></div> `,
 })
 export class AppComponent {
   enabled$ = state.select('enabled');
@@ -514,12 +545,7 @@ This helps to exclude all side effects from special render strategies.
 ### Basic Setup
 
 ```typescript
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { RxIf } from '@rx-angular/template/if';
