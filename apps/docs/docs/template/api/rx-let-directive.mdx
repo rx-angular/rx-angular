@@ -111,87 +111,18 @@ It mostly is used in combination with state management libs to handle user inter
 <ng-container *rxLet="number$; let n"> ... </ng-container>
 ```
 
-## Concepts
-
-- [Local variables](../concepts/local-variables.md)
-- [Local template](../concepts/local-templates.md)
-- [Reactive context](../concepts/reactive-context.md)
-- [Render strategies](../../cdk/render-strategies/render-strategies.mdx)
-
-## Features
-
-**DX Features**
-
-- context variables (error, complete, suspense)
-- context templates (error, complete, suspense)
-- context trigger
-- reduces boilerplate (multiple `async` pipe's)
-- a unified/structured way of handling `null` and `undefined`
-- works also with static variables `*rxLet="42; let n"`
-
-**Performance Features**
-
-- value binding is always present. ('`*ngIf` hack' bugs and edge cases)
-- lazy template creation (done by render strategies)
-- triggers change-detection on `EmbeddedView` level
-- distinct same values in a row (over-rendering)
-- concurrent mode (read more about this [here](../../cdk/render-strategies/strategies/concurrent-strategies))
-
-### Inputs
-
-**Value**
-
-| Input   | Type            | description                                                       |
-| ------- | --------------- | ----------------------------------------------------------------- |
-| `rxLet` | `Observable<T>` | The Observable or value to be bound to the context of a template. |
-
-**Contextual state**
-
-| Input             | Type                             | description                                                            |
-| ----------------- | -------------------------------- | ---------------------------------------------------------------------- |
-| `error`           | `TemplateRef<RxLetViewContext>`  | defines the template for the error state                               |
-| `complete`        | `TemplateRef<RxLetViewContext>`  | defines the template for the complete state                            |
-| `suspense`        | `TemplateRef<RxLetViewContext>`  | defines the template for the suspense state                            |
-| `nextTrigger`     | `Observable<unknown>`            | trigger to show `next` template                                        |
-| `errorTrigger`    | `Observable<unknown>`            | trigger to show `error` template                                       |
-| `completeTrigger` | `Observable<unknown>`            | trigger to show `complete` template                                    |
-| `suspenseTrigger` | `Observable<unknown>`            | trigger to show `suspense` template                                    |
-| `contextTrigger`  | `Observable<RxNotificationKind>` | trigger to show any templates, based on the given `RxNotificationKind` |
-
-**Rendering**
-
-| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                      |
-| ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
-| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                             |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `RxLet` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
-
-## Setup
-
-The `RxLet` can be imported as following:
-
-```ts
-import { RxLet } from '@rx-angular/template/let';
-
-@Component({
-  standalone: true,
-  imports: [RxLet],
-  template: `...`,
-})
-export class AnyComponent {}
-```
-
 ## Basic Usage
 
-> **⚠ Notice:**
-> By default `*rxLet` is optimized for performance out of the box.
->
-> This includes:
->
-> - The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
->   This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies/strategies/basic-strategies.md) if you want to change it.
-> - Creates templates lazy and manages multiple template instances
+:::tip
+
+By default `*rxLet` is optimized for performance out of the box.
+This includes:
+
+- The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
+  - This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies/strategies/basic-strategies.md) if you want to change it.
+- Creates templates lazy and manages multiple template instances
+
+:::
 
 ### Binding a value in the template
 
@@ -450,6 +381,62 @@ export class AppComponent {
   }
 }
 ```
+
+## Concepts
+
+- [Local variables](../concepts/local-variables.md)
+- [Local template](../concepts/local-templates.md)
+- [Reactive context](../concepts/reactive-context.md)
+- [Render strategies](../../cdk/render-strategies/render-strategies.mdx)
+
+## Features
+
+### DX
+
+- context variables (error, complete, suspense)
+- context templates (error, complete, suspense)
+- context trigger
+- reduces boilerplate (multiple `async` pipe's)
+- a unified/structured way of handling `null` and `undefined`
+- works also with static variables `*rxLet="42; let n"`
+
+### Performance Features
+
+- value binding is always present. ('`*ngIf` hack' bugs and edge cases)
+- lazy template creation (done by render strategies)
+- triggers change-detection on `EmbeddedView` level
+- distinct same values in a row (over-rendering)
+- concurrent mode (read more about this [here](../../cdk/render-strategies/strategies/concurrent-strategies))
+
+## Inputs
+
+**Value**
+
+| Input   | Type            | description                                                       |
+| ------- | --------------- | ----------------------------------------------------------------- |
+| `rxLet` | `Observable<T>` | The Observable or value to be bound to the context of a template. |
+
+**Contextual state**
+
+| Input             | Type                             | description                                                            |
+| ----------------- | -------------------------------- | ---------------------------------------------------------------------- |
+| `error`           | `TemplateRef<RxLetViewContext>`  | defines the template for the error state                               |
+| `complete`        | `TemplateRef<RxLetViewContext>`  | defines the template for the complete state                            |
+| `suspense`        | `TemplateRef<RxLetViewContext>`  | defines the template for the suspense state                            |
+| `nextTrigger`     | `Observable<unknown>`            | trigger to show `next` template                                        |
+| `errorTrigger`    | `Observable<unknown>`            | trigger to show `error` template                                       |
+| `completeTrigger` | `Observable<unknown>`            | trigger to show `complete` template                                    |
+| `suspenseTrigger` | `Observable<unknown>`            | trigger to show `suspense` template                                    |
+| `contextTrigger`  | `Observable<RxNotificationKind>` | trigger to show any templates, based on the given `RxNotificationKind` |
+
+**Rendering**
+
+| Input                 | Type                                                               | description                                                                                                                                                                                                                                                                                      |
+| --------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `patchZone`           | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
+| `parent` (deprecated) | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
+| `strategy`            | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                             |
+| `renderCallback`      | `Subject<U>`                                                       | giving the developer the exact timing when the `RxLet` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
 
 ## Advanced Usage
 
