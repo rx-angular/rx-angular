@@ -88,7 +88,7 @@ export class RxState<State extends object>
     this.scheduler === 'sync' ? null : this.scheduler,
   );
   private effectObservable = createSideEffectObservable(
-    new Subject<Observable<State>>(),
+    new Subject<Observable<unknown>>(),
     this.scheduler === 'sync' ? null : this.scheduler,
   );
 
