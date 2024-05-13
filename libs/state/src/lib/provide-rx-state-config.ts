@@ -55,7 +55,7 @@ export const RX_STATE_SCHEDULER = new InjectionToken<SchedulerLike | 'sync'>(
 
 /**
  * Injection token for the default scheduler for rxState.
- * @param fn
+ * @param scheduler
  */
 export function withScheduler(
   scheduler: SchedulerLike | 'sync',

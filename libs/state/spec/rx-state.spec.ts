@@ -1,9 +1,26 @@
 import { Component, isSignal, signal } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { selectSlice } from '@rx-angular/state/selections';
-import { delay, of, pipe, startWith } from 'rxjs';
+import {
+  asapScheduler,
+  delay,
+  of,
+  pipe,
+  queueScheduler,
+  startWith,
+} from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { rxState, RxStateSetupFn } from '../src/lib/rx-state';
+import {
+  provideRxStateConfig,
+  withAccumulatorFn,
+  withScheduler,
+  withSyncScheduler,
+} from '../src/lib/provide-rx-state-config';
+import {
+  RxState as FnState,
+  rxState,
+  RxStateSetupFn,
+} from '../src/lib/rx-state';
 import { RxState } from '../src/lib/rx-state.service';
 
 describe(rxState, () => {
@@ -24,7 +41,7 @@ describe(rxState, () => {
           ...state,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           count: (slice as any).count + 10,
-        }))
+        })),
     );
     component.state.set({ count: 10 });
     expect(component.state.get()).toEqual({ count: 20 });
@@ -32,14 +49,14 @@ describe(rxState, () => {
 
   it('should connect with slice$', () => {
     const { component } = setupComponent<{ count: number }>(({ connect }) =>
-      connect(of({ count: 10 }))
+      connect(of({ count: 10 })),
     );
     expect(component.state.get()).toEqual({ count: 10 });
   });
 
   it('should connect with key and value', () => {
     const { component } = setupComponent<{ count: number }>(({ connect }) =>
-      connect('count', of(10))
+      connect('count', of(10)),
     );
     expect(component.state.get()).toEqual({ count: 10 });
   });
@@ -48,7 +65,7 @@ describe(rxState, () => {
     const { component } = setupComponent<{ count: number }>(({ connect }) =>
       connect('count', of({ count: 10 }), (state, { count }) => {
         return count + 10;
-      })
+      }),
     );
     expect(component.state.get()).toEqual({ count: 20 });
   });
@@ -169,7 +186,7 @@ describe(rxState, () => {
         ({ connect }) => {
           connect('count', counterInput);
         },
-        `{{ count() }}`
+        `{{ count() }}`,
       );
       const state = component.state;
 
@@ -196,7 +213,7 @@ describe(rxState, () => {
             return (state?.count ?? count) * count;
           });
         },
-        `{{ count() }}`
+        `{{ count() }}`,
       );
       const state = component.state;
 
@@ -221,7 +238,7 @@ describe(rxState, () => {
         ({ connect }) => {
           connect(counterInput);
         },
-        `{{ count() }}`
+        `{{ count() }}`,
       );
       const state = component.state;
 
@@ -249,7 +266,7 @@ describe(rxState, () => {
       });
       const state = component.state;
       const multiplied = state.computed(
-        ({ count, multiplier }) => count() * multiplier()
+        ({ count, multiplier }) => count() * multiplier(),
       );
 
       expect(multiplied()).toBe(1337);
@@ -271,8 +288,8 @@ describe(rxState, () => {
       const multiplied = state.computedFrom(
         pipe(
           selectSlice(['count', 'multiplier']),
-          map(({ count, multiplier }) => count * multiplier)
-        )
+          map(({ count, multiplier }) => count * multiplier),
+        ),
       );
 
       expect(multiplied()).toBe(1337);
@@ -293,7 +310,7 @@ describe(rxState, () => {
         selectSlice(['count', 'multiplier']),
         map(({ count, multiplier }) => count * multiplier),
         delay(1000),
-        startWith(10)
+        startWith(10),
       );
 
       expect(multiplied()).toBe(10);
@@ -306,6 +323,62 @@ describe(rxState, () => {
       expect(multiplied()).toBe(13370);
     }));
   });
+
+  describe('configuration', () => {
+    const setupConfig = (...cfg) => {
+      TestBed.configureTestingModule({
+        providers: [provideRxStateConfig(...cfg)],
+      });
+    };
+
+    it('should return empty array', () => {
+      expect(provideRxStateConfig()).toEqual([]);
+    });
+
+    it('should use custom scheduler', async () => {
+      const scheduler = asapScheduler;
+      const scheduled = jest.spyOn(scheduler, 'schedule');
+      setupConfig(withScheduler(scheduler));
+      let state: FnState<{ foo: string }>;
+      TestBed.runInInjectionContext(() => {
+        state = rxState<{ foo: string }>();
+        state.set({ foo: 'bar' });
+      });
+      expect(scheduled).toBeCalled();
+      expect(state.get('foo')).not.toBeDefined();
+      await Promise.resolve();
+      expect(state.get('foo')).toEqual('bar');
+      scheduled.mockClear();
+    });
+
+    it('should not use queueScheduler scheduler', () => {
+      const scheduler = queueScheduler;
+      const scheduled = jest.spyOn(scheduler, 'schedule');
+      setupConfig(withSyncScheduler());
+      TestBed.runInInjectionContext(() => {
+        const state = rxState<{ foo: string }>();
+        state.set({ foo: 'bar' });
+        expect(state.get('foo')).toEqual('bar');
+      });
+      expect(scheduled).not.toBeCalled();
+      expect(scheduled).not.toHaveBeenCalled();
+      scheduled.mockClear();
+    });
+
+    it('should use custom accumulator', () => {
+      const accumulator = jest.fn().mockImplementation((state, slice) => ({
+        ...state,
+        ...slice,
+      }));
+      setupConfig(withAccumulatorFn(accumulator));
+      TestBed.runInInjectionContext(() => {
+        const state = rxState<{ foo: string }>();
+        state.set({ foo: 'bar' });
+        expect(state.get('foo')).toEqual('bar');
+      });
+      expect(accumulator).toHaveBeenCalled();
+    });
+  });
 });
 
 type ITestComponent<State extends object> = {
@@ -314,7 +387,7 @@ type ITestComponent<State extends object> = {
 
 function setupComponent<State extends { count: number }>(
   setupFn?: RxStateSetupFn<State>,
-  template?: string
+  template?: string,
 ) {
   @Component({
     template,
