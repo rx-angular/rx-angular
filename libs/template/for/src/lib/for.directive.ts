@@ -5,16 +5,20 @@ import {
   EmbeddedViewRef,
   ErrorHandler,
   inject,
+  Injector,
   Input,
+  isSignal,
   IterableDiffers,
   NgIterable,
   NgZone,
   OnDestroy,
   OnInit,
+  Signal,
   TemplateRef,
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import {
   coerceDistinctWith,
   coerceObservableWith,
@@ -87,6 +91,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   private ngZone = inject(NgZone);
   /** @internal */
+  private injector = inject(Injector);
+  /** @internal */
   private viewContainerRef = inject(ViewContainerRef);
   /** @internal */
   private strategyProvider = inject(RxStrategyProvider);
@@ -114,19 +120,26 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    */
   @Input()
   set rxForOf(
-    potentialObservable:
+    potentialSignalOrObservable:
       | Observable<(U & NgIterable<T>) | undefined | null>
+      | Signal<(U & NgIterable<T>) | undefined | null>
       | (U & NgIterable<T>)
       | null
-      | undefined
+      | undefined,
   ) {
-    if (!isObservable(potentialObservable)) {
-      this.staticValue = potentialObservable;
+    if (isSignal(potentialSignalOrObservable)) {
+      this.staticValue = undefined;
+      this.renderStatic = false;
+      this.observables$.next(
+        toObservable(potentialSignalOrObservable, { injector: this.injector }),
+      );
+    } else if (!isObservable(potentialSignalOrObservable)) {
+      this.staticValue = potentialSignalOrObservable;
       this.renderStatic = true;
     } else {
       this.staticValue = undefined;
       this.renderStatic = false;
-      this.observables$.next(potentialObservable);
+      this.observables$.next(potentialSignalOrObservable);
     }
   }
 
@@ -178,7 +191,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    */
   @Input()
   set rxForStrategy(
-    strategyName: RxStrategyNames | Observable<RxStrategyNames> | undefined
+    strategyName: RxStrategyNames | Observable<RxStrategyNames> | undefined,
   ) {
     this.strategyInput$.next(strategyName);
   }
@@ -329,8 +342,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     ) {
       console.warn(
         `trackBy must be a function, but received ${JSON.stringify(
-          trackByFnOrKey
-        )}.`
+          trackByFnOrKey,
+        )}.`,
       );
     }
     if (trackByFnOrKey == null) {
@@ -409,7 +422,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private readonly values$ = this.observables$.pipe(
     coerceObservableWith(),
     switchAll(),
-    shareReplay({ refCount: true, bufferSize: 1 })
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
   /** @internal */
@@ -430,7 +443,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   _distinctBy = (a: T, b: T) => a === b;
 
   constructor(
-    private readonly templateRef: TemplateRef<RxForViewContext<T, U>>
+    private readonly templateRef: TemplateRef<RxForViewContext<T, U>>,
   ) {}
 
   /** @internal */
@@ -458,14 +471,14 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     this._subscription.add(
       this.listManager
         .render(this.values$)
-        .subscribe((v) => this._renderCallback?.next(v))
+        .subscribe((v) => this._renderCallback?.next(v)),
     );
   }
 
   /** @internal */
   createViewContext(
     item: T,
-    computedContext: RxListViewComputedContext
+    computedContext: RxListViewComputedContext,
   ): RxForViewContext<T, U> {
     return new RxForViewContext<T, U>(item, this.values, computedContext);
   }
@@ -474,7 +487,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   updateViewContext(
     item: T,
     view: EmbeddedViewRef<RxForViewContext<T>>,
-    computedContext: RxListViewComputedContext
+    computedContext: RxListViewComputedContext,
   ): void {
     view.context.updateContext(computedContext);
     view.context.rxForOf = this.values;
@@ -498,7 +511,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   static ngTemplateContextGuard<
     T,
     U extends NgIterable<T> = NgIterable<T>,
-    K = keyof T
+    K = keyof T,
   >(dir: RxFor<T, U>, ctx: any): ctx is RxForViewContext<T, U, K> {
     return true;
   }
