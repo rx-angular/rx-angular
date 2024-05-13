@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import {
-  RX_ACCUMULATOR_FN,
-  createAccumulationObservable,
-  select,
-} from '@rx-angular/state/selections';
-import {
-  PrimitiveState,
   initialPrimitiveState,
   jestMatcher,
+  PrimitiveState,
 } from '@test-helpers/rx-angular';
 import { of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
+import {
+  createAccumulationObservable,
+  RX_ACCUMULATOR_FN,
+} from '../src/lib/accumulation-observable';
+import { select } from '../src/lib/operators';
 
 function setupAccumulationObservable<T extends object>(cfg: {
   initialState?: T;

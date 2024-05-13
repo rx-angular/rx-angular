@@ -1,3 +1,4 @@
+import { inject, InjectionToken } from '@angular/core';
 import {
   BehaviorSubject,
   ConnectableObservable,
@@ -20,7 +21,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { AccumulationFn, Accumulator } from './model';
-import { inject, InjectionToken } from '@angular/core';
 
 const defaultAccumulator: AccumulationFn = <T>(st: T, sl: Partial<T>): T => {
   return { ...st, ...sl };
@@ -40,13 +40,14 @@ const defaultAccumulator: AccumulationFn = <T>(st: T, sl: Partial<T>): T => {
 export const RX_ACCUMULATOR_FN = new InjectionToken<AccumulationFn>(
   'RX_ACCUMULATOR_FN',
   {
+    providedIn: 'root',
     factory: () => defaultAccumulator,
-  }
+  },
 );
 
 export function createAccumulationObservable<T extends object>(
   stateObservables = new Subject<Observable<Partial<T>>>(),
-  stateSlices = new Subject<Partial<T>>()
+  stateSlices = new Subject<Partial<T>>(),
 ): Accumulator<T> {
   const accumulatorFn = inject(RX_ACCUMULATOR_FN);
   const accumulatorObservable = new BehaviorSubject(accumulatorFn);
@@ -54,22 +55,22 @@ export function createAccumulationObservable<T extends object>(
     stateObservables.pipe(
       distinctUntilChanged(),
       mergeAll(),
-      observeOn(queueScheduler)
+      observeOn(queueScheduler),
     ),
-    stateSlices.pipe(observeOn(queueScheduler))
+    stateSlices.pipe(observeOn(queueScheduler)),
   ).pipe(
     withLatestFrom(accumulatorObservable.pipe(observeOn(queueScheduler))),
     scan(
       (state, [slice, stateAccumulator]) => stateAccumulator(state, slice),
-      {} as T
+      {} as T,
     ),
     tap(
       (newState) => (compositionObservable.state = newState),
-      (error) => console.error(error)
+      (error) => console.error(error),
     ),
     // @Notice We catch the error here as it get lost in between `publish` and `publishReplay`. We return empty to
     catchError((e) => EMPTY),
-    publish()
+    publish(),
   );
   const state$: Observable<T> = signal$.pipe(publishReplay(1));
   const compositionObservable: Accumulator<T> = {
@@ -105,7 +106,7 @@ export function createAccumulationObservable<T extends object>(
       compositionObservable.signal$ as ConnectableObservable<T>
     ).connect();
     sub.add(
-      (compositionObservable.state$ as ConnectableObservable<T>).connect()
+      (compositionObservable.state$ as ConnectableObservable<T>).connect(),
     );
     sub.add(() => {
       accumulatorObservable.complete();
