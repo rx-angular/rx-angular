@@ -11,7 +11,8 @@ import { environment } from './environments/environment';
 import { promiseMarkerFactory } from './app/shared/utils/measure';
 
 const mP = promiseMarkerFactory('Bootstrap');
-mP.wrap(bootstrapApplication(AppComponent, {
+mP.wrap(
+  bootstrapApplication(AppComponent, {
     providers: [
       provideHttpClient(),
       provideAnimations(),
@@ -23,5 +24,4 @@ mP.wrap(bootstrapApplication(AppComponent, {
       provideRouter(ROUTES),
     ],
   }),
-).catch((err) => console.error(err),
-);
+).catch((err) => console.error(err));
