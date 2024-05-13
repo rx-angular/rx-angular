@@ -230,8 +230,8 @@ export class CounterComponent {
 
 ```html title="src/counter.component.html"
 <ng-container *rxLet="number$; let n">
-  <app-number [number]="n"></app-number>
-  <app-number-special [number]="n"></app-number-special>
+  <app-number [number]="n" />
+  <app-number-special [number]="n" />
 </ng-container>
 ```
 
