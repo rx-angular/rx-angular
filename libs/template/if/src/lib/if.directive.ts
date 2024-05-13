@@ -1,8 +1,8 @@
 import {
   ChangeDetectorRef,
   Directive,
-  effect,
   inject,
+  Injector,
   Input,
   isSignal,
   NgZone,
@@ -10,12 +10,11 @@ import {
   OnDestroy,
   OnInit,
   Signal,
-  signal,
   SimpleChanges,
   TemplateRef,
-  untracked,
   ViewContainerRef,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
@@ -82,7 +81,8 @@ export class RxIf<T = unknown>
   private ngZone = inject(NgZone);
   /** @internal */
   private viewContainerRef = inject(ViewContainerRef);
-
+  /** @internal */
+  private injector = inject(Injector);
   /** @internal */
   private subscription = new Subscription();
   /** @internal */
@@ -491,20 +491,7 @@ export class RxIf<T = unknown>
     return this.then ? this.then : this.templateRef;
   }
 
-  /**
-   * We will store a signal inside a signal in order to listen to both value changes, and reference changes.
-   * @internal
-   */
-  private currentRxIfSignal = signal<Signal<T> | undefined>(undefined);
-
-  constructor(private readonly templateRef: TemplateRef<RxIfViewContext<T>>) {
-    effect(() => {
-      if (this.currentRxIfSignal() !== undefined) {
-        const rxIfValue = this.currentRxIfSignal()();
-        untracked(() => this.templateNotifier.next(rxIfValue));
-      }
-    });
-  }
+  constructor(private readonly templateRef: TemplateRef<RxIfViewContext<T>>) {}
 
   /** @internal */
   ngOnInit() {
@@ -568,8 +555,9 @@ export class RxIf<T = unknown>
     }
     if (changes.rxIf) {
       if (isSignal(this.rxIf)) {
-        // add to currentRxIfSignal so we can listen to changes
-        this.currentRxIfSignal.set(this.rxIf);
+        this.templateNotifier.next(
+          toObservable(this.rxIf, { injector: this.injector }),
+        );
       } else {
         this.templateNotifier.next(this.rxIf);
       }

@@ -63,6 +63,11 @@ describe('rxIf directive signal values', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll('span').length).toEqual(1);
     expect(fixture.nativeElement.textContent).toBe('hello');
+
+    fixture.componentInstance.booleanConditionSignal.set(false);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('span').length).toEqual(0);
   }));
 
   it('should work on a template element', waitForAsync(() => {
@@ -341,7 +346,7 @@ describe('rxIf directive signal values', () => {
     }));
   });
 
-  xdescribe('Templates & Context', () => {
+  fdescribe('Templates & Context', () => {
     it('should render suspense template when value is undefined', waitForAsync(() => {
       fixture = createTestComponent(`
          <span *rxIf="booleanConditionSignal; suspense: suspense; let v">{{v}}</span>
@@ -353,11 +358,11 @@ describe('rxIf directive signal values', () => {
       expect(fixture.nativeElement.textContent).toBe('suspended');
 
       getComponent().booleanConditionSignal.set(true);
+      fixture.detectChanges();
       expect(fixture.nativeElement.textContent).toBe('true');
     }));
 
-    // TODO: signals do not support complete and error
-    xit('should not have suspense context', waitForAsync(() => {
+    it('should not have suspense context', waitForAsync(() => {
       const template =
         '<span *rxIf="booleanConditionSignal; let v; let suspense = suspense">{{suspense}}</span>';
 
@@ -367,11 +372,11 @@ describe('rxIf directive signal values', () => {
       expect(fixture.nativeElement.textContent).toBe('false');
 
       getComponent().booleanConditionSignal.set(undefined);
+      fixture.detectChanges();
       expect(fixture.nativeElement.textContent).toBe('');
     }));
 
-    // TODO: signals do not support complete and error
-    xit('should not have suspense context', waitForAsync(() => {
+    it('should not have suspense context', waitForAsync(() => {
       const template =
         '<span *rxIf="booleanConditionSignal; let v; let suspense = suspense">{{suspense}}</span>';
 
@@ -399,36 +404,6 @@ describe('rxIf directive signal values', () => {
       getComponent().booleanConditionSignal = signal(true);
       fixture.detectChanges();
       expect(fixture.nativeElement.textContent).toBe('true');
-    }));
-
-    // TODO: signals do not support complete and error
-    xit('should have complete context when source completes', waitForAsync(() => {
-      const template =
-        '<span *rxIf="booleanConditionSignal; let v; let complete = complete">{{complete}}</span>';
-
-      fixture = createTestComponent(template);
-      getComponent().booleanConditionSignal = signal(true);
-      fixture.detectChanges();
-      expect(fixture.nativeElement.textContent).toBe('true');
-
-      getComponent().booleanConditionSignal = signal(true);
-      expect(fixture.nativeElement.textContent).toBe('true');
-    }));
-
-    // TODO: signals do not support complete and error
-    xit('should have complete context on else template', waitForAsync(() => {
-      const template =
-        '<span *rxIf="booleanConditionSignal; let v; else: elseTpl">then</span>' +
-        '<ng-template #elseTpl let-c="complete">else{{c}}</ng-template>';
-
-      fixture = createTestComponent(template);
-      getComponent().booleanConditionSignal = signal(false);
-      fixture.detectChanges();
-      expect(fixture.nativeElement.textContent).toBe('elsetrue');
-
-      getComponent().booleanConditionSignal = signal(true);
-      fixture.detectChanges();
-      expect(fixture.nativeElement.textContent).toBe('then');
     }));
 
     // TODO: signals do not support complete and error
