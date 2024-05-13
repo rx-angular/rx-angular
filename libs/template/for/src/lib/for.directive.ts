@@ -114,9 +114,10 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * </ng-container>
    *
    * @param { Observable<(U & NgIterable<T>) | undefined | null>
+   *       | Signal<(U & NgIterable<T>) | undefined | null>
    *       | (U & NgIterable<T>)
    *       | null
-   *       | undefined } potentialObservable
+   *       | undefined } potentialSignalOrObservable
    */
   @Input()
   set rxForOf(
