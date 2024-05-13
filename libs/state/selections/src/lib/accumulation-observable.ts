@@ -1,11 +1,12 @@
-import { inject, InjectionToken } from '@angular/core';
 import {
   BehaviorSubject,
   ConnectableObservable,
   EMPTY,
   merge,
+  MonoTypeOperatorFunction,
   Observable,
   queueScheduler,
+  SchedulerLike,
   Subject,
   Subscription,
 } from 'rxjs';
@@ -22,44 +23,26 @@ import {
 } from 'rxjs/operators';
 import { AccumulationFn, Accumulator } from './model';
 
-const defaultAccumulator: AccumulationFn = <T>(st: T, sl: Partial<T>): T => {
+export const defaultAccumulator: AccumulationFn = <T>(
+  st: T,
+  sl: Partial<T>,
+): T => {
   return { ...st, ...sl };
 };
-
-/**
- * Injection token for the default accumulator function.
- *
- * @example
- * providers: [
- *  {
- *   provide: RX_ACCUMULATOR_FN,
- *   useValue: (state, slice) => ({ ...state, ...slice })
- *  }
- * ]
- */
-export const RX_ACCUMULATOR_FN = new InjectionToken<AccumulationFn>(
-  'RX_ACCUMULATOR_FN',
-  {
-    providedIn: 'root',
-    factory: () => defaultAccumulator,
-  },
-);
 
 export function createAccumulationObservable<T extends object>(
   stateObservables = new Subject<Observable<Partial<T>>>(),
   stateSlices = new Subject<Partial<T>>(),
+  accumulatorObservable = new BehaviorSubject(defaultAccumulator),
+  scheduler: SchedulerLike | null = queueScheduler,
 ): Accumulator<T> {
-  const accumulatorFn = inject(RX_ACCUMULATOR_FN);
-  const accumulatorObservable = new BehaviorSubject(accumulatorFn);
+  const observeStateOn = <R>(): MonoTypeOperatorFunction<R> =>
+    scheduler ? observeOn(scheduler) : (o$) => o$;
   const signal$ = merge(
-    stateObservables.pipe(
-      distinctUntilChanged(),
-      mergeAll(),
-      observeOn(queueScheduler),
-    ),
-    stateSlices.pipe(observeOn(queueScheduler)),
+    stateObservables.pipe(distinctUntilChanged(), mergeAll(), observeStateOn()),
+    stateSlices.pipe(observeStateOn()),
   ).pipe(
-    withLatestFrom(accumulatorObservable.pipe(observeOn(queueScheduler))),
+    withLatestFrom(accumulatorObservable.pipe(observeStateOn())),
     scan(
       (state, [slice, stateAccumulator]) => stateAccumulator(state, slice),
       {} as T,

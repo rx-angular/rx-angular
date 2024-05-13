@@ -1,15 +1,27 @@
-import { merge, Observable, queueScheduler, Subject, Subscribable, Subscription } from 'rxjs';
+import {
+  merge,
+  Observable,
+  queueScheduler,
+  SchedulerLike,
+  Subject,
+  Subscribable,
+  Subscription,
+} from 'rxjs';
 import { mergeAll, observeOn } from 'rxjs/operators';
 
 export function createSideEffectObservable<T>(
-  stateObservables = new Subject<Observable<T>>()
+  stateObservables = new Subject<Observable<T>>(),
+  scheduler: SchedulerLike | null = queueScheduler,
 ): {
   effects$: Observable<T>;
   nextEffectObservable: (effect$: Observable<T>) => void;
   subscribe: () => Subscription;
 } & Subscribable<T> {
   const effects$: Observable<T> = merge(
-    stateObservables.pipe(mergeAll(), observeOn(queueScheduler))
+    stateObservables.pipe(
+      mergeAll(),
+      scheduler ? observeOn(scheduler) : (o$) => o$,
+    ),
   );
 
   function nextEffectObservable(effect$: Observable<T>): void {
@@ -23,6 +35,6 @@ export function createSideEffectObservable<T>(
   return {
     effects$,
     nextEffectObservable,
-    subscribe
+    subscribe,
   };
 }
