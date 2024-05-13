@@ -29,8 +29,7 @@ components and does not work in zone-less mode.
 _Example_
 
 ```html
-<hero-search [term]="searchTerm$ | push"> </hero-search>
-<hero-list-component [heroes]="heroes$ | push"> </hero-list-component>
+<hero-search [term]="searchTerm$ | push"> </hero-search> <hero-list-component [heroes]="heroes$ | push"> </hero-list-component>
 ```
 
 The rendering behavior can be configured per RxPush instance using the strategy parameter.
@@ -38,8 +37,7 @@ The rendering behavior can be configured per RxPush instance using the strategy 
 _Example_
 
 ```html
-<hero-search [term]="searchTerm$ | push: 'global'"> </hero-search>
-<hero-list-component [heroes]="heroes$ | push: 'global'"> </hero-list-component>
+<hero-search [term]="searchTerm$ | push: 'global'"> </hero-search> <hero-list-component [heroes]="heroes$ | push: 'global'"> </hero-list-component>
 ```
 
 ## Included features
@@ -48,7 +46,7 @@ _Example_
 - Handling null and undefined values in a clean unified/structured way
 - Distinct same values in a row to increase performance
 - Coalescing of change detection calls to boost performance
-- Lazy rendering (see [RxLet](rx-let-directive.md))
+- Lazy rendering (see [RxLet](./rx-let-directive.mdx))
 - Chunked rendering
 
 ## Signature

@@ -1,4 +1,4 @@
-import { Component, ErrorHandler } from '@angular/core';
+import { Component, ErrorHandler, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject, Subject } from 'rxjs';
 
@@ -14,6 +14,7 @@ export class TestComponent {
   items: any[] = [1, 2];
   itemsCold$ = new Subject<any[]>();
   itemsHot$ = new BehaviorSubject<any[]>([1, 2]);
+  itemsHotSignal = signal<any[]>([1, 2]);
   parent: boolean;
 
   renderedValue$ = new Subject<number[]>();
@@ -35,7 +36,7 @@ const TEMPLATE =
   '<div><span *rxFor="let item of items">{{item.toString()}};</span></div>';
 
 export function createTestComponent(
-  template: string = TEMPLATE
+  template: string = TEMPLATE,
 ): ComponentFixture<TestComponent> {
   return TestBed.overrideComponent(TestComponent, {
     set: { template: template },
