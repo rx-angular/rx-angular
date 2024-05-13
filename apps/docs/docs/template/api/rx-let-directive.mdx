@@ -18,17 +18,6 @@ To name a few:
 - it leads to too many subscriptions in the template
 - it is cumbersome to work with values in the template
 
-**Access async values in the template: `*ngIf hack`**
-
-The ngIf hack looks like this:
-
-```html
-<ng-container *ngIf="observableNumber$ | async as n">
-  <app-number [number]="n"></app-number>
-  <app-number-special [number]="n"></app-number-special>
-</ng-container>
-```
-
 <Tabs>
 
 <TabItem value="ngIf" label="ngIf hack">
