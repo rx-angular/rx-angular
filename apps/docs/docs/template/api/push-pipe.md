@@ -46,7 +46,7 @@ _Example_
 - Handling null and undefined values in a clean unified/structured way
 - Distinct same values in a row to increase performance
 - Coalescing of change detection calls to boost performance
-- Lazy rendering (see [RxLet](./rx-let-directive))
+- Lazy rendering (see [RxLet](./rx-let-directive.mdx))
 - Chunked rendering
 
 ## Signature
