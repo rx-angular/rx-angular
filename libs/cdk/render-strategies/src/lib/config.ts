@@ -11,6 +11,9 @@ export interface RxRenderStrategiesConfig<T extends string> {
   primaryStrategy?: RxStrategyNames<T>;
   customStrategies?: RxCustomStrategyCredentials<T>;
   patchZone?: boolean;
+  /**
+   *  @deprecated This flag will be dropped soon, as it is no longer required when using signal based view & content queries
+   */
   parent?: boolean;
 }
 
@@ -31,7 +34,7 @@ export const RX_RENDER_STRATEGIES_DEFAULTS: Required<
 } as const;
 
 export function mergeDefaultConfig<T extends string>(
-  cfg?: RxRenderStrategiesConfig<T>
+  cfg?: RxRenderStrategiesConfig<T>,
 ): Required<RxRenderStrategiesConfig<T | RxDefaultStrategyNames>> {
   const custom: RxRenderStrategiesConfig<T> = cfg
     ? cfg

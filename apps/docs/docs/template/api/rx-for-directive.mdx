@@ -293,13 +293,13 @@ export class ListComponent {
 
 **Rendering**
 
-| Input            | Type                                                               | description                                                                                                                                                                                                                                                                                      |
-| ---------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `trackBy`        | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                                                                                            |
-| `patchZone`      | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxFor` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
-| `parent`         | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxFor` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
-| `strategy`       | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                             |
-| `renderCallback` | `Subject<U>`                                                       | giving the developer the exact timing when the `RxFor` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
+| Input                 | Type                                                               | description                                                                                                                                                                                                                                                                                      |
+| --------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `trackBy`             | `keyof T` or `(index: number, item: T) => any`                     | Identifier function for items. `rxFor` provides a shorthand where you can name the property directly.                                                                                                                                                                                            |
+| `patchZone`           | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxFor` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
+| `parent` (deprecated) | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxFor` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
+| `strategy`            | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                             |
+| `renderCallback`      | `Subject<U>`                                                       | giving the developer the exact timing when the `RxFor` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
 
 ## Context Variables
 
@@ -358,6 +358,41 @@ export class AppComponent {
 Learn more about the general concept of [`RenderStrategies`](../../cdk/render-strategies) especially the section [usage-in-the-template](../../cdk/render-strategies#usage-in-the-template) if you need more clarity.
 
 #### Local strategies and view/content queries (`parent`)
+
+:::warning
+
+**Deprecation warning**
+
+The `parent` flag being true is not needed anymore with the new [signal based view queries](https://angular.io/guide/signal-queries).
+
+The flag itself is deprecated now and will be removed in future versions.
+
+However, for the time being: if you are already using the signal queries, you definitely want to set the `parent` flag to be false. We highly recommend doing so, as it reduces the amount of
+change detection cycles significantly, thus improving the runtime performance of your apps.
+
+You can do so by providing a custom `RxRenderStrategiesConfig`, see the following example:
+
+```typescript
+// import
+import { RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+
+// create configuration with parent flag to be false
+const rxaConfig: RxRenderStrategiesConfig<string> = {
+  parent: false,
+};
+
+// provide it, in best case on root level
+{
+  providers: [
+    {
+      provide: RX_RENDER_STRATEGIES_CONFIG,
+      useValue: rxaConfig,
+    },
+  ];
+}
+```
+
+:::
 
 When local rendering strategies are used, we need to treat view and content queries in a
 special way.

@@ -1,7 +1,8 @@
 import { AfterViewInit, Component } from '@angular/core';
+import { AppShellModule } from '../app-shell/index';
 import { AppPresenter } from './app-presenter.service';
 import { MENU_ITEMS } from './app.menu';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, take, tap } from 'rxjs/operators';
 
 @Component({
@@ -9,18 +10,23 @@ import { filter, take, tap } from 'rxjs/operators';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppPresenter],
+  standalone: true,
+  imports: [AppShellModule, RouterOutlet],
 })
 export class AppComponent implements AfterViewInit {
   menuItems = MENU_ITEMS;
 
-  constructor(public vm: AppPresenter, router: Router) {
+  constructor(
+    public vm: AppPresenter,
+    router: Router,
+  ) {
     performance.mark('startRouting');
     router.events
       .pipe(
         filter((e) => e instanceof NavigationEnd),
         tap(() => console.log('endRouting')),
         tap(() => performance.mark('endRouting')),
-        take(1)
+        take(1),
       )
       .subscribe();
   }
@@ -43,21 +49,21 @@ export class AppComponent implements AfterViewInit {
           `${
             Math.round(performance.timing.domContentLoadedEventEnd) -
             Math.round(performance.timeOrigin)
-          }ms`
+          }ms`,
       );
       console.log(
         'domComplete :' +
           `${
             Math.round(performance.timing.domComplete) -
             Math.round(performance.timeOrigin)
-          }ms`
+          }ms`,
       );
       console.log(
         'loadEventEnd :' +
           `${
             Math.round(performance.timing.loadEventEnd) -
             Math.round(performance.timeOrigin)
-          }ms`
+          }ms`,
       );
     } else {
       console.log("Performance timing isn't supported.");

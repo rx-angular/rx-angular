@@ -1,13 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
+  viewChild,
   ViewChild,
+  viewChildren,
   ViewChildren,
 } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
 import { ContentChildComponent } from './content-child.component';
 import { ViewChildComponent } from './view-child.component';
-import { RxActionFactory } from '@rx-angular/state/actions';
+import { RxActionFactory, rxActions } from '@rx-angular/state/actions';
 
 @Component({
   selector: 'rxa-projected-views',
@@ -27,14 +30,7 @@ import { RxActionFactory } from '@rx-angular/state/actions';
       test1
       <rxa-view-child>
         <div>
-          <div
-            *rxLet="
-              renderCallback$;
-              let renderCbVal;
-              parent: false;
-              patchZone: false
-            "
-          >
+          <div *rxLet="renderCallback$; let renderCbVal; parent: false">
             renderCallback: {{ renderCbVal }}
           </div>
           <div
@@ -42,8 +38,7 @@ import { RxActionFactory } from '@rx-angular/state/actions';
               ui.trigger$;
               renderCallback: renderCallback$;
               let value;
-              parent: true;
-              patchZone: false
+              parent: false
             "
           >
             <rxa-content-child>
@@ -62,32 +57,39 @@ import { RxActionFactory } from '@rx-angular/state/actions';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [RxActionFactory],
 })
 export class ProjectedViewsComponent {
-  @ViewChildren('test') set test(t) {
+  @ViewChildren('test') set testDif(t) {
     console.log('ViewChild in ProjectedViewsComponent of type div', t);
+    // this thing will never fire
   }
 
-  @ViewChild(ViewChildComponent)
-  set vcVc(v) {
-    console.log(
-      'ViewChild in ProjectedViewsComponent of type ViewChildComponent: ',
-      v
-    );
+  test = viewChildren('test');
+  viewChildComponent = viewChild(ViewChildComponent);
+  contentChildComponent = viewChild(ContentChildComponent);
+
+  constructor() {
+    effect(() => {
+      console.log(
+        'ViewChild in ProjectedViewsComponent of type ContentChildComponent: ',
+        this.contentChildComponent(),
+      );
+    });
+    effect(() => {
+      console.log(
+        'ViewChild in ProjectedViewsComponent of type ViewChildComponent: ',
+        this.viewChildComponent(),
+      );
+    });
+    effect(() => {
+      console.log(
+        'ViewChild in ProjectedViewsComponent of type div: ',
+        this.test(),
+      );
+    });
   }
 
-  @ViewChild(ContentChildComponent)
-  set vcCc(v) {
-    console.log(
-      'ViewChild in ProjectedViewsComponent of type ContentChildComponent: ',
-      v
-    );
-  }
-
-  constructor(private actions: RxActionFactory<{ trigger: number }>) {}
-
-  ui = this.actions.create();
+  ui = rxActions<{ trigger: number }>();
   renderCallback$ = new Subject<any>();
 
   triggerArr$ = combineLatest([this.ui.trigger$]);

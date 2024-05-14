@@ -237,6 +237,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * }
    *
    * @param {boolean} renderParent
+   *
+   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content queries
    */
   @Input('rxForParent') renderParent = this.strategyProvider.config.parent;
 

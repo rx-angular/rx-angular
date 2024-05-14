@@ -4,6 +4,7 @@ import {
   ErrorHandler,
   QueryList,
   ViewChildren,
+  viewChildren,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
@@ -15,9 +16,7 @@ import { asapScheduler, delay } from 'rxjs';
 import { RxFor } from '../for.directive';
 import { TestComponent } from './fixtures';
 
-@Component({
-  selector: 'rx-test-cmp',
-  template: `<div>
+const testTemplate = `<div>
     <span
       #listChild
       *rxFor="let item of itemsCold$; strategy: strategy; parent: parent"
@@ -32,7 +31,11 @@ import { TestComponent } from './fixtures';
       "
       >{{ item.toString() }};</span
     >
-  </div>`,
+  </div>`;
+
+@Component({
+  selector: 'rx-test-cmp',
+  template: testTemplate,
 })
 class ParentNotifyTestComponent extends TestComponent {
   @ViewChildren('listChild')
@@ -41,17 +44,26 @@ class ParentNotifyTestComponent extends TestComponent {
   forChildren: QueryList<RxFor<number>>;
 }
 
-async function rendered(
-  component: ParentNotifyTestComponent,
-  behavior: RxRenderBehavior
-) {
+@Component({
+  selector: 'rx-test-cmp',
+  template: testTemplate,
+  imports: [RxFor],
+  standalone: true,
+})
+class ParentNotifySignalTestComponent extends TestComponent {
+  parent = false;
+  listChildren = viewChildren('listChild');
+  forChildren = viewChildren(RxFor);
+}
+
+async function rendered(component: TestComponent, behavior: RxRenderBehavior) {
   return new Promise<void>((resolve) => {
     component.renderedValue$
       .pipe(
         behavior({
           work: () => {},
         }),
-        delay(0, asapScheduler)
+        delay(0, asapScheduler),
       )
       .subscribe(() => {
         resolve();
@@ -60,93 +72,155 @@ async function rendered(
 }
 
 describe('rxFor parent-notifications', () => {
-  let fixture: ComponentFixture<ParentNotifyTestComponent>;
-  let errorHandler: ErrorHandler;
   let strategyProvider: RxStrategyProvider;
-  let component: ParentNotifyTestComponent;
+  let behavior: RxRenderBehavior;
 
-  afterEach(() => {
-    fixture = null as any;
-    errorHandler = null as any;
-  });
+  function forEachStrategy(testFn: (strategy: string) => void) {
+    describe.each([
+      ['immediate'],
+      ['userBlocking'],
+      ['normal'],
+      ['low'],
+      ['idle'],
+    ])('Strategy: %p', (strategy) => {
+      beforeEach(() => {
+        behavior = strategyProvider.strategies[strategy].behavior;
+      });
 
-  beforeAll(() => {
-    mockConsole();
-  });
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [ParentNotifyTestComponent],
-      imports: [RxFor],
-      teardown: { destroyAfterEach: true },
+      testFn(strategy);
     });
-    fixture = TestBed.createComponent(ParentNotifyTestComponent);
-    component = fixture.componentInstance;
-    strategyProvider = TestBed.inject(RxStrategyProvider);
-  });
+  }
 
-  describe.each([
-    ['immediate'],
-    ['userBlocking'],
-    ['normal'],
-    ['low'],
-    ['idle'],
-  ])('Strategy: %p', (strategy) => {
-    let behavior: RxRenderBehavior;
+  describe('legacy queries', () => {
+    let fixture: ComponentFixture<ParentNotifyTestComponent>;
+    let errorHandler: ErrorHandler;
+    let component: ParentNotifyTestComponent;
+
+    afterEach(() => {
+      fixture = null as any;
+      errorHandler = null as any;
+    });
+
+    beforeAll(() => {
+      mockConsole();
+    });
 
     beforeEach(() => {
-      behavior = strategyProvider.strategies[strategy].behavior;
+      TestBed.configureTestingModule({
+        declarations: [ParentNotifyTestComponent],
+        imports: [RxFor],
+        teardown: { destroyAfterEach: true },
+      });
+      fixture = TestBed.createComponent(ParentNotifyTestComponent);
+      component = fixture.componentInstance;
+      strategyProvider = TestBed.inject(RxStrategyProvider);
     });
 
-    describe('parent: true', () => {
-      beforeEach(() => {
-        component.strategy = strategy;
-        component.parent = true;
-        fixture.detectChanges();
-        component.itemsCold$.next([1, 2]);
+    forEachStrategy((strategy) => {
+      describe('parent: true', () => {
+        beforeEach(() => {
+          component.strategy = strategy;
+          component.parent = true;
+          fixture.detectChanges();
+          component.itemsCold$.next([1, 2]);
+        });
+
+        it('should update ViewChild', async () => {
+          await rendered(component, behavior);
+          expect(component.listChildren.length).toBe(2);
+        });
+
+        it('should update parent', async () => {
+          const cdRef = (component.forChildren.first as any).cdRef;
+          cdRef.detectChanges = jest.fn();
+          await rendered(component, behavior);
+          expect(cdRef.detectChanges).toHaveBeenCalled();
+        });
+
+        it('should scope parent notifications', async () => {
+          const cdRef = (component.forChildren.first as any).cdRef;
+          const cdRef2 = (component.forChildren.last as any).cdRef;
+          expect(cdRef2).toEqual(cdRef);
+          cdRef.detectChanges = jest.fn();
+          await rendered(component, behavior);
+          expect(cdRef.detectChanges).toHaveBeenCalledTimes(1);
+        });
       });
 
-      it('should update ViewChild', async () => {
-        await rendered(component, behavior);
-        expect(component.listChildren.length).toBe(2);
-      });
+      describe('parent: false', () => {
+        beforeEach(() => {
+          component.strategy = strategy;
+          component.parent = false;
+          fixture.detectChanges();
+          component.itemsCold$.next([1, 2]);
+        });
 
-      it('should update parent', async () => {
-        const cdRef = (component.forChildren.first as any).cdRef;
-        cdRef.detectChanges = jest.fn();
-        await rendered(component, behavior);
-        expect(cdRef.detectChanges).toHaveBeenCalled();
-      });
+        it('should not update ViewChild', async () => {
+          await rendered(component, behavior);
+          expect(component.listChildren.length).toBe(0);
+        });
 
-      it('should scope parent notifications', async () => {
-        const cdRef = (component.forChildren.first as any).cdRef;
-        const cdRef2 = (component.forChildren.last as any).cdRef;
-        expect(cdRef2).toEqual(cdRef);
-        cdRef.detectChanges = jest.fn();
-        await rendered(component, behavior);
-        expect(cdRef.detectChanges).toHaveBeenCalledTimes(1);
+        it('should not update parent', async () => {
+          const cdRef = (component.forChildren.first as any).cdRef;
+          cdRef.detectChanges = jest.fn();
+          const behavior = strategyProvider.strategies[strategy].behavior;
+          await rendered(component, behavior);
+          expect(cdRef.detectChanges).not.toHaveBeenCalled();
+        });
       });
     });
 
-    describe('parent: false', () => {
+    /*describe.each([
+      ['immediate'],
+      ['userBlocking'],
+      ['normal'],
+      ['low'],
+      ['idle'],
+    ])('Strategy: %p', (strategy) => {
+      let behavior: RxRenderBehavior;
+
       beforeEach(() => {
-        component.strategy = strategy;
-        component.parent = false;
-        fixture.detectChanges();
-        component.itemsCold$.next([1, 2]);
+        behavior = strategyProvider.strategies[strategy].behavior;
       });
 
-      it('should not update ViewChild', async () => {
-        await rendered(component, behavior);
-        expect(component.listChildren.length).toBe(0);
-      });
 
-      it('should not update parent', async () => {
-        const cdRef = (component.forChildren.first as any).cdRef;
-        cdRef.detectChanges = jest.fn();
-        const behavior = strategyProvider.strategies[strategy].behavior;
-        await rendered(component, behavior);
-        expect(cdRef.detectChanges).not.toHaveBeenCalled();
+
+    });*/
+  });
+
+  describe('signal queries', () => {
+    let fixture: ComponentFixture<ParentNotifySignalTestComponent>;
+    let component: ParentNotifySignalTestComponent;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [ParentNotifySignalTestComponent],
+      });
+      fixture = TestBed.createComponent(ParentNotifySignalTestComponent);
+      component = fixture.componentInstance;
+      strategyProvider = TestBed.inject(RxStrategyProvider);
+    });
+
+    forEachStrategy((strategy) => {
+      describe('parent: false', () => {
+        beforeEach(() => {
+          component.strategy = strategy;
+          fixture.detectChanges();
+          component.itemsCold$.next([1, 2]);
+        });
+
+        it('should update viewchildren', async () => {
+          await rendered(component, behavior);
+          expect(component.listChildren().length).toBe(2);
+        });
+
+        it('should not update parent', async () => {
+          const cdRef = (component.forChildren()[0] as any)?.cdRef;
+          cdRef.detectChanges = jest.fn();
+          const behavior = strategyProvider.strategies[strategy].behavior;
+          await rendered(component, behavior);
+          expect(cdRef.detectChanges).not.toHaveBeenCalled();
+        });
       });
     });
   });
