@@ -44,14 +44,14 @@ export function select<T>(): MonoTypeOperatorFunction<T>;
  * @docsCategory operators
  */
 export function select<T, A>(
-  op: OperatorFunction<T, A>
+  op: OperatorFunction<T, A>,
 ): OperatorFunction<T, A>;
 /**
  * @internal
  */
 export function select<T, A, B>(
   op1: OperatorFunction<T, A>,
-  op2: OperatorFunction<A, B>
+  op2: OperatorFunction<A, B>,
 ): OperatorFunction<T, B>;
 /**
  * @internal
@@ -59,7 +59,7 @@ export function select<T, A, B>(
 export function select<T, A, B, C>(
   op1: OperatorFunction<T, A>,
   op2: OperatorFunction<A, B>,
-  op3: OperatorFunction<B, C>
+  op3: OperatorFunction<B, C>,
 ): OperatorFunction<T, C>;
 /**
  * @internal
@@ -68,7 +68,7 @@ export function select<T, A, B, C, D>(
   op1: OperatorFunction<T, A>,
   op2: OperatorFunction<A, B>,
   op3: OperatorFunction<B, C>,
-  op4: OperatorFunction<C, D>
+  op4: OperatorFunction<C, D>,
 ): OperatorFunction<T, D>;
 /**
  * @internal
@@ -78,7 +78,7 @@ export function select<T, A, B, C, D, E>(
   op2: OperatorFunction<A, B>,
   op3: OperatorFunction<B, C>,
   op4: OperatorFunction<C, D>,
-  op5: OperatorFunction<D, E>
+  op5: OperatorFunction<D, E>,
 ): OperatorFunction<T, E>;
 
 /**
@@ -100,7 +100,7 @@ export function select<T, A, B, C, D, E>(
 export function select<T extends object, K extends keyof T, R>(
   keys: K[],
   fn?: (slice: PickSlice<T, K>) => R,
-  keyCompareMap?: KeyCompareMap<Pick<T, K>>
+  keyCompareMap?: KeyCompareMap<Pick<T, K>>,
 ): OperatorFunction<T, R>;
 
 /**
@@ -116,7 +116,7 @@ export function select<T extends object, K extends keyof T, R>(
  */
 export function select<T, K extends keyof T, R>(
   k: K,
-  fn: (val: T[K]) => R
+  fn: (val: T[K]) => R,
 ): OperatorFunction<T, R>;
 
 /**
@@ -134,14 +134,14 @@ export function select<T, K extends keyof T, R>(
  * @return Observable<T[K1]>
  */
 export function select<T, K1 extends keyof T>(
-  k1: K1
+  k1: K1,
 ): OperatorFunction<T, T[K1]>;
 /**
  * @internal
  */
 export function select<T, K1 extends keyof T, K2 extends keyof T[K1]>(
   k1: K1,
-  k2: K2
+  k2: K2,
 ): OperatorFunction<T, T[K1][K2]>;
 /**
  * @internal
@@ -150,7 +150,7 @@ export function select<
   T,
   K1 extends keyof T,
   K2 extends keyof T[K1],
-  K3 extends keyof T[K1][K2]
+  K3 extends keyof T[K1][K2],
 >(k1: K1, k2: K2, k3: K3): OperatorFunction<T, T[K1][K2][K3]>;
 /**
  * @internal
@@ -160,7 +160,7 @@ export function select<
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
-  K4 extends keyof T[K1][K2][K3]
+  K4 extends keyof T[K1][K2][K3],
 >(k1: K1, k2: K2, k3: K3, k4: K4): OperatorFunction<T, T[K1][K2][K3][K4]>;
 /**
  * @internal
@@ -171,13 +171,13 @@ export function select<
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
-  K5 extends keyof T[K1][K2][K3][K4]
+  K5 extends keyof T[K1][K2][K3][K4],
 >(
   k1: K1,
   k2: K2,
   k3: K3,
   k4: K4,
-  k5: K5
+  k5: K5,
 ): OperatorFunction<T, T[K1][K2][K3][K4][K5]>;
 /**
  * @internal
@@ -189,14 +189,14 @@ export function select<
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
   K5 extends keyof T[K1][K2][K3][K4],
-  K6 extends keyof T[K1][K2][K3][K4][K5]
+  K6 extends keyof T[K1][K2][K3][K4][K5],
 >(
   k1: K1,
   k2: K2,
   k3: K3,
   k4: K4,
   k5: K5,
-  k6: K6
+  k6: K6,
 ): OperatorFunction<T, T[K1][K2][K3][K4][K5][K6]>;
 
 /**
@@ -210,7 +210,7 @@ export function select<T extends Record<string, unknown>>(
     | [
         keys: string[],
         fn?: (slice: unknown) => unknown,
-        keyCompareMap?: KeyCompareMap<T>
+        keyCompareMap?: KeyCompareMap<T>,
       ]
 ): OperatorFunction<T, unknown> {
   return (state$: Observable<T>) => {
@@ -223,8 +223,8 @@ export function select<T extends Record<string, unknown>>(
         state$.pipe(
           selectSlice<T & object, keyof T>(
             opOrMapFn[0] as (keyof T)[],
-            opOrMapFn[2] as KeyCompareMap<{ [P in keyof T]: (T & object)[P] }>
-          )
+            opOrMapFn[2] as KeyCompareMap<{ [P in keyof T]: (T & object)[P] }>,
+          ),
         );
       return typeof opOrMapFn[1] === 'undefined'
         ? selectedState$
@@ -232,8 +232,8 @@ export function select<T extends Record<string, unknown>>(
     } else if (isStringArrayGuard(opOrMapFn)) {
       return state$.pipe(
         stateful(
-          map((state) => opOrMapFn.reduce((acc, key) => acc?.[key], state))
-        )
+          map((state) => opOrMapFn.reduce((acc, key) => acc?.[key], state)),
+        ),
       );
     } else if (isOperateFnArrayGuard(opOrMapFn)) {
       return state$.pipe(stateful(pipeFromArray(opOrMapFn)));

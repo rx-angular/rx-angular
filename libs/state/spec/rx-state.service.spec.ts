@@ -199,7 +199,7 @@ describe('RxStateService', () => {
       const errorMessage = 'wrong params passed to select';
       expect(() => state.select(true as any)).toThrowError(errorMessage);
       expect(() => state.asReadOnly().select(true as any)).toThrowError(
-        errorMessage
+        errorMessage,
       );
     });
 
@@ -276,7 +276,7 @@ describe('RxStateService', () => {
         testScheduler.run(({ expectObservable }) => {
           const state = setupState({ initialState: initialPrimitiveState });
           expectObservable(
-            state.select(['num', 'str'], ({ num, str }) => `${str}: ${num}`)
+            state.select(['num', 'str'], ({ num, str }) => `${str}: ${num}`),
           ).toBe('s', {
             s: `${initialPrimitiveState.str}: ${initialPrimitiveState.num}`,
           });
@@ -304,8 +304,8 @@ describe('RxStateService', () => {
             state.select(
               ['num', 'obj'],
               ({ num, obj }) => `${num}: ${obj.key1.key11.key111}`,
-              { obj: (a, b) => a.key1.key11.key111 === b.key1.key11.key111 }
-            )
+              { obj: (a, b) => a.key1.key11.key111 === b.key1.key11.key111 },
+            ),
           ).toBe('s', {
             s: `${initialPrimitiveState.num}: ${initialNestedState.obj.key1.key11.key111}`,
           });
@@ -339,7 +339,7 @@ describe('RxStateService', () => {
         const state = setupState({ initialState: initialPrimitiveState });
 
         expect(() =>
-          state.set('wrong params passed to set' as any)
+          state.set('wrong params passed to set' as any),
         ).toThrowError('wrong param');
       });
     });
@@ -400,7 +400,7 @@ describe('RxStateService', () => {
         });
 
         state.connect(
-          scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler)
+          scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler),
         );
       });
     });
@@ -418,8 +418,8 @@ describe('RxStateService', () => {
           'num',
           scheduled(
             [{ num: 42 }, { num: 43 }, { num: 44 }],
-            testScheduler
-          ).pipe(map((s) => s.num))
+            testScheduler,
+          ).pipe(map((s) => s.num)),
         );
       });
     });
@@ -435,7 +435,7 @@ describe('RxStateService', () => {
 
         state.connect(
           scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler),
-          (s, n) => ({ num: n.num })
+          (s, n) => ({ num: n.num }),
         );
       });
     });
@@ -452,7 +452,7 @@ describe('RxStateService', () => {
         state.connect(
           'num',
           scheduled([{ num: 42 }, { num: 43 }, { num: 44 }], testScheduler),
-          (s, v) => v.num
+          (s, v) => v.num,
         );
       });
     });
@@ -471,9 +471,9 @@ describe('RxStateService', () => {
         state.connect(
           scheduled(
             [{ num: undefined }, { num: 43 }, { num: undefined }],
-            testScheduler
+            testScheduler,
           ),
-          (o, n) => n
+          (o, n) => n,
         );
       });
     });
@@ -492,7 +492,7 @@ describe('RxStateService', () => {
         state.connect(
           'num',
           scheduled([undefined, 43, undefined], testScheduler),
-          (o, n) => n
+          (o, n) => n,
         );
       });
     });
@@ -510,7 +510,7 @@ describe('RxStateService', () => {
 
         state.connect(
           'num',
-          scheduled([undefined, 43, undefined], testScheduler)
+          scheduled([undefined, 43, undefined], testScheduler),
         );
       });
     });
@@ -529,9 +529,9 @@ describe('RxStateService', () => {
         state.connect(
           scheduled(
             [{ num: undefined }, { num: 43 }, { num: undefined }],
-            testScheduler
+            testScheduler,
           ),
-          (sta, newVal) => newVal
+          (sta, newVal) => newVal,
         );
       });
     });
@@ -540,7 +540,7 @@ describe('RxStateService', () => {
       const state = setupState({ initialState: initialPrimitiveState });
 
       expect(() => state.connect('some string' as any)).toThrowError(
-        'wrong params passed to connect'
+        'wrong params passed to connect',
       );
     });
 
@@ -602,10 +602,10 @@ describe('RxStateService', () => {
             switchMap(() =>
               interval$.pipe(
                 map((num) => ({ num })),
-                take(3)
-              )
-            )
-          )
+                take(3),
+              ),
+            ),
+          ),
         ).toBe('');
         expectSubscriptions(interval$.subscriptions).toBe(subs);
         state.ngOnDestroy();
@@ -622,9 +622,9 @@ describe('RxStateService', () => {
           readOnlyState['connect'](
             scheduled(
               [{ num: undefined }, { num: 43 }, { num: undefined }],
-              testScheduler
+              testScheduler,
             ),
-            (o, n) => n
+            (o, n) => n,
           );
         }).toThrowError('readOnlyState.connect is not a function');
       });
