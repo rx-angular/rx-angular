@@ -10,7 +10,7 @@ export function isPromiseGuard<T>(value: unknown): value is Promise<T> {
 }
 
 export function isOperateFnArrayGuard<T, R = T>(
-  op: any[]
+  op: any[],
 ): op is OperatorFunction<T, R>[] {
   if (!Array.isArray(op)) {
     return false;
@@ -55,13 +55,13 @@ export function isDefined(val: unknown): val is NonNullable<any> {
 }
 
 export function isStringAndFunctionTupleGuard<R>(
-  op: unknown[]
+  op: unknown[],
 ): op is [string, (val: any) => R] {
   return typeof op[0] === 'string' && typeof op[1] === 'function';
 }
 
 export function isStringArrayFunctionAndOptionalObjectTupleGuard<R>(
-  op: unknown[]
+  op: unknown[],
 ): op is [strs: string[], fn: (val: any) => R, obj?: object] {
   return (
     isStringArrayGuard(op[0] as any) &&
