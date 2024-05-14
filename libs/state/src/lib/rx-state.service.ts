@@ -157,6 +157,10 @@ export class RxState<State extends object>
    *
    * @param {AccumulationFn} accumulatorFn
    * @return void
+   *
+   * @deprecated
+   * Use `provideRxStateConfig` and provide the accumulator with the `withAccumulator` provider function.
+   * Will be removed in future versions.
    */
   setAccumulator(accumulatorFn: AccumulationFn): void {
     this.accumulator.nextAccumulator(accumulatorFn);
