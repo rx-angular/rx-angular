@@ -1,14 +1,13 @@
 ---
-sidebar_label: Setup
+sidebar_label: Getting Started
 sidebar_position: 2
-title: Setup
-# Renamed from libs/state/docs/usage.md
+title: Getting Started
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-## Basic Setup
+## Create a State Instance
 
 The new functional creation API lets you create and configure `RxState` in only one place.
 
@@ -113,8 +112,8 @@ export class MovieListComponent {
         // start with loading true
         startWith({ loading: true }),
         // when request completes, we can set loading to false
-        endWith({ loading: false })
-      )
+        endWith({ loading: false }),
+      ),
     );
   });
 
@@ -301,9 +300,7 @@ export class MovieListComponent {
     // use the oldState and the searchInput to calculate the new state
     //highlight-start
     connect('movies', this.search.valueChanges, (oldState, searchInput) => {
-      return oldState.movies.filter((movie) =>
-        movie.title.includes(searchInput)
-      );
+      return oldState.movies.filter((movie) => movie.title.includes(searchInput));
     });
     //highlight-end
   });
@@ -339,27 +336,22 @@ export class MovieListComponent {
 
   search = new FormControl<string>();
 
-  private state = rxState<{ movies: Movie[]; searchValue: string }>(
-    ({ set, connect }) => {
-      // set initial state
-      set({ movies: [], searchValue: string });
-      // connect global state to your local state
-      connect('movies', this.store.select('movies'));
+  private state = rxState<{ movies: Movie[]; searchValue: string }>(({ set, connect }) => {
+    // set initial state
+    set({ movies: [], searchValue: string });
+    // connect global state to your local state
+    connect('movies', this.store.select('movies'));
 
-      // use the oldState and the searchInput to calculate the new state
-      //highlight-next-line
-      connect('searchValue', this.search.valueChanges);
-    }
-  );
+    // use the oldState and the searchInput to calculate the new state
+    //highlight-next-line
+    connect('searchValue', this.search.valueChanges);
+  });
 
   // derive filteredMovies$ from your stored state as an observable
   //highlight-next-line
-  filteredMovies$ = this.state.select(
-    ['movies', 'searchValue'],
-    (movies, searchValue) => {
-      return movies.filter((movie) => movie.title.includes(searchValue));
-    }
-  ); // Observable<Movie[]>
+  filteredMovies$ = this.state.select(['movies', 'searchValue'], (movies, searchValue) => {
+    return movies.filter((movie) => movie.title.includes(searchValue));
+  }); // Observable<Movie[]>
 
   // derive filteredMovies from your stored state as a signal
   //highlight-next-line
@@ -372,7 +364,7 @@ export class MovieListComponent {
   filteredMovies = this.state.computedFrom(
     select('searchValue'),
     switchMap((searchValue) => this.movieResource.fetchMovies(searchValue)),
-    startWith([] as Movie[]) // needed as the initial value otherwise it will throw an error
+    startWith([] as Movie[]), // needed as the initial value otherwise it will throw an error
   ); // Signal<Movie[]>
 }
 ```
@@ -389,7 +381,7 @@ import { rxState } from '@rx-angular/state';
 export class MovieService {
   private resource = inject(MovieResource);
 
-  private state = rxState<{ movies: Movie[] }>(({ set, connect }) => {
+  readonly state = rxState<{ movies: Movie[] }>(({ set, connect }) => {
     // set initial state
     set({ movies: [] });
     // connect global state to your local state
@@ -401,12 +393,32 @@ export class MovieService {
 
   // select a property for the template to consume as a signal
   movies = this.state.signal('movies'); // Signal<Movie[]>
+}
+```
 
-  // expose the select method
-  select: typeof this.state.select = this.state.select.bind(this.state);
+## expose readOnly rxState from a Service
 
-  // expose the signal method
-  signal: typeof this.state.signal = this.state.signal.bind(this.state);
+If you only want to expose your `RxState` instance as a readonly state, you can use the new `asReadOnly()` function.
+This allows you to only expose APIs that allows consumers to read from your state. Write access remains private to the
+owner of the `RxState` instance.
+
+```typescript
+import { inject, Injectable } from '@angular/core';
+import { rxState } from '@rx-angular/state';
+
+@Injectable({ providedIn: 'root' })
+export class MovieService {
+  private resource = inject(MovieResource);
+
+  private readonly _state = rxState<{ movies: Movie[] }>(({ set, connect }) => {
+    // set initial state
+    set({ movies: [] });
+    // connect global state to your local state
+    connect('movies', this.resource.fetchMovies());
+  });
+
+  // consumers can use `get`, `select`, `signal` and `compute`
+  readonly state = this._state.asReadOnly();
 }
 ```
 
@@ -449,19 +461,116 @@ export class MovieListComponent {
 }
 ```
 
-## Custom state accumulation (mutability)
+## Configuration
+
+There are a couple of settings you can adjust when using `RxState`.
+
+### provideRxStateConfig
+
+Configurations for `RxState` instances are provided in the DI tree by using the `provideRxStateConfig` provider function.
+
+```typescript title="main.ts"
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { provideRxStateConfig } from '@rx-angular/state';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRxStateConfig(),
+    /* define features here */
+  ],
+});
+```
+
+### Scheduler
+
+By default, `RxState` observes changes and computes new states on the [`queueScheduler`](https://rxjs.dev/api/index/const/queueScheduler). You can modify
+this behavior by using the `withScheduler()` or `withSyncScheduler()` configuration features.
+
+The most applicable use case will be to have sync scheduling:
+
+```typescript title="main.ts"
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { provideRxStateConfig, withSyncScheduler } from '@rx-angular/state';
+
+bootstrapApplication(AppComponent, {
+  providers: [provideRxStateConfig(withSyncScheduler())],
+});
+```
+
+It is however also possible to define whatever `SchedulerLike` you want, e.g. make your state asynchronous by using the `asapScheduler`.
+
+```typescript title="main.ts"
+import { bootstrapApplication } from '@angular/platform-browser';
+import { asapScheduler } from 'rxjs';
+import { AppComponent } from './app.component';
+import { provideRxStateConfig, withScheduler } from '@rx-angular/state';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRxStateConfig(
+      /* use the asapScheduler to new states -> makes the state async! */
+      withScheduler(asapScheduler),
+    ),
+  ],
+});
+```
+
+### Accumulator
+
+The accumulator defines how state transitions from change to change and how slices are integrated into the state.
+
+By default, `RxState` operators immutable on the top level of the state. Deeply nested objects are shallow cloned on state changes.
+In order to adjust this behavior or add new functionality, you can define your own `AccumulatorFn`. This enables you to e.g. integrate an `immer` based
+state management.
 
 The `AccumulationFn` is a function that runs on every state change and is responsible for building a new state from a given input.
 By default it merges together the state by spreading it - producing a new object on every change.
 
-```typescript
-const defaultAccumulator: AccumulationFn = <T>(
-  state: T,
-  slice: Partial<T>
-): T => {
+```typescript title="default-accumulator.ts"
+import { AccumulationFn } from '@rx-angular/state/selections';
+
+const defaultAccumulator: AccumulationFn = <T>(state: T, slice: Partial<T>): T => {
   return { ...state, ...slice };
 };
 ```
+
+#### withAccumulator
+
+Use the `withAccumulator` configuration feature to set a custom `AccumulatorFn` via the DI tree.
+
+```typescript title="main.ts"
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { provideRxStateConfig, withAccumulator } from '@rx-angular/state';
+
+import { produce } from 'immer';
+
+const immerAccumulator = (state, slice) =>
+  produce(state, (draft) => {
+    Object.keys(slice).forEach((k) => {
+      draft[k] = slice[k];
+    });
+  });
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRxStateConfig(
+      /* use the asapScheduler to new states -> makes the state async! */
+      withAccumulator(immerAccumulator),
+    ),
+  ],
+});
+```
+
+#### (deprecated) Custom state accumulation (mutability)
+
+:::warning deprecated
+
+The `setAccumulator` API is deprecated in favor of the `withAccumulator` configuration feature
+
+:::
 
 Use `setAccumulator` to change that behavior. This way you could e.g. introduce `immer` as your accumulation to have
 full immutability.
@@ -483,8 +592,7 @@ state = rxState(({ setAccumulator }) => setAccumulator(immerAccumulator));
 Or you can use any other custom deep-copying algorithm or simply go fully mutable.
 
 ```typescript
-const myAccumulator = (state: MyState, slice: Partial<MyState>) =>
-  deepCopy(state, slice);
+const myAccumulator = (state: MyState, slice: Partial<MyState>) => deepCopy(state, slice);
 state.setAccumulator(myAccumulator);
 ```
 
@@ -578,10 +686,7 @@ import { Component } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
-  template: `<movie
-    (click)="deleteClick$.next(item.id)"
-    *rxFor="let item of items$"
-  />`,
+  template: `<movie (click)="deleteClick$.next(item.id)" *rxFor="let item of items$" />`,
   providers: [RxState],
 })
 export class MovieListComponent {
@@ -591,11 +696,9 @@ export class MovieListComponent {
 
   constructor(
     private state: RxState<{ movies: Movie[] }>,
-    private movieResource: MovieResource
+    private movieResource: MovieResource,
   ) {
-    this.state.hold(
-      this.deleteClick$.pipe(concatMap((id) => this.movieResource.delete(id)))
-    );
+    this.state.hold(this.deleteClick$.pipe(concatMap((id) => this.movieResource.delete(id))));
   }
 }
 ```
