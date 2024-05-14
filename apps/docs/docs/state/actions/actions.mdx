@@ -38,7 +38,7 @@ Actions are an essential part of any state management system. They represent uni
 system events or device APIs. From a pure technical perspective, actions are the triggers for state changes and side effect executions.
 The `@rx-angular/state/actions` package helps to reduce & streamline your code used to create composable action streams.
 
-It is best suited to be used in combination with [RxState](./setup) and/or [RxEffects](./effects) but can also be
+It is best suited to be used in combination with [RxState](./getting-started) and/or [RxEffects](./effects) but can also be
 used in a standalone way.
 
 :::note
@@ -93,9 +93,7 @@ class LoginComponent {
   actions = rxActions<{ login: { username: string; password: string } }>();
 
   constructor(private service: AuthService) {
-    this.actions.login$
-      .pipe(exhaustMap((credentials) => this.service.login(credentials)))
-      .subscribe();
+    this.actions.login$.pipe(exhaustMap((credentials) => this.service.login(credentials))).subscribe();
   }
 }
 ```
@@ -138,15 +136,12 @@ class LoginComponent {
   actions = rxActions<{ login: { username: string; password: string } }>();
 
   private loginEffect = this.actions.onLogin(
-    (credentials$) =>
-      credentials$.pipe(
-        exhaustMap((credentials) => this.service.login(credentials))
-      ),
-    () => this.doc.defaultView.alert('successfully logged in')
+    (credentials$) => credentials$.pipe(exhaustMap((credentials) => this.service.login(credentials))),
+    () => this.doc.defaultView.alert('successfully logged in'),
   );
   constructor(
     private service: AuthService,
-    @Inject(DOCUMENT) private doc: Document
+    @Inject(DOCUMENT) private doc: Document,
   ) {}
 }
 ```
@@ -170,10 +165,9 @@ export class MovieService {
 
   private refreshEffect = this.actions.onRefresh(
     // data refresh with applied behaviour
-    (refresh$) =>
-      refresh$.pipe(exhaustMap(() => this.movieResource.getMovies())),
+    (refresh$) => refresh$.pipe(exhaustMap(() => this.movieResource.getMovies())),
     // set the value to the state
-    (movies) => this.movies.set(movies)
+    (movies) => this.movies.set(movies),
   );
 
   refresh() {
@@ -200,10 +194,9 @@ export class MovieService {
   // highlight-start
   private refreshEffect = this.actions.onRefresh(
     // data refresh with applied behaviour
-    (refresh$) =>
-      refresh$.pipe(exhaustMap(() => this.movieResource.getMovies())),
+    (refresh$) => refresh$.pipe(exhaustMap(() => this.movieResource.getMovies())),
     // set the value to the state
-    (movies) => this.movies.set(movies)
+    (movies) => this.movies.set(movies),
   );
   // highlight-end
 
@@ -251,7 +244,7 @@ import { rxActions, eventValue } from '@rx-angular/state/actions';
 class ListComponent {
   actions = rxActions<{ search: string }>(({ transforms }) =>
     // if event is forwarded pluck the value `e?.target?.value` else forward the value as is
-    transforms({ search: eventValue })
+    transforms({ search: eventValue }),
   );
 }
 ```
@@ -274,7 +267,7 @@ export class GreetComponent {
     transforms({
       // highlight-next-line
       greet: (v) => `Hello ${v}`,
-    })
+    }),
   );
 }
 ```
@@ -367,9 +360,7 @@ export class LoginComponent {
   actions = rxActions<{ login: { username: string; password: string } }>();
 
   constructor(private service: AuthService) {
-    this.actions.login$
-      .pipe(exhaustMap((credentials) => this.service.login(credentials)))
-      .subscribe();
+    this.actions.login$.pipe(exhaustMap((credentials) => this.service.login(credentials))).subscribe();
   }
 }
 ```
@@ -405,9 +396,7 @@ describe('LoginComponent', () => {
   it('login on form submit', () => {
     // arrange
     const username = fixture.debugElement.query(By.css('input:first-child'));
-    const password = fixture.debugElement.query(
-      By.css('input[type="password"]')
-    );
+    const password = fixture.debugElement.query(By.css('input[type="password"]'));
     const btn = fixture.debugElement.query(By.css('button'));
     const loginSpy = jest.spyOn(service, 'login');
     username.nativeElement.value = 'user';
@@ -450,10 +439,7 @@ describe('MovieService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        MovieService,
-        { provide: MovieResource, useClass: MovieResourceMock },
-      ],
+      providers: [MovieService, { provide: MovieResource, useClass: MovieResourceMock }],
     }).compileComponents();
     service = TestBed.inject(MovieService);
     resource = TestBed.inject(MovieResource) as any;
@@ -515,9 +501,7 @@ describe('LoginComponent', () => {
   it('should alert success after login', () => {
     // arrange
     const username = fixture.debugElement.query(By.css('input:first-child'));
-    const password = fixture.debugElement.query(
-      By.css('input[type="password"]')
-    );
+    const password = fixture.debugElement.query(By.css('input[type="password"]'));
     const btn = fixture.debugElement.query(By.css('button'));
     const alertSpy = jest.spyOn(documentMock.defaultView, 'alert');
     username.nativeElement.value = 'user';
@@ -558,10 +542,7 @@ describe('MovieService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        MovieService,
-        { provide: MovieResource, useClass: MovieResourceMock },
-      ],
+      providers: [MovieService, { provide: MovieResource, useClass: MovieResourceMock }],
     }).compileComponents();
     service = TestBed.inject(MovieService);
     resource = TestBed.inject(MovieResource);
@@ -601,9 +582,7 @@ describe('GreetComponent', () => {
     const div = fixture.debugElement.query(By.css('div'));
     input.nativeElement.value = 'me';
     // act
-    (input.nativeElement as HTMLInputElement).dispatchEvent(
-      new InputEvent('input')
-    );
+    (input.nativeElement as HTMLInputElement).dispatchEvent(new InputEvent('input'));
     fixture.detectChanges();
     // assert
     expect(div.nativeElement.textContent.trim()).toBe('Hello me');
