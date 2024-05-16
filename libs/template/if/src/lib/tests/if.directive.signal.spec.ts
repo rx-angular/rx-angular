@@ -329,7 +329,7 @@ describe('rxIf directive signal values', () => {
       fixture = createTestComponent(template);
 
       expect(() => fixture.detectChanges()).toThrowError(
-        /rxThen must be a TemplateRef, but received/
+        /rxThen must be a TemplateRef, but received/,
       );
     }));
 
@@ -341,7 +341,7 @@ describe('rxIf directive signal values', () => {
       fixture = createTestComponent(template);
 
       expect(() => fixture.detectChanges()).toThrowError(
-        /rxElse must be a TemplateRef, but received/
+        /rxElse must be a TemplateRef, but received/,
       );
     }));
   });
@@ -429,7 +429,7 @@ describe('rxIf directive signal values', () => {
 
       fixture = createTestComponent(template);
       getComponent().booleanConditionSignal = throwError(() => null).pipe(
-        startWith(true)
+        startWith(true),
       ) as any;
       fixture.detectChanges();
       expect(fixture.nativeElement.textContent).toBe('true');

@@ -64,7 +64,7 @@ describe('RxIf signal parent notification', () => {
         const behavior = strategyProvider.strategies[strategy].behavior;
         await rendered(componentInstance.rendered$, behavior);
         expect(
-          componentInstance.ifChild()?.nativeElement?.textContent?.trim()
+          componentInstance.ifChild()?.nativeElement?.textContent?.trim(),
         ).toBe('hello');
       });
     });
@@ -73,7 +73,7 @@ describe('RxIf signal parent notification', () => {
 
 async function rendered(
   rendered$: Observable<any>,
-  behavior: RxRenderBehavior
+  behavior: RxRenderBehavior,
 ) {
   return new Promise<void>((resolve) => {
     rendered$
@@ -81,7 +81,7 @@ async function rendered(
         behavior({
           work: () => {},
         }),
-        delay(0, asapScheduler)
+        delay(0, asapScheduler),
       )
       .subscribe(() => {
         resolve();

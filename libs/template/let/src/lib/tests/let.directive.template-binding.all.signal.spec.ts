@@ -41,8 +41,8 @@ import { MockChangeDetectorRef } from './fixtures';
         value === undefined
           ? 'undefined'
           : value === null
-          ? 'null'
-          : (value | json)
+            ? 'null'
+            : (value | json)
       }}</ng-container
     >
 
@@ -121,7 +121,7 @@ describe('LetDirective reactive context templates w/ signals', () => {
   it('should render "error" template on observable error', () => {
     component.valueSignal = toSignal(
       throwError(() => new Error('test error')),
-      { injector }
+      { injector },
     );
     fixture.detectChanges();
     expectContentToBe('error');

@@ -16,14 +16,17 @@ import { filter, take, tap } from 'rxjs/operators';
 export class AppComponent implements AfterViewInit {
   menuItems = MENU_ITEMS;
 
-  constructor(public vm: AppPresenter, router: Router) {
+  constructor(
+    public vm: AppPresenter,
+    router: Router,
+  ) {
     performance.mark('startRouting');
     router.events
       .pipe(
         filter((e) => e instanceof NavigationEnd),
         tap(() => console.log('endRouting')),
         tap(() => performance.mark('endRouting')),
-        take(1)
+        take(1),
       )
       .subscribe();
   }
@@ -46,21 +49,21 @@ export class AppComponent implements AfterViewInit {
           `${
             Math.round(performance.timing.domContentLoadedEventEnd) -
             Math.round(performance.timeOrigin)
-          }ms`
+          }ms`,
       );
       console.log(
         'domComplete :' +
           `${
             Math.round(performance.timing.domComplete) -
             Math.round(performance.timeOrigin)
-          }ms`
+          }ms`,
       );
       console.log(
         'loadEventEnd :' +
           `${
             Math.round(performance.timing.loadEventEnd) -
             Math.round(performance.timeOrigin)
-          }ms`
+          }ms`,
       );
     } else {
       console.log("Performance timing isn't supported.");

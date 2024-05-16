@@ -61,12 +61,8 @@ The following states can apply to this UI:
 @Component({
   selector: 'any-component',
   template: `
-    <ng-container
-      *ngIf="count$ | async as count; else loadingOrErrorOrComplete"
-    >
-      <p *ngIf="count > 0 && count !== undefined; else empty">
-        Count: {{ count }}
-      </p>
+    <ng-container *ngIf="count$ | async as count; else loadingOrErrorOrComplete">
+      <p *ngIf="count > 0 && count !== undefined; else empty">Count: {{ count }}</p>
 
       <ng-template #empty> Negative Count </ng-template>
     </ng-container>
@@ -106,18 +102,7 @@ A good example is the [`rxLet`](../../template/api/rx-let-directive.mdx) directi
 @Component({
   selector: 'any-component',
   template: `
-    <p
-      *rxIf="
-        count$;
-        let count;
-        else: empty;
-        suspense: loading;
-        error: error;
-        complete: complete
-      "
-    >
-      Count: {{ count }}
-    </p>
+    <p *rxIf="count$; let count; else: empty; suspense: loading; error: error; complete: complete">Count: {{ count }}</p>
 
     <ng-template #empty> Negative Count </ng-template>
 
@@ -164,38 +149,27 @@ For wrapping a value into a RxNotification we provide 3 helpers:
 
 ```typescript
 const errorNotification: RxErrorNotification<any> = toRxErrorNotification();
-const errorNotification: RxErrorNotification<any> = toRxErrorNotification(
-  new Error()
-);
-const errorNotification: RxErrorNotification<string> = toRxErrorNotification(
-  new Error(),
-  'lastValue'
-);
+const errorNotification: RxErrorNotification<any> = toRxErrorNotification(new Error());
+const errorNotification: RxErrorNotification<string> = toRxErrorNotification(new Error(), 'lastValue');
 ```
 
 **toRxSuspenseNotification**
 
 ```typescript
-const toRxSuspenseNotification: RxSuspenseNotification<any> =
-  toRxSuspenseNotification();
-const toRxSuspenseNotification: RxSuspenseNotification<string> =
-  toRxSuspenseNotification('lastValue');
+const toRxSuspenseNotification: RxSuspenseNotification<any> = toRxSuspenseNotification();
+const toRxSuspenseNotification: RxSuspenseNotification<string> = toRxSuspenseNotification('lastValue');
 ```
 
 **toRxCompleteNotification**
 
 ```typescript
-const toRxCompleteNotification: RxCompleteNotification<any> =
-  toRxCompleteNotification();
-const toRxCompleteNotification: RxCompleteNotification<string> =
-  toRxCompleteNotification('lastValue');
+const toRxCompleteNotification: RxCompleteNotification<any> = toRxCompleteNotification();
+const toRxCompleteNotification: RxCompleteNotification<string> = toRxCompleteNotification('lastValue');
 ```
 
 **rxMaterialize**
 
 ```typescript
 const websocketUpdates$: Observable<number> = interval(3000);
-const materialized$: Observable<RxNotification<number>> = websocketUpdates.pipe(
-  rxMaterialize()
-);
+const materialized$: Observable<RxNotification<number>> = websocketUpdates.pipe(rxMaterialize());
 ```

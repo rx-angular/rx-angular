@@ -213,15 +213,12 @@ The following context variables are available for each template:
 You can use the as like this:
 
 ```html
-<ng-container
-  *rxLet="number$; let n; let s = suspense; let e = error, let c = complete"
->
+<ng-container *rxLet="number$; let n; let s = suspense; let e = error, let c = complete">
   {{ s && 'No value arrived so far' }}
 
   <app-number [number]="n"></app-number>
 
-  There is an error: {{ e ? e.message : 'No Error' }} Observable is completed:
-  {{c ? 'Yes' : 'No'}}
+  There is an error: {{ e ? e.message : 'No Error' }} Observable is completed: {{c ? 'Yes' : 'No'}}
 </ng-container>
 ```
 
@@ -267,9 +264,7 @@ e.g. from the complete template back to the value display
   selector: 'app-root',
   template: `
     <button (click)="nextTrigger$.next()">show value</button>
-    <ng-container
-      *rxLet="num$; let n; complete: complete; nextTrg: nextTrigger$"
-    >
+    <ng-container *rxLet="num$; let n; complete: complete; nextTrg: nextTrigger$">
       {{ n }}
     </ng-container>
     <ng-template #complete>✔</ng-template>
@@ -315,9 +310,7 @@ e.g. from the complete template back to the value display
 @Component({
   selector: 'app-root',
   template: `
-    <ng-container
-      *rxLet="num$; let n; complete: complete; completeTrg: completeTrigger$"
-    >
+    <ng-container *rxLet="num$; let n; complete: complete; completeTrg: completeTrigger$">
       {{ n }}
     </ng-container>
     <ng-template #complete>✔</ng-template>
@@ -341,15 +334,7 @@ e.g. from the complete template back to the value display
   selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
-    <ng-container
-      *rxLet="
-        num$;
-        let n;
-        let n;
-        suspense: suspense;
-        suspenseTrg: suspenseTrigger$
-      "
-    >
+    <ng-container *rxLet="num$; let n; let n; suspense: suspense; suspenseTrg: suspenseTrigger$">
       {{ n }}
     </ng-container>
     <ng-template #suspense>loading...</ng-template>
@@ -378,9 +363,7 @@ in a convenient way.
   selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
-    <ng-container
-      *rxLet="num$; let n; suspense: suspense; contextTrg: contextTrg$"
-    >
+    <ng-container *rxLet="num$; let n; suspense: suspense; contextTrg: contextTrg$">
       {{ n }}
     </ng-container>
     <ng-template #suspense>loading...</ng-template>
@@ -465,13 +448,9 @@ an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-an
 The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md#normal).
 
 ```html
-<ng-container *rxLet="item$; let item; strategy: strategy">
-  {{ item }}
-</ng-container>
+<ng-container *rxLet="item$; let item; strategy: strategy"> {{ item }} </ng-container>
 
-<ng-container *rxFor="item$; let item; strategy: strategy$">
-  {{ item }}
-</ng-container>
+<ng-container *rxFor="item$; let item; strategy: strategy$"> {{ item }} </ng-container>
 ```
 
 ```ts
@@ -503,10 +482,7 @@ You can do so by providing a custom `RxRenderStrategiesConfig`, see the followin
 
 ```typescript
 // import
-import {
-  RxRenderStrategiesConfig,
-  RX_RENDER_STRATEGIES_CONFIG,
-} from '@rx-angular/cdk/render-strategies';
+import { RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 
 // create configuration with parent flag to be false
 const rxaConfig: RxRenderStrategiesConfig<string> = {
@@ -601,13 +577,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 ```ts
 @Component({
   selector: 'app-root',
-  template: `
-    <div
-      *rxLet="bgColor$; let bgColor; patchZone: false"
-      (mousemove)="calcBgColor($event)"
-      [style.background]="bgColor"
-    ></div>
-  `,
+  template: ` <div *rxLet="bgColor$; let bgColor; patchZone: false" (mousemove)="calcBgColor($event)" [style.background]="bgColor"></div> `,
 })
 export class AppComponent {
   // As the part of the template where this function is used as event listener callback
@@ -626,12 +596,7 @@ This helps to exclude all side effects from special render strategies.
 ### Basic Setup
 
 ```typescript
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { RxLet } from '@rx-angular/template/let';

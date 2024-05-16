@@ -340,13 +340,9 @@ an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-an
 The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
 
 ```html
-<ng-container *rxFor="let item of items; strategy: strategy">
-  {{ item }}
-</ng-container>
+<ng-container *rxFor="let item of items; strategy: strategy"> {{ item }} </ng-container>
 
-<ng-container *rxFor="let item of items; strategy: strategy$">
-  {{ item }}
-</ng-container>
+<ng-container *rxFor="let item of items; strategy: strategy$"> {{ item }} </ng-container>
 ```
 
 ```ts
@@ -378,10 +374,7 @@ You can do so by providing a custom `RxRenderStrategiesConfig`, see the followin
 
 ```typescript
 // import
-import {
-  RxRenderStrategiesConfig,
-  RX_RENDER_STRATEGIES_CONFIG,
-} from '@rx-angular/cdk/render-strategies';
+import { RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 
 // create configuration with parent flag to be false
 const rxaConfig: RxRenderStrategiesConfig<string> = {
@@ -494,13 +487,7 @@ The result of the `renderCallback` will contain the currently rendered set of it
   selector: 'app-root',
   template: `
     <app-list-component>
-      <app-list-item
-        *rxFor="
-          let item of items$;
-          trackBy: trackItem;
-          renderCallback: itemsRendered
-        "
-      >
+      <app-list-item *rxFor="let item of items$; trackBy: trackItem; renderCallback: itemsRendered">
         <div>{{ item.name }}</div>
       </app-list-item>
     </app-list-component>
@@ -555,13 +542,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 ```ts
 @Component({
   selector: 'app-root',
-  template: `
-    <div
-      *rxFor="let bgColor; in: bgColor$; patchZone: false"
-      (mousemove)="calcBgColor($event)"
-      [style.background]="bgColor"
-    ></div>
-  `,
+  template: ` <div *rxFor="let bgColor; in: bgColor$; patchZone: false" (mousemove)="calcBgColor($event)" [style.background]="bgColor"></div> `,
 })
 export class AppComponent {
   // As the part of the template where this function is used as event listener callback

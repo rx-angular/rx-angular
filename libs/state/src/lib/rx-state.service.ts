@@ -33,17 +33,17 @@ import { createSignalStateProxy, SignalStateProxy } from './signal-state-proxy';
 export type ProjectStateFn<Type> = (oldState: Type) => Partial<Type>;
 
 export type ProjectValueFn<Type, Key extends keyof Type> = (
-  oldState: Type
+  oldState: Type,
 ) => Type[Key];
 
 export type ProjectStateReducer<Type, Value> = (
   oldState: Type,
-  value: Value
+  value: Value,
 ) => Partial<Type>;
 
 export type ProjectValueReducer<Type, Key extends keyof Type, Value> = (
   oldState: Type,
-  value: Value
+  value: Value,
 ) => Type[Key];
 
 export type ReadOnly = 'get' | 'select' | 'computed' | 'signal';
@@ -180,14 +180,14 @@ export class RxState<State extends object>
   /** @internal **/
   get<KeyA extends keyof State, KeyB extends keyof State[KeyA]>(
     keyA: KeyA,
-    keyB: KeyB
+    keyB: KeyB,
   ): State[KeyA][KeyB];
 
   /** @internal **/
   get<
     KeyA extends keyof State,
     KeyB extends keyof State[KeyA],
-    KeyC extends keyof State[KeyA][KeyB]
+    KeyC extends keyof State[KeyA][KeyB],
   >(keyA: KeyA, keyB: KeyB, keyC: KeyC): State[KeyA][KeyB][KeyC];
 
   /** @internal **/
@@ -195,12 +195,12 @@ export class RxState<State extends object>
     KeyA extends keyof State,
     KeyB extends keyof State[KeyA],
     KeyC extends keyof State[KeyA][KeyB],
-    KeyD extends keyof State[KeyA][KeyB][KeyC]
+    KeyD extends keyof State[KeyA][KeyB][KeyC],
   >(
     keyA: KeyA,
     keyB: KeyB,
     keyC: KeyC,
-    keyD: KeyD
+    keyD: KeyD,
   ): State[KeyA][KeyB][KeyC][KeyD];
 
   /** @internal **/
@@ -209,13 +209,13 @@ export class RxState<State extends object>
     KeyB extends keyof State[KeyA],
     KeyC extends keyof State[KeyA][KeyB],
     KeyD extends keyof State[KeyA][KeyB][KeyC],
-    KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD]
+    KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD],
   >(
     keyA: KeyA,
     keyB: KeyB,
     keyC: KeyC,
     keyD: KeyD,
-    keyE: KeyE
+    keyE: KeyE,
   ): State[KeyA][KeyB][KeyC][KeyD][KeyE];
 
   /** @internal **/
@@ -225,14 +225,14 @@ export class RxState<State extends object>
     KeyC extends keyof State[KeyA][KeyB],
     KeyD extends keyof State[KeyA][KeyB][KeyC],
     KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD],
-    KeyF extends keyof State[KeyA][KeyB][KeyC][KeyD][KeyE]
+    KeyF extends keyof State[KeyA][KeyB][KeyC][KeyD][KeyE],
   >(
     keyA: KeyA,
     keyB: KeyB,
     keyC: KeyC,
     keyD: KeyD,
     keyE: KeyE,
-    keyF: KeyF
+    keyF: KeyF,
   ): State[KeyA][KeyB][KeyC][KeyD][KeyE][KeyF];
 
   /** @internal **/
@@ -242,7 +242,7 @@ export class RxState<State extends object>
     KeyC extends keyof State[KeyA][KeyB],
     KeyD extends keyof State[KeyA][KeyB][KeyC],
     KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD],
-    KeyF extends keyof State[KeyA][KeyB][KeyC][KeyD][KeyE]
+    KeyF extends keyof State[KeyA][KeyB][KeyC][KeyD][KeyE],
   >(
     ...keys:
       | [KeyA]
@@ -309,14 +309,14 @@ export class RxState<State extends object>
    */
   set<Key extends keyof State, Object>(
     key: Key,
-    projectSlice: ProjectValueFn<State, Key>
+    projectSlice: ProjectValueFn<State, Key>,
   ): void;
   /**
    * @internal
    */
   set<Key extends keyof State>(
     keyOrStateOrProjectState: Partial<State> | ProjectStateFn<State> | Key,
-    stateOrSliceProjectFn?: ProjectValueFn<State, Key>
+    stateOrSliceProjectFn?: ProjectValueFn<State, Key>,
   ): void {
     if (
       typeof keyOrStateOrProjectState === 'object' &&
@@ -331,7 +331,7 @@ export class RxState<State extends object>
       stateOrSliceProjectFn === undefined
     ) {
       this.accumulator.nextSlice(
-        keyOrStateOrProjectState(this.accumulator.state)
+        keyOrStateOrProjectState(this.accumulator.state),
       );
       return;
     }
@@ -342,7 +342,7 @@ export class RxState<State extends object>
     ) {
       const state: Partial<State> = {};
       state[keyOrStateOrProjectState] = stateOrSliceProjectFn(
-        this.accumulator.state
+        this.accumulator.state,
       );
       this.accumulator.nextSlice(state);
       return;
@@ -408,7 +408,7 @@ export class RxState<State extends object>
    */
   connect<Value>(
     inputOrSlice$: Observable<Value>,
-    projectFn: ProjectStateReducer<State, Value>
+    projectFn: ProjectStateReducer<State, Value>,
   ): void;
 
   /**
@@ -423,7 +423,7 @@ export class RxState<State extends object>
    */
   connect<Value>(
     signal: Signal<Value>,
-    projectFn: ProjectStateReducer<State, Value>
+    projectFn: ProjectStateReducer<State, Value>,
   ): void;
 
   /**
@@ -444,7 +444,7 @@ export class RxState<State extends object>
    */
   connect<Key extends keyof State>(
     key: Key,
-    slice$: Observable<State[Key]>
+    slice$: Observable<State[Key]>,
   ): void;
 
   /**
@@ -479,7 +479,7 @@ export class RxState<State extends object>
   connect<Key extends keyof State, Value>(
     key: Key,
     input$: Observable<Value>,
-    projectSliceFn: ProjectValueReducer<State, Key, Value>
+    projectSliceFn: ProjectValueReducer<State, Key, Value>,
   ): void;
 
   /**
@@ -498,7 +498,7 @@ export class RxState<State extends object>
   connect<Key extends keyof State, Value>(
     key: Key,
     signal: Signal<Value>,
-    projectSliceFn: ProjectValueReducer<State, Key, Value>
+    projectSliceFn: ProjectValueReducer<State, Key, Value>,
   ): void;
 
   /**
@@ -513,7 +513,7 @@ export class RxState<State extends object>
       | ProjectStateReducer<State, Value>
       | Observable<State[Key] | Value>
       | Signal<State[Key] | Value>,
-    projectValueFn?: ProjectValueReducer<State, Key, Value>
+    projectValueFn?: ProjectValueReducer<State, Key, Value>,
   ): void {
     /**
      * From top to bottom the overloads are handled.
@@ -529,7 +529,7 @@ export class RxState<State extends object>
 
     if (isSignal(keyOrInputOrSlice$) && !projectOrSlices$ && !projectValueFn) {
       this.accumulator.nextSliceObservable(
-        toObservable(keyOrInputOrSlice$, { injector: this.injector })
+        toObservable(keyOrInputOrSlice$, { injector: this.injector }),
       );
       return;
     }
@@ -542,7 +542,7 @@ export class RxState<State extends object>
     ) {
       const projectionStateFn = projectOrSlices$;
       const slice$ = keyOrInputOrSlice$.pipe(
-        map((v) => projectionStateFn(this.accumulator.state, v as Value))
+        map((v) => projectionStateFn(this.accumulator.state, v as Value)),
       );
       this.accumulator.nextSliceObservable(slice$ as Observable<Value>);
       return;
@@ -558,7 +558,7 @@ export class RxState<State extends object>
       const slice$ = toObservable(keyOrInputOrSlice$, {
         injector: this.injector,
       }).pipe(
-        map((v) => projectionStateFn(this.accumulator.state, v as Value))
+        map((v) => projectionStateFn(this.accumulator.state, v as Value)),
       );
       this.accumulator.nextSliceObservable(slice$ as Observable<Value>);
       return;
@@ -570,7 +570,7 @@ export class RxState<State extends object>
       !projectValueFn
     ) {
       const slice$ = projectOrSlices$.pipe(
-        map((value) => ({ ...{}, [keyOrInputOrSlice$]: value }))
+        map((value) => ({ ...{}, [keyOrInputOrSlice$]: value })),
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
@@ -599,7 +599,7 @@ export class RxState<State extends object>
         map((value) => ({
           ...{},
           [key]: projectValueFn(this.get(), value as Value),
-        }))
+        })),
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
@@ -618,7 +618,7 @@ export class RxState<State extends object>
         map((value) => ({
           ...{},
           [key]: projectValueFn(this.get(), value as Value),
-        }))
+        })),
       );
       this.accumulator.nextSliceObservable(slice$);
       return;
@@ -662,7 +662,7 @@ export class RxState<State extends object>
    */
   select<TypeA = State, TypeB = TypeA>(
     op1: OperatorFunction<State, TypeA>,
-    op2: OperatorFunction<TypeA, TypeB>
+    op2: OperatorFunction<TypeA, TypeB>,
   ): Observable<TypeB>;
 
   /**
@@ -671,7 +671,7 @@ export class RxState<State extends object>
   select<TypeA = State, TypeB = TypeA, TypeC = TypeB>(
     op1: OperatorFunction<State, TypeA>,
     op2: OperatorFunction<TypeA, TypeB>,
-    op3: OperatorFunction<TypeB, TypeC>
+    op3: OperatorFunction<TypeB, TypeC>,
   ): Observable<TypeC>;
 
   /**
@@ -681,7 +681,7 @@ export class RxState<State extends object>
     op1: OperatorFunction<State, TypeA>,
     op2: OperatorFunction<TypeA, TypeB>,
     op3: OperatorFunction<TypeB, TypeC>,
-    op4: OperatorFunction<TypeC, TypeD>
+    op4: OperatorFunction<TypeC, TypeD>,
   ): Observable<TypeD>;
 
   /**
@@ -692,13 +692,13 @@ export class RxState<State extends object>
     TypeB = TypeA,
     TypeC = TypeB,
     TypeD = TypeC,
-    TypeE = TypeD
+    TypeE = TypeD,
   >(
     op1: OperatorFunction<State, TypeA>,
     op2: OperatorFunction<TypeA, TypeB>,
     op3: OperatorFunction<TypeB, TypeC>,
     op4: OperatorFunction<TypeC, TypeD>,
-    op5: OperatorFunction<TypeD, TypeE>
+    op5: OperatorFunction<TypeD, TypeE>,
   ): Observable<TypeE>;
 
   /**
@@ -722,7 +722,7 @@ export class RxState<State extends object>
   select<Key extends keyof State, Value>(
     keys: Key[],
     fn?: (slice: PickSlice<State, Key>) => Value,
-    keyCompareMap?: KeyCompareMap<Pick<State, Key>>
+    keyCompareMap?: KeyCompareMap<Pick<State, Key>>,
   ): Observable<Value>;
 
   /**
@@ -741,7 +741,7 @@ export class RxState<State extends object>
    */
   select<Key extends keyof State, Value>(
     key: Key,
-    fn: (val: State[Key]) => Value
+    fn: (val: State[Key]) => Value,
   ): Observable<Value>;
 
   /**
@@ -767,7 +767,7 @@ export class RxState<State extends object>
    */
   select<KeyA extends keyof State, KeyB extends keyof State[KeyA]>(
     keyA: KeyA,
-    keyB: KeyB
+    keyB: KeyB,
   ): Observable<State[KeyA][KeyB]>;
 
   /**
@@ -776,7 +776,7 @@ export class RxState<State extends object>
   select<
     KeyA extends keyof State,
     KeyB extends keyof State[KeyA],
-    KeyC extends keyof State[KeyA][KeyB]
+    KeyC extends keyof State[KeyA][KeyB],
   >(keyA: KeyA, keyB: KeyB, keyC: KeyC): Observable<State[KeyA][KeyB][KeyC]>;
 
   /**
@@ -786,12 +786,12 @@ export class RxState<State extends object>
     KeyA extends keyof State,
     KeyB extends keyof State[KeyA],
     KeyC extends keyof State[KeyA][KeyB],
-    KeyD extends keyof State[KeyA][KeyB][KeyC]
+    KeyD extends keyof State[KeyA][KeyB][KeyC],
   >(
     keyA: KeyA,
     keyB: KeyB,
     keyC: KeyC,
-    keyD: KeyD
+    keyD: KeyD,
   ): Observable<State[KeyA][KeyB][KeyC][KeyD]>;
 
   /**
@@ -802,13 +802,13 @@ export class RxState<State extends object>
     KeyB extends keyof State[KeyA],
     KeyC extends keyof State[KeyA][KeyB],
     KeyD extends keyof State[KeyA][KeyB][KeyC],
-    KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD]
+    KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD],
   >(
     keyA: KeyA,
     keyB: KeyB,
     keyC: KeyC,
     keyD: KeyD,
-    keyE: KeyE
+    keyE: KeyE,
   ): Observable<State[KeyA][KeyB][KeyC][KeyD][KeyE]>;
 
   /**
@@ -820,14 +820,14 @@ export class RxState<State extends object>
     KeyC extends keyof State[KeyA][KeyB],
     KeyD extends keyof State[KeyA][KeyB][KeyC],
     KeyE extends keyof State[KeyA][KeyB][KeyC][KeyD],
-    KeyF extends keyof State[KeyA][KeyB][KeyC][KeyD][KeyE]
+    KeyF extends keyof State[KeyA][KeyB][KeyC][KeyD][KeyE],
   >(
     keyA: KeyA,
     keyB: KeyB,
     keyC: KeyC,
     keyD: KeyD,
     keyE: KeyE,
-    keyF: KeyF
+    keyF: KeyF,
   ): Observable<State[KeyA][KeyB][KeyC][KeyD][KeyE][KeyF]>;
 
   /**
@@ -841,11 +841,11 @@ export class RxState<State extends object>
       | [
           keys: string[],
           fn?: (slice: unknown) => unknown,
-          keyCompareMap?: KeyCompareMap<State>
+          keyCompareMap?: KeyCompareMap<State>,
         ]
   ): Observable<State | Return> {
     return this.accumulator.state$.pipe(
-      select(...(args as Parameters<typeof select>))
+      select(...(args as Parameters<typeof select>)),
     );
   }
 
@@ -870,7 +870,7 @@ export class RxState<State extends object>
    * @return Signal<ComputedType>
    */
   computed<ComputedType>(
-    fn: (slice: SignalStateProxy<State>) => ComputedType
+    fn: (slice: SignalStateProxy<State>) => ComputedType,
   ): Signal<ComputedType> {
     return computed(() => {
       return fn(this.signalStoreProxy);
@@ -888,20 +888,20 @@ export class RxState<State extends object>
    // * @returns Signal<TypeA>
    */
   computedFrom<TypeA = State>(
-    op1: OperatorFunction<State, TypeA>
+    op1: OperatorFunction<State, TypeA>,
   ): Signal<TypeA>;
 
   /** @internal */
   computedFrom<TypeA = State, TypeB = TypeA>(
     op1: OperatorFunction<State, TypeA>,
-    op2: OperatorFunction<TypeA, TypeB>
+    op2: OperatorFunction<TypeA, TypeB>,
   ): Signal<TypeB>;
 
   /** @internal */
   computedFrom<TypeA = State, TypeB = TypeA, TypeC = TypeB>(
     op1: OperatorFunction<State, TypeA>,
     op2: OperatorFunction<TypeA, TypeB>,
-    op3: OperatorFunction<TypeB, TypeC>
+    op3: OperatorFunction<TypeB, TypeC>,
   ): Signal<TypeC>;
 
   /** @internal */
@@ -909,7 +909,7 @@ export class RxState<State extends object>
     op1: OperatorFunction<State, TypeA>,
     op2: OperatorFunction<TypeA, TypeB>,
     op3: OperatorFunction<TypeB, TypeC>,
-    op4: OperatorFunction<TypeC, TypeD>
+    op4: OperatorFunction<TypeC, TypeD>,
   ): Signal<TypeD>;
 
   /** @internal */
@@ -918,13 +918,13 @@ export class RxState<State extends object>
     TypeB = TypeA,
     TypeC = TypeB,
     TypeD = TypeC,
-    TypeE = TypeD
+    TypeE = TypeD,
   >(
     op1: OperatorFunction<State, TypeA>,
     op2: OperatorFunction<TypeA, TypeB>,
     op3: OperatorFunction<TypeB, TypeC>,
     op4: OperatorFunction<TypeC, TypeD>,
-    op5: OperatorFunction<TypeD, TypeE>
+    op5: OperatorFunction<TypeD, TypeE>,
   ): Signal<TypeE>;
 
   /** @internal */
@@ -960,12 +960,12 @@ export class RxState<State extends object>
    */
   hold<SideEffect>(
     obsOrObsWithSideEffect: Observable<SideEffect>,
-    sideEffectFn?: (arg: SideEffect) => void
+    sideEffectFn?: (arg: SideEffect) => void,
   ): void {
     const sideEffect = obsOrObsWithSideEffect.pipe(catchError((e) => EMPTY));
     if (typeof sideEffectFn === 'function') {
       this.effectObservable.nextEffectObservable(
-        sideEffect.pipe(tap(sideEffectFn))
+        sideEffect.pipe(tap(sideEffectFn)),
       );
       return;
     }
@@ -981,7 +981,7 @@ export class RxState<State extends object>
     subscription.add(this.effectObservable.subscribe());
     this.signalStoreProxy = createSignalStateProxy<State>(
       this.$,
-      this.get.bind(this)
+      this.get.bind(this),
     );
     return subscription;
   }

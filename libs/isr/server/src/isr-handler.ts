@@ -45,14 +45,14 @@ export class ISRHandler {
       config.indexHtml,
       config.commonEngine,
       config.bootstrap,
-      config.browserDistFolder
+      config.browserDistFolder,
     );
   }
 
   async invalidate(
     req: Request,
     res: Response,
-    config?: InvalidateConfig
+    config?: InvalidateConfig,
   ): Promise<any> {
     const { token, urlsToInvalidate } = extractDataFromBody(req);
     const { indexHtml } = this.config;
@@ -125,20 +125,21 @@ export class ISRHandler {
     const invalidatedUrls = variantUrlsToInvalidate
       .map((val) => val.cacheKey)
       .filter(
-        (cacheKey) => !notInCache.includes(cacheKey) && !urlWithErrors[cacheKey]
+        (cacheKey) =>
+          !notInCache.includes(cacheKey) && !urlWithErrors[cacheKey],
       );
 
     if (notInCache.length) {
       this.logger.log(
-        `Urls: ${notInCache.join(', ')} does not exist in cache.`
+        `Urls: ${notInCache.join(', ')} does not exist in cache.`,
       );
     }
 
     if (Object.keys(urlWithErrors).length) {
       this.logger.log(
         `Urls: ${Object.keys(urlWithErrors).join(
-          ', '
-        )} had errors while regenerating!`
+          ', ',
+        )} had errors while regenerating!`,
       );
     }
 
@@ -181,7 +182,7 @@ export class ISRHandler {
     req: Request,
     res: Response,
     next: NextFunction,
-    config?: ServeFromCacheConfig
+    config?: ServeFromCacheConfig,
   ): Promise<any> {
     try {
       const variant = this.getVariant(req);
@@ -208,7 +209,7 @@ export class ISRHandler {
             res,
             cacheData,
             this.logger,
-            config?.providers
+            config?.providers,
           );
         }
       }
@@ -226,7 +227,7 @@ export class ISRHandler {
       // Cache exists. Send it.
       this.logger.log(
         `Page was retrieved from cache: `,
-        getCacheKey(req.url, variant)
+        getCacheKey(req.url, variant),
       );
       return res.send(finalHtml);
     } catch (error) {
@@ -239,7 +240,7 @@ export class ISRHandler {
     req: Request,
     res: Response,
     next: NextFunction,
-    config?: RenderConfig
+    config?: RenderConfig,
   ): Promise<any> {
     const renderUrlConfig: RenderUrlConfig = {
       req,
@@ -299,7 +300,7 @@ export class ISRHandler {
 }
 
 const extractDataFromBody = (
-  req: Request
+  req: Request,
 ): { token: string | null; urlsToInvalidate: string[] } => {
   const { urlsToInvalidate, token } = req.body;
   return { urlsToInvalidate, token };

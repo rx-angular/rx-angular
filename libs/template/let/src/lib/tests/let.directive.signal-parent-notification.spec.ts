@@ -72,7 +72,7 @@ describe('LetDirective signal parent notification', () => {
             behavior({
               work: () => {},
             }),
-            delay(0, asapScheduler)
+            delay(0, asapScheduler),
           )
           .subscribe(() => {
             expect(componentInstance.letChild()).toBeDefined();
@@ -91,7 +91,7 @@ describe('LetDirective signal parent notification', () => {
             behavior({
               work: () => {},
             }),
-            delay(0, asapScheduler)
+            delay(0, asapScheduler),
           )
           .subscribe(() => {
             expect(cdRef.detectChanges).not.toHaveBeenCalled();

@@ -15,21 +15,21 @@ export const ROUTES: Routes = [
     path: 'scoping',
     loadChildren: () =>
       import('./scoping/rx-let-scoping.module').then(
-        (m) => m.RxLetScopingModule
+        (m) => m.RxLetScopingModule,
       ),
   },
   {
     path: 'error-handling',
     loadChildren: () =>
       import('./error-handling/error-handing.module').then(
-        (m) => m.ErrorHandingModule
+        (m) => m.ErrorHandingModule,
       ),
   },
   {
     path: 'exception-handling',
     loadChildren: () =>
       import('./exception-handling/rx-let-exception-handling.module').then(
-        (m) => m.RxLetExceptionHandlingModule
+        (m) => m.RxLetExceptionHandlingModule,
       ),
   },
   {
@@ -41,14 +41,14 @@ export const ROUTES: Routes = [
     path: 'template-bindings',
     loadChildren: () =>
       import('./let-template-binding/let-template-binding.module').then(
-        (m) => m.LetTemplateBindingModule
+        (m) => m.LetTemplateBindingModule,
       ),
   },
   {
     path: 'template-triggers',
     loadChildren: () =>
       import('./template-triggers/template-triggers.module').then(
-        (m) => m.TemplateTriggersModule
+        (m) => m.TemplateTriggersModule,
       ),
   },
   {
@@ -60,14 +60,14 @@ export const ROUTES: Routes = [
     path: 'preloading-images',
     loadChildren: () =>
       import('./preloading-images/preloading-images.module').then(
-        (m) => m.PreloadingImagesModule
+        (m) => m.PreloadingImagesModule,
       ),
   },
   {
     path: 'lazy-components',
     loadChildren: () =>
       import('./lazy-loading-components/lazy-loading-components.module').then(
-        (m) => m.LazyLoadingComponentsModule
+        (m) => m.LazyLoadingComponentsModule,
       ),
   },
 ];

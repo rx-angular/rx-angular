@@ -17,7 +17,7 @@ const customErrorHandler: ErrorHandler = {
 };
 
 function createTestComponent(
-  template = `<div><span *rxFor="let item of itemsHotSignal">{{item.toString()}};</span></div>`
+  template = `<div><span *rxFor="let item of itemsHotSignal">{{item.toString()}};</span></div>`,
 ) {
   return utilCreateTestComponent(template);
 }
@@ -176,7 +176,7 @@ describe('rxFor with signals', () => {
     const errorSpy = jest.spyOn(errorHandler, 'handleError');
 
     const expectedError = new Error(
-      "NG0901: Cannot find a differ supporting object 'whaaa' of type 'string'"
+      "NG0901: Cannot find a differ supporting object 'whaaa' of type 'string'",
     );
     getComponent().itemsHotSignal.set(<any>'whaaa');
     fixture.detectChanges();
@@ -189,7 +189,7 @@ describe('rxFor with signals', () => {
     errorHandler = createErrorHandler();
     const errorSpy = jest.spyOn(errorHandler, 'handleError');
     const expectedError = new Error(
-      "NG0900: Error trying to diff 'whaaa'. Only arrays and iterables are allowed"
+      "NG0900: Error trying to diff 'whaaa'. Only arrays and iterables are allowed",
     );
     detectChangesAndExpectText('1;2;');
 

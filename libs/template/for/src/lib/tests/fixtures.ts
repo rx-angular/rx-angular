@@ -36,7 +36,7 @@ const TEMPLATE =
   '<div><span *rxFor="let item of items">{{item.toString()}};</span></div>';
 
 export function createTestComponent(
-  template: string = TEMPLATE
+  template: string = TEMPLATE,
 ): ComponentFixture<TestComponent> {
   return TestBed.overrideComponent(TestComponent, {
     set: { template: template },

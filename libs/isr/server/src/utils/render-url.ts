@@ -76,7 +76,7 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
             reject(err);
           }
           resolve(html);
-        }
+        },
       );
     }
   });

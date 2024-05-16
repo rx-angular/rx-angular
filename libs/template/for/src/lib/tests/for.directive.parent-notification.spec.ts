@@ -63,7 +63,7 @@ async function rendered(component: TestComponent, behavior: RxRenderBehavior) {
         behavior({
           work: () => {},
         }),
-        delay(0, asapScheduler)
+        delay(0, asapScheduler),
       )
       .subscribe(() => {
         resolve();

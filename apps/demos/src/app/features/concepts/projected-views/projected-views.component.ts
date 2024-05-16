@@ -72,19 +72,19 @@ export class ProjectedViewsComponent {
     effect(() => {
       console.log(
         'ViewChild in ProjectedViewsComponent of type ContentChildComponent: ',
-        this.contentChildComponent()
+        this.contentChildComponent(),
       );
     });
     effect(() => {
       console.log(
         'ViewChild in ProjectedViewsComponent of type ViewChildComponent: ',
-        this.viewChildComponent()
+        this.viewChildComponent(),
       );
     });
     effect(() => {
       console.log(
         'ViewChild in ProjectedViewsComponent of type div: ',
-        this.test()
+        this.test(),
       );
     });
   }

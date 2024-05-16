@@ -15,10 +15,7 @@ You can do so by providing a custom `RxRenderStrategiesConfig`, see the followin
 
 ```typescript
 // import
-import {
-  RxRenderStrategiesConfig,
-  RX_RENDER_STRATEGIES_CONFIG,
-} from '@rx-angular/cdk/render-strategies';
+import { RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 
 // create configuration with parent flag to be false
 const rxaConfig: RxRenderStrategiesConfig<string> = {

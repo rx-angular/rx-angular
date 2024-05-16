@@ -23,5 +23,5 @@ mP.wrap(
       ɵprovideZonelessChangeDetection(),
       provideRouter(ROUTES),
     ],
-  })
+  }),
 ).catch((err) => console.error(err));

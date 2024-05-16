@@ -34,7 +34,7 @@ export const RX_RENDER_STRATEGIES_DEFAULTS: Required<
 } as const;
 
 export function mergeDefaultConfig<T extends string>(
-  cfg?: RxRenderStrategiesConfig<T>
+  cfg?: RxRenderStrategiesConfig<T>,
 ): Required<RxRenderStrategiesConfig<T | RxDefaultStrategyNames>> {
   const custom: RxRenderStrategiesConfig<T> = cfg
     ? cfg

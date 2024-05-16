@@ -62,11 +62,7 @@ import {
 
 @Component({
   standalone: true,
-  imports: [
-    RxVirtualFor,
-    RxVirtualScrollViewportComponent,
-    FixedSizeVirtualScrollStrategy,
-  ],
+  imports: [RxVirtualFor, RxVirtualScrollViewportComponent, FixedSizeVirtualScrollStrategy],
 })
 export class ListComponent {
   movies: Signal<Movie[]> = this.movieService.fetchMovies();
@@ -96,11 +92,7 @@ import {
 
 @Component({
   standalone: true,
-  imports: [
-    RxVirtualFor,
-    RxVirtualScrollViewportComponent,
-    FixedSizeVirtualScrollStrategy,
-  ],
+  imports: [RxVirtualFor, RxVirtualScrollViewportComponent, FixedSizeVirtualScrollStrategy],
 })
 export class ListComponent {
   movies$: Observable<Movie[]> = this.movieService.fetchMovies();
@@ -139,20 +131,14 @@ import {
 
 @Component({
   standalone: true,
-  imports: [
-    RxVirtualFor,
-    RxVirtualScrollViewportComponent,
-    FixedSizeVirtualScrollStrategy,
-  ],
+  imports: [RxVirtualFor, RxVirtualScrollViewportComponent, FixedSizeVirtualScrollStrategy],
 })
 export class ListComponent {
   moviesSignal: Signal<Movie[]> = this.movieService.fetchMovies();
   movies: Movie[];
 
   constructor() {
-    this.movieService
-      .fetchMovies$()
-      .subscribe((result) => (this.movies = result.data));
+    this.movieService.fetchMovies$().subscribe((result) => (this.movies = result.data));
   }
 }
 ```
@@ -170,11 +156,7 @@ import {
 
 @Component({
   standalone: true,
-  imports: [
-    RxVirtualFor,
-    RxVirtualScrollViewportComponent,
-    FixedSizeVirtualScrollStrategy,
-  ],
+  imports: [RxVirtualFor, RxVirtualScrollViewportComponent, FixedSizeVirtualScrollStrategy],
 })
 export class MyComponent {}
 ```
@@ -664,11 +646,7 @@ They also share two inputs to define the amount of views to actually render on t
 
 See the layouting technique in action in the following video. It compares `@rx-angular/template` vs. `@angular/cdk/scrolling`
 
-<ReactPlayer
-  playing
-  controls
-  url="https://user-images.githubusercontent.com/4904455/231340169-f65efe6c-863d-49e8-9f4f-183bb38e1b2a.mp4"
-/>
+<ReactPlayer playing controls url="https://user-images.githubusercontent.com/4904455/231340169-f65efe6c-863d-49e8-9f4f-183bb38e1b2a.mp4" />
 
 #### FixedSizeVirtualScrollStrategy
 
@@ -896,7 +874,7 @@ this section covers a brief feature comparison between both implementations and 
 | layout technique                        | absolutely position each view                                                                 | transform a container within the viewport               |
 | scheduling technique                    | [`RenderStrategies`](../../cdk/render-strategies/strategies/concurrent-strategies.md)         | `requestAnimationFrame`                                 |
 | renderCallback                          | ✅                                                                                            | ❌                                                      |
-| SSR                                     | ⚠ - to be tested                                                                              | ✅                                                      |
+| SSR                                     | ⚠ - to be tested                                                                             | ✅                                                      |
 | Define visible view buffer              | configurable amount of views displayed in scroll direction,<br/>and opposite scroll direction | configurable buffer in px                               |
 | trackBy                                 | ✅                                                                                            | ✅                                                      |
 | View recycling                          | ✅                                                                                            | ✅                                                      |
@@ -1035,18 +1013,14 @@ puts the most pressure on the virtual scrollers.
 | --------- | ---------------------------------------------------------- |
 | OS        | `Pop!_OS 22.04 LTS`                                        |
 | Browser   | `Chromium Version 112.0.5615.49 (Official Build) (64-bit)` |
-| Processor | `Intel® Core™ i7-9750H CPU @ 2.60GHz × 12`                 |
+| Processor | `Intel® Core™ i7-9750H CPU @ 2.60GHz × 12`               |
 
 ### Different Layout techniques
 
 The RxVirtualScrolling approach to layout items is to absolutely position every view inside the viewport. Therefore, it sets the `transform` property for each managed item.
 The CDK approach instead transforms the viewport. The following video showcases the difference.
 
-<ReactPlayer
-  playing
-  controls
-  url="https://user-images.githubusercontent.com/4904455/231340169-f65efe6c-863d-49e8-9f4f-183bb38e1b2a.mp4"
-/>
+<ReactPlayer playing controls url="https://user-images.githubusercontent.com/4904455/231340169-f65efe6c-863d-49e8-9f4f-183bb38e1b2a.mp4" />
 
 ### Fixed Size Strategy
 

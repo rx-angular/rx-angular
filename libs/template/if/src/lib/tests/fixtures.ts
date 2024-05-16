@@ -30,7 +30,7 @@ export class TestComponent {
 }
 
 export function createTestComponent(
-  template: string
+  template: string,
 ): ComponentFixture<TestComponent> {
   return TestBed.overrideComponent(TestComponent, {
     set: { template: template },

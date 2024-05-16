@@ -159,11 +159,7 @@ _Example_
 
 ```typescript
 const myTimer$ = interval(250);
-state.connect(
-  'timer',
-  myTimer$,
-  (state, timerChange) => (state.timer += timerChange)
-);
+state.connect('timer', myTimer$, (state, timerChange) => (state.timer += timerChange));
 // every 250ms the property timer will get updated
 ```
 
@@ -248,7 +244,7 @@ _Example_
 ```typescript
 const profilePicture$ = state.select(
   map((state) => state.profilePicture),
-  switchMap((profilePicture) => mapImageAsync(profilePicture))
+  switchMap((profilePicture) => mapImageAsync(profilePicture)),
 );
 ```
 
@@ -302,10 +298,7 @@ _Example_
 
 ```typescript
 // Project state slice
-const text$ = state.select(
-  ['query', 'results'],
-  ({ query, results }) => `${results.length} results found for "${query}"`
-);
+const text$ = state.select(['query', 'results'], ({ query, results }) => `${results.length} results found for "${query}"`);
 ```
 
 ---
@@ -373,9 +366,7 @@ _Example_
 
 ```typescript
 // Directly pass an observable side-effect
-const localStorageEffect$ = changes$.pipe(
-  tap((changes) => storeChanges(changes))
-);
+const localStorageEffect$ = changes$.pipe(tap((changes) => storeChanges(changes)));
 state.hold(localStorageEffect$);
 
 // Pass an additional `sideEffectFunction`

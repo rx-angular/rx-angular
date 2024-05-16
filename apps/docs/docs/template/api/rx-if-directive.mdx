@@ -310,9 +310,7 @@ You can use them like this:
 **Context Variables on then template**
 
 ```html
-<ng-container
-  *rxIf="customer$; let customer; let s = suspense; let e = error, let c = complete"
->
+<ng-container *rxIf="customer$; let customer; let s = suspense; let e = error, let c = complete">
   <loader *ngIf="s"></loader>
   <error *ngIf="e"></error>
   <complete *ngIf="c"></complete>
@@ -324,9 +322,7 @@ You can use them like this:
 **Context Variables on else template**
 
 ```html
-<ng-container
-  *rxIf="show$; else: nope; let s = suspense; let e = error, let c = complete"
->
+<ng-container *rxIf="show$; else: nope; let s = suspense; let e = error, let c = complete">
   <loader *ngIf="s"></loader>
   <error *ngIf="e"></error>
   <complete *ngIf="c"></complete>
@@ -460,9 +456,7 @@ e.g. from the complete template back to the value display
 @Component({
   selector: 'app-root',
   template: `
-    <ng-container
-      *rxIf="show$; complete: complete; completeTrg: completeTrigger$"
-    >
+    <ng-container *rxIf="show$; complete: complete; completeTrg: completeTrigger$">
       <item></item>
     </ng-container>
     <ng-template #complete>✔</ng-template>
@@ -484,9 +478,7 @@ e.g. from the complete template back to the value display
   selector: 'app-root',
   template: `
     <input (input)="search($event.target.value)" />
-    <ng-container
-      *rxIf="show$; suspense: suspense; suspenseTrg: suspenseTrigger$"
-    >
+    <ng-container *rxIf="show$; suspense: suspense; suspenseTrg: suspenseTrigger$">
       <list></list>
     </ng-container>
     <ng-template #suspense>loading...</ng-template>
@@ -577,10 +569,7 @@ You can do so by providing a custom `RxRenderStrategiesConfig`, see the followin
 
 ```typescript
 // import
-import {
-  RxRenderStrategiesConfig,
-  RX_RENDER_STRATEGIES_CONFIG,
-} from '@rx-angular/cdk/render-strategies';
+import { RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 
 // create configuration with parent flag to be false
 const rxaConfig: RxRenderStrategiesConfig<string> = {
@@ -671,9 +660,7 @@ For more details read about [NgZone optimizations](../performance-issues/ngzone-
 ```ts
 @Component({
   selector: 'app-root',
-  template: `
-    <div *rxIf="enabled$; patchZone: false" (drag)="itemDrag($event)"></div>
-  `,
+  template: ` <div *rxIf="enabled$; patchZone: false" (drag)="itemDrag($event)"></div> `,
 })
 export class AppComponent {
   enabled$ = state.select('enabled');
@@ -691,12 +678,7 @@ This helps to exclude all side effects from special render strategies.
 ### Basic Setup
 
 ```typescript
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { RxIf } from '@rx-angular/template/if';
