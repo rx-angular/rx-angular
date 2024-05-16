@@ -132,7 +132,13 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    *
    * @param { ObservableInput<U> | U | null | undefined } rxLet
    */
-  @Input() rxLet: ObservableInput<U> | Subscribable<U> | Signal<U> | U | null | undefined;
+  @Input() rxLet:
+    | ObservableInput<U>
+    | Subscribable<U>
+    | Signal<U>
+    | U
+    | null
+    | undefined;
 
   /**
    * @description

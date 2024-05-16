@@ -119,9 +119,9 @@ export function createTemplateNotifier<U>(): {
         tap(() => (emittedValueOnce = true)),
         distinctUntilChanged(),
         rxMaterialize(),
-        map(handleSuspenseAndLastValueInNotifications<U>())
+        map(handleSuspenseAndLastValueInNotifications<U>()),
       );
-    })
+    }),
   );
 
   return {
@@ -143,7 +143,7 @@ export function createTemplateNotifier<U>(): {
    * @param observable$
    */
   function skipSuspenseIfHasValue<T>(
-    observable$: ObservableInput<T>
+    observable$: ObservableInput<T>,
   ): Observable<T> {
     return new Observable((subscriber) => {
       let startWithUndefined = true;
