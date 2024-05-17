@@ -2,6 +2,17 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [17.2.0](https://github.com/rx-angular/rx-angular/compare/template@17.1.0...template@17.2.0) (2024-05-17)
+
+
+### Features
+
+* accept subscribable on rx-let input ([#1721](https://github.com/rx-angular/rx-angular/issues/1721)) ([897a5b0](https://github.com/rx-angular/rx-angular/commit/897a5b00e4101f1ab6463f4386aa7dff876dc840))
+* **template:** deprecate parent flag ([a4592e3](https://github.com/rx-angular/rx-angular/commit/a4592e3d26df6567ff4214bc907b245068ac9436))
+* **template:** implement signal support in template package ([35e7d18](https://github.com/rx-angular/rx-angular/commit/35e7d18139799a0c425652911e9a599252b9e646))
+
+
+
 # [17.1.0](https://github.com/rx-angular/rx-angular/compare/template@17.0.1...template@17.1.0) (2024-03-03)
 
 
