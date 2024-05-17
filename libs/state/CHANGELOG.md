@@ -2,6 +2,16 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [17.1.0](https://github.com/rx-angular/rx-angular/compare/state@17.0.1...state@17.1.0) (2024-05-17)
+
+
+### Features
+
+* **state:** add default transform function to select  ([7875319](https://github.com/rx-angular/rx-angular/commit/7875319ff84a05e7706f8f6f70dc84a2234b8ebc))
+* **state:** introduce rxState asReadOnly API ([baa678f](https://github.com/rx-angular/rx-angular/commit/baa678fe264bd675c786944a2b3b60533a6235c3))
+
+
+
 ## [17.0.1](https://github.com/rx-angular/rx-angular/compare/state@17.0.0...state@17.0.1) (2024-03-03)
 
 
