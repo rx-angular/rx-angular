@@ -26,10 +26,7 @@ export class RxStateParentCompositionComponent implements OnDestroy {
     shareReplay(1)
   );
 
-  constructor(private source: SourceService) {
-    // this.hotComposition1$ = this.composition1$.pipe(publishReplay(1)) as ConnectableObservable<any>
-    // this.subscription =  this.hotComposition1$.connect();
-  }
+  constructor(private source: SourceService) {}
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
