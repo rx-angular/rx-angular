@@ -17,7 +17,9 @@ import {
 } from 'rxjs';
 import {
   distinctUntilChanged,
+  filter,
   map,
+  shareReplay,
   startWith,
   switchMap,
   takeUntil,
@@ -68,7 +70,7 @@ import {
 })
 export class FixedSizeVirtualScrollStrategy<
     T,
-    U extends NgIterable<T> = NgIterable<T>
+    U extends NgIterable<T> = NgIterable<T>,
   >
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
@@ -114,6 +116,14 @@ export class FixedSizeVirtualScrollStrategy<
   @Input() runwayItemsOpposite =
     this.defaults?.runwayItemsOpposite ?? DEFAULT_RUNWAY_ITEMS_OPPOSITE;
 
+  /**
+   * @description
+   * If this flag is true, the virtual scroll strategy maintains the scrolled item when new data
+   * is prepended to the list. This is very useful when implementing a reversed infinite scroller, that prepends
+   * data instead of appending it
+   */
+  @Input({ transform: toBoolean }) keepScrolledIndexOnPrepend = false;
+
   /** @internal */
   private readonly runwayStateChanged$ = new Subject<void>();
 
@@ -126,6 +136,10 @@ export class FixedSizeVirtualScrollStrategy<
   private set scrolledIndex(index: number) {
     this._scrolledIndex = index;
     this._scrolledIndex$.next(index);
+  }
+
+  private get scrolledIndex(): number {
+    return this._scrolledIndex;
   }
 
   private readonly _contentSize$ = new ReplaySubject<number>(1);
@@ -177,7 +191,7 @@ export class FixedSizeVirtualScrollStrategy<
 
   attach(
     viewport: RxVirtualScrollViewport,
-    viewRepeater: RxVirtualViewRepeater<T, U>
+    viewRepeater: RxVirtualViewRepeater<T, U>,
   ): void {
     this.viewport = viewport;
     this.viewRepeater = viewRepeater;
@@ -203,26 +217,61 @@ export class FixedSizeVirtualScrollStrategy<
               item,
               index,
             });
-          })
+          }),
         );
       }),
-      this.untilDetached$()
+      this.untilDetached$(),
     ).subscribe();
   }
 
   private calcRenderedRange(): void {
-    const dataLengthChanged$ = this.viewRepeater!.values$.pipe(
-      map(
-        (values) =>
-          (Array.isArray(values)
-            ? values
-            : values != null
+    const valueArray$ = this.viewRepeater!.values$.pipe(
+      map((values) =>
+        Array.isArray(values)
+          ? values
+          : values != null
             ? Array.from(values)
-            : []
-          ).length
+            : [],
       ),
+      shareReplay({ bufferSize: 1, refCount: true }),
+    );
+    /*
+     * when keepScrolledIndexOnPrepend is active, we need to listen to data changes and figure out what was appended
+     * before the last scrolledToItem
+     */
+    let valueCache: Record<any, T> = {};
+    valueArray$
+      .pipe(
+        // TODO: this might cause issues when turning on/off
+        filter(() => this.keepScrolledIndexOnPrepend),
+        this.untilDetached$(),
+      )
+      .subscribe((valueArray) => {
+        const trackBy = this.viewRepeater!._trackBy;
+        let scrollTo = this.scrolledIndex;
+        const dataLength = valueArray.length;
+        const oldDataLength = Object.keys(valueCache).length;
+
+        if (oldDataLength > 0) {
+          let i = 0;
+          // check for each item from the last known scrolledIndex if it's an insert
+          for (i; i <= scrollTo && i < dataLength; i++) {
+            // item is not in the valueCache, so it was added
+            if (!valueCache[trackBy(i, valueArray[i])]) {
+              scrollTo++;
+            }
+          }
+        }
+        valueCache = {};
+        valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
+        if (scrollTo !== this.scrolledIndex) {
+          this.scrollToIndex(scrollTo);
+        }
+      });
+    const dataLengthChanged$ = valueArray$.pipe(
+      map((values) => values.length),
       distinctUntilChanged(),
-      tap((dataLength) => (this.contentSize = dataLength * this.itemSize))
+      tap((dataLength) => (this.contentSize = dataLength * this.itemSize)),
     );
     const onScroll$ = this.viewport!.elementScrolled$.pipe(
       coalesceWith(unpatchedAnimationFrameTick()),
@@ -234,14 +283,14 @@ export class FixedSizeVirtualScrollStrategy<
             this.viewport!.getScrollTop(),
             this.viewportOffset,
             this._contentSize,
-            this.containerSize
+            this.containerSize,
           );
         this.direction =
           scrollTopWithOutOffset > this.scrollTopWithOutOffset ? 'down' : 'up';
         this.scrollTopWithOutOffset = scrollTopWithOutOffset;
         this.scrollTopAfterOffset = scrollTopAfterOffset;
         this.scrollTop = scrollTop;
-      })
+      }),
     );
     combineLatest([
       dataLengthChanged$,
@@ -250,7 +299,7 @@ export class FixedSizeVirtualScrollStrategy<
           this.containerSize = height;
           return height;
         }),
-        distinctUntilChanged()
+        distinctUntilChanged(),
       ),
       onScroll$,
       this.runwayStateChanged$.pipe(startWith(void 0)),
@@ -260,13 +309,13 @@ export class FixedSizeVirtualScrollStrategy<
           const containerSize = calculateVisibleContainerSize(
             this.containerSize,
             this.scrollTopWithOutOffset,
-            this.scrollTopAfterOffset
+            this.scrollTopAfterOffset,
           );
           const range: ListRange = { start: 0, end: 0 };
           if (this.direction === 'up') {
             range.start = Math.floor(
               Math.max(0, this.scrollTop - this.runwayItems * this.itemSize) /
-                this.itemSize
+                this.itemSize,
             );
             range.end = Math.min(
               length,
@@ -274,15 +323,15 @@ export class FixedSizeVirtualScrollStrategy<
                 (this.scrollTop +
                   containerSize +
                   this.runwayItemsOpposite * this.itemSize) /
-                  this.itemSize
-              )
+                  this.itemSize,
+              ),
             );
           } else {
             range.start = Math.floor(
               Math.max(
                 0,
-                this.scrollTop - this.runwayItemsOpposite * this.itemSize
-              ) / this.itemSize
+                this.scrollTop - this.runwayItemsOpposite * this.itemSize,
+              ) / this.itemSize,
             );
             range.end = Math.min(
               length,
@@ -290,8 +339,8 @@ export class FixedSizeVirtualScrollStrategy<
                 (this.scrollTop +
                   containerSize +
                   this.runwayItems * this.itemSize) /
-                  this.itemSize
-              )
+                  this.itemSize,
+              ),
             );
           }
           if (this.appendOnly) {
@@ -303,9 +352,9 @@ export class FixedSizeVirtualScrollStrategy<
         }),
         distinctUntilChanged(
           ({ start: prevStart, end: prevEnd }, { start, end }) =>
-            prevStart === start && prevEnd === end
+            prevStart === start && prevEnd === end,
         ),
-        this.untilDetached$()
+        this.untilDetached$(),
       )
       .subscribe((range) => (this.renderedRange = range));
   }
@@ -321,7 +370,7 @@ export class FixedSizeVirtualScrollStrategy<
 
   private _setViewPosition(
     view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>,
-    scrollTop: number
+    scrollTop: number,
   ): void {
     const element = this.getElement(view);
     element.style.position = 'absolute';
