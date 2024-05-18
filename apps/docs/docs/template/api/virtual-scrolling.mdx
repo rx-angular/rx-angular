@@ -464,6 +464,97 @@ To enable window scrolling, simply add the `scrollWindow` directive to the `rx-v
 </rx-virtual-scroll-viewport>
 ```
 
+## Reverse Infinite Scroll (keepScrolledIndexOnPrepend)
+
+:::note Infinite Scrolling != Virtual Scrolling
+
+Infinite scrolling is a scrollable pagination. Instead of loading all elements at once, they are
+added to the list when the user hits a certain scroll position. By default you are starting at the top and new data
+is _appended_ to the list, when the user hits the bottom of the list.
+
+:::
+
+When implementing a _reversed_ infinite scroller, you are starting from the _bottom_ of the list and _prepend_ data when
+users hit the top of the list. This is usually the case for chat windows like whatsapp.
+
+In order to support this behavior, the virtual scroll strategies need to adjust the scrolling behavior. They should keep the
+currently scrolled to index stable when new data is prepended to the list.
+
+You can tell the scroll strategies to do so by setting the `keepScrolledIndexOnPrepend` flag to `true`.
+
+See the following example implementation.
+
+<Tabs>
+
+  <TabItem value="component" label="Component">
+
+```typescript title="reverse-infinite-list.component.ts"
+import { AutoSizeVirtualScrollStrategy, ListRange, RxVirtualFor, RxVirtualScrollViewportComponent } from '@rx-angular/template/experimental/virtual-scrolling';
+
+@Component({
+  imports: [RxVirtualScrollViewportComponent, RxVirtualFor, AutoSizeVirtualScrollStrategy],
+})
+export class ReverseInfiniteListComponent {
+  initialScrollIndex = 19;
+
+  private dataService = inject(MessageService);
+  // the currently rendered list range
+  listRange: ListRange = { start: 0, end: 0 };
+  // attach to scrollIndexChanged
+  scrolled$ = new Subject<number>();
+  messages$ = this.scrolled$.pipe(
+    // only fetch when hitting the start
+    filter(() => this.listRange.start === 0),
+    // start with the first request
+    startWith(0),
+    // index will be the page we want to fetch
+    exhaustMap((_, index) => {
+      return this.dataService.getMessages(index);
+    }),
+    scan(
+      (messages, newMessages) => [
+        ...newMessages, // <- append new messages
+        ...messages,
+      ],
+      [],
+    ),
+  );
+
+  trackMessage = (index: number, message: Message) => {
+    return message.id;
+  };
+}
+```
+
+  </TabItem>
+  <TabItem value="template" label="Template">
+
+```html title="reverse-infinite-list.component.html"
+<rx-virtual-scroll-viewport #viewport autosize keepScrolledIndexOnPrepend [initialScrollIndex]="initialScrollIndex" (viewRange)="listRange = $event" (scrolledIndexChange)="scrolled$.next($event)">
+  <div
+    *rxVirtualFor="
+      let item of messages$;
+      trackBy: trackMessage;
+      renderCallback: viewsRendered$
+    "
+  >
+    <div>
+      <div>{{ item.message.text }}</div>
+      <div>{{ item.sendAt | date }}</div>
+    </div>
+  </div>
+</rx-virtual-scroll-viewport>
+```
+
+  </TabItem>
+
+</Tabs>
+
+This is how the implementation looks like in real life, based on the example
+given in our demos application
+
+<ReactPlayer playing controls url={require('@site/static/img/template/virtual-scrolling/reverse-infinite-scroll.mp4').default} />
+
 ## Advanced Usage
 
 ### Use render strategies (`strategy`)
@@ -639,10 +730,11 @@ All of them provide a twitter-like virtual-scrolling implementation, where views
 using css `transforms`.
 They also share two inputs to define the amount of views to actually render on the screen.
 
-| Input                 | Type     | description                                                                      |
-| --------------------- | -------- | -------------------------------------------------------------------------------- |
-| `runwayItems`         | `number` | _default: `10`_ The amount of items to render upfront in scroll direction        |
-| `runwayItemsOpposite` | `number` | _default: `2`_ The amount of items to render upfront in reverse scroll direction |
+| Input                        | Type      | description                                                                                                                                                                                                                                             |
+| ---------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `runwayItems`                | `number`  | _default: `10`_ The amount of items to render upfront in scroll direction                                                                                                                                                                               |
+| `runwayItemsOpposite`        | `number`  | _default: `2`_ The amount of items to render upfront in reverse scroll direction                                                                                                                                                                        |
+| `keepScrolledIndexOnPrepend` | `boolean` | _default: `false`_ If this flag is true, the virtual scroll strategy maintains the scrolled item when new data is prepended to the list. This is very useful when implementing a reversed infinite scroller, that prepends data instead of appending it |
 
 See the layouting technique in action in the following video. It compares `@rx-angular/template` vs. `@angular/cdk/scrolling`
 
