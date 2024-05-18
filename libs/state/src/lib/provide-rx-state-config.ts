@@ -5,10 +5,7 @@ import {
 } from '@rx-angular/state/selections';
 import { queueScheduler, SchedulerLike } from 'rxjs';
 
-export const enum RX_STATE_CONFIGS {
-  Scheduler,
-  Accumulator,
-}
+export type RX_STATE_CONFIGS = 'Accumulator' | 'Scheduler';
 
 interface RxStateConfigFn {
   kind: RX_STATE_CONFIGS;
@@ -40,7 +37,7 @@ export const RX_ACCUMULATOR_FN = new InjectionToken<AccumulationFn>(
  */
 export function withAccumulatorFn(fn: AccumulationFn): RxStateConfigFn {
   return {
-    kind: RX_STATE_CONFIGS.Accumulator,
+    kind: 'Accumulator',
     providers: [{ provide: RX_ACCUMULATOR_FN, useValue: fn }],
   };
 }
@@ -61,7 +58,7 @@ export function withScheduler(
   scheduler: SchedulerLike | 'sync',
 ): RxStateConfigFn {
   return {
-    kind: RX_STATE_CONFIGS.Scheduler,
+    kind: 'Scheduler',
     providers: [{ provide: RX_STATE_SCHEDULER, useValue: scheduler }],
   };
 }
@@ -72,7 +69,7 @@ export function withScheduler(
  */
 export function withSyncScheduler(): RxStateConfigFn {
   return {
-    kind: RX_STATE_CONFIGS.Scheduler,
+    kind: 'Scheduler',
     providers: [{ provide: RX_STATE_SCHEDULER, useValue: 'sync' }],
   };
 }
