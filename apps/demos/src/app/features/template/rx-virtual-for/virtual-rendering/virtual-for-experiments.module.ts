@@ -21,6 +21,7 @@ import { RxLet } from '@rx-angular/template/let';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
 import { VirtualForDemoComponent } from './virtual-for-demo.component';
+import { VirtualForReverseInfiniteScrollComponent } from './virtual-for-reverse-infinite-scroll.component';
 import { VirtualForScrollWindowDemoComponent } from './virtual-for-scroll-window-demo.component';
 import { VirtualForCustomScrollableDemoComponent } from './virtual-for-scrollable-demo.component';
 
@@ -29,6 +30,11 @@ import { VirtualForCustomScrollableDemoComponent } from './virtual-for-scrollabl
     RouterModule.forChild([
       {
         path: '',
+        redirectTo: 'showcase',
+        pathMatch: 'full',
+      },
+      {
+        path: 'showcase',
         component: VirtualForDemoComponent,
       },
       {
@@ -38,6 +44,10 @@ import { VirtualForCustomScrollableDemoComponent } from './virtual-for-scrollabl
       {
         path: 'window-scrolling',
         component: VirtualForScrollWindowDemoComponent,
+      },
+      {
+        path: 'reverse-infinite-scroll',
+        component: VirtualForReverseInfiniteScrollComponent,
       },
     ]),
     ValueProvidersModule,

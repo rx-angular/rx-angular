@@ -13,6 +13,7 @@ import {
   updateItemImmutable,
   updateItemMutable,
   withCompleteAndError,
+  prependItemImmutable,
 } from './utils';
 import { ProvidedValues } from './model';
 
@@ -24,12 +25,15 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
   protected error$ = this.errorSubject.pipe(
     map((_) => {
       throw new Error('ERROR');
-    })
+    }),
   );
   protected completeSubject = new Subject<any>();
   protected resetSubject = new Subject<number | undefined>();
 
-  protected addItemsImmutableSubject = new Subject<number | undefined>();
+  protected addItemsImmutableSubject = new Subject<{
+    numItems: number;
+    prepend: boolean;
+  }>();
   protected moveItemsImmutableSubject = new Subject<number | undefined>();
   protected shuffleItemsImmutableSubject = new Subject<void>();
   protected updateItemsImmutableSubject = new Subject<number>();
@@ -47,7 +51,7 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
   private resetObservables = () => {
     this.array$ = this.$.pipe(
       map((s) => s.array),
-      withCompleteAndError(this.error$, this.completeSubject)
+      withCompleteAndError(this.error$, this.completeSubject),
     );
   };
 
@@ -57,50 +61,60 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
     this.connect(
       'array',
       this.addItemsImmutableSubject,
-      (state, numItems = 1) => addItemImmutable(state?.array || [], numItems)
+      (state, { numItems, prepend }) => {
+        if (prepend) {
+          return prependItemImmutable(state?.array || [], numItems);
+        } else {
+          return addItemImmutable(state?.array || [], numItems);
+        }
+      },
     );
 
     this.connect('array', this.updateItemsImmutableSubject, (state, num) =>
-      updateItemImmutable(state?.array || [], num)
+      updateItemImmutable(state?.array || [], num),
     );
 
     this.connect('array', this.moveItemsImmutableSubject, (state, positions) =>
-      moveItemsImmutable(state?.array || [], positions)
+      moveItemsImmutable(state?.array || [], positions),
     );
 
     this.connect('array', this.shuffleItemsImmutableSubject, (state) =>
-      shuffleItemsImmutable(state?.array || [])
+      shuffleItemsImmutable(state?.array || []),
     );
 
     this.connect('array', this.removeItemsImmutableSubject, (state, num) =>
-      removeItemsImmutable(state?.array || [], num)
+      removeItemsImmutable(state?.array || [], num),
     );
 
     this.connect('array', this.addItemsMutableSubject, (state, numItems = 1) =>
-      addItemMutable(state?.array || [], numItems)
+      addItemMutable(state?.array || [], numItems),
     );
 
     this.connect('array', this.updateItemsMutableSubject, (state, itemIds) =>
-      updateItemMutable(state?.array || [], itemIds)
+      updateItemMutable(state?.array || [], itemIds),
     );
 
     this.connect('array', this.moveItemsMutableSubject, (state, positions) =>
-      moveItemMutable(state?.array || [], positions)
+      moveItemMutable(state?.array || [], positions),
     );
 
     this.connect('array', this.removeItemsMutableSubject, (state, ids) =>
-      removeItemsMutable(state?.array || [], ids)
+      removeItemsMutable(state?.array || [], ids),
     );
 
     this.connect('array', this.resetSubject, (state, itemsToAdd) =>
-      addItemImmutable([], itemsToAdd ?? 0)
+      addItemImmutable([], itemsToAdd ?? 0),
     );
 
     this.resetAll();
   }
 
   addItemsImmutable(numItems?: number): void {
-    this.addItemsImmutableSubject.next(numItems);
+    this.addItemsImmutableSubject.next({ numItems, prepend: false });
+  }
+
+  prependItemsImmutable(numItems?: number): void {
+    this.addItemsImmutableSubject.next({ numItems, prepend: true });
   }
 
   moveItemsImmutable(numPositions: number = 1): void {

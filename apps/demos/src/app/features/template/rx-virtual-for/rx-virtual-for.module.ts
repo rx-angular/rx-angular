@@ -1,16 +1,12 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
-export const ROUTES = [
+export const ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'showcase',
-  },
-  {
-    path: 'showcase',
     loadChildren: () =>
       import('./virtual-rendering/virtual-for-experiments.module').then(
-        (m) => m.RxVirtualForModule
+        (m) => m.RxVirtualForModule,
       ),
   },
 ];

@@ -1,41 +1,41 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
-export const ROUTES = [
+export const ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'list-actions'
+    redirectTo: 'list-actions',
+    pathMatch: 'full',
   },
   {
     path: 'list-actions',
     loadChildren: () =>
       import('./list-actions/list-actions.module').then(
-        m => m.ListActionsModule
-      )
+        (m) => m.ListActionsModule,
+      ),
   },
   {
     path: 'error-handling',
     loadChildren: () =>
       import('./error-handling/rx-for-error-handling.module').then(
-        m => m.RxForErrorHandlingModule
-      )
+        (m) => m.RxForErrorHandlingModule,
+      ),
   },
   {
     path: 'nested-lists',
     loadChildren: () =>
       import('./nested-lists/nested-lists.routed.module').then(
-        m => m.NestedListsRoutedModule
-      )
+        (m) => m.NestedListsRoutedModule,
+      ),
   },
   {
     path: 'route-change',
     loadChildren: () =>
       import('./route-change/route-change.module').then(
-        m => m.RouteChangeModule
-      )
-  }
+        (m) => m.RouteChangeModule,
+      ),
+  },
 ];
-
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
