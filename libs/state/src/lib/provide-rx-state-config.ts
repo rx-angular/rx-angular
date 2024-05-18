@@ -32,7 +32,7 @@ export const RX_ACCUMULATOR_FN = new InjectionToken<AccumulationFn>(
 );
 
 /**
- * Injection token for the default accumulator function.
+ * Provider function to specify a custom `AccumulationFn` for `RxState` to use.
  * @param fn
  */
 export function withAccumulatorFn(fn: AccumulationFn): RxStateConfigFn {
@@ -42,6 +42,17 @@ export function withAccumulatorFn(fn: AccumulationFn): RxStateConfigFn {
   };
 }
 
+/**
+ * Injection token for the default state scheduler
+ *
+ * @example
+ * providers: [
+ *  {
+ *   provide: RX_STATE_SCHEDULER,
+ *   useValue: asapScheduler
+ *  }
+ * ]
+ */
 export const RX_STATE_SCHEDULER = new InjectionToken<SchedulerLike | 'sync'>(
   'RX_STATE_SCHEDULER',
   {
@@ -51,7 +62,7 @@ export const RX_STATE_SCHEDULER = new InjectionToken<SchedulerLike | 'sync'>(
 );
 
 /**
- * Injection token for the default scheduler for rxState.
+ * Provider function to specify a scheduler for `RxState` to perform state updates & emit new values.
  * @param scheduler
  */
 export function withScheduler(
@@ -64,8 +75,8 @@ export function withScheduler(
 }
 
 /**
- * Injection token for the default scheduler for rxState.
- * @param fn
+ * Provider function to specify synchronous (no) scheduling for `RxState`. The state computations
+ * will be fully synchronous instead of using the default `queueScheduler`
  */
 export function withSyncScheduler(): RxStateConfigFn {
   return {

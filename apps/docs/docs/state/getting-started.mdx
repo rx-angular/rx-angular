@@ -487,7 +487,42 @@ bootstrapApplication(AppComponent, {
 By default, `RxState` observes changes and computes new states on the [`queueScheduler`](https://rxjs.dev/api/index/const/queueScheduler). You can modify
 this behavior by using the `withScheduler()` or `withSyncScheduler()` configuration features.
 
-The most applicable use case will be to have sync scheduling:
+The `queueScheduler` provides a certain level of integrity, as state mutations that cause other state mutations are executed in the right order.
+
+:::note queueScheduler
+
+When used without delay, it schedules given task synchronously - executes it right when it is scheduled.
+However when called recursively, that is when inside the scheduled task, another task is scheduled with queue scheduler,
+instead of executing immediately as well, that task will be put on a queue and wait for current one to finish.
+
+This means that when you execute task with queue scheduler, you are sure it will end before any other task scheduled with that scheduler will start.
+
+src: (https://rxjs.dev/api/index/const/queueScheduler)
+
+:::
+
+This means, it is possible that u run into the situation where you mutate the state, but isn't synchronous.
+
+See the following very simplified example:
+
+```typescript title="queue-scheduler.example.ts"
+import { rxState } from '@rx-angular/state';
+
+const state = rxState<{ foo: string; bar: string }>();
+
+state.set(() => {
+  // will execute after the { bar: 'bar' } was set
+  state.set('foo', 'foo');
+  console.log(state.get('foo')); // prints undefined
+
+  // will execute first
+  return {
+    bar: 'bar',
+  };
+});
+```
+
+In order to escape this behavior, you can define the scheduling to be fully synchronous:
 
 ```typescript title="main.ts"
 import { bootstrapApplication } from '@angular/platform-browser';
