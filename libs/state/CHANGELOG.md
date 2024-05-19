@@ -2,6 +2,18 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [17.2.0](https://github.com/rx-angular/rx-angular/compare/state@17.1.0...state@17.2.0) (2024-05-19)
+
+
+### Features
+
+* **state:** add `provideRxStateConfig` function ([3ee6fda](https://github.com/rx-angular/rx-angular/commit/3ee6fda9db634d63e4555fdd946b9d5308c5878f))
+* **state:** add accumulator fn injection token ([6bb9d76](https://github.com/rx-angular/rx-angular/commit/6bb9d7666e277b8b599bcc9c42d3773ce9b335c9))
+* **state:** deprecate `setAccumulator` in favor of `withAccumulator` ([6497d6c](https://github.com/rx-angular/rx-angular/commit/6497d6caefc773656b627d230edee149c10ba79b))
+* **state:** introduce configurable scheduler ([a269ee3](https://github.com/rx-angular/rx-angular/commit/a269ee3d2d2722ceb12c8a6fc195da267bd42ca3))
+
+
+
 # [17.1.0](https://github.com/rx-angular/rx-angular/compare/state@17.0.1...state@17.1.0) (2024-05-17)
 
 
