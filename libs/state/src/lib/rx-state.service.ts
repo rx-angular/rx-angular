@@ -405,6 +405,10 @@ export class RxState<State extends object>
    * Connect a `Signal<Partial<State>>` to the state `State`.
    * Any change emitted by the source will get merged into the state.
    *
+   * @example
+   * const partialState = signal({ foo: 'foo', bar: 5 });
+   * state.connect(partialState);
+   *
    *  @param {Signal<Partial<State>>} signal
    *  @return void
    */
@@ -422,6 +426,7 @@ export class RxState<State extends object>
    * const sliceToAdd$ = interval(250);
    * state.connect(sliceToAdd$, (type, value) => ({bar: value}));
    * // every 250ms the property bar get updated due to the emission of sliceToAdd$
+   *
    * @param {Observable<Value>} inputOrSlice$
    * @param {ProjectStateReducer<State, Value>} projectFn
    * @return void
@@ -437,6 +442,11 @@ export class RxState<State extends object>
    * Any change emitted by the source will get forwarded to the project function and merged into the state.
    *
    * You have to provide a `projectionFunction` to access the current state object and do custom mappings.
+   *
+   * @example
+   * const signalSlice = signal(5);
+   * state.connect(signalSlice, (type, value) => ({bar: value}));
+   *
    * @param {Signal<Value>} signal
    * @param {ProjectStateReducer<State, Value>} projectFn
    * @return void
@@ -472,6 +482,11 @@ export class RxState<State extends object>
    * @description
    * Connect a `Signal<State[Key]>` source to a specific property `Key` in the state `State`.
    * Any emitted change will update this specific property in the state.
+   *
+   * @example
+   * const currentTime = signal(Date.now())
+   * state.connect('currentTime', currentTime);
+   *
    * @param {Key} key
    * @param {Signal<State[Key]>} signal
    *
@@ -490,6 +505,7 @@ export class RxState<State extends object>
    * const myTimer$ = interval(250);
    * state.connect('timer', myTimer$, (state, timerChange) => state.timer += timerChange);
    * // every 250ms the property timer will get updated
+   *
    * @param {Key} key
    * @param {Observable<Value>} input$
    * @param {ProjectValueReducer<State, Key, Value>} projectSliceFn
@@ -509,6 +525,11 @@ export class RxState<State extends object>
    * `projectionFunction` to access the current state object on every emission of your connected `Observable`.
    * Any change emitted by the source will get merged into the state.
    * Subscription handling is done automatically.
+   *
+   * @example
+   * const currentTime = signal(Date.now())
+   * state.connect('currentTime', currentTime, (state, currentTime) => state.currentTime = currentTime);
+   *
    * @param {Key} key
    * @param {Signal<Value>} signal
    * @param {ProjectValueReducer<State, Key, Value>} projectSliceFn
@@ -874,6 +895,10 @@ export class RxState<State extends object>
    * Returns a signal of the given key. It's first value is determined by the
    * current keys value in RxState. Whenever the key gets updated, the signal
    * will also be updated accordingly.
+   *
+   * @example
+   * const fooSignal = state.signal('foo');
+   *
    * @param {Key} key
    *
    * @return Signal<State[Key]>
@@ -885,6 +910,9 @@ export class RxState<State extends object>
   /**
    * @description
    * Lets you create a computed signal based off multiple keys stored in RxState.
+   *
+   * @example
+   * const computedSignal = state.computed((s) => s.foo + s.bar);
    *
    * @param {(slice: SignalStateProxy<Type>) => ComputedType} fn
    * @return Signal<ComputedType>
@@ -904,8 +932,14 @@ export class RxState<State extends object>
    * @throws If the initial value is not provided and the signal is not sync.
    * Use startWith() to provide an initial value.
    *
-   // * @param op1 { OperatorFunction<Type, TypeA> }
-   // * @returns Signal<TypeA>
+   * @example
+   * const computedSignal = state.computedFrom(
+   *    map(state => state.foo),
+   *    filter(foo => foo > 5)
+   *  );
+   *
+   * @param op1 { OperatorFunction<Type, TypeA> }
+   * @returns Signal<TypeA>
    */
   computedFrom<TypeA = State>(
     op1: OperatorFunction<State, TypeA>,
