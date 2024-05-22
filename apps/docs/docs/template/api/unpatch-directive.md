@@ -41,12 +41,22 @@ The `unpatch` directive solves this problem in a convenient way:
 > 1. Elements that should trigger navigation (with `routerLink` directly or with method bound to `(click)` or other events). Otherwise you will end up having a 'Navigation triggered outside Angular zone, did you forget to call "ngZone.run()"?' warning.
 > 2. Elements that reference a `FormControl`. Specify all events except the `blur` and `change` events. Otherwise user input is ignored, the `FormControl.valueChanges` observable will not emit and attached validations to the FormControl will not run until next change detection that affects the component in which the element is rendered.
 
-Included Features:
+## Included Features:
 
 - by default un-patch all registered listeners of the host it is applied on
 - un-patch only a specified set of registered event listeners
-- works zone independent (it directly checks the widow for patched APIs and un-patches them without the use of `runOutsideZone` which brings more performance)
+- un-patch all events listeners except a specified set
+- works zone independent (it directly checks the window for patched APIs and un-patches them without the use of `runOutsideZone` which brings more performance)
 - Not interfering with any logic executed by the registered callback
+
+
+## Apply in three distinct ways:
+
+1. Unpatch all events: `<div [unpatch]>...<div>`
+2. Unpatch specified events*: `<div [unpatch]="['mouseenter', 'mouseleave']">...<div>`
+3. Unpatch all except specified events*: `<div [unpatch]="['!mouseenter', '!mouseleave']">...<div>`
+
+When combining negated and non-negated events i.e:  `<div [unpatch]="['!mouseenter', 'mouseleave']">...<div>` all non-negated events are ignored and an error will be thrown in dev mode!
 
 ## Current list of unpatched events
 
