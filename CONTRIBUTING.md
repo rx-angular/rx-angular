@@ -108,3 +108,7 @@ The following is the list of supported scopes:
 - `demos`
 - `schematics`
 - `ci`
+
+## How to release (maintainers)
+
+See the [how to release guide](./docs/how-to-release.md).
