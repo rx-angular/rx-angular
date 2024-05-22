@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [2.1.0](https://github.com/rx-angular/rx-angular/compare/eslint-plugin@2.0.0...eslint-plugin@2.1.0) (2024-05-22)
+
+
+### Features
+
+* **eslint:** update dependencies to be compatible to nx 18 ([f6b59eb](https://github.com/rx-angular/rx-angular/commit/f6b59eb687d307e1fc958f00b31487e4994a1ab1))
+
+
+
 # [2.0.0](https://github.com/rx-angular/rx-angular/compare/eslint-plugin@1.0.0...eslint-plugin@2.0.0) (2023-11-17)
 
 
