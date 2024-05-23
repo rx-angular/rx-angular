@@ -198,13 +198,7 @@ Tooltips should be displayed immediately on mouse over. Any delay will be very n
 ```typescript
 @Component({
   selector: 'item-image',
-  template: `
-    <img
-      [src]="src"
-      (mouseenter)="showTooltip()"
-      (mouseleave)="hideTooltip()"
-    />
-  `,
+  template: ` <img [src]="src" (mouseenter)="showTooltip()" (mouseleave)="hideTooltip()" /> `,
 })
 export class ItemsListComponent {
   @Input() src: string;
@@ -217,7 +211,7 @@ export class ItemsListComponent {
         () => {
           // create tooltip
         },
-        { strategy: 'immediate' }
+        { strategy: 'immediate' },
       )
       .subscribe();
   }
@@ -228,7 +222,7 @@ export class ItemsListComponent {
         () => {
           // destroy tooltip
         },
-        { strategy: 'immediate' }
+        { strategy: 'immediate' },
       )
       .subscribe();
   }
@@ -262,11 +256,7 @@ Dropdowns should be displayed right away on user interaction.
 @Component({
   selector: 'item-dropdown',
   template: `
-    <div
-      id="collapse"
-      (mouseenter)="showDropdown()"
-      (mouseleave)="hideDropdown()"
-    >
+    <div id="collapse" (mouseenter)="showDropdown()" (mouseleave)="hideDropdown()">
       {{ text }}
     </div>
   `,
@@ -281,7 +271,7 @@ export class DropdownComponent {
       () => {
         // create dropdown
       },
-      { strategy: 'userBlocking' }
+      { strategy: 'userBlocking' },
     );
   }
 
@@ -291,7 +281,7 @@ export class DropdownComponent {
         () => {
           // destroy dropdown
         },
-        { strategy: 'userBlocking' }
+        { strategy: 'userBlocking' },
       )
       .subscribe();
   }
@@ -378,7 +368,7 @@ export class ItemsListComponent {
 
   constructor(
     private state: StateService,
-    private strategyProvider: RxStrategyProvider
+    private strategyProvider: RxStrategyProvider,
   ) {}
 
   openCreateItemPopup() {
@@ -387,7 +377,7 @@ export class ItemsListComponent {
         () => {
           // logic to lazy load popup component
         },
-        { strategy: 'low' }
+        { strategy: 'low' },
       )
       .subscribe();
   }
@@ -436,16 +426,9 @@ export class ItemsListComponent {
   constructor(
     private state: StateService,
     private strategyProvider: RxStrategyProvider,
-    private webSocket: WebSocketService
+    private webSocket: WebSocketService,
   ) {
-    this.items$
-      .pipe(
-        this.strategyProvider.scheduleWith(
-          (items) => this.webSocket.syncItems(items),
-          { strategy: 'idle' }
-        )
-      )
-      .subscribe();
+    this.items$.pipe(this.strategyProvider.scheduleWith((items) => this.webSocket.syncItems(items), { strategy: 'idle' })).subscribe();
   }
 
   openCreateItemPopup() {
@@ -454,7 +437,7 @@ export class ItemsListComponent {
         () => {
           // logic to lazy load popup component
         },
-        { strategy: 'low' }
+        { strategy: 'low' },
       )
       .subscribe();
   }

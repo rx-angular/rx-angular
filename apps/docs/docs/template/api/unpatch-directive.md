@@ -26,14 +26,7 @@ This can lead to very bad user experiences, especially if you work with frequent
 The `unpatch` directive solves this problem in a convenient way:
 
 ```html
-<button [unpatch] (click)="triggerSomeMethod($event)">click me</button>
-<button
-  [unpatch]="['mousemove']"
-  (mousemove)="doStuff2($event)"
-  (click)="doStuff($event)"
->
-  click or hover me
-</button>
+<button [unpatch] (click)="triggerSomeMethod($event)">click me</button> <button [unpatch]="['mousemove']" (mousemove)="doStuff2($event)" (click)="doStuff($event)">click or hover me</button>
 ```
 
 > **Warning**: Do not use `[unpatch]` on the following elements:
@@ -51,31 +44,7 @@ Included Features:
 ## Current list of unpatched events
 
 ```typescript
-export const zonePatchedEvents = [
-  'scroll',
-  'mousedown',
-  'mouseenter',
-  'mouseleave',
-  'mousemove',
-  'mouseout',
-  'mouseover',
-  'mouseup',
-  'load',
-  'pointerup',
-  'change',
-  'blur',
-  'focus',
-  'click',
-  'contextmenu',
-  'drag',
-  'dragend',
-  'dragenter',
-  'dragleave',
-  'dragover',
-  'dragstart',
-  'drop',
-  'input',
-];
+export const zonePatchedEvents = ['scroll', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'load', 'pointerup', 'change', 'blur', 'focus', 'click', 'contextmenu', 'drag', 'dragend', 'dragenter', 'dragleave', 'dragover', 'dragstart', 'drop', 'input'];
 ```
 
 _more coming soon_:
