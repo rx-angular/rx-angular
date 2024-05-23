@@ -8,17 +8,17 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { RxDefaultListViewContext } from '@rx-angular/cdk/template';
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 type CreateViewContext<Implicit, Context, ComputedContext> = (
   value: Implicit,
-  computedContext: ComputedContext
+  computedContext: ComputedContext,
 ) => Context;
 
 type UpdateViewContext<Implicit, Context, ComputedContext> = (
   value: Implicit,
   view: EmbeddedViewRef<Context>,
-  computedContext?: ComputedContext
+  computedContext?: ComputedContext,
 ) => void;
 
 export interface TemplateSettings<Implicit, Context, ComputedContext> {
@@ -52,7 +52,7 @@ export interface ListRange {
 @Directive()
 export abstract class RxVirtualScrollStrategy<
   T,
-  U extends NgIterable<T> = NgIterable<T>
+  U extends NgIterable<T> = NgIterable<T>,
 > {
   /** Emits when the index of the first element visible in the viewport changes. */
   /** @internal */
@@ -61,6 +61,10 @@ export abstract class RxVirtualScrollStrategy<
   abstract renderedRange$: Observable<ListRange>;
   /** @internal */
   abstract contentSize$: Observable<number>;
+  /** @internal */
+  get isStable() {
+    return of(true);
+  }
 
   /**
    * @description
@@ -78,7 +82,7 @@ export abstract class RxVirtualScrollStrategy<
 
   /** @internal */
   protected getElement(
-    view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>
+    view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>,
   ): HTMLElement {
     if (this.nodeIndex !== undefined) {
       return view.rootNodes[this.nodeIndex];
@@ -95,7 +99,7 @@ export abstract class RxVirtualScrollStrategy<
    */
   abstract attach(
     viewport: RxVirtualScrollViewport,
-    viewRepeater: RxVirtualViewRepeater<any>
+    viewRepeater: RxVirtualViewRepeater<any>,
   ): void;
 
   /** Detaches this scroll strategy from the currently attached viewport. */
@@ -124,7 +128,7 @@ export abstract class RxVirtualScrollViewport {
 @Directive()
 export abstract class RxVirtualViewRepeater<
   T,
-  U extends NgIterable<T> = NgIterable<T>
+  U extends NgIterable<T> = NgIterable<T>,
 > {
   abstract values$: Observable<U | null | undefined>;
   abstract viewsRendered$: Observable<
@@ -145,9 +149,13 @@ export class RxVirtualForViewContext<
   T,
   U extends NgIterable<T> = NgIterable<T>,
   C extends { count: number; index: number } = { count: number; index: number },
-  K = keyof T
+  K = keyof T,
 > extends RxDefaultListViewContext<T, U, K> {
-  constructor(item: T, public rxVirtualForOf: U, customProps?: C) {
+  constructor(
+    item: T,
+    public rxVirtualForOf: U,
+    customProps?: C,
+  ) {
     super(item, customProps);
   }
 }

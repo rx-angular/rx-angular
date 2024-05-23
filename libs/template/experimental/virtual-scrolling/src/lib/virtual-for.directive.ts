@@ -50,6 +50,7 @@ import {
   shareReplay,
   switchAll,
   switchMap,
+  take,
   takeUntil,
   tap,
 } from 'rxjs/operators';
@@ -659,90 +660,103 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       this.scrollStrategy.renderedRange$,
       this.strategyHandler.strategy$.pipe(distinctUntilChanged()),
     ]).pipe(
-      // map iterable to latest diff
-      switchMap(([items, range, strategy]) => {
-        const iterable = items.slice(range.start, range.end);
-        const differ = this.getDiffer(iterable);
-        let changes: IterableChanges<T> | null = null;
-        if (differ) {
-          if (this.partiallyFinished) {
-            const currentIterable = [];
-            for (let i = 0, ilen = this.viewContainer.length; i < ilen; i++) {
-              const viewRef = <EmbeddedViewRef<any>>this.viewContainer.get(i);
-              currentIterable[i] = viewRef.context.$implicit;
-            }
-            differ.diff(currentIterable);
-          }
-          changes = differ.diff(iterable);
-        }
-        if (!changes) {
-          return NEVER;
-        }
-        const listChanges = this.templateManager.getListChanges(
-          changes,
-          iterable,
-          items.length,
-          range.start,
-        );
-        const updates = listChanges[0].sort((a, b) => a[0] - b[0]);
-        const indicesToPosition = new Set<number>();
-        const insertedOrRemoved = listChanges[1];
-        const work$ = updates.map(([index, work, removed]) => {
-          if (!removed) {
-            indicesToPosition.add(index);
-          }
-          return onStrategy(
-            null,
-            strategy,
-            () => {
-              const update = work();
-              if (update.view) {
-                this.viewRendered$.next(update as any);
+      switchMap(([items, range, strategy]) =>
+        // wait for scrollStrategy to be stable until computing new state
+        this.scrollStrategy.isStable.pipe(
+          take(1),
+          // map iterable to latest diff
+          switchMap(() => {
+            const iterable = items.slice(range.start, range.end);
+            const differ = this.getDiffer(iterable);
+            let changes: IterableChanges<T> | null = null;
+            if (differ) {
+              if (this.partiallyFinished) {
+                const currentIterable = [];
+                for (
+                  let i = 0, ilen = this.viewContainer.length;
+                  i < ilen;
+                  i++
+                ) {
+                  const viewRef = <EmbeddedViewRef<any>>(
+                    this.viewContainer.get(i)
+                  );
+                  currentIterable[i] = viewRef.context.$implicit;
+                }
+                differ.diff(currentIterable);
               }
-            },
-            { ngZone: this.patchZone ? this.ngZone : undefined },
-          );
-        });
-        this.partiallyFinished = true;
-        const notifyParent = insertedOrRemoved && this.renderParent;
-        this.renderingStart$.next(indicesToPosition);
-        return combineLatest(
-          // emit after all changes are rendered
-          work$.length > 0 ? work$ : [of(iterable)],
-        ).pipe(
-          tap(() => {
-            this.templateManager.setItemCount(items.length);
-            this.partiallyFinished = false;
-            const viewsRendered = [];
-            const end = this.viewContainer.length;
-            let i = 0;
-            for (i; i < end; i++) {
-              viewsRendered.push(this.viewContainer.get(i));
+              changes = differ.diff(iterable);
             }
-            this.viewsRendered$.next(viewsRendered as any);
+            if (!changes) {
+              return NEVER;
+            }
+            const listChanges = this.templateManager.getListChanges(
+              changes,
+              iterable,
+              items.length,
+              range.start,
+            );
+            const updates = listChanges[0].sort((a, b) => a[0] - b[0]);
+
+            const indicesToPosition = new Set<number>();
+            const insertedOrRemoved = listChanges[1];
+            const work$ = updates.map(([index, work, removed]) => {
+              if (!removed) {
+                indicesToPosition.add(index);
+              }
+              return onStrategy(
+                null,
+                strategy,
+                () => {
+                  const update = work();
+                  if (update.view) {
+                    this.viewRendered$.next(update as any);
+                  }
+                },
+                { ngZone: this.patchZone ? this.ngZone : undefined },
+              );
+            });
+            this.partiallyFinished = true;
+            const notifyParent = insertedOrRemoved && this.renderParent;
+            this.renderingStart$.next(indicesToPosition);
+            return combineLatest(
+              // emit after all changes are rendered
+              work$.length > 0 ? work$ : [of(iterable)],
+            ).pipe(
+              tap(() => {
+                this.templateManager.setItemCount(items.length);
+                this.partiallyFinished = false;
+                const viewsRendered = [];
+                const end = this.viewContainer.length;
+                let i = 0;
+                for (i; i < end; i++) {
+                  viewsRendered.push(this.viewContainer.get(i));
+                }
+                this.viewsRendered$.next(viewsRendered as any);
+              }),
+              notifyParent
+                ? switchMap((v) =>
+                    concat(
+                      of(v),
+                      onStrategy(
+                        null,
+                        strategy,
+                        (_, work, options) => {
+                          work(this.cdRef, options.scope);
+                        },
+                        {
+                          ngZone: this.patchZone ? this.ngZone : undefined,
+                          scope: (this.cdRef as any).context || this.cdRef,
+                        },
+                      ).pipe(ignoreElements()),
+                    ),
+                  )
+                : (o$) => o$,
+              this.handleError(),
+              map(() => iterable),
+            );
           }),
-          notifyParent
-            ? switchMap((v) =>
-                concat(
-                  of(v),
-                  onStrategy(
-                    null,
-                    strategy,
-                    (_, work, options) => {
-                      work(this.cdRef, options.scope);
-                    },
-                    {
-                      ngZone: this.patchZone ? this.ngZone : undefined,
-                      scope: (this.cdRef as any).context || this.cdRef,
-                    },
-                  ).pipe(ignoreElements()),
-                ),
-              )
-            : (o$) => o$,
-          this.handleError(),
-          map(() => iterable),
-        );
-      }),
+        ),
+      ),
       this.handleError(),
     );
   }

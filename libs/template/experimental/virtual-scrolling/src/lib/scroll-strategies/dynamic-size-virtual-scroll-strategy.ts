@@ -11,12 +11,15 @@ import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   combineLatest,
   MonoTypeOperatorFunction,
+  Observable,
   ReplaySubject,
   Subject,
 } from 'rxjs';
 import {
   distinctUntilChanged,
+  filter,
   map,
+  shareReplay,
   startWith,
   switchMap,
   takeUntil,
@@ -78,7 +81,7 @@ const defaultItemSize = () => DEFAULT_ITEM_SIZE;
 })
 export class DynamicSizeVirtualScrollStrategy<
     T,
-    U extends NgIterable<T> = NgIterable<T>
+    U extends NgIterable<T> = NgIterable<T>,
   >
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
@@ -110,6 +113,14 @@ export class DynamicSizeVirtualScrollStrategy<
 
   /**
    * @description
+   * If this flag is true, the virtual scroll strategy maintains the scrolled item when new data
+   * is prepended to the list. This is very useful when implementing a reversed infinite scroller, that prepends
+   * data instead of appending it
+   */
+  @Input({ transform: toBoolean }) keepScrolledIndexOnPrepend = false;
+
+  /**
+   * @description
    * Function returning the size of an item
    */
   @Input('dynamic')
@@ -122,6 +133,17 @@ export class DynamicSizeVirtualScrollStrategy<
     return this._itemSizeFn;
   }
   private _itemSizeFn: (item: T) => number = defaultItemSize;
+
+  /** @internal */
+  private waitForScroll = false;
+
+  /** @internal */
+  private isStable$ = new ReplaySubject<boolean>(1);
+
+  /** @internal */
+  override get isStable(): Observable<boolean> {
+    return this.isStable$.pipe(filter((w) => w));
+  }
 
   /** @internal */
   private viewport: RxVirtualScrollViewport | null = null;
@@ -155,8 +177,13 @@ export class DynamicSizeVirtualScrollStrategy<
 
   /** @internal */
   private set renderedRange(range: ListRange) {
-    this._renderedRange = range;
-    this._renderedRange$.next(range);
+    if (
+      this._renderedRange.start !== range.start ||
+      this._renderedRange.end !== range.end
+    ) {
+      this._renderedRange = range;
+      this._renderedRange$.next(range);
+    }
   }
   /** @internal */
   private get renderedRange(): ListRange {
@@ -166,9 +193,14 @@ export class DynamicSizeVirtualScrollStrategy<
   private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
   /** @internal */
   readonly scrolledIndex$ = this._scrolledIndex$.pipe(distinctUntilChanged());
+  private _scrolledIndex = 0;
   /** @internal */
   private set scrolledIndex(index: number) {
+    this._scrolledIndex = index;
     this._scrolledIndex$.next(index);
+  }
+  private get scrolledIndex() {
+    return this._scrolledIndex;
   }
   /** @internal */
   private get contentLength(): number {
@@ -229,7 +261,7 @@ export class DynamicSizeVirtualScrollStrategy<
   /** @internal */
   attach(
     viewport: RxVirtualScrollViewport,
-    viewRepeater: RxVirtualViewRepeater<T, U>
+    viewRepeater: RxVirtualViewRepeater<T, U>,
   ): void {
     this.viewport = viewport;
     this.viewRepeater = viewRepeater;
@@ -252,18 +284,30 @@ export class DynamicSizeVirtualScrollStrategy<
     for (let i = 0; i < _index; i++) {
       scrollTo += this._virtualItems[i].size;
     }
+    this.waitForScroll = true;
+    this.isStable$.next(false);
     this.viewport!.scrollTo(this.viewportOffset + scrollTo, behavior);
   }
 
   /** @internal */
   private maintainVirtualItems(): void {
-    this.viewRepeater!.values$.pipe(this.until$()).subscribe((data) => {
-      if (!data) {
+    const valueArray$ = this.viewRepeater!.values$.pipe(
+      map((values) =>
+        Array.isArray(values)
+          ? values
+          : values != null
+            ? Array.from(values)
+            : [],
+      ),
+      shareReplay({ bufferSize: 1, refCount: true }),
+    );
+
+    valueArray$.pipe(this.until$()).subscribe((dataArr) => {
+      if (!dataArr.length) {
         this._virtualItems = [];
         this.contentSize = 0;
         this.recalculateRange$.next();
       } else {
-        const dataArr = Array.isArray(data) ? data : Array.from(data);
         let shouldRecalculateRange = false;
         let contentSize = 0;
         for (let i = 0; i < dataArr.length; i++) {
@@ -287,6 +331,40 @@ export class DynamicSizeVirtualScrollStrategy<
         }
       }
     });
+
+    let valueCache: Record<any, T> = {};
+    /*
+     * when keepScrolledIndexOnPrepend is active, we need to listen to data changes and figure out what was appended
+     * before the last scrolledToItem
+     */
+    valueArray$
+      .pipe(
+        // TODO: this might cause issues when turning on/off at runtime
+        filter(() => this.keepScrolledIndexOnPrepend),
+        this.until$(),
+      )
+      .subscribe((valueArray) => {
+        const trackBy = this.viewRepeater!._trackBy;
+        let scrollTo = this.scrolledIndex;
+        const dataLength = valueArray.length;
+        const oldDataLength = Object.keys(valueCache).length;
+
+        if (oldDataLength > 0) {
+          let i = 0;
+          // check for each item from the last known scrolledIndex if it's an insert
+          for (i; i <= scrollTo && i < dataLength; i++) {
+            // item is not in the valueCache, so it was added
+            if (!valueCache[trackBy(i, valueArray[i])]) {
+              scrollTo++;
+            }
+          }
+        }
+        valueCache = {};
+        valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
+        if (scrollTo !== this.scrolledIndex) {
+          this.scrollToIndex(scrollTo);
+        }
+      });
   }
 
   /** @internal */
@@ -297,7 +375,7 @@ export class DynamicSizeVirtualScrollStrategy<
           this.containerSize = height;
           return height;
         }),
-        distinctUntilChanged()
+        distinctUntilChanged(),
       ),
       this.viewport!.elementScrolled$.pipe(
         startWith(void 0),
@@ -308,7 +386,7 @@ export class DynamicSizeVirtualScrollStrategy<
               this.viewport!.getScrollTop(),
               this.viewportOffset,
               this._contentSize,
-              this.containerSize
+              this.containerSize,
             );
           this.direction =
             scrollTopWithOutOffset > this.scrollTopWithOutOffset
@@ -317,7 +395,8 @@ export class DynamicSizeVirtualScrollStrategy<
           this.scrollTopWithOutOffset = scrollTopWithOutOffset;
           this.scrollTopAfterOffset = scrollTopAfterOffset;
           this.scrollTop = scrollTop;
-        })
+          this.waitForScroll = false;
+        }),
       ),
       this._contentSize$.pipe(distinctUntilChanged()),
       this.recalculateRange$.pipe(startWith(void 0)),
@@ -334,7 +413,7 @@ export class DynamicSizeVirtualScrollStrategy<
           } else {
             this.anchorItem = this.calculateAnchoredItem(
               this.anchorItem,
-              delta
+              delta,
             );
           }
           this.scrolledIndex = this.anchorItem.index;
@@ -344,23 +423,23 @@ export class DynamicSizeVirtualScrollStrategy<
             calculateVisibleContainerSize(
               this.containerSize,
               this.scrollTopWithOutOffset,
-              this.scrollTopAfterOffset
-            )
+              this.scrollTopAfterOffset,
+            ),
           );
           if (this.direction === 'up') {
             range.start = Math.max(0, this.anchorItem.index - this.runwayItems);
             range.end = Math.min(
               length,
-              this.lastScreenItem.index + this.runwayItemsOpposite
+              this.lastScreenItem.index + this.runwayItemsOpposite,
             );
           } else {
             range.start = Math.max(
               0,
-              this.anchorItem.index - this.runwayItemsOpposite
+              this.anchorItem.index - this.runwayItemsOpposite,
             );
             range.end = Math.min(
               length,
-              this.lastScreenItem.index + this.runwayItems
+              this.lastScreenItem.index + this.runwayItems,
             );
           }
           if (this.appendOnly) {
@@ -368,16 +447,13 @@ export class DynamicSizeVirtualScrollStrategy<
             range.end = Math.max(this._renderedRange.end, range.end);
           }
           return range;
-        })
+        }),
       )
-      .pipe(
-        distinctUntilChanged(
-          ({ start: prevStart, end: prevEnd }, { start, end }) =>
-            prevStart === start && prevEnd === end
-        ),
-        this.until$()
-      )
-      .subscribe((range: ListRange) => (this.renderedRange = range));
+      .pipe(this.until$())
+      .subscribe((range: ListRange) => {
+        this.renderedRange = range;
+        this.isStable$.next(!this.waitForScroll);
+      });
   }
 
   /** @internal */
@@ -401,10 +477,10 @@ export class DynamicSizeVirtualScrollStrategy<
               view,
               item,
             });
-          })
+          }),
         );
       }),
-      this.until$()
+      this.until$(),
     ).subscribe();
   }
 
@@ -415,7 +491,7 @@ export class DynamicSizeVirtualScrollStrategy<
    */
   private calculateAnchoredItem(
     initialAnchor: AnchorItem,
-    delta: number
+    delta: number,
   ): AnchorItem {
     if (delta == 0) return initialAnchor;
     delta += initialAnchor.offset;

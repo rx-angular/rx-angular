@@ -1,36 +1,17 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   OnInit,
-  QueryList,
   TemplateRef,
   ViewChild,
-  ViewChildren,
 } from '@angular/core';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
-import { patch, toDictionary, update } from '@rx-angular/cdk/transformations';
 import { RxState } from '@rx-angular/state';
-import {
-  BehaviorSubject,
-  combineLatest,
-  defer,
-  pairwise,
-  ReplaySubject,
-  Subject,
-  switchMap,
-} from 'rxjs';
-import {
-  distinctUntilChanged,
-  map,
-  shareReplay,
-  startWith,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
 import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimental/virtual-scrolling';
@@ -255,6 +236,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
               *ngIf="state.scrollStrategy === 'dynamic'"
               (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
               [dynamic]="dynamicSize"
+              [initialScrollIndex]="initialScrollTo"
               [runwayItemsOpposite]="state.runwayItemsOpposite"
               [runwayItems]="state.runwayItems"
               class="viewport"
@@ -398,11 +380,11 @@ export class VirtualForDemoComponent implements OnInit, AfterViewInit {
   components$ = new BehaviorSubject<'cdk' | 'rxa' | 'both'>('rxa');
 
   showRxa$ = this.components$.pipe(
-    map((components) => components === 'rxa' || components === 'both')
+    map((components) => components === 'rxa' || components === 'both'),
   );
 
   showCdk$ = this.components$.pipe(
-    map((components) => components === 'cdk' || components === 'both')
+    map((components) => components === 'cdk' || components === 'both'),
   );
 
   cdkScrolledIndex$ = new ReplaySubject<number>(1);
@@ -414,8 +396,9 @@ export class VirtualForDemoComponent implements OnInit, AfterViewInit {
   renderedItems$ = this.rendered.pipe(
     map(
       () =>
-        this.virtualViewport.getScrollElement().querySelectorAll('.item').length
-    )
+        this.virtualViewport.getScrollElement().querySelectorAll('.item')
+          .length,
+    ),
   );
 
   data$ = this.state.select('data');
@@ -449,7 +432,7 @@ export class VirtualForDemoComponent implements OnInit, AfterViewInit {
 
   trackItem = (
     idx: number,
-    item: TestItem & { tmpl: TemplateRef<any>; content: string }
+    item: TestItem & { tmpl: TemplateRef<any>; content: string },
   ): number => item.id;
 
   initialScrollTo = parseInt(localStorage.getItem('vs-initialScrollTo') ?? '0');
@@ -460,7 +443,7 @@ export class VirtualForDemoComponent implements OnInit, AfterViewInit {
       runwayItems: number;
       runwayItemsOpposite: number;
       scrollStrategy: 'fixed' | 'auto' | 'dynamic';
-    }>
+    }>,
   ) {
     state.set({
       runwayItems: 20,
@@ -487,9 +470,9 @@ export class VirtualForDemoComponent implements OnInit, AfterViewInit {
               ...item,
               content,
             };
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   }
 

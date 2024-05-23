@@ -11,7 +11,7 @@ export interface RxVirtualListChange<T, C> {
 export type RxVirtualListChanges<T, C> = [
   number,
   () => RxVirtualListChange<T, C>,
-  boolean? // removed
+  boolean?, // removed
 ][];
 
 /**
@@ -24,7 +24,7 @@ export interface RxVirtualListTemplateManager<T, C> {
     changes: IterableChanges<T>,
     items: T[],
     renderCount: number,
-    adjustIndexWith: number
+    adjustIndexWith: number,
   ): [RxVirtualListChanges<T, C>, boolean];
   setItemCount(itemCount: number): void;
   detach(): void;
@@ -39,7 +39,7 @@ export interface RxVirtualListTemplateManager<T, C> {
  */
 export function createVirtualListTemplateManager<
   C extends RxListViewContext<T>,
-  T
+  T,
 >({
   viewContainerRef,
   templateRef,
@@ -65,7 +65,7 @@ export function createVirtualListTemplateManager<
     item: T,
     index: number,
     count: number,
-    contextIndex: number
+    contextIndex: number,
   ): EmbeddedViewRef<C> {
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(index);
     updateViewContext(item, view, {
@@ -84,7 +84,7 @@ export function createVirtualListTemplateManager<
     value: T,
     count: number,
     adjustIndexWith: number,
-    currentIndex?: number
+    currentIndex?: number,
   ): [number, EmbeddedViewRef<C>] {
     currentIndex = currentIndex ?? viewContainerRef.length;
     const contextIndex = currentIndex + adjustIndexWith;
@@ -104,7 +104,7 @@ export function createVirtualListTemplateManager<
     const view = viewContainerRef.createEmbeddedView(
       templateRef,
       context,
-      currentIndex
+      currentIndex,
     );
     view.detectChanges();
     return [currentIndex, view];
@@ -123,7 +123,7 @@ export function createVirtualListTemplateManager<
     adjustedPreviousIndex: number,
     currentIndex: number,
     count: number,
-    contextIndex: number
+    contextIndex: number,
   ): EmbeddedViewRef<C> {
     const oldView = viewContainerRef.get(adjustedPreviousIndex);
     const view = <EmbeddedViewRef<C>>(
@@ -177,7 +177,7 @@ export function createVirtualListTemplateManager<
     changes: IterableChanges<T>,
     items: T[],
     count: number,
-    adjustIndexWith: number
+    adjustIndexWith: number,
   ): [RxVirtualListChanges<T, C>, boolean] {
     const changedIdxs = new Set<T>();
     const listChanges: RxVirtualListChanges<T, C> = [];
@@ -196,7 +196,7 @@ export function createVirtualListTemplateManager<
                 item,
                 count,
                 adjustIndexWith,
-                index
+                index,
               );
               return {
                 view,
@@ -231,7 +231,7 @@ export function createVirtualListTemplateManager<
                 adjustedPreviousIndex,
                 currentIndex,
                 count,
-                currentIndex + adjustIndexWith
+                currentIndex + adjustIndexWith,
               );
               return {
                 view,
@@ -244,7 +244,7 @@ export function createVirtualListTemplateManager<
           changedIdxs.add(item);
           notifyParent = true;
         }
-      }
+      },
     );
     changes.forEachIdentityChange(({ item, currentIndex }) => {
       if (currentIndex != null && !changedIdxs.has(item)) {
@@ -255,7 +255,7 @@ export function createVirtualListTemplateManager<
               item,
               currentIndex,
               count,
-              currentIndex + adjustIndexWith
+              currentIndex + adjustIndexWith,
             );
             return {
               view,
@@ -279,7 +279,7 @@ export function createVirtualListTemplateManager<
               itemIndex,
               count,
               itemIndex + adjustIndexWith,
-              item
+              item,
             ),
         ]);
       }
@@ -302,7 +302,7 @@ export function createVirtualListTemplateManager<
     viewIndex: number,
     count: number,
     itemIndex: number,
-    item: T
+    item: T,
   ) {
     const view = <EmbeddedViewRef<C>>viewContainerRef.get(viewIndex);
     if (view.context.count !== count || view.context.index !== itemIndex) {

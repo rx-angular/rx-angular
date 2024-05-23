@@ -66,6 +66,13 @@ import { ArrayProviderService } from '../array-provider.service';
         <button
           mat-raised-button
           [unpatch]="unpatched"
+          (click)="prependItemsImmutable(numberOfItems)"
+        >
+          Prepend Many
+        </button>
+        <button
+          mat-raised-button
+          [unpatch]="unpatched"
           (click)="moveItemsImmutable(numberOfItems / 2)"
         >
           Move Many
@@ -135,7 +142,7 @@ export class ArrayProviderComponent
   ngOnInit() {
     if (this.initialNumberOfItems) {
       Promise.resolve().then(() =>
-        this.addItemsImmutable(this.initialNumberOfItems)
+        this.addItemsImmutable(this.initialNumberOfItems),
       );
     }
   }
