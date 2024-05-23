@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [17.3.0](https://github.com/rx-angular/rx-angular/compare/template@17.2.0...template@17.3.0) (2024-05-23)
+
+
+### Bug Fixes
+
+* **template:** virtual-for: wait for strategy to stabilize ([32b451b](https://github.com/rx-angular/rx-angular/commit/32b451b3631d2c5d9fd58f073a76a3b35f5b6b78))
+
+
+### Features
+
+* **template:** virtual-scrolling: introduce keepScrolledIndexOnPrepend ([0cb5614](https://github.com/rx-angular/rx-angular/commit/0cb56141ed5d1c4064673c356850882b612b1fbe))
+
+
+
 # [17.2.0](https://github.com/rx-angular/rx-angular/compare/template@17.1.0...template@17.2.0) (2024-05-17)
 
 
