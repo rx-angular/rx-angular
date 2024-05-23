@@ -111,4 +111,4 @@ The following is the list of supported scopes:
 
 ## How to release (maintainers)
 
-See the [how to release guide](./docs/how-to-release.md).
+See the [how to release guide](https://github.com/rx-angular/rx-angular/blob/main/docs/how-to-release.md).
