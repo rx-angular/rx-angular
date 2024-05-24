@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [17.3.1](https://github.com/rx-angular/rx-angular/compare/template@17.3.0...template@17.3.1) (2024-05-24)
+
+
+### Bug Fixes
+
+* **template:** virtual-for: properly calculate stable state ([112a299](https://github.com/rx-angular/rx-angular/commit/112a299c1d9d74ac6dc72f8f8bcf6b3671761ec7))
+
+
+
 # [17.3.0](https://github.com/rx-angular/rx-angular/compare/template@17.2.0...template@17.3.0) (2024-05-23)
 
 

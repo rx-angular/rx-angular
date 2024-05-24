@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/template",
-  "version": "17.3.0",
+  "version": "17.3.1",
   "description": "**Fully** Reactive Component Template Rendering in Angular. @rx-angular/template aims to be a reflection of Angular's built in renderings just reactive.",
   "publishConfig": {
     "access": "public"
