@@ -284,8 +284,11 @@ export class DynamicSizeVirtualScrollStrategy<
     for (let i = 0; i < _index; i++) {
       scrollTo += this._virtualItems[i].size;
     }
-    this.waitForScroll = true;
-    this.isStable$.next(false);
+    this.waitForScroll =
+      scrollTo !== this.scrollTop && this.contentSize > this.containerSize;
+    if (this.waitForScroll) {
+      this.isStable$.next(false);
+    }
     this.viewport!.scrollTo(this.viewportOffset + scrollTo, behavior);
   }
 

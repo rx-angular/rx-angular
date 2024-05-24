@@ -359,8 +359,11 @@ export class AutoSizeVirtualScrollStrategy<
   }
 
   private scrollTo(scrollTo: number, behavior?: ScrollBehavior): void {
-    this.waitForScroll = true;
-    this.isStable$.next(false);
+    this.waitForScroll =
+      scrollTo !== this.scrollTop && this.contentSize > this.containerSize;
+    if (this.waitForScroll) {
+      this.isStable$.next(false);
+    }
     this.viewport!.scrollTo(this.viewportOffset + scrollTo, behavior);
   }
 
