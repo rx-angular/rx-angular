@@ -17,7 +17,7 @@ There are 5 core concepts of the concurrent strategies:
 
 The Browser has only one UI thread (main thread), meaning things happen one after another.
 
-Users constantly interact with our site and this means if our main thread is busy, they can't interact whit the page. The events like scroll or click will get delayed until the main thread is unblocked from work again and can process those interactions.
+Users constantly interact with our site and this means if our main thread is busy, they can't interact with the page. The events like scroll or click will get delayed until the main thread is unblocked from work again and can process those interactions.
 
 ![Render Strategies - Frame Drop Overview](https://user-images.githubusercontent.com/10064416/145212039-b4b20fe5-19c9-4062-aba3-b5749cca978d.png)
 
@@ -72,7 +72,7 @@ https://github.com/angular/angular/blob/master/packages/elements/src/utils.ts#L1
 A simple way to schedule work is using `setTimeout`.
 
 ```typescript
-function work(): viod {
+function work(): void {
   console.log('work done!');
 }
 
@@ -134,7 +134,7 @@ This scenario gets to a problem depending on:
 ![concurrent scheduling - abstract diagram](https://user-images.githubusercontent.com/10064416/145228577-6b8f0bb7-6547-4835-aecc-13d7e07baf02.png)
 
 Concurrent scheduling is a marketing term and simply means that there is a mechanism in place that knows how much time is spent in the current task.
-This number is called frame budget and measured in milliseconds. As a result of this technique we're getting prioritized user-centric scheduling behavior's.
+This number is called frame budget and measured in milliseconds. As a result of this technique we're getting prioritized user-centric scheduling behaviour's.
 
 This enables:
 
@@ -159,7 +159,7 @@ Instead all remaining work will get executed as fast as possible. This means in 
 ![Render Strategies - concurrent anatomy png](https://user-images.githubusercontent.com/10064416/146287356-023836c8-a697-4640-a4ae-7d567bc02bf0.png)
 Every strategy has a different render deadline. Strategies are designed from the perspective of how important the work is for the user. see: [RAIL model](https://web.dev/rail/)
 
-What concurrent scheduling does under the hood is is chunking up work in cycles of scheduling, prioritization and execution based on different settings.
+What concurrent scheduling does under the hood is chunking up work in cycles of scheduling, prioritization and execution based on different settings.
 
 ![Render Strategies - task flow](https://user-images.githubusercontent.com/10064416/146287195-89e22ed8-12ba-4099-9379-430a41469b9c.png)
 
@@ -198,13 +198,7 @@ Tooltips should be displayed immediately on mouse over. Any delay will be very n
 ```typescript
 @Component({
   selector: 'item-image',
-  template: `
-    <img
-      [src]="src"
-      (mouseenter)="showTooltip()"
-      (mouseleave)="hideTooltip()"
-    />
-  `,
+  template: ` <img [src]="src" (mouseenter)="showTooltip()" (mouseleave)="hideTooltip()" /> `,
 })
 export class ItemsListComponent {
   @Input() src: string;
@@ -217,7 +211,7 @@ export class ItemsListComponent {
         () => {
           // create tooltip
         },
-        { strategy: 'immediate' }
+        { strategy: 'immediate' },
       )
       .subscribe();
   }
@@ -228,7 +222,7 @@ export class ItemsListComponent {
         () => {
           // destroy tooltip
         },
-        { strategy: 'immediate' }
+        { strategy: 'immediate' },
       )
       .subscribe();
   }
@@ -262,11 +256,7 @@ Dropdowns should be displayed right away on user interaction.
 @Component({
   selector: 'item-dropdown',
   template: `
-    <div
-      id="collapse"
-      (mouseenter)="showDropdown()"
-      (mouseleave)="hideDropdown()"
-    >
+    <div id="collapse" (mouseenter)="showDropdown()" (mouseleave)="hideDropdown()">
       {{ text }}
     </div>
   `,
@@ -281,7 +271,7 @@ export class DropdownComponent {
       () => {
         // create dropdown
       },
-      { strategy: 'userBlocking' }
+      { strategy: 'userBlocking' },
     );
   }
 
@@ -291,7 +281,7 @@ export class DropdownComponent {
         () => {
           // destroy dropdown
         },
-        { strategy: 'userBlocking' }
+        { strategy: 'userBlocking' },
       )
       .subscribe();
   }
@@ -378,7 +368,7 @@ export class ItemsListComponent {
 
   constructor(
     private state: StateService,
-    private strategyProvider: RxStrategyProvider
+    private strategyProvider: RxStrategyProvider,
   ) {}
 
   openCreateItemPopup() {
@@ -387,7 +377,7 @@ export class ItemsListComponent {
         () => {
           // logic to lazy load popup component
         },
-        { strategy: 'low' }
+        { strategy: 'low' },
       )
       .subscribe();
   }
@@ -427,7 +417,7 @@ This strategy is especially useful for logic meant to run in the background. Goo
 
     <button id="addItem" (click)="openCreateItemPopup()">Create new item</button>
 
-    <div id="background-indicator>Background sync</div>
+    <div id="background-indicator">Background sync</div>
   `,
 })
 export class ItemsListComponent {
@@ -436,16 +426,9 @@ export class ItemsListComponent {
   constructor(
     private state: StateService,
     private strategyProvider: RxStrategyProvider,
-    private webSocket: WebSocketService
+    private webSocket: WebSocketService,
   ) {
-    this.items$
-      .pipe(
-        this.strategyProvider.scheduleWith(
-          (items) => this.webSocket.syncItems(items),
-          { strategy: 'idle' }
-        )
-      )
-      .subscribe();
+    this.items$.pipe(this.strategyProvider.scheduleWith((items) => this.webSocket.syncItems(items), { strategy: 'idle' })).subscribe();
   }
 
   openCreateItemPopup() {
@@ -454,7 +437,7 @@ export class ItemsListComponent {
         () => {
           // logic to lazy load popup component
         },
-        { strategy: 'low' }
+        { strategy: 'low' },
       )
       .subscribe();
   }
