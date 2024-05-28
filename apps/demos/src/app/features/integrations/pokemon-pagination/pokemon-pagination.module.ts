@@ -1,20 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
-import { MatLegacyPaginatorModule as MatPaginatorModule } from '@angular/material/legacy-paginator';
-import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
-import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { RxLet } from '@rx-angular/template/let';
 import { ROUTES } from './pokemon-pagination.routes';
 import { PokemonComponent } from './pokemon.component';
 
 @NgModule({
+  declarations: [PokemonComponent],
   imports: [
     CommonModule,
-    HttpClientModule,
     RxLet,
     RouterModule.forChild(ROUTES),
     ReactiveFormsModule,
@@ -23,6 +26,6 @@ import { PokemonComponent } from './pokemon.component';
     MatInputModule,
     MatProgressSpinnerModule,
   ],
-  declarations: [PokemonComponent],
+  providers: [provideHttpClient(withInterceptorsFromDi())],
 })
 export class PokemonPaginationModule {}

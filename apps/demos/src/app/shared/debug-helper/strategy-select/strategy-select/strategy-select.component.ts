@@ -1,20 +1,17 @@
 import {
   AfterViewInit,
-  ApplicationRef,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Output,
   ViewChild,
 } from '@angular/core';
-import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
-import { asyncScheduler } from 'rxjs-zone-less';
+import { MatSelect } from '@angular/material/select';
 import { RxState } from '@rx-angular/state';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { delay, map, skip } from 'rxjs/operators';
+import { map, skip } from 'rxjs/operators';
 import { EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs';
-import { take } from 'rxjs';
 
 const strategiesUiConfig = {
   local: { name: 'local', icon: 'call_split' },
@@ -38,14 +35,7 @@ const strategiesUiConfig = {
         <mat-select-trigger>
           {{ strategyProvider.primaryStrategy }}
         </mat-select-trigger>
-        <mat-option
-          [value]="s"
-          *rxFor="
-            let s of stratNames$;
-            parent: true;
-            renderCallback: strategiesRendered$
-          "
-        >
+        <mat-option [value]="s" *rxFor="let s of stratNames$">
           <mat-icon class="mr-2">{{ strategiesUiConfig[s]?.icon }}</mat-icon>
           {{ s }}
         </mat-option>
@@ -59,7 +49,7 @@ const strategiesUiConfig = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
 })
-export class StrategySelectComponent implements AfterViewInit {
+export class StrategySelectComponent {
   readonly strategiesUiConfig = strategiesUiConfig;
 
   readonly stratNames$ = this.strategyProvider.strategyNames$;
@@ -72,25 +62,15 @@ export class StrategySelectComponent implements AfterViewInit {
   constructor(
     public strategyProvider: RxStrategyProvider,
     private state: RxState<any>,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
   ) {
     state.hold(
       this.strategyProvider.primaryStrategy$.pipe(
         map((s) => s.name),
-        skip(1) // skip(1) to make it "COLD"...
+        skip(1), // skip(1) to make it "COLD"...
       ),
       (primaryStrategyChanged) =>
-        this.strategyChange.next(primaryStrategyChanged)
-    );
-  }
-
-  ngAfterViewInit() {
-    this.state.hold(
-      this.strategiesRendered$.pipe(take(1), delay(0, asyncScheduler)),
-      () => {
-        // ugly hack to make the even more ugly mat-select display any value on bootstrap
-        this.cdRef.detectChanges();
-      }
+        this.strategyChange.next(primaryStrategyChanged),
     );
   }
 }

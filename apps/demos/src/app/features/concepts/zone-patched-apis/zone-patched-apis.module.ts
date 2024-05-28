@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './zone-patched-apis.routes';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { RxPush } from '@rx-angular/template/push';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { ZonePatchedApisComponent } from './zone-patched-apis.component';

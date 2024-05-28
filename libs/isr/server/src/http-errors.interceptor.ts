@@ -13,7 +13,7 @@ import { IsrServerService } from './isr-server.service';
 
 export const httpErrorInterceptorISR: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
-  next: HttpHandlerFn
+  next: HttpHandlerFn,
 ) => {
   const isrService = inject(IsrServerService);
 
@@ -21,7 +21,7 @@ export const httpErrorInterceptorISR: HttpInterceptorFn = (
     catchError((err) => {
       isrService.addError(err);
       return throwError(() => err);
-    })
+    }),
   );
 };
 
@@ -31,13 +31,13 @@ export class HttpErrorsInterceptor implements HttpInterceptor {
 
   intercept(
     request: HttpRequest<unknown>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((err) => {
         this.isrService.addError(err);
         return throwError(() => err);
-      })
+      }),
     );
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { debounceTime } from 'rxjs/operators';
 import { PokemonStateService } from './states/pokemon-state.service';
 
@@ -107,7 +107,7 @@ export class PokemonComponent {
      */
     this.pokemonStateService.connect(
       'query',
-      this.query.valueChanges.pipe(debounceTime(250)) // debounce the query changes by 250ms
+      this.query.valueChanges.pipe(debounceTime(250)), // debounce the query changes by 250ms
     );
   }
 

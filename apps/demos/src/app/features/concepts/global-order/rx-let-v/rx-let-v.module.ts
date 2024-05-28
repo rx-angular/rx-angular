@@ -11,7 +11,7 @@ import { V3EComponent } from './v3-e.component';
 import { V3FComponent } from './v3-f.component';
 import { V3HComponent } from './v3-h.component';
 import { SharedModule } from '../shared/shared.module';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { PushModule } from '../../../../rx-angular-pocs';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 

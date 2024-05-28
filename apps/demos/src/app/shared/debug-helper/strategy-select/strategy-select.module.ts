@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
@@ -12,6 +14,8 @@ import { StrategySelectComponent } from './strategy-select/strategy-select.compo
   declarations: [StrategySelectComponent],
   imports: [
     CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
     RxUnpatch,
     RxPush,
     MatIconModule,

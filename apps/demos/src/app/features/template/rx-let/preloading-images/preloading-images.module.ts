@@ -10,7 +10,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatIconModule } from '@angular/material/icon';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 const DECLARATIONS = [PreloadingImagesComponent];
 

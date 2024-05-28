@@ -75,7 +75,9 @@
             "selector": "typeParameter",
             "format": ["PascalCase"]
           }
-        ]
+        ],
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
       }
     },
     {
@@ -86,7 +88,9 @@
         "plugin:@nx/javascript"
       ],
       "rules": {
-        "@typescript-eslint/no-non-null-assertion": "off"
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
       }
     }
   ]

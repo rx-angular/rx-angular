@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ROUTES } from './nested-vs-injected.routes';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DetectChangesInjectedComponent } from './injected/detect-changes.injected.component';

@@ -1,7 +1,7 @@
 @use '@angular/material' as mat;
 .log-item {
   &.component {
-    background: mat.$green-palette;
+    background: mat.$m2-green-palette;
     &.ctor {
       background: lightgreen;
     }

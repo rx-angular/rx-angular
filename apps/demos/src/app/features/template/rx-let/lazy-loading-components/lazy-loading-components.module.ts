@@ -6,7 +6,7 @@ import { LazyLoadingComponentsComponent } from './lazy-loading-components.compon
 import { RxLet } from '@rx-angular/template/let';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { GhostElementsModule } from '../../../../shared/ghost-elements';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { LazyLoadingComponentsObservableComponent } from './lazy-loading-components-observable.component';

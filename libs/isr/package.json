@@ -2,11 +2,11 @@
   "name": "@rx-angular/isr",
   "author": "Enea Jahollari",
   "description": "Incremental Static Regeneration for Angular",
-  "version": "17.1.0",
+  "version": "18.0.0",
   "peerDependencies": {
-    "@angular/common": "^17.0.0",
-    "@angular/core": "^17.0.0",
-    "@angular/ssr": "^17.0.0",
+    "@angular/common": "^18.0.0",
+    "@angular/core": "^18.0.0",
+    "@angular/ssr": "^18.0.0",
     "@types/node": "^18.0.0 || ^20.0.0",
     "express": "^4.15.2"
   },
