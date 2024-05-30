@@ -72,6 +72,36 @@ module.exports = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      metadata: [
+        {
+          name: 'description',
+          content:
+            'Official documentation for RxAngular, the ultimate reactive programming library for Angular.',
+        },
+        { property: 'og:title', content: 'RxAngular Documentation' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:url', content: 'https://www.rx-angular.io' },
+        {
+          property: 'og:image',
+          content: 'https://www.rx-angular.io/img/logo.png',
+        },
+        {
+          property: 'og:description',
+          content:
+            'Official documentation for RxAngular, the ultimate reactive programming library for Angular.',
+        },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'RxAngular Documentation' },
+        {
+          name: 'twitter:description',
+          content:
+            'Official documentation for RxAngular, the ultimate reactive programming library for Angular.',
+        },
+        {
+          name: 'twitter:image',
+          content: 'https://www.rx-angular.io/img/logo.png',
+        },
+      ],
       navbar: {
         title: 'RxAngular',
         logo: {
