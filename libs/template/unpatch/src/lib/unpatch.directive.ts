@@ -43,7 +43,7 @@ export function unpatchEventListener(
   element: HTMLElement & {
     eventListeners?: (event: string) => EventListenerOrEventListenerObject[];
   },
-  event: string
+  event: string,
 ): EventListenerOrEventListenerObject[] {
   // `EventTarget` is patched only in the browser environment, thus
   // running this code on the server-side will throw an exception:
@@ -61,7 +61,7 @@ export function unpatchEventListener(
 
   const addEventListener = getZoneUnPatchedApi(
     element,
-    'addEventListener'
+    'addEventListener',
   ).bind(element) as typeof element.addEventListener;
 
   const listeners: EventListenerOrEventListenerObject[] = [];
@@ -76,6 +76,10 @@ export function unpatchEventListener(
 
   return listeners;
 }
+
+declare const ngDevMode: boolean;
+
+const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
 
 /**
  * @Directive RxUnpatch
@@ -103,8 +107,18 @@ export function unpatchEventListener(
  * Included Features:
  *  - by default un-patch all registered listeners of the host it is applied on
  *  - un-patch only a specified set of registered event listeners
+ *  - un-patch all events listeners except a specified set
  *  - works zone independent (it directly checks the widow for patched APIs and un-patches them without the use of `runOutsideZone` which brings more performance)
  *  - Not interfering with any logic executed by the registered callback
+ *
+ *  Apply in three distinct ways:
+ *
+ *  1. Unpatch all events: `<div [unpatch]>...<div>`
+ *  2. Unpatch specified events*: `<div [unpatch]="['mouseenter', 'mouseleave']">...<div>`
+ *  3. Unpatch all except specified events*: `<div [unpatch]="['!mouseenter', '!mouseleave']">...<div>`
+ *
+ *  When combining negated and non-negated events i.e:  `<div [unpatch]="['!mouseenter', 'mouseleave']">...<div>` all non-negated events are ignored and an error will be thrown in dev mode!
+ *
  *
  * @usageNotes
  *
@@ -137,7 +151,21 @@ export class RxUnpatch implements OnChanges, AfterViewInit, OnDestroy {
 
   ngOnChanges({ events }: SimpleChanges): void {
     if (events && Array.isArray(this.events)) {
-      this.events$.next(this.events);
+      const negatedEvents = this.events
+        .filter((event) => event.startsWith('!'))
+        .map((event) => event.replace('!', ''));
+
+      const nextEvents = negatedEvents.length
+        ? zonePatchedEvents.filter(
+            (zonePatchedEvent) => !negatedEvents.includes(zonePatchedEvent),
+          )
+        : this.events;
+
+      if (NG_DEV_MODE) {
+        this.validateEvents(nextEvents, negatedEvents);
+      }
+
+      this.events$.next(nextEvents);
     }
   }
 
@@ -161,6 +189,25 @@ export class RxUnpatch implements OnChanges, AfterViewInit, OnDestroy {
     for (const event of events) {
       const listeners = unpatchEventListener(this.host.nativeElement, event);
       this.listeners.set(event, listeners);
+    }
+  }
+
+  private validateEvents(nextEvents: string[], negatedEvents: string[]): void {
+    // check if user has specified negated and non-negated events
+    if (negatedEvents.length && negatedEvents.length !== this.events.length) {
+      throw new Error(
+        `Invalid value [${this.events.toString()}] specified for unpatch directive! Cannot combine negated & non-negated events!`,
+      );
+    }
+
+    // check if user has specified invalid events
+    const unknownEvents = [...negatedEvents, ...nextEvents].filter(
+      (event) => !zonePatchedEvents.includes(event),
+    );
+    if (unknownEvents.length) {
+      throw new Error(
+        `Unknown events [${unknownEvents.toString()}] specified for unpatch directive!`,
+      );
     }
   }
 }
