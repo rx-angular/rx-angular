@@ -2,6 +2,30 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [18.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@17.1.0...cdk@18.0.0) (2024-05-31)
+
+
+### Features
+
+* **template:** set the parent flag to false by default ([e41e2f2](https://github.com/rx-angular/rx-angular/commit/e41e2f24c4d831b0800266a6af8cb9700eb62a76))
+* upgrade to ng 18 ([#1730](https://github.com/rx-angular/rx-angular/issues/1730)) ([c2b2873](https://github.com/rx-angular/rx-angular/commit/c2b2873f9f1a5bdf06a751226f65ea9149afadcf))
+
+
+### BREAKING CHANGES
+
+* bump peerDependency to @angular/core to ^18.0.0
+
+* feat: upgrade to ng 18
+
+* chore: add missing @angular/build dev dependency
+
+* chore: update CI to node 20
+* **template:** It is possible that this change breaks the integration with 3rd party libraries, that are not up to date. If you are using the @rx-angular/template directives to project content into other components which don't use the new signal queries, they might not work properly anymore.
+In order to fix this, you might want to set the parent flag to true on a global scope by providing an `RX_RENDER_STRATEGIES_CONFIG`. Another option is to set `parent: true` on a per directive basis.
+Read more about this here: https://www.rx-angular.io/docs/template/performance-issues/handling-view-and-content-queries & here: https://push-based.io/article/new-features-for-rxangular-native-signal-support-and-improved-state#the-parent-flag-gets-deprecated
+
+
+
 # [17.1.0](https://github.com/rx-angular/rx-angular/compare/cdk@17.0.1...cdk@17.1.0) (2024-05-17)
 
 
