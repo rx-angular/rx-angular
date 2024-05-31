@@ -30,7 +30,7 @@ export const RX_RENDER_STRATEGIES_DEFAULTS: Required<
     ...RX_CONCURRENT_STRATEGIES,
   },
   patchZone: true,
-  parent: true,
+  parent: false,
 } as const;
 
 export function mergeDefaultConfig<T extends string>(
