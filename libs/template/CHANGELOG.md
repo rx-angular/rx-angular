@@ -2,6 +2,31 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [18.0.0](https://github.com/rx-angular/rx-angular/compare/template@17.3.0...template@18.0.0) (2024-05-31)
+
+
+### Bug Fixes
+
+* **template:** virtual-for: properly calculate stable state ([112a299](https://github.com/rx-angular/rx-angular/commit/112a299c1d9d74ac6dc72f8f8bcf6b3671761ec7))
+
+
+### Features
+
+* upgrade to ng 18 ([#1730](https://github.com/rx-angular/rx-angular/issues/1730)) ([c2b2873](https://github.com/rx-angular/rx-angular/commit/c2b2873f9f1a5bdf06a751226f65ea9149afadcf))
+
+
+### BREAKING CHANGES
+
+* bump peerDependency to @angular/core to ^18.0.0
+
+* feat: upgrade to ng 18
+
+* chore: add missing @angular/build dev dependency
+
+* chore: update CI to node 20
+
+
+
 # [17.3.0](https://github.com/rx-angular/rx-angular/compare/template@17.2.0...template@17.3.0) (2024-05-23)
 
 
