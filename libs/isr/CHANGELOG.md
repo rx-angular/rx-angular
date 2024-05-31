@@ -2,6 +2,27 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [18.0.0](https://github.com/rx-angular/rx-angular/compare/isr@17.1.0...isr@18.0.0) (2024-05-31)
+
+
+### Features
+
+* **isr:** add `inlineCriticalCss` support ([001b507](https://github.com/rx-angular/rx-angular/commit/001b507f5a2463698312afcad87fa612735e6825))
+* upgrade to ng 18 ([#1730](https://github.com/rx-angular/rx-angular/issues/1730)) ([c2b2873](https://github.com/rx-angular/rx-angular/commit/c2b2873f9f1a5bdf06a751226f65ea9149afadcf))
+
+
+### BREAKING CHANGES
+
+* bump peerDependency to @angular/core to ^18.0.0
+
+* feat: upgrade to ng 18
+
+* chore: add missing @angular/build dev dependency
+
+* chore: update CI to node 20
+
+
+
 # [17.1.0](https://github.com/rx-angular/rx-angular/compare/isr@17.0.0...isr@17.1.0) (2024-02-05)
 
 
