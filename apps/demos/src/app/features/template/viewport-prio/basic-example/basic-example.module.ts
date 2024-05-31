@@ -7,7 +7,7 @@ import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { RenderingsModule } from '../../../../shared/debug-helper/renderings';

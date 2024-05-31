@@ -9,7 +9,7 @@ import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visual
 import { ContentChildComponent } from './content-child.component';
 import { ViewChildComponent } from './view-child.component';
 import { RxForModule, RxLetModule } from '../../../rx-angular-pocs';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [

@@ -9,7 +9,7 @@ import { V2EComponent } from './v2-e.component';
 import { V2FComponent } from './v2-f.component';
 import { V2HComponent } from './v2-h.component';
 import { SharedModule } from '../shared/shared.module';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { RxLetModule } from '../../../../rx-angular-pocs/template/directives/let';
 import { UnpatchEventsModule } from '../../../../rx-angular-pocs/template/directives/unpatch';
 import { PushModule } from '../../../../rx-angular-pocs/template/pipes/push';

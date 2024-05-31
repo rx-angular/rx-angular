@@ -6,7 +6,7 @@ import { ComparisonUnpatchComponent } from './comparison-unpatch.component';
 import { ROUTES } from './comparison.routes';
 import { RunOutsideZoneDirective } from './runOutsideZone.directive';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 const DECLARATIONS = [ComparisonUnpatchComponent, RunOutsideZoneDirective];
 

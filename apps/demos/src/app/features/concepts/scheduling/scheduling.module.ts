@@ -6,7 +6,7 @@ import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { ROUTES } from './scheduling.routes';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 
 const DECLARATIONS = [SchedulingComponent];
