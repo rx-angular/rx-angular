@@ -7,7 +7,10 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const organizationName = 'rx-angular';
 const projectName = 'rx-angular';
 const title = 'RxAngular';
+const description =
+  'RxAngular offers a comprehensive toolset for handling fully reactive Angular applications with the main focus on runtime performance and template rendering.';
 const url = 'https://rx-angular.io';
+const logo = 'https://www.rx-angular.io/img/logo.png';
 
 const googleTrackingId = 'UA-180240379-1';
 
@@ -72,6 +75,41 @@ module.exports = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      metadata: [
+        {
+          name: 'description',
+          content: description,
+        },
+        {
+          property: 'og:title',
+          content: title,
+        },
+        /** @type {*} - website | profile | article | product */
+        {
+          property: 'og:type',
+          content: 'website',
+        },
+        { property: 'og:url', content: url },
+        { property: 'og:image', content: logo },
+        { property: 'og:description', content: description },
+        /** @type {*} - summary | summary_large_image | app | player */
+        {
+          name: 'twitter:card',
+          content: 'summary_large_image',
+        },
+        {
+          name: 'twitter:title',
+          content: title,
+        },
+        {
+          name: 'twitter:description',
+          content: description,
+        },
+        {
+          name: 'twitter:image',
+          content: logo,
+        },
+      ],
       navbar: {
         title: 'RxAngular',
         logo: {
