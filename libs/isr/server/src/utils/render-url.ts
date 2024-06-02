@@ -35,12 +35,11 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
     inlineCriticalCss,
   } = options;
 
-  const { protocol, originalUrl, baseUrl, headers } = req;
-
   // we need to override url of req with the one we have in parameters
   req.url = url;
   req.originalUrl = url;
 
+  const { protocol, originalUrl, baseUrl, headers } = req;
   const BASE_URL_PROVIDER: Provider = {
     provide: APP_BASE_HREF,
     useValue: baseUrl,
