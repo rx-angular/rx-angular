@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [18.0.1](https://github.com/rx-angular/rx-angular/compare/isr@18.0.0...isr@18.0.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* **isr:** invalidation issue with url ([4622995](https://github.com/rx-angular/rx-angular/commit/4622995fd1eadd0940b6578de370d9c8a92a3b75))
+
+
+
 # [18.0.0](https://github.com/rx-angular/rx-angular/compare/isr@17.1.0...isr@18.0.0) (2024-05-31)
 
 
