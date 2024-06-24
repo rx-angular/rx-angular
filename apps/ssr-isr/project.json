@@ -20,7 +20,9 @@
         "styles": ["apps/ssr-isr/src/styles.scss"],
         "scripts": [],
         "server": "apps/ssr-isr/src/main.server.ts",
-        "prerender": true,
+        "prerender": {
+          "discoverRoutes": false
+        },
         "ssr": {
           "entry": "apps/ssr-isr/server.ts"
         }

@@ -3,6 +3,7 @@ import { ISRHandler } from '@rx-angular/isr/server';
 import express from 'express';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { RESPONSE } from './src/app/redirect.component';
 import bootstrap from './src/main.server';
 // import { FileSystemCacheHandler } from '@rx-angular/isr/server';
 
@@ -36,7 +37,7 @@ export function app(): express.Express {
 
   server.post(
     '/api/invalidate',
-    async (req, res) => await isr.invalidate(req, res)
+    async (req, res) => await isr.invalidate(req, res),
   );
 
   server.set('view engine', 'html');
@@ -49,7 +50,7 @@ export function app(): express.Express {
     '*.*',
     express.static(browserDistFolder, {
       maxAge: '1y',
-    })
+    }),
   );
 
   server.get(
@@ -57,7 +58,15 @@ export function app(): express.Express {
     // Serve page if it exists in cache
     async (req, res, next) => await isr.serveFromCache(req, res, next),
     // Server side render the page and add to cache if needed
-    async (req, res, next) => await isr.render(req, res, next)
+    async (req, res, next) =>
+      await isr.render(req, res, next, {
+        providers: [
+          {
+            provide: RESPONSE,
+            useValue: res,
+          },
+        ],
+      }),
   );
 
   return server;
