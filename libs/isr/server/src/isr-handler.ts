@@ -255,6 +255,11 @@ export class ISRHandler {
     };
 
     renderUrl(renderUrlConfig).then(async (html) => {
+      // If headers are already sent, we can't send the response
+      if (res.headersSent) {
+        return;
+      }
+
       const { revalidate, errors } = getRouteISRDataFromHTML(html);
 
       // Apply the callback if given
