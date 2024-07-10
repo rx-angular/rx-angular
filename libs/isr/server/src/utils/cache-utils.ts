@@ -1,5 +1,5 @@
+import { ISRHandlerConfig, RenderVariant } from '@rx-angular/isr/models';
 import { Request } from 'express';
-import { ISRHandlerConfig, RenderVariant } from '../../../models/src';
 
 export const getCacheKey = (
   url: string,
