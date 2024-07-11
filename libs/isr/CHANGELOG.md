@@ -2,6 +2,16 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [18.0.2](https://github.com/rx-angular/rx-angular/compare/isr@18.0.1...isr@18.0.2) (2024-07-11)
+
+
+### Bug Fixes
+
+* **isr:** fix import path ([2935422](https://github.com/rx-angular/rx-angular/commit/29354220cf6b0f1c758903288f9aa84c2bda2a2e))
+* **isr:** refactor regeneration function ([622964e](https://github.com/rx-angular/rx-angular/commit/622964ecf5ac3f747b3de7999b65bd6bccc24942))
+
+
+
 ## [18.0.1](https://github.com/rx-angular/rx-angular/compare/isr@18.0.0...isr@18.0.1) (2024-06-06)
 
 
