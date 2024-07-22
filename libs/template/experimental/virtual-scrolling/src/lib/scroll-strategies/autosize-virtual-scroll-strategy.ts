@@ -969,7 +969,7 @@ export class AutoSizeVirtualScrollStrategy<
 
   /** @internal */
   private getItemSize(index: number): number {
-    return this._virtualItems[index].size || this.tombstoneSize;
+    return this._virtualItems[index]?.size || this.tombstoneSize;
   }
   /** @internal */
   private getElementSize(element: HTMLElement): number {

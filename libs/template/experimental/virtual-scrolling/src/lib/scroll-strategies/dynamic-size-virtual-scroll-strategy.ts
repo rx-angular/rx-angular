@@ -536,7 +536,7 @@ export class DynamicSizeVirtualScrollStrategy<
   }
   /** @internal */
   private getItemSize(index: number): number {
-    return this._virtualItems[index].size;
+    return this._virtualItems[index]?.size || 0;
   }
 
   /** @internal */
