@@ -802,6 +802,9 @@ export class AutoSizeVirtualScrollStrategy<
         map((event) => {
           const index = viewRef.context.index;
           const size = Math.round(this.extractSize(event));
+          if (!this._virtualItems[index]) {
+            return null as unknown as [number, number];
+          }
           const diff = size - this._virtualItems[index].size;
           if (diff !== 0) {
             this._virtualItems[index].size = size;
