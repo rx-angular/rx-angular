@@ -12,6 +12,10 @@ export const RX_VIRTUAL_FOR_MENU_ITEMS = [
     link: 'window-scrolling',
   },
   {
+    label: 'Monkey Test',
+    link: 'monkey-test',
+  },
+  {
     label: 'Reverse Infinite Scroll',
     link: 'reverse-infinite-scroll',
   },
