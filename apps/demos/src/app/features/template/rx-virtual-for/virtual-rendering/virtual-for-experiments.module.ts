@@ -2,6 +2,7 @@ import { ScrollingModule as AutosizedScrollingModule } from '@angular/cdk-experi
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
@@ -21,6 +22,7 @@ import { RxLet } from '@rx-angular/template/let';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
 import { VirtualForDemoComponent } from './virtual-for-demo.component';
+import { VirtualForMonkeyTestComponent } from './virtual-for-monkey-test.component';
 import { VirtualForReverseInfiniteScrollComponent } from './virtual-for-reverse-infinite-scroll.component';
 import { VirtualForScrollWindowDemoComponent } from './virtual-for-scroll-window-demo.component';
 import { VirtualForCustomScrollableDemoComponent } from './virtual-for-scrollable-demo.component';
@@ -49,6 +51,10 @@ import { VirtualForCustomScrollableDemoComponent } from './virtual-for-scrollabl
         path: 'reverse-infinite-scroll',
         component: VirtualForReverseInfiniteScrollComponent,
       },
+      {
+        path: 'monkey-test',
+        component: VirtualForMonkeyTestComponent,
+      },
     ]),
     ValueProvidersModule,
     RxLet,
@@ -68,11 +74,13 @@ import { VirtualForCustomScrollableDemoComponent } from './virtual-for-scrollabl
     RxFor,
     RxVirtualScrollWindowDirective,
     RxVirtualScrollElementDirective,
+    FormsModule,
   ],
   declarations: [
     VirtualForDemoComponent,
     VirtualForCustomScrollableDemoComponent,
     VirtualForScrollWindowDemoComponent,
+    VirtualForMonkeyTestComponent,
   ],
   providers: [],
 })
