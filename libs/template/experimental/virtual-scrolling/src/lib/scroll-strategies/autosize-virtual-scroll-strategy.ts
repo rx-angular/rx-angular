@@ -211,13 +211,8 @@ export class AutoSizeVirtualScrollStrategy<
 
   /** @internal */
   private set renderedRange(range: ListRange) {
-    if (
-      this._renderedRange.start !== range.start ||
-      this._renderedRange.end !== range.end
-    ) {
-      this._renderedRange = range;
-      this._renderedRange$.next(range);
-    }
+    this._renderedRange = range;
+    this._renderedRange$.next(range);
   }
   /** @internal */
   private get renderedRange(): ListRange {
@@ -350,7 +345,10 @@ export class AutoSizeVirtualScrollStrategy<
   }
 
   scrollToIndex(index: number, behavior?: ScrollBehavior): void {
-    const _index = Math.min(Math.max(index, 0), this.contentLength - 1);
+    const _index = Math.min(
+      Math.max(index, 0),
+      Math.max(0, this.contentLength - 1),
+    );
     if (_index !== this.scrolledIndex) {
       const scrollTop = this.calcInitialPosition(_index);
       this._scrollToIndex = _index;
@@ -403,9 +401,12 @@ export class AutoSizeVirtualScrollStrategy<
     this.renderedRange$
       .pipe(pairwise(), this.until$())
       .subscribe(([oldRange, newRange]) => {
-        for (let i = oldRange.start; i < oldRange.end; i++) {
-          if (i < newRange.start || i >= newRange.end) {
-            this._virtualItems[i].position = undefined;
+        let i = oldRange.start;
+        if (i < this._virtualItems.length) {
+          for (i; i < Math.min(this._virtualItems.length, oldRange.end); i++) {
+            if (i < newRange.start || i >= newRange.end) {
+              this._virtualItems[i].position = undefined;
+            }
           }
         }
       });
@@ -475,23 +476,36 @@ export class AutoSizeVirtualScrollStrategy<
           this.anchorItem.index !== anchorItemIndex
         ) {
           this.scrollToIndex(anchorItemIndex);
+        } else if (dataLength === 0) {
+          this.anchorItem = {
+            index: 0,
+            offset: 0,
+          };
+          this._renderedRange = {
+            start: 0,
+            end: 0,
+          };
+          this.scrollTo(0);
+          this.scrollTop = this.anchorScrollTop = 0;
         } else if (dataLength < this._renderedRange.end) {
-          const rangeDiff = this._renderedRange.end - this._renderedRange.start;
-          const anchorDiff = this.anchorItem.index - this._renderedRange.start;
-          this._renderedRange.end = Math.min(
-            dataLength,
-            this._renderedRange.end,
-          );
-          this._renderedRange.start = Math.max(
-            0,
-            this._renderedRange.end - rangeDiff,
-          );
-          // this.anchorItem.offset = 0;
-          this.anchorItem.index = Math.max(
-            0,
-            this._renderedRange.start + anchorDiff,
+          this.anchorItem = this.calculateAnchoredItem(
+            {
+              index: dataLength,
+              offset: 0,
+            },
+            -calculateVisibleContainerSize(
+              this.containerSize,
+              this.scrollTopWithOutOffset,
+              this.scrollTopAfterOffset,
+            ),
           );
           this.calcAnchorScrollTop();
+          this._renderedRange = {
+            start: Math.max(0, this.anchorItem.index - this.runwayItems),
+            end: dataLength,
+          };
+          this.scrollTo(size);
+          this.scrollTop = this.anchorScrollTop;
         }
         this.contentSize = size;
       }),
@@ -561,7 +575,7 @@ export class AutoSizeVirtualScrollStrategy<
         map(() => {
           const range = { start: 0, end: 0 };
           const delta = this.scrollTop - this.anchorScrollTop;
-          if (this.scrollTop == 0) {
+          if (this.scrollTop === 0) {
             this.anchorItem = { index: 0, offset: 0 };
           } else {
             this.anchorItem = this.calculateAnchoredItem(
@@ -798,7 +812,11 @@ export class AutoSizeVirtualScrollStrategy<
     return this.resizeObserver
       .observeElement(element, this.resizeObserverConfig?.options)
       .pipe(
-        takeWhile((event) => event.target.isConnected),
+        takeWhile(
+          (event) =>
+            event.target.isConnected &&
+            !!this._virtualItems[viewRef.context.index],
+        ),
         map((event) => {
           const index = viewRef.context.index;
           const size = Math.round(this.extractSize(event));

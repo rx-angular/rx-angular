@@ -177,13 +177,8 @@ export class DynamicSizeVirtualScrollStrategy<
 
   /** @internal */
   private set renderedRange(range: ListRange) {
-    if (
-      this._renderedRange.start !== range.start ||
-      this._renderedRange.end !== range.end
-    ) {
-      this._renderedRange = range;
-      this._renderedRange$.next(range);
-    }
+    this._renderedRange = range;
+    this._renderedRange$.next(range);
   }
   /** @internal */
   private get renderedRange(): ListRange {
@@ -284,6 +279,10 @@ export class DynamicSizeVirtualScrollStrategy<
     for (let i = 0; i < _index; i++) {
       scrollTo += this._virtualItems[i].size;
     }
+    this.scrollTo(scrollTo, behavior);
+  }
+
+  private scrollTo(scrollTo: number, behavior?: ScrollBehavior): void {
     this.waitForScroll =
       scrollTo !== this.scrollTop && this.contentSize > this.containerSize;
     if (this.waitForScroll) {
@@ -306,9 +305,18 @@ export class DynamicSizeVirtualScrollStrategy<
     );
 
     valueArray$.pipe(this.until$()).subscribe((dataArr) => {
-      if (!dataArr.length) {
+      const dataLength = dataArr.length;
+      if (!dataLength) {
         this._virtualItems = [];
         this.contentSize = 0;
+        this._renderedRange = {
+          start: 0,
+          end: 0,
+        };
+        this.anchorItem = {
+          index: 0,
+          offset: 0,
+        };
         this.recalculateRange$.next();
       } else {
         let shouldRecalculateRange = false;
@@ -327,6 +335,27 @@ export class DynamicSizeVirtualScrollStrategy<
               shouldRecalculateRange = true;
             }
           }
+        }
+        if (dataLength < this._renderedRange.end) {
+          this.anchorItem = this.calculateAnchoredItem(
+            {
+              index: dataLength,
+              offset: 0,
+            },
+            -calculateVisibleContainerSize(
+              this.containerSize,
+              this.scrollTopWithOutOffset,
+              this.scrollTopAfterOffset,
+            ),
+          );
+          this._renderedRange.start = Math.max(
+            0,
+            this.anchorItem.index - this.runwayItems,
+          );
+          this._renderedRange.end = dataLength;
+          this.calcAnchorScrollTop();
+          this.scrollTo(contentSize);
+          this.scrollTop = this.anchorScrollTop;
         }
         this.contentSize = contentSize;
         if (shouldRecalculateRange) {
@@ -534,6 +563,16 @@ export class DynamicSizeVirtualScrollStrategy<
     }
     return pos;
   }
+
+  /** @internal */
+  private calcAnchorScrollTop(): void {
+    this.anchorScrollTop = 0;
+    for (let i = 0; i < this.anchorItem.index; i++) {
+      this.anchorScrollTop += this.getItemSize(i);
+    }
+    this.anchorScrollTop += this.anchorItem.offset;
+  }
+
   /** @internal */
   private getItemSize(index: number): number {
     return this._virtualItems[index].size;

@@ -657,7 +657,12 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
               : [],
         ),
       ),
-      this.scrollStrategy.renderedRange$,
+      this.scrollStrategy.renderedRange$.pipe(
+        distinctUntilChanged(
+          (oldRange, newRange) =>
+            oldRange.start === newRange.start && oldRange.end === newRange.end,
+        ),
+      ),
       this.strategyHandler.strategy$.pipe(distinctUntilChanged()),
     ]).pipe(
       switchMap(([items, range, strategy]) =>
