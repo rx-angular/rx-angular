@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [18.0.1](https://github.com/rx-angular/rx-angular/compare/template@18.0.0...template@18.0.1) (2024-08-01)
+
+
+### Bug Fixes
+
+* **template:** properly calculate range & anchor when values reset ([2456ecc](https://github.com/rx-angular/rx-angular/commit/2456eccc587a6061f965f801251067f02336f093)), closes [#1744](https://github.com/rx-angular/rx-angular/issues/1744)
+
+
+
 # [18.0.0](https://github.com/rx-angular/rx-angular/compare/template@17.3.0...template@18.0.0) (2024-05-31)
 
 
