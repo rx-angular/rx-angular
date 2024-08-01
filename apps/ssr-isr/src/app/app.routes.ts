@@ -15,6 +15,11 @@ export const appRoutes: Route[] = [
     },
   },
   {
+    path: 'needs-redirect',
+    loadComponent: () =>
+      import('./redirect.component').then((m) => m.RedirectComponent),
+  },
+  {
     path: '**',
     redirectTo: '/static',
   },
