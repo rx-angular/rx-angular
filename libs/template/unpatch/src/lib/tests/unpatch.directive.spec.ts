@@ -50,11 +50,11 @@ describe(RxUnpatch.name, () => {
     const div = fixture.debugElement.query(By.css('div'));
     const addEventListener = jest.spyOn(
       div.nativeElement,
-      Zone.__symbol__('addEventListener')
+      Zone.__symbol__('addEventListener'),
     );
     const removeEventListener = jest.spyOn(
       div.nativeElement,
-      'removeEventListener'
+      'removeEventListener',
     );
 
     // Act
@@ -87,11 +87,11 @@ describe(RxUnpatch.name, () => {
     const div = fixture.debugElement.query(By.css('div'));
     const addEventListener = jest.spyOn(
       div.nativeElement,
-      Zone.__symbol__('addEventListener')
+      Zone.__symbol__('addEventListener'),
     );
     const removeEventListener = jest.spyOn(
       div.nativeElement,
-      'removeEventListener'
+      'removeEventListener',
     );
 
     // Act
@@ -107,6 +107,43 @@ describe(RxUnpatch.name, () => {
         [LogEvent.Mouseenter, false],
       ]);
       // Change detection has been run once since we unpatched only `mouseenter`.
+      expect(tick).toHaveBeenCalledTimes(1);
+      expect(addEventListener).toHaveBeenCalledTimes(1);
+      expect(removeEventListener).toHaveBeenCalledTimes(1);
+    } finally {
+      tick.mockRestore();
+      addEventListener.mockRestore();
+    }
+  });
+
+  it('should re-apply all except provided negated event listeners', () => {
+    // Arrange
+    const fixture = TestBed.createComponent(TestComponent);
+    fixture.componentInstance.unpatch = ['!mouseenter'];
+    const appRef = TestBed.inject(ApplicationRef);
+    const div = fixture.debugElement.query(By.css('div'));
+    const addEventListener = jest.spyOn(
+      div.nativeElement,
+      Zone.__symbol__('addEventListener'),
+    );
+    const removeEventListener = jest.spyOn(
+      div.nativeElement,
+      'removeEventListener',
+    );
+
+    // Act
+    fixture.detectChanges();
+    const tick = jest.spyOn(appRef, 'tick');
+    div.nativeElement.dispatchEvent(new Event('mouseenter'));
+    div.nativeElement.dispatchEvent(new Event('click'));
+
+    try {
+      // Assert
+      expect(logs).toEqual([
+        [LogEvent.Mouseenter, true],
+        [LogEvent.Click, false],
+      ]);
+      // Change detection has been run once since we unpatched only `!mouseenter`.
       expect(tick).toHaveBeenCalledTimes(1);
       expect(addEventListener).toHaveBeenCalledTimes(1);
       expect(removeEventListener).toHaveBeenCalledTimes(1);
