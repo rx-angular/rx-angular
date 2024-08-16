@@ -25,6 +25,10 @@ env:
   docs-path: dist/apps/docs
   NX_BRANCH: ${{ github.event.number || github.ref_name }}
 
+permissions:
+  actions: read
+  contents: read
+
 jobs:
   main:
     name: Main CI
@@ -59,7 +63,7 @@ jobs:
       - name: Run commands in parallel
         run: |
           npx nx-cloud record -- npx nx format:check
-          npx nx affected -t lint build test e2e component-test --parallel=4 --exclude=docs
+          npx nx affected -t lint build test component-test e2e --parallel=4 --exclude=docs
 
       # Upload coverage reports to Codecov
       - name: Upload coverage
@@ -74,27 +78,21 @@ jobs:
   build-docs:
     name: Build docs
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
 
     steps:
       - name: Checkout all commits
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
       - name: Build docs
-        env:
-          NX_CLOUD_DISTRIBUTED_EXECUTION: false
-          NX_DISTRIBUTED_TASK_EXECUTION: false
         run: yarn nx build docs
 
       - name: '[Merge] Upload docs'
         if: github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.docs-name }}
           path: ${{ env.docs-path }}
