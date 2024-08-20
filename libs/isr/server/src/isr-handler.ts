@@ -188,18 +188,9 @@ export class ISRHandler {
         return;
       }
 
-      // Apply the callback if given
-      let finalHtml = html;
-      if (config?.modifyCachedHtml) {
-        const timeStart = performance.now();
-        finalHtml = config.modifyCachedHtml(req, html);
-        const totalTime = (performance.now() - timeStart).toFixed(2);
-        finalHtml += `<!--\nℹ️ ISR: This cachedHtml has been modified with modifyCachedHtml()\n❗️
-        This resulted into more ${totalTime}ms of processing time.\n-->`;
-      }
-
       // Cache exists. Send it.
       this.logger.log(`Page was retrieved from cache: `, cacheKey);
+      let finalHtml = html;
 
       // if the cache is expired, we will regenerate it
       if (cacheConfig.revalidate && cacheConfig.revalidate > 0) {
@@ -207,14 +198,35 @@ export class ISRHandler {
 
         if (lastCacheDateDiff > cacheConfig.revalidate) {
           // regenerate the page without awaiting, so the user gets the cached page immediately
-          this.cacheGeneration.generateWithCacheKey(
-            req,
-            res,
-            cacheKey,
-            config?.providers,
-            'regenerate',
-          );
+          if (this.isrConfig.backgroundRevalidation) {
+            this.cacheGeneration.generateWithCacheKey(
+              req,
+              res,
+              cacheKey,
+              config?.providers,
+              'regenerate',
+            );
+          } else {
+            const result = await this.cacheGeneration.generateWithCacheKey(
+              req,
+              res,
+              cacheKey,
+              config?.providers,
+              'regenerate',
+            );
+            if (result?.html) {
+              finalHtml = result.html;
+            }
+          }
         }
+      }
+      // Apply the callback if given
+      if (config?.modifyCachedHtml) {
+        const timeStart = performance.now();
+        finalHtml = config.modifyCachedHtml(req, finalHtml);
+        const totalTime = (performance.now() - timeStart).toFixed(2);
+        finalHtml += `<!--\nℹ️ ISR: This cachedHtml has been modified with modifyCachedHtml()\n❗️
+              This resulted into more ${totalTime}ms of processing time.\n-->`;
       }
       return res.send(finalHtml);
     } catch (error) {

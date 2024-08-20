@@ -31,8 +31,9 @@ export function app(): express.Express {
     browserDistFolder,
     bootstrap,
     commonEngine,
+    backgroundRevalidation: true, // will revalidate in background and serve the cache page first
+    nonBlockingRender: true, // will serve page first and store in cache in background
     modifyGeneratedHtml: defaultModifyGeneratedHtml,
-
     // cache: fsCacheHandler,
   });
 
