@@ -32,7 +32,7 @@ export abstract class CacheHandler {
   abstract add(
     url: string,
     html: string,
-    config?: CacheISRConfig
+    config?: CacheISRConfig,
   ): Promise<void>;
 
   abstract get(url: string): Promise<CacheData>;
