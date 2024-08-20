@@ -11,7 +11,7 @@ export class ISRLogger {
    * @param optionalParams Optional parameters to log
    * @internal
    */
-  log(message?: any, ...optionalParams: any[]): void {
+  log(message?: string, ...optionalParams: unknown[]): void {
     this.showLogs && console.log(message, ...optionalParams);
   }
 }

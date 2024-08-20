@@ -15,11 +15,11 @@ export class InMemoryCacheHandler implements CacheHandler {
   add(
     url: string,
     html: string,
-    config: CacheISRConfig = defaultCacheISRConfig
+    config: CacheISRConfig = defaultCacheISRConfig,
   ): Promise<void> {
     const htmlWithMsg = html + cacheMsg(config.revalidate);
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const cacheData: CacheData = {
         html: htmlWithMsg,
         options: config,
@@ -33,26 +33,26 @@ export class InMemoryCacheHandler implements CacheHandler {
   get(url: string): Promise<CacheData> {
     return new Promise((resolve, reject) => {
       if (this.cache.has(url)) {
-        resolve(this.cache.get(url)!);
+        resolve(this.cache.get(url) as CacheData);
       }
       reject('This url does not exist in cache!');
     });
   }
 
   getAll(): Promise<string[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(Array.from(this.cache.keys()));
     });
   }
 
   has(url: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(this.cache.has(url));
     });
   }
 
   delete(url: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(this.cache.delete(url));
     });
   }

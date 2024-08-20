@@ -19,13 +19,14 @@ import { renderUrl, RenderUrlConfig } from './utils/render-url';
 export class ISRHandler {
   protected cache!: CacheHandler;
   protected cacheRegeneration!: CacheRegeneration;
-  protected logger = new ISRLogger(this.config?.enableLogging || false);
+  protected logger: ISRLogger;
 
   constructor(protected config: ISRHandlerConfig) {
     if (!config) {
       throw new Error('Provide ISRHandlerConfig!');
     }
 
+    this.logger = new ISRLogger(this.config?.enableLogging || false);
     // if skipCachingOnHttpError is not provided it will default to true
     config.skipCachingOnHttpError = config.skipCachingOnHttpError !== false;
     // if buildId is not provided it will default to null
@@ -55,7 +56,7 @@ export class ISRHandler {
     req: Request,
     res: Response,
     config?: InvalidateConfig,
-  ): Promise<any> {
+  ): Promise<Response> {
     const { token, urlsToInvalidate } = extractDataFromBody(req);
     const { indexHtml } = this.config;
 
@@ -74,7 +75,7 @@ export class ISRHandler {
     }
 
     const notInCache: string[] = [];
-    const urlWithErrors: Record<string, any> = {};
+    const urlWithErrors: Record<string, string[]> = {};
 
     // Include all possible variants in the list of URLs to be invalidated including
     // their modified request to regenerate the pages
@@ -120,7 +121,7 @@ export class ISRHandler {
         };
         await this.cache.add(cacheKey, html, cacheConfig);
       } catch (err) {
-        urlWithErrors[cacheKey] = err;
+        urlWithErrors[cacheKey] = err as string[];
       }
     }
 
@@ -139,9 +140,7 @@ export class ISRHandler {
 
     if (Object.keys(urlWithErrors).length) {
       this.logger.log(
-        `Urls: ${Object.keys(urlWithErrors).join(
-          ', ',
-        )} had errors while regenerating!`,
+        `Urls: ${Object.keys(urlWithErrors).join(', ')} had errors while regenerating!`,
       );
     }
 
@@ -185,7 +184,7 @@ export class ISRHandler {
     res: Response,
     next: NextFunction,
     config?: ServeFromCacheConfig,
-  ): Promise<any> {
+  ): Promise<Response | void> {
     try {
       const variant = this.getVariant(req);
 
@@ -243,7 +242,7 @@ export class ISRHandler {
     res: Response,
     next: NextFunction,
     config?: RenderConfig,
-  ): Promise<any> {
+  ): Promise<Response> {
     const renderUrlConfig: RenderUrlConfig = {
       req,
       res,
@@ -255,45 +254,38 @@ export class ISRHandler {
       browserDistFolder: this.config.browserDistFolder,
       inlineCriticalCss: this.config.inlineCriticalCss,
     };
+    const html = await renderUrl(renderUrlConfig);
+    const { revalidate, errors } = getRouteISRDataFromHTML(html);
 
-    renderUrl(renderUrlConfig).then(async (html) => {
-      // If headers are already sent, we can't send the response
-      if (res.headersSent) {
-        return;
-      }
+    // Apply the callback if given
+    const finalHtml = config?.modifyGeneratedHtml
+      ? config.modifyGeneratedHtml(req, html)
+      : html;
 
-      const { revalidate, errors } = getRouteISRDataFromHTML(html);
-
-      // Apply the callback if given
-      const finalHtml = config?.modifyGeneratedHtml
-        ? config.modifyGeneratedHtml(req, html)
-        : html;
-
-      // if we have any http errors when rendering the site, and we have skipCachingOnHttpError enabled
-      // we don't want to cache it, and, we will fall back to client side rendering
-      if (errors?.length && this.config.skipCachingOnHttpError) {
-        this.logger.log('Http errors: \n', errors);
-        return res.send(finalHtml);
-      }
-
-      // if revalidate is null we won't cache it
-      // if revalidate is 0, we will never clear the cache automatically
-      // if revalidate is x, we will clear cache every x seconds (after the last request) for that url
-
-      if (revalidate === null || revalidate === undefined) {
-        // don't do !revalidate because it will also catch "0"
-        return res.send(finalHtml);
-      }
-
-      const variant = this.getVariant(req);
-
-      // Cache the rendered `html` for this request url to use for subsequent requests
-      await this.cache.add(getCacheKey(req.url, variant), finalHtml, {
-        revalidate,
-        buildId: this.config.buildId,
-      });
+    // if we have any http errors when rendering the site, and we have skipCachingOnHttpError enabled
+    // we don't want to cache it, and, we will fall back to client side rendering
+    if (errors?.length && this.config.skipCachingOnHttpError) {
+      this.logger.log('Http errors: \n', errors);
       return res.send(finalHtml);
+    }
+
+    // if revalidate is null we won't cache it
+    // if revalidate is 0, we will never clear the cache automatically
+    // if revalidate is x, we will clear cache every x seconds (after the last request) for that url
+
+    if (revalidate === null || revalidate === undefined) {
+      // don't do !revalidate because it will also catch "0"
+      return res.send(finalHtml);
+    }
+
+    const variant = this.getVariant(req);
+
+    // Cache the rendered `html` for this request url to use for subsequent requests
+    await this.cache.add(getCacheKey(req.url, variant), finalHtml, {
+      revalidate,
+      buildId: this.config.buildId,
     });
+    return res.send(finalHtml);
   }
 
   protected getVariant(req: Request): RenderVariant | null {
@@ -309,6 +301,9 @@ export class ISRHandler {
 const extractDataFromBody = (
   req: Request,
 ): { token: string | null; urlsToInvalidate: string[] } => {
-  const { urlsToInvalidate, token } = req.body;
+  const { urlsToInvalidate, token } = req.body as {
+    urlsToInvalidate: string[];
+    token: string;
+  };
   return { urlsToInvalidate, token };
 };
