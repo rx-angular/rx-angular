@@ -184,7 +184,7 @@ export class FileSystemCacheHandler extends CacheHandler {
     // if yes add the folder name to cache as url and index.html as html
     // then remove the found files because they will be handled by ISR
 
-    const folderPath = this.options.prerenderedPagesPath!;
+    const folderPath = this.options.prerenderedPagesPath || '';
 
     // path is full path to file
     const pathsToCache: Array<{ path: string; html: string }> = [];
@@ -216,11 +216,11 @@ export class FileSystemCacheHandler extends CacheHandler {
       console.error('ERROR! 💥 ! Cannot read folder: ' + folderPath);
     }
 
-    for (const { path, html } of pathsToCache) {
+    for (const { path } of pathsToCache) {
       // from: '/Users/enea/Documents/GitHub/ngx-isr/dist/ngx-isr-demo/browser/details/1/index.html
       // to: '/details/1/index.html'
       const pathWithoutPrerenderedPagesPath = path.replace(
-        this.options.prerenderedPagesPath!,
+        this.options.prerenderedPagesPath || '',
         '',
       );
 

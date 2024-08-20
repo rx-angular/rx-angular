@@ -23,7 +23,7 @@ export class IsrServerService implements IsrServiceInterface {
     this.state = { ...this.state, ...partialState };
   }
 
-  getExtra(): Record<string, any> {
+  getExtra(): Record<string, unknown> {
     return this.state.extra;
   }
 
@@ -34,7 +34,7 @@ export class IsrServerService implements IsrServiceInterface {
   activate(): void {
     this.router.events
       .pipe(
-        filter((e) => e instanceof ChildActivationEnd),
+        filter((e) => 'snapshot' in e),
         map((event) => {
           let snapshot = (event as ChildActivationEnd).snapshot;
           // get the last child route
@@ -44,11 +44,11 @@ export class IsrServerService implements IsrServiceInterface {
           // get the data from the last child route
           return snapshot.data;
         }),
-        take(1)
+        take(1),
       )
-      .subscribe((data: any) => {
+      .subscribe((data) => {
         // if revalidate is defined, set it
-        if (data?.['revalidate'] !== undefined) {
+        if (typeof data?.['revalidate'] === 'number') {
           this.patchState({ revalidate: data['revalidate'] });
         }
       });
@@ -76,7 +76,7 @@ export class IsrServerService implements IsrServiceInterface {
    * this.isrService.addExtra({ foo: 'bar' });
    * ```
    */
-  addExtra(extra: Record<string, any> = {}): void {
+  addExtra(extra: Record<string, unknown> = {}): void {
     this.patchState({ extra: { ...this.getExtra(), ...extra } });
   }
 }

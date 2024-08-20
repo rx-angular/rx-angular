@@ -36,7 +36,7 @@ export class InMemoryCacheHandler extends CacheHandler {
   get(url: string): Promise<CacheData> {
     return new Promise((resolve, reject) => {
       if (this.cache.has(url)) {
-        resolve(this.cache.get(url)!);
+        resolve(this.cache.get(url) as CacheData);
       }
       reject('This url does not exist in cache!');
     });
