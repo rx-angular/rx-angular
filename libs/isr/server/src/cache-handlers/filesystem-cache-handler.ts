@@ -76,14 +76,20 @@ export class FileSystemCacheHandler extends CacheHandler {
 
       if (cachedRoute) {
         // on html field we have saved path to file
-        this.readFromFile(cachedRoute.htmlFilePath).then((html) => {
-          const cacheData: CacheData = {
-            html,
-            options: cachedRoute.options,
-            createdAt: cachedRoute.createdAt,
-          };
-          resolve(cacheData);
-        });
+        this.readFromFile(cachedRoute.htmlFilePath)
+          .then((html) => {
+            const cacheData: CacheData = {
+              html,
+              options: cachedRoute.options,
+              createdAt: cachedRoute.createdAt,
+            };
+            resolve(cacheData);
+          })
+          .catch((err) => {
+            reject(
+              `Error: 💥 Cannot read cache file for route ${route}: ${cachedRoute.htmlFilePath}, ${err}`,
+            );
+          });
       } else {
         reject('Error: 💥 Url is not cached.');
       }
