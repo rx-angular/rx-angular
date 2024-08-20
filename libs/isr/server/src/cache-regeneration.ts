@@ -64,7 +64,7 @@ export class CacheRegeneration {
       // if there are errors, don't add the page to cache
       if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
         // remove url from urlsOnHold because we want to try to regenerate it again
-        this.urlsOnHold = this.urlsOnHold.filter((x) => x !== url);
+        this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
         logger.log(
           '💥 ERROR: Url: ' + cacheKey + ' was not regenerated!',
           errors,
