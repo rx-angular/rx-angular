@@ -9,17 +9,20 @@ const defaultCacheISRConfig: CacheISRConfig = {
   buildId: null,
 };
 
-export class InMemoryCacheHandler implements CacheHandler {
+export class InMemoryCacheHandler extends CacheHandler {
   protected cache = new Map<string, CacheData>();
+  constructor() {
+    super();
+  }
 
   add(
     url: string,
     html: string,
-    config: CacheISRConfig = defaultCacheISRConfig
+    config: CacheISRConfig = defaultCacheISRConfig,
   ): Promise<void> {
     const htmlWithMsg = html + cacheMsg(config.revalidate);
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const cacheData: CacheData = {
         html: htmlWithMsg,
         options: config,
@@ -40,20 +43,27 @@ export class InMemoryCacheHandler implements CacheHandler {
   }
 
   getAll(): Promise<string[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(Array.from(this.cache.keys()));
     });
   }
 
   has(url: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(this.cache.has(url));
     });
   }
 
   delete(url: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(this.cache.delete(url));
+    });
+  }
+
+  override clearCache?(): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.cache.clear();
+      resolve(true);
     });
   }
 }
