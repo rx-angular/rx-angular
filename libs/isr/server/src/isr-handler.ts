@@ -168,7 +168,7 @@ export class ISRHandler {
       for (const variant of variants) {
         result.push({
           url,
-          cacheKey: getCacheKey(url, variant),
+          cacheKey: getCacheKey(url, this.config.allowedQueryParams, variant),
           reqSimulator: variant.simulateVariant
             ? variant.simulateVariant
             : defaultVariant,
@@ -187,8 +187,9 @@ export class ISRHandler {
   ): Promise<Response | void> {
     try {
       const variant = this.getVariant(req);
-
-      const cacheData = await this.cache.get(getCacheKey(req.url, variant));
+      const cacheData = await this.cache.get(
+        getCacheKey(req.url, this.config.allowedQueryParams, variant),
+      );
       const { html, options: cacheConfig, createdAt } = cacheData;
 
       const cacheHasBuildId =
@@ -228,7 +229,7 @@ export class ISRHandler {
       // Cache exists. Send it.
       this.logger.log(
         `Page was retrieved from cache: `,
-        getCacheKey(req.url, variant),
+        getCacheKey(req.url, this.config.allowedQueryParams, variant),
       );
       return res.send(finalHtml);
     } catch (error) {
@@ -280,12 +281,16 @@ export class ISRHandler {
 
     const variant = this.getVariant(req);
 
-    // Cache the rendered `html` for this request url to use for subsequent requests
-    await this.cache.add(getCacheKey(req.url, variant), finalHtml, {
-      revalidate,
-      buildId: this.config.buildId,
-    });
-    return res.send(finalHtml);
+      // Cache the rendered `html` for this request url to use for subsequent requests
+      await this.cache.add(
+        getCacheKey(req.url, this.config.allowedQueryParams, variant),
+        finalHtml,
+        {
+          revalidate,
+          buildId: this.config.buildId,
+        },
+      );
+      return res.send(finalHtml);
   }
 
   protected getVariant(req: Request): RenderVariant | null {
