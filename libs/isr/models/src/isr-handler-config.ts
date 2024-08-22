@@ -97,6 +97,13 @@ export interface ISRHandlerConfig {
    * ],
    */
   variants?: RenderVariant[];
+
+  /**
+   * This array of query params will be allowed to be part of the cache key.
+   * If not provided, which is null, all query params will be part of the cache key.
+   * If provided as an empty array, no query params will be part of the cache key.
+   */
+  allowedQueryParams?: string[];
 }
 
 export interface ServeFromCacheConfig {

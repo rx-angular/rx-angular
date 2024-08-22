@@ -34,7 +34,11 @@ export class CacheRegeneration {
   ): Promise<void> {
     const { url } = req;
     const variant = getVariant(req, this.isrConfig);
-    const cacheKey = getCacheKey(url, variant);
+    const cacheKey = getCacheKey(
+      url,
+      this.isrConfig.allowedQueryParams,
+      variant,
+    );
 
     if (this.urlsOnHold.includes(cacheKey)) {
       logger.log('Another regeneration is on-going for this url...');
