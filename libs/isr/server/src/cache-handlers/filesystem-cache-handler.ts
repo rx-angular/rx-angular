@@ -344,16 +344,20 @@ function getFileFullPath(fileName: string, cacheFolderPath: string): string {
  * @param {string} route - The string representing the route to be converted into a file name.
  * @returns {string} The modified string representing the file name obtained by replacing '/' characters with '__'.
  */
-function convertRouteToFileName(route: string): string {
+export function convertRouteToFileName(route: string): string {
   // replace all occurrences of '/' character in the 'route' string with '__' using regular expression
-  return route.replace(new RegExp('/', 'g'), '__');
+  return route
+    .replace(new RegExp('/', 'g'), '__')
+    .replace(new RegExp('\\?', 'g'), '++');
 }
 
 /**
  * This function takes a string parameter 'fileName' and replaces all '__' strings in it with '/' and returns the modified string.
  * @param fileName - The string representing the file name to be converted into a route.
  */
-function convertFileNameToRoute(fileName: string): string {
+export function convertFileNameToRoute(fileName: string): string {
   // replace all occurrences of '__' string in the 'fileName' string with '/' using regular expression
-  return fileName.replace(new RegExp('__', 'g'), '/');
+  return fileName
+    .replace(new RegExp('\\+\\+', 'g'), '?')
+    .replace(new RegExp('__', 'g'), '/');
 }
