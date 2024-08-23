@@ -34,7 +34,7 @@ export class FileSystemCacheHandler extends CacheHandler {
 
     if (options.addPrerenderedPagesToCache && !options.prerenderedPagesPath) {
       throw new Error(
-        'Prerendered pages path is required when `addPrerenderedPagesToCache` is enabled!'
+        'Prerendered pages path is required when `addPrerenderedPagesToCache` is enabled!',
       );
     }
 
@@ -44,7 +44,7 @@ export class FileSystemCacheHandler extends CacheHandler {
   async add(
     route: string,
     html: string,
-    config?: CacheISRConfig
+    config?: CacheISRConfig,
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       // ex: route is like: / or /details/user/1
@@ -104,7 +104,7 @@ export class FileSystemCacheHandler extends CacheHandler {
             reject(
               'Error: 💥 Cannot delete cache file for route ' +
                 route +
-                `: ${cacheData.htmlFilePath}`
+                `: ${cacheData.htmlFilePath}`,
             );
           } else {
             this.cache.delete(route);
@@ -221,7 +221,7 @@ export class FileSystemCacheHandler extends CacheHandler {
       // to: '/details/1/index.html'
       const pathWithoutPrerenderedPagesPath = path.replace(
         this.options.prerenderedPagesPath!,
-        ''
+        '',
       );
 
       let route = '';
@@ -255,7 +255,7 @@ export class FileSystemCacheHandler extends CacheHandler {
     }
 
     console.log(
-      `${pathsToCache.length} Prerendered pages were moved to cache folder.`
+      `${pathsToCache.length} Prerendered pages were moved to cache folder.`,
     );
   }
 
@@ -280,7 +280,7 @@ export class FileSystemCacheHandler extends CacheHandler {
  * @returns {Array<{ path: string; html: string }>} An array of objects, where each object contains the path and contents of an 'index.html' file found in the specified directory or its subdirectories.
  */
 function findIndexHtmlFilesRecursively(
-  path: string
+  path: string,
 ): Array<{ path: string; html: string }> {
   // Initialize an empty array to hold the data for each file found
   const data: Array<{ path: string; html: string }> = [];
