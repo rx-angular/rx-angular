@@ -11,7 +11,7 @@ import { getCacheKey, getVariant } from './utils/cache-utils';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
 import { renderUrl } from './utils/render-url';
 
-export class CacheRegeneration {
+export class CacheGeneration {
   // TODO: make this pluggable because on serverless environments we can't share memory between functions
   // so we need to use a database or redis cache to store the urls that are on hold if we want to use this feature
   private urlsOnHold: string[] = []; // urls that have regeneration loading
@@ -25,7 +25,7 @@ export class CacheRegeneration {
     public browserDistFolder?: string,
   ) {}
 
-  async regenerate(
+  async generate(
     req: Request,
     res: Response,
     cacheData: CacheData,
