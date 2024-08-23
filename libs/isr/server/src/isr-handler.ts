@@ -10,7 +10,7 @@ import {
 } from '@rx-angular/isr/models';
 import { NextFunction, Request, Response } from 'express';
 import { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
-import { CacheRegeneration } from './cache-regeneration';
+import { CacheGeneration } from './cache-regeneration';
 import { ISRLogger } from './isr-logger';
 import { getCacheKey } from './utils/cache-utils';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
@@ -18,7 +18,7 @@ import { renderUrl, RenderUrlConfig } from './utils/render-url';
 
 export class ISRHandler {
   protected cache!: CacheHandler;
-  protected cacheRegeneration!: CacheRegeneration;
+  protected cacheGeneration!: CacheGeneration;
   protected logger: ISRLogger;
 
   constructor(protected config: ISRHandlerConfig) {
@@ -42,7 +42,7 @@ export class ISRHandler {
       this.cache = new InMemoryCacheHandler();
     }
 
-    this.cacheRegeneration = new CacheRegeneration(
+    this.cacheGeneration = new CacheGeneration(
       this.config,
       this.cache,
       config.indexHtml,
@@ -206,7 +206,7 @@ export class ISRHandler {
         const lastCacheDateDiff = (Date.now() - createdAt) / 1000; // in seconds
 
         if (lastCacheDateDiff > cacheConfig.revalidate) {
-          await this.cacheRegeneration.regenerate(
+          await this.cacheGeneration.generate(
             req,
             res,
             cacheData,
