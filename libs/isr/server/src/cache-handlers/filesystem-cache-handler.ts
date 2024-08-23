@@ -34,7 +34,7 @@ export class FileSystemCacheHandler extends CacheHandler {
 
     if (options.addPrerenderedPagesToCache && !options.prerenderedPagesPath) {
       throw new Error(
-        'Prerendered pages path is required when `addPrerenderedPagesToCache` is enabled!'
+        'Prerendered pages path is required when `addPrerenderedPagesToCache` is enabled!',
       );
     }
 
@@ -44,7 +44,7 @@ export class FileSystemCacheHandler extends CacheHandler {
   async add(
     route: string,
     html: string,
-    config?: CacheISRConfig
+    config?: CacheISRConfig,
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       // ex: route is like: / or /details/user/1
@@ -76,14 +76,20 @@ export class FileSystemCacheHandler extends CacheHandler {
 
       if (cachedRoute) {
         // on html field we have saved path to file
-        this.readFromFile(cachedRoute.htmlFilePath).then((html) => {
-          const cacheData: CacheData = {
-            html,
-            options: cachedRoute.options,
-            createdAt: cachedRoute.createdAt,
-          };
-          resolve(cacheData);
-        });
+        this.readFromFile(cachedRoute.htmlFilePath)
+          .then((html) => {
+            const cacheData: CacheData = {
+              html,
+              options: cachedRoute.options,
+              createdAt: cachedRoute.createdAt,
+            };
+            resolve(cacheData);
+          })
+          .catch((err) => {
+            reject(
+              `Error: 💥 Cannot read cache file for route ${route}: ${cachedRoute.htmlFilePath}, ${err}`,
+            );
+          });
       } else {
         reject('Error: 💥 Url is not cached.');
       }
@@ -104,7 +110,7 @@ export class FileSystemCacheHandler extends CacheHandler {
             reject(
               'Error: 💥 Cannot delete cache file for route ' +
                 route +
-                `: ${cacheData.htmlFilePath}`
+                `: ${cacheData.htmlFilePath}`,
             );
           } else {
             this.cache.delete(route);
@@ -184,7 +190,7 @@ export class FileSystemCacheHandler extends CacheHandler {
     // if yes add the folder name to cache as url and index.html as html
     // then remove the found files because they will be handled by ISR
 
-    const folderPath = this.options.prerenderedPagesPath!;
+    const folderPath = this.options.prerenderedPagesPath || '';
 
     // path is full path to file
     const pathsToCache: Array<{ path: string; html: string }> = [];
@@ -216,12 +222,12 @@ export class FileSystemCacheHandler extends CacheHandler {
       console.error('ERROR! 💥 ! Cannot read folder: ' + folderPath);
     }
 
-    for (const { path, html } of pathsToCache) {
+    for (const { path } of pathsToCache) {
       // from: '/Users/enea/Documents/GitHub/ngx-isr/dist/ngx-isr-demo/browser/details/1/index.html
       // to: '/details/1/index.html'
       const pathWithoutPrerenderedPagesPath = path.replace(
-        this.options.prerenderedPagesPath!,
-        ''
+        this.options.prerenderedPagesPath || '',
+        '',
       );
 
       let route = '';
@@ -255,7 +261,7 @@ export class FileSystemCacheHandler extends CacheHandler {
     }
 
     console.log(
-      `${pathsToCache.length} Prerendered pages were moved to cache folder.`
+      `${pathsToCache.length} Prerendered pages were moved to cache folder.`,
     );
   }
 
@@ -280,7 +286,7 @@ export class FileSystemCacheHandler extends CacheHandler {
  * @returns {Array<{ path: string; html: string }>} An array of objects, where each object contains the path and contents of an 'index.html' file found in the specified directory or its subdirectories.
  */
 function findIndexHtmlFilesRecursively(
-  path: string
+  path: string,
 ): Array<{ path: string; html: string }> {
   // Initialize an empty array to hold the data for each file found
   const data: Array<{ path: string; html: string }> = [];

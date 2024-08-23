@@ -15,7 +15,7 @@ import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serializ
 export class IsrModule {
   constructor(
     private isrService: IsrService,
-    @Inject(PLATFORM_ID) private platformId: object
+    @Inject(PLATFORM_ID) private platformId: object,
   ) {
     // Activate ISR only on the server
     if (isPlatformServer(platformId)) {

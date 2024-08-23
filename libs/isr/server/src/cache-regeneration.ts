@@ -47,16 +47,18 @@ export class CacheRegeneration {
 
     this.urlsOnHold.push(cacheKey);
 
-    renderUrl({
-      req,
-      res,
-      url,
-      indexHtml: this.indexHtml,
-      providers,
-      commonEngine: this.commonEngine,
-      bootstrap: this.bootstrap,
-      browserDistFolder: this.browserDistFolder,
-    }).then((html) => {
+    try {
+      const html = await renderUrl({
+        req,
+        res,
+        url,
+        indexHtml: this.indexHtml,
+        providers,
+        commonEngine: this.commonEngine,
+        bootstrap: this.bootstrap,
+        browserDistFolder: this.browserDistFolder,
+      });
+
       const { errors } = getRouteISRDataFromHTML(html);
 
       // if there are errors, don't add the page to cache
@@ -71,13 +73,17 @@ export class CacheRegeneration {
       }
 
       // add the regenerated page to cache
-      this.cache
-        .add(cacheKey, html, { revalidate, buildId: this.isrConfig.buildId })
-        .then(() => {
-          // remove from urlsOnHold because we are done
-          this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
-          logger.log('Url: ' + cacheKey + ' was regenerated!');
-        });
-    });
+      await this.cache.add(cacheKey, html, {
+        revalidate,
+        buildId: this.isrConfig.buildId,
+      });
+      // remove from urlsOnHold because we are done
+      this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
+      logger.log('Url: ' + cacheKey + ' was regenerated!');
+    } catch (error) {
+      logger.log(`Error regenerating url: ${cacheKey}`, error);
+      // Ensure removal from urlsOnHold in case of error
+      this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
+    }
   }
 }
