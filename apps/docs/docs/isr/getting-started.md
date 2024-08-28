@@ -101,6 +101,9 @@ export function app(): express.Express {
 
   const commonEngine = new CommonEngine();
 
+  // This array of query params will be allowed to be part of the cache key. If null, all query params will be allowed. If empty, no query params will be allowed.
+  const allowedQueryParams = ['page'];
+
   // 2. 👇 Instantiate the ISRHandler class with the index.html file
   // highlight-start
   const isr = new ISRHandler({
@@ -111,14 +114,12 @@ export function app(): express.Express {
     browserDistFolder,
     bootstrap,
     commonEngine,
+    allowedQueryParams,
   });
   // highlight-end
 
   server.use(express.json());
-  server.post(
-    '/api/invalidate',
-    async (req, res) => await isr.invalidate(req, res)
-  );
+  server.post('/api/invalidate', async (req, res) => await isr.invalidate(req, res));
 
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
@@ -130,7 +131,7 @@ export function app(): express.Express {
     '*.*',
     express.static(browserDistFolder, {
       maxAge: '1y',
-    })
+    }),
   );
 
   // 3. 👇 Use the ISRHandler to handle the requests
@@ -140,7 +141,7 @@ export function app(): express.Express {
     // Serve page if it exists in cache
     async (req, res, next) => await isr.serveFromCache(req, res, next),
     // Server side render the page and add to cache if needed
-    async (req, res, next) => await isr.render(req, res, next)
+    async (req, res, next) => await isr.render(req, res, next),
   );
   // highlight-end
 
@@ -177,9 +178,7 @@ import { ISRHandler } from '@rx-angular/isr/server';
 export function app(): express.Express {
   const server = express();
   const distFolder = join(process.cwd(), 'dist/docs/browser');
-  const indexHtml = existsSync(join(distFolder, 'index.original.html'))
-    ? 'index.original.html'
-    : 'index';
+  const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
   // 2. 👇 Instantiate the ISRHandler class with the index.html file
   // highlight-start
@@ -204,7 +203,7 @@ export function app(): express.Express {
     // Serve page if it exists in cache
     async (req, res, next) => await isr.serveFromCache(req, res, next),
     // Server side render the page and add to cache if needed
-    async (req, res, next) => await isr.render(req, res, next)
+    async (req, res, next) => await isr.render(req, res, next),
   );
   // highlight-end
 
