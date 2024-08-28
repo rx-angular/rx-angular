@@ -101,7 +101,7 @@ export function app(): express.Express {
 
   const commonEngine = new CommonEngine();
 
-  // This array of query params will be allowed to be part of the cache key. If null, all query params will be allowed. If empty, no query params will be allowed.
+  // This array of query params will be allowed to be part of the cache key. If undefined, all query params will be allowed. If empty array, no query params will be allowed.
   const allowedQueryParams = ['page'];
 
   // 2. 👇 Instantiate the ISRHandler class with the index.html file
