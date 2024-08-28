@@ -21,6 +21,7 @@ import { RxIf } from '@rx-angular/template/if';
 import { RxLet } from '@rx-angular/template/let';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
+import { VirtualForCrazyUpdateComponent } from './virtual-for-crazy-update.component';
 import { VirtualForDemoComponent } from './virtual-for-demo.component';
 import { VirtualForMonkeyTestComponent } from './virtual-for-monkey-test.component';
 import { VirtualForReverseInfiniteScrollComponent } from './virtual-for-reverse-infinite-scroll.component';
@@ -54,6 +55,10 @@ import { VirtualForCustomScrollableDemoComponent } from './virtual-for-scrollabl
       {
         path: 'monkey-test',
         component: VirtualForMonkeyTestComponent,
+      },
+      {
+        path: 'crazy-update',
+        component: VirtualForCrazyUpdateComponent,
       },
     ]),
     ValueProvidersModule,
