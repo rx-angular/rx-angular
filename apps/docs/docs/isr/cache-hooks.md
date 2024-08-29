@@ -32,13 +32,24 @@ server.get(
         return `${cachedHtml}<!-- Hello, I'm a modification to the original cache! -->`;
       },
     }),
+
   // Server side render the page and add to cache if needed
-  async (req, res, next) =>
-    await isr.render(req, res, next, {
-      modifyGeneratedHtml: (req, html) => {
-        return `${html}<!-- Hello, I'm modifying the generatedHtml before caching it! -->`;
-      },
-    })
+  const isr = new ISRHandler({
+    indexHtml,
+    invalidateSecretToken: 'MY_TOKEN', // replace with env secret key ex. process.env.REVALIDATE_SECRET_TOKEN
+    enableLogging: true,
+    serverDistFolder,
+    browserDistFolder,
+    bootstrap,
+    commonEngine,
+    modifyGeneratedHtml: (req, html) => {
+      return `${html}<!-- Hello, I'm modifying the generatedHtml before caching it! -->`;
+    },
+    // cache: fsCacheHandler,
+  });
+
+
+  async (req, res, next) => await isr.render(req, res, next),
 );
 ```
 

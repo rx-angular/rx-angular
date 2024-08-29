@@ -9,6 +9,7 @@ export {
 export {
   InvalidateConfig,
   ISRHandlerConfig,
+  modifyHtmlCallbackFn,
   RenderConfig,
   RouteISRConfig,
   ServeFromCacheConfig,
