@@ -1,15 +1,16 @@
 import { Provider } from '@angular/core';
-import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
-import {
-  CacheData,
-  CacheHandler,
-  ISRHandlerConfig,
-} from '@rx-angular/isr/models';
+import { CacheHandler, ISRHandlerConfig } from '@rx-angular/isr/models';
 import { Request, Response } from 'express';
 import { ISRLogger } from './isr-logger';
+import { defaultModifyGeneratedHtml } from './modify-generated-html';
 import { getCacheKey, getVariant } from './utils/cache-utils';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
-import { renderUrl } from './utils/render-url';
+import { renderUrl, RenderUrlConfig } from './utils/render-url';
+
+export interface IGeneratedResult {
+  html?: string;
+  errors?: string[];
+}
 
 export class CacheGeneration {
   // TODO: make this pluggable because on serverless environments we can't share memory between functions
@@ -19,75 +20,103 @@ export class CacheGeneration {
   constructor(
     public isrConfig: ISRHandlerConfig,
     public cache: CacheHandler,
-    public indexHtml: string,
-    public commonEngine?: CommonEngine,
-    public bootstrap?: CommonEngineRenderOptions['bootstrap'],
-    public browserDistFolder?: string,
+    public logger: ISRLogger,
   ) {}
-
   async generate(
     req: Request,
     res: Response,
-    cacheData: CacheData,
-    logger: ISRLogger,
     providers?: Provider[],
-  ): Promise<void> {
+    mode: 'regenerate' | 'generate' = 'regenerate',
+  ): Promise<IGeneratedResult | void> {
     const { url } = req;
-    const variant = getVariant(req, this.isrConfig);
+    const variant = getVariant(req, this.isrConfig.variants);
     const cacheKey = getCacheKey(
       url,
       this.isrConfig.allowedQueryParams,
       variant,
     );
 
-    if (this.urlsOnHold.includes(cacheKey)) {
-      logger.log('Another regeneration is on-going for this url...');
-      return;
+    return this.generateWithCacheKey(req, res, cacheKey, providers, mode);
+  }
+  async generateWithCacheKey(
+    req: Request,
+    res: Response,
+    cacheKey: string,
+    providers?: Provider[],
+    mode: 'regenerate' | 'generate' = 'regenerate',
+  ): Promise<IGeneratedResult | void> {
+    const { url } = req;
+
+    if (mode === 'regenerate') {
+      // only regenerate will use queue to avoid multiple regenerations for the same url
+      // generate mode is used for the request without cache
+      if (this.urlsOnHold.includes(cacheKey)) {
+        this.logger.log('Another generation is on-going for this url...');
+        return;
+      }
+      this.logger.log(`The url: ${cacheKey} is being generated.`);
+
+      this.urlsOnHold.push(cacheKey);
     }
-
-    const { revalidate } = cacheData.options;
-
-    logger.log(`The url: ${cacheKey} is being regenerated.`);
-
-    this.urlsOnHold.push(cacheKey);
-
+    const renderUrlConfig: RenderUrlConfig = {
+      req,
+      res,
+      url,
+      indexHtml: this.isrConfig.indexHtml,
+      providers,
+      commonEngine: this.isrConfig.commonEngine,
+      bootstrap: this.isrConfig.bootstrap,
+      browserDistFolder: this.isrConfig.browserDistFolder,
+      inlineCriticalCss: this.isrConfig.inlineCriticalCss,
+    };
     try {
-      const html = await renderUrl({
-        req,
-        res,
-        url,
-        indexHtml: this.indexHtml,
-        providers,
-        commonEngine: this.commonEngine,
-        bootstrap: this.bootstrap,
-        browserDistFolder: this.browserDistFolder,
-      });
+      const html = await renderUrl(renderUrlConfig);
+      const { revalidate, errors } = getRouteISRDataFromHTML(html);
 
-      const { errors } = getRouteISRDataFromHTML(html);
+      // Apply the modify generation callback
+      // If undefined, use the default modifyGeneratedHtml function
+      const finalHtml = this.isrConfig.modifyGeneratedHtml
+        ? this.isrConfig.modifyGeneratedHtml(req, html, revalidate)
+        : defaultModifyGeneratedHtml(req, html, revalidate);
 
       // if there are errors, don't add the page to cache
       if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
         // remove url from urlsOnHold because we want to try to regenerate it again
-        this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
-        logger.log(
-          '💥 ERROR: Url: ' + cacheKey + ' was not regenerated!',
+        if (mode === 'regenerate') {
+          this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
+        }
+        this.logger.log(
+          `💥 ERROR: Url: ${cacheKey} was not regenerated!`,
           errors,
         );
-        return;
+        return { html: finalHtml, errors };
       }
 
+      // if revalidate is null we won't cache it
+      // if revalidate is 0, we will never clear the cache automatically
+      // if revalidate is x, we will clear cache every x seconds (after the last request) for that url
+      if (revalidate === null || revalidate === undefined) {
+        // don't do !revalidate because it will also catch "0"
+        return { html: finalHtml };
+      }
       // add the regenerated page to cache
-      await this.cache.add(cacheKey, html, {
+      await this.cache.add(cacheKey, finalHtml, {
         revalidate,
         buildId: this.isrConfig.buildId,
       });
-      // remove from urlsOnHold because we are done
-      this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
-      logger.log('Url: ' + cacheKey + ' was regenerated!');
+      if (mode === 'regenerate') {
+        // remove from urlsOnHold because we are done
+        this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
+        this.logger.log(`Url: ${cacheKey} was regenerated!`);
+      }
+      return { html: finalHtml };
     } catch (error) {
-      logger.log(`Error regenerating url: ${cacheKey}`, error);
-      // Ensure removal from urlsOnHold in case of error
-      this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
+      this.logger.log(`Error regenerating url: ${cacheKey}`, error);
+      if (mode === 'regenerate') {
+        // Ensure removal from urlsOnHold in case of error
+        this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
+      }
+      throw error;
     }
   }
 }

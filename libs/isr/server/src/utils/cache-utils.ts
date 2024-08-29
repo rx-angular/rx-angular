@@ -1,4 +1,4 @@
-import { ISRHandlerConfig, RenderVariant } from '@rx-angular/isr/models';
+import { RenderVariant } from '@rx-angular/isr/models';
 import { Request } from 'express';
 
 export const getCacheKey = (
@@ -28,14 +28,13 @@ export const getCacheKey = (
 
 export const getVariant = (
   req: Request,
-  config: ISRHandlerConfig,
+  variants: RenderVariant[] | undefined,
 ): RenderVariant | null => {
-  if (!config.variants) {
+  if (!variants) {
     return null;
   }
   return (
-    config.variants.find((variant: RenderVariant) =>
-      variant.detectVariant(req),
-    ) || null
+    variants.find((variant: RenderVariant) => variant.detectVariant(req)) ||
+    null
   );
 };
