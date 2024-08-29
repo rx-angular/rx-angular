@@ -20,11 +20,9 @@ export class InMemoryCacheHandler extends CacheHandler {
     html: string,
     config: CacheISRConfig = defaultCacheISRConfig,
   ): Promise<void> {
-    const htmlWithMsg = html + cacheMsg(config.revalidate);
-
     return new Promise((resolve) => {
       const cacheData: CacheData = {
-        html: htmlWithMsg,
+        html,
         options: config,
         createdAt: Date.now(),
       };
@@ -67,14 +65,3 @@ export class InMemoryCacheHandler extends CacheHandler {
     });
   }
 }
-
-const cacheMsg = (revalidateTime?: number | null): string => {
-  const time = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
-  let msg = '<!-- ';
-  msg += `\n🚀 ISR: Served from cache! \n⌛ Last updated: ${time}. `;
-  if (revalidateTime)
-    msg += `\n⏭️ Next refresh is after ${revalidateTime} seconds. `;
-  msg += ' \n-->';
-  return msg;
-};

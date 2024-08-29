@@ -1,54 +1,48 @@
 import {
   CacheHandler,
-  CacheISRConfig,
   InvalidateConfig,
   ISRHandlerConfig,
   RenderConfig,
-  RenderVariant,
   ServeFromCacheConfig,
   VariantRebuildItem,
 } from '@rx-angular/isr/models';
 import { NextFunction, Request, Response } from 'express';
+import { CacheGeneration } from './cache-generation';
 import { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
-import { CacheRegeneration } from './cache-regeneration';
 import { ISRLogger } from './isr-logger';
-import { getCacheKey } from './utils/cache-utils';
-import { getRouteISRDataFromHTML } from './utils/get-isr-options';
-import { renderUrl, RenderUrlConfig } from './utils/render-url';
+import { getCacheKey, getVariant } from './utils/cache-utils';
 
 export class ISRHandler {
   protected cache!: CacheHandler;
-  protected cacheRegeneration!: CacheRegeneration;
+  protected cacheGeneration!: CacheGeneration;
   protected logger: ISRLogger;
 
-  constructor(protected config: ISRHandlerConfig) {
-    if (!config) {
+  constructor(protected isrConfig: ISRHandlerConfig) {
+    if (!isrConfig) {
       throw new Error('Provide ISRHandlerConfig!');
     }
 
-    this.logger = new ISRLogger(this.config?.enableLogging || false);
+    this.logger = new ISRLogger(this.isrConfig?.enableLogging || false);
     // if skipCachingOnHttpError is not provided it will default to true
-    config.skipCachingOnHttpError = config.skipCachingOnHttpError !== false;
+    isrConfig.skipCachingOnHttpError =
+      isrConfig.skipCachingOnHttpError !== false;
     // if buildId is not provided it will default to null
-    config.buildId = config.buildId || null;
+    isrConfig.buildId = isrConfig.buildId || null;
     // if invalidateSecretToken is not provided it will default to null
-    config.invalidateSecretToken = config.invalidateSecretToken || null;
+    isrConfig.invalidateSecretToken = isrConfig.invalidateSecretToken || null;
 
-    if (config.cache && config.cache instanceof CacheHandler) {
+    if (isrConfig.cache && isrConfig.cache instanceof CacheHandler) {
       this.logger.log('Using custom cache handler!');
-      this.cache = config.cache;
+      this.cache = isrConfig.cache;
     } else {
       this.logger.log('Using in memory cache handler!');
       this.cache = new InMemoryCacheHandler();
     }
 
-    this.cacheRegeneration = new CacheRegeneration(
-      this.config,
+    this.cacheGeneration = new CacheGeneration(
+      this.isrConfig,
       this.cache,
-      config.indexHtml,
-      config.commonEngine,
-      config.bootstrap,
-      config.browserDistFolder,
+      this.logger,
     );
   }
 
@@ -58,9 +52,8 @@ export class ISRHandler {
     config?: InvalidateConfig,
   ): Promise<Response> {
     const { token, urlsToInvalidate } = extractDataFromBody(req);
-    const { indexHtml } = this.config;
 
-    if (token !== this.config.invalidateSecretToken) {
+    if (token !== this.isrConfig.invalidateSecretToken) {
       return res.json({
         status: 'error',
         message: 'Your secret token is wrong!!!',
@@ -92,34 +85,20 @@ export class ISRHandler {
         notInCache.push(cacheKey);
         continue;
       }
-
+      // override url of req with the one in parameters,
+      req.url = url;
       try {
-        // re-render the page again
-        const html = await renderUrl({
-          req: reqSimulator(req),
+        const result = await this.cacheGeneration.generateWithCacheKey(
+          reqSimulator(req),
           res,
-          url,
-          indexHtml,
-          providers: config?.providers,
-          bootstrap: this.config.bootstrap,
-          commonEngine: this.config.commonEngine,
-          browserDistFolder: this.config.browserDistFolder,
-        });
+          cacheKey,
+          config?.providers,
+          'generate',
+        );
 
-        // get revalidate data in order to set it to cache data
-        const { revalidate, errors } = getRouteISRDataFromHTML(html);
-
-        // if there are errors when rendering the site we throw an error
-        if (errors?.length && this.config.skipCachingOnHttpError) {
-          urlWithErrors[cacheKey] = errors;
+        if (result && result.errors?.length) {
+          urlWithErrors[cacheKey] = result.errors;
         }
-
-        // add the regenerated page to cache
-        const cacheConfig: CacheISRConfig = {
-          revalidate,
-          buildId: this.config.buildId,
-        };
-        await this.cache.add(cacheKey, html, cacheConfig);
       } catch (err) {
         urlWithErrors[cacheKey] = err as string[];
       }
@@ -158,7 +137,7 @@ export class ISRHandler {
   }
 
   getVariantUrlsToInvalidate(urlsToInvalidate: string[]): VariantRebuildItem[] {
-    const variants = this.config.variants || [];
+    const variants = this.isrConfig.variants || [];
     const result: VariantRebuildItem[] = [];
 
     const defaultVariant = (req: Request) => req;
@@ -168,7 +147,11 @@ export class ISRHandler {
       for (const variant of variants) {
         result.push({
           url,
-          cacheKey: getCacheKey(url, this.config.allowedQueryParams, variant),
+          cacheKey: getCacheKey(
+            url,
+            this.isrConfig.allowedQueryParams,
+            variant,
+          ),
           reqSimulator: variant.simulateVariant
             ? variant.simulateVariant
             : defaultVariant,
@@ -186,34 +169,22 @@ export class ISRHandler {
     config?: ServeFromCacheConfig,
   ): Promise<Response | void> {
     try {
-      const variant = this.getVariant(req);
-      const cacheData = await this.cache.get(
-        getCacheKey(req.url, this.config.allowedQueryParams, variant),
+      const variant = getVariant(req, this.isrConfig.variants);
+      const cacheKey = getCacheKey(
+        req.url,
+        this.isrConfig.allowedQueryParams,
+        variant,
       );
+      const cacheData = await this.cache.get(cacheKey);
       const { html, options: cacheConfig, createdAt } = cacheData;
 
       const cacheHasBuildId =
         cacheConfig.buildId !== null && cacheConfig.buildId !== undefined;
 
-      if (cacheHasBuildId && cacheConfig.buildId !== this.config.buildId) {
+      if (cacheHasBuildId && cacheConfig.buildId !== this.isrConfig.buildId) {
         // Cache is from a different build. Serve user using SSR
         next();
         return;
-      }
-
-      // if the cache is expired, we will regenerate it
-      if (cacheConfig.revalidate && cacheConfig.revalidate > 0) {
-        const lastCacheDateDiff = (Date.now() - createdAt) / 1000; // in seconds
-
-        if (lastCacheDateDiff > cacheConfig.revalidate) {
-          await this.cacheRegeneration.regenerate(
-            req,
-            res,
-            cacheData,
-            this.logger,
-            config?.providers,
-          );
-        }
       }
 
       // Apply the callback if given
@@ -227,10 +198,23 @@ export class ISRHandler {
       }
 
       // Cache exists. Send it.
-      this.logger.log(
-        `Page was retrieved from cache: `,
-        getCacheKey(req.url, this.config.allowedQueryParams, variant),
-      );
+      this.logger.log(`Page was retrieved from cache: `, cacheKey);
+
+      // if the cache is expired, we will regenerate it
+      if (cacheConfig.revalidate && cacheConfig.revalidate > 0) {
+        const lastCacheDateDiff = (Date.now() - createdAt) / 1000; // in seconds
+
+        if (lastCacheDateDiff > cacheConfig.revalidate) {
+          // regenerate the page without awaiting, so the user gets the cached page immediately
+          this.cacheGeneration.generateWithCacheKey(
+            req,
+            res,
+            cacheKey,
+            config?.providers,
+            'regenerate',
+          );
+        }
+      }
       return res.send(finalHtml);
     } catch (error) {
       // Cache does not exist. Serve user using SSR
@@ -243,63 +227,22 @@ export class ISRHandler {
     res: Response,
     next: NextFunction,
     config?: RenderConfig,
-  ): Promise<Response> {
-    const renderUrlConfig: RenderUrlConfig = {
-      req,
-      res,
-      url: req.url,
-      indexHtml: this.config.indexHtml,
-      providers: config?.providers,
-      bootstrap: this.config.bootstrap,
-      commonEngine: this.config.commonEngine,
-      browserDistFolder: this.config.browserDistFolder,
-      inlineCriticalCss: this.config.inlineCriticalCss,
-    };
-    const html = await renderUrl(renderUrlConfig);
-    const { revalidate, errors } = getRouteISRDataFromHTML(html);
-
-    // Apply the callback if given
-    const finalHtml = config?.modifyGeneratedHtml
-      ? config.modifyGeneratedHtml(req, html)
-      : html;
-
-    // if we have any http errors when rendering the site, and we have skipCachingOnHttpError enabled
-    // we don't want to cache it, and, we will fall back to client side rendering
-    if (errors?.length && this.config.skipCachingOnHttpError) {
-      this.logger.log('Http errors: \n', errors);
-      return res.send(finalHtml);
+  ): Promise<Response | void> {
+    try {
+      const result = await this.cacheGeneration.generate(
+        req,
+        res,
+        config?.providers,
+        'generate',
+      );
+      if (!result) {
+        throw new Error('Error while generating the page!');
+      } else {
+        return res.send(result.html);
+      }
+    } catch (error) {
+      next();
     }
-
-    // if revalidate is null we won't cache it
-    // if revalidate is 0, we will never clear the cache automatically
-    // if revalidate is x, we will clear cache every x seconds (after the last request) for that url
-
-    if (revalidate === null || revalidate === undefined) {
-      // don't do !revalidate because it will also catch "0"
-      return res.send(finalHtml);
-    }
-
-    const variant = this.getVariant(req);
-
-    // Cache the rendered `html` for this request url to use for subsequent requests
-    await this.cache.add(
-      getCacheKey(req.url, this.config.allowedQueryParams, variant),
-      finalHtml,
-      {
-        revalidate,
-        buildId: this.config.buildId,
-      },
-    );
-    return res.send(finalHtml);
-  }
-
-  protected getVariant(req: Request): RenderVariant | null {
-    if (!this.config.variants) {
-      return null;
-    }
-    return (
-      this.config.variants.find((variant) => variant.detectVariant(req)) || null
-    );
   }
 }
 
