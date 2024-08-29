@@ -113,6 +113,12 @@ export interface ISRHandlerConfig {
    * which only add commented text to the html to indicate when it was generated with very low performance impact
    */
   modifyGeneratedHtml?: modifyHtmlCallbackFn;
+
+  /**
+   * If set to true, the server will not wait for storing the rendered page to the cache storage first and will return the rendered HTML as soon as possible.
+   * This can avoid client-side waiting times if the remote cache storage is down.
+   */
+  nonBlockingRender?: boolean;
 }
 
 export interface ServeFromCacheConfig {

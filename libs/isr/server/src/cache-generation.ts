@@ -100,10 +100,17 @@ export class CacheGeneration {
         return { html: finalHtml };
       }
       // add the regenerated page to cache
-      await this.cache.add(cacheKey, finalHtml, {
-        revalidate,
-        buildId: this.isrConfig.buildId,
-      });
+      if (this.isrConfig.nonBlockingRender) {
+        this.cache.add(cacheKey, finalHtml, {
+          revalidate,
+          buildId: this.isrConfig.buildId,
+        });
+      } else {
+        await this.cache.add(cacheKey, finalHtml, {
+          revalidate,
+          buildId: this.isrConfig.buildId,
+        });
+      }
       if (mode === 'regenerate') {
         // remove from urlsOnHold because we are done
         this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
