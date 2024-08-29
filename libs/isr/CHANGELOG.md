@@ -2,6 +2,16 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [18.0.3](https://github.com/rx-angular/rx-angular/compare/isr@18.0.2...isr@18.0.3) (2024-08-23)
+
+
+### Bug Fixes
+
+* **isr:** filter urlsOnHold by cacheKey instead of url ([bca4374](https://github.com/rx-angular/rx-angular/commit/bca4374d19dc7c26a57cc431ffc1644ec9a54830))
+* **isr:** handle response sent in render ([a553e5b](https://github.com/rx-angular/rx-angular/commit/a553e5bd1dd552f1a4193b35ae418da9eda5d90f))
+
+
+
 ## [18.0.2](https://github.com/rx-angular/rx-angular/compare/isr@18.0.1...isr@18.0.2) (2024-07-11)
 
 
