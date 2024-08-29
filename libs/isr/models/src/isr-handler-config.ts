@@ -119,6 +119,11 @@ export interface ISRHandlerConfig {
    * This can avoid client-side waiting times if the remote cache storage is down.
    */
   nonBlockingRender?: boolean;
+
+  /**
+   * If set to true, the server will provide the cached HTML as soon as possible and will revalidate the cache in the background.
+   */
+  backgroundRevalidation?: boolean;
 }
 
 export interface ServeFromCacheConfig {
