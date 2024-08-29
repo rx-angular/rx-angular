@@ -109,7 +109,7 @@ export interface ISRHandlerConfig {
    * This callback lets you hook into the generated html and provide any modifications
    * necessary on-the-fly.
    * Use with caution as this may lead to a performance loss on serving the html.
-   * if null, it will use defaultModifyGeneratedHtml function,
+   * If null, it will use `defaultModifyGeneratedHtml` function,
    * which only add commented text to the html to indicate when it was generated.
    */
   modifyGeneratedHtml?: modifyHtmlCallbackFn;
