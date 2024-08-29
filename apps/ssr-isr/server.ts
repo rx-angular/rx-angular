@@ -1,6 +1,7 @@
 import { CommonEngine } from '@angular/ssr';
+import { modifyHtmlCallbackFn } from '@rx-angular/isr/models';
 import { ISRHandler } from '@rx-angular/isr/server';
-import express from 'express';
+import express, { Request } from 'express';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { RESPONSE } from './src/app/redirect.component';
@@ -30,6 +31,7 @@ export function app(): express.Express {
     browserDistFolder,
     bootstrap,
     commonEngine,
+    modifyGeneratedHtml: customModifyGeneratedHtml,
     // cache: fsCacheHandler,
   });
 
@@ -71,6 +73,22 @@ export function app(): express.Express {
 
   return server;
 }
+
+const customModifyGeneratedHtml: modifyHtmlCallbackFn = (
+  req: Request,
+  html: string,
+  revalidateTime?: number | null,
+): string => {
+  const time = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+
+  let msg = '<!-- ';
+  msg += `\n🚀 ISR: Served from cache! \n⌛ Last updated: ${time}. `;
+  if (revalidateTime)
+    msg += `\n⏭️ Next refresh is after ${revalidateTime} seconds. `;
+  msg += ' \n-->';
+  html = html.replace('Original content', 'Modified content');
+  return html + msg;
+};
 
 function run(): void {
   const port = process.env['PORT'] || 4000;
