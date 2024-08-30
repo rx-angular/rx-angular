@@ -4,11 +4,12 @@ import { Request, Response } from 'express';
 import { ISRLogger } from './isr-logger';
 import { defaultModifyGeneratedHtml } from './modify-generated-html';
 import { getCacheKey, getVariant } from './utils/cache-utils';
+import { bufferToString } from './utils/compression-utils';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
 import { renderUrl, RenderUrlConfig } from './utils/render-url';
 
 export interface IGeneratedResult {
-  html?: string;
+  html?: string | Buffer;
   errors?: string[];
 }
 
@@ -75,10 +76,15 @@ export class CacheGeneration {
 
       // Apply the modify generation callback
       // If undefined, use the default modifyGeneratedHtml function
-      const finalHtml = this.isrConfig.modifyGeneratedHtml
+      let finalHtml: string | Buffer = this.isrConfig.modifyGeneratedHtml
         ? this.isrConfig.modifyGeneratedHtml(req, html, revalidate)
         : defaultModifyGeneratedHtml(req, html, revalidate);
-
+      let cacheString: string = finalHtml;
+      // Apply the compressHtml callback
+      if (this.isrConfig.compressHtml) {
+        finalHtml = await this.isrConfig.compressHtml(finalHtml);
+        cacheString = bufferToString(finalHtml);
+      }
       // if there are errors, don't add the page to cache
       if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
         // remove url from urlsOnHold because we want to try to regenerate it again
@@ -101,12 +107,12 @@ export class CacheGeneration {
       }
       // add the regenerated page to cache
       if (this.isrConfig.nonBlockingRender) {
-        this.cache.add(cacheKey, finalHtml, {
+        this.cache.add(cacheKey, cacheString, {
           revalidate,
           buildId: this.isrConfig.buildId,
         });
       } else {
-        await this.cache.add(cacheKey, finalHtml, {
+        await this.cache.add(cacheKey, cacheString, {
           revalidate,
           buildId: this.isrConfig.buildId,
         });
