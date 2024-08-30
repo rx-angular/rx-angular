@@ -1,6 +1,11 @@
 import { CommonEngine } from '@angular/ssr';
 import { modifyHtmlCallbackFn } from '@rx-angular/isr/models';
-import { ISRHandler } from '@rx-angular/isr/server';
+import {
+  compressHtml,
+  CompressStaticFilter,
+  ISRHandler,
+} from '@rx-angular/isr/server';
+import compression from 'compression';
 import express, { Request } from 'express';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -34,9 +39,12 @@ export function app(): express.Express {
     backgroundRevalidation: true, // will revalidate in background and serve the cache page first
     nonBlockingRender: true, // will serve page first and store in cache in background
     modifyGeneratedHtml: customModifyGeneratedHtml,
+    compressHtml: compressHtml, // compress the html before storing in cache
+    // cacheHtmlCompressionMethod: 'gzip', // compression method for cache
     // cache: fsCacheHandler,
   });
-
+  // compress js|css files
+  server.use(compression({ filter: CompressStaticFilter }));
   server.use(express.json());
 
   server.post(
