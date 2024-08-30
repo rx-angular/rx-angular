@@ -236,10 +236,7 @@ export class ISRHandler {
           This resulted into more ${totalTime}ms of processing time.\n-->`;
         }
       } else {
-        setCompressHeader(
-          res,
-          this.isrConfig.cacheHtmlCompressionMethod || 'gzip',
-        );
+        setCompressHeader(res, this.isrConfig.htmlCompressionMethod);
       }
 
       return res.send(finalHtml);
@@ -266,10 +263,7 @@ export class ISRHandler {
         throw new Error('Error while generating the page!');
       } else {
         if (this.isrConfig.compressHtml) {
-          setCompressHeader(
-            res,
-            this.isrConfig.cacheHtmlCompressionMethod || 'gzip',
-          );
+          setCompressHeader(res, this.isrConfig.htmlCompressionMethod);
         }
         return res.send(result.html);
       }

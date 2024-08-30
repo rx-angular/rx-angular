@@ -134,9 +134,9 @@ export interface ISRHandlerConfig {
   compressHtml?: CompressHtmlFn;
 
   /**
-   * Compression solution, it will use gzip by default if not provided.
+   * Cached Html compression method, it will use gzip by default if not provided.
    */
-  cacheHtmlCompressionMethod?: 'gzip' | 'brotli' | undefined | null;
+  htmlCompressionMethod?: string;
 }
 
 export interface ServeFromCacheConfig {

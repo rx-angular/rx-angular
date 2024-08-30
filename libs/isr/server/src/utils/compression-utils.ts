@@ -3,9 +3,9 @@ import * as express from 'express';
 
 export function setCompressHeader(
   response: express.Response,
-  method: string,
+  method?: string,
 ): void {
-  response.setHeader('Content-Encoding', method);
+  response.setHeader('Content-Encoding', method || 'gzip');
   response.setHeader('Content-type', 'text/html; charset=utf-8');
   response.setHeader('Vary', 'Accept-Encoding');
 }
