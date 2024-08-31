@@ -32,6 +32,7 @@ export function app(): express.Express {
     bootstrap,
     commonEngine,
     modifyGeneratedHtml: defaultModifyGeneratedHtml,
+
     // cache: fsCacheHandler,
   });
 
@@ -68,14 +69,11 @@ export function app(): express.Express {
 const defaultModifyGeneratedHtml: ModifyHtmlCallbackFn = (
   req: Request,
   html: string,
-  revalidateTime?: number | null,
 ): string => {
   const time = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
   let msg = '<!-- ';
   msg += `\n🚀 ISR: Served from cache! \n⌛ Last updated: ${time}. `;
-  if (revalidateTime)
-    msg += `\n⏭️ Next refresh is after ${revalidateTime} seconds. `;
   msg += ' \n-->';
   html = html.replace('Original content', 'Modified content');
   return html + msg;

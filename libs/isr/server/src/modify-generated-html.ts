@@ -1,5 +1,5 @@
+import { ModifyHtmlCallbackFn } from '@rx-angular/isr/models';
 import { Request } from 'express';
-import { ModifyHtmlCallbackFn } from '../../models/src';
 
 export const defaultModifyGeneratedHtml: ModifyHtmlCallbackFn = (
   req: Request,

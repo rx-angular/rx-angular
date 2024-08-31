@@ -2,6 +2,7 @@ import {
   CacheHandler,
   InvalidateConfig,
   ISRHandlerConfig,
+  ModifyHtmlCallbackFn,
   RenderConfig,
   ServeFromCacheConfig,
   VariantRebuildItem,
@@ -228,6 +229,23 @@ export class ISRHandler {
     next: NextFunction,
     config?: RenderConfig,
   ): Promise<Response | void> {
+    // TODO: remove this in a major as a BREAKING CHANGE
+    if (config?.modifyGeneratedHtml) {
+      if (this.isrConfig.modifyGeneratedHtml !== undefined) {
+        console.warn(
+          'You can only specify `modifyGeneratedHtml` once. The one in render function will be removed in the next version.',
+        );
+      }
+      const patchedModifyFn: ModifyHtmlCallbackFn = (
+        req: Request,
+        html: string,
+        validate?: number | null,
+      ) => {
+        return config!.modifyGeneratedHtml!(req, html);
+      };
+      this.isrConfig['modifyGeneratedHtml'] = patchedModifyFn;
+    }
+
     try {
       const result = await this.cacheGeneration.generate(
         req,

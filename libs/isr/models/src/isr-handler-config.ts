@@ -141,6 +141,15 @@ export type ModifyHtmlCallbackFn = (
 
 export interface RenderConfig {
   providers?: Provider[];
+
+  // TODO: remove this in a major as a BREAKING CHANGE (we can provide some schematics to fix the breaking change maybe)
+  /**
+   * This callback lets you hook into the generated html and provide any modifications
+   * necessary on-the-fly.
+   * Use with caution as this may lead to a performance loss on serving the html.
+   * @deprecated
+   */
+  modifyGeneratedHtml?: (req: Request, html: string) => string;
 }
 
 /**
