@@ -22,6 +22,7 @@ export class CacheGeneration {
     public cache: CacheHandler,
     public logger: ISRLogger,
   ) {}
+
   async generate(
     req: Request,
     res: Response,
@@ -38,6 +39,7 @@ export class CacheGeneration {
 
     return this.generateWithCacheKey(req, res, cacheKey, providers, mode);
   }
+
   async generateWithCacheKey(
     req: Request,
     res: Response,
@@ -58,6 +60,7 @@ export class CacheGeneration {
 
       this.urlsOnHold.push(cacheKey);
     }
+
     const renderUrlConfig: RenderUrlConfig = {
       req,
       res,
@@ -69,6 +72,7 @@ export class CacheGeneration {
       browserDistFolder: this.isrConfig.browserDistFolder,
       inlineCriticalCss: this.isrConfig.inlineCriticalCss,
     };
+
     try {
       const html = await renderUrl(renderUrlConfig);
       const { revalidate, errors } = getRouteISRDataFromHTML(html);
