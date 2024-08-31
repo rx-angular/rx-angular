@@ -281,16 +281,16 @@ export class ISRHandler {
 
     const variant = this.getVariant(req);
 
-      // Cache the rendered `html` for this request url to use for subsequent requests
-      await this.cache.add(
-        getCacheKey(req.url, this.config.allowedQueryParams, variant),
-        finalHtml,
-        {
-          revalidate,
-          buildId: this.config.buildId,
-        },
-      );
-      return res.send(finalHtml);
+    // Cache the rendered `html` for this request url to use for subsequent requests
+    await this.cache.add(
+      getCacheKey(req.url, this.config.allowedQueryParams, variant),
+      finalHtml,
+      {
+        revalidate,
+        buildId: this.config.buildId,
+      },
+    );
+    return res.send(finalHtml);
   }
 
   protected getVariant(req: Request): RenderVariant | null {
