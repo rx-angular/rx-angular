@@ -112,7 +112,7 @@ export interface ISRHandlerConfig {
    * If null, it will use `defaultModifyGeneratedHtml` function,
    * which only add commented text to the html to indicate when it was generated.
    */
-  modifyGeneratedHtml?: modifyHtmlCallbackFn;
+  modifyGeneratedHtml?: ModifyHtmlCallbackFn;
 }
 
 export interface ServeFromCacheConfig {
@@ -133,7 +133,7 @@ export interface InvalidateConfig {
   providers?: Provider[];
 }
 
-export type modifyHtmlCallbackFn = (
+export type ModifyHtmlCallbackFn = (
   req: Request,
   html: string,
   revalidateTime?: number | null,

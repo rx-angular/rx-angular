@@ -1,5 +1,5 @@
 import { CommonEngine } from '@angular/ssr';
-import { modifyHtmlCallbackFn } from '@rx-angular/isr/models';
+import { ModifyHtmlCallbackFn } from '@rx-angular/isr/models';
 import { ISRHandler } from '@rx-angular/isr/server';
 import express, { Request } from 'express';
 import { dirname, join, resolve } from 'node:path';
@@ -31,7 +31,7 @@ export function app(): express.Express {
     browserDistFolder,
     bootstrap,
     commonEngine,
-    modifyGeneratedHtml: customModifyGeneratedHtml,
+    modifyGeneratedHtml: defaultModifyGeneratedHtml,
     // cache: fsCacheHandler,
   });
 
@@ -48,33 +48,24 @@ export function app(): express.Express {
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
-  server.get(
-    '*.*',
-    express.static(browserDistFolder, {
-      maxAge: '1y',
-    }),
-  );
+  server.get('*.*', express.static(browserDistFolder, { maxAge: '1y' }));
 
   server.get(
     '*',
     // Serve page if it exists in cache
     async (req, res, next) => await isr.serveFromCache(req, res, next),
+
     // Server side render the page and add to cache if needed
     async (req, res, next) =>
       await isr.render(req, res, next, {
-        providers: [
-          {
-            provide: RESPONSE,
-            useValue: res,
-          },
-        ],
+        providers: [{ provide: RESPONSE, useValue: res }],
       }),
   );
 
   return server;
 }
 
-const customModifyGeneratedHtml: modifyHtmlCallbackFn = (
+const defaultModifyGeneratedHtml: ModifyHtmlCallbackFn = (
   req: Request,
   html: string,
   revalidateTime?: number | null,

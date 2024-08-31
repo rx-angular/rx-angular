@@ -1,7 +1,7 @@
-import { modifyHtmlCallbackFn } from '@rx-angular/isr/models';
 import { Request } from 'express';
+import { ModifyHtmlCallbackFn } from '../../models/src';
 
-export const defaultModifyGeneratedHtml: modifyHtmlCallbackFn = (
+export const defaultModifyGeneratedHtml: ModifyHtmlCallbackFn = (
   req: Request,
   html: string,
   revalidateTime?: number | null,
