@@ -34,6 +34,17 @@ export interface ListRange {
   end: number;
 }
 
+export abstract class DataSource<T> {
+  abstract connect(
+    collectionViewer: CollectionViewer,
+  ): Observable<NgIterable<T>>;
+  abstract disconnect(collectionViewer: CollectionViewer): void;
+}
+
+export interface CollectionViewer {
+  viewChange: Observable<ListRange>;
+}
+
 /**
  * @Directive RxVirtualScrollStrategy
  *
