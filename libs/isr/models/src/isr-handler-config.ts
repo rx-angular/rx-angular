@@ -104,6 +104,15 @@ export interface ISRHandlerConfig {
    * If provided as an empty array, no query params will be part of the cache key.
    */
   allowedQueryParams?: string[];
+
+  /**
+   * This callback lets you hook into the generated html and provide any modifications
+   * necessary on-the-fly.
+   * Use with caution as this may lead to a performance loss on serving the html.
+   * If null, it will use `defaultModifyGeneratedHtml` function,
+   * which only add commented text to the html to indicate when it was generated.
+   */
+  modifyGeneratedHtml?: ModifyHtmlCallbackFn;
 }
 
 export interface ServeFromCacheConfig {
@@ -124,14 +133,14 @@ export interface InvalidateConfig {
   providers?: Provider[];
 }
 
+export type ModifyHtmlCallbackFn = (
+  req: Request,
+  html: string,
+  revalidateTime?: number | null,
+) => string;
+
 export interface RenderConfig {
   providers?: Provider[];
-  /**
-   * This callback lets you hook into the generated html and provide any modifications
-   * necessary on-the-fly.
-   * Use with caution as this may lead to a performance loss on serving the html.
-   */
-  modifyGeneratedHtml?: (req: Request, html: string) => string;
 }
 
 /**

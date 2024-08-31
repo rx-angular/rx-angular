@@ -1,6 +1,7 @@
 import { CommonEngine } from '@angular/ssr';
+import { ModifyHtmlCallbackFn } from '@rx-angular/isr/models';
 import { ISRHandler } from '@rx-angular/isr/server';
-import express from 'express';
+import express, { Request } from 'express';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { RESPONSE } from './src/app/redirect.component';
@@ -30,6 +31,7 @@ export function app(): express.Express {
     browserDistFolder,
     bootstrap,
     commonEngine,
+    modifyGeneratedHtml: defaultModifyGeneratedHtml,
     // cache: fsCacheHandler,
   });
 
@@ -46,31 +48,38 @@ export function app(): express.Express {
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
-  server.get(
-    '*.*',
-    express.static(browserDistFolder, {
-      maxAge: '1y',
-    }),
-  );
+  server.get('*.*', express.static(browserDistFolder, { maxAge: '1y' }));
 
   server.get(
     '*',
     // Serve page if it exists in cache
     async (req, res, next) => await isr.serveFromCache(req, res, next),
+
     // Server side render the page and add to cache if needed
     async (req, res, next) =>
       await isr.render(req, res, next, {
-        providers: [
-          {
-            provide: RESPONSE,
-            useValue: res,
-          },
-        ],
+        providers: [{ provide: RESPONSE, useValue: res }],
       }),
   );
 
   return server;
 }
+
+const defaultModifyGeneratedHtml: ModifyHtmlCallbackFn = (
+  req: Request,
+  html: string,
+  revalidateTime?: number | null,
+): string => {
+  const time = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+
+  let msg = '<!-- ';
+  msg += `\n🚀 ISR: Served from cache! \n⌛ Last updated: ${time}. `;
+  if (revalidateTime)
+    msg += `\n⏭️ Next refresh is after ${revalidateTime} seconds. `;
+  msg += ' \n-->';
+  html = html.replace('Original content', 'Modified content');
+  return html + msg;
+};
 
 function run(): void {
   const port = process.env['PORT'] || 4000;
