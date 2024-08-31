@@ -4,7 +4,7 @@
  * @returns
  * @example
  * ```typescript
- * const { revalidate, errors } = getISROptions(html);
+ * const { revalidate, errors } = getRouteISRDataFromHTML(html);
  * ```
  * @internal
  */
@@ -29,7 +29,10 @@ export function getRouteISRDataFromHTML(html: string): {
     .substring(0, indexOfCloseScriptTag) // remove close script tag
     .replace(ISR_SCRIPT_TAG, ''); // remove start script tag
 
-  return JSON.parse(val);
+  return JSON.parse(val) as {
+    revalidate: number | null;
+    errors: string[];
+  };
 }
 
 /**

@@ -10,7 +10,6 @@ export interface RenderUrlConfig {
   url: string;
   indexHtml: string;
   providers?: Provider[];
-
   commonEngine?: CommonEngine;
   bootstrap?: CommonEngineRenderOptions['bootstrap'];
   browserDistFolder?: string;
@@ -35,7 +34,8 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
     inlineCriticalCss,
   } = options;
 
-  // we need to override url of req with the one we have in parameters
+  // we need to override url of req with the one we have in parameters,
+  // because during invalidate process, the url is not from the request
   req.url = url;
   req.originalUrl = url;
 
@@ -70,11 +70,12 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
       res.render(
         indexHtml,
         { req, providers: allProviders },
-        async (err: Error, html: string) => {
+        (err: Error, html: string) => {
           if (err) {
             reject(err);
+          } else {
+            resolve(html);
           }
-          resolve(html);
         },
       );
     }
