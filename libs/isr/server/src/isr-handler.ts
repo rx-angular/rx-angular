@@ -223,14 +223,7 @@ export class ISRHandler {
           }
         }
       }
-      // Apply the callback if given
-      if (config?.modifyCachedHtml) {
-        const timeStart = performance.now();
-        finalHtml = config.modifyCachedHtml(req, finalHtml);
-        const totalTime = (performance.now() - timeStart).toFixed(2);
-        finalHtml += `<!--\nℹ️ ISR: This cachedHtml has been modified with modifyCachedHtml()\n❗️
-              This resulted into more ${totalTime}ms of processing time.\n-->`;
-      }
+
       return res.send(finalHtml);
     } catch (error) {
       // Cache does not exist. Serve user using SSR
