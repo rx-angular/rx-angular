@@ -33,7 +33,7 @@ export function app(): express.Express {
     commonEngine,
     backgroundRevalidation: true, // will revalidate in background and serve the cache page first
     nonBlockingRender: true, // will serve page first and store in cache in background
-    modifyGeneratedHtml: defaultModifyGeneratedHtml,
+    modifyGeneratedHtml: customModifyGeneratedHtml,
     // cache: fsCacheHandler,
   });
 
@@ -67,12 +67,11 @@ export function app(): express.Express {
   return server;
 }
 
-const defaultModifyGeneratedHtml: ModifyHtmlCallbackFn = (
+const customModifyGeneratedHtml: ModifyHtmlCallbackFn = (
   req: Request,
   html: string,
 ): string => {
   const time = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
   let msg = '<!-- ';
   msg += `\n🚀 ISR: Served from cache! \n⌛ Last updated: ${time}. `;
   msg += ' \n-->';

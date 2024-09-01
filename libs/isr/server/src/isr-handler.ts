@@ -197,26 +197,29 @@ export class ISRHandler {
         const lastCacheDateDiff = (Date.now() - createdAt) / 1000; // in seconds
 
         if (lastCacheDateDiff > cacheConfig.revalidate) {
-          // regenerate the page without awaiting, so the user gets the cached page immediately
-          if (this.isrConfig.backgroundRevalidation) {
-            this.cacheGeneration.generateWithCacheKey(
+          const generate = () => {
+            return this.cacheGeneration.generateWithCacheKey(
               req,
               res,
               cacheKey,
               config?.providers,
               'regenerate',
             );
-          } else {
-            const result = await this.cacheGeneration.generateWithCacheKey(
-              req,
-              res,
-              cacheKey,
-              config?.providers,
-              'regenerate',
-            );
-            if (result?.html) {
-              finalHtml = result.html;
+          };
+
+          try {
+            // regenerate the page without awaiting, so the user gets the cached page immediately
+            if (this.isrConfig.backgroundRevalidation) {
+              generate();
+            } else {
+              const result = await generate();
+              if (result?.html) {
+                finalHtml = result.html;
+              }
             }
+          } catch (error) {
+            console.error('Error generating html', error);
+            next();
           }
         }
       }
