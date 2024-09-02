@@ -116,7 +116,7 @@
     "e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {
-        "cypressConfig": "apps/ssr/cypress.config.ts",
+        "cypressConfig": "{projectRoot}/cypress.config.ts",
         "testingType": "e2e",
         "devServerTarget": "ssr:serve-ssr"
       },
@@ -124,6 +124,12 @@
         "production": {
           "devServerTarget": "ssr:serve:production"
         }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "ssr:build"
       }
     },
     "lint": {

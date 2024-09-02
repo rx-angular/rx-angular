@@ -11,6 +11,17 @@
     "analytics": false,
     "packageManager": "yarn"
   },
+  "plugins": [
+    {
+      "plugin": "@nx/cypress/plugin",
+      "options": {
+        "targetName": "e2e",
+        "ciTargetName": "e2e-ci",
+        "componentTestingTargetName": "component-test",
+        "openTargetName": "serve-ssr"
+      }
+    }
+  ],
   "generators": {
     "@nx/angular:application": {
       "style": "scss",
