@@ -280,7 +280,7 @@ export class ISRHandler {
         config?.providers,
         'generate',
       );
-      if (!result) {
+      if (!result?.html) {
         throw new Error('Error while generating the page!');
       } else {
         if (this.isrConfig.compressHtml) {
