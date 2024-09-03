@@ -10,7 +10,7 @@ export {
   CompressHtmlFn,
   InvalidateConfig,
   ISRHandlerConfig,
-  modifyHtmlCallbackFn,
+  ModifyHtmlCallbackFn,
   RenderConfig,
   RouteISRConfig,
   ServeFromCacheConfig,

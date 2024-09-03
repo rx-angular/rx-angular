@@ -6,7 +6,7 @@ import { defaultModifyGeneratedHtml } from './modify-generated-html';
 import { getCacheKey, getVariant } from './utils/cache-utils';
 import { bufferToString } from './utils/compression-utils';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
-import { renderUrl, RenderUrlConfig } from './utils/render-url';
+import { renderUrl,RenderUrlConfig } from './utils/render-url';
 
 export interface IGeneratedResult {
   html?: string | Buffer;
@@ -105,26 +105,37 @@ export class CacheGeneration {
         // don't do !revalidate because it will also catch "0"
         return { html: finalHtml };
       }
+
       // add the regenerated page to cache
-      if (this.isrConfig.nonBlockingRender) {
-        this.cache.add(cacheKey, cacheString, {
+      const addToCache = () => {
+        return this.cache.add(cacheKey, finalHtml, {
           revalidate,
           buildId: this.isrConfig.buildId,
         });
-      } else {
-        await this.cache.add(cacheKey, cacheString, {
-          revalidate,
-          buildId: this.isrConfig.buildId,
-        });
+      };
+
+      try {
+        if (this.isrConfig.nonBlockingRender) {
+          // If enabled, add to cache without waiting (fire-and-forget)
+          addToCache();
+        } else {
+          // If not enabled, wait for cache addition to complete before proceeding
+          await addToCache();
+        }
+      } catch (error) {
+        console.error('Error adding to cache:', error);
       }
+
       if (mode === 'regenerate') {
         // remove from urlsOnHold because we are done
         this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
         this.logger.log(`Url: ${cacheKey} was regenerated!`);
       }
+
       return { html: finalHtml };
     } catch (error) {
       this.logger.log(`Error regenerating url: ${cacheKey}`, error);
+
       if (mode === 'regenerate') {
         // Ensure removal from urlsOnHold in case of error
         this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);

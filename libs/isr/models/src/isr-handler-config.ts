@@ -100,7 +100,7 @@ export interface ISRHandlerConfig {
 
   /**
    * This array of query params will be allowed to be part of the cache key.
-   * If not provided, which is null, all query params will be part of the cache key.
+   * If not provided, which is undefined, all query params will be part of the cache key.
    * If provided as an empty array, no query params will be part of the cache key.
    */
   allowedQueryParams?: string[];
@@ -109,10 +109,10 @@ export interface ISRHandlerConfig {
    * This callback lets you hook into the generated html and provide any modifications
    * necessary on-the-fly.
    * Use with caution as this may lead to a performance loss on serving the html.
-   * if null, it will use defaultModifyGeneratedHtml function,
-   * which only add commented text to the html to indicate when it was generated with very low performance impact
+   * If null, it will use `defaultModifyGeneratedHtml` function,
+   * which only add commented text to the html to indicate when it was generated.
    */
-  modifyGeneratedHtml?: modifyHtmlCallbackFn;
+  modifyGeneratedHtml?: ModifyHtmlCallbackFn;
 
   /**
    * If set to true, the server will not wait for storing the rendered page to the cache storage first and will return the rendered HTML as soon as possible.
@@ -157,7 +157,7 @@ export interface InvalidateConfig {
   providers?: Provider[];
 }
 
-export type modifyHtmlCallbackFn = (
+export type ModifyHtmlCallbackFn = (
   req: Request,
   html: string,
   revalidateTime?: number | null,
@@ -165,6 +165,15 @@ export type modifyHtmlCallbackFn = (
 
 export interface RenderConfig {
   providers?: Provider[];
+
+  // TODO: remove this in a major as a BREAKING CHANGE (we can provide some schematics to fix the breaking change maybe)
+  /**
+   * This callback lets you hook into the generated html and provide any modifications
+   * necessary on-the-fly.
+   * Use with caution as this may lead to a performance loss on serving the html.
+   * @deprecated
+   */
+  modifyGeneratedHtml?: (req: Request, html: string) => string;
 }
 
 /**

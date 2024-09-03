@@ -1,5 +1,5 @@
 import { CommonEngine } from '@angular/ssr';
-import { modifyHtmlCallbackFn } from '@rx-angular/isr/models';
+import { ModifyHtmlCallbackFn } from '@rx-angular/isr/models';
 import {
   compressHtml,
   CompressStaticFilter,
@@ -58,43 +58,30 @@ export function app(): express.Express {
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
-  server.get(
-    '*.*',
-    express.static(browserDistFolder, {
-      maxAge: '1y',
-    }),
-  );
+  server.get('*.*', express.static(browserDistFolder, { maxAge: '1y' }));
 
   server.get(
     '*',
     // Serve page if it exists in cache
     async (req, res, next) => await isr.serveFromCache(req, res, next),
+
     // Server side render the page and add to cache if needed
     async (req, res, next) =>
       await isr.render(req, res, next, {
-        providers: [
-          {
-            provide: RESPONSE,
-            useValue: res,
-          },
-        ],
+        providers: [{ provide: RESPONSE, useValue: res }],
       }),
   );
 
   return server;
 }
 
-const customModifyGeneratedHtml: modifyHtmlCallbackFn = (
+const customModifyGeneratedHtml: ModifyHtmlCallbackFn = (
   req: Request,
   html: string,
-  revalidateTime?: number | null,
 ): string => {
   const time = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
   let msg = '<!-- ';
   msg += `\n🚀 ISR: Served from cache! \n⌛ Last updated: ${time}. `;
-  if (revalidateTime)
-    msg += `\n⏭️ Next refresh is after ${revalidateTime} seconds. `;
   msg += ' \n-->';
   html = html.replace('Original content', 'Modified content');
   return html + msg;

@@ -33,7 +33,6 @@ server.get(
       },
     }),
 
-  // Server side render the page and add to cache if needed
   const isr = new ISRHandler({
     indexHtml,
     invalidateSecretToken: 'MY_TOKEN', // replace with env secret key ex. process.env.REVALIDATE_SECRET_TOKEN
@@ -48,7 +47,7 @@ server.get(
     // cache: fsCacheHandler,
   });
 
-
+// Server side render the page and add to cache if needed
   async (req, res, next) => await isr.render(req, res, next),
 );
 ```

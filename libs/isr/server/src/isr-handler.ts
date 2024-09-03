@@ -2,6 +2,7 @@ import {
   CacheHandler,
   InvalidateConfig,
   ISRHandlerConfig,
+  ModifyHtmlCallbackFn,
   RenderConfig,
   ServeFromCacheConfig,
   VariantRebuildItem,
@@ -201,26 +202,29 @@ export class ISRHandler {
         const lastCacheDateDiff = (Date.now() - createdAt) / 1000; // in seconds
 
         if (lastCacheDateDiff > cacheConfig.revalidate) {
-          // regenerate the page without awaiting, so the user gets the cached page immediately
-          if (this.isrConfig.backgroundRevalidation) {
-            this.cacheGeneration.generateWithCacheKey(
+          const generate = () => {
+            return this.cacheGeneration.generateWithCacheKey(
               req,
               res,
               cacheKey,
               config?.providers,
               'regenerate',
             );
-          } else {
-            const result = await this.cacheGeneration.generateWithCacheKey(
-              req,
-              res,
-              cacheKey,
-              config?.providers,
-              'regenerate',
-            );
-            if (result?.html) {
-              finalHtml = result.html;
+          };
+
+          try {
+            // regenerate the page without awaiting, so the user gets the cached page immediately
+            if (this.isrConfig.backgroundRevalidation) {
+              generate();
+            } else {
+              const result = await generate();
+              if (result?.html) {
+                finalHtml = result.html;
+              }
             }
+          } catch (error) {
+            console.error('Error generating html', error);
+            next();
           }
         }
       }
@@ -252,6 +256,23 @@ export class ISRHandler {
     next: NextFunction,
     config?: RenderConfig,
   ): Promise<Response | void> {
+    // TODO: remove this in a major as a BREAKING CHANGE
+    if (config?.modifyGeneratedHtml) {
+      if (this.isrConfig.modifyGeneratedHtml !== undefined) {
+        console.warn(
+          'You can only specify `modifyGeneratedHtml` once. The one in render function will be removed in the next version.',
+        );
+      }
+      const patchedModifyFn: ModifyHtmlCallbackFn = (
+        req: Request,
+        html: string,
+        validate?: number | null,
+      ) => {
+        return config!.modifyGeneratedHtml!(req, html);
+      };
+      this.isrConfig['modifyGeneratedHtml'] = patchedModifyFn;
+    }
+
     try {
       const result = await this.cacheGeneration.generate(
         req,
@@ -259,7 +280,7 @@ export class ISRHandler {
         config?.providers,
         'generate',
       );
-      if (!result?.html) {
+      if (!result) {
         throw new Error('Error while generating the page!');
       } else {
         if (this.isrConfig.compressHtml) {
