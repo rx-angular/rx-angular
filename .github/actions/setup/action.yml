@@ -29,6 +29,6 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: yarn --frozen-lockfile --no-progress --non-interactive --prefer-offline --ignore-engines
+      run: yarn --immutable
       env:
         HUSKY_SKIP_INSTALL: 'true'
