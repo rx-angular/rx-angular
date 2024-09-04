@@ -36,6 +36,8 @@ docs/demos
 /libpeerconnection.log
 npm-debug.log
 yarn-error.log
+/.yarn/cache/
+.yarn/install-state.gz
 testem.log
 /typings
 package-lock.json
