@@ -2,6 +2,25 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [18.1.0](https://github.com/rx-angular/rx-angular/compare/isr@18.0.3...isr@18.1.0) (2024-09-04)
+
+
+### Bug Fixes
+
+* format ([17f2ee8](https://github.com/rx-angular/rx-angular/commit/17f2ee8a19dbe41905e68ceb0b9625c641f5a639))
+* **isr:** fix breaking changes with the new modifyGeneratedHtml config ([#1766](https://github.com/rx-angular/rx-angular/issues/1766)) ([0bb7443](https://github.com/rx-angular/rx-angular/commit/0bb7443a2f51c0ae12a82fc40d763ea435a9a2e5))
+* **isr:** in memory cache handler should use extends  [#1736](https://github.com/rx-angular/rx-angular/issues/1736) ([3f91916](https://github.com/rx-angular/rx-angular/commit/3f919167f68a1bc969e95876d81a4dbace306fc1))
+* **isr:** use modifyGeneratedHtml in all cache generation process ([#1760](https://github.com/rx-angular/rx-angular/issues/1760)) ([e59ffb5](https://github.com/rx-angular/rx-angular/commit/e59ffb542d7e539ffc8b0c3e34f37332107dd5cb)), closes [#1758](https://github.com/rx-angular/rx-angular/issues/1758)
+
+
+### Features
+
+* handle query string for filesystem cache [#1690](https://github.com/rx-angular/rx-angular/issues/1690) ([445a319](https://github.com/rx-angular/rx-angular/commit/445a3196061da7ca3198e50517001b53be29ebb2))
+* **isr:** add allowed query params options [#1743](https://github.com/rx-angular/rx-angular/issues/1743) ([#1757](https://github.com/rx-angular/rx-angular/issues/1757)) ([5af9ab2](https://github.com/rx-angular/rx-angular/commit/5af9ab2d41c1472c2d917b4a8dd5549b3cd72618))
+* **isr:** added background revalidation and non-blocking render ([65221e5](https://github.com/rx-angular/rx-angular/commit/65221e5cf9dcaeff8c1333aa8e08e3d638fb7db6))
+
+
+
 ## [18.0.3](https://github.com/rx-angular/rx-angular/compare/isr@18.0.2...isr@18.0.3) (2024-08-23)
 
 
