@@ -11,7 +11,7 @@ import { NextFunction, Request, Response } from 'express';
 import { CacheGeneration } from './cache-generation';
 import { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
 import { ISRLogger } from './isr-logger';
-import { getCacheKey, getVariant } from './utils/cache-utils';
+import { getVariant } from './utils/cache-utils';
 import { setCompressHeader, stringToBuffer } from './utils/compression-utils';
 
 export class ISRHandler {
@@ -149,7 +149,7 @@ export class ISRHandler {
       for (const variant of variants) {
         result.push({
           url,
-          cacheKey: getCacheKey(
+          cacheKey: this.cacheGeneration.getCacheKey(
             url,
             this.isrConfig.allowedQueryParams,
             variant,
@@ -172,7 +172,7 @@ export class ISRHandler {
   ): Promise<Response | void> {
     try {
       const variant = getVariant(req, this.isrConfig.variants);
-      const cacheKey = getCacheKey(
+      const cacheKey = this.cacheGeneration.getCacheKey(
         req.url,
         this.isrConfig.allowedQueryParams,
         variant,

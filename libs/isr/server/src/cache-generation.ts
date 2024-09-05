@@ -1,12 +1,17 @@
 import { Provider } from '@angular/core';
-import { CacheHandler, ISRHandlerConfig } from '@rx-angular/isr/models';
+import {
+  CacheHandler,
+  CacheKeyGeneratorFn,
+  ISRHandlerConfig,
+  RenderVariant,
+} from '@rx-angular/isr/models';
 import { Request, Response } from 'express';
 import { ISRLogger } from './isr-logger';
 import { defaultModifyGeneratedHtml } from './modify-generated-html';
-import { getCacheKey, getVariant } from './utils/cache-utils';
+import { defaultCacheKeyGenerator, getVariant } from './utils/cache-utils';
 import { bufferToString } from './utils/compression-utils';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
-import { renderUrl,RenderUrlConfig } from './utils/render-url';
+import { renderUrl, RenderUrlConfig } from './utils/render-url';
 
 export interface IGeneratedResult {
   html?: string | Buffer;
@@ -22,7 +27,20 @@ export class CacheGeneration {
     public isrConfig: ISRHandlerConfig,
     public cache: CacheHandler,
     public logger: ISRLogger,
-  ) {}
+  ) {
+    if (!this.isrConfig.cacheKeyGenerator) {
+      this.isrConfig.cacheKeyGenerator = defaultCacheKeyGenerator;
+    }
+  }
+  getCacheKey: CacheKeyGeneratorFn = (
+    url: string,
+    allowedQueryParams: string[] | null | undefined,
+    variant: RenderVariant | null,
+  ) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.isrConfig.cacheKeyGenerator!(url, allowedQueryParams, variant);
+  };
+
   async generate(
     req: Request,
     res: Response,
@@ -31,7 +49,7 @@ export class CacheGeneration {
   ): Promise<IGeneratedResult | void> {
     const { url } = req;
     const variant = getVariant(req, this.isrConfig.variants);
-    const cacheKey = getCacheKey(
+    const cacheKey = this.getCacheKey(
       url,
       this.isrConfig.allowedQueryParams,
       variant,

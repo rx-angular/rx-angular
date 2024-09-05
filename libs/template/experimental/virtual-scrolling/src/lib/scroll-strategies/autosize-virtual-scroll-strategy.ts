@@ -780,6 +780,7 @@ export class AutoSizeVirtualScrollStrategy<
               const itemIndex = view.context.index;
               const virtualItem = this._virtualItems[itemIndex];
               const element = this.getElement(view);
+              this.updateElementSize(view, itemIndex);
               virtualItem.position = position;
               this.positionElement(element, position);
               position += virtualItem.size;

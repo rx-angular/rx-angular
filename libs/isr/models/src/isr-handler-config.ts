@@ -137,6 +137,10 @@ export interface ISRHandlerConfig {
    * Cached Html compression method, it will use gzip by default if not provided.
    */
   htmlCompressionMethod?: string;
+  /**
+   * This callback lets you use custom cache key generation logic. If not provided, it will use the default cache key generation logic.
+   */
+  cacheKeyGenerator?: CacheKeyGeneratorFn;
 }
 
 export interface ServeFromCacheConfig {
@@ -156,6 +160,12 @@ export interface ServeFromCacheConfig {
 export interface InvalidateConfig {
   providers?: Provider[];
 }
+
+export type CacheKeyGeneratorFn = (
+  url: string,
+  allowedQueryParams: string[] | null | undefined,
+  variant: RenderVariant | null,
+) => string;
 
 export type ModifyHtmlCallbackFn = (
   req: Request,

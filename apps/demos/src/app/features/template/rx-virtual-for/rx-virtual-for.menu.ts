@@ -19,4 +19,8 @@ export const RX_VIRTUAL_FOR_MENU_ITEMS = [
     label: 'Reverse Infinite Scroll',
     link: 'reverse-infinite-scroll',
   },
+  {
+    label: 'Crazy Update',
+    link: 'crazy-update',
+  },
 ];

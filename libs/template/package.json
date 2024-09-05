@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/template",
-  "version": "18.0.1",
+  "version": "18.0.2",
   "description": "**Fully** Reactive Component Template Rendering in Angular. @rx-angular/template aims to be a reflection of Angular's built in renderings just reactive.",
   "publishConfig": {
     "access": "public"
@@ -44,12 +44,12 @@
   },
   "peerDependencies": {
     "@angular/core": "^18.0.0",
-    "rxjs": "^6.5.3 || ^7.4.0",
-    "@rx-angular/cdk": "^18.0.0"
+    "@rx-angular/cdk": "^18.0.0",
+    "rxjs": "^6.5.3 || ^7.4.0"
   },
   "dependencies": {
-    "tslib": "^2.4.1",
-    "ng-morph": "^4.0.3"
+    "ng-morph": "^4.0.3",
+    "tslib": "^2.4.1"
   },
   "schematics": "./schematics/collection.json",
   "ng-add": {
