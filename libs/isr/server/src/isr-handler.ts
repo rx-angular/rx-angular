@@ -266,9 +266,8 @@ export class ISRHandler {
       const patchedModifyFn: ModifyHtmlCallbackFn = (
         req: Request,
         html: string,
-        validate?: number | null,
       ) => {
-        return config!.modifyGeneratedHtml!(req, html);
+        return config.modifyGeneratedHtml?.(req, html) || html;
       };
       this.isrConfig['modifyGeneratedHtml'] = patchedModifyFn;
     }
