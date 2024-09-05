@@ -108,7 +108,7 @@ export class CacheGeneration {
 
       // add the regenerated page to cache
       const addToCache = () => {
-        return this.cache.add(cacheKey, finalHtml, {
+        return this.cache.add(cacheKey, cacheString, {
           revalidate,
           buildId: this.isrConfig.buildId,
         });
