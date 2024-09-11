@@ -2,11 +2,11 @@ import { Provider } from '@angular/core';
 import {
   CacheHandler,
   CacheKeyGeneratorFn,
+  ILogger,
   ISRHandlerConfig,
   RenderVariant,
 } from '@rx-angular/isr/models';
 import { Request, Response } from 'express';
-import { ISRLogger } from './isr-logger';
 import { defaultModifyGeneratedHtml } from './modify-generated-html';
 import { defaultCacheKeyGenerator, getVariant } from './utils/cache-utils';
 import { bufferToString } from './utils/compression-utils';
@@ -26,7 +26,7 @@ export class CacheGeneration {
   constructor(
     public isrConfig: ISRHandlerConfig,
     public cache: CacheHandler,
-    public logger: ISRLogger,
+    public logger: ILogger,
   ) {
     if (!this.isrConfig.cacheKeyGenerator) {
       this.isrConfig.cacheKeyGenerator = defaultCacheKeyGenerator;
@@ -70,10 +70,10 @@ export class CacheGeneration {
       // only regenerate will use queue to avoid multiple regenerations for the same url
       // generate mode is used for the request without cache
       if (this.urlsOnHold.includes(cacheKey)) {
-        this.logger.log('Another generation is on-going for this url...');
+        this.logger.info('Another generation is on-going for this url...');
         return;
       }
-      this.logger.log(`The url: ${cacheKey} is being generated.`);
+      this.logger.info(`The url: ${cacheKey} is being generated.`);
 
       this.urlsOnHold.push(cacheKey);
     }
@@ -109,7 +109,7 @@ export class CacheGeneration {
         if (mode === 'regenerate') {
           this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
         }
-        this.logger.log(
+        this.logger.error(
           `💥 ERROR: Url: ${cacheKey} was not regenerated!`,
           errors,
         );
@@ -147,12 +147,12 @@ export class CacheGeneration {
       if (mode === 'regenerate') {
         // remove from urlsOnHold because we are done
         this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
-        this.logger.log(`Url: ${cacheKey} was regenerated!`);
+        this.logger.info(`Url: ${cacheKey} was regenerated!`);
       }
 
       return { html: finalHtml };
     } catch (error) {
-      this.logger.log(`Error regenerating url: ${cacheKey}`, error);
+      this.logger.error(`Error regenerating url: ${cacheKey}`, error);
 
       if (mode === 'regenerate') {
         // Ensure removal from urlsOnHold in case of error

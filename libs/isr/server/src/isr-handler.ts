@@ -1,5 +1,6 @@
 import {
   CacheHandler,
+  ILogger,
   InvalidateConfig,
   ISRHandlerConfig,
   ModifyHtmlCallbackFn,
@@ -17,14 +18,19 @@ import { setCompressHeader, stringToBuffer } from './utils/compression-utils';
 export class ISRHandler {
   protected cache!: CacheHandler;
   protected cacheGeneration!: CacheGeneration;
-  protected logger: ISRLogger;
+  protected logger: ILogger;
 
   constructor(protected isrConfig: ISRHandlerConfig) {
     if (!isrConfig) {
       throw new Error('Provide ISRHandlerConfig!');
     }
 
-    this.logger = new ISRLogger(this.isrConfig?.enableLogging || false);
+    this.logger = this.isrConfig.logger
+      ? this.isrConfig.logger
+      : new ISRLogger(
+          this.isrConfig?.enableLogging || false,
+          this.isrConfig?.logLevel,
+        );
     // if skipCachingOnHttpError is not provided it will default to true
     isrConfig.skipCachingOnHttpError =
       isrConfig.skipCachingOnHttpError !== false;
@@ -34,10 +40,10 @@ export class ISRHandler {
     isrConfig.invalidateSecretToken = isrConfig.invalidateSecretToken || null;
 
     if (isrConfig.cache && isrConfig.cache instanceof CacheHandler) {
-      this.logger.log('Using custom cache handler!');
+      this.logger.info('Using custom cache handler!');
       this.cache = isrConfig.cache;
     } else {
-      this.logger.log('Using in memory cache handler!');
+      this.logger.info('Using in memory cache handler!');
       this.cache = new InMemoryCacheHandler();
     }
 
@@ -114,19 +120,19 @@ export class ISRHandler {
       );
 
     if (notInCache.length) {
-      this.logger.log(
+      this.logger.warn(
         `Urls: ${notInCache.join(', ')} does not exist in cache.`,
       );
     }
 
     if (Object.keys(urlWithErrors).length) {
-      this.logger.log(
+      this.logger.warn(
         `Urls: ${Object.keys(urlWithErrors).join(', ')} had errors while regenerating!`,
       );
     }
 
     if (invalidatedUrls.length) {
-      this.logger.log(`Urls: ${invalidatedUrls.join(', ')} were regenerated!`);
+      this.logger.warn(`Urls: ${invalidatedUrls.join(', ')} were regenerated!`);
     }
 
     const response = {
@@ -190,7 +196,7 @@ export class ISRHandler {
       }
 
       // Cache exists. Send it.
-      this.logger.log(`Page was retrieved from cache: `, cacheKey);
+      this.logger.info(`Page was retrieved from cache: `, cacheKey);
       let finalHtml: string | Buffer = html;
 
       if (this.isrConfig.compressHtml) {

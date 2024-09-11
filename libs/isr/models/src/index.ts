@@ -17,3 +17,4 @@ export {
   ServeFromCacheConfig,
 } from './isr-handler-config';
 export { IsrServiceInterface, IsrState } from './isr-service.interface';
+export { ILogger, LogLevel, LogLevelString } from './logger';

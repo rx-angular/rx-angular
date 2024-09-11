@@ -1,5 +1,5 @@
 import { CommonEngine } from '@angular/ssr';
-import { ModifyHtmlCallbackFn } from '@rx-angular/isr/models';
+import { ILogger, ModifyHtmlCallbackFn } from '@rx-angular/isr/models';
 import {
   compressHtml,
   CompressStaticFilter,
@@ -40,6 +40,7 @@ export function app(): express.Express {
     nonBlockingRender: true, // will serve page first and store in cache in background
     modifyGeneratedHtml: customModifyGeneratedHtml,
     compressHtml: compressHtml, // compress the html before storing in cache
+    logger: new customLogger(),
     // cacheHtmlCompressionMethod: 'gzip', // compression method for cache
     // cache: fsCacheHandler,
   });
@@ -86,6 +87,21 @@ const customModifyGeneratedHtml: ModifyHtmlCallbackFn = (
   html = html.replace('Original content', 'Modified content');
   return html + msg;
 };
+
+class customLogger implements ILogger {
+  debug(message: string, ...optionalParams: unknown[]): void {
+    console.debug(message, ...optionalParams);
+  }
+  info(message: string, ...optionalParams: unknown[]): void {
+    console.info(message, ...optionalParams);
+  }
+  warn(message: string, ...optionalParams: unknown[]): void {
+    console.warn(message, ...optionalParams);
+  }
+  error(message: string, ...optionalParams: unknown[]): void {
+    console.error(message, ...optionalParams);
+  }
+}
 
 function run(): void {
   const port = process.env['PORT'] || 4000;

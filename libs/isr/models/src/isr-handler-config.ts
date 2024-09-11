@@ -2,6 +2,7 @@ import { Provider } from '@angular/core';
 import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
 import { Request } from 'express';
 import { CacheHandler, RenderVariant } from './cache-handler';
+import { ILogger, LogLevelString } from './logger';
 
 export interface ISRHandlerConfig {
   /**
@@ -137,10 +138,21 @@ export interface ISRHandlerConfig {
    * Cached Html compression method, it will use gzip by default if not provided.
    */
   htmlCompressionMethod?: string;
+
   /**
    * This callback lets you use custom cache key generation logic. If not provided, it will use the default cache key generation logic.
    */
   cacheKeyGenerator?: CacheKeyGeneratorFn;
+
+  /**
+   * This is for custom logger, if undefined, it will use the default logger
+   */
+  logger?: ILogger;
+
+  /**
+   * This is for logger level, if undefined, it will use the default logger level, INFO
+   */
+  logLevel?: LogLevelString;
 }
 
 export interface ServeFromCacheConfig {
