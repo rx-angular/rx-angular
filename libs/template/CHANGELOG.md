@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [18.0.2](https://github.com/rx-angular/rx-angular/compare/template@18.0.1...template@18.0.2) (2024-09-04)
+
+
+### Bug Fixes
+
+* **template:** properly calc sizes when resizeobserver adjust viewport ([#1759](https://github.com/rx-angular/rx-angular/issues/1759)) ([b74fafc](https://github.com/rx-angular/rx-angular/commit/b74fafcb2a96bc94244c56edf5bd4ecbdf79389c)), closes [#1746](https://github.com/rx-angular/rx-angular/issues/1746)
+
+
+
 ## [18.0.1](https://github.com/rx-angular/rx-angular/compare/template@18.0.0...template@18.0.1) (2024-08-01)
 
 
