@@ -194,7 +194,7 @@ module.exports = {
             items: [
               {
                 label: 'Angular Community Discord',
-                href: 'https://discord.com/invite/XWWGZsQ',
+                href: 'https://discord.gg/angular',
               },
               {
                 label: 'RxAngular Slack (existing users)',
