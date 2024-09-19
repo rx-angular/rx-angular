@@ -6,7 +6,7 @@ import { defaultModifyGeneratedHtml } from './modify-generated-html';
 import { getCacheKey, getVariant } from './utils/cache-utils';
 import { bufferToString } from './utils/compression-utils';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
-import { renderUrl,RenderUrlConfig } from './utils/render-url';
+import { renderUrl, RenderUrlConfig } from './utils/render-url';
 
 export interface IGeneratedResult {
   html?: string | Buffer;
