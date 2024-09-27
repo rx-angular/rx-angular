@@ -63,7 +63,7 @@ export class MovieListComponent {
 
 The functional approach will be the new default approach for newer versions.
 
-Read the [Migration Guide](https://rx-angular.io/docs/state/setup#migrate-to-new-functional-api) for a migration guide explaining how to upgrade your codebase to the new API.
+Read the [Migration Guide](https://rx-angular.io/docs/state/getting-started#migrate-to-new-functional-api) for a migration guide explaining how to upgrade your codebase to the new API.
 
 ### Class Based
 
