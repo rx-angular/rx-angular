@@ -35,11 +35,7 @@ const selectItems = (state: ComponentState) => state.items;
 
 const selectVisibleIds = (state: ComponentState) => state.visibleIds;
 
-const selectVisibleItems = createSelector(
-  selectVisibleIds,
-  selectItems,
-  (visibleIds, items) => visibleIds.map((id) => items[id])
-);
+const selectVisibleItems = createSelector(selectVisibleIds, selectItems, (visibleIds, items) => visibleIds.map((id) => items[id]));
 ```
 
 Using this in our component will look like this:
@@ -70,8 +66,9 @@ export class ItemListComponent extends RxState<ComponentState> {
 
     constructor() {
     super();
-  }
-  }
+
+}
+}
 
     ```
 
@@ -88,9 +85,10 @@ export class ItemListComponent extends RxState<ComponentState> {
 
     constructor() {
     super();
-  }
-  }
-    ```
+
+}
+}
+```
 
   </TabItem>
 

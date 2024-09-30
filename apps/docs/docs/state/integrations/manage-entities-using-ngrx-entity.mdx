@@ -93,7 +93,8 @@ readonly addItem$ = new Subject<string>();
 })
 
 }
-```
+
+````
 
   </TabItem>
 
@@ -120,7 +121,7 @@ interface ComponentState extends EntityState<Item> {
 const adapter: EntityAdapter<Item> = createEntityAdapter<Item>({
   selectId: (item: Item) => item.id,
 });
-```
+````
 
 The entity adapter needs a `selectId` function which is used to query items by `id` within the collection.
 
@@ -177,7 +178,6 @@ Check out the [full list of adapter collection methods](https://ngrx.io/guide/en
 ## Selecting state with `@ngrx/entity`
 
 The entity adapter comes with a small set of default selectors we can use right out of the box.
-
 
       <Tabs>
 
