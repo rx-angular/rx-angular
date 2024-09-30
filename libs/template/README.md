@@ -67,11 +67,14 @@ export class AnyComponent {}
 ## Version Compatibility
 
 | RxAngular | Angular    |
-| --------- | ---------- |
-| `^1.0.0`  | `>=12.0.0` |
-| `^2.0.0`  | `>=13.0.0` |
-| `^14.0.0` | `^14.0.0`  |
-| `^15.0.0` | `^15.0.0`  |
+|-----------|------------|
+| `^18.0.0` | `^18.0.0`  |
+| `^17.0.0` | `^17.0.0`  |
 | `^16.0.0` | `^16.0.0`  |
+| `^15.0.0` | `^15.0.0`  |
+| `^14.0.0` | `^14.0.0`  |
+| `^2.0.0`  | `>=13.0.0` |
+| `^1.0.0`  | `>=12.0.0` |
 
-Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see the [official guide](https://angular.io/guide/versions).
+Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see the [official guide](https://angular.dev/reference/versions).
+
