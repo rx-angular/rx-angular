@@ -5,6 +5,9 @@ title: Reusing ngrx selectors to compose state
 # Renamed from libs/state/docs/snippets/composing-state-using-ngrx-selectors.md
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 _Author: [@Phhansen](https://github.com/Phhansen)_
 
 # Reusing ngrx selectors to compose state
@@ -53,3 +56,42 @@ export class ItemListComponent extends RxState<ComponentState> {
   }
 }
 ```
+
+<Tabs>
+
+  <TabItem value="class-based" label="Class Based (Classic)">
+
+    ```typescript
+    import { select } from '@ngrx/store';
+
+    @Component()
+    export class ItemListComponent extends RxState<ComponentState> {
+    readonly visibleItems$ = this.state.select(select(selectVisibleItems));
+
+    constructor() {
+    super();
+  }
+  }
+
+    ```
+
+  </TabItem>
+
+  <TabItem value="new" label="Functional Creation (NEW)">
+    ```typescript
+    import { select } from '@ngrx/store';
+
+    @Component()
+    export class ItemListComponent{
+    readonly #state = rxState<ComponentState>()
+    readonly visibleItems$ = this.#state.select(select(selectVisibleItems));
+
+    constructor() {
+    super();
+  }
+  }
+    ```
+
+  </TabItem>
+
+</Tabs>
