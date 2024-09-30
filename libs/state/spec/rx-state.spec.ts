@@ -379,6 +379,31 @@ describe(rxState, () => {
       expect(accumulator).toHaveBeenCalled();
     });
   });
+
+  describe('asReadOnly', () => {
+    it('should throw error when trying to call set from readOnlystate', () => {
+      const { component } = setupComponent<{ count: number }>();
+
+      const readOnlyState = component.state.asReadOnly();
+
+      expect((): void => {
+        readOnlyState['set'](
+          'count',
+          (state: { count: number }) => state.count + 1,
+        );
+      }).toThrowError('readOnlyState.set is not a function');
+    });
+
+    it('should throw error when trying to call connect from readOnlystate', () => {
+      const { component } = setupComponent<{ count: number }>();
+
+      const readOnlyState = component.state.asReadOnly();
+
+      expect((): void => {
+        readOnlyState['connect']('count', of(10));
+      }).toThrowError('readOnlyState.connect is not a function');
+    });
+  });
 });
 
 type ITestComponent<State extends object> = {
