@@ -203,11 +203,10 @@ The entity adapter comes with a small set of default selectors we can use right 
         </TabItem>
 
         <TabItem value="new" label="Functional Creation (NEW)">
+          ```typescript
           import { select } from '@ngrx/store';
-
           const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();
 
-          ```typescript
           @Component({
           selector: 'my-component',
         })
