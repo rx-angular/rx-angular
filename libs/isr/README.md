@@ -21,6 +21,14 @@ A library that enables Angular Universal applications to generate static pages a
 npm install @rx-angular/isr
 ```
 
+## Version Compatibility
+
+| RxAngular | Angular   |
+| --------- | --------- |
+| `^18.0.0` | `^18.0.0` |
+| `^17.1.0` | `^17.0.0` |
+| `^16.0.0` | `^16.0.0` |
+
 ## How to use it?
 
 1. Initialize `ISRHandler` inside `server.ts`
@@ -37,10 +45,7 @@ const isr = new ISRHandler({
 
 ```ts
 server.use(express.json());
-server.post(
-  '/api/invalidate',
-  async (req, res) => await isr.invalidate(req, res)
-);
+server.post('/api/invalidate', async (req, res) => await isr.invalidate(req, res));
 ```
 
 3. Replace Angular default server side rendering with ISR rendering
@@ -64,7 +69,7 @@ server.get(
   // Serve page if it exists in cache
   async (req, res, next) => await isr.serveFromCache(req, res, next),
   // Server side render the page and add to cache if needed
-  async (req, res, next) => await isr.render(req, res, next)
+  async (req, res, next) => await isr.render(req, res, next),
 );
 ```
 
@@ -80,7 +85,7 @@ server.get(
         { provide: CUSTOM_TOKEN, useValue: 'Hello from ISR' },
         CustomService,
       ],
-    })
+    }),
 );
 ```
 
@@ -105,7 +110,7 @@ server.get(
       modifyGeneratedHtml: (req, html) => {
         return `${html}<!-- Hello, I'm modifying the generatedHtml before caching it! -->`;
       },
-    })
+    }),
 );
 ```
 
