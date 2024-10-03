@@ -504,10 +504,13 @@ export class AutoSizeVirtualScrollStrategy<
               index: dataLength,
               offset: 0,
             },
-            -calculateVisibleContainerSize(
-              this.containerSize,
-              this.scrollTopWithOutOffset,
-              this.scrollTopAfterOffset,
+            Math.max(
+              -size,
+              -calculateVisibleContainerSize(
+                this.containerSize,
+                this.scrollTopWithOutOffset,
+                this.scrollTopAfterOffset,
+              ),
             ),
           );
           this.calcAnchorScrollTop();
