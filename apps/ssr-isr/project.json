@@ -51,6 +51,18 @@
       },
       "defaultConfiguration": "production"
     },
+    "serve-ssr": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "ssr-isr:build:production"
+        },
+        "development": {
+          "buildTarget": "ssr-isr:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
@@ -76,14 +88,20 @@
     "e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {
-        "cypressConfig": "apps/ssr-isr/cypress.config.ts",
+        "cypressConfig": "{projectRoot}/cypress.config.ts",
         "testingType": "e2e",
-        "devServerTarget": "ssr-isr:serve"
+        "devServerTarget": "ssr-isr:serve-ssr"
       },
       "configurations": {
         "production": {
           "devServerTarget": "ssr-isr:serve:production"
         }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "ssr-isr:build"
       }
     }
   }
