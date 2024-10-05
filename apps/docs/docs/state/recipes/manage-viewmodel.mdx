@@ -5,6 +5,9 @@ title: Selecting the ViewModel
 # Renamed from libs/state/docs/snippets/selecting-the-viewmodel.md
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Selecting the ViewModel
 
 Here are some useful strategies to properly handle `ViewModels` with `@rx-angular/state`. In this examples we will use standalone [`selectSlice`](../api/rxjs-operators/select-slice.md) operator.
@@ -58,6 +61,8 @@ It returns an Observable that emits a distinct subset of the received object.
 
 Utilizing it inside of the `RxState#select` method enables you to pluck a _distinct_ `ViewModel` directly out of your state.
 
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
 ```typescript
 @Component()
 export class ViewModelComponent extends RxState<ComponentState> {
@@ -77,6 +82,29 @@ export class ViewModelComponent extends RxState<ComponentState> {
   }
 }
 ```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+@Component()
+export class ViewModelComponent {
+  readonly #state = rxState<ComponentState>();
+  readonly viewModel$: Observable<ComponentViewModel> = this.#state.select(
+    selectSlice(['title', 'list', 'created', 'visibleItemIds']),
+    map(({ title, list, created, visibleItemIds }) => ({
+      title,
+      created,
+      total: list.length,
+      visibleItems: list.filter((item) =>
+        visibleItemIds.some((itemId) => itemId === item.id)
+      ),
+    }))
+  );
+}
+```
+
+</TabItem>
+
+</Tabs>
 
 ## Multiple Observables and selectSlice:
 
@@ -100,6 +128,8 @@ This way you may achieve more control over what to render when, e.g. lazy render
 </ng-container>
 ```
 
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
 ```typescript
 interface ComponentViewModel {
   main$: Observable<{ title: string; created: Date }>;
@@ -125,3 +155,30 @@ export class ViewModelComponent extends RxState<ComponentState> {
   }
 }
 ```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+interface ComponentViewModel {
+  main$: Observable<{ title: string; created: Date }>;
+  list$: Observable<{ total: number; visibleItems: Item[] }>;
+}
+
+@Component()
+export class ViewModelComponent {
+  readonly #state = rxState<ComponentState>();
+  readonly viewModel: ComponentViewModel = {
+    main$: this.#state.select(selectSlice(['title', 'created'])),
+    list$: this.#state.select(
+      selectSlice(['list', 'visibleItemIds']),
+      map(({ list, visibleItemIds }) => ({
+        total: list.length,
+        visibleItems: list.filter((item) =>
+          visibleItemIds.some((itemId) => itemId === item.id)
+        ),
+      }))
+    ),
+  };
+}
+```
+</TabItem>
+</Tabs>

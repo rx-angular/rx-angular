@@ -3,6 +3,9 @@ title: Migrating to RxState
 # Renamed from libs/state/docs/snippets/behavior-subject-vs-rx-state.md
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Migrating to RxState
 
 Let's take a look at a simple checklist app, see how it can be implemented in an imperative way, and after that, we will iterate over it and add some reactiveness. We skip any additional logic such as routing, error handling etc., in these examples.
@@ -113,7 +116,7 @@ export class State<T = any> {
 
   select<K extends keyof T>(path: K): Observable<T[K]> {
     return this.data$.pipe(
-      map((state) => state[path])
+      map((state) => state[path]),
       // some additional logic
     );
   }
@@ -229,11 +232,7 @@ Now we need a place from which we can **trigger** this event. `@Input id: string
 Also, we need to write a logic for getting our checklist from API and storing a response:
 
 ```ts
-initHandler$ = this.init$.pipe(
-  switchMap((id) =>
-    this.api.get(id).pipe(tap((checklist) => this.state.patch(checklist)))
-  )
-);
+initHandler$ = this.init$.pipe(switchMap((id) => this.api.get(id).pipe(tap((checklist) => this.state.patch(checklist)))));
 ```
 
 So far, so good. Inside `switchMap`, we are getting value passed to `init$` and switching to our API call. We
@@ -261,13 +260,7 @@ Answering logic
 ```ts
 answerHandler$ = this.answer$.pipe(
   withLatestFrom(this.tasks$),
-  switchMap(([id, tasks]) =>
-    this.api
-      .answerTask(id)
-      .pipe(
-        tap(() => this.state.patch({ tasks: tasks.filter((t) => t.id !== id) }))
-      )
-  )
+  switchMap(([id, tasks]) => this.api.answerTask(id).pipe(tap(() => this.state.patch({ tasks: tasks.filter((t) => t.id !== id) })))),
 );
 ```
 
@@ -308,31 +301,17 @@ export class ChecklistComponent implements OnDestroy {
   init$ = new Subject<string>();
   answer$ = new Subject<string>();
 
-  initHandler$ = this.init$.pipe(
-    switchMap((id) =>
-      this.api.get(id).pipe(tap((checklist) => this.state.patch(checklist)))
-    )
-  );
+  initHandler$ = this.init$.pipe(switchMap((id) => this.api.get(id).pipe(tap((checklist) => this.state.patch(checklist)))));
 
   answerHandler$ = this.answer$.pipe(
     withLatestFrom(this.tasks$),
-    switchMap(([id, tasks]) =>
-      this.api
-        .answerTask(id)
-        .pipe(
-          tap(() =>
-            this.state.patch({ tasks: tasks.filter((t) => t.id !== id) })
-          )
-        )
-    )
+    switchMap(([id, tasks]) => this.api.answerTask(id).pipe(tap(() => this.state.patch({ tasks: tasks.filter((t) => t.id !== id) })))),
   );
 
   private destroy$ = new Subject();
 
   constructor(private api: TodoApiService) {
-    merge(this.initHandler$, this.answerHandler$)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
+    merge(this.initHandler$, this.answerHandler$).pipe(takeUntil(this.destroy$)).subscribe();
   }
 
   ngOnDestroy(): void {
@@ -410,9 +389,7 @@ Now we need to update our `answerHandler$` so it will return an id of task that 
 (api returns only status code). And connect it to our `tasks` property.
 
 ```ts
-answerHandler$ = this.answer$.pipe(
-  switchMap((id) => this.api.answerTask(id).pipe(map(() => id)))
-);
+answerHandler$ = this.answer$.pipe(switchMap((id) => this.api.answerTask(id).pipe(map(() => id))));
 ```
 
 ```ts
@@ -430,6 +407,8 @@ our source. More on possible `connect` variants [here](../api/rx-state.md#connec
 
 **Full component code**
 
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
 ```ts
 export class ChecklistComponent {
   @Input() set id(id: string) {
@@ -446,18 +425,50 @@ export class ChecklistComponent {
 
   // HANDLERS
   initHandler$ = this.init$.pipe(switchMap((id) => this.api.get(id)));
-  answerHandler$ = this.answer$.pipe(
-    switchMap((id) => this.api.answerTask(id).pipe(map(() => id)))
-  );
+  answerHandler$ = this.answer$.pipe(switchMap((id) => this.api.answerTask(id).pipe(map(() => id))));
 
-  constructor(private api: TodoApiService, private state: RxState<IChecklist>) {
+  constructor(
+    private api: TodoApiService,
+    private state: RxState<IChecklist>,
+  ) {
     this.state.connect(this.initHandler$);
-    this.state.connect('tasks', this.answerHandler$, (state, id) =>
-      state.tasks.filter((t) => t.id !== id)
-    );
+    this.state.connect('tasks', this.answerHandler$, (state, id) => state.tasks.filter((t) => t.id !== id));
   }
 }
 ```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```ts
+export class ChecklistComponent {
+  readonly #state = rxState<IChecklist>();
+  @Input() set id(id: string) {
+    this.init$.next(id);
+  }
+
+  // READS
+  name$ = this.#state.select('name');
+  tasks$ = this.#state.select('tasks');
+
+  // EVENTS
+  init$ = new Subject<string>();
+  answer$ = new Subject<string>();
+
+  // HANDLERS
+  initHandler$ = this.init$.pipe(switchMap((id) => this.api.get(id)));
+  answerHandler$ = this.answer$.pipe(switchMap((id) => this.api.answerTask(id).pipe(map(() => id))));
+
+  constructor(
+    private api: TodoApiService,
+  ) {
+    this.#state.connect(this.initHandler$);
+    this.#state.connect('tasks', this.answerHandler$, (state, id) => state.tasks.filter((t) => t.id !== id));
+  }
+}
+```
+</TabItem>
+</Tabs>
+
+
 
 **Summary:**
 
