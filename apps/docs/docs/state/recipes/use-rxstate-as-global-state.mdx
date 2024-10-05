@@ -24,31 +24,28 @@ As with the global/local state snippet, we'll be doing the same example to-do ap
 - The list can be expanded or collapsed and has property `isExpanded`.
 - Gets tasks array from endpoint _tasks/get_ and filters out tasks that already answered.
 
-      <Tabs>
-
-        <TabItem value="class-based" label="Class Based (Classic)">
-
-          ```typescript
-        interface TodosState {
-        tasks: Task[];
-        isExpanded: boolean;
-
-  }
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+interface TodosState {
+  tasks: Task[];
+  isExpanded: boolean;
+}
 
 @Component({
-selector: 'todos',
-templateUrl: './todo.component.html',
+  selector: 'todos',
+  templateUrl: './todo.component.html',
 })
 export class TodoComponent extends RxState<TodosState> {
-readonly tasks$ = this.select('tasks');
-readonly counter$ = this.select(
-map((state) => state.tasks),
-map((tasks) => tasks.length)
-);
-readonly isExpanded$ = this.select('isExpanded');
+  readonly tasks$ = this.select('tasks');
+  readonly counter$ = this.select(
+    map((state) => state.tasks),
+    map((tasks) => tasks.length)
+  );
+  readonly isExpanded$ = this.select('isExpanded');
 
-constructor(private tasksService: TasksService) {
-super();
+  constructor(private tasksService: TasksService) {
+    super();
 
     /* Filter out tasks that are done */
     this.connect(
@@ -57,37 +54,31 @@ super();
         .fetchTasks()
         .pipe(filter((tasks) => tasks.filter((task) => !task.done)))
     );
-
+  }
 }
-}
-
-````
-
-      </TabItem>
-
-      <TabItem value="new" label="Functional Creation (NEW)">
-       ```typescript
-
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
 interface TodosState {
-tasks: Task[];
-isExpanded: boolean;
+  tasks: Task[];
+  isExpanded: boolean;
 }
 
 @Component({
-selector: 'todos',
-templateUrl: './todo.component.html',
+  selector: 'todos',
+  templateUrl: './todo.component.html',
 })
 export class TodoComponent {
-readonly #state = rxState<TodosState>()
-readonly tasks$ = this.#state.select('tasks');
-readonly counter$ = this.#state.select(
-map((state) => state.tasks),
-map((tasks) => tasks.length)
-);
-readonly isExpanded$ = this.#state.select('isExpanded');
+  readonly #state = rxState<TodosState>();
+  readonly tasks$ = this.#state.select('tasks');
+  readonly counter$ = this.#state.select(
+    map((state) => state.tasks),
+    map((tasks) => tasks.length)
+  );
+  readonly isExpanded$ = this.#state.select('isExpanded');
 
-constructor(private tasksService: TasksService) {
-
+  constructor(private tasksService: TasksService) {
     /* Filter out tasks that are done */
     this.#state.connect(
       'tasks',
@@ -95,14 +86,12 @@ constructor(private tasksService: TasksService) {
         .fetchTasks()
         .pipe(filter((tasks) => tasks.filter((task) => !task.done)))
     );
-
+  }
 }
-}
-````
+```
+</TabItem>
+</Tabs>
 
-      </TabItem>
-
-    </Tabs>
 
 ### Setup
 
@@ -110,74 +99,64 @@ constructor(private tasksService: TasksService) {
 - The list can be expanded or collapsed and has property `isExpanded`.
 - Gets tasks as array from endpoint _tasks/get_.
 
-     <Tabs>
-
-        <TabItem value="class-based" label="Class Based (Classic)">
-
-          ```typescript
-            interface AllTodosState {
-            tasks: Task[];
-            isExpanded: boolean;
-          }
-
-          @Component({
-          selector: 'all-tasks',
-          templateUrl: './all-tasks.component.html',
-          })
-          export class AllTasksComponent extends RxState<AllTodosState> {
-          readonly tasks$ = this.select('tasks');
-          readonly counter$ = this.select(
-          map((state) => state.tasks),
-          map((tasks) => tasks.length)
-          );
-          readonly isExpanded$ = this.select('isExpanded');
-
-          constructor(private tasksService: TasksService) {
-          super();
-
-              /* Fetch tasks from backend */
-              this.connect('tasks', this.tasksService.fetchTasks());
-          }
-          }
-          ```
-
-        </TabItem>
-
-        <TabItem value="new" label="Functional Creation (NEW)">
-         ```typescript
-
-  interface AllTodosState {
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+interface AllTodosState {
   tasks: Task[];
   isExpanded: boolean;
-  }
+}
 
 @Component({
-selector: 'all-tasks',
-templateUrl: './all-tasks.component.html',
+  selector: 'all-tasks',
+  templateUrl: './all-tasks.component.html',
 })
-export class AllTasksComponent {
-readonly #state = rxState<AllTodosState>()
-readonly tasks$ = this.#state.select('tasks');
-readonly counter$ = this.#state.select(
-map((state) => state.tasks),
-map((tasks) => tasks.length)
-);
-readonly isExpanded$ = this.#state.select('isExpanded');
+export class AllTasksComponent extends RxState<AllTodosState> {
+  readonly tasks$ = this.select('tasks');
+  readonly counter$ = this.select(
+    map((state) => state.tasks),
+    map((tasks) => tasks.length)
+  );
+  readonly isExpanded$ = this.select('isExpanded');
 
-constructor(private tasksService: TasksService) {
-super();
+  constructor(private tasksService: TasksService) {
+    super();
 
     /* Fetch tasks from backend */
+    this.connect('tasks', this.tasksService.fetchTasks());
+  }
+}
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+interface AllTodosState {
+  tasks: Task[];
+  isExpanded: boolean;
+}
+
+@Component({
+  selector: 'all-tasks',
+  templateUrl: './all-tasks.component.html',
+})
+export class AllTasksComponent {
+  readonly #state = rxState<AllTodosState>();
+  readonly tasks$ = this.#state.select('tasks');
+  readonly counter$ = this.#state.select(
+    map((state) => state.tasks),
+    map((tasks) => tasks.length)
+  );
+  readonly isExpanded$ = this.#state.select('isExpanded');
+
+  constructor(private tasksService: TasksService) {
+    /* Fetch tasks from backend */
     this.#state.connect('tasks', this.tasksService.fetchTasks());
-
+  }
 }
-}
+```
+</TabItem>
+</Tabs>
 
-````
-
-      </TabItem>
-
-    </Tabs>
 
 
 ### What is global and what is local?
@@ -213,46 +192,41 @@ export const GLOBAL_RX_STATE = new InjectionToken<RxState<GlobalState>>(
 
 We then _provide_ the `injectionToken` in our `app.module.ts`.
 
-   <Tabs>
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+import { GLOBAL_RX_STATE, GlobalState } from "./rx-state";
+...
 
-      <TabItem value="class-based" label="Class Based (Classic)">
+@NgModule({
+    imports: [...],
+    declarations: [...],
+    providers: [{
+        provide: GLOBAL_RX_STATE, useFactory: () => new RxState<GlobalState>()
+    }],
+    bootstrap: [...]
+})
+export class AppModule {}
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+import { GLOBAL_RX_STATE, GlobalState } from "./rx-state";
+...
 
-        ```typescript
-         import { GLOBAL_RX_STATE, GlobalState } from "./rx-state";
-          ...
+@NgModule({
+    imports: [...],
+    declarations: [...],
+    providers: [{
+        provide: GLOBAL_RX_STATE, useFactory: () => rxState<GlobalState>()
+    }],
+    bootstrap: [...]
+})
+export class AppModule {}
+```
+</TabItem>
+</Tabs>
 
-          @NgModule({
-              imports: [...],
-              declarations: [...],
-              providers: [{
-                  provide: GLOBAL_RX_STATE, useFactory: () => new RxState<GlobalState>()
-              }],
-              bootstrap: [...]
-          })
-          export class AppModule {}
-        ```
-
-      </TabItem>
-
-      <TabItem value="new" label="Functional Creation (NEW)">
-       ```typescript
-        import { GLOBAL_RX_STATE, GlobalState } from "./rx-state";
-        ...
-
-        @NgModule({
-            imports: [...],
-            declarations: [...],
-            providers: [{
-                provide: GLOBAL_RX_STATE, useFactory: () => rxState<GlobalState>()
-            }],
-            bootstrap: [...]
-        })
-        export class AppModule {}
-        ```
-
-      </TabItem>
-
-    </Tabs>
 
 We can then load the `tasks` in the `AppComponent` via our `tasksService.fetchTasks()` and just have our `TodoComponent` and `AllTasksComponent` connect to the global state.
 
@@ -273,33 +247,30 @@ constructor(@Inject(GLOBAL_RX_STATE) private state, private tasksService: TasksS
 
 And our updated `TodoComponent`
 
- <Tabs>
-
-      <TabItem value="class-based" label="Class Based (Classic)">
-
-        ```typescript
-         interface TodosState {
-
-tasks: Task[];
-isExpanded: boolean;
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+interface TodosState {
+  tasks: Task[];
+  isExpanded: boolean;
 }
 
 @Component({
-selector: 'todos',
-templateUrl: './todo.component.html',
+  selector: 'todos',
+  templateUrl: './todo.component.html',
 })
 export class TodoComponent extends RxState<TodosState> {
-readonly tasks$ = this.select('tasks');
-readonly counter$ = this.select(
-map((state) => state.tasks),
-map((tasks) => tasks.length)
-);
-readonly isExpanded$ = this.select('isExpanded');
+  readonly tasks$ = this.select('tasks');
+  readonly counter$ = this.select(
+    map((state) => state.tasks),
+    map((tasks) => tasks.length)
+  );
+  readonly isExpanded$ = this.select('isExpanded');
 
-constructor(
-@Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>
-) {
-super();
+  constructor(
+    @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>
+  ) {
+    super();
 
     /* Connect to global state and filter out already completed tasks */
     this.connect(
@@ -308,39 +279,33 @@ super();
         .select('tasks')
         .pipe(map((tasks) => tasks.filter((task) => !task.done)))
     );
-
+  }
 }
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+interface TodosState {
+  tasks: Task[];
+  isExpanded: boolean;
 }
-
-````
-
-      </TabItem>
-
-      <TabItem value="new" label="Functional Creation (NEW)">
-       ```typescript
-        interface TodosState {
-          tasks: Task[];
-          isExpanded: boolean;
-        }
 
 @Component({
-selector: 'todos',
-templateUrl: './todo.component.html',
+  selector: 'todos',
+  templateUrl: './todo.component.html',
 })
 export class TodoComponent {
-readonly #state = rxState<TodosState>()
-readonly tasks$ = this.#state.select('tasks');
-readonly counter$ = this.#state.select(
-map((state) => state.tasks),
-map((tasks) => tasks.length)
-);
-readonly isExpanded$ = this.#state.select('isExpanded');
+  readonly #state = rxState<TodosState>();
+  readonly tasks$ = this.#state.select('tasks');
+  readonly counter$ = this.#state.select(
+    map((state) => state.tasks),
+    map((tasks) => tasks.length)
+  );
+  readonly isExpanded$ = this.#state.select('isExpanded');
 
-constructor(
-@Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>
-) {
-super();
-
+  constructor(
+    @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>
+  ) {
     /* Connect to global state and filter out already completed tasks */
     this.#state.connect(
       'tasks',
@@ -348,77 +313,67 @@ super();
         .select('tasks')
         .pipe(map((tasks) => tasks.filter((task) => !task.done)))
     );
-
+  }
 }
-}
-````
+```
+</TabItem>
+</Tabs>
 
-      </TabItem>
-
-    </Tabs>
 
 Here we `connect` to the global state instance and filter out the already completed tasks.
 
 Our `AllTasksComponent` is slightly different in that it doesn't actually need to filter anything, and thus it only needs to manage the **local** `isExpanded` value, and just have the `tasks` and `counter` values come directly from the **global** state.
 
- <Tabs>
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+interface AllTodosState {
+  isExpanded: boolean;
+}
 
-      <TabItem value="class-based" label="Class Based (Classic)">
+@Component({
+  selector: 'all-tasks',
+  templateUrl: './all-tasks.component.html',
+})
+export class AllTasksComponent extends RxState<AllTodosState> {
+  readonly tasks$ = this.globalState.select('tasks');
+  readonly counter$ = this.globalState.select(
+    map((state) => state.tasks),
+    map((tasks) => tasks.length)
+  );
+  readonly isExpanded$ = this.select('isExpanded');
 
-        ```typescript
-        interface AllTodosState {
-          isExpanded: boolean;
-        }
+  constructor(
+    @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>
+  ) {
+    super();
+  }
+}
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+interface AllTodosState {
+  isExpanded: boolean;
+}
 
-        @Component({
-          selector: 'all-tasks',
-          templateUrl: './all-tasks.component.html',
-        })
-        export class AllTasksComponent extends RxState<AllTodosState> {
-          readonly tasks$ = this.globalState.select('tasks');
-          readonly counter$ = this.globalState.select(
-            map((state) => state.tasks),
-            map((tasks) => tasks.length)
-          );
-          readonly isExpanded$ = this.select('isExpanded');
+@Component({
+  selector: 'all-tasks',
+  templateUrl: './all-tasks.component.html',
+})
+export class AllTasksComponent {
+  readonly #state = rxState<AllTodosState>();
+  readonly tasks$ = this.globalState.select('tasks');
+  readonly counter$ = this.globalState.select(
+    map((state) => state.tasks),
+    map((tasks) => tasks.length)
+  );
+  readonly isExpanded$ = this.#state.select('isExpanded');
 
-          constructor(
-            @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>
-          ) {
-            super();
-          }
-        }
-        ```
-
-      </TabItem>
-
-      <TabItem value="new" label="Functional Creation (NEW)">
-       ```typescript
-        interface AllTodosState {
-          isExpanded: boolean;
-        }
-
-        @Component({
-          selector: 'all-tasks',
-          templateUrl: './all-tasks.component.html',
-        })
-        export class AllTasksComponent {
-          readonly #state = rxState<AllTodosState>();
-          readonly tasks$ = this.globalState.select('tasks');
-          readonly counter$ = this.globalState.select(
-            map((state) => state.tasks),
-            map((tasks) => tasks.length)
-          );
-          readonly isExpanded$ = this.#state.select('isExpanded');
-
-          constructor(
-            @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>
-          ) {
-            super();
-          }
-        }
-        ```
-
-      </TabItem>
-
-    </Tabs>
+  constructor(
+    @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>
+  ) {}
+}
+```
+</TabItem>
+</Tabs>

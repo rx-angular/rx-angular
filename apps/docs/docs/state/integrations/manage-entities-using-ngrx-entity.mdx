@@ -32,73 +32,60 @@ interface ComponentState {
 Now, if we want to add one item to our array _(in an immutable way)_, we replace the `items` array in the state with a new reference.
 
 <Tabs>
-
-  <TabItem value="class-based" label="Class Based (Classic)">
-
-    ```typescript
-
-    @Component({
-    selector: 'my-component',
-
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+@Component({
+  selector: 'my-component',
 })
 export class MyComponent extends RxState<ComponentState> {
-readonly addItem$ = new Subject<string>();
+  readonly addItem$ = new Subject<string>();
 
-    constructor() {
+  constructor() {
     super();
 
     this.connect(this.addItem$, (oldState, itemName) => {
-    const newItem = {
-    id: uuid(), // unique hash generation fn()
-    name: itemName,
+      const newItem = {
+        id: uuid(), // unique hash generation fn()
+        name: itemName,
+      };
 
-};
-
-    return {
-    ...oldState,
-    items: [...oldState.items, newItem],
-
-};
-});
+      return {
+        ...oldState,
+        items: [...oldState.items, newItem],
+      };
+    });
+  }
 }
-}
-
-    ```
-
-  </TabItem>
-
-  <TabItem value="new" label="Functional Creation (NEW)">
-    ```typescript
-    @Component({
-    selector: 'my-component',
-
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+@Component({
+  selector: 'my-component',
 })
 export class MyComponent {
-readonly addItem$ = new Subject<string>();
+  readonly #state = rxState<ComponentState>();
+  readonly addItem$ = new Subject<string>();
 
-    readonly #state = rxState<ComponentState>(({connect}) => {
-    connect(this.addItem$, (oldState, itemName) => {
-    const newItem = {
-    id: uuid(), // unique hash generation fn()
-    name: itemName,
+  constructor() {
 
-};
+    this.#state.connect(this.addItem$, (oldState, itemName) => {
+      const newItem = {
+        id: uuid(), // unique hash generation fn()
+        name: itemName,
+      };
 
-    return {
-    ...oldState,
-    items: [...oldState.items, newItem],
-
-};
-})
-})
-
+      return {
+        ...oldState,
+        items: [...oldState.items, newItem],
+      };
+    });
+  }
 }
-
-````
-
-  </TabItem>
-
+```
+</TabItem>
 </Tabs>
+
 
 If we want to update one item, we have to query the `items` array first to get a hold of the item and then construct a new array again.
 
@@ -127,47 +114,44 @@ The entity adapter needs a `selectId` function which is used to query items by `
 
 Now let's see how the component has changed:
 
-  <Tabs>
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+@Component({
+  selector: 'my-component',
+})
+export class MyComponent extends RxState<ComponentState> {
+  readonly addItem$ = new Subject<string>();
 
-    <TabItem value="class-based" label="Class Based (Classic)">
+  constructor() {
+    super();
 
-      ```typescript
-      @Component({
-      selector: 'my-component',
-    })
-      export class MyComponent extends RxState<ComponentState> {
-      readonly addItem$ = new Subject<string>();
-
-      constructor() {
-      super();
-
-      this.connect(this.addItem$, (oldState, itemName) =>
+    this.connect(this.addItem$, (oldState, itemName) =>
       adapter.addOne({ id: uuid(), name: itemName() }, oldState)
-      );
-    }
-    }
-      ```
+    );
+  }
+}
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+@Component({
+  selector: 'my-component',
+})
+export class MyComponent {
+  readonly #state = rxState<ComponentState>();
+  readonly addItem$ = new Subject<string>();
 
-    </TabItem>
+  constructor() {
+    this.#state.connect(this.addItem$, (oldState, itemName) =>
+      adapter.addOne({ id: uuid(), name: itemName() }, oldState)
+    );
+  }
+}
+```
+</TabItem>
+</Tabs>
 
-    <TabItem value="new" label="Functional Creation (NEW)">
-      ```typescript
-      @Component({
-      selector: 'my-component',
-    })
-      export class MyComponent  {
-      readonly addItem$ = new Subject<string>();
-      readonly #state = rxState<ComponentState>(({connect}) => {
-        connect(this.addItem$, (oldState, itemName) =>
-          adapter.addOne({ id: uuid(), name: itemName() }, oldState)
-        )
-      }
-    }
-      ```
-
-    </TabItem>
-
-  </Tabs>
 
 The `addOne()` function is just one of many functions that help us manipulate the collection.
 
@@ -179,43 +163,41 @@ Check out the [full list of adapter collection methods](https://ngrx.io/guide/en
 
 The entity adapter comes with a small set of default selectors we can use right out of the box.
 
-      <Tabs>
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+import { select } from '@ngrx/store';
 
-        <TabItem value="class-based" label="Class Based (Classic)">
+const { selectIds, selectEntities, selectAll, selectTotal } =
+  adapter.getSelectors();
 
-          ```typescript
-          import { select } from '@ngrx/store';
+@Component({
+  selector: 'my-component',
+})
+export class MyComponent extends RxState<ComponentState> {
+  readonly items$ = this.select(select(selectAll));
 
-          const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();
+  constructor() {
+    super();
+  }
+}
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+import { select } from '@ngrx/store';
 
-          @Component({
-          selector: 'my-component',
-        })
-          export class MyComponent extends RxState<ComponentState> {
-          readonly items$ = this.select(select(selectAll));
+const { selectIds, selectEntities, selectAll, selectTotal } =
+  adapter.getSelectors();
 
-          constructor() {
-          super();
-        }
-        }
-          ```
+@Component({
+  selector: 'my-component',
+})
+export class MyComponent {
+  readonly #state = rxState<ComponentState>();
+  readonly items$ = this.#state.select(select(selectAll));
+}
+```
+</TabItem>
+</Tabs>
 
-        </TabItem>
-
-        <TabItem value="new" label="Functional Creation (NEW)">
-          ```typescript
-          import { select } from '@ngrx/store';
-          const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();
-
-          @Component({
-          selector: 'my-component',
-        })
-          export class MyComponent  {
-          readonly #state = rxState<ComponentState>()
-          readonly items$ = this.#state.select(select(selectAll));
-        }
-          ```
-
-        </TabItem>
-
-      </Tabs>

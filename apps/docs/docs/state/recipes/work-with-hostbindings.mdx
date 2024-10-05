@@ -39,59 +39,51 @@ As stated in the title, we have to be aware changeDetection. On every changeDete
 all `HostBindings`. If our component doesn't get flagged as dirty, our `HostBindings` won't get updated. So we have to make
 sure that state changes that are related to the `HostBindings` value are actually triggering a re-render.
 
-      <Tabs>
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+@Component({
+  providers: [RxState],
+})
+export class RxComponent {
+  // Modifying the class
+  @HostBinding('[class.is-hidden]') get isHidden() {
+    return !this.state.get().visible;
+  }
+  // Modifying styles
+  @HostBinding('[style.marginTop]') get marginTop() {
+    return `${this.state.get().top}px`;
+  }
+  // Modifying styles
+  @HostBinding('[style.maxHeight]') get maxHeight() {
+    return `${this.state.get().maxHeight}px`;
+  }
 
-        <TabItem value="class-based" label="Class Based (Classic)">
-
-          ```typescript
-            @Component({
-              providers: [RxState],
-            })
-            export class RxComponent {
-            // Modifying the class
-            @HostBinding('[class.is-hidden]') get isHidden() {
-            return !this.state.get().visible;
-            }
-            // Modifying styles
-            @HostBinding('[style.marginTop]') get marginTop() {
-            return `${this.state.get().top}px`;
-            }
-            // Modifying styles
-            @HostBinding('[style.maxHeight]') get maxHeight() {
-            return `${this.state.get().maxHeight}px`;
-            }
-
-            constructor(private state: RxState<ComponentState>) {}
-            }
-          ```
-
-        </TabItem>
-
-        <TabItem value="new" label="Functional Creation (NEW)">
-          import { select } from '@ngrx/store';
-
-          const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();
-
-          ```typescript
-              @Component({...})
-              export class RxComponent {
-              readonly #state = rxState<ComponentState>()
-              // Modifying the class
-              @HostBinding('[class.is-hidden]') get isHidden() {
-              return !this.#state.get().visible;
-              }
-              // Modifying styles
-              @HostBinding('[style.marginTop]') get marginTop() {
-              return `${this.#state.get().top}px`;
-              }
-              // Modifying styles
-              @HostBinding('[style.maxHeight]') get maxHeight() {
-              return `${this.#state.get().maxHeight}px`;
-              }
-
-          ```
-        </TabItem>
-      </Tabs>
+  constructor(private state: RxState<ComponentState>) {}
+}
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+@Component({...})
+export class RxComponent {
+  readonly #state = rxState<ComponentState>()
+  // Modifying the class
+  @HostBinding('[class.is-hidden]') get isHidden() {
+    return !this.#state.get().visible;
+  }
+  // Modifying styles
+  @HostBinding('[style.marginTop]') get marginTop() {
+    return `${this.#state.get().top}px`;
+  }
+  // Modifying styles
+  @HostBinding('[style.maxHeight]') get maxHeight() {
+    return `${this.#state.get().maxHeight}px`;
+  }
+}
+```
+</TabItem>
+</Tabs>
 
 With this setup in place we have two options to get things done.
 
@@ -100,72 +92,63 @@ With this setup in place we have two options to get things done.
 Since rendering is a side-effect, we could utilize the `hold` method and register
 a function which handles change detection for us.
 
-      <Tabs>
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+@Component({
+  providers: [RxState],
+})
+export class RxComponent {
+  // Modifying the class
+  @HostBinding('[class.is-hidden]') get isHidden() {
+    return !this.state.get().visible;
+  }
+  // Modifying styles
+  @HostBinding('[style.marginTop]') get marginTop() {
+    return `${this.state.get().top}px`;
+  }
+  // Modifying styles
+  @HostBinding('[style.maxHeight]') get maxHeight() {
+    return `${this.state.get().maxHeight}px`;
+  }
 
-        <TabItem value="class-based" label="Class Based (Classic)">
+  constructor(
+    private state: RxState<ComponentState>,
+    private cdRef: ChangeDetectorRef
+  ) {
+    state.hold(state.select(), () => this.cdRef.markForCheck());
+  }
+}
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+@Component({...})
+export class RxComponent {
+  readonly #state = rxState<ComponentState>()
+  readonly #effects = rxEffects();
+  // Modifying the class
+  @HostBinding('[class.is-hidden]') get isHidden() {
+    return !this.#state.get().visible;
+  }
+  // Modifying styles
+  @HostBinding('[style.marginTop]') get marginTop() {
+    return `${this.#state.get().top}px`;
+  }
+  // Modifying styles
+  @HostBinding('[style.maxHeight]') get maxHeight() {
+    return `${this.#state.get().maxHeight}px`;
+  }
 
-          ```typescript
-          @Component({
-            providers: [RxState],
-          })
-          export class RxComponent {
-            // Modifying the class
-            @HostBinding('[class.is-hidden]') get isHidden() {
-            return !this.state.get().visible;
-            }
-            // Modifying styles
-            @HostBinding('[style.marginTop]') get marginTop() {
-            return `${this.state.get().top}px`;
-            }
-            // Modifying styles
-            @HostBinding('[style.maxHeight]') get maxHeight() {
-            return `${this.state.get().maxHeight}px`;
-            }
-
-            constructor(
-            private state: RxState<ComponentState>,
-            private cdRef: ChangeDetectorRef
-            ) {
-            state.hold(state.select(), () => this.cdRef.markForCheck());
-            }
-          }
-          ```
-
-        </TabItem>
-
-        <TabItem value="new" label="Functional Creation (NEW)">
-          import { select } from '@ngrx/store';
-
-          const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();
-
-          ```typescript
-        @Component({...})
-          export class RxComponent {
-            readonly #state = rxState<ComponentState>()
-            readonly #effects = rxEffects();
-            // Modifying the class
-            @HostBinding('[class.is-hidden]') get isHidden() {
-            return !this.#state.get().visible;
-            }
-            // Modifying styles
-            @HostBinding('[style.marginTop]') get marginTop() {
-            return `${this.#state.get().top}px`;
-            }
-            // Modifying styles
-            @HostBinding('[style.maxHeight]') get maxHeight() {
-            return `${this.#state.get().maxHeight}px`;
-            }
-
-            constructor(
-            private state: RxState<ComponentState>,
-            private cdRef: ChangeDetectorRef
-            ) {
-              this.#effects.register(state.select(), () => this.cdRef.markForCheck());
-            }
-          }
-          ```
-        </TabItem>
-      </Tabs>
+  constructor(
+    private cdRef: ChangeDetectorRef
+  ) {
+    this.#effects.register(this.#state.select(), () => this.cdRef.markForCheck());
+  }
+}
+```
+</TabItem>
+</Tabs>
 
 By calling `ChangeDetectorRef#markForCheck` after every state change, we flag our component dirty when needed and let angular's
 `ChangeDetection` do it's magic for us.
@@ -201,71 +184,64 @@ We will utilize the `ElementRef` itself for this purpose and manipulate the DOM 
 
 Feel free to use angular's `Renderer2` if you want an abstraction layer, should work the exact same way.
 
-      <Tabs>
-
-        <TabItem value="class-based" label="Class Based (Classic)">
-
-          ```typescript
-        @Component({
-          providers: [RxState],
-        })
-        export class RxComponent {
-        constructor(
-        private state: RxState<ComponentState>,
-        private elementRef: ElementRef<HTMLElement>,
-        private cdRef: ChangeDetectorRef
-        ) {
-        // optional: cdRef.detach();
-        this.state.hold(this.state.select(), ({ visible, top, maxHeight }) => {
-        const { nativeElement } = elementRef;
-        nativeElement.style.marginTop = `${top ? top : 0}px`;
-        nativeElement.style.maxHeight = `${maxHeight ? maxHeight : 100}px`;
-        // by using this, we could assign more classes
-        const classList: { [cls: string]: boolean } = {
+<Tabs>
+<TabItem value="class-based" label="Class Based (Classic)">
+```typescript
+@Component({
+  providers: [RxState],
+})
+export class RxComponent {
+  constructor(
+    private state: RxState<ComponentState>,
+    private elementRef: ElementRef<HTMLElement>,
+    private cdRef: ChangeDetectorRef
+  ) {
+    // optional: cdRef.detach();
+    this.state.hold(this.state.select(), ({ visible, top, maxHeight }) => {
+      const { nativeElement } = elementRef;
+      nativeElement.style.marginTop = `${top ? top : 0}px`;
+      nativeElement.style.maxHeight = `${maxHeight ? maxHeight : 100}px`;
+      // by using this, we could assign more classes
+      const classList: { [cls: string]: boolean } = {
         'is-hidden': !visible,
-        };
-        Object.keys(classList).forEach((cls) => {
+      };
+      Object.keys(classList).forEach((cls) => {
         classList[cls]
-        ? nativeElement.classList.add(cls)
-        : nativeElement.classList.remove(cls);
-        });
-        });
-        }
-        }
-          ```
-
-        </TabItem>
-
-        <TabItem value="new" label="Functional Creation (NEW)">
-          import { select } from '@ngrx/store';
-
-          const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();
-
-          ```typescript
-        @Component({...})
-        export class RxComponent {
-        readonly #state: RxState<ComponentState>
-        constructor(
-          private elementRef: ElementRef<HTMLElement>,
-          private cdRef: ChangeDetectorRef
-        ) {
-        // optional: cdRef.detach();
-        this.state.hold(this.#state.select(), ({ visible, top, maxHeight }) => {
-        const { nativeElement } = elementRef;
-        nativeElement.style.marginTop = `${top ? top : 0}px`;
-        nativeElement.style.maxHeight = `${maxHeight ? maxHeight : 100}px`;
-        // by using this, we could assign more classes
-        const classList: { [cls: string]: boolean } = {
+          ? nativeElement.classList.add(cls)
+          : nativeElement.classList.remove(cls);
+      });
+    });
+  }
+}
+```
+</TabItem>
+<TabItem value="new" label="Functional Creation (NEW)">
+```typescript
+@Component({...})
+export class RxComponent {
+  readonly #state = rxState<ComponentState>()
+  readonly #effects = rxEffects();
+  constructor(
+    private elementRef: ElementRef<HTMLElement>,
+    private cdRef: ChangeDetectorRef
+  ) {
+    // optional: cdRef.detach();
+    this.#effects.register(this.#state.select(), ({ visible, top, maxHeight }) => {
+      const { nativeElement } = elementRef;
+      nativeElement.style.marginTop = `${top ? top : 0}px`;
+      nativeElement.style.maxHeight = `${maxHeight ? maxHeight : 100}px`;
+      // by using this, we could assign more classes
+      const classList: { [cls: string]: boolean } = {
         'is-hidden': !visible,
-        };
-        Object.keys(classList).forEach((cls) => {
+      };
+      Object.keys(classList).forEach((cls) => {
         classList[cls]
-        ? nativeElement.classList.add(cls)
-        : nativeElement.classList.remove(cls);
-        });
-        });
-        }
-        }
-          ```
-        </TabItem>
-      </Tabs>
+          ? nativeElement.classList.add(cls)
+          : nativeElement.classList.remove(cls);
+      });
+    });
+  }
+}
+```
+</TabItem>
+</Tabs>
