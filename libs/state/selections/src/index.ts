@@ -1,5 +1,4 @@
 export {
-  createAccumulationObservable,
   defaultAccumulator,
 } from './lib/accumulation-observable';
 export { CompareFn, KeyCompareMap, PickSlice } from './lib/interfaces/index';
