@@ -266,7 +266,7 @@ describe(rxState, () => {
       });
       const state = component.state;
       const multiplied = state.computed(
-        ({ count, multiplier }) => count() * multiplier(),
+        ({ count, multiplier }) => count * multiplier,
       );
 
       expect(multiplied()).toBe(1337);
