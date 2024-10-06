@@ -1,12 +1,14 @@
 import {
-  computed, effect,
+  computed,
+  effect,
   inject,
   Injectable,
   Injector,
   isSignal,
   OnDestroy,
   Signal,
-  signal} from '@angular/core';
+  signal,
+} from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
   AccumulationFn,
@@ -32,7 +34,6 @@ import {
   RX_ACCUMULATOR_FN,
   RX_STATE_SCHEDULER,
 } from './provide-rx-state-config';
-
 
 export type ProjectStateFn<Type> = (oldState: Type) => Partial<Type>;
 
@@ -79,7 +80,7 @@ export class RxState<State extends object>
 
   protected scheduler = inject(RX_STATE_SCHEDULER, { optional: true });
   protected accumulatorFn = inject(RX_ACCUMULATOR_FN);
-  private stateAccumulator = signal<State>({} as State, );
+  private stateAccumulator = signal<State>({} as State);
 
   private effectObservable = createSideEffectObservable(
     new Subject<Observable<unknown>>(),
@@ -93,7 +94,7 @@ export class RxState<State extends object>
    * The unmodified state exposed as `Observable<State>`. It is not shared, distinct or gets replayed.
    * Use the `$` property if you want to read the state without having applied {@link stateful} to it.
    */
-    // TODO Check what to do here: the implementation does not match the behavior in the description
+  // TODO Check what to do here: the implementation does not match the behavior in the description
   readonly $: Observable<State> = toObservable(this.stateAccumulator);
 
   /**
@@ -335,7 +336,9 @@ export class RxState<State extends object>
       typeof keyOrStateOrProjectState === 'object' &&
       stateOrSliceProjectFn === undefined
     ) {
-      this.stateAccumulator.set(this.accumulatorFn(this.stateAccumulator(), keyOrStateOrProjectState));
+      this.stateAccumulator.set(
+        this.accumulatorFn(this.stateAccumulator(), keyOrStateOrProjectState),
+      );
       return;
     }
 
@@ -343,7 +346,9 @@ export class RxState<State extends object>
       typeof keyOrStateOrProjectState === 'function' &&
       stateOrSliceProjectFn === undefined
     ) {
-      this.stateAccumulator.update(oldState => this.accumulatorFn(oldState, keyOrStateOrProjectState(oldState)));
+      this.stateAccumulator.update((oldState) =>
+        this.accumulatorFn(oldState, keyOrStateOrProjectState(oldState)),
+      );
       return;
     }
 
@@ -353,11 +358,13 @@ export class RxState<State extends object>
     ) {
       const state: Partial<State> = {};
 
-       state[keyOrStateOrProjectState] = stateOrSliceProjectFn(
+      state[keyOrStateOrProjectState] = stateOrSliceProjectFn(
         this.stateAccumulator(),
       );
 
-      this.stateAccumulator.update(oldState => this.accumulatorFn(oldState, state));
+      this.stateAccumulator.update((oldState) =>
+        this.accumulatorFn(oldState, state),
+      );
       return;
     }
 
@@ -557,17 +564,26 @@ export class RxState<State extends object>
       !projectOrSlices$ &&
       !projectValueFn
     ) {
-      this.subscription.add(keyOrInputOrSlice$.subscribe(value => {
-        this.stateAccumulator.update(oldState => this.accumulatorFn(oldState, value));
-      }))
+      this.subscription.add(
+        keyOrInputOrSlice$.subscribe((value) => {
+          this.stateAccumulator.update((oldState) =>
+            this.accumulatorFn(oldState, value),
+          );
+        }),
+      );
 
       return;
     }
 
     if (isSignal(keyOrInputOrSlice$) && !projectOrSlices$ && !projectValueFn) {
-      effect(() => {
-        this.stateAccumulator.update(oldState => this.accumulatorFn(oldState, keyOrInputOrSlice$()));
-      }, {injector: this.injector, allowSignalWrites: true})
+      effect(
+        () => {
+          this.stateAccumulator.update((oldState) =>
+            this.accumulatorFn(oldState, keyOrInputOrSlice$()),
+          );
+        },
+        { injector: this.injector, allowSignalWrites: true },
+      );
 
       return;
     }
@@ -583,9 +599,13 @@ export class RxState<State extends object>
         map((v) => projectionStateFn(this.stateAccumulator(), v as Value)),
       );
 
-      this.subscription.add(slice$.subscribe(value => {
-        this.stateAccumulator.update(oldState => this.accumulatorFn(oldState, value as Value));
-      }))
+      this.subscription.add(
+        slice$.subscribe((value) => {
+          this.stateAccumulator.update((oldState) =>
+            this.accumulatorFn(oldState, value as Value),
+          );
+        }),
+      );
       return;
     }
 
@@ -602,9 +622,13 @@ export class RxState<State extends object>
         map((v) => projectionStateFn(this.stateAccumulator(), v as Value)),
       );
 
-      this.subscription.add(slice$.subscribe(value => {
-        this.stateAccumulator.update(oldState => this.accumulatorFn(oldState, value as Value));
-      }))
+      this.subscription.add(
+        slice$.subscribe((value) => {
+          this.stateAccumulator.update((oldState) =>
+            this.accumulatorFn(oldState, value as Value),
+          );
+        }),
+      );
 
       return;
     }
@@ -618,9 +642,13 @@ export class RxState<State extends object>
         map((value) => ({ ...{}, [keyOrInputOrSlice$]: value })),
       );
 
-      this.subscription.add(slice$.subscribe(value => {
-        this.stateAccumulator.update(oldState => this.accumulatorFn(oldState, value));
-      }))
+      this.subscription.add(
+        slice$.subscribe((value) => {
+          this.stateAccumulator.update((oldState) =>
+            this.accumulatorFn(oldState, value),
+          );
+        }),
+      );
       return;
     }
 
@@ -633,9 +661,13 @@ export class RxState<State extends object>
         injector: this.injector,
       }).pipe(map((value) => ({ ...{}, [keyOrInputOrSlice$]: value })));
 
-       this.subscription.add(slice$.subscribe(value => {
-        this.stateAccumulator.update(oldState => this.accumulatorFn(oldState, value));
-      }))
+      this.subscription.add(
+        slice$.subscribe((value) => {
+          this.stateAccumulator.update((oldState) =>
+            this.accumulatorFn(oldState, value),
+          );
+        }),
+      );
       return;
     }
 
@@ -652,9 +684,13 @@ export class RxState<State extends object>
           [key]: projectValueFn(this.get(), value as Value),
         })),
       );
-       this.subscription.add(slice$.subscribe(value => {
-        this.stateAccumulator.update(oldState => this.accumulatorFn(oldState, value as Value));
-      }))
+      this.subscription.add(
+        slice$.subscribe((value) => {
+          this.stateAccumulator.update((oldState) =>
+            this.accumulatorFn(oldState, value as Value),
+          );
+        }),
+      );
       return;
     }
 
@@ -673,9 +709,13 @@ export class RxState<State extends object>
           [key]: projectValueFn(this.get(), value as Value),
         })),
       );
-       this.subscription.add(slice$.subscribe(value => {
-        this.stateAccumulator.update(oldState => this.accumulatorFn(oldState, value as Value));
-      }))
+      this.subscription.add(
+        slice$.subscribe((value) => {
+          this.stateAccumulator.update((oldState) =>
+            this.accumulatorFn(oldState, value as Value),
+          );
+        }),
+      );
       return;
     }
 
@@ -899,9 +939,9 @@ export class RxState<State extends object>
           keyCompareMap?: KeyCompareMap<State>,
         ]
   ): Observable<State | Return> {
-    return toObservable(this.stateAccumulator, {injector: this.injector}).pipe(
-      select(...(args as Parameters<typeof select>)),
-    );
+    return toObservable(this.stateAccumulator, {
+      injector: this.injector,
+    }).pipe(select(...(args as Parameters<typeof select>)));
   }
 
   /**
@@ -934,9 +974,9 @@ export class RxState<State extends object>
   computed<ComputedType>(
     fn: (slice: State) => ComputedType,
   ): Signal<ComputedType> {
-     return computed(() => {
-          return fn(this.stateAccumulator());
-        });
+    return computed(() => {
+      return fn(this.stateAccumulator());
+    });
   }
 
   /**
