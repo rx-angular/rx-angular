@@ -126,11 +126,12 @@ export interface ISRHandlerConfig {
   backgroundRevalidation?: boolean;
 
   /**
-   * compression callback to compress the html before storing it in the cache.
-   * If not provided, the html will not be compressed.
-   * If provided, the html will be compressed before storing it as base64 in the cache,
-   * also this will disable the modifyCachedHtml callback, because html is compressed and can't be modified.
-   */
+   * A compression callback can be provided to compress the HTML before storing it in the cache.
+   * If not provided, the HTML will be stored without compression.
+   * When provided, the HTML will be compressed and stored as Buffer | string in the cache
+   * (depending on how cache handler is implemented. Default examples use Buffer)
+   * Note that this will disable the modifyCachedHtml callback, as compressed HTML cannot be modified.
+   **/
   compressHtml?: CompressHtmlFn;
 
   /**

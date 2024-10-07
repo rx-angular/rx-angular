@@ -10,6 +10,8 @@ export interface CacheISRConfig {
   errors?: string[];
 }
 
+// html could be a string or a buffer, it is depending on if `compressHtml` is set in `ISRHandler` config.
+// if `compressHtml` is set, the html will be a buffer, otherwise it will be a string
 export interface CacheData {
   html: string | Buffer;
   options: CacheISRConfig;
@@ -29,6 +31,8 @@ export interface VariantRebuildItem {
 }
 
 export abstract class CacheHandler {
+  // html could be a string or a buffer, it is depending on if `compressHtml` is set in `ISRHandler` config.
+  // if `compressHtml` is set, the html will be a buffer, otherwise it will be a string
   abstract add(
     url: string,
     html: string | Buffer,
