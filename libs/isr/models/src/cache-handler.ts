@@ -11,7 +11,7 @@ export interface CacheISRConfig {
 }
 
 export interface CacheData {
-  html: string;
+  html: string | Buffer;
   options: CacheISRConfig;
   createdAt: number;
 }
@@ -31,7 +31,7 @@ export interface VariantRebuildItem {
 export abstract class CacheHandler {
   abstract add(
     url: string,
-    html: string,
+    html: string | Buffer,
     config?: CacheISRConfig,
   ): Promise<void>;
 

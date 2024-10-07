@@ -16,6 +16,7 @@ export interface FileSystemCacheOptions {
 interface FileSystemCacheData {
   htmlFilePath: string; // full path to file
   options: CacheISRConfig;
+  isBuffer: boolean;
   createdAt: number;
 }
 
@@ -43,7 +44,7 @@ export class FileSystemCacheHandler extends CacheHandler {
 
   async add(
     route: string,
-    html: string,
+    html: string | Buffer,
     config?: CacheISRConfig,
   ): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -61,6 +62,7 @@ export class FileSystemCacheHandler extends CacheHandler {
           htmlFilePath: filePath,
           options: config || { revalidate: null },
           createdAt: Date.now(),
+          isBuffer: Buffer.isBuffer(html),
         });
 
         resolve();
@@ -76,7 +78,7 @@ export class FileSystemCacheHandler extends CacheHandler {
 
       if (cachedRoute) {
         // on html field we have saved path to file
-        this.readFromFile(cachedRoute.htmlFilePath)
+        this.readFromFile(cachedRoute.htmlFilePath, cachedRoute.isBuffer)
           .then((html) => {
             const cacheData: CacheData = {
               html,
@@ -179,6 +181,7 @@ export class FileSystemCacheHandler extends CacheHandler {
         htmlFilePath: filePath, // full path to file
         options: { revalidate, errors },
         createdAt: Date.now(),
+        isBuffer: false,
       });
 
       console.log('The request was stored in cache! Route: ', route);
@@ -265,9 +268,13 @@ export class FileSystemCacheHandler extends CacheHandler {
     );
   }
 
-  private async readFromFile(filePath: string): Promise<string> {
+  private async readFromFile(
+    filePath: string,
+    isBuffer: boolean,
+  ): Promise<string | Buffer> {
+    const options = isBuffer ? undefined : 'utf-8';
     return new Promise((resolve, reject) => {
-      fs.readFile(filePath, 'utf-8', (err, data) => {
+      fs.readFile(filePath, options, (err, data) => {
         if (err) {
           console.error('ERROR! 💥 ! Cannot read file: ' + filePath);
           reject(err);

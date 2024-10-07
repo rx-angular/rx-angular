@@ -12,7 +12,7 @@ import { CacheGeneration } from './cache-generation';
 import { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
 import { ISRLogger } from './isr-logger';
 import { getCacheKey, getVariant } from './utils/cache-utils';
-import { setCompressHeader, stringToBuffer } from './utils/compression-utils';
+import { setCompressHeader } from './utils/compression-utils';
 
 export class ISRHandler {
   protected cache!: CacheHandler;
@@ -192,10 +192,6 @@ export class ISRHandler {
       // Cache exists. Send it.
       this.logger.log(`Page was retrieved from cache: `, cacheKey);
       let finalHtml: string | Buffer = html;
-
-      if (this.isrConfig.compressHtml) {
-        finalHtml = stringToBuffer(finalHtml);
-      }
 
       // if the cache is expired, we will regenerate it
       if (cacheConfig.revalidate && cacheConfig.revalidate > 0) {

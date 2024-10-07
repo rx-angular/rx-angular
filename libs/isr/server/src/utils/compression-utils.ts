@@ -22,11 +22,3 @@ export function CompressStaticFilter(
   // fallback to standard filter function
   return compression.filter(req, res);
 }
-
-export const bufferToString = (buffer: Buffer): string => {
-  return buffer.toString('base64');
-};
-
-export const stringToBuffer = (str: string): Buffer => {
-  return Buffer.from(str, 'base64');
-};

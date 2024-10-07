@@ -4,7 +4,6 @@ import { Request, Response } from 'express';
 import { ISRLogger } from './isr-logger';
 import { defaultModifyGeneratedHtml } from './modify-generated-html';
 import { getCacheKey, getVariant } from './utils/cache-utils';
-import { bufferToString } from './utils/compression-utils';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
 import { renderUrl, RenderUrlConfig } from './utils/render-url';
 
@@ -79,11 +78,9 @@ export class CacheGeneration {
       let finalHtml: string | Buffer = this.isrConfig.modifyGeneratedHtml
         ? this.isrConfig.modifyGeneratedHtml(req, html, revalidate)
         : defaultModifyGeneratedHtml(req, html, revalidate);
-      let cacheString: string = finalHtml;
       // Apply the compressHtml callback
       if (this.isrConfig.compressHtml) {
         finalHtml = await this.isrConfig.compressHtml(finalHtml);
-        cacheString = bufferToString(finalHtml);
       }
       // if there are errors, don't add the page to cache
       if (errors?.length && this.isrConfig.skipCachingOnHttpError) {
@@ -108,7 +105,7 @@ export class CacheGeneration {
 
       // add the regenerated page to cache
       const addToCache = () => {
-        return this.cache.add(cacheKey, cacheString, {
+        return this.cache.add(cacheKey, finalHtml, {
           revalidate,
           buildId: this.isrConfig.buildId,
         });
