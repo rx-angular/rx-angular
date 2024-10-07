@@ -124,6 +124,20 @@ export interface ISRHandlerConfig {
    * If set to true, the server will provide the cached HTML as soon as possible and will revalidate the cache in the background.
    */
   backgroundRevalidation?: boolean;
+
+  /**
+   * A compression callback can be provided to compress the HTML before storing it in the cache.
+   * If not provided, the HTML will be stored without compression.
+   * When provided, the HTML will be compressed and stored as Buffer | string in the cache
+   * (depending on how cache handler is implemented. Default examples use Buffer)
+   * Note that this will disable the modifyCachedHtml callback, as compressed HTML cannot be modified.
+   **/
+  compressHtml?: CompressHtmlFn;
+
+  /**
+   * Cached Html compression method, it will use gzip by default if not provided.
+   */
+  htmlCompressionMethod?: string;
 }
 
 export interface ServeFromCacheConfig {
@@ -181,3 +195,5 @@ export interface RenderConfig {
 export interface RouteISRConfig {
   revalidate?: number | null;
 }
+
+export type CompressHtmlFn = (html: string) => Promise<Buffer>;

@@ -71,67 +71,61 @@ export class RedisCacheHandler extends CacheHandler {
 
     this.redis = new Redis(this.options.connectionString);
     console.log('RedisCacheHandler initialized 🚀');
+    options.keyPrefix = options.keyPrefix || 'isr';
   }
 
-  add(
-    url: string,
-    html: string,
-    options: ISROptions = { revalidate: null }
-  ): Promise<void> {
-    const htmlWithMsg = html + cacheMsg(options.revalidate);
-
-    return new Promise((resolve, reject) => {
-      const cacheData: CacheData = {
-        html: htmlWithMsg,
-        options,
-        createdAt: Date.now(),
-      };
-      const key = this.createKey(url);
-      this.redis.set(key, JSON.stringify(cacheData)).then(() => {
-        resolve();
-      });
+  add(url: string, html: string | Buffer, options: ISROptions = { revalidate: null }): Promise<void> {
+    const key = this.createKey(cacheKey);
+    const createdAt = Date.now().toString();
+    await this.redis.hmset(key, {
+      html,
+      revalidate: config.revalidate ? config.revalidate.toString() : '',
+      buildId: config.buildId || '',
+      createdAt,
     });
   }
 
-  get(url: string): Promise<CacheData> {
-    return new Promise((resolve, reject) => {
-      const key = this.createKey(url);
-      this.redis.get(key, (err, result) => {
-        if (err || result === null || result === undefined) {
-          reject('This url does not exist in cache!');
-        } else {
-          resolve(JSON.parse(result));
-        }
-      });
-    });
+  // in this example, it is assumed that the html is stored as a buffer, use hgetall if it is stored as a string
+  async get(cacheKey: string): Promise<CacheData> {
+    const key = this.createKey(cacheKey);
+    const data = await this.redis.hgetallBuffer(key);
+    if (Object.keys(data).length > 0) {
+      const revalidate = data['revalidate'] ? parseInt(data['revalidate'].toString(), 10) : null;
+      return {
+        html: data['html'],
+        options: {
+          revalidate,
+          buildId: data['buildId'].toString() || null,
+        },
+        createdAt: parseInt(data['createdAt'].toString(), 10),
+      } as CacheData;
+    } else {
+      this.logger.info(`Cache with key ${cacheKey} not found`);
+      throw new Error(`Cache with key ${cacheKey} not found`);
+    }
   }
 
-  getAll(): Promise<string[]> {
-    console.log('getAll() is not implemented for RedisCacheHandler');
-    return Promise.resolve([]);
+  async getAll(): Promise<string[]> {
+    return await this.redis.keys(`${this.redisCacheOptions.keyPrefix}:*`);
   }
 
-  has(url: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      const key = this.createKey(url);
-      resolve(this.redis.exists(key).then((exists) => exists === 1));
-    });
+  async has(cacheKey: string): Promise<boolean> {
+    const key = this.createKey(cacheKey);
+    return (await this.redis.exists(key)) === 1;
   }
 
-  delete(url: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      const key = this.createKey(url);
-      resolve(this.redis.del(key).then((deleted) => deleted === 1));
-    });
+  async delete(cacheKey: string): Promise<boolean> {
+    const key = this.createKey(cacheKey);
+    return (await this.redis.del(key)) === 1;
   }
 
-  clearCache?(): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async clearCache(): Promise<boolean> {
+    await this.redis.flushdb();
+    return true;
   }
 
-  private createKey(url: string): string {
-    const prefix = this.options.keyPrefix || 'isr';
-    return `${prefix}:${url}`;
+  private createKey(cacheKey: string): string {
+    return `${this.redisCacheOptions.keyPrefix}:${cacheKey}`;
   }
 }
 
@@ -203,7 +197,7 @@ The `CacheHandler` abstract class has the following API:
 
 ```typescript
 export abstract class CacheHandler {
-  abstract add(url: string, html: string, options: ISROptions): Promise<void>;
+  abstract add(url: string | Buffer, html: string, options: ISROptions): Promise<void>;
 
   abstract get(url: string): Promise<CacheData>;
 
@@ -223,8 +217,11 @@ The `CacheData` interface is used to store the cached pages in the cache handler
 
 ```typescript
 export interface CacheData {
-  html: string;
+  html: string | Buffer;
   options: ISROptions;
   createdAt: number;
 }
 ```
+
+note: The `html` field can be a string or a buffer. It depends on if you set `compressHtml` function in the `ISRHandler` options.
+If it is set, the html will be compressed and stored as a buffer. If it is not set, the html will be stored as a string.
