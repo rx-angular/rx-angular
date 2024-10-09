@@ -3,6 +3,10 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "es2015",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "inlineSources": true,
     "importHelpers": true,
     "lib": ["dom", "es2018"]
@@ -14,7 +18,9 @@
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
     "fullTemplateTypeCheck": true,
+    "strictTemplates": true,
     "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
     "enableResourceInlining": true
   },
   "exclude": [
