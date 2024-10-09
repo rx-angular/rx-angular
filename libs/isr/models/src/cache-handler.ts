@@ -30,16 +30,16 @@ export interface VariantRebuildItem {
 
 export abstract class CacheHandler {
   abstract add(
-    url: string,
+    cacheKey: string,
     html: string,
     config?: CacheISRConfig,
   ): Promise<void>;
 
-  abstract get(url: string): Promise<CacheData>;
+  abstract get(cacheKey: string): Promise<CacheData>;
 
-  abstract has(url: string): Promise<boolean>;
+  abstract has(cacheKey: string): Promise<boolean>;
 
-  abstract delete(url: string): Promise<boolean>;
+  abstract delete(cacheKey: string): Promise<boolean>;
 
   abstract getAll(): Promise<string[]>;
 
