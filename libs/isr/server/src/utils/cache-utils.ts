@@ -1,7 +1,7 @@
 import { RenderVariant } from '@rx-angular/isr/models';
 import { Request } from 'express';
 
-export const getCacheKey = (
+export const defaultCacheKeyGenerator = (
   url: string,
   allowedQueryParams: string[] | null | undefined,
   variant: RenderVariant | null,

@@ -7,6 +7,7 @@ export {
   VariantRebuildItem,
 } from './cache-handler';
 export {
+  CacheKeyGeneratorFn,
   InvalidateConfig,
   ISRHandlerConfig,
   ModifyHtmlCallbackFn,
