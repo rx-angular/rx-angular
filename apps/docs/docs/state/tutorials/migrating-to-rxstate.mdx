@@ -415,27 +415,28 @@ export class ChecklistComponent {
     this.init$.next(id);
   }
 
-  // READS
-  name$ = this.state.select('name');
-  tasks$ = this.state.select('tasks');
+// READS
+name$ = this.state.select('name');
+tasks$ = this.state.select('tasks');
 
-  // EVENTS
-  init$ = new Subject<string>();
-  answer$ = new Subject<string>();
+// EVENTS
+init$ = new Subject<string>();
+answer$ = new Subject<string>();
 
-  // HANDLERS
-  initHandler$ = this.init$.pipe(switchMap((id) => this.api.get(id)));
+// HANDLERS
+initHandler$ = this.init$.pipe(switchMap((id) => this.api.get(id)));
   answerHandler$ = this.answer$.pipe(switchMap((id) => this.api.answerTask(id).pipe(map(() => id))));
 
-  constructor(
-    private api: TodoApiService,
-    private state: RxState<IChecklist>,
-  ) {
-    this.state.connect(this.initHandler$);
+constructor(
+private api: TodoApiService,
+private state: RxState<IChecklist>,
+) {
+this.state.connect(this.initHandler$);
     this.state.connect('tasks', this.answerHandler$, (state, id) => state.tasks.filter((t) => t.id !== id));
-  }
 }
-```
+}
+
+````
 </TabItem>
 <TabItem value="new" label="Functional Creation (NEW)">
 ```ts
@@ -464,11 +465,10 @@ export class ChecklistComponent {
     this.#state.connect('tasks', this.answerHandler$, (state, id) => state.tasks.filter((t) => t.id !== id));
   }
 }
-```
+````
+
 </TabItem>
 </Tabs>
-
-
 
 **Summary:**
 

@@ -40,8 +40,8 @@ Now, if we want to add one item to our array _(in an immutable way)_, we replace
 export class MyComponent extends RxState<ComponentState> {
   readonly addItem$ = new Subject<string>();
 
-  constructor() {
-    super();
+constructor() {
+super();
 
     this.connect(this.addItem$, (oldState, itemName) => {
       const newItem = {
@@ -54,9 +54,11 @@ export class MyComponent extends RxState<ComponentState> {
         items: [...oldState.items, newItem],
       };
     });
-  }
+
 }
-```
+}
+
+````
 </TabItem>
 <TabItem value="new" label="Functional Creation (NEW)">
 ```typescript
@@ -82,10 +84,10 @@ export class MyComponent {
     });
   }
 }
-```
+````
+
 </TabItem>
 </Tabs>
-
 
 If we want to update one item, we have to query the `items` array first to get a hold of the item and then construct a new array again.
 
@@ -108,7 +110,7 @@ interface ComponentState extends EntityState<Item> {
 const adapter: EntityAdapter<Item> = createEntityAdapter<Item>({
   selectId: (item: Item) => item.id,
 });
-````
+```
 
 The entity adapter needs a `selectId` function which is used to query items by `id` within the collection.
 
@@ -123,15 +125,17 @@ Now let's see how the component has changed:
 export class MyComponent extends RxState<ComponentState> {
   readonly addItem$ = new Subject<string>();
 
-  constructor() {
-    super();
+constructor() {
+super();
 
     this.connect(this.addItem$, (oldState, itemName) =>
       adapter.addOne({ id: uuid(), name: itemName() }, oldState)
     );
-  }
+
 }
-```
+}
+
+````
 </TabItem>
 <TabItem value="new" label="Functional Creation (NEW)">
 ```typescript
@@ -148,10 +152,10 @@ export class MyComponent {
     );
   }
 }
-```
+````
+
 </TabItem>
 </Tabs>
-
 
 The `addOne()` function is just one of many functions that help us manipulate the collection.
 
@@ -169,19 +173,20 @@ The entity adapter comes with a small set of default selectors we can use right 
 import { select } from '@ngrx/store';
 
 const { selectIds, selectEntities, selectAll, selectTotal } =
-  adapter.getSelectors();
+adapter.getSelectors();
 
 @Component({
-  selector: 'my-component',
+selector: 'my-component',
 })
 export class MyComponent extends RxState<ComponentState> {
-  readonly items$ = this.select(select(selectAll));
+readonly items$ = this.select(select(selectAll));
 
-  constructor() {
-    super();
-  }
+constructor() {
+super();
 }
-```
+}
+
+````
 </TabItem>
 <TabItem value="new" label="Functional Creation (NEW)">
 ```typescript
@@ -197,7 +202,7 @@ export class MyComponent {
   readonly #state = rxState<ComponentState>();
   readonly items$ = this.#state.select(select(selectAll));
 }
-```
+````
+
 </TabItem>
 </Tabs>
-
