@@ -138,23 +138,24 @@ interface ComponentViewModel {
 
 @Component()
 export class ViewModelComponent extends RxState<ComponentState> {
-  readonly viewModel: ComponentViewModel = {
-    main$: this.state.select(selectSlice(['title', 'created'])),
+readonly viewModel: ComponentViewModel = {
+main$: this.state.select(selectSlice(['title', 'created'])),
     list$: this.state.select(
-      selectSlice(['list', 'visibleItemIds']),
-      map(({ list, visibleItemIds }) => ({
-        total: list.length,
-        visibleItems: list.filter((item) =>
-          visibleItemIds.some((itemId) => itemId === item.id)
-        ),
-      }))
-    ),
-  };
-  constructor() {
-    super();
-  }
+selectSlice(['list', 'visibleItemIds']),
+map(({ list, visibleItemIds }) => ({
+total: list.length,
+visibleItems: list.filter((item) =>
+visibleItemIds.some((itemId) => itemId === item.id)
+),
+}))
+),
+};
+constructor() {
+super();
 }
-```
+}
+
+````
 </TabItem>
 <TabItem value="new" label="Functional Creation (NEW)">
 ```typescript
@@ -179,6 +180,7 @@ export class ViewModelComponent {
     ),
   };
 }
-```
+````
+
 </TabItem>
 </Tabs>

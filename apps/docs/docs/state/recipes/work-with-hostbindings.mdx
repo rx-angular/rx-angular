@@ -59,9 +59,10 @@ export class RxComponent {
     return `${this.state.get().maxHeight}px`;
   }
 
-  constructor(private state: RxState<ComponentState>) {}
+constructor(private state: RxState<ComponentState>) {}
 }
-```
+
+````
 </TabItem>
 <TabItem value="new" label="Functional Creation (NEW)">
 ```typescript
@@ -81,7 +82,8 @@ export class RxComponent {
     return `${this.#state.get().maxHeight}px`;
   }
 }
-```
+````
+
 </TabItem>
 </Tabs>
 
@@ -112,14 +114,15 @@ export class RxComponent {
     return `${this.state.get().maxHeight}px`;
   }
 
-  constructor(
-    private state: RxState<ComponentState>,
-    private cdRef: ChangeDetectorRef
-  ) {
-    state.hold(state.select(), () => this.cdRef.markForCheck());
-  }
+constructor(
+private state: RxState<ComponentState>,
+private cdRef: ChangeDetectorRef
+) {
+state.hold(state.select(), () => this.cdRef.markForCheck());
 }
-```
+}
+
+````
 </TabItem>
 <TabItem value="new" label="Functional Creation (NEW)">
 ```typescript
@@ -146,7 +149,8 @@ export class RxComponent {
     this.#effects.register(this.#state.select(), () => this.cdRef.markForCheck());
   }
 }
-```
+````
+
 </TabItem>
 </Tabs>
 

@@ -26,15 +26,16 @@ interface ComponentState {
 }
 
 class AnyComponent extends RxState<ComponentState> {
-  updateTitle() {
-    this.set({ title: 'Hello!' });
-  }
-
-  resetList() {
-    this.connect(this.globalState$.list$({ list: [], loading: false }));
-  }
+updateTitle() {
+this.set({ title: 'Hello!' });
 }
-```
+
+resetList() {
+this.connect(this.globalState$.list$({ list: [], loading: false }));
+}
+}
+
+````
 </TabItem>
 <TabItem value="new" label="Functional Creation (NEW)">
 ```typescript
@@ -55,7 +56,8 @@ class AnyComponent {
     this.#state.connect(this.globalState$.list$({ list: [], loading: false }));
   }
 }
-```
+````
+
 </TabItem>
 </Tabs>
 

@@ -66,24 +66,25 @@ export class MyComponent {
   readonly user$ = this.state.select('user');
   readonly isLoading$ = this.state.select('isLoading');
 
-  constructor(
-    private router: Router,
-    private userService: UserService,
-    private state: RxState<{ user: string; isLoading: boolean }>
-  ) {
-    const fetchUserOnUrlChange$ = this.router.params.pipe(
-      switchMap((p) =>
-        this.userService.getUser(p.user).pipe(
-          map((res) => ({ user: res.user })),
-          startWith({ isLoading: true }),
-          endWith({ isLoading: false })
-        )
-      )
-    );
-    this.state.connect(fetchUserOnUrlChange$);
-  }
+constructor(
+private router: Router,
+private userService: UserService,
+private state: RxState<{ user: string; isLoading: boolean }>
+) {
+const fetchUserOnUrlChange$ = this.router.params.pipe(
+switchMap((p) =>
+this.userService.getUser(p.user).pipe(
+map((res) => ({ user: res.user })),
+startWith({ isLoading: true }),
+endWith({ isLoading: false })
+)
+)
+);
+this.state.connect(fetchUserOnUrlChange$);
 }
-```
+}
+
+````
 </TabItem>
 <TabItem value="new" label="Functional Creation (NEW)">
 ```typescript
@@ -116,6 +117,7 @@ export class MyComponent {
     this.#state.connect(fetchUserOnUrlChange$);
   }
 }
-```
+````
+
 </TabItem>
 </Tabs>
