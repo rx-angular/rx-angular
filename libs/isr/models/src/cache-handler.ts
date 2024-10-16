@@ -35,6 +35,7 @@ export abstract class CacheHandler {
   // if `compressHtml` is set, the html will be a buffer, otherwise it will be a string
   abstract add(
     url: string,
+    // it will be buffer when we use compressHtml
     html: string | Buffer,
     config?: CacheISRConfig,
   ): Promise<void>;
