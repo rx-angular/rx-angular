@@ -10013,6 +10013,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/compression@npm:^1.7.5":
+  version: 1.7.5
+  resolution: "@types/compression@npm:1.7.5"
+  dependencies:
+    "@types/express": "npm:*"
+  checksum: 10c0/3818f3d10cede38a835b40b80c341eae162aef1691f2e8f81178a77dbc109f04234cf760b6066eaa06ecbb1da143433c00db2fd9999198b76cd5a193e1d09675
+  languageName: node
+  linkType: hard
+
 "@types/connect-history-api-fallback@npm:^1.3.5":
   version: 1.3.5
   resolution: "@types/connect-history-api-fallback@npm:1.3.5"
@@ -10119,18 +10128,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express-serve-static-core@npm:^4.17.18":
-  version: 4.17.41
-  resolution: "@types/express-serve-static-core@npm:4.17.41"
-  dependencies:
-    "@types/node": "npm:*"
-    "@types/qs": "npm:*"
-    "@types/range-parser": "npm:*"
-    "@types/send": "npm:*"
-  checksum: 10c0/dc166cbf4475c00a81fbcab120bf7477c527184be11ae149df7f26d9c1082114c68f8d387a2926fe80291b06477c8bbd9231ff4f5775de328e887695aefce269
-  languageName: node
-  linkType: hard
-
 "@types/express@npm:*, @types/express@npm:^4.17.13":
   version: 4.17.17
   resolution: "@types/express@npm:4.17.17"
@@ -10143,19 +10140,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:4.17.14":
-  version: 4.17.14
-  resolution: "@types/express@npm:4.17.14"
-  dependencies:
-    "@types/body-parser": "npm:*"
-    "@types/express-serve-static-core": "npm:^4.17.18"
-    "@types/qs": "npm:*"
-    "@types/serve-static": "npm:*"
-  checksum: 10c0/616e3618dfcbafe387bf2213e1e40f77f101685f3e9efff47c66fd2da611b7578ed5f4e61e1cdb1f2a32c8f01eff4ee74f93c52ad56d45e69b7154da66b3443a
-  languageName: node
-  linkType: hard
-
-"@types/express@npm:^4.17.21":
+"@types/express@npm:4.17.21, @types/express@npm:^4.17.21":
   version: 4.17.21
   resolution: "@types/express@npm:4.17.21"
   dependencies:
@@ -26026,7 +26011,8 @@ __metadata:
     "@swc-node/register": "npm:1.8.0"
     "@swc/core": "npm:~1.3.85"
     "@types/benchmark": "npm:^2.1.0"
-    "@types/express": "npm:4.17.14"
+    "@types/compression": "npm:^1.7.5"
+    "@types/express": "npm:4.17.21"
     "@types/jest": "npm:^29.4.0"
     "@types/klaw-sync": "npm:^6.0.0"
     "@types/lodash": "npm:^4.14.196"
@@ -26038,6 +26024,7 @@ __metadata:
     benchmark: "npm:^2.1.4"
     bootstrap: "npm:^5.2.3"
     browser-sync: "npm:^3.0.0"
+    compression: "npm:^1.7.4"
     cpx: "npm:^1.5.0"
     cypress: "npm:13.9.0"
     eslint: "npm:8.57.0"
@@ -26073,6 +26060,7 @@ __metadata:
     ts-node: "npm:10.9.1"
     tslib: "npm:^2.4.1"
     typescript: "npm:5.4.3"
+    zlib: "npm:^1.0.5"
     zone.js: "npm:0.14.4"
   languageName: unknown
   linkType: soft
@@ -29763,6 +29751,13 @@ __metadata:
   version: 1.0.0
   resolution: "yocto-queue@npm:1.0.0"
   checksum: 10c0/856117aa15cf5103d2a2fb173f0ab4acb12b4b4d0ed3ab249fdbbf612e55d1cadfd27a6110940e24746fb0a78cf640b522cc8bca76f30a3b00b66e90cf82abe0
+  languageName: node
+  linkType: hard
+
+"zlib@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "zlib@npm:1.0.5"
+  checksum: 10c0/34bd33f4fdcda34f57a1ab628ceb423bdf8ef07290f46cd944eedd9a66458cc24ccf3c770da73dc0f8d28016607d861290ac5c53d49113177f7c321838df2913
   languageName: node
   linkType: hard
 

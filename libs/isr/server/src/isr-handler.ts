@@ -12,6 +12,7 @@ import { CacheGeneration } from './cache-generation';
 import { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
 import { ISRLogger } from './isr-logger';
 import { getCacheKey, getVariant } from './utils/cache-utils';
+import { setCompressHeader } from './utils/compression-utils';
 
 export class ISRHandler {
   protected cache!: CacheHandler;
@@ -190,7 +191,7 @@ export class ISRHandler {
 
       // Cache exists. Send it.
       this.logger.log(`Page was retrieved from cache: `, cacheKey);
-      let finalHtml = html;
+      let finalHtml: string | Buffer = html;
 
       // if the cache is expired, we will regenerate it
       if (cacheConfig.revalidate && cacheConfig.revalidate > 0) {
@@ -224,6 +225,20 @@ export class ISRHandler {
         }
       }
 
+      if (!this.isrConfig.compressHtml) {
+        // Apply the callback if given
+        // It doesn't work with compressed html
+        if (config?.modifyCachedHtml) {
+          const timeStart = performance.now();
+          finalHtml = config.modifyCachedHtml(req, finalHtml as string);
+          const totalTime = (performance.now() - timeStart).toFixed(2);
+          finalHtml += `<!--\nℹ️ ISR: This cachedHtml has been modified with modifyCachedHtml()\n❗️
+          This resulted into more ${totalTime}ms of processing time.\n-->`;
+        }
+      } else {
+        setCompressHeader(res, this.isrConfig.htmlCompressionMethod);
+      }
+
       return res.send(finalHtml);
     } catch (error) {
       // Cache does not exist. Serve user using SSR
@@ -247,9 +262,8 @@ export class ISRHandler {
       const patchedModifyFn: ModifyHtmlCallbackFn = (
         req: Request,
         html: string,
-        validate?: number | null,
       ) => {
-        return config!.modifyGeneratedHtml!(req, html);
+        return config.modifyGeneratedHtml?.(req, html) || html;
       };
       this.isrConfig['modifyGeneratedHtml'] = patchedModifyFn;
     }
@@ -261,9 +275,12 @@ export class ISRHandler {
         config?.providers,
         'generate',
       );
-      if (!result) {
+      if (!result?.html) {
         throw new Error('Error while generating the page!');
       } else {
+        if (this.isrConfig.compressHtml) {
+          setCompressHeader(res, this.isrConfig.htmlCompressionMethod);
+        }
         return res.send(result.html);
       }
     } catch (error) {
