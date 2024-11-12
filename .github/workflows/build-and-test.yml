@@ -117,13 +117,13 @@ jobs:
 
     steps:
       - name: Download docs
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.docs-name }}
           path: ${{ env.docs-path }}
 
       - name: Set up GitHub Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v4
 
       - name: Upload docs to GitHub Pages
         uses: actions/upload-pages-artifact@v1
