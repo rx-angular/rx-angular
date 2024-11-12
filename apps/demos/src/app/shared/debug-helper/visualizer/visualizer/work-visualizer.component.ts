@@ -81,6 +81,8 @@ export class WorkVisualizerComponent extends Hooks {
   @Input()
   renderingsOn = false;
 
+  @Input() reCreateContentOnCd = true;
+
   changeO$ = new ReplaySubject<Observable<any>>(1);
 
   @Input()
@@ -105,24 +107,30 @@ export class WorkVisualizerComponent extends Hooks {
         this.changeO$.pipe(
           distinctUntilChanged(),
           switchMap((o$) =>
-            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$
+            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$,
           ),
           distinctUntilChanged(),
-          tap((v) => console.log('value', v))
-        )
-      )
-    )
+          tap((v) => console.log('value', v)),
+        ),
+      ),
+    ),
   );
+
+  private items: any[];
 
   constructor() {
     super();
   }
 
   getChildren(): number[] {
+    if (!this.reCreateContentOnCd && this.items) {
+      return this.items;
+    }
     const items = [];
     for (let i = 0; i <= this.work * 10; i++) {
       items.push(Math.ceil(Math.random() * 100));
     }
-    return items;
+    this.items = items;
+    return this.items;
   }
 }
