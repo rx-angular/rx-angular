@@ -97,8 +97,8 @@ This means for every emitted value [`ChangeDetectorRef#markForCheck`](https://gi
 Angular still needs zone.js to trigger the [`ApplicationRef#tick`](https://github.com/angular/angular/blob/7d8dce11c0726cdba999fc59a83295d19e5e92e6/packages/core/src/application_ref.ts#L719) to re-render,
 as the internally called function [`markViewDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/shared.ts#L1837) is only responsible for dirty marking and not rendering.
 
-| Name     | Zone Agnostic | Render Method    | Coalescing    | Scheduling              |
-| -------- | ------------- | ---------------- | ------------- | ----------------------- |
+| Name     | Zone Agnostic | Render Method    | Coalescing     | Scheduling              |
+| -------- | ------------- | ---------------- | -------------- | ----------------------- |
 | `native` | ❌            | ⮁ `markForCheck` | ✔ RootContext | `requestAnimationFrame` |
 
 #### Local
@@ -112,7 +112,7 @@ As detectChanges has no coalescing of render calls
 like [`ChangeDetectorRef#markForCheck`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/view_ref.ts#L128) or [`ɵmarkDirty`](https://github.com/angular/angular/blob/930eeaf177a4c277f437f42314605ff8dc56fc82/packages/core/src/render3/instructions/change_detection.ts#L36) have, we apply our own coalescing, 'scoped' on component level.
 
 Coalescing, in this very manner, means _collecting all events_ in the same
-[EventLoop](https://developer.mozilla.org/de/docs/Web/JavaScript/EventLoop) tick, that would cause a re-render. Then execute re-rendering only _once_.
+[EventLoop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop) tick, that would cause a re-render. Then execute re-rendering only _once_.
 
 'Scoped' coalescing, in addition, means _grouping the collected events_ by a specific context.
 E. g. the _component_ from which the re-rendering was initiated.
@@ -120,9 +120,9 @@ E. g. the _component_ from which the re-rendering was initiated.
 This context could be the Component instance or a `ViewContextRef`,
 both accessed over the context over `ChangeDetectorRef#context`.
 
-| Name    | Zone Agnostic | Render Method     | Coalescing         | Scheduling              |
-| ------- | ------------- | ----------------- | ------------------ | ----------------------- |
-| `local` | ✔             | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
+| Name    | Zone Agnostic | Render Method     | Coalescing          | Scheduling              |
+| ------- | ------------- | ----------------- | ------------------- | ----------------------- |
+| `local` | ✔            | 🠗 `detectChanges` | ✔ ComponentContext | `requestAnimationFrame` |
 
 The best place to use the local strategy is a structural directive like `*rxLet`. Those will have a independent template from the component and perform changes only there.
 
@@ -138,7 +138,7 @@ The no-operation strategy does nothing. It can be a valuable tool for performanc
 
 | Name   | Zone Agnostic | Render Method | Coalescing | Scheduling |
 | ------ | ------------- | ------------- | ---------- | ---------- |
-| `noop` | ✔             | - `noop`      | ❌         | ❌         |
+| `noop` | ✔            | - `noop`      | ❌         | ❌         |
 
 ## Usage
 
