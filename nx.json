@@ -31,7 +31,6 @@
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals", "projectSpecificFiles"],
     "sharedGlobals": [
-      "{workspaceRoot}/angular.json",
       "{workspaceRoot}/tsconfig.json",
       "{workspaceRoot}/nx.json"
     ],
@@ -105,6 +104,5 @@
     }
   },
   "nxCloudAccessToken": "OTg2OGFkNmMtNzA5Zi00MjBiLWFhMmQtOGYwNTQ1MjM1ZjQ3fHJlYWQtd3JpdGU=",
-  "parallel": 1,
-  "defaultBase": "origin/main"
+  "parallel": 1
 }
