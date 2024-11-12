@@ -55,7 +55,7 @@ jobs:
         uses: nrwl/nx-set-shas@v4
 
       - name: Initialize the Nx Cloud distributed CI run
-        run: npx nx-cloud start-ci-run --distribute-on="./nx/workflows/dynamic-changesets.yml" --stop-agents-after="e2e"
+        run: npx nx-cloud start-ci-run --distribute-on="./nx/workflows/dynamic-changesets.yml" --stop-agents-after="e2e" --require-explicit-completion
 
       - name: Set up dependencies
         uses: ./.github/actions/setup
@@ -64,6 +64,7 @@ jobs:
         run: |
           npx nx-cloud record -- npx nx format:check
           npx nx affected -t lint build test component-test e2e --parallel=4 --exclude=docs
+          npx nx-cloud complete-ci-run
 
       # Upload coverage reports to Codecov
       - name: Upload coverage
