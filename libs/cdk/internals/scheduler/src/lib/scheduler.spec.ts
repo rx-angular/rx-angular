@@ -38,7 +38,7 @@ describe('Scheduler', () => {
           break;
       }
       performance = ɵglobal.performance;
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const Scheduler = require('./scheduler');
       scheduleCallback = Scheduler.scheduleCallback;
       cancelCallback = Scheduler.cancelCallback;
