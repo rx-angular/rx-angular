@@ -78,7 +78,7 @@
     "@commitlint/cli": "^19.2.1",
     "@commitlint/config-angular": "^19.1.0",
     "@jscutlery/semver": "^4.1.0",
-    "@nx-plus/docusaurus": "14.1.0",
+    "@nx-plus/docusaurus": "patch:@nx-plus/docusaurus@npm%3A14.1.0#~/.yarn/patches/@nx-plus-docusaurus-npm-14.1.0-b526e34c01.patch",
     "@nx/angular": "20.1.0",
     "@nx/cypress": "20.1.0",
     "@nx/eslint": "20.1.0",

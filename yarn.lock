@@ -8552,6 +8552,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nx-plus/docusaurus@patch:@nx-plus/docusaurus@npm%3A14.1.0#~/.yarn/patches/@nx-plus-docusaurus-npm-14.1.0-b526e34c01.patch":
+  version: 14.1.0
+  resolution: "@nx-plus/docusaurus@patch:@nx-plus/docusaurus@npm%3A14.1.0#~/.yarn/patches/@nx-plus-docusaurus-npm-14.1.0-b526e34c01.patch::version=14.1.0&hash=e29990"
+  dependencies:
+    "@nrwl/devkit": "npm:^14.3.6"
+  peerDependencies:
+    "@nrwl/workspace": ^14.3.6
+  checksum: 10c0/6c831f5560ede824e6c40b24fd2cbdf1b99d4c3a4fe955e51439df7be0a0e08a83b1bfddad28227d47ec3ffdfee0522c0a4bca65b531945ca0845455b42daa29
+  languageName: node
+  linkType: hard
+
 "@nx/angular@npm:20.1.0":
   version: 20.1.0
   resolution: "@nx/angular@npm:20.1.0"
@@ -27353,7 +27364,7 @@ __metadata:
     "@commitlint/cli": "npm:^19.2.1"
     "@commitlint/config-angular": "npm:^19.1.0"
     "@jscutlery/semver": "npm:^4.1.0"
-    "@nx-plus/docusaurus": "npm:14.1.0"
+    "@nx-plus/docusaurus": "patch:@nx-plus/docusaurus@npm%3A14.1.0#~/.yarn/patches/@nx-plus-docusaurus-npm-14.1.0-b526e34c01.patch"
     "@nx/angular": "npm:20.1.0"
     "@nx/cypress": "npm:20.1.0"
     "@nx/eslint": "npm:20.1.0"
