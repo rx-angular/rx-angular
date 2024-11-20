@@ -91,6 +91,7 @@ function createZoneFlagsConfigurator(): RxZoneConfig {
   // append as global method for easy debugging
   (cfg as RxZoneFlagsHelperFunctions).__rxa_zone_config__log = (): void => {
     configProps.forEach((flag) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       cfg[flag] && console.log(flag, cfg[flag]);
     });
   };
@@ -110,12 +111,12 @@ function createZoneFlagsConfigurator(): RxZoneConfig {
     },
     events: {
       disable: reduceToObject<RxZoneGlobalEventsConfigurationsMethods>(
-        zoneGlobalEventsConfigurationsKeys.map(addArraySymbolFlag)
+        zoneGlobalEventsConfigurationsKeys.map(addArraySymbolFlag),
       ),
     },
     runtime: {
       disable: reduceToObject<RxRuntimeConfigurationMethods>(
-        zoneRuntimeConfigurationsKeys.map(addSymbolFlag)
+        zoneRuntimeConfigurationsKeys.map(addSymbolFlag),
       ),
     },
   };
