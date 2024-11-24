@@ -43,8 +43,8 @@ export class FileSystemCacheHandler extends CacheHandler {
   }
 
   async add(
-    html: string | Buffer,
     cacheKey: string,
+    html: string | Buffer,
     config?: CacheISRConfig,
   ): Promise<void> {
     return new Promise((resolve, reject) => {
