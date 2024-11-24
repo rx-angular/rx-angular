@@ -12,13 +12,14 @@ export type RxState<T extends object> = Pick<
   | 'signal'
   | 'computed'
   | 'computedFrom'
+  | 'asReadOnly'
 >;
 
 export type RxStateSetupFn<State extends object> = (
   rxState: Pick<
     RxState<State>,
     'connect' | 'set' | 'get' | 'select' | 'setAccumulator'
-  >
+  >,
 ) => void;
 
 /**
@@ -46,7 +47,7 @@ export type RxStateSetupFn<State extends object> = (
  *
  */
 export function rxState<State extends object>(
-  setupFn?: RxStateSetupFn<State>
+  setupFn?: RxStateSetupFn<State>,
 ): RxState<State> {
   assertInInjectionContext(rxState);
 
@@ -65,6 +66,7 @@ export function rxState<State extends object>(
     computedFrom: legacyState.computedFrom.bind(legacyState),
     $: legacyState.$,
     setAccumulator: legacyState.setAccumulator.bind(legacyState),
+    asReadOnly: legacyState.asReadOnly.bind(legacyState),
   };
 
   setupFn?.(state);

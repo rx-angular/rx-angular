@@ -9,4 +9,6 @@ CHANGELOG.md
 
 .angular
 
+.yarn
 /.nx/cache
+/.nx/workspace-data

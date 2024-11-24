@@ -27,6 +27,7 @@ import { VirtualForMonkeyTestComponent } from './virtual-for-monkey-test.compone
 import { VirtualForReverseInfiniteScrollComponent } from './virtual-for-reverse-infinite-scroll.component';
 import { VirtualForScrollWindowDemoComponent } from './virtual-for-scroll-window-demo.component';
 import { VirtualForCustomScrollableDemoComponent } from './virtual-for-scrollable-demo.component';
+import { VirtualForScrollToDemoComponent } from './virtual-for-scrollto-demo.component';
 
 @NgModule({
   imports: [
@@ -59,6 +60,10 @@ import { VirtualForCustomScrollableDemoComponent } from './virtual-for-scrollabl
       {
         path: 'crazy-update',
         component: VirtualForCrazyUpdateComponent,
+      },
+      {
+        path: 'scroll-to',
+        component: VirtualForScrollToDemoComponent,
       },
     ]),
     ValueProvidersModule,

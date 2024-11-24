@@ -23,4 +23,8 @@ export const RX_VIRTUAL_FOR_MENU_ITEMS = [
     label: 'Crazy Update',
     link: 'crazy-update',
   },
+  {
+    label: 'Scroll To',
+    link: 'scroll-to',
+  },
 ];

@@ -45,7 +45,7 @@ import {
  */
 export function rxActions<
   T extends Partial<Actions>,
-  U extends ActionTransforms<T> = {}
+  U extends ActionTransforms<T> = object,
 >(setupFn?: (cfg: { transforms: (t: U) => void }) => void): RxActions<T, U> {
   // Assert rxAction usage
   assertInInjectionContext(rxActions);
@@ -64,6 +64,7 @@ export function rxActions<
   });
 
   // run setup function if given
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   setupFn &&
     setupFn({
       transforms: (t: U) => (transformsMap = t),
@@ -78,6 +79,6 @@ export function rxActions<
       transformsMap,
       effectMap,
       errorHandler,
-    })
+    }),
   ) as any as RxActions<T, U>;
 }

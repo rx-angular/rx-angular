@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [18.1.0](https://github.com/rx-angular/rx-angular/compare/state@18.0.0...state@18.1.0) (2024-10-03)
+
+
+### Features
+
+* **state:** expose asReadOnly() when create state instance using functional approach ([60c4aa4](https://github.com/rx-angular/rx-angular/commit/60c4aa45ddbb45c281e362db4e1493abcc7f6960)), closes [#1789](https://github.com/rx-angular/rx-angular/issues/1789)
+
+
+
 # [18.0.0](https://github.com/rx-angular/rx-angular/compare/state@17.2.0...state@18.0.0) (2024-05-31)
 
 

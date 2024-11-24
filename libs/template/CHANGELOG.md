@@ -2,6 +2,17 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [18.0.3](https://github.com/rx-angular/rx-angular/compare/template@18.0.2...template@18.0.3) (2024-10-03)
+
+
+### Bug Fixes
+
+* **template:** enforce absolute positioned children. fixes [#1783](https://github.com/rx-angular/rx-angular/issues/1783) ([cc26bcd](https://github.com/rx-angular/rx-angular/commit/cc26bcd3828a93959bff6110a76d570a2ffd1179))
+* **template:** properly calculate anchorItem ([04fb418](https://github.com/rx-angular/rx-angular/commit/04fb418a82abea2c382b0d06ce50783419893640))
+* **template:** wait for scroll until container is init. fixes [#1779](https://github.com/rx-angular/rx-angular/issues/1779) ([e6727bf](https://github.com/rx-angular/rx-angular/commit/e6727bfb7a0341198f07ba112c7d26b40484b96c))
+
+
+
 ## [18.0.2](https://github.com/rx-angular/rx-angular/compare/template@18.0.1...template@18.0.2) (2024-09-04)
 
 

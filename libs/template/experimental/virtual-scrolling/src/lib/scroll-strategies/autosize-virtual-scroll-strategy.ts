@@ -14,6 +14,7 @@ import {
   merge,
   MonoTypeOperatorFunction,
   Observable,
+  of,
   pairwise,
   ReplaySubject,
   Subject,
@@ -28,6 +29,7 @@ import {
   mergeMap,
   startWith,
   switchMap,
+  take,
   takeUntil,
   takeWhile,
   tap,
@@ -225,6 +227,14 @@ export class AutoSizeVirtualScrollStrategy<
   private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
   /** @internal */
   readonly scrolledIndex$ = this._scrolledIndex$.pipe(distinctUntilChanged());
+  /**
+   * @internal
+   * The action used to kick off the scroll process
+   */
+  private scrollToTrigger$ = new Subject<{
+    scrollTop: number;
+    behavior?: ScrollBehavior;
+  }>();
   /** @internal */
   private _scrolledIndex = 0;
   /** @internal */
@@ -332,6 +342,7 @@ export class AutoSizeVirtualScrollStrategy<
     this.maintainVirtualItems();
     this.calcRenderedRange();
     this.positionElements();
+    this.listenToScrollTrigger();
   }
 
   /** @internal */
@@ -352,7 +363,7 @@ export class AutoSizeVirtualScrollStrategy<
     if (_index !== this.scrolledIndex) {
       const scrollTop = this.calcInitialPosition(_index);
       this._scrollToIndex = _index;
-      this.scrollTo(scrollTop, behavior);
+      this.scrollToTrigger$.next({ scrollTop, behavior });
     }
   }
 
@@ -493,10 +504,13 @@ export class AutoSizeVirtualScrollStrategy<
               index: dataLength,
               offset: 0,
             },
-            -calculateVisibleContainerSize(
-              this.containerSize,
-              this.scrollTopWithOutOffset,
-              this.scrollTopAfterOffset,
+            Math.max(
+              -size,
+              -calculateVisibleContainerSize(
+                this.containerSize,
+                this.scrollTopWithOutOffset,
+                this.scrollTopAfterOffset,
+              ),
             ),
           );
           this.calcAnchorScrollTop();
@@ -796,6 +810,25 @@ export class AutoSizeVirtualScrollStrategy<
       .subscribe();
   }
 
+  /** listen to API initiated scroll triggers (e.g. initialScrollIndex) */
+  private listenToScrollTrigger(): void {
+    this.scrollToTrigger$
+      .pipe(
+        switchMap((scrollTo) =>
+          // wait until containerRect at least emitted once
+          this.containerSize === 0
+            ? this.viewport!.containerRect$.pipe(
+                map(() => scrollTo),
+                take(1),
+              )
+            : of(scrollTo),
+        ),
+        this.until$(),
+      )
+      .subscribe(({ scrollTop, behavior }) => {
+        this.scrollTo(scrollTop, behavior);
+      });
+  }
   /** @internal */
   private adjustContentSize(position: number) {
     let newContentSize = position;

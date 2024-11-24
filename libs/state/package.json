@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/state",
-  "version": "18.0.0",
+  "version": "18.1.0",
   "description": "@rx-angular/state is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state and side effects in angular",
   "publishConfig": {
     "access": "public"

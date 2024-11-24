@@ -197,7 +197,7 @@ describe('actions fn', () => {
     fixture.componentInstance.actions.resize(42);
 
     expect(customErrorHandler.handleError).toHaveBeenCalledWith(
-      new Error('something went wrong')
+      new Error('something went wrong'),
     );
   });
 
@@ -215,7 +215,7 @@ type Actions = {
 };
 function setupComponent<
   Actions extends object,
-  Transforms extends ActionTransforms<Actions> = {}
+  Transforms extends ActionTransforms<Actions> = object,
 >(cfg?: { transformFns?: Transforms; providers?: Provider[] }) {
   let providers = [];
   if (Array.isArray(cfg?.providers)) {

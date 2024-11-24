@@ -34,17 +34,17 @@ export abstract class CacheHandler {
   // html could be a string or a buffer, it is depending on if `compressHtml` is set in `ISRHandler` config.
   // if `compressHtml` is set, the html will be a buffer, otherwise it will be a string
   abstract add(
-    url: string,
+    cacheKey: string,
     // it will be buffer when we use compressHtml
     html: string | Buffer,
     config?: CacheISRConfig,
   ): Promise<void>;
 
-  abstract get(url: string): Promise<CacheData>;
+  abstract get(cacheKey: string): Promise<CacheData>;
 
-  abstract has(url: string): Promise<boolean>;
+  abstract has(cacheKey: string): Promise<boolean>;
 
-  abstract delete(url: string): Promise<boolean>;
+  abstract delete(cacheKey: string): Promise<boolean>;
 
   abstract getAll(): Promise<string[]>;
 

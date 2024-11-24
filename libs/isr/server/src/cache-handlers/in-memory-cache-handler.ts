@@ -16,8 +16,8 @@ export class InMemoryCacheHandler extends CacheHandler {
   }
 
   add(
-    url: string,
     html: string | Buffer,
+    cacheKey: string,
     config: CacheISRConfig = defaultCacheISRConfig,
   ): Promise<void> {
     return new Promise((resolve) => {
@@ -26,15 +26,15 @@ export class InMemoryCacheHandler extends CacheHandler {
         options: config,
         createdAt: Date.now(),
       };
-      this.cache.set(url, cacheData);
+      this.cache.set(cacheKey, cacheData);
       resolve();
     });
   }
 
-  get(url: string): Promise<CacheData> {
+  get(cacheKey: string): Promise<CacheData> {
     return new Promise((resolve, reject) => {
-      if (this.cache.has(url)) {
-        resolve(this.cache.get(url) as CacheData);
+      if (this.cache.has(cacheKey)) {
+        resolve(this.cache.get(cacheKey) as CacheData);
       }
       reject('This url does not exist in cache!');
     });
@@ -46,15 +46,15 @@ export class InMemoryCacheHandler extends CacheHandler {
     });
   }
 
-  has(url: string): Promise<boolean> {
+  has(cacheKey: string): Promise<boolean> {
     return new Promise((resolve) => {
-      resolve(this.cache.has(url));
+      resolve(this.cache.has(cacheKey));
     });
   }
 
-  delete(url: string): Promise<boolean> {
+  delete(cacheKey: string): Promise<boolean> {
     return new Promise((resolve) => {
-      resolve(this.cache.delete(url));
+      resolve(this.cache.delete(cacheKey));
     });
   }
 
