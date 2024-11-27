@@ -89,7 +89,7 @@ export class FileSystemCacheHandler extends CacheHandler {
           })
           .catch((err) => {
             reject(
-              `Error: 💥 Cannot read cache file for route ${cacheKey}: ${cachedMeta.htmlFilePath}, ${err}`,
+              `Error: 💥 Cannot read cache file for cacheKey ${cacheKey}: ${cachedMeta.htmlFilePath}, ${err}`,
             );
           });
       } else {
@@ -104,15 +104,15 @@ export class FileSystemCacheHandler extends CacheHandler {
 
   delete(cacheKey: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const cacheMeta = this.cache.get(cacheKey);
+      const cachedMeta = this.cache.get(cacheKey);
 
-      if (cacheMeta) {
-        fs.unlink(cacheMeta.htmlFilePath, (err) => {
+      if (cachedMeta) {
+        fs.unlink(cachedMeta.htmlFilePath, (err) => {
           if (err) {
             reject(
-              'Error: 💥 Cannot delete cache file for route ' +
+              'Error: 💥 Cannot delete cache file for cacheKey ' +
                 cacheKey +
-                `: ${cacheMeta.htmlFilePath}`,
+                `: ${cachedMeta.htmlFilePath}`,
             );
           } else {
             this.cache.delete(cacheKey);
@@ -120,7 +120,7 @@ export class FileSystemCacheHandler extends CacheHandler {
           }
         });
       } else {
-        reject(`Error: 💥 CacheKey: ${cacheKey} is not cached.`);
+        reject(`Error: 💥 cacheKey: ${cacheKey} is not cached.`);
       }
     });
   }
@@ -184,7 +184,7 @@ export class FileSystemCacheHandler extends CacheHandler {
         isBuffer: false,
       });
 
-      console.log('The request was stored in cache! Route: ', cacheKey);
+      console.log('The request was stored in cache! cacheKey: ', cacheKey);
     }
   }
 
@@ -222,7 +222,9 @@ export class FileSystemCacheHandler extends CacheHandler {
         }
       }
     } catch (err) {
-      console.error('ERROR! 💥 ! Cannot read folder: ' + folderPath);
+      console.error(
+        `ERROR! 💥 ! Cannot read folder: ${folderPath}, err: ${err instanceof Error ? err.message : ''}`,
+      );
     }
 
     for (const { path } of pathsToCache) {
@@ -316,7 +318,9 @@ function findIndexHtmlFilesRecursively(
     });
   } catch (err) {
     // If an error occurs, log an error message and return an empty array
-    console.error('ERROR! 💥 ! Cannot read folder: ' + path);
+    console.error(
+      `ERROR! 💥 ! Cannot read folder: ${path}, err: ${err instanceof Error ? err.message : ''}`,
+    );
     return [];
   }
 
@@ -345,14 +349,14 @@ function getFileFullPath(fileName: string, cacheFolderPath: string): string {
 }
 
 /**
- * This function takes a string parameter 'route' and replaces all '/' characters in it with '__' and returns the modified string.
+ * This function takes a string parameter 'cacheKey' and replaces all '/' characters in it with '__' and returns the modified string.
  *
  * @internal
- * @param {string} cacheKey - The string representing the route to be converted into a file name.
+ * @param {string} cacheKey - The string representing the cacheKey to be converted into a file name.
  * @returns {string} The modified string representing the file name obtained by replacing '/' characters with '__'.
  */
 export function convertCacheKeyToFileName(cacheKey: string): string {
-  // replace all occurrences of '/' character in the 'route' string with '__' using regular expression
+  // replace all occurrences of '/' character in the 'cacheKey' string with '__' using regular expression
   return cacheKey
     .replace(new RegExp('/', 'g'), '__')
     .replace(new RegExp('\\?', 'g'), '++');
@@ -360,7 +364,7 @@ export function convertCacheKeyToFileName(cacheKey: string): string {
 
 /**
  * This function takes a string parameter 'fileName' and replaces all '__' strings in it with '/' and returns the modified string.
- * @param fileName - The string representing the file name to be converted into a route.
+ * @param fileName - The string representing the file name to be converted into a cacheKey.
  */
 export function convertFileNameToCacheKey(fileName: string): string {
   // replace all occurrences of '__' string in the 'fileName' string with '/' using regular expression
