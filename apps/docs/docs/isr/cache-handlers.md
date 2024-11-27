@@ -74,7 +74,7 @@ export class RedisCacheHandler extends CacheHandler {
     options.keyPrefix = options.keyPrefix || 'isr';
   }
 
-  add(url: string, html: string | Buffer, options: ISROptions = { revalidate: null }): Promise<void> {
+  add(cacheKey: string, html: string | Buffer, options: ISROptions = { revalidate: null }): Promise<void> {
     const key = this.createKey(cacheKey);
     const createdAt = Date.now().toString();
     await this.redis.hmset(key, {
@@ -128,22 +128,6 @@ export class RedisCacheHandler extends CacheHandler {
     return `${this.redisCacheOptions.keyPrefix}:${cacheKey}`;
   }
 }
-
-const cacheMsg = (revalidateTime?: number | null): string => {
-  const time = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
-  let msg = '<!-- ';
-
-  msg += `\n🚀 ISR: Served from Redis Cache! \n⌛ Last updated: ${time}. `;
-
-  if (revalidateTime) {
-    msg += `\n⏭️ Next refresh is after ${revalidateTime} seconds. `;
-  }
-
-  msg += ' \n-->';
-
-  return msg;
-};
 ```
 
 And then, to register the cache handler, you need to pass it to the `cache` field in ISRHandler:
@@ -197,15 +181,22 @@ The `CacheHandler` abstract class has the following API:
 
 ```typescript
 export abstract class CacheHandler {
-  abstract add(url: string | Buffer, html: string, options: ISROptions): Promise<void>;
+  // html could be a string or a buffer, it is depending on if `compressHtml` is set in `ISRHandler` config.
+  // if `compressHtml` is set, the html will be a buffer, otherwise it will be a string
+  abstract add(
+    cacheKey: string,
+    // it will be buffer when we use compressHtml
+    html: string | Buffer,
+    config?: CacheISRConfig,
+  ): Promise<void>;
 
-  abstract get(url: string): Promise<CacheData>;
+  abstract get(cacheKey: string): Promise<CacheData>;
+
+  abstract has(cacheKey: string): Promise<boolean>;
+
+  abstract delete(cacheKey: string): Promise<boolean>;
 
   abstract getAll(): Promise<string[]>;
-
-  abstract has(url: string): Promise<boolean>;
-
-  abstract delete(url: string): Promise<boolean>;
 
   abstract clearCache?(): Promise<boolean>;
 }
@@ -223,5 +214,5 @@ export interface CacheData {
 }
 ```
 
-note: The `html` field can be a string or a buffer. It depends on if you set `compressHtml` function in the `ISRHandler` options.
+**note**: The `html` field can be a string or a buffer. It depends on if you set `compressHtml` function in the `ISRHandler` options.
 If it is set, the html will be compressed and stored as a buffer. If it is not set, the html will be stored as a string.
