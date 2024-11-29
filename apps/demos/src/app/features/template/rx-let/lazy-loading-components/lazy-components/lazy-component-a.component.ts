@@ -2,15 +2,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'rxa-lazy-component-a',
-  template: `
-    <h3>Lazy Component A</h3>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  template: ` <h3>Lazy Component A</h3> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class LazyComponentAComponent {
-
-  constructor() {
-  }
+  constructor() {}
 }
 
 export const component = LazyComponentAComponent;

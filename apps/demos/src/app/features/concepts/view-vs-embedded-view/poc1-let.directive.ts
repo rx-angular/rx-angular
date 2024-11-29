@@ -1,29 +1,39 @@
-import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Directive,
+  Input,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 
-import { ObservableInput, ReplaySubject, Subscription, Unsubscribable } from 'rxjs';
+import {
+  ObservableInput,
+  ReplaySubject,
+  Subscription,
+  Unsubscribable,
+} from 'rxjs';
 import { distinctUntilChanged, switchAll } from 'rxjs/operators';
 
 export interface PocLetViewContext<T> {
   // to enable `as` syntax we have to assign the directives selector (var as v)
   pocLet: T;
-  $implicit: T,
-  $error: false | Error,
-  $complete: boolean,
-  $suspense: boolean
+  $implicit: T;
+  $error: false | Error;
+  $complete: boolean;
+  $suspense: boolean;
 }
 
 @Directive({
-  selector: '[poc1Let]'
+  selector: '[poc1Let]',
+  standalone: false,
 })
 export class Poc1LetDirective<U> implements OnInit, OnDestroy {
   observables$ = new ReplaySubject(1);
-  viewContext = { $implicit: undefined};
+  viewContext = { $implicit: undefined };
   embeddedView;
-  values$ = this.observables$
-    .pipe(
-      distinctUntilChanged(),
-      switchAll()
-    );
+  values$ = this.observables$.pipe(distinctUntilChanged(), switchAll());
 
   @Input()
   set poc1Let(potentialObservable: ObservableInput<U> | null | undefined) {
@@ -35,29 +45,23 @@ export class Poc1LetDirective<U> implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private readonly nextTemplateRef: TemplateRef<PocLetViewContext<U>>,
-    private readonly viewContainerRef: ViewContainerRef
-  ) {
-
-  }
+    private readonly viewContainerRef: ViewContainerRef,
+  ) {}
 
   ngOnInit() {
     this.embeddedView = this.viewContainerRef.createEmbeddedView(
       this.nextTemplateRef,
-      this.viewContext
+      this.viewContext,
     );
 
-    this.subscription = this.values$
-      .subscribe(
-        v => {
-          this.viewContext.$implicit = v;
-          this.embeddedView.detectChanges()
-        }
-      );
+    this.subscription = this.values$.subscribe((v) => {
+      this.viewContext.$implicit = v;
+      this.embeddedView.detectChanges();
+    });
   }
 
   ngOnDestroy() {
     this.embeddedView.destroy();
     this.subscription.unsubscribe();
   }
-
 }

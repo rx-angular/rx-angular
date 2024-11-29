@@ -8,18 +8,14 @@ import { scan } from 'rxjs/operators';
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h2>
-          Component Template vs Embedded View
-        </h2>
+        <h2>Component Template vs Embedded View</h2>
         <div>
-
           <button mat-raised-button [unpatch] (click)="btn2Click$.next($event)">
             Directive cdRef#detectChanges
           </button>
           <button mat-raised-button [unpatch] (click)="btn1Click$.next($event)">
             EmbeddedView cdRef#detectChanges
           </button>
-
         </div>
       </ng-container>
     </rxa-visualizer>
@@ -29,7 +25,7 @@ import { scan } from 'rxjs/operators';
         <h3>*rxLet Directive cdRef#detectChanges</h3>
         <ng-container *oLet="value2$; let value">
           <rxa-visualizer>
-            {{value}}
+            {{ value }}
           </rxa-visualizer>
         </ng-container>
       </div>
@@ -38,21 +34,18 @@ import { scan } from 'rxjs/operators';
         <h3>*rxLet EmbeddedView cdRef#detectChanges</h3>
         <ng-container *poc1Let="value1$; let value">
           <rxa-visualizer [viewType]="'embedded-view'">
-            {{value}}
+            {{ value }}
           </rxa-visualizer>
         </ng-container>
       </div>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
+  standalone: false,
 })
 export class ViewVsEmbeddedViewComponent {
   btn1Click$ = new Subject<Event>();
   btn2Click$ = new Subject<Event>();
-  value1$ = this.btn1Click$.pipe(
-    scan(a => ++a, 0)
-  );
-  value2$ = this.btn2Click$.pipe(
-    scan(a => ++a, 0)
-  );
+  value1$ = this.btn1Click$.pipe(scan((a) => ++a, 0));
+  value2$ = this.btn2Click$.pipe(scan((a) => ++a, 0));
 }

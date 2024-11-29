@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core';
 import { CdHelper } from '../../../../shared/utils/cd-helper';
 
 @Component({
@@ -7,26 +11,35 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
     <rxa-visualizer>
       <div visualizerHeader>
         <h3>Resolving over async/await</h3>
-        <button mat-raised-button (click)="toggle();">Toggle</button>
+        <button mat-raised-button (click)="toggle()">Toggle</button>
       </div>
       <ng-template #suspenseView>
         <rxa-list-item-ghost></rxa-list-item-ghost>
       </ng-template>
-      <ng-container [ngComponentOutlet]="componentAwait" *ngIf="componentAwait; else: suspenseView"></ng-container>
+      <ng-container
+        [ngComponentOutlet]="componentAwait"
+        *ngIf="componentAwait; else suspenseView"
+      ></ng-container>
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [CdHelper]
+  providers: [CdHelper],
+  standalone: false,
 })
 export class LazyLoadingComponentsAsyncAwaitComponent {
   _shouldLoadA = false;
   componentAwait;
 
-  cA = () => import('./lazy-components/lazy-component-a.component').then(c => c.component);
-  cB = () => import('./lazy-components/lazy-component-b.component').then(c => c.component);
+  cA = () =>
+    import('./lazy-components/lazy-component-a.component').then(
+      (c) => c.component,
+    );
+  cB = () =>
+    import('./lazy-components/lazy-component-b.component').then(
+      (c) => c.component,
+    );
 
-  constructor(private cdRef: ChangeDetectorRef) {
-  }
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   toggle() {
     this._shouldLoadA = !this._shouldLoadA;
@@ -37,5 +50,4 @@ export class LazyLoadingComponentsAsyncAwaitComponent {
     this.componentAwait = await (b ? this.cA() : this.cB());
     this.cdRef.detectChanges();
   }
-
 }

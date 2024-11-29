@@ -31,6 +31,7 @@ import { RxEffects } from '@rx-angular/state/effects';
 @Directive({
   selector: '[ifVisible]',
   providers: [RxEffects],
+  standalone: false,
 })
 export class IfVisibleDirective<U> extends Hooks implements OnInit {
   displayed = false;
@@ -56,7 +57,7 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
     private eRef: ElementRef<Comment>,
     private ngZone: NgZone,
     private readonly viewTemplateRef: TemplateRef<any>,
-    private readonly viewContainerRef: ViewContainerRef
+    private readonly viewContainerRef: ViewContainerRef,
   ) {
     super();
   }
@@ -87,7 +88,7 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
     });
     this.templateManager.addTemplateRef(
       RxIfVisibleTemplateNames.view,
-      this.viewTemplateRef
+      this.viewTemplateRef,
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
     this.subscription.add(
@@ -95,13 +96,13 @@ export class IfVisibleDirective<U> extends Hooks implements OnInit {
         .render(
           this.observer.entries$.pipe(
             filter((entry) => entry.isIntersecting && !this.displayed),
-            takeUntil(this.onDestroy$)
-          )
+            takeUntil(this.onDestroy$),
+          ),
         )
         .subscribe(() => {
           this.displayed = true;
           this.observer.unobserve(this.eRef.nativeElement.parentElement);
-        })
+        }),
     );
     this.onAfterViewInit$.subscribe(() => {
       this.observer.observe(this.eRef.nativeElement.parentElement);

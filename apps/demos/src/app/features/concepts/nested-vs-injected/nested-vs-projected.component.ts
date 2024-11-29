@@ -11,12 +11,17 @@ import { CdHelper } from '../../../shared/utils/cd-helper';
           name="visibleExamples"
           aria-label="Visible Examples"
           [value]="displayStates.all"
-          #group="matButtonToggleGroup">
-          <mat-button-toggle [value]="displayStates.nested">Nested</mat-button-toggle>
-          <mat-button-toggle [value]="displayStates.projected">Projected</mat-button-toggle>
+          #group="matButtonToggleGroup"
+        >
+          <mat-button-toggle [value]="displayStates.nested"
+            >Nested</mat-button-toggle
+          >
+          <mat-button-toggle [value]="displayStates.projected"
+            >Projected</mat-button-toggle
+          >
           <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
         </mat-button-toggle-group>
-        <button mat-raised-button class="ml-2" (click)="isVisible = !isVisible;">
+        <button mat-raised-button class="ml-2" (click)="isVisible = !isVisible">
           Toggle visibility to reset
         </button>
       </div>
@@ -33,15 +38,15 @@ import { CdHelper } from '../../../shared/utils/cd-helper';
     </rxa-visualizer>
   `,
   providers: [CdHelper],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  standalone: false,
 })
 export class NestedVsProjectedComponent {
-
   displayStates = {
     none: 0,
     all: 1,
     nested: 2,
-    projected: 3
+    projected: 3,
   };
   isVisible = true;
 

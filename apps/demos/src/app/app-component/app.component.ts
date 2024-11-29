@@ -10,7 +10,6 @@ import { filter, take, tap } from 'rxjs/operators';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppPresenter],
-  standalone: true,
   imports: [AppShellModule, RouterOutlet],
 })
 export class AppComponent implements AfterViewInit {

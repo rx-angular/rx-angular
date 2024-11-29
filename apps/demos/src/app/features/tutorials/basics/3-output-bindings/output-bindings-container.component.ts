@@ -22,11 +22,12 @@ import { map } from 'rxjs/operators';
     </rxa-output-bindings-start>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class OutputBindingsContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();
   refreshInterval$ = this.refreshIntervalInput$.pipe(
-    map((e: any) => e.target.value)
+    map((e: any) => e.target.value),
   );
   listExpandedChange$ = new Subject<boolean>();
 }

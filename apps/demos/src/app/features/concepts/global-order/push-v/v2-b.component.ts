@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -14,38 +20,43 @@ import { tap } from 'rxjs/operators';
       </div>
       <div class="row w-100">
         <div class="col">
-          <button [unpatch] mat-raised-button (click)="l('click in B'); valueChange.next(1);">increment</button>
-          <span>count: {{value | push}}</span>
+          <button
+            [unpatch]
+            mat-raised-button
+            (click)="l('click in B'); valueChange.next(1)"
+          >
+            increment
+          </button>
+          <span>count: {{ value | push }}</span>
         </div>
       </div>
       <div class="row w-100">
-        <div class="col">
-        </div>
+        <div class="col"></div>
       </div>
     </rxa-visualizer>
   `,
-  host: { class: 'w-100' }, changeDetection: ChangeDetectionStrategy.OnPush
+  host: { class: 'w-100' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class V2BComponent {
-
   numExpressions = new Array(1).fill(0);
 
   value;
   @Input('value')
   set _value(v$: Observable<number>) {
     this.l('input of B', v$);
-    this.value = v$.pipe(tap(v => console.log('value change in B', v)));
+    this.value = v$.pipe(tap((v) => console.log('value change in B', v)));
   }
 
   @Output()
   valueChange = new Subject<number>();
 
   l(m: string, v?: any) {
-    if(v !== undefined) {
+    if (v !== undefined) {
       console.log(m, v);
     } else {
       console.log(m);
     }
   }
-
 }

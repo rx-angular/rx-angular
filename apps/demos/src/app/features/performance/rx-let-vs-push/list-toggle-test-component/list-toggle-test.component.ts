@@ -7,6 +7,7 @@ import { finalize, take, tap } from 'rxjs/operators';
   selector: 'rxa-list-toggle-test',
   templateUrl: './list-toggle-test.component.html',
   changeDetection: environment.changeDetection,
+  standalone: false,
 })
 export class ListToggleTestComponent implements AfterViewInit {
   private letEmitted = false;
@@ -26,12 +27,12 @@ export class ListToggleTestComponent implements AfterViewInit {
       this.process$
         .pipe(
           tap(() =>
-            this.type === 'push' ? this.togglePush() : this.toggleLet()
+            this.type === 'push' ? this.togglePush() : this.toggleLet(),
           ),
           take(10),
           finalize(() => {
             this.done$.next(true);
-          })
+          }),
         )
         .subscribe();
     }

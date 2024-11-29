@@ -8,17 +8,19 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     ---
 
     <button mat-raised-button (click)="nativeAngular()">Native Angular</button>
-    <br/>
+    <br />
     <button mat-raised-button [runOutsideZone] (click)="runOutSideAngular()">
       Zone Run Outside Angular
     </button>
-    <br/>
-    <button mat-raised-button [unpatch] (click)="unpatch()">Rx-Angular Unpatch</button>
+    <br />
+    <button mat-raised-button [unpatch] (click)="unpatch()">
+      Rx-Angular Unpatch
+    </button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ComparisonUnpatchComponent {
-
   nativeAngular() {
     console.log('nativeAngular');
   }
@@ -30,5 +32,4 @@ export class ComparisonUnpatchComponent {
   unpatch() {
     console.log('unpatch');
   }
-
 }

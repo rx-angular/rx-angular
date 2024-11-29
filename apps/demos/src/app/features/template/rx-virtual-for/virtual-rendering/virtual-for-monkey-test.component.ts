@@ -44,6 +44,7 @@ import { BehaviorSubject } from 'rxjs';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class VirtualForMonkeyTestComponent {
   items$ = new BehaviorSubject([

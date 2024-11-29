@@ -357,6 +357,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
   ],
   providers: [RxState],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class VirtualForDemoComponent implements OnInit, AfterViewInit {
   @ViewChild(ArrayProviderComponent)

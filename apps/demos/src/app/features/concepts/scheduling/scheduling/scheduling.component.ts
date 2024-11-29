@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 
 import { Observable, of, Subject } from 'rxjs';
@@ -17,28 +22,60 @@ import { priorityTickMap, SchedulingPriority } from './utils';
         <button mat-raised-button [unpatch] (click)="scheduleByPrio()">
           Unscheduled
         </button>
-        <button mat-raised-button [unpatch] (click)="scheduleByPrio(prios.Promise)">
+        <button
+          mat-raised-button
+          [unpatch]
+          (click)="scheduleByPrio(prios.Promise)"
+        >
           Promise
         </button>
-        <button mat-raised-button [unpatch] (click)="scheduleByPrio(prios.setTimeout)">
+        <button
+          mat-raised-button
+          [unpatch]
+          (click)="scheduleByPrio(prios.setTimeout)"
+        >
           setTimeout
         </button>
-        <button mat-raised-button [unpatch] (click)="scheduleByPrio(prios.setInterval)">
+        <button
+          mat-raised-button
+          [unpatch]
+          (click)="scheduleByPrio(prios.setInterval)"
+        >
           setInterval
         </button>
-        <button mat-raised-button [unpatch] (click)="scheduleByPrio(prios.animationFrame)">
+        <button
+          mat-raised-button
+          [unpatch]
+          (click)="scheduleByPrio(prios.animationFrame)"
+        >
           animationFrame
         </button>
-        <button mat-raised-button [unpatch] (click)="scheduleByPrio(prios.idleCallback)">
+        <button
+          mat-raised-button
+          [unpatch]
+          (click)="scheduleByPrio(prios.idleCallback)"
+        >
           idleCallback
         </button>
-        <button mat-raised-button [unpatch] (click)="scheduleByPrio(prios.background)">
+        <button
+          mat-raised-button
+          [unpatch]
+          (click)="scheduleByPrio(prios.background)"
+        >
           background
         </button>
-        <button mat-raised-button [unpatch] (click)="scheduleByPrio(prios.userVisible)">
+        <button
+          mat-raised-button
+          [unpatch]
+          (click)="scheduleByPrio(prios.userVisible)"
+        >
           userVisible
         </button>
-        <button mat-raised-button [unpatch] (click)="scheduleByPrio(prios.userBlocking)">
+        <button
+          mat-raised-button
+          [unpatch]
+          (click)="scheduleByPrio(prios.userBlocking)"
+        >
           userBlocking
         </button>
       </div>
@@ -46,12 +83,13 @@ import { priorityTickMap, SchedulingPriority } from './utils';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
-      `
+    `
       button:active {
         background: red;
       }
-    `
-  ]
+    `,
+  ],
+  standalone: false,
 })
 export class SchedulingComponent implements OnInit {
   prios = SchedulingPriority;
@@ -61,13 +99,15 @@ export class SchedulingComponent implements OnInit {
   strategies;
   nextValues = new Subject<any>();
   value$: Observable<string> = this.nextValues.pipe(
-    scan(count => ++count),
-    tap(v => console.log('count:', v))
+    scan((count) => ++count),
+    tap((v) => console.log('count:', v)),
   );
   value;
 
-  constructor(private cdRef: ChangeDetectorRef, private strategyProvider: RxStrategyProvider) {
-  }
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private strategyProvider: RxStrategyProvider,
+  ) {}
 
   scheduleAllPrios() {
     const sync = () => {
@@ -99,11 +139,13 @@ export class SchedulingComponent implements OnInit {
     };
 
     sync();
-    this.strategyProvider.scheduleCD(this.cdRef, {strategy: ''})
+    this.strategyProvider.scheduleCD(this.cdRef, { strategy: '' });
     priorityTickMap[SchedulingPriority.Promise].subscribe(micro);
     priorityTickMap[SchedulingPriority.setTimeout].subscribe(setTimeout);
     priorityTickMap[SchedulingPriority.setInterval].subscribe(setInterval);
-    priorityTickMap[SchedulingPriority.animationFrame].subscribe(animationFrame);
+    priorityTickMap[SchedulingPriority.animationFrame].subscribe(
+      animationFrame,
+    );
     priorityTickMap[SchedulingPriority.idleCallback].subscribe(idleCallback);
     priorityTickMap[SchedulingPriority.background].subscribe(background);
     priorityTickMap[SchedulingPriority.userVisible].subscribe(userVisible);

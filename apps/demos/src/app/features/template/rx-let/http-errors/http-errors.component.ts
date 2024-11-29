@@ -51,6 +51,7 @@ import { RxState } from '@rx-angular/state';
     `,
   ],
   providers: [RxState],
+  standalone: false,
 })
 export class HttpErrorsComponent {
   error$ = new Subject<HttpErrorResponse>();
@@ -61,7 +62,7 @@ export class HttpErrorsComponent {
   setup(): Observable<HttpErrorResponse> {
     return this.error$.pipe(
       concatMap((e) => throwError(parseError(e))),
-      share()
+      share(),
     );
   }
 

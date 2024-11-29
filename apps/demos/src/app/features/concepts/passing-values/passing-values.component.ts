@@ -11,27 +11,38 @@ import { BehaviorSubject } from 'rxjs';
           <div class="col-sm-12 col-md-12">
             <mat-form-field>
               <mat-label>Nesting Level</mat-label>
-              <input matInput type="number" [(ngModel)]="depth">
+              <input matInput type="number" [(ngModel)]="depth" />
             </mat-form-field>
             <mat-form-field>
               <mat-label>Min Value</mat-label>
-              <input matInput type="number" [(ngModel)]="min">
+              <input matInput type="number" [(ngModel)]="min" />
             </mat-form-field>
             <mat-form-field>
               <mat-label>Max Value</mat-label>
-              <input matInput type="number" [(ngModel)]="max">
+              <input matInput type="number" [(ngModel)]="max" />
             </mat-form-field>
             <div>
               <mat-button-toggle-group
                 name="visibleExamples"
                 aria-label="Visible Examples"
                 [value]="displayStates.all"
-                #group="matButtonToggleGroup">
-                <mat-button-toggle [value]="displayStates.static">Static</mat-button-toggle>
-                <mat-button-toggle [value]="displayStates.observable">Observable</mat-button-toggle>
-                <mat-button-toggle [value]="displayStates.all">All</mat-button-toggle>
+                #group="matButtonToggleGroup"
+              >
+                <mat-button-toggle [value]="displayStates.static"
+                  >Static</mat-button-toggle
+                >
+                <mat-button-toggle [value]="displayStates.observable"
+                  >Observable</mat-button-toggle
+                >
+                <mat-button-toggle [value]="displayStates.all"
+                  >All</mat-button-toggle
+                >
               </mat-button-toggle-group>
-              <button mat-raised-button class="ml-2" (click)="isVisible = !isVisible;">
+              <button
+                mat-raised-button
+                class="ml-2"
+                (click)="isVisible = !isVisible"
+              >
                 Toggle visibility to reset
               </button>
             </div>
@@ -39,34 +50,47 @@ import { BehaviorSubject } from 'rxjs';
         </div>
       </ng-container>
       <div class="row w-100" *ngIf="isVisible">
-        <div class="col"
-             *ngIf="visible(group, displayStates.static)">
+        <div class="col" *ngIf="visible(group, displayStates.static)">
           <h2 class="mat-subheader">Static</h2>
-          <rxa-value-provider [min]="min" [max]="max" [changes$]="btnBothClick$"
-                              #staticVal="rxaValueProvider"></rxa-value-provider>
+          <rxa-value-provider
+            [min]="min"
+            [max]="max"
+            [changes$]="btnBothClick$"
+            #staticVal="rxaValueProvider"
+          ></rxa-value-provider>
           <div class="mb-1">
             <button mat-mini-fab (click)="staticVal.next()">
               <mat-icon>add</mat-icon>
             </button>
           </div>
-          <rxa-recursive-static [depth]="depth" [value]="staticVal.int"></rxa-recursive-static>
+          <rxa-recursive-static
+            [depth]="depth"
+            [value]="staticVal.int"
+          ></rxa-recursive-static>
         </div>
-        <div class="col"
-             *ngIf="visible(group, displayStates.observable)">
+        <div class="col" *ngIf="visible(group, displayStates.observable)">
           <h2 class="mat-subheader">Observable</h2>
-          <rxa-value-provider [min]="min" [max]="max" [changes$]="btnBothClick$"
-                              #observableVal="rxaValueProvider"></rxa-value-provider>
+          <rxa-value-provider
+            [min]="min"
+            [max]="max"
+            [changes$]="btnBothClick$"
+            #observableVal="rxaValueProvider"
+          ></rxa-value-provider>
           <div class="mb-1">
             <button mat-mini-fab [unpatch] (click)="observableVal.next()">
               <mat-icon>add</mat-icon>
             </button>
           </div>
-          <rxa-recursive-observable [depth]="depth" [value$]="observableVal.int$"></rxa-recursive-observable>
+          <rxa-recursive-observable
+            [depth]="depth"
+            [value$]="observableVal.int$"
+          ></rxa-recursive-observable>
         </div>
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  standalone: false,
 })
 export class PassingValuesComponent {
   min = 0;
@@ -76,7 +100,7 @@ export class PassingValuesComponent {
     none: 0,
     all: 1,
     static: 2,
-    observable: 3
+    observable: 3,
   };
   isVisible = true;
   btnBothClick$ = new BehaviorSubject<any>(1);
@@ -97,5 +121,4 @@ export class PassingValuesComponent {
   visible(group, choice) {
     return group.value === choice || group.value === this.displayStates.all;
   }
-
 }

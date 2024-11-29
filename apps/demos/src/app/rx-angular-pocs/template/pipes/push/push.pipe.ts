@@ -14,10 +14,17 @@ import {
   Unsubscribable,
 } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { createRenderAware, RenderAware } from '../../../cdk/render-aware/render-aware';
+import {
+  createRenderAware,
+  RenderAware,
+} from '../../../cdk/render-aware/render-aware';
 import { RxTemplateObserver } from '../../../cdk/utils/rxjs/Notification';
 
-@Pipe({ name: 'push', pure: false })
+@Pipe({
+  name: 'push',
+  pure: false,
+  standalone: false,
+})
 export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit {
   private renderedValue: U | null | undefined;
 
@@ -25,18 +32,17 @@ export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit {
   private subscription: Unsubscribable;
   private renderCallbackSubscription: Unsubscribable = Subscription.EMPTY;
 
-  private readonly templateObserver: RxTemplateObserver<
-    U | null | undefined
-  > = {
-    suspense: () => (this.renderedValue = undefined),
-    next: (value: U | null | undefined) => {
-      this.renderedValue = value;
-    },
-  };
+  private readonly templateObserver: RxTemplateObserver<U | null | undefined> =
+    {
+      suspense: () => (this.renderedValue = undefined),
+      next: (value: U | null | undefined) => {
+        this.renderedValue = value;
+      },
+    };
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    strategyProvider: RxStrategyProvider
+    strategyProvider: RxStrategyProvider,
   ) {
     this.renderAware = createRenderAware<U>({
       strategies: strategyProvider.strategies,
@@ -51,22 +57,22 @@ export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit {
   transform<T>(
     potentialObservable: null,
     config?: string | Observable<string>,
-    renderCallback?: NextObserver<U>
+    renderCallback?: NextObserver<U>,
   ): null;
   transform<T>(
     potentialObservable: undefined,
     config?: string | Observable<string>,
-    renderCallback?: NextObserver<U>
+    renderCallback?: NextObserver<U>,
   ): undefined;
   transform<T>(
     potentialObservable: ObservableInput<T>,
     config?: string | Observable<string>,
-    renderCallback?: NextObserver<U>
+    renderCallback?: NextObserver<U>,
   ): T;
   transform<T>(
     potentialObservable: ObservableInput<T> | null | undefined,
     strategyName: string | Observable<string> | undefined,
-    renderCallback?: NextObserver<U>
+    renderCallback?: NextObserver<U>,
   ): T | null | undefined {
     this.renderAware.nextStrategy(strategyName);
     this.renderAware.nextPotentialObservable(potentialObservable);

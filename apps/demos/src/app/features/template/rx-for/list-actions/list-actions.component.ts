@@ -293,6 +293,7 @@ const moveChangeSet1 = [items5k];
       }
     `,
   ],
+  standalone: false,
 })
 export class ListActionsComponent extends Hooks implements AfterViewInit {
   @ViewChild('arrayP', { read: ArrayProviderComponent, static: true }) arrayP;
@@ -304,7 +305,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
   readonly view = new BehaviorSubject<'list' | 'tile'>('list');
   readonly triggerChangeSet = new Subject<void>();
   readonly activeChangeSet$ = this.triggerChangeSet.pipe(
-    switchMapTo(scheduled(customChangeSet, asyncScheduler))
+    switchMapTo(scheduled(customChangeSet, asyncScheduler)),
     // tap((data) => console.log(data))
   );
 
@@ -312,18 +313,18 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
   readonly triggerMoveSetSwapped = new Subject<void>();
   readonly activeMoveSet$ = merge(
     this.triggerMoveSet.pipe(switchMap(() => [items5k])),
-    this.triggerMoveSetSwapped.pipe(switchMap(() => [items5kSwapped]))
+    this.triggerMoveSetSwapped.pipe(switchMap(() => [items5kSwapped])),
   );
 
   readonly data$ = defer(() =>
-    merge(this.arrayP.array$, this.activeChangeSet$, this.activeMoveSet$)
+    merge(this.arrayP.array$, this.activeChangeSet$, this.activeMoveSet$),
   );
   readonly renderCallback = new Subject();
   readonly rendered$ = this.renderCallback.pipe(map(() => ++this.numRendered));
   readonly viewBroken$ = this.renderCallback.pipe(
     map(() => {
       const children = Array.from(
-        document.getElementsByClassName('work-child')
+        document.getElementsByClassName('work-child'),
       );
       let broken = false;
       let i = 0;
@@ -339,7 +340,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
         i++;
       }
       return broken;
-    })
+    }),
   );
   strategy$ = new Subject<string>();
   customChangeSet = customChangeSet;
@@ -349,7 +350,10 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
     return item.id;
   };
 
-  constructor(public state: RxState<any>, public cdRef: ChangeDetectorRef) {
+  constructor(
+    public state: RxState<any>,
+    public cdRef: ChangeDetectorRef,
+  ) {
     super();
   }
 

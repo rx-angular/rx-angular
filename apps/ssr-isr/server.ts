@@ -1,4 +1,4 @@
-import { CommonEngine } from '@angular/ssr';
+import { CommonEngine } from '@angular/ssr/node';
 import { ModifyHtmlCallbackFn } from '@rx-angular/isr/models';
 import { ISRHandler } from '@rx-angular/isr/server';
 import express, { Request } from 'express';

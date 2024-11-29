@@ -1,8 +1,18 @@
-import { AfterViewInit, Directive, ElementRef, Input, NgZone, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+} from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-@Directive({ selector: '[runOutsideZone]' })
+@Directive({
+  selector: '[runOutsideZone]',
+  standalone: false,
+})
 export class RunOutsideZoneDirective implements AfterViewInit, OnDestroy {
   subscription = new Subscription();
   events$ = new BehaviorSubject<string[]>(['click']);
@@ -17,12 +27,15 @@ export class RunOutsideZoneDirective implements AfterViewInit, OnDestroy {
   }
 
   reapplyEventListenersZoneUnPatched(events) {
-    events.forEach(ev => {
+    events.forEach((ev) => {
       this.unpatchEventListener(this.el.nativeElement, ev);
     });
   }
 
-  constructor(private el: ElementRef, private ngZone: NgZone) {}
+  constructor(
+    private el: ElementRef,
+    private ngZone: NgZone,
+  ) {}
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
@@ -31,7 +44,7 @@ export class RunOutsideZoneDirective implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.subscription = this.events$
       .pipe(
-        tap(eventList => this.reapplyEventListenersZoneUnPatched(eventList))
+        tap((eventList) => this.reapplyEventListenersZoneUnPatched(eventList)),
       )
       .subscribe();
   }
@@ -43,7 +56,7 @@ export class RunOutsideZoneDirective implements AfterViewInit, OnDestroy {
       return;
     }
 
-    eventListeners.forEach(listener => {
+    eventListeners.forEach((listener) => {
       // Remove and reapply listeners with patched API
       elem.removeEventListener(event, listener);
       // Reapply listeners with un-patched API

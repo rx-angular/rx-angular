@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Output,
+} from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -10,31 +15,30 @@ import { Subject } from 'rxjs';
       </div>
       <div class="row w-100">
         <div class="col">
-          <button [unpatch] mat-raised-button (click)="valueChange.next(1)">increment</button>
+          <button [unpatch] mat-raised-button (click)="valueChange.next(1)">
+            increment
+          </button>
           <span *rxLet="value; let v">
             <rxa-dirty-check></rxa-dirty-check>
-          count: {{v}}
+            count: {{ v }}
           </span>
         </div>
       </div>
       <div class="row w-100">
-        <div class="col">
-        </div>
+        <div class="col"></div>
       </div>
     </rxa-visualizer>
   `,
   host: { class: 'w-100' },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class V3BComponent {
-
   @Input()
   value;
 
   @Output()
   valueChange = new Subject<number>();
 
-  constructor() {
-  }
-
+  constructor() {}
 }

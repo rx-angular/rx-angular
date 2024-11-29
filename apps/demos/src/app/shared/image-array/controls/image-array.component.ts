@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, ElementRef, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { RxEffects } from '@rx-angular/state/effects';
 import { Hooks } from '../../debug-helper/hooks';
@@ -13,7 +19,6 @@ interface ComponentState {
   height: number;
 }
 
-
 @Component({
   selector: 'rxa-image-array',
   template: `
@@ -24,39 +29,64 @@ interface ComponentState {
             <mat-expansion-panel-header>
               Select Image
             </mat-expansion-panel-header>
-            <div class="w-100 d-flex align-items-center" *ngFor="let imgSet of all; let setIdx = index">
-              <img [tabindex]="0" (keydown.enter)="imgSelectionChange$.next($event.target)" [alt]="name" class="mr-2"
-                   (click)="imgSelectionChange$.next($event.target)" [src]="'assets/'+name"
-                   *ngFor="let name of imgSet[1]; let idx = index">
+            <div
+              class="w-100 d-flex align-items-center"
+              *ngFor="let imgSet of all; let setIdx = index"
+            >
+              <img
+                [tabindex]="0"
+                (keydown.enter)="imgSelectionChange$.next($event.target)"
+                [alt]="name"
+                class="mr-2"
+                (click)="imgSelectionChange$.next($event.target)"
+                [src]="'assets/' + name"
+                *ngFor="let name of imgSet[1]; let idx = index"
+              />
             </div>
-            <button type="button" class="mr-2" mat-raised-button (click)="fileInput.click()">Choose File</button>
-            <input hidden #fileInput (change)="filesChange$.next(fileInput.files[0])" type="file">
+            <button
+              type="button"
+              class="mr-2"
+              mat-raised-button
+              (click)="fileInput.click()"
+            >
+              Choose File
+            </button>
+            <input
+              hidden
+              #fileInput
+              (change)="filesChange$.next(fileInput.files[0])"
+              type="file"
+            />
 
-            <button mat-raised-button class="btn-link" href="http://pixelartmaker.com" target="_blank">Create</button>
-
+            <button
+              mat-raised-button
+              class="btn-link"
+              href="http://pixelartmaker.com"
+              target="_blank"
+            >
+              Create
+            </button>
           </mat-expansion-panel>
-
-
         </div>
-
       </div>
     </div>
   `,
-  providers: [RxEffects, RxState]
+  providers: [RxEffects, RxState],
+  standalone: false,
 })
 export class ImageArrayComponent extends Hooks implements AfterViewInit {
   big = [
     'doom-hunter-2.png',
     'reinhardt-reinhardt-reinhardt.png',
-    'rainbow-skull.png'
-  ].map(n => 'big/' + n);
+    'rainbow-skull.png',
+  ].map((n) => 'big/' + n);
   monster = [
     'monster-1.png',
     'monster-2.png',
     'monster-3.png',
     'monster-4.png',
-    'darth-maul-1.png'
-  ].map(n => 'monster/' + n);
+    'darth-maul-1.png',
+  ].map((n) => 'monster/' + n);
   random = [
     'warrior.png',
     'sonic2.png',
@@ -65,7 +95,7 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'duck.png',
     'knight.png',
     'sure.png',
-    'maroon.png'
+    'maroon.png',
   ];
   koopa = [
     'bowser-jr.png',
@@ -81,8 +111,8 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'motron-koopa-jr.png',
     'parallel-larry.png',
     'parallel-wendy.png',
-    'wendy-koopa.png'
-  ].map(n => 'koopa/' + n);
+    'wendy-koopa.png',
+  ].map((n) => 'koopa/' + n);
   pokemon = [
     'pokemon-1.png',
     'pokemon-2.png',
@@ -92,16 +122,16 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'pokemon-6.png',
     'pokemon-7.png',
     'pokemon-8.png',
-    'pokemon-9.png'
-  ].map(n => 'pokemon/' + n);
+    'pokemon-9.png',
+  ].map((n) => 'pokemon/' + n);
   zombi = [
     'zombi-1.png',
     'zombi-2.png',
     'zombi-3.png',
     'zombi-4.png',
     'zombi-5.png',
-    'zombi-6.png'
-  ].map(n => 'zombi/' + n);
+    'zombi-6.png',
+  ].map((n) => 'zombi/' + n);
   superMario = [
     'super-mario-1.png',
     'super-mario-2.png',
@@ -111,15 +141,15 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
     'super-mario-6.png',
     'super-mario-7.png',
     'super-mario-8.png',
-    'super-mario-9.png'
-  ].map(n => 'super-mario/' + n);
+    'super-mario-9.png',
+  ].map((n) => 'super-mario/' + n);
 
   all = [
     ['superMario', this.superMario],
     ['monster', this.monster],
     ['koopa', this.koopa],
     ['pokemon', this.pokemon],
-      ['big', this.big]
+    ['big', this.big],
   ];
 
   filesChange$ = new Subject<any>();
@@ -131,15 +161,16 @@ export class ImageArrayComponent extends Hooks implements AfterViewInit {
   @Output()
   img: Observable<HTMLImageElement> = this.state.select('image');
 
-
   constructor(
     private elemRef: ElementRef,
     private rxEf: RxEffects,
-    private state: RxState<ComponentState>
+    private state: RxState<ComponentState>,
   ) {
     super();
-    this.state.connect('image', this.filesChange$.pipe(fileReaderFromBlob(), imageFromFileReader()));
+    this.state.connect(
+      'image',
+      this.filesChange$.pipe(fileReaderFromBlob(), imageFromFileReader()),
+    );
     this.state.connect('image', this.imgSelectionChange$);
   }
-
 }

@@ -37,6 +37,7 @@ import { AppConfigService } from '../../../app-config.service';
     `,
   ],
   providers: [RxEffects],
+  standalone: false,
 })
 export class DirtyChecksWorkComponent extends Hooks {
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -62,7 +63,7 @@ export class DirtyChecksWorkComponent extends Hooks {
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private configService: AppConfigService,
-    private rxEf: RxEffects
+    private rxEf: RxEffects,
   ) {
     super();
     this.rxEf.register(this.configService.$.pipe(select('rippleOn')), (r) => {
@@ -89,7 +90,7 @@ export class DirtyChecksWorkComponent extends Hooks {
       this.renderer.setProperty(
         this.displayElem,
         'innerHTML',
-        ++this.dirtyChecks + ''
+        ++this.dirtyChecks + '',
       );
   }
 }

@@ -4,23 +4,28 @@ import { ReplaySubject } from 'rxjs';
 @Component({
   selector: 'rxa-recursive-push',
   template: `
-    <ng-container *ngIf="level === 0; else: branch">
+    <ng-container *ngIf="level === 0; else branch">
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total - level}}</p>
+        <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-renders [value$]="value$ | push"></rxa-renders>
       </rxa-visualizer>
     </ng-container>
     <ng-template #branch>
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total - level}}</p>
-        <rxa-recursive-push [total]="total" [level]="level-1" [value]="value$ | push"></rxa-recursive-push>
+        <p visualizerHeader>Level {{ total - level }}</p>
+        <rxa-recursive-push
+          [total]="total"
+          [level]="level - 1"
+          [value]="value$ | push"
+        ></rxa-recursive-push>
       </rxa-visualizer>
     </ng-template>
   `,
   host: {
-    class: 'd-flex w-100'
+    class: 'd-flex w-100',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RecursivePushComponent {
   @Input()
@@ -40,6 +45,5 @@ export class RecursivePushComponent {
   @Input()
   set value(v) {
     this.value$.next(v);
-  };
-
+  }
 }

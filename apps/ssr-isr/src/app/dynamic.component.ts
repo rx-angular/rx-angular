@@ -22,7 +22,6 @@ import { map, switchMap } from 'rxjs';
     </div>
   `,
   imports: [AsyncPipe],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicPageComponent {

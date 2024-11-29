@@ -1,14 +1,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable,OperatorFunction } from 'rxjs';
+import { Observable, OperatorFunction } from 'rxjs';
 
-@Pipe({ name: 'pipe', pure: true })
+@Pipe({
+  name: 'pipe',
+  pure: true,
+  standalone: false,
+})
 export class PipePipe<T, U> implements PipeTransform {
-
   transform(
     potentialObservable: Observable<T>,
     operatorFn?: OperatorFunction<T, U>,
   ): Observable<U> {
-    return potentialObservable.pipe(operatorFn)
+    return potentialObservable.pipe(operatorFn);
   }
-
 }

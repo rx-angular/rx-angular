@@ -1,9 +1,10 @@
 import { DOCUMENT, isPlatformServer } from '@angular/common';
 import {
-  ENVIRONMENT_INITIALIZER,
   EnvironmentProviders,
+  inject,
   makeEnvironmentProviders,
   PLATFORM_ID,
+  provideEnvironmentInitializer,
 } from '@angular/core';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
 import { IsrService } from '@rx-angular/isr/browser';
@@ -55,17 +56,14 @@ export const provideISR = (): EnvironmentProviders => {
       multi: true,
       deps: [IsrServerService, DOCUMENT],
     },
-    {
-      provide: ENVIRONMENT_INITIALIZER,
-      useFactory: (isrService: IsrService, platformId: object) => () => {
-        // Activate ISR only on the server
-        if (isPlatformServer(platformId)) {
-          isrService.activate();
-        }
-      },
-      deps: [IsrService, PLATFORM_ID],
-      multi: true,
-    },
+    provideEnvironmentInitializer(() => {
+      const isrService = inject(IsrService);
+      const platformId = inject(PLATFORM_ID);
+      // Activate ISR only on the server
+      if (isPlatformServer(platformId)) {
+        isrService.activate();
+      }
+    }),
   ]);
 };
 

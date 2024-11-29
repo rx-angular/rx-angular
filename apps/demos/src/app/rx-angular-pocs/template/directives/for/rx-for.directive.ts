@@ -281,6 +281,7 @@ import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
  */
 @Directive({
   selector: '[rxFor]',
+  standalone: false,
 })
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy
@@ -305,7 +306,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       | Observable<NgIterable<T>>
       | NgIterable<T>
       | null
-      | undefined
+      | undefined,
   ) {
     this.observables$.next(potentialObservable);
   }
@@ -317,7 +318,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       | Observable<NgIterable<T>>
       | NgIterable<T>
       | null
-      | undefined
+      | undefined,
   ) {
     this.observables$.next(potentialObservable);
   }
@@ -585,7 +586,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T>>,
     private readonly viewContainerRef: ViewContainerRef,
     private strategyProvider: RxStrategyProvider,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
   ) {}
 
   /** @internal */
@@ -614,7 +615,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   static ngTemplateContextGuard<U>(
     dir: RxFor<U>,
-    ctx: unknown | null | undefined
+    ctx: unknown | null | undefined,
   ): ctx is RxDefaultListViewContext<U> {
     return true;
   }
@@ -655,7 +656,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   createViewContext(
     item: T,
-    computedContext: RxListViewComputedContext
+    computedContext: RxListViewComputedContext,
   ): RxDefaultListViewContext<T> {
     return new RxDefaultListViewContext<T>(item, computedContext);
   }
@@ -664,7 +665,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   updateViewContext(
     item: T,
     view: EmbeddedViewRef<RxListViewContext<T>>,
-    computedContext: RxListViewComputedContext
+    computedContext: RxListViewComputedContext,
   ): void {
     view.context.updateContext(computedContext);
     view.context.$implicit = item;

@@ -12,7 +12,11 @@ import { scan, switchMap } from 'rxjs/operators';
           <button mat-raised-button [unpatch] (click)="valP.next()">
             count up
           </button>
-          <button mat-raised-button [unpatch] (click)="runningToggle$.next(undefined)">
+          <button
+            mat-raised-button
+            [unpatch]
+            (click)="runningToggle$.next(undefined)"
+          >
             auto
           </button>
         </rxa-value-provider>
@@ -27,8 +31,8 @@ import { scan, switchMap } from 'rxjs/operators';
               viewport-prio
               *rxLet="valP.incremental$; let count"
             >
-              {{logLetUpdate(count)}}
-              {{count}}
+              {{ logLetUpdate(count) }}
+              {{ count }}
             </div>
           </div>
         </div>
@@ -62,12 +66,13 @@ import { scan, switchMap } from 'rxjs/operators';
       }
     `,
   ],
+  standalone: false,
 })
 export class BasicExampleComponent {
   runningToggle$ = new Subject<any>();
   running$ = this.runningToggle$.pipe(
     scan((b) => !b, false),
-    switchMap((b) => (b ? interval(200) : NEVER))
+    switchMap((b) => (b ? interval(200) : NEVER)),
   );
 
   constructor() {}
