@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -48,6 +49,7 @@ const TestTemplateNames = {
 
 @Component({
   template: ``,
+  imports: [ErrorTestComponent, NgIf],
 })
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
@@ -80,7 +82,7 @@ export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private strategyProvider: RxStrategyProvider,
-    public errorHandler: ErrorHandler
+    public errorHandler: ErrorHandler,
   ) {}
 
   ngAfterViewInit() {
@@ -114,25 +116,25 @@ export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
     });
     this.templateManager.addTemplateRef(
       TestTemplateNames.next,
-      this.templateRef
+      this.templateRef,
     );
     if (this.suspenseTpl) {
       this.templateManager.addTemplateRef(
         TestTemplateNames.suspense,
-        this.suspenseTpl
+        this.suspenseTpl,
       );
       this.observablesHandler.withInitialSuspense(!!this.suspenseTpl);
     }
     if (this.errorTpl) {
       this.templateManager.addTemplateRef(
         TestTemplateNames.error,
-        this.errorTpl
+        this.errorTpl,
       );
     }
     if (this.completeTpl) {
       this.templateManager.addTemplateRef(
         TestTemplateNames.complete,
-        this.completeTpl
+        this.completeTpl,
       );
     }
     this.sub.add(
@@ -140,7 +142,7 @@ export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
         .render(this.observablesHandler.values$)
         .subscribe((n) => {
           this.latestRenderedValue = n;
-        })
+        }),
     );
   }
 
@@ -157,7 +159,7 @@ export const DEFAULT_TEMPLATE = `
 `;
 
 export function createTestComponent(
-  template: string
+  template: string,
 ): ComponentFixture<TemplateManagerSpecComponent> {
   return TestBed.overrideComponent(TemplateManagerSpecComponent, {
     set: { template: template },
