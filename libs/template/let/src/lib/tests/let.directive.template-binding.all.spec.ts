@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -46,8 +47,8 @@ import { MockChangeDetectorRef } from './fixtures';
         value === undefined
           ? 'undefined'
           : value === null
-          ? 'null'
-          : (value | json)
+            ? 'null'
+            : (value | json)
       }}</ng-container
     >
 
@@ -55,6 +56,7 @@ import { MockChangeDetectorRef } from './fixtures';
     <ng-template #error>error</ng-template>
     <ng-template #suspense>suspense</ng-template>
   `,
+  imports: [RxLet, JsonPipe],
 })
 class LetDirectiveAllTemplatesTestComponent {
   value$: Observable<number> = of(1);
@@ -71,8 +73,7 @@ let nativeElement: HTMLElement;
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveAllTemplatesTestComponent],
-    imports: [RxLet],
+    imports: [LetDirectiveAllTemplatesTestComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

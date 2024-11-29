@@ -1,4 +1,5 @@
 import { NgIterable } from '@angular/core';
+import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { Observable } from 'rxjs';
@@ -38,7 +39,7 @@ function randomDate() {
   const diff = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
   const randomDiff = Math.floor(Math.random() * diff);
   const randomDate = new Date(
-    start.getTime() + randomDiff * (1000 * 60 * 60 * 24)
+    start.getTime() + randomDiff * (1000 * 60 * 60 * 24),
   );
   return randomDate;
 }
@@ -66,11 +67,11 @@ export interface VirtualScrollMountConfig<T> {
   runwayItemsOpposite?: number;
   viewCache?: number;
   items?: Observable<NgIterable<T>> | NgIterable<T> | null | undefined;
+  showItemDescription?: boolean;
   trackBy?: keyof T | ((idx: number, i: T) => unknown);
   itemSize?: number;
   strategy?: RxStrategyNames<string> | Observable<RxStrategyNames<string>>;
   containerHeight?: number;
-  template?: string;
 }
 
 export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
@@ -79,6 +80,7 @@ export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
   itemSize: DEFAULT_ITEM_SIZE,
   viewCache: DEFAULT_TEMPLATE_CACHE_SIZE,
   containerHeight: 300,
+  showItemDescription: true,
 } as const;
 export const defaultItemLength = 500;
 export function getDefaultMountConfig(): VirtualScrollMountConfig<Item> {
@@ -87,8 +89,8 @@ export function getDefaultMountConfig(): VirtualScrollMountConfig<Item> {
     ...defaultMountConfig,
   };
 }
-export function getViewportComponent(fixture) {
+export function getViewportComponent(fixture: ComponentFixture<any>) {
   return fixture.debugElement.query(
-    By.directive(RxVirtualScrollViewportComponent)
+    By.directive(RxVirtualScrollViewportComponent),
   ).componentInstance as RxVirtualScrollViewportComponent;
 }

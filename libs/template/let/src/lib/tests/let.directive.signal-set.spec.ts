@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -21,6 +22,7 @@ import { MockChangeDetectorRef } from './fixtures';
       v === undefined ? 'undefined' : v === null ? 'null' : (v | json)
     }}</ng-container>
   `,
+  imports: [RxLet, JsonPipe],
 })
 class LetDirectiveTestComponent {
   value = signal(42);
@@ -35,8 +37,7 @@ let componentNativeElement: any;
 
 const setupLetDirectiveTestComponent = (): void => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveTestComponent],
-    imports: [RxLet],
+    imports: [LetDirectiveTestComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

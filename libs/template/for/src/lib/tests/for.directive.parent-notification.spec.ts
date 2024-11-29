@@ -36,6 +36,7 @@ const testTemplate = `<div>
 @Component({
   selector: 'rx-test-cmp',
   template: testTemplate,
+  imports: [RxFor],
 })
 class ParentNotifyTestComponent extends TestComponent {
   @ViewChildren('listChild')
@@ -48,7 +49,6 @@ class ParentNotifyTestComponent extends TestComponent {
   selector: 'rx-test-cmp',
   template: testTemplate,
   imports: [RxFor],
-  standalone: true,
 })
 class ParentNotifySignalTestComponent extends TestComponent {
   parent = false;
@@ -107,8 +107,7 @@ describe('rxFor parent-notifications', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        declarations: [ParentNotifyTestComponent],
-        imports: [RxFor],
+        imports: [ParentNotifyTestComponent],
         teardown: { destroyAfterEach: true },
       });
       fixture = TestBed.createComponent(ParentNotifyTestComponent);

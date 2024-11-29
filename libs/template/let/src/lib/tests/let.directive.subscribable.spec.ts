@@ -17,6 +17,7 @@ import { MockChangeDetectorRef } from './fixtures';
       {{ value }}
     </ng-container>
   `,
+  imports: [RxLet],
 })
 class LetDirectiveSubscribableTestComponent {
   value$: Subscribable<number>;
@@ -31,8 +32,7 @@ let componentNativeElement: any;
 
 const setupLetDirectiveTestComponent = (): void => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveSubscribableTestComponent],
-    imports: [RxLet],
+    imports: [LetDirectiveSubscribableTestComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

@@ -16,7 +16,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { ɵtoObservableMicrotask } from '@angular/core/rxjs-interop';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
@@ -590,7 +590,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
     if (changes.rxLet) {
       if (isSignal(this.rxLet)) {
         this.observablesHandler.next(
-          toObservable(this.rxLet, { injector: this.injector }),
+          ɵtoObservableMicrotask(this.rxLet, { injector: this.injector }),
         );
       } else {
         this.observablesHandler.next(this.rxLet);

@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -42,8 +43,8 @@ import { MockChangeDetectorRef } from './fixtures';
           value === undefined
             ? 'undefined'
             : value === null
-            ? 'null'
-            : (value | json)
+              ? 'null'
+              : (value | json)
         }}
       </span>
       <span class="context">{{
@@ -51,6 +52,7 @@ import { MockChangeDetectorRef } from './fixtures';
       }}</span>
     </ng-container>
   `,
+  imports: [RxLet, JsonPipe],
 })
 class LetDirectiveTestComponent {
   value$: Observable<number>;
@@ -65,8 +67,7 @@ const contentElement = (): HTMLElement => nativeElement.querySelector('.value');
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveTestComponent],
-    imports: [RxLet],
+    imports: [LetDirectiveTestComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,

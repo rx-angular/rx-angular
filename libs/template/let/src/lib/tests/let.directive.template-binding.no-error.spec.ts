@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
@@ -13,14 +14,15 @@ import { RxLet } from '../let.directive';
         value === undefined
           ? 'undefined'
           : value === null
-          ? 'null'
-          : (value | json)
+            ? 'null'
+            : (value | json)
       }}</ng-container
     >
 
     <ng-template #complete>complete</ng-template>
     <ng-template #suspense>suspense</ng-template>
   `,
+  imports: [RxLet, JsonPipe],
 })
 class LetDirectiveNoErrorTemplateTestComponent {
   value$: Observable<number> = of(1);
@@ -40,8 +42,7 @@ const setupTestComponent = () => {
         },
       },
     ],
-    declarations: [LetDirectiveNoErrorTemplateTestComponent],
-    imports: [RxLet],
+    imports: [LetDirectiveNoErrorTemplateTestComponent],
     teardown: { destroyAfterEach: true },
   });
 };
