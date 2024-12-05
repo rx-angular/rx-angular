@@ -2,6 +2,26 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [19.0.0](https://github.com/rx-angular/rx-angular/compare/isr@18.1.0...isr@19.0.0) (2024-12-05)
+
+
+### Bug Fixes
+
+* **isr:** fix eslint issue ([08b814f](https://github.com/rx-angular/rx-angular/commit/08b814f323a22b94e2419e2c0146d1a88e9745ff))
+
+
+### Features
+
+* **isr:** add custom cache key generation logic ([821bd12](https://github.com/rx-angular/rx-angular/commit/821bd1202ef7ad7582a0013ad871f6e51a59a6e1))
+* **isr:** upgrade to ng-19 ([faa25ed](https://github.com/rx-angular/rx-angular/commit/faa25ed818f9d7b317dd1fdf17209a723042dc84))
+
+
+### BREAKING CHANGES
+
+* **isr:** bump peerDependency to angular 19
+
+
+
 # [18.1.0](https://github.com/rx-angular/rx-angular/compare/isr@18.0.3...isr@18.1.0) (2024-09-04)
 
 
