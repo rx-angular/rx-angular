@@ -2,6 +2,25 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [19.0.0](https://github.com/rx-angular/rx-angular/compare/template@18.0.3...template@19.0.0) (2024-12-05)
+
+
+### Bug Fixes
+
+* **template:** switch to native ng-packagr executor ([2e2cd39](https://github.com/rx-angular/rx-angular/commit/2e2cd394a089a1ea62d50fdb7592d90fdb875d4e))
+
+
+### Features
+
+* **template:** upgrade to ng-19 ([01f0022](https://github.com/rx-angular/rx-angular/commit/01f00220fd9dcd0274705caa478cf6b8c3e4dc31))
+
+
+### BREAKING CHANGES
+
+* **template:** bump peerDependency to angular 19
+
+
+
 ## [18.0.3](https://github.com/rx-angular/rx-angular/compare/template@18.0.2...template@18.0.3) (2024-10-03)
 
 
