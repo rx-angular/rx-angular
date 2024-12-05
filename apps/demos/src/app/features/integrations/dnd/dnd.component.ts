@@ -1,4 +1,8 @@
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -9,23 +13,14 @@ import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx
 @Component({
   selector: 'rxa-dnd',
   template: `
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-    >
+    <div cdkDropList (cdkDropListDropped)="drop($event)">
       <h3>ngFor</h3>
       <ul>
-        <li
-          cdkDrag
-          *ngFor="let item of items$ | async"
-        >{{item.value}}</li>
+        <li cdkDrag *ngFor="let item of items$ | async">{{ item.value }}</li>
       </ul>
     </div>
 
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-    >
+    <div cdkDropList (cdkDropListDropped)="drop($event)">
       <h3>ngFor with error</h3>
       <ul>
         <li
@@ -33,65 +28,75 @@ import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx
           (cdkDragStarted)="dragging$.next(true)"
           (cdkDragEnded)="dragging$.next(false)"
           *ngFor="let item of errorItems$ | async; trackBy: trackItem"
-        >{{item.value}}</li>
+        >
+          {{ item.value }}
+        </li>
       </ul>
     </div>
 
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-    >
+    <div cdkDropList (cdkDropListDropped)="drop($event)">
       <h3>rxFor errorItems with</h3>
       <ul>
         <li
           cdkDrag
           (cdkDragStarted)="dragging$.next(true)"
           (cdkDragEnded)="dragging$.next(false)"
-          *rxFor="let item of errorItems$; trackBy: trackItem; strategy: 'normal'"
-        >{{item.value}}</li>
+          *rxFor="
+            let item of errorItems$;
+            trackBy: trackItem;
+            strategy: 'normal'
+          "
+        >
+          {{ item.value }}
+        </li>
       </ul>
     </div>
 
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-    >
+    <div cdkDropList (cdkDropListDropped)="drop($event)">
       <h3>rxFor errorItems with noop-switch</h3>
       <ul>
         <li
           cdkDrag
           (cdkDragStarted)="dragging$.next(true)"
           (cdkDragEnded)="dragging$.next(false)"
-          *rxFor="let item of errorItems$; trackBy: trackItem; strategy: noopWhileDrag$"
-        >{{item.value}}</li>
+          *rxFor="
+            let item of errorItems$;
+            trackBy: trackItem;
+            strategy: noopWhileDrag$
+          "
+        >
+          {{ item.value }}
+        </li>
       </ul>
     </div>
 
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-    >
+    <div cdkDropList (cdkDropListDropped)="drop($event)">
       <h3>rxFor</h3>
       <ul>
         <li
           cdkDrag
           *rxFor="let item of items$; trackBy: trackItem; strategy: 'normal'"
-        >{{item.value}}</li>
+        >
+          {{ item.value }}
+        </li>
       </ul>
     </div>
 
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-    >
+    <div cdkDropList (cdkDropListDropped)="drop($event)">
       <h3>rxFor with noop-switch</h3>
       <ul>
         <li
           cdkDrag
           (cdkDragStarted)="dragging$.next(true)"
           (cdkDragEnded)="dragging$.next(false)"
-          *rxFor="let item of items$; trackBy: trackItem; strategy: noopWhileDrag$"
-        >{{item.value}}</li>
+          *rxFor="
+            let item of items$;
+            trackBy: trackItem;
+            strategy: noopWhileDrag$
+          "
+        >
+          {{ item.value }}
+        </li>
       </ul>
     </div>
 
@@ -109,41 +114,40 @@ import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx
     </style>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DndComponent {
   items$ = new BehaviorSubject<any>(createItems(50));
   private errorItems = [
     {
       id: 1,
-      value: 'item - 1'
+      value: 'item - 1',
     },
     {
       id: 2,
-      value: 'item - 2'
-    }
+      value: 'item - 2',
+    },
   ];
   private errorItemsSwapped = [
     {
       id: 2,
-      value: 'item - 2'
+      value: 'item - 2',
     },
     {
       id: 1,
-      value: 'item - 1'
-    }
+      value: 'item - 1',
+    },
   ];
   _errorItems$ = new BehaviorSubject<any>(this.errorItems);
   dragging$ = new BehaviorSubject<boolean>(false);
   errorItems$ = this.dragging$.pipe(
     delay(1000),
-    map(d => !d ? [...this.errorItems] : [...this.errorItemsSwapped]),
-    tap(data => console.log('items', data)),
-    shareReplay({ bufferSize: 1, refCount: true })
-  )
+    map((d) => (!d ? [...this.errorItems] : [...this.errorItemsSwapped])),
+    tap((data) => console.log('items', data)),
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
 
-  noopWhileDrag$ = this.dragging$.pipe(
-    map(d => d ? 'noop' : 'normal')
-  )
+  noopWhileDrag$ = this.dragging$.pipe(map((d) => (d ? 'noop' : 'normal')));
 
   constructor() {}
 
@@ -162,11 +166,13 @@ export class DndComponent {
        * but its near impossible to trigger on purpose then)
        */
     }
-    this.items$.next([...items.map(i => ({
-      id: i.id,
-      group: i.group,
-      value: i.value
-    }))]);
+    this.items$.next([
+      ...items.map((i) => ({
+        id: i.id,
+        group: i.group,
+        value: i.value,
+      })),
+    ]);
     // this.items$.next([...items]);
   }
 
@@ -201,8 +207,8 @@ function createItems(groups = randomInt(20, 10)) {
       Array.from({ length: randomInt(5, 1) }, (_, id) => ({
         id: `${group}${id}`,
         group,
-        value: `${group} Item #${id}`
-      }))
+        value: `${group} Item #${id}`,
+      })),
     );
   }, []);
 }

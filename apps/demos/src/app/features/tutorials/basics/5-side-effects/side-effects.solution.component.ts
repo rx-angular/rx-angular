@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { distinctUntilKeyChanged, map, startWith } from 'rxjs/operators';
@@ -24,9 +31,7 @@ const initComponentState = {
 @Component({
   selector: 'rxa-side-effects-solution',
   template: `
-    <h3>
-      Side Effects
-    </h3>
+    <h3>Side Effects</h3>
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
       (expandedChange)="listExpandedChanges.next($event)"
@@ -34,12 +39,10 @@ const initComponentState = {
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title>
-          List
-        </mat-panel-title>
+        <mat-panel-title> List </mat-panel-title>
         <mat-panel-description>
           <span
-          >{{ vm.list.length }} Repositories Updated every:
+            >{{ vm.list.length }} Repositories Updated every:
             {{ vm.refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -48,7 +51,8 @@ const initComponentState = {
       <button
         mat-raised-button
         color="primary"
-        (click)="refreshClicks$.next($event)">
+        (click)="refreshClicks$.next($event)"
+      >
         Refresh List
       </button>
 
@@ -66,9 +70,12 @@ const initComponentState = {
     </mat-expansion-panel>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class SideEffectsSolution extends RxState<ComponentState>
-  implements OnInit, OnDestroy {
+export class SideEffectsSolution
+  extends RxState<ComponentState>
+  implements OnInit, OnDestroy
+{
   model$ = this.select();
 
   listExpandedChanges = new Subject<boolean>();
@@ -83,14 +90,19 @@ export class SideEffectsSolution extends RxState<ComponentState>
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
+  listExpandedChange = this.$.pipe(
+    distinctUntilKeyChanged('listExpanded'),
+    map((s) => s.listExpanded),
+  );
 
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
     this.connect('listExpanded', this.listExpandedChanges);
     this.connect('list', this.listService.list$.pipe(map(this.parseListItems)));
-    this.hold(this.refreshClicks$.pipe(startWith(true)), () => this.listService.refetchList())
+    this.hold(this.refreshClicks$.pipe(startWith(true)), () =>
+      this.listService.refetchList(),
+    );
   }
 
   ngOnInit(): void {

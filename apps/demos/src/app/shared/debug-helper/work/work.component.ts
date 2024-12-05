@@ -18,6 +18,7 @@ type workType = 'scripting' | 'layouting';
   `,
   styleUrls: ['./work.component.scss'],
   providers: [RxState],
+  standalone: false,
 })
 export class WorkComponent extends Hooks {
   dirtyCheckSubject = new Subject<number>();
@@ -25,7 +26,7 @@ export class WorkComponent extends Hooks {
   state$ = this.state.select();
   iterations$ = this.state.select(
     selectSlice(['base', 'load']),
-    map(({ base, load }) => base * load)
+    map(({ base, load }) => base * load),
   );
   displayElem;
 
@@ -47,7 +48,7 @@ export class WorkComponent extends Hooks {
   constructor(
     public state: RxState<{ load: number; base: number; type: workType }>,
     private elementRef: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
   ) {
     super();
     this.state.set({
@@ -63,19 +64,19 @@ export class WorkComponent extends Hooks {
           switch (t) {
             case 'layouting':
               return ef$.pipe(
-                tap((iterations) => this.layoutingWork(iterations))
+                tap((iterations) => this.layoutingWork(iterations)),
               );
             case 'scripting':
               return ef$.pipe(
-                tap((iterations) => this.scriptingWork(iterations))
+                tap((iterations) => this.scriptingWork(iterations)),
               );
             default:
               return ef$.pipe(
-                tap((iterations) => this.scriptingWork(iterations))
+                tap((iterations) => this.scriptingWork(iterations)),
               );
           }
-        })
-      )
+        }),
+      ),
     );
 
     this.afterViewInit$.subscribe(() => {
@@ -125,11 +126,11 @@ function toColor(n) {
 }
 
 function toLatestWith<I, O>(
-  target$: Observable<O>[]
+  target$: Observable<O>[],
 ): (o: Observable<I>) => Observable<O> {
   return (o$) =>
     o$.pipe(
       withLatestFrom(...target$),
-      map(([_, iterations]) => iterations)
+      map(([_, iterations]) => iterations),
     );
 }

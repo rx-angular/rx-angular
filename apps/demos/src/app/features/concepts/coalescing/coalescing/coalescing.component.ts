@@ -41,6 +41,7 @@ import { Platform } from '@angular/cdk/platform';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CoalescingComponent {
   click$ = new Subject<any>();
@@ -50,6 +51,6 @@ export class CoalescingComponent {
 
   constructor(
     private readonly elRef: ElementRef,
-    private readonly platform: Platform
+    private readonly platform: Platform,
   ) {}
 }

@@ -1,5 +1,5 @@
 import { Provider } from '@angular/core';
-import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
+import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr/node';
 import { Request } from 'express';
 import { CacheHandler, RenderVariant } from './cache-handler';
 

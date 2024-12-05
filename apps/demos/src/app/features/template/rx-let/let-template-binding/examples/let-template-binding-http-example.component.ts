@@ -111,6 +111,7 @@ import {
       }
     `,
   ],
+  standalone: false,
 })
 export class LetTemplateBindingHttpExampleComponent {
   visibleStrategy = 'local';
@@ -128,15 +129,15 @@ export class LetTemplateBindingHttpExampleComponent {
             return fetch(
               `https://swapi.dev/api/people/${
                 Math.floor(Math.random() * 50) + 1
-              }`
+              }`,
             ).then((a) => a.json());
           }
         }),
-        map((hero) => hero.name || hero.detail || 'Not found')
+        map((hero) => hero.name || hero.detail || 'Not found'),
       );
     }),
     share(),
-    takeUntil(this.complete$)
+    takeUntil(this.complete$),
   );
 
   startFetch() {

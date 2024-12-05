@@ -100,7 +100,10 @@ import { immutableArr } from './utils';
             *ngFor="let value of array$ | async; trackBy: trackById"
           >
             <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-              <rxa-rx-for-value [value]="i" [strategy$]="native$"></rxa-rx-for-value>
+              <rxa-rx-for-value
+                [value]="i"
+                [strategy$]="native$"
+              ></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
         </div>
@@ -112,7 +115,7 @@ import { immutableArr } from './utils';
           "
         >
           <h2>*rxFor</h2>
-          <p *rxLet="table$; let t;">
+          <p *rxLet="table$; let t">
             <button
               mat-raised-button
               [unpatch]
@@ -134,7 +137,8 @@ import { immutableArr } from './utils';
             >
               toggle interval
             </button>
-            <rxa-strategy-select [unpatch]="['strategyChange']"
+            <rxa-strategy-select
+              [unpatch]="['strategyChange']"
               (strategyChange)="strategy$.next($event)"
             ></rxa-strategy-select>
           </p>
@@ -163,13 +167,16 @@ import { immutableArr } from './utils';
                 select(['arr']);
                 strategy: strategy$;
                 trackBy: trackById;
-                 parent: false;
+                parent: false;
                 patchZone: false;
                 let o;
                 let v$ = item$
               "
             >
-              <rxa-rx-for-value [strategy$]="strategy$" [value]="v$"></rxa-rx-for-value>
+              <rxa-rx-for-value
+                [strategy$]="strategy$"
+                [value]="v$"
+              ></rxa-rx-for-value>
             </ng-container>
           </rxa-visualizer>
         </div>
@@ -178,10 +185,12 @@ import { immutableArr } from './utils';
   `,
   changeDetection: environment.changeDetection,
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class RxForNestedListsComponent
   extends RxState<{ rows: number; columns: number; changes: number }>
-  implements AfterViewInit {
+  implements AfterViewInit
+{
   @ViewChildren('spanChild') spanChildren: QueryList<ElementRef>;
 
   tK = 'id';
@@ -207,33 +216,35 @@ export class RxForNestedListsComponent
   childrenRendered2 = new Subject<string>();
   private numChildrenRendered2 = 0;
   childrenRendered2$ = this.childrenRendered2.pipe(
-    tap((v) => console.log('rcb2', v))
+    tap((v) => console.log('rcb2', v)),
   );
 
   table$ = this.select();
 
-  strategy$ = new BehaviorSubject<string>(this.strategyProvider.primaryStrategy);
+  strategy$ = new BehaviorSubject<string>(
+    this.strategyProvider.primaryStrategy,
+  );
   changeOneClick$ = new Subject<number>();
   changeAllClick$ = new Subject<number>();
   toggleIntervalClick$ = new Subject<number>();
 
   changesFromTick$ = this.toggleIntervalClick$.pipe(
     scan((a) => !a, false),
-    switchMap((b) => (b ? interval(100) : EMPTY))
+    switchMap((b) => (b ? interval(100) : EMPTY)),
   );
 
   array$ = merge(
     combineLatest([this.changeOneClick$, this.table$]).pipe(
-      switchMap(([_, { rows, columns }]) => immutableArr(rows, columns)(of(1)))
+      switchMap(([_, { rows, columns }]) => immutableArr(rows, columns)(of(1))),
     ),
     combineLatest([
       merge(this.changesFromTick$, this.changeAllClick$),
-      this.table$
+      this.table$,
     ]).pipe(
       switchMap(([_, { rows, columns, changes }]) =>
-        immutableArr(rows, columns)(of(rows))
-      )
-    )
+        immutableArr(rows, columns)(of(rows)),
+      ),
+    ),
   ).pipe(share());
 
   load$ = new BehaviorSubject<number>(0);
@@ -241,9 +252,7 @@ export class RxForNestedListsComponent
 
   dK = (a, b) => a.value === b.value;
 
-  constructor(
-    private strategyProvider: RxStrategyProvider
-  ) {
+  constructor(private strategyProvider: RxStrategyProvider) {
     super();
     this.set({ columns: 5, rows: 10 });
   }

@@ -79,7 +79,7 @@ describe(rxEffects, () => {
       register(
         new Observable(() => {
           return spyInternalOnCleanup;
-        })
+        }),
       );
     });
     fixture.destroy();
@@ -113,7 +113,7 @@ function setupComponent(setupFn?: RxEffectsSetupFn) {
   }
 
   TestBed.configureTestingModule({
-    declarations: [TestComponent],
+    imports: [TestComponent],
   });
 
   const fixture = TestBed.createComponent(TestComponent);

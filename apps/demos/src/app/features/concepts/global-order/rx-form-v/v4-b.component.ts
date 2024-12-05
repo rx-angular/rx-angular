@@ -44,6 +44,7 @@ import { UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class V4BComponent {
   form = this.fb.group({ value: ['t', Validators.minLength(2)] });

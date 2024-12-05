@@ -6,8 +6,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     <rxa-visualizer>
       <div visualizerHeader>
         <h2>Strategy controlled by this component</h2>
-        <br/>
-       <rxa-value-provider
+        <br />
+        <rxa-value-provider
           buttons="true"
           #vP="rxaValueProvider"
         ></rxa-value-provider>
@@ -23,11 +23,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   `,
   host: {
     class: 'm-1 p-1',
-    style: 'display: block;'
+    style: 'display: block;',
   },
-
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class StrategyTokensProvideComponent {
-
-}
+export class StrategyTokensProvideComponent {}

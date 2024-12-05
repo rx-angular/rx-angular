@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { BehaviorSubject, of, startWith, tap, throwError } from 'rxjs';
-import { RxIf } from '../if.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 
 describe('rxIf directive observable values', () => {
@@ -18,8 +17,7 @@ describe('rxIf directive observable values', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TestComponent],
-      imports: [RxIf],
+      imports: [TestComponent],
       providers: [
         {
           provide: RX_RENDER_STRATEGIES_CONFIG,
@@ -262,7 +260,7 @@ describe('rxIf directive observable values', () => {
       fixture = createTestComponent(template);
 
       expect(() => fixture.detectChanges()).toThrowError(
-        /rxThen must be a TemplateRef, but received/
+        /rxThen must be a TemplateRef, but received/,
       );
     }));
 
@@ -274,7 +272,7 @@ describe('rxIf directive observable values', () => {
       fixture = createTestComponent(template);
 
       expect(() => fixture.detectChanges()).toThrowError(
-        /rxElse must be a TemplateRef, but received/
+        /rxElse must be a TemplateRef, but received/,
       );
     }));
   });
@@ -385,7 +383,7 @@ describe('rxIf directive observable values', () => {
 
       fixture = createTestComponent(template);
       getComponent().booleanCondition$ = throwError(() => null).pipe(
-        startWith(true)
+        startWith(true),
       ) as any;
       fixture.detectChanges();
       expect(fixture.nativeElement.textContent).toBe('true');

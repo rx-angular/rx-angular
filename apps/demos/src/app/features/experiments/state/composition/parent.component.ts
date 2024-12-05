@@ -15,6 +15,7 @@ import { SourceService } from './source.service';
     </div>
   `,
   changeDetection: environment.changeDetection,
+  standalone: false,
 })
 export class RxStateParentCompositionComponent implements OnDestroy {
   subscription = new Subscription();
@@ -23,7 +24,7 @@ export class RxStateParentCompositionComponent implements OnDestroy {
 
   composition1$ = this.source.$.pipe(
     scan((numOfEmissions) => ++numOfEmissions, 0),
-    shareReplay(1)
+    shareReplay(1),
   );
 
   constructor(private source: SourceService) {

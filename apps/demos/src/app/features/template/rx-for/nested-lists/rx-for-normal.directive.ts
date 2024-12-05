@@ -40,6 +40,7 @@ import {
 
 @Directive({
   selector: '[rxForNormal]',
+  standalone: false,
 })
 export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy
@@ -52,13 +53,13 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
 
   @Input()
   set rxForNormalOf(
-    potentialObservable: ObservableInput<U> | null | undefined
+    potentialObservable: ObservableInput<U> | null | undefined,
   ) {
     this._rxFor = potentialObservable;
     this.observables$.next(potentialObservable);
   }
   @Input('rxForNormalRenderCallback') set renderCallback(
-    renderCallback: Subject<void>
+    renderCallback: Subject<void>,
   ) {
     this._renderCallback = renderCallback;
   }
@@ -78,7 +79,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
     private cdRef: ChangeDetectorRef,
     private readonly templateRef: TemplateRef<RxDefaultListViewContext<T, U>>,
     private readonly viewContainerRef: ViewContainerRef,
-    private iterableDiffers: IterableDiffers
+    private iterableDiffers: IterableDiffers,
   ) {}
 
   private differ: IterableDiffer<T> | null = null;
@@ -87,7 +88,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
   values$ = this.observables$.pipe(
     switchAll(),
     distinctUntilChanged(),
-    shareReplay({ refCount: true, bufferSize: 1 })
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
   private _rxFor: ObservableInput<U> | null | undefined;
 
@@ -117,7 +118,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
    */
   static ngTemplateContextGuard<T, U extends NgIterable<T>>(
     dir: RxForNormal<T, U>,
-    ctx: any
+    ctx: any,
   ): ctx is RxDefaultListViewContext<T, U> {
     return true;
   }
@@ -134,9 +135,9 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
       concat(
         this.values$.pipe(
           take(1),
-          tap((value) => this.initDiffer(value || ([] as any)))
+          tap((value) => this.initDiffer(value || ([] as any))),
         ),
-        this.values$
+        this.values$,
       )
         .pipe(
           map((i) => this.differ.diff(i)),
@@ -146,9 +147,9 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
             console.error(e);
             return of(null);
           }),
-          tap(this?._renderCallback)
+          tap(this?._renderCallback),
         )
-        .subscribe()
+        .subscribe(),
     );
   }
 
@@ -165,7 +166,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
     const insertMap = new Map<number, RxDefaultListViewContext<T, U>>();
     const scheduleInsert = (
       idx: number,
-      ctx: RxDefaultListViewContext<T, U>
+      ctx: RxDefaultListViewContext<T, U>,
     ) => {
       if (!insertMap.has(idx)) {
         insertMap.set(idx, ctx);
@@ -175,7 +176,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
             const view = this.viewContainerRef.createEmbeddedView(
               this.templateRef,
               insertMap.get(idx),
-              idx
+              idx,
             );
             strat.work(view);
           } catch (e) {
@@ -186,7 +187,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
         this.sub.add(
           of(null)
             .pipe(strat.behavior({ work, scope: this }), take(1))
-            .subscribe(insert)
+            .subscribe(insert),
         );
         behaviors$.push(insert);
       }
@@ -197,7 +198,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
     >();
     const scheduleUpdate = (
       idx: number,
-      update: (context: RxDefaultListViewContext<T, U>) => void
+      update: (context: RxDefaultListViewContext<T, U>) => void,
     ) => {
       const view = this.viewContainerRef.get(idx) as EmbeddedViewRef<any>;
       if (view) {
@@ -214,7 +215,10 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
             strat.work(view);
           };
           behaviors$.push(
-            of(null).pipe(strat.behavior({ work, scope: view as any }), take(1))
+            of(null).pipe(
+              strat.behavior({ work, scope: view as any }),
+              take(1),
+            ),
           );
         }
       } else if (insertMap.has(idx)) {
@@ -226,7 +230,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
       (
         r: IterableChangeRecord<T>,
         previousIndex: number | null,
-        currentIndex: number | null
+        currentIndex: number | null,
       ) => {
         const idx = currentIndex == null ? undefined : currentIndex;
         // insert
@@ -255,7 +259,7 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
             ctx.$implicit = $implicit;
           });
         }
-      }
+      },
     );
     // if views only had identityChanges, update the $implict value
     changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {

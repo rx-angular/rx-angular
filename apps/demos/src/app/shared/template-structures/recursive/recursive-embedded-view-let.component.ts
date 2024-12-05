@@ -4,24 +4,29 @@ import { ReplaySubject } from 'rxjs';
 @Component({
   selector: 'rxa-recursive-embedded-view-let',
   template: `
-    <ng-container *ngIf="level === 0; else: branch">
+    <ng-container *ngIf="level === 0; else branch">
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total - level}}</p>
+        <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-renders *poc1Let="value$; let v" [value$]="v"></rxa-renders>
       </rxa-visualizer>
     </ng-container>
     <ng-template #branch>
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total - level}}</p>
-        <rxa-recursive-embedded-view-let [total]="total" *poc1Let="value$; let v" [level]="level-1"
-                                         [value]="v"></rxa-recursive-embedded-view-let>
+        <p visualizerHeader>Level {{ total - level }}</p>
+        <rxa-recursive-embedded-view-let
+          [total]="total"
+          *poc1Let="value$; let v"
+          [level]="level - 1"
+          [value]="v"
+        ></rxa-recursive-embedded-view-let>
       </rxa-visualizer>
     </ng-template>
   `,
   host: {
-    class: 'd-flex w-100'
+    class: 'd-flex w-100',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RecursiveEmbeddedViewLetComponent {
   @Input()
@@ -41,6 +46,5 @@ export class RecursiveEmbeddedViewLetComponent {
   @Input()
   set value(v) {
     this.value$.next(v);
-  };
-
+  }
 }

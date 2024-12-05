@@ -33,16 +33,17 @@ import { observableToRxTemplateName } from '../../../cdk/utils/rxjs/operators/ob
     <ng-content select="[rxAfterContext]"> </ng-content>
   `,
   providers: [RxState],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RxContextContainer<U> extends Hooks implements OnInit {
   @Input('rxContextContainer')
   set rxContextContainer(
-    potentialObservable: Observable<U> | null | undefined
+    potentialObservable: Observable<U> | null | undefined,
   ) {
     this.rxState.connect(
       'templateName',
-      potentialObservable.pipe(observableToRxTemplateName())
+      potentialObservable.pipe(observableToRxTemplateName()),
     );
   }
 
@@ -50,7 +51,7 @@ export class RxContextContainer<U> extends Hooks implements OnInit {
   set strategy(strategyName$: string | Observable<string> | undefined) {
     this.rxState.connect(
       'strategyName',
-      isObservable(strategyName$) ? strategyName$ : of(strategyName$)
+      isObservable(strategyName$) ? strategyName$ : of(strategyName$),
     );
   }
 
@@ -58,7 +59,7 @@ export class RxContextContainer<U> extends Hooks implements OnInit {
   set rxCompleteTrigger(complete$: Observable<any>) {
     this.rxState.connect(
       'templateName',
-      complete$.pipe(mapTo(RxNotificationKind.complete))
+      complete$.pipe(mapTo(RxNotificationKind.complete)),
     );
   }
 
@@ -66,7 +67,7 @@ export class RxContextContainer<U> extends Hooks implements OnInit {
   set rxErrorTrigger(error$: Observable<any>) {
     this.rxState.connect(
       'templateName',
-      error$.pipe(mapTo(RxNotificationKind.error))
+      error$.pipe(mapTo(RxNotificationKind.error)),
     );
   }
 
@@ -74,7 +75,7 @@ export class RxContextContainer<U> extends Hooks implements OnInit {
   set rxSuspenseTrigger(suspense$: Observable<any>) {
     this.rxState.connect(
       'templateName',
-      suspense$.pipe(mapTo(RxNotificationKind.suspense))
+      suspense$.pipe(mapTo(RxNotificationKind.suspense)),
     );
   }
 
@@ -83,7 +84,7 @@ export class RxContextContainer<U> extends Hooks implements OnInit {
     private readonly rxState: RxState<{
       templateName: RxNotificationKind;
       strategyName: string;
-    }>
+    }>,
   ) {
     super();
   }
@@ -100,4 +101,3 @@ export class RxContextContainer<U> extends Hooks implements OnInit {
     }
   }
 }
-

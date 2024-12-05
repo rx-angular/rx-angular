@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { distinctUntilKeyChanged, map, startWith, tap } from 'rxjs/operators';
@@ -18,28 +25,24 @@ interface ComponentState {
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: []
+  list: [],
 };
 
 @Component({
   selector: 'rxa-side-effects-start',
   template: `
-    <h3>
-      Side Effects
-    </h3>
+    <h3>Side Effects</h3>
     <mat-expansion-panel
-      *ngIf='model$ | async as vm'
-      (expandedChange)='listExpandedChanges.next($event)'
-      [expanded]='vm.listExpanded'
+      *ngIf="model$ | async as vm"
+      (expandedChange)="listExpandedChanges.next($event)"
+      [expanded]="vm.listExpanded"
     >
-      <mat-expansion-panel-header class='list'>
-        <mat-progress-bar *ngIf='false' [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title>
-          List
-        </mat-panel-title>
+      <mat-expansion-panel-header class="list">
+        <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
+        <mat-panel-title> List </mat-panel-title>
         <mat-panel-description>
           <span
-          >{{ vm.list.length }} Repositories Updated every:
+            >{{ vm.list.length }} Repositories Updated every:
             {{ vm.refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -47,15 +50,15 @@ const initComponentState = {
       <!--👇 Change the refresh button -->
       <button
         mat-raised-button
-        color='primary'
-        (click)='onRefreshClicks($event)'
+        color="primary"
+        (click)="onRefreshClicks($event)"
       >
         Refresh List
       </button>
 
-      <div *ngIf='vm.list?.length; else noList'>
+      <div *ngIf="vm.list?.length; else noList">
         <mat-list>
-          <mat-list-item *ngFor='let item of vm.list'>
+          <mat-list-item *ngFor="let item of vm.list">
             {{ item.name }}
           </mat-list-item>
         </mat-list>
@@ -66,10 +69,13 @@ const initComponentState = {
       </ng-template>
     </mat-expansion-panel>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class SideEffectsStart extends RxState<ComponentState>
-  implements OnInit, OnDestroy {
+export class SideEffectsStart
+  extends RxState<ComponentState>
+  implements OnInit, OnDestroy
+{
   //👇 Create a new Subject
 
   model$ = this.select();
@@ -78,7 +84,7 @@ export class SideEffectsStart extends RxState<ComponentState>
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
     map(this.parseListItems),
-    startWith(initComponentState.list)
+    startWith(initComponentState.list),
   );
 
   //👇 Set the refresh interval
@@ -92,7 +98,10 @@ export class SideEffectsStart extends RxState<ComponentState>
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
+  listExpandedChange = this.$.pipe(
+    distinctUntilKeyChanged('listExpanded'),
+    map((s) => s.listExpanded),
+  );
 
   constructor(private listService: ListService) {
     super();

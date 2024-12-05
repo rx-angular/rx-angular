@@ -86,7 +86,10 @@ const eventsToUnpatch: string[] = [
  *
  * @publicApi
  */
-@Directive({ selector: '[unpatch]' })
+@Directive({
+  selector: '[unpatch]',
+  standalone: false,
+})
 export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   /**
    * @description
@@ -123,7 +126,7 @@ export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.subscription = this.events$
       .pipe(
-        tap((eventList) => this.reapplyEventListenersZoneUnPatched(eventList))
+        tap((eventList) => this.reapplyEventListenersZoneUnPatched(eventList)),
       )
       .subscribe();
   }

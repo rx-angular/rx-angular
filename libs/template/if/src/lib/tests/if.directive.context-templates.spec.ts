@@ -17,7 +17,6 @@ import {
   throwError,
 } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
-import { RxIf } from '../if.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 
 const ifContextTemplatesTemplate = `
@@ -51,7 +50,7 @@ const contentElement = (): HTMLElement => nativeElement.querySelector('.value');
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [TestComponent],
+    imports: [TestComponent],
     providers: [
       {
         provide: RX_RENDER_STRATEGIES_CONFIG,
@@ -70,7 +69,6 @@ const setupTestComponent = () => {
         },
       },
     ],
-    imports: [RxIf],
   });
 };
 
@@ -122,7 +120,7 @@ describe('RxIf reactive context templates', () => {
     it('should render "error" template on truthy observable error', () => {
       component.value$ = concat(
         of(true),
-        throwError(() => new Error('test error'))
+        throwError(() => new Error('test error')),
       );
       fixture.detectChanges();
       expectContextToBe('error');
@@ -168,7 +166,7 @@ describe('RxIf reactive context templates', () => {
       fakeAsync(() => {
         component.value$ = interval(1000).pipe(
           map(() => true),
-          take(2)
+          take(2),
         );
         fixture.detectChanges();
         expect(contentElement()).toBeNull();
@@ -183,7 +181,7 @@ describe('RxIf reactive context templates', () => {
         // so we expect "complete" here
         expect(contentElement()).toBeNull();
         expectContextToBe('complete');
-      })
+      }),
     );
   });
 

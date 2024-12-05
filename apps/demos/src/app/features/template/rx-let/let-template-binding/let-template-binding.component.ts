@@ -7,5 +7,6 @@ import { Component } from '@angular/core';
     <rxa-let-template-binding-subject-example />
     <rxa-let-template-binding-http-example />
   `,
+  standalone: false,
 })
 export class LetTemplateBindingComponent {}

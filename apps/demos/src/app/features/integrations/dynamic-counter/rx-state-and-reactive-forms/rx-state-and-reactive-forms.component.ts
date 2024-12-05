@@ -69,6 +69,7 @@ import { updateCount } from '../shared/utils';
     </form>
   `,
   providers: [RxState],
+  standalone: false,
 })
 export class RxStateAndReactiveFormsCounterComponent {
   readonly initialCounterState = INITIAL_STATE;
@@ -86,7 +87,7 @@ export class RxStateAndReactiveFormsCounterComponent {
 
   constructor(
     private fb: UntypedFormBuilder,
-    private $: RxState<CounterState>
+    private $: RxState<CounterState>,
   ) {
     this.reset();
 
@@ -94,21 +95,21 @@ export class RxStateAndReactiveFormsCounterComponent {
     this.$.connect(this.updateCountUp);
     this.$.connect(
       this.counterForm.valueChanges.pipe(
-        selectSlice(['tickSpeed', 'countDiff'])
-      )
+        selectSlice(['tickSpeed', 'countDiff']),
+      ),
     );
     this.$.connect(
       this.btnSetTo.pipe(
         toLatestFrom(
           this.counterForm.valueChanges.pipe(selectSlice(['count'])),
-          { count: this.counterForm.value.count }
-        )
-      )
+          { count: this.counterForm.value.count },
+        ),
+      ),
     );
 
     const updateCountTrigger$ = this.$.select(
       selectSlice(['isTicking', 'tickSpeed']),
-      switchMap((s) => (s.isTicking ? timer(0, s.tickSpeed) : EMPTY))
+      switchMap((s) => (s.isTicking ? timer(0, s.tickSpeed) : EMPTY)),
     );
     this.$.connect('count', updateCountTrigger$, updateCount);
   }

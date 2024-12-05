@@ -108,6 +108,7 @@ import { scan, startWith } from 'rxjs/operators';
       }
     `,
   ],
+  standalone: false,
 })
 export class LetTemplateBindingSubjectExampleComponent {
   errorStub = new Error('Template observable error!');
@@ -127,7 +128,7 @@ export class LetTemplateBindingSubjectExampleComponent {
     this.signals$ = new Subject<any>();
     this.signalsCount$ = this.signals$.pipe(
       scan((acc) => acc + 1, 0),
-      startWith(0)
+      startWith(0),
     );
   }
 }

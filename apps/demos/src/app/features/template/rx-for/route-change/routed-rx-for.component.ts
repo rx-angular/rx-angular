@@ -31,10 +31,7 @@ function getItems(num: number) {
         <button mat-icon-button (click)="toggleSortBy$.next('id')">
           <ng-container *rxIf="sorting.isSortedBy$('id')">
             <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
-            <mat-icon *ngIf="sorting.isDesc()"
-            >arrow_downward
-            </mat-icon
-            >
+            <mat-icon *ngIf="sorting.isDesc()">arrow_downward </mat-icon>
           </ng-container>
         </button>
       </div>
@@ -43,10 +40,7 @@ function getItems(num: number) {
         <button mat-icon-button (click)="toggleSortBy$.next('value')">
           <ng-container *rxIf="sorting.isSortedBy$('value')">
             <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
-            <mat-icon *ngIf="sorting.isDesc()"
-            >arrow_downward
-            </mat-icon
-            >
+            <mat-icon *ngIf="sorting.isDesc()">arrow_downward </mat-icon>
           </ng-container>
         </button>
       </div>
@@ -59,7 +53,7 @@ function getItems(num: number) {
         let item of items$;
         let i = index;
         let count = count;
-          strategy: 'normal';
+        strategy: 'normal';
         trackBy: 'id'
       "
     >
@@ -105,21 +99,22 @@ function getItems(num: number) {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SortingPresenter],
+  standalone: false,
 })
 export class RoutedRxForComponent {
   toggleSortBy$ = new Subject<SortProps<TestItem>>();
 
   constructor(
     private activeRoute: ActivatedRoute,
-    public sorting: SortingPresenter<TestItem>
+    public sorting: SortingPresenter<TestItem>,
   ) {
     this.sorting.connectToggleSortBy(this.toggleSortBy$);
   }
 
   items$ = this.activeRoute.params.pipe(
     map((params: { count: number }) =>
-      getItems(coerceNumberProperty(params.count, 1000))
+      getItems(coerceNumberProperty(params.count, 1000)),
     ),
-   // this.sorting.sortItems()
+    // this.sorting.sortItems()
   );
 }

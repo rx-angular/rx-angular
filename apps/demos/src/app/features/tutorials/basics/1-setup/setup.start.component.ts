@@ -105,6 +105,7 @@ const initComponentState = {
   ],
   providers: [RxActionFactory, RxState, RxEffects],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SetupStart {
   ui = this.rxActions.create();
@@ -114,7 +115,7 @@ export class SetupStart {
   set refreshInterval(refreshInterval$: Observable<number>) {
     this.model.connect(
       'refreshInterval',
-      refreshInterval$.pipe(filter((rI) => rI > 4000))
+      refreshInterval$.pipe(filter((rI) => rI > 4000)),
     );
   }
 
@@ -134,18 +135,18 @@ export class SetupStart {
     private rxActions: RxActionFactory<{
       listExpandedChanges: boolean;
       refreshClicks: undefined;
-    }>
+    }>,
   ) {
     this.model.set(initComponentState);
 
     this.model.connect(
       'list',
-      this.listService.list$.pipe(map(this.parseListItems))
+      this.listService.list$.pipe(map(this.parseListItems)),
     );
 
     this.ef.register(
       merge(this.autoTrigger$, this.ui.listExpandedChanges$),
-      this.fetchEffect
+      this.fetchEffect,
     );
   }
 

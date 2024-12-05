@@ -7,6 +7,7 @@ import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 
 @Directive({
   selector: '[rxSwitch]',
+  standalone: false,
 })
 export class RxSwitch<U> {
   @Input()
@@ -16,7 +17,7 @@ export class RxSwitch<U> {
 
   private strategyHandler = coerceAllFactory<string>(
     () => new BehaviorSubject(this.strategyProvider.primaryStrategy),
-    mergeAll()
+    mergeAll(),
   );
   readonly strategies$ = this.strategyHandler.values$;
 
@@ -31,7 +32,7 @@ export class RxSwitch<U> {
   values$ = this.observables$.pipe(
     distinctUntilChanged(),
     switchAll(),
-    distinctUntilChanged()
+    distinctUntilChanged(),
   );
 
   constructor(private strategyProvider: RxStrategyProvider) {}

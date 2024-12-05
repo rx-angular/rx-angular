@@ -39,6 +39,7 @@ import { RxState } from '@rx-angular/state';
 @Directive({
   selector: '[rxContext]',
   providers: [RxState],
+  standalone: false,
 })
 export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
   @Input()
@@ -50,37 +51,37 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
   set strategy(strategyName$: string | Observable<string> | undefined) {
     this.rxState.connect(
       'strategyName',
-      isObservable(strategyName$) ? strategyName$ : of(strategyName$)
+      isObservable(strategyName$) ? strategyName$ : of(strategyName$),
     );
   }
 
   @Input('rxContextCompleteTpl')
   set rxComplete(
-    templateRef: TemplateRef<RxContextViewContext<U | undefined | null> | null>
+    templateRef: TemplateRef<RxContextViewContext<U | undefined | null> | null>,
   ) {
     this.templateManager.addTemplateRef(
       RxContextTemplateNames.complete,
-      templateRef
+      templateRef,
     );
   }
 
   @Input('rxContextErrorTpl')
   set rxError(
-    templateRef: TemplateRef<RxContextViewContext<U | undefined | null> | null>
+    templateRef: TemplateRef<RxContextViewContext<U | undefined | null> | null>,
   ) {
     this.templateManager.addTemplateRef(
       RxContextTemplateNames.error,
-      templateRef
+      templateRef,
     );
   }
 
   @Input('rxContextSuspenseTpl')
   set rxSuspense(
-    templateRef: TemplateRef<RxContextViewContext<U | undefined | null> | null>
+    templateRef: TemplateRef<RxContextViewContext<U | undefined | null> | null>,
   ) {
     this.templateManager.addTemplateRef(
       RxContextTemplateNames.suspense,
-      templateRef
+      templateRef,
     );
   }
 
@@ -88,7 +89,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
   set rxCompleteTrigger(complete$: Observable<any>) {
     this.rxState.connect(
       'templateName',
-      complete$.pipe(mapTo(RxNotificationKind.Complete))
+      complete$.pipe(mapTo(RxNotificationKind.Complete)),
     );
   }
 
@@ -96,7 +97,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
   set rxErrorTrigger(error$: Observable<any>) {
     this.rxState.connect(
       'templateName',
-      error$.pipe(mapTo(RxNotificationKind.Error))
+      error$.pipe(mapTo(RxNotificationKind.Error)),
     );
   }
 
@@ -104,7 +105,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
   set rxSuspenseTrigger(suspense$: Observable<any>) {
     this.rxState.connect(
       'templateName',
-      suspense$.pipe(mapTo(RxNotificationKind.Suspense))
+      suspense$.pipe(mapTo(RxNotificationKind.Suspense)),
     );
   }
 
@@ -116,7 +117,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
     private readonly rxState: RxState<{
       templateName: RxNotificationKind;
       strategyName: string;
-    }>
+    }>,
   ) {
     super();
     /* this.templateManager = createTemplateManager(
@@ -129,13 +130,13 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
 
   strategy$: Observable<any /*RxStrategyCredentials*/> = this.rxState.select(
     // ngInputFlatten(),
-    startWith(this.strategyProvider.primaryStrategy)
+    startWith(this.strategyProvider.primaryStrategy),
     // nameToStrategyCredentials(this.strategyProvider.strategies, this.strategyProvider.primaryStrategy)
   );
 
   observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
   valuesFromTemplate$ = this.observablesFromTemplate$.pipe(
-    distinctUntilChanged()
+    distinctUntilChanged(),
   );
 
   private subscription: Unsubscribable = Subscription.EMPTY;
@@ -156,7 +157,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
   /** @internal */
   static ngTemplateContextGuard<U>(
     dir: RxContext<U>,
-    ctx: unknown | null | undefined
+    ctx: unknown | null | undefined,
   ): ctx is RxContextViewContext<U> {
     return true;
   }
@@ -164,7 +165,7 @@ export class RxContext<U> extends Hooks implements OnInit, OnDestroy {
   ngOnInit() {
     this.templateManager.addTemplateRef(
       RxContextTemplateNames.content,
-      this.nextTemplateRef
+      this.nextTemplateRef,
     );
     // this.templateManager.displayView(RxContextTemplateNames.content);
 

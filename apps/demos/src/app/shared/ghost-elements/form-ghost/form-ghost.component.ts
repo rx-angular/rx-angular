@@ -12,41 +12,43 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
     </div>
   `,
   encapsulation: ViewEncapsulation.None,
-  styles: [`
-    .form-ghost {
-      position: relative;
-      text-align: left;
-      width: 100%;
-    }
+  styles: [
+    `
+      .form-ghost {
+        position: relative;
+        text-align: left;
+        width: 100%;
+      }
 
-    .form-ghost .button-ghost {
-      width: 50px;
-      float: right;
-    }
+      .form-ghost .button-ghost {
+        width: 50px;
+        float: right;
+      }
 
-    .form-ghost .input-ghost {
-      float: left;
-      line-height: 10px;
-      width: 100%;
-    }
+      .form-ghost .input-ghost {
+        float: left;
+        line-height: 10px;
+        width: 100%;
+      }
 
-    .form-ghost .input-ghost .loader {
-      border: 1px solid lightgray;
-    }
+      .form-ghost .input-ghost .loader {
+        border: 1px solid lightgray;
+      }
 
-    .form-ghost .input-ghost:first-child {
-      width: 48%;
-      padding-right: 5px;
-    }
+      .form-ghost .input-ghost:first-child {
+        width: 48%;
+        padding-right: 5px;
+      }
 
-    .form-ghost .input-ghost:nth-child(2) {
-       width: 48%;
-       float: right;
-    }
-  `]
+      .form-ghost .input-ghost:nth-child(2) {
+        width: 48%;
+        float: right;
+      }
+    `,
+  ],
+  standalone: false,
 })
 export class FormGhostComponent {
-
   numItems = [0];
   @Input()
   set count(n: number) {

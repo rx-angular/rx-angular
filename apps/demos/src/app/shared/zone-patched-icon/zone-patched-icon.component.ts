@@ -3,14 +3,18 @@ import { RxState } from '@rx-angular/state';
 
 @Component({
   selector: 'rxa-zone-patched-icon',
-  template: `
-    <mat-icon style="font-size: 18px; height: 18px; width: 18px;" *rxLet="zoneState$; let zoneState">{{zoneState}}</mat-icon>`,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  template: ` <mat-icon
+    style="font-size: 18px; height: 18px; width: 18px;"
+    *rxLet="zoneState$; let zoneState"
+    >{{ zoneState }}</mat-icon
+  >`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ZonePatchedIconComponent extends RxState<{ zoneState: string }> {
   zoneStates = {
-    'patched': 'wifi',
-    'unpatched': 'wifi_off'
+    patched: 'wifi',
+    unpatched: 'wifi_off',
   };
   zoneState$ = this.select('zoneState');
 
@@ -24,6 +28,4 @@ export class ZonePatchedIconComponent extends RxState<{ zoneState: string }> {
   constructor() {
     super();
   }
-
-
 }

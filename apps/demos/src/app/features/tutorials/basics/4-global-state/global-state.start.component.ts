@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { distinctUntilKeyChanged, map, startWith, tap } from 'rxjs/operators';
@@ -18,15 +25,13 @@ interface ComponentState {
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: []
+  list: [],
 };
 
 @Component({
   selector: 'rxa-global-state-start',
   template: `
-    <h3>
-      Output Bindings
-    </h3>
+    <h3>Output Bindings</h3>
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
@@ -34,13 +39,11 @@ const initComponentState = {
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title>
-          List
-        </mat-panel-title>
+        <mat-panel-title> List </mat-panel-title>
         <!--👇 Refactor state management -->
         <mat-panel-description>
           <span
-          >{{ (storeList$ | async)?.length }} Repositories Updated every:
+            >{{ (storeList$ | async)?.length }} Repositories Updated every:
             {{ vm.refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -70,16 +73,19 @@ const initComponentState = {
     </mat-expansion-panel>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class GlobalStateStart extends RxState<ComponentState>
-  implements OnInit, OnDestroy {
+export class GlobalStateStart
+  extends RxState<ComponentState>
+  implements OnInit, OnDestroy
+{
   model$ = this.select();
 
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
     map(this.parseListItems),
-    startWith(initComponentState.list)
+    startWith(initComponentState.list),
   );
 
   @Input()
@@ -92,7 +98,10 @@ export class GlobalStateStart extends RxState<ComponentState>
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
+  listExpandedChange = this.$.pipe(
+    distinctUntilKeyChanged('listExpanded'),
+    map((s) => s.listExpanded),
+  );
   //👇 Connect the global state to the list slice
   constructor(private listService: ListService) {
     super();

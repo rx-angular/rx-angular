@@ -84,6 +84,7 @@ import { map } from 'rxjs/operators';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RxIfBasicComponent {
   private _renderCalled = 0;

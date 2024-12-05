@@ -17,6 +17,7 @@ import { MockChangeDetectorRef } from './fixtures';
       value === undefined ? 'undefined' : value === null ? 'null' : value
     }}</ng-container>
   `,
+  imports: [RxLet],
 })
 class LetDirectiveTestComponent {
   value$: Observable<number> = of(42);
@@ -34,8 +35,7 @@ let componentNativeElement: any;
 
 const setupLetDirectiveTestComponent = (): void => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveTestComponent],
-    imports: [RxLet],
+    imports: [LetDirectiveTestComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
@@ -50,7 +50,7 @@ const setupLetDirectiveTestComponent = (): void => {
     teardown: { destroyAfterEach: true },
   });
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
-    LetDirectiveTestComponent
+    LetDirectiveTestComponent,
   );
   letDirectiveTestComponent =
     fixtureLetDirectiveTestComponent.componentInstance;

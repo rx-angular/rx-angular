@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -24,9 +31,7 @@ const initComponentState = {
 @Component({
   selector: 'rxa-input-bindings-solution',
   template: `
-    <h3>
-      Input Bindings
-    </h3>
+    <h3>Input Bindings</h3>
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
@@ -34,12 +39,10 @@ const initComponentState = {
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title>
-          List
-        </mat-panel-title>
+        <mat-panel-title> List </mat-panel-title>
         <mat-panel-description>
           <span
-          >{{ (storeList$ | async)?.length }} Repositories Updated every:
+            >{{ (storeList$ | async)?.length }} Repositories Updated every:
             {{ vm.refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -70,31 +73,35 @@ const initComponentState = {
   `,
   styles: [
     `
-        .list .mat-expansion-panel-header {
-          position: relative;
-        }
+      .list .mat-expansion-panel-header {
+        position: relative;
+      }
 
-        .list .mat-expansion-panel-header mat-progress-bar {
-          position: absolute;
-          top: 0px;
-          left: 0;
-        }
+      .list .mat-expansion-panel-header mat-progress-bar {
+        position: absolute;
+        top: 0px;
+        left: 0;
+      }
 
-        .list .mat-expansion-panel-content .mat-expansion-panel-body {
-          padding-top: 10px;
-        }
-      `,
+      .list .mat-expansion-panel-content .mat-expansion-panel-body {
+        padding-top: 10px;
+      }
+    `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class InputBindingsSolution extends RxState<ComponentState> implements OnInit, OnDestroy {
+export class InputBindingsSolution
+  extends RxState<ComponentState>
+  implements OnInit, OnDestroy
+{
   model$ = this.select();
 
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
     map(this.parseListItems),
-    startWith(initComponentState.list)
+    startWith(initComponentState.list),
   );
 
   @Input()

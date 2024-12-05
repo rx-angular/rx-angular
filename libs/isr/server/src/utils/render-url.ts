@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { Provider, StaticProvider } from '@angular/core';
 import { ɵSERVER_CONTEXT as SERVER_CONTEXT } from '@angular/platform-server';
-import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
+import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr/node';
 import { Request, Response } from 'express';
 
 export interface RenderUrlConfig {

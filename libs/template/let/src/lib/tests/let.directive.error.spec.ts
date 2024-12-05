@@ -17,6 +17,7 @@ import { MockChangeDetectorRef } from './fixtures';
       hasError
     }}</ng-container>
   `,
+  imports: [RxLet],
 })
 class LetDirectiveTestErrorComponent {
   value$: Observable<number> = of(42);
@@ -24,8 +25,7 @@ class LetDirectiveTestErrorComponent {
 
 const setupLetDirectiveTestComponentError = (): void => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveTestErrorComponent],
-    imports: [RxLet],
+    imports: [LetDirectiveTestErrorComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
@@ -41,7 +41,7 @@ const setupLetDirectiveTestComponentError = (): void => {
   });
 
   fixtureLetDirectiveTestComponent = TestBed.createComponent(
-    LetDirectiveTestErrorComponent
+    LetDirectiveTestErrorComponent,
   );
   letDirectiveTestComponent =
     fixtureLetDirectiveTestComponent.componentInstance;

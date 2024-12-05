@@ -6,6 +6,7 @@ import { ReplaySubject } from 'rxjs';
   selector: 'template-triggers',
   templateUrl: 'template-triggers.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TemplateTriggersComponent implements OnInit {
   strategy$ = new ReplaySubject<RxStrategyNames<any>>(1);

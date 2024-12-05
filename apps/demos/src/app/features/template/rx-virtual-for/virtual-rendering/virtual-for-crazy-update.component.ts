@@ -8,7 +8,6 @@ import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [
     RxVirtualFor,
     RxVirtualScrollViewportComponent,

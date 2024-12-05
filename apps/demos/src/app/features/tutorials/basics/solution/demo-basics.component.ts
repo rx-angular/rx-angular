@@ -24,6 +24,7 @@ import { DemoBasicsAdapterService } from './demo-basics.adapter.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DemoBasicsViewModelService, DemoBasicsAdapterService],
+  standalone: false,
 })
 export class DemoBasicsComponent extends RxState<any> {
   @Input()
@@ -33,7 +34,7 @@ export class DemoBasicsComponent extends RxState<any> {
 
   constructor(
     public vm: DemoBasicsViewModelService,
-    private ca: DemoBasicsAdapterService
+    private ca: DemoBasicsAdapterService,
   ) {
     super();
 

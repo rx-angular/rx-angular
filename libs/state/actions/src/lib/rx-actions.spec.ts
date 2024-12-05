@@ -239,7 +239,7 @@ function setupComponent<
   }
 
   TestBed.configureTestingModule({
-    declarations: [TestComponent],
+    imports: [TestComponent],
   });
 
   const fixture = TestBed.createComponent(TestComponent);

@@ -32,14 +32,10 @@ import { Subject } from 'rxjs';
           </div>
         </div>
       </div>
-
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [
-  ]
+  styles: [],
+  standalone: false,
 })
-export class ErrorHandlingParentComponent {
-
-
-}
+export class ErrorHandlingParentComponent {}

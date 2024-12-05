@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input, Output, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { select } from '@rx-angular/state/selections';
@@ -33,6 +34,7 @@ export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
   template: `
     <span>{{ (num$ | async) == null ? 'undefined' : (num$ | async) }}</span>
   `,
+  imports: [AsyncPipe],
   providers: [RxState],
 })
 export class RxStateInjectionComponent {
@@ -48,6 +50,7 @@ export class RxStateInjectionComponent {
       (str$ | async) == null ? 'undefined' : (str$ | async)
     }}</span>
   `,
+  imports: [AsyncPipe],
 })
 export class RxStateGlueComponent extends RxState<{ str: string }> {
   str$ = this.select('str');
@@ -83,6 +86,7 @@ export class RxStateGlueComponent extends RxState<{ str: string }> {
     >
     </rx-angular-state-glue-test>
   `,
+  imports: [AsyncPipe],
 })
 export class RxStateGlueContainerComponent extends RxState<PrimitiveState> {
   strChange$ = new Subject<string>();
@@ -103,7 +107,7 @@ describe('LocalProviderTestComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RxStateInjectionComponent],
+      imports: [RxStateInjectionComponent],
       teardown: { destroyAfterEach: true },
     });
     fixture = TestBed.createComponent(RxStateInjectionComponent);
@@ -122,7 +126,7 @@ describe('InheritanceTestComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RxStateInheritanceComponent],
+      imports: [RxStateInheritanceComponent],
       teardown: { destroyAfterEach: true },
     });
     fixture = TestBed.createComponent(RxStateInheritanceComponent);

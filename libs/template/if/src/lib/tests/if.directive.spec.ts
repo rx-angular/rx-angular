@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { RxIf } from '../if.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 
 describe('rxIf directive', () => {
@@ -17,8 +16,7 @@ describe('rxIf directive', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TestComponent],
-      imports: [RxIf],
+      imports: [TestComponent],
       providers: [
         {
           provide: RX_RENDER_STRATEGIES_CONFIG,
@@ -108,7 +106,7 @@ describe('rxIf directive', () => {
     fixture.detectChanges();
     expect(fixture.debugElement.queryAll(By.css('span')).length).toEqual(3);
     expect(fixture.nativeElement.textContent).toEqual(
-      'helloNumberhelloStringhelloFunction'
+      'helloNumberhelloStringhelloFunction',
     );
 
     getComponent().numberCondition = 0;
@@ -266,7 +264,7 @@ describe('rxIf directive', () => {
       fixture = createTestComponent(template);
 
       expect(() => fixture.detectChanges()).toThrowError(
-        /rxThen must be a TemplateRef, but received/
+        /rxThen must be a TemplateRef, but received/,
       );
     }));
 
@@ -278,7 +276,7 @@ describe('rxIf directive', () => {
       fixture = createTestComponent(template);
 
       expect(() => fixture.detectChanges()).toThrowError(
-        /rxElse must be a TemplateRef, but received/
+        /rxElse must be a TemplateRef, but received/,
       );
     }));
   });

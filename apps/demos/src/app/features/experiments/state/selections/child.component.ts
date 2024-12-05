@@ -17,7 +17,7 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
     </div>
   `,
   changeDetection: environment.changeDetection,
-  // providers: [SubscriptionHandlingService]
+  standalone: false,
 })
 export class RxStateChildSelectionsComponent {
   state$ = new ReplaySubject(1);
@@ -31,11 +31,11 @@ export class RxStateChildSelectionsComponent {
 
   formGroup$: Observable<UntypedFormGroup> = this.state$.pipe(
     startWith({}),
-    map((input) => this.getFormGroupFromConfig(input))
+    map((input) => this.getFormGroupFromConfig(input)),
   );
 
   @Output() formValueChange = this.formGroup$.pipe(
-    switchMap((fg: UntypedFormGroup) => fg.valueChanges)
+    switchMap((fg: UntypedFormGroup) => fg.valueChanges),
   );
 
   constructor(private fb: UntypedFormBuilder) {}
@@ -47,7 +47,7 @@ export class RxStateChildSelectionsComponent {
   getFormGroupFromConfig(modelFromInput) {
     const config = Object.entries(modelFromInput).reduce(
       (c, [name, initialValue]) => ({ ...c, [name]: [initialValue] }),
-      {}
+      {},
     );
     return this.fb.group(config);
   }

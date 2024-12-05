@@ -24,7 +24,10 @@ import {
 } from 'rxjs/operators';
 import { RxSwitch } from './rx-switch.directive';
 
-@Directive({ selector: '[rxSwitchCase]' })
+@Directive({
+  selector: '[rxSwitchCase]',
+  standalone: false,
+})
 export class RxSwitchCase implements OnInit, OnDestroy {
   @Input()
   set rxSwitchCaseValue(v) {
@@ -46,7 +49,7 @@ export class RxSwitchCase implements OnInit, OnDestroy {
     public templateRef: TemplateRef<Object>,
     private cdRef: ChangeDetectorRef,
     private strategyProvider: RxStrategyProvider<RxStrategyNames>,
-    @Host() private rxSwitch: RxSwitch<any>
+    @Host() private rxSwitch: RxSwitch<any>,
   ) {}
 
   ngOnInit() {
@@ -60,9 +63,9 @@ export class RxSwitchCase implements OnInit, OnDestroy {
           onStrategy(
             v,
             this.strategyProvider.strategies[strategyName],
-            this.rxSwitchCaseWorkFactory
-          )
-        )
+            this.rxSwitchCaseWorkFactory,
+          ),
+        ),
         // applyStrategy2(this.rxSwitch.strategy$, this.rxSwitchCaseWorkFactory, this._view)
       )
       .subscribe({ error: console.log });
@@ -77,7 +80,7 @@ export class RxSwitchCase implements OnInit, OnDestroy {
     this._view = this.viewContainer.createEmbeddedView(
       this.templateRef,
       { $implicit: this.caseValue },
-      0
+      0,
     );
     this.viewContainer.detach(0);
   }

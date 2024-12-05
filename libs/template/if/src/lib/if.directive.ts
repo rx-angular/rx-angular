@@ -14,7 +14,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { ɵtoObservableMicrotask } from '@angular/core/rxjs-interop';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
   createTemplateNotifier,
@@ -558,7 +558,7 @@ export class RxIf<T = unknown>
     if (changes.rxIf) {
       if (isSignal(this.rxIf)) {
         this.templateNotifier.next(
-          toObservable(this.rxIf, { injector: this.injector }),
+          ɵtoObservableMicrotask(this.rxIf, { injector: this.injector }),
         );
       } else {
         this.templateNotifier.next(this.rxIf);

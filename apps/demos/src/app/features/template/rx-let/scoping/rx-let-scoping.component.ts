@@ -106,6 +106,7 @@ import { map } from 'rxjs/operators';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RxLetScopingComponent implements AfterViewInit {
   private _renderCalled = 0;

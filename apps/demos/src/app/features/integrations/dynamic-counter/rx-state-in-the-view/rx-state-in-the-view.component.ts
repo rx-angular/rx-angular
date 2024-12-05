@@ -81,6 +81,7 @@ import { updateCount } from '../shared/utils';
       </mat-form-field>
     </div>
   `,
+  standalone: false,
 })
 export class RxStateInTheViewComponent extends RxState<CounterState> {
   initialCounterState = INITIAL_STATE;
@@ -93,7 +94,7 @@ export class RxStateInTheViewComponent extends RxState<CounterState> {
 
   private readonly updateCountTrigger$ = this.select(
     selectSlice(['isTicking', 'tickSpeed']),
-    switchMap((s) => (s.isTicking ? timer(0, s.tickSpeed) : EMPTY))
+    switchMap((s) => (s.isTicking ? timer(0, s.tickSpeed) : EMPTY)),
   );
 
   constructor() {
@@ -103,8 +104,8 @@ export class RxStateInTheViewComponent extends RxState<CounterState> {
       'count',
       this.setToClick.pipe(
         toLatestFrom(this.countChange, this.initialCounterState.count + ''),
-        toInt()
-      )
+        toInt(),
+      ),
     );
     this.connect('count', this.updateCountTrigger$, updateCount);
   }

@@ -1,10 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { Observable } from 'rxjs';
-import { RxFor } from '../for.directive';
 import {
   createErrorHandler,
   createTestComponent as utilCreateTestComponent,
@@ -18,7 +16,7 @@ const customErrorHandler: ErrorHandler = {
 };
 
 function createTestComponent(
-  template = `<div><span *rxFor="let item of itemsHot$">{{item.toString()}};</span></div>`
+  template = `<div><span *rxFor="let item of itemsHot$">{{item.toString()}};</span></div>`,
 ) {
   return utilCreateTestComponent(template);
 }
@@ -48,8 +46,7 @@ describe('rxFor with observables', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TestComponent],
-      imports: [CommonModule, RxFor],
+      imports: [TestComponent],
       providers: [
         {
           provide: ErrorHandler,
@@ -179,7 +176,7 @@ describe('rxFor with observables', () => {
     const errorSpy = jest.spyOn(errorHandler, 'handleError');
 
     const expectedError = new Error(
-      "NG0901: Cannot find a differ supporting object 'whaaa' of type 'string'"
+      "NG0901: Cannot find a differ supporting object 'whaaa' of type 'string'",
     );
     getComponent().itemsHot$.next(<any>'whaaa');
     fixture.detectChanges();
@@ -192,7 +189,7 @@ describe('rxFor with observables', () => {
     errorHandler = createErrorHandler();
     const errorSpy = jest.spyOn(errorHandler, 'handleError');
     const expectedError = new Error(
-      "NG0900: Error trying to diff 'whaaa'. Only arrays and iterables are allowed"
+      "NG0900: Error trying to diff 'whaaa'. Only arrays and iterables are allowed",
     );
     detectChangesAndExpectText('1;2;');
 
