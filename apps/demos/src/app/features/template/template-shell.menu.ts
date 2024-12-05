@@ -1,3 +1,4 @@
+import { RX_CHUNK_MENU_ITEMS } from './chunk/rx-chunk.menu';
 import { PUSH_PIPE_MENU } from './push/push.menu';
 import { MENU_ITEMS as RX_LET_MENU_ITEMS } from './rx-let/rx-let.menu';
 import { MENU_ITEMS as RX_IF_MENU_ITEMS } from './rx-if/rx-if.menu';
@@ -38,6 +39,11 @@ export const TEMPLATE_MENU = [
     label: '*rxFor',
     link: 'rx-for',
     children: RX_FOR_MENU_ITEMS,
+  },
+  {
+    label: '*rxChunk',
+    link: 'rx-chunk',
+    children: RX_CHUNK_MENU_ITEMS,
   },
   {
     label: 'Virtual Scrolling',
