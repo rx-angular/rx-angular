@@ -14,13 +14,13 @@ To do that, you can use the `modifyCachedHtml` and `modifyGeneratedHtml` callbac
 
 ### modifyCachedHtml
 
-The `modifyCachedHtml` callback is called when the html is served from cache (on every user request). It receives the request and the cached html as parameters. It should return the modified html.
+The `modifyCachedHtml` callback is called when the html is served from cache (on every user request). It receives the request and the cached html as parameters. It should return the modified html. However, if compressHtml is set, this callback will not be called, since the cached html is compressed and cannot be modified.
 
 ### modifyGeneratedHtml
 
 The `modifyGeneratedHtml` callback is called when the html is generated on the fly (before the cache is stored). It receives the request and the generated html as parameters. It should return the modified html.
 
-### Example
+#### Example
 
 ```ts
 server.get(
@@ -55,3 +55,7 @@ server.get(
 :::caution **Important:**
 Use these methods with caution as the logic written can increase the processing time.
 :::
+
+### compressHtml (> v18.1.0)
+
+A compression callback can be provided to compress the HTML before storing it in the cache. If not provided, the HTML will be stored without compression. When provided, the HTML will be compressed and stored as Buffer | string in the cache (depending on how cache handler is implemented. Default examples use Buffer). Note that this will disable the modifyCachedHtml callback, as compressed HTML cannot be modified.
