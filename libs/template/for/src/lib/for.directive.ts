@@ -18,11 +18,11 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-import { ɵtoObservableMicrotask } from '@angular/core/rxjs-interop';
 import {
   coerceDistinctWith,
   coerceObservableWith,
 } from '@rx-angular/cdk/coercing';
+import { toObservableMicrotaskInternal } from '@rx-angular/cdk/internals/core';
 import {
   RxStrategyNames,
   RxStrategyProvider,
@@ -132,7 +132,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       this.staticValue = undefined;
       this.renderStatic = false;
       this.observables$.next(
-        ɵtoObservableMicrotask(potentialSignalOrObservable, {
+        toObservableMicrotaskInternal(potentialSignalOrObservable, {
           injector: this.injector,
         }),
       );
