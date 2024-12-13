@@ -48,6 +48,7 @@
       "@rx-angular/state/effects": ["libs/state/effects/src/index.ts"],
       "@rx-angular/state/selections": ["libs/state/selections/src/index.ts"],
       "@rx-angular/template": ["libs/template/src/index.ts"],
+      "@rx-angular/template/chunk": ["libs/template/chunk/src/index.ts"],
       "@rx-angular/template/experimental/viewport-prio": [
         "libs/template/experimental/viewport-prio/src/index.ts"
       ],
