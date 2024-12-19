@@ -1,0 +1,75 @@
+---
+sidebar_label: 'RxVirtualView'
+sidebar_position: 7
+title: 'RxVirtualView'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Motivation
+
+### Motivation
+
+When dealing with large lists or data sets, rendering a large number of DOM elements can significantly impact performance, leading to slow initial load times and sluggish interactions. This is where the RxVirtualView directive comes in. It provides a way to optimize rendering by only displaying the elements that are currently visible in the viewport. This technique, known as virtual scrolling or windowing, can drastically improve the performance of your Angular applications, especially when handling extensive lists.
+
+### Features
+
+- Performance Optimization: Only renders visible elements, improving initial load time and overall performance.
+- Template and Placeholder: Allows for defining a template for visible items and a placeholder for out-of-view items.
+- Observability: Observes the virtual view to determine which items are visible.
+- Configurability: Provides options for customizing behavior, such as rendering strategies and caching.
+
+### Usage
+
+The RxVirtualView directive is designed to work seamlessly with other related directives:
+
+- `rxVirtualViewTemplate`: Defines the template for the virtual view elements.
+- `rxVirtualViewPlaceholder`: Defines the placeholder for elements that are not in the view.
+- `rxVirtualViewObserver`: The container for rxVirtualView directives, responsible for observing the visibility of elements.
+
+### Basic Usage
+
+```angular2html
+<div rxVirtualViewObserver>
+  <div rxVirtualView>
+    <div *rxVirtualViewTemplate>Virtual View 1</div>
+    <div *rxVirtualViewPlaceholder>Loading...</div>
+  </div>
+</div>
+```
+
+This setup will:
+
+1. Use rxVirtualViewObserver to monitor the visibility of the rxVirtualView element.
+2. Render the content of rxVirtualViewTemplate when the element is visible.
+3. Show the rxVirtualViewPlaceholder when the element is not visible.
+
+### Advanced Usage
+
+You can further customize the behavior of RxVirtualView using these optional inputs:
+
+- `cacheEnabled`: Whether to cache the templates and placeholders.
+- `startWithPlaceholderAsap`: Whether to render the placeholder immediately.
+- `keepLastKnownSize`: Whether to keep the last known size of the element.
+- `useContentVisibility`: Whether to use the content-visibility CSS property.
+- `useContainment`: Whether to use the contain CSS property.
+- `placeholderStrategy`: The rendering strategy for the placeholder.
+- `templateStrategy`: The rendering strategy for the template.
+
+### Examples
+
+Optimizing a long list
+
+```angular2html
+<ul rxVirtualViewObserver>
+  @for (item of items; track item.id) {
+    <li rxVirtualView>
+      <div *rxVirtualViewTemplate> {{ item.name }} </div>
+      <div *rxVirtualViewPlaceholder>Loading...</div>
+    </li>
+  }
+</ul>
+```
+
+This example demonstrates how to use RxVirtualView to optimize a long list by only rendering the visible list items.
