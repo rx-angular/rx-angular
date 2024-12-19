@@ -1,12 +1,33 @@
-import { Injectable, OnDestroy, ViewRef } from '@angular/core';
+import { inject, Injectable, OnDestroy, ViewRef } from '@angular/core';
+import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 
+/**
+ * A service that caches templates and placeholders to optimize view rendering.
+ * It makes sure that all cached resources are cleared when the service is destroyed.
+ */
 @Injectable()
 export class VirtualViewCache implements OnDestroy {
-  #maxTemplates = 20;
+  private #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
+
+  // Maximum number of templates that can be stored in the cache.
+  #maxTemplates = this.#config.maxTemplates;
+
+  // Cache for storing template views, identified by a unique key, which is the directive instance.
   #templateCache = new Map<unknown, ViewRef>();
-  #maxPlaceholders = 20;
+
+  // Maximum number of placeholders that can be stored in the cache.
+  #maxPlaceholders = this.#config.maxPlaceholders;
+
+  // Cache for storing placeholder views, identified by a unique key.
   #placeholderCache = new Map<unknown, ViewRef>();
 
+  /**
+   * Stores a placeholder view in the cache. When the cache reaches its limit,
+   * the oldest entry is removed.
+   *
+   * @param key - The key used to identify the placeholder in the cache.
+   * @param view - The ViewRef of the placeholder to cache.
+   */
   storePlaceholder(key: unknown, view: ViewRef) {
     if (this.#placeholderCache.size >= this.#maxPlaceholders) {
       this.#placeholderCache.delete(
@@ -16,10 +37,23 @@ export class VirtualViewCache implements OnDestroy {
     this.#placeholderCache.set(key, view);
   }
 
+  /**
+   * Retrieves a cached placeholder view using the specified key.
+   *
+   * @param key - The key of the placeholder to retrieve.
+   * @returns The ViewRef of the cached placeholder, or undefined if not found.
+   */
   getPlaceholder(key: unknown) {
     return this.#placeholderCache.get(key);
   }
 
+  /**
+   * Stores a template view in the cache. When the cache reaches its limit,
+   * the oldest entry is removed.
+   *
+   * @param key - The key used to identify the template in the cache.
+   * @param view - The ViewRef of the template to cache.
+   */
   storeTemplate(key: unknown, view: ViewRef) {
     if (this.#templateCache.size >= this.#maxTemplates) {
       this.#templateCache.delete(this.#templateCache.entries().next().value[0]);
@@ -27,15 +61,29 @@ export class VirtualViewCache implements OnDestroy {
     this.#templateCache.set(key, view);
   }
 
+  /**
+   * Retrieves a cached template view using the specified key.
+   *
+   * @param key - The key of the template to retrieve.
+   * @returns The ViewRef of the cached template, or undefined if not found.
+   */
   getTemplate(key: unknown) {
     return this.#templateCache.get(key);
   }
 
+  /**
+   * Clears both template and placeholder caches for a given key.
+   *
+   * @param key - The key of the template and placeholder to remove.
+   */
   clear(key: unknown) {
     this.#templateCache.delete(key);
     this.#placeholderCache.delete(key);
   }
 
+  /**
+   * Clears all cached resources when the service is destroyed.
+   */
   ngOnDestroy() {
     this.#templateCache.clear();
     this.#placeholderCache.clear();

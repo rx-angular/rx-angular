@@ -25,8 +25,6 @@ import { VirtualViewCache } from './virtual-view-cache';
 
 declare const ngDevMode: boolean;
 
-type BooleanInput = string | boolean | null | undefined;
-
 @Directive({
   selector: '[rxVirtualView]',
   host: {
@@ -42,53 +40,50 @@ type BooleanInput = string | boolean | null | undefined;
   providers: [{ provide: _RxVirtualView, useExisting: RxVirtualView }],
 })
 export class RxVirtualView implements AfterContentInit, _RxVirtualView {
-  template: _RxVirtualViewTemplate;
-  placeholder?: _RxVirtualViewPlaceholder;
+  readonly #observer = inject(_RxVirtualViewObserver);
+  readonly #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  readonly #strategyProvider = inject<RxStrategyProvider>(RxStrategyProvider);
+  readonly #viewCache = inject(VirtualViewCache);
+  readonly #resizeObserver = inject(RxaResizeObserver);
+  readonly #destroyRef = inject(DestroyRef);
 
-  #observer = inject(_RxVirtualViewObserver);
-  #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  #strategyProvider = inject<RxStrategyProvider>(RxStrategyProvider);
-  #viewCache = inject(VirtualViewCache);
-  #resizeObserver = inject(RxaResizeObserver);
-  #destroyRef = inject(DestroyRef);
+  private template: _RxVirtualViewTemplate;
+  private placeholder?: _RxVirtualViewPlaceholder;
 
-  cacheEnabled = input<boolean, BooleanInput>(true, {
+  readonly cacheEnabled = input(true, { transform: booleanAttribute });
+
+  readonly startWithPlaceholderAsap = input(false, {
     transform: booleanAttribute,
   });
 
-  startWithPlaceholderAsap = input<boolean, BooleanInput>(false, {
-    transform: booleanAttribute,
-  });
+  readonly keepLastKnownSize = input(false, { transform: booleanAttribute });
 
-  keepLastKnownSize = input<boolean, BooleanInput>(false, {
-    transform: booleanAttribute,
-  });
+  readonly useContentVisibility = input(false, { transform: booleanAttribute });
 
-  useContentVisibility = input<boolean, BooleanInput>(false, {
-    transform: booleanAttribute,
-  });
+  readonly useContainment = input(true, { transform: booleanAttribute });
 
-  useContainment = input<boolean, BooleanInput>(true, {
-    transform: booleanAttribute,
-  });
+  readonly #placeholderVisible = signal(false);
 
-  #placeholderVisible = signal(false);
-  #templateVisible = false;
-  #visible$ = connectable(
+  #templateIsShown = false;
+
+  readonly #visible$ = connectable(
     this.#observer.register(this.#elementRef.nativeElement),
     {
       connector: () => new ReplaySubject<boolean>(1),
     },
   );
 
-  size = signal({ width: 0, height: 0 });
-  width = computed(() =>
+  readonly size = signal({ width: 0, height: 0 });
+
+  readonly width = computed(() =>
     this.size().width ? `${this.size().width}px` : 'auto',
   );
-  height = computed(() =>
+
+  readonly height = computed(() =>
     this.size().height ? `${this.size().height}px` : 'auto',
   );
-  containment = computed(() => {
+
+  readonly containment = computed(() => {
     if (!this.useContainment()) {
       return null;
     }
@@ -96,25 +91,26 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
       ? 'size layout paint'
       : 'content';
   });
-  intrinsicWidth = computed(() => {
+
+  readonly intrinsicWidth = computed(() => {
     if (!this.useContentVisibility()) {
       return null;
     }
     return this.width() === 'auto' ? 'auto' : `auto ${this.width()}`;
   });
-  intrinsicHeight = computed(() => {
+  readonly intrinsicHeight = computed(() => {
     if (!this.useContentVisibility()) {
       return null;
     }
     return this.height() === 'auto' ? 'auto' : `auto ${this.height()}`;
   });
 
-  minHeight = computed(() => {
+  readonly minHeight = computed(() => {
     return this.keepLastKnownSize() && this.#placeholderVisible()
       ? this.height()
       : null;
   });
-  minWidth = computed(() => {
+  readonly minWidth = computed(() => {
     return this.keepLastKnownSize() && this.#placeholderVisible()
       ? this.width()
       : null;
@@ -139,7 +135,7 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
         distinctUntilChanged(),
         switchMap((visible) => {
           if (visible) {
-            return this.#templateVisible
+            return this.#templateIsShown
               ? NEVER
               : this.showTemplate$().pipe(
                   switchMap((view) => {
@@ -178,7 +174,7 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
   private showTemplate$(): Observable<EmbeddedViewRef<unknown>> {
     return this.#strategyProvider.schedule(
       () => {
-        this.#templateVisible = true;
+        this.#templateIsShown = true;
         this.#placeholderVisible.set(false);
         const placeHolder = this.template.viewContainerRef.detach();
         if (this.cacheEnabled() && placeHolder) {
@@ -204,20 +200,38 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
     });
   }
 
+  /**
+   * Renders a placeholder within the view container, and hides the template.
+   *
+   * If we already have a template and cache enabled, we store the template in
+   * the cache, so we can reuse it later.
+   *
+   * When we want to render the placeholder, we try to get it from the cache,
+   * and if it is not available, we create a new one.
+   *
+   * Then insert the placeholder into the view container and trigger a CD.
+   */
   private renderPlaceholder() {
     this.#placeholderVisible.set(true);
-    this.#templateVisible = false;
+    this.#templateIsShown = false;
+
     const template = this.template.viewContainerRef.detach();
-    if (this.cacheEnabled() && template) {
-      this.#viewCache.storeTemplate(this, template);
-    } else if (!this.cacheEnabled() && template) {
-      template.destroy();
+
+    if (template) {
+      if (this.cacheEnabled()) {
+        this.#viewCache.storeTemplate(this, template);
+      } else {
+        template.destroy();
+      }
+
+      template?.detectChanges();
     }
-    template?.detectChanges();
+
     if (this.placeholder) {
       const placeholderRef =
         this.#viewCache.getPlaceholder(this) ??
         this.placeholder.templateRef.createEmbeddedView({});
+
       this.template.viewContainerRef.insert(placeholderRef);
       placeholderRef.detectChanges();
     }
