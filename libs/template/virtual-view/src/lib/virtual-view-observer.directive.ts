@@ -4,6 +4,7 @@ import {
   ElementRef,
   inject,
   input,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
@@ -21,7 +22,7 @@ import { VirtualViewCache } from './virtual-view-cache';
     { provide: _RxVirtualViewObserver, useExisting: RxVirtualViewObserver },
   ],
 })
-export class RxVirtualViewObserver implements OnInit {
+export class RxVirtualViewObserver implements OnInit, OnDestroy {
   #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   #observer: IntersectionObserver | null = null;
@@ -43,7 +44,7 @@ export class RxVirtualViewObserver implements OnInit {
     return this.#elementRef.nativeElement;
   });
 
-  #elements = new WeakMap<Element, Subject<boolean>>();
+  #elements = new Map<Element, Subject<boolean>>();
 
   #forcedHidden$ = new BehaviorSubject(false);
 
@@ -61,6 +62,13 @@ export class RxVirtualViewObserver implements OnInit {
         threshold: this.threshold(),
       },
     );
+  }
+
+  ngOnDestroy() {
+    this.#elements.clear();
+    this.#observer?.disconnect();
+    this.#observer = null;
+    this.#elementRef = null;
   }
 
   hideAll(): void {

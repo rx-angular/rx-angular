@@ -8,6 +8,7 @@ import {
   EmbeddedViewRef,
   inject,
   input,
+  OnDestroy,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -37,7 +38,9 @@ import { VirtualViewCache } from './virtual-view-cache';
   },
   providers: [{ provide: _RxVirtualView, useExisting: RxVirtualView }],
 })
-export class RxVirtualView implements AfterContentInit, _RxVirtualView {
+export class RxVirtualView
+  implements AfterContentInit, _RxVirtualView, OnDestroy
+{
   readonly #observer = inject(_RxVirtualViewObserver, { optional: true });
   readonly #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly #strategyProvider = inject<RxStrategyProvider>(RxStrategyProvider);
@@ -45,8 +48,8 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
   readonly #resizeObserver = inject(RxaResizeObserver, { optional: true });
   readonly #destroyRef = inject(DestroyRef);
 
-  private template: _RxVirtualViewTemplate;
-  private placeholder?: _RxVirtualViewPlaceholder;
+  #template: _RxVirtualViewTemplate;
+  #placeholder?: _RxVirtualViewPlaceholder;
 
   readonly cacheEnabled = input(true, { transform: booleanAttribute });
 
@@ -122,7 +125,7 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
   }
 
   ngAfterContentInit() {
-    if (!this.template) {
+    if (!this.#template) {
       throw new Error(
         'RxVirtualView expects you to provide a RxVirtualViewTemplate',
       );
@@ -153,22 +156,28 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
           }
           return this.#placeholderVisible() ? NEVER : this.showPlaceholder$();
         }),
-        takeUntilDestroyed(this.#destroyRef),
         tap({
           unsubscribe: () => {
             this.#viewCache.clear(this);
           },
         }),
+        takeUntilDestroyed(this.#destroyRef),
       )
       .subscribe();
   }
 
+  ngOnDestroy() {
+    // WE DON'T NEED THAT... but enea insists!
+    this.#template = null;
+    this.#placeholder = null;
+  }
+
   registerTemplate(template: _RxVirtualViewTemplate) {
-    this.template = template;
+    this.#template = template;
   }
 
   registerPlaceholder(placeholder: _RxVirtualViewPlaceholder) {
-    this.placeholder = placeholder;
+    this.#placeholder = placeholder;
   }
 
   private showTemplate$(): Observable<EmbeddedViewRef<unknown>> {
@@ -176,7 +185,7 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
       () => {
         this.#templateIsShown = true;
         this.#placeholderVisible.set(false);
-        const placeHolder = this.template.viewContainerRef.detach();
+        const placeHolder = this.#template.viewContainerRef.detach();
         if (this.cacheEnabled() && placeHolder) {
           this.#viewCache.storePlaceholder(this, placeHolder);
         } else if (!this.cacheEnabled() && placeHolder) {
@@ -184,8 +193,8 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
         }
         const tmpl =
           (this.#viewCache.getTemplate(this) as EmbeddedViewRef<unknown>) ??
-          this.template.templateRef.createEmbeddedView({});
-        this.template.viewContainerRef.insert(tmpl);
+          this.#template.templateRef.createEmbeddedView({});
+        this.#template.viewContainerRef.insert(tmpl);
         placeHolder?.detectChanges();
 
         return tmpl;
@@ -215,7 +224,7 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
     this.#placeholderVisible.set(true);
     this.#templateIsShown = false;
 
-    const template = this.template.viewContainerRef.detach();
+    const template = this.#template.viewContainerRef.detach();
 
     if (template) {
       if (this.cacheEnabled()) {
@@ -227,12 +236,12 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
       template?.detectChanges();
     }
 
-    if (this.placeholder) {
+    if (this.#placeholder) {
       const placeholderRef =
         this.#viewCache.getPlaceholder(this) ??
-        this.placeholder.templateRef.createEmbeddedView({});
+        this.#placeholder.templateRef.createEmbeddedView({});
 
-      this.template.viewContainerRef.insert(placeholderRef);
+      this.#template.viewContainerRef.insert(placeholderRef);
       placeholderRef.detectChanges();
     }
   }
