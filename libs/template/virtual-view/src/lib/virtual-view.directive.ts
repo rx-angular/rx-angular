@@ -12,7 +12,10 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import {
+  RxStrategyNames,
+  RxStrategyProvider,
+} from '@rx-angular/cdk/render-strategies';
 import { NEVER, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import {
@@ -22,6 +25,7 @@ import {
   _RxVirtualViewTemplate,
 } from './model';
 import { RxaResizeObserver } from './resize-observer';
+import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 import { VirtualViewCache } from './virtual-view-cache';
 
 @Directive({
@@ -47,21 +51,41 @@ export class RxVirtualView
   readonly #viewCache = inject(VirtualViewCache, { optional: true });
   readonly #resizeObserver = inject(RxaResizeObserver, { optional: true });
   readonly #destroyRef = inject(DestroyRef);
+  readonly #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
 
   #template: _RxVirtualViewTemplate;
   #placeholder?: _RxVirtualViewPlaceholder;
 
-  readonly cacheEnabled = input(true, { transform: booleanAttribute });
-
-  readonly startWithPlaceholderAsap = input(false, {
+  readonly cacheEnabled = input(this.#config.cacheEnabled, {
     transform: booleanAttribute,
   });
 
-  readonly keepLastKnownSize = input(false, { transform: booleanAttribute });
+  readonly startWithPlaceholderAsap = input(
+    this.#config.startWithPlaceholderAsap,
+    {
+      transform: booleanAttribute,
+    },
+  );
 
-  readonly useContentVisibility = input(false, { transform: booleanAttribute });
+  readonly keepLastKnownSize = input(this.#config.keepLastKnownSize, {
+    transform: booleanAttribute,
+  });
 
-  readonly useContainment = input(true, { transform: booleanAttribute });
+  readonly useContentVisibility = input(this.#config.useContentVisibility, {
+    transform: booleanAttribute,
+  });
+
+  readonly useContainment = input(this.#config.useContainment, {
+    transform: booleanAttribute,
+  });
+
+  readonly placeholderStrategy = input<RxStrategyNames<string>>(
+    this.#config.placeholderStrategy,
+  );
+
+  readonly templateStrategy = input<RxStrategyNames<string>>(
+    this.#config.templateStrategy,
+  );
 
   readonly #placeholderVisible = signal(false);
 
@@ -199,13 +223,14 @@ export class RxVirtualView
 
         return tmpl;
       },
-      { scope: this },
+      { scope: this, strategy: this.templateStrategy() },
     );
   }
 
   private showPlaceholder$() {
     return this.#strategyProvider.schedule(() => this.renderPlaceholder(), {
       scope: this,
+      strategy: this.placeholderStrategy(),
     });
   }
 

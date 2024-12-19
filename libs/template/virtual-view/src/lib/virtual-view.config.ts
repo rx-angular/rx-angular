@@ -1,4 +1,5 @@
 import { InjectionToken, Provider } from '@angular/core';
+import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 
 export const VIRTUAL_VIEW_CONFIG_TOKEN =
   new InjectionToken<RxVirtualViewConfig>('VIRTUAL_VIEW_CONFIG_TOKEN', {
@@ -7,22 +8,40 @@ export const VIRTUAL_VIEW_CONFIG_TOKEN =
   });
 
 export interface RxVirtualViewConfig {
-  /**
-   * The maximum number of templates that can be stored in the cache.
-   * Defaults to 20.
-   */
-  maxTemplates?: number;
+  keepLastKnownSize?: boolean;
+  useContentVisibility?: boolean;
+  useContainment?: boolean;
+  placeholderStrategy?: RxStrategyNames<string>;
+  templateStrategy?: RxStrategyNames<string>;
+  cacheEnabled?: boolean;
+  startWithPlaceholderAsap?: boolean;
+  cache?: {
+    /**
+     * The maximum number of templates that can be stored in the cache.
+     * Defaults to 20.
+     */
+    maxTemplates?: number;
 
-  /**
-   * The maximum number of placeholders that can be stored in the cache.
-   * Defaults to 20.
-   */
-  maxPlaceholders?: number;
+    /**
+     * The maximum number of placeholders that can be stored in the cache.
+     * Defaults to 20.
+     */
+    maxPlaceholders?: number;
+  };
 }
 
 export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
-  maxTemplates: 20,
-  maxPlaceholders: 20,
+  keepLastKnownSize: false,
+  useContentVisibility: false,
+  useContainment: true,
+  placeholderStrategy: 'low',
+  templateStrategy: 'normal',
+  startWithPlaceholderAsap: false,
+  cacheEnabled: true,
+  cache: {
+    maxTemplates: 20,
+    maxPlaceholders: 20,
+  },
 };
 
 /**
@@ -57,6 +76,10 @@ export function provideVirtualViewConfig(
 ): Provider {
   return {
     provide: VIRTUAL_VIEW_CONFIG_TOKEN,
-    useValue: config,
+    useValue: {
+      ...VIRTUAL_VIEW_CONFIG_DEFAULT,
+      ...config,
+      cache: { ...VIRTUAL_VIEW_CONFIG_DEFAULT.cache, ...(config?.cache ?? {}) },
+    },
   } satisfies Provider;
 }
