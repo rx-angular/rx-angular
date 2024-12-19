@@ -50,6 +50,8 @@ import { VirtualViewCache } from './virtual-view-cache';
  *   </div>
  * </div>
  * ```
+ *
+ * @developerPreview
  */
 @Directive({
   selector: '[rxVirtualView]',

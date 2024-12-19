@@ -68,6 +68,8 @@ export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
  * };
  * ```
  *
+ * @developerPreview
+ *
  * @param config - The configuration object.
  * @returns An object that can be provided to the `VirtualView` service.
  */

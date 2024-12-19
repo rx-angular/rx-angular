@@ -29,6 +29,7 @@ import { VirtualViewCache } from './virtual-view-cache';
  * </div>
  * ```
  *
+ * @developerPreview
  */
 @Directive({
   selector: '[rxVirtualViewObserver]',

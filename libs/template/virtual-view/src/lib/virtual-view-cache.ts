@@ -4,6 +4,8 @@ import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 /**
  * A service that caches templates and placeholders to optimize view rendering.
  * It makes sure that all cached resources are cleared when the service is destroyed.
+ *
+ * @developerPreview
  */
 @Injectable()
 export class VirtualViewCache implements OnDestroy {

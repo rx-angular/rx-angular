@@ -2,6 +2,11 @@ import { DestroyRef, inject, Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 
+/**
+ * A service that observes the resize of the elements.
+ *
+ * @developerPreview
+ */
 @Injectable()
 export class RxaResizeObserver {
   #destroyRef = inject(DestroyRef);
