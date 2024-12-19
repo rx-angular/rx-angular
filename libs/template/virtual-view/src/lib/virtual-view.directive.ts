@@ -28,6 +28,29 @@ import { RxaResizeObserver } from './resize-observer';
 import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 import { VirtualViewCache } from './virtual-view-cache';
 
+/**
+ * The RxVirtualView directive is a directive that allows you to create virtual views.
+ *
+ * It can be used on an element/component to create a virtual view.
+ *
+ * It works by using 3 directives:
+ * - `rxVirtualViewTemplate`: The template to render when the virtual view is visible.
+ * - `rxVirtualViewPlaceholder`: The placeholder to render when the virtual view is not visible.
+ * - `rxVirtualViewObserver`: The directive that observes the virtual view and emits a boolean value indicating whether the virtual view is visible.
+ *
+ * The `rxVirtualViewObserver` directive is mandatory for the `rxVirtualView` directive to work.
+ * And it needs to be a sibling of the `rxVirtualView` directive.
+ *
+ * @example
+ * ```html
+ * <div rxVirtualViewObserver>
+ *   <div rxVirtualView>
+ *     <div *rxVirtualViewTemplate>Virtual View 1</div>
+ *     <div *rxVirtualViewPlaceholder>Loading...</div>
+ *   </div>
+ * </div>
+ * ```
+ */
 @Directive({
   selector: '[rxVirtualView]',
   host: {
@@ -56,10 +79,23 @@ export class RxVirtualView
   #template: _RxVirtualViewTemplate;
   #placeholder?: _RxVirtualViewPlaceholder;
 
+  /**
+   * Useful when we want to cache the templates and placeholders to optimize view rendering.
+   *
+   * Enabled by default.
+   */
   readonly cacheEnabled = input(this.#config.cacheEnabled, {
     transform: booleanAttribute,
   });
 
+  /**
+   * Whether to start with the placeholder asap or not.
+   *
+   * If `true`, the placeholder will be rendered immediately, without waiting for the template to be visible.
+   * This is useful when you want to render the placeholder immediately, but you don't want to wait for the template to be visible.
+   *
+   * This is to counter concurrent rendering, and to avoid flickering.
+   */
   readonly startWithPlaceholderAsap = input(
     this.#config.startWithPlaceholderAsap,
     {
@@ -67,22 +103,44 @@ export class RxVirtualView
     },
   );
 
+  /**
+   * This will keep the last known size of the host element while the template is visible.
+   */
   readonly keepLastKnownSize = input(this.#config.keepLastKnownSize, {
     transform: booleanAttribute,
   });
 
+  /**
+   * Whether to use content visibility or not.
+   *
+   * It will add the `content-visibility` CSS class to the host element, together with
+   * `contain-intrinsic-width` and `contain-intrinsic-height` CSS properties.
+   */
   readonly useContentVisibility = input(this.#config.useContentVisibility, {
     transform: booleanAttribute,
   });
 
+  /**
+   * Whether to use containment or not.
+   *
+   * It will add `contain` css property with:
+   * - `size layout paint`: if `useContentVisibility` is `true` && placeholder is visible
+   * - `content`: if `useContentVisibility` is `false` || template is visible
+   */
   readonly useContainment = input(this.#config.useContainment, {
     transform: booleanAttribute,
   });
 
+  /**
+   * The strategy to use for rendering the placeholder.
+   */
   readonly placeholderStrategy = input<RxStrategyNames<string>>(
     this.#config.placeholderStrategy,
   );
 
+  /**
+   * The strategy to use for rendering the template.
+   */
   readonly templateStrategy = input<RxStrategyNames<string>>(
     this.#config.templateStrategy,
   );
@@ -204,6 +262,10 @@ export class RxVirtualView
     this.#placeholder = placeholder;
   }
 
+  /**
+   * Shows the template using the configured rendering strategy (by default: normal).
+   * @private
+   */
   private showTemplate$(): Observable<EmbeddedViewRef<unknown>> {
     return this.#strategyProvider.schedule(
       () => {
@@ -227,6 +289,10 @@ export class RxVirtualView
     );
   }
 
+  /**
+   * Shows the placeholder using the configured rendering strategy (by default: low).
+   * @private
+   */
   private showPlaceholder$() {
     return this.#strategyProvider.schedule(() => this.renderPlaceholder(), {
       scope: this,
@@ -271,6 +337,10 @@ export class RxVirtualView
     }
   }
 
+  /**
+   * Observes the element size and emits the size as an observable. This is used to calculate the containment.
+   * @private
+   */
   private observeElementSize$() {
     return this.#resizeObserver.observeElement(this.#elementRef.nativeElement);
   }
