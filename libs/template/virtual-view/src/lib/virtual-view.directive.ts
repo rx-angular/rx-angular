@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { connectable, NEVER, Observable, ReplaySubject } from 'rxjs';
+import { NEVER, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import {
   _RxVirtualView,
@@ -22,8 +22,6 @@ import {
 } from './model';
 import { RxaResizeObserver } from './resize-observer';
 import { VirtualViewCache } from './virtual-view-cache';
-
-declare const ngDevMode: boolean;
 
 @Directive({
   selector: '[rxVirtualView]',
@@ -40,11 +38,11 @@ declare const ngDevMode: boolean;
   providers: [{ provide: _RxVirtualView, useExisting: RxVirtualView }],
 })
 export class RxVirtualView implements AfterContentInit, _RxVirtualView {
-  readonly #observer = inject(_RxVirtualViewObserver);
+  readonly #observer = inject(_RxVirtualViewObserver, { optional: true });
   readonly #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly #strategyProvider = inject<RxStrategyProvider>(RxStrategyProvider);
-  readonly #viewCache = inject(VirtualViewCache);
-  readonly #resizeObserver = inject(RxaResizeObserver);
+  readonly #viewCache = inject(VirtualViewCache, { optional: true });
+  readonly #resizeObserver = inject(RxaResizeObserver, { optional: true });
   readonly #destroyRef = inject(DestroyRef);
 
   private template: _RxVirtualViewTemplate;
@@ -66,12 +64,7 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
 
   #templateIsShown = false;
 
-  readonly #visible$ = connectable(
-    this.#observer.register(this.#elementRef.nativeElement),
-    {
-      connector: () => new ReplaySubject<boolean>(1),
-    },
-  );
+  readonly #visible$ = new ReplaySubject<boolean>(1);
 
   readonly size = signal({ width: 0, height: 0 });
 
@@ -117,12 +110,19 @@ export class RxVirtualView implements AfterContentInit, _RxVirtualView {
   });
 
   constructor() {
-    const visibleSub = this.#visible$.connect();
-    this.#destroyRef.onDestroy(() => visibleSub.unsubscribe());
+    if (!this.#observer) {
+      throw new Error(
+        'RxVirtualView expects you to provide a RxVirtualViewObserver',
+      );
+    }
+    this.#observer
+      .register(this.#elementRef.nativeElement)
+      .pipe(takeUntilDestroyed())
+      .subscribe((visible) => this.#visible$.next(visible));
   }
 
   ngAfterContentInit() {
-    if (ngDevMode && !this.template) {
+    if (!this.template) {
       throw new Error(
         'RxVirtualView expects you to provide a RxVirtualViewTemplate',
       );

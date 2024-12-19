@@ -7,7 +7,7 @@ import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
  */
 @Injectable()
 export class VirtualViewCache implements OnDestroy {
-  private #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
+  #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
 
   // Maximum number of templates that can be stored in the cache.
   #maxTemplates = this.#config.maxTemplates;
