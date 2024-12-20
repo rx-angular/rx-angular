@@ -7,28 +7,33 @@ title: 'RxVirtualView'
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+:::info Developer preview
+
+This feature is under developer preview. It won't follow semver.
+
+:::
+
 ## Motivation
 
 A large number of DOM elements can significantly impact performance, leading to slow initial load times and sluggish interactions.
 
+Especially mobile users have a very limited viewport available. Most of the pages contents are hidden below
+the fold. So why render them at all?
+
 When dealing with large lists or data sets there is a technique, known as virtual scrolling or windowing.
 It drastically improves the performance of your Angular applications.
 
-However, if you are not working with plain lists & highly dynamic components, the concept of virtual scrolling isn't applicable.
-This applies to:
+However, if you are not working with plain lists, or highly dynamic components, the concept of virtual scrolling isn't applicable.
+This is true for:
 
-- masonry like layouts
+- masonry layouts
 - dynamic grids
 - landing pages with widgets
 
 This is where the RxVirtualView directive comes in. It provides a simple way to only display the elements that are currently visible to
 the user.
 
-## Features
-
-- Performance Optimization: Only renders visible elements, improving initial load time and overall performance.
-- Template and Placeholder: Allows for defining a template for visible items and a placeholder for out-of-view items.
-- Configurability: Provides options for customizing behavior, such as rendering strategies and caching.
+![rx-virtual-view](../../../static/img/template/rx-virtual-view/rx-virtual-view.jpg)
 
 ## Usage
 
