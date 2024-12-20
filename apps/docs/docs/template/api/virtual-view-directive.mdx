@@ -9,32 +9,49 @@ import TabItem from '@theme/TabItem';
 
 ## Motivation
 
-### Motivation
+A large number of DOM elements can significantly impact performance, leading to slow initial load times and sluggish interactions.
 
-When dealing with large lists or data sets, rendering a large number of DOM elements can significantly impact performance, leading to slow initial load times and sluggish interactions. This is where the RxVirtualView directive comes in. It provides a way to optimize rendering by only displaying the elements that are currently visible in the viewport. This technique, known as virtual scrolling or windowing, can drastically improve the performance of your Angular applications, especially when handling extensive lists.
+When dealing with large lists or data sets there is a technique, known as virtual scrolling or windowing.
+It drastically improves the performance of your Angular applications.
 
-### Features
+However, if you are not working with plain lists & highly dynamic components, the concept of virtual scrolling isn't applicable.
+This applies to:
+
+- masonry like layouts
+- dynamic grids
+- landing pages with widgets
+
+This is where the RxVirtualView directive comes in. It provides a simple way to only display the elements that are currently visible to
+the user.
+
+## Features
 
 - Performance Optimization: Only renders visible elements, improving initial load time and overall performance.
 - Template and Placeholder: Allows for defining a template for visible items and a placeholder for out-of-view items.
-- Observability: Observes the virtual view to determine which items are visible.
 - Configurability: Provides options for customizing behavior, such as rendering strategies and caching.
 
-### Usage
+## Usage
 
-The RxVirtualView directive is designed to work seamlessly with other related directives:
+RxVirtualView is designed to work in combination with related directives:
 
-- `rxVirtualViewTemplate`: Defines the template for the virtual view elements.
-- `rxVirtualViewPlaceholder`: Defines the placeholder for elements that are not in the view.
-- `rxVirtualViewObserver`: The container for rxVirtualView directives, responsible for observing the visibility of elements.
+- `rxVirtualView`: Defines the DOM node being observed for visibility.
+- `rxVirtualViewTemplate`: Defines the template shown when the observed node is visible.
+- `rxVirtualViewPlaceholder`: Defines the placeholder shown when the observed node isn't visible.
+- `rxVirtualViewObserver`: Defines the node being used for the `IntersectionObserver`. Provides cache & other services.
 
 ### Basic Usage
 
-```angular2html
-<div rxVirtualViewObserver>
-  <div rxVirtualView>
+```html
+<!-- use the root node (html) for the IntersectionObserver -->
+<div rxVirtualViewObserver [root]="null">
+  <div class="item" rxVirtualView>
+    <!-- this will be the template when .item is visible to the user -->
     <div *rxVirtualViewTemplate>Virtual View 1</div>
-    <div *rxVirtualViewPlaceholder>Loading...</div>
+    <!-- this will be the template when .item isn't visible to the user -->
+    <div *rxVirtualViewPlaceholder>
+      Placeholder
+      <div></div>
+    </div>
   </div>
 </div>
 ```
@@ -57,19 +74,29 @@ You can further customize the behavior of RxVirtualView using these optional inp
 - `placeholderStrategy`: The rendering strategy for the placeholder.
 - `templateStrategy`: The rendering strategy for the template.
 
-### Examples
+## Examples
 
-Optimizing a long list
-
-```angular2html
-<ul rxVirtualViewObserver>
-  @for (item of items; track item.id) {
-    <li rxVirtualView>
-      <div *rxVirtualViewTemplate> {{ item.name }} </div>
-      <div *rxVirtualViewPlaceholder>Loading...</div>
-    </li>
-  }
-</ul>
-```
+### Optimizing Lists
 
 This example demonstrates how to use RxVirtualView to optimize a long list by only rendering the visible list items.
+We are only rendering the `item` component when it's visible to the user. Otherwise, it gets replaced by an empty div.
+
+:::tip Define placeholder dimensions
+
+The placeholder is what makes or breaks your experience with `RxVirtualView`. In best case it's just
+an empty container which has just the same dimensions as its template it should replace.
+
+This will make sure you don't run into stuttery scrolling behavior and layout shifts.
+
+:::
+
+```html
+<div rxVirtualViewObserver class="container">
+  @for (item of items; track item.id) {
+  <div class="item" rxVirtualView>
+    <item *rxVirtualViewTemplate [item]="item" />
+    <div *rxVirtualViewPlaceholder style="height: 50px;"></div>
+  </div>
+  }
+</div>
+```
