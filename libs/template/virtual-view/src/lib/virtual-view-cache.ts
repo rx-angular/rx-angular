@@ -12,13 +12,13 @@ export class VirtualViewCache implements OnDestroy {
   #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
 
   // Maximum number of templates that can be stored in the cache.
-  #maxTemplates = this.#config.maxTemplates;
+  #maxTemplates = this.#config.cache.maxTemplates;
 
   // Cache for storing template views, identified by a unique key, which is the directive instance.
   #templateCache = new Map<unknown, ViewRef>();
 
   // Maximum number of placeholders that can be stored in the cache.
-  #maxPlaceholders = this.#config.maxPlaceholders;
+  #maxPlaceholders = this.#config.cache.maxPlaceholders;
 
   // Cache for storing placeholder views, identified by a unique key.
   #placeholderCache = new Map<unknown, ViewRef>();

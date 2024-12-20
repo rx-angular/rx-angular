@@ -8,25 +8,25 @@ export const VIRTUAL_VIEW_CONFIG_TOKEN =
   });
 
 export interface RxVirtualViewConfig {
-  keepLastKnownSize?: boolean;
-  useContentVisibility?: boolean;
-  useContainment?: boolean;
-  placeholderStrategy?: RxStrategyNames<string>;
-  templateStrategy?: RxStrategyNames<string>;
-  cacheEnabled?: boolean;
-  startWithPlaceholderAsap?: boolean;
-  cache?: {
+  keepLastKnownSize: boolean;
+  useContentVisibility: boolean;
+  useContainment: boolean;
+  placeholderStrategy: RxStrategyNames<string>;
+  templateStrategy: RxStrategyNames<string>;
+  cacheEnabled: boolean;
+  startWithPlaceholderAsap: boolean;
+  cache: {
     /**
      * The maximum number of templates that can be stored in the cache.
      * Defaults to 20.
      */
-    maxTemplates?: number;
+    maxTemplates: number;
 
     /**
      * The maximum number of placeholders that can be stored in the cache.
      * Defaults to 20.
      */
-    maxPlaceholders?: number;
+    maxPlaceholders: number;
   };
 }
 
@@ -74,7 +74,9 @@ export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
  * @returns An object that can be provided to the `VirtualView` service.
  */
 export function provideVirtualViewConfig(
-  config: RxVirtualViewConfig,
+  config: Partial<
+    RxVirtualViewConfig & { cache: Partial<RxVirtualViewConfig['cache']> }
+  >,
 ): Provider {
   return {
     provide: VIRTUAL_VIEW_CONFIG_TOKEN,
