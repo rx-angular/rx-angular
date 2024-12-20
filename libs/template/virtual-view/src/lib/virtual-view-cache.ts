@@ -32,6 +32,7 @@ export class VirtualViewCache implements OnDestroy {
    */
   storePlaceholder(key: unknown, view: ViewRef) {
     if (this.#maxPlaceholders <= 0) {
+      view.destroy();
       return;
     }
     if (this.#placeholderCache.size >= this.#maxPlaceholders) {
@@ -47,7 +48,9 @@ export class VirtualViewCache implements OnDestroy {
    * @returns The ViewRef of the cached placeholder, or undefined if not found.
    */
   getPlaceholder(key: unknown) {
-    return this.#placeholderCache.get(key);
+    const view = this.#placeholderCache.get(key);
+    this.#placeholderCache.delete(key);
+    return view;
   }
 
   /**
@@ -59,6 +62,7 @@ export class VirtualViewCache implements OnDestroy {
    */
   storeTemplate(key: unknown, view: ViewRef) {
     if (this.#maxTemplates <= 0) {
+      view.destroy();
       return;
     }
     if (this.#templateCache.size >= this.#maxTemplates) {
@@ -74,7 +78,9 @@ export class VirtualViewCache implements OnDestroy {
    * @returns The ViewRef of the cached template, or undefined if not found.
    */
   getTemplate(key: unknown) {
-    return this.#templateCache.get(key);
+    const view = this.#templateCache.get(key);
+    this.#templateCache.delete(key);
+    return view;
   }
 
   /**
@@ -100,9 +106,11 @@ export class VirtualViewCache implements OnDestroy {
   }
 
   #removeOldestEntry(cache: Map<unknown, ViewRef>) {
-    const oldestValue = cache.entries().next().value?.[0];
+    const oldestValue = cache.entries().next().value;
     if (oldestValue !== undefined) {
-      cache.delete(oldestValue);
+      const [key, view] = oldestValue;
+      view?.destroy();
+      cache.delete(key);
     }
   }
 }
