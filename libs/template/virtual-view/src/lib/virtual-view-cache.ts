@@ -31,10 +31,11 @@ export class VirtualViewCache implements OnDestroy {
    * @param view - The ViewRef of the placeholder to cache.
    */
   storePlaceholder(key: unknown, view: ViewRef) {
+    if (this.#maxPlaceholders <= 0) {
+      return;
+    }
     if (this.#placeholderCache.size >= this.#maxPlaceholders) {
-      this.#placeholderCache.delete(
-        this.#placeholderCache.entries().next().value[0],
-      );
+      this.#removeOldestEntry(this.#placeholderCache);
     }
     this.#placeholderCache.set(key, view);
   }
@@ -57,8 +58,11 @@ export class VirtualViewCache implements OnDestroy {
    * @param view - The ViewRef of the template to cache.
    */
   storeTemplate(key: unknown, view: ViewRef) {
+    if (this.#maxTemplates <= 0) {
+      return;
+    }
     if (this.#templateCache.size >= this.#maxTemplates) {
-      this.#templateCache.delete(this.#templateCache.entries().next().value[0]);
+      this.#removeOldestEntry(this.#templateCache);
     }
     this.#templateCache.set(key, view);
   }
@@ -79,7 +83,9 @@ export class VirtualViewCache implements OnDestroy {
    * @param key - The key of the template and placeholder to remove.
    */
   clear(key: unknown) {
+    this.#templateCache.get(key)?.destroy();
     this.#templateCache.delete(key);
+    this.#placeholderCache.get(key)?.destroy();
     this.#placeholderCache.delete(key);
   }
 
@@ -87,7 +93,16 @@ export class VirtualViewCache implements OnDestroy {
    * Clears all cached resources when the service is destroyed.
    */
   ngOnDestroy() {
+    this.#templateCache.forEach((view) => view.destroy());
+    this.#placeholderCache.forEach((view) => view.destroy());
     this.#templateCache.clear();
     this.#placeholderCache.clear();
+  }
+
+  #removeOldestEntry(cache: Map<unknown, ViewRef>) {
+    const oldestValue = cache.entries().next().value?.[0];
+    if (oldestValue !== undefined) {
+      cache.delete(oldestValue);
+    }
   }
 }
