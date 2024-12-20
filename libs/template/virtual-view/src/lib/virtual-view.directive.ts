@@ -17,7 +17,7 @@ import {
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import { NEVER, Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, finalize, switchMap, tap } from 'rxjs/operators';
 import {
   _RxVirtualView,
   _RxVirtualViewObserver,
@@ -240,10 +240,8 @@ export class RxVirtualView
           }
           return this.#placeholderVisible() ? NEVER : this.showPlaceholder$();
         }),
-        tap({
-          unsubscribe: () => {
-            this.#viewCache.clear(this);
-          },
+        finalize(() => {
+          this.#viewCache.clear(this);
         }),
         takeUntilDestroyed(this.#destroyRef),
       )
