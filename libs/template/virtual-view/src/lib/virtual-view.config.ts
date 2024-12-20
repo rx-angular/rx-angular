@@ -75,7 +75,7 @@ export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
  */
 export function provideVirtualViewConfig(
   config: Partial<
-    RxVirtualViewConfig & { cache: Partial<RxVirtualViewConfig['cache']> }
+    RxVirtualViewConfig & { cache?: Partial<RxVirtualViewConfig['cache']> }
   >,
 ): Provider {
   return {
