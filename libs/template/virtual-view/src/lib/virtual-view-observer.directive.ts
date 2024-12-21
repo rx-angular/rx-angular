@@ -8,7 +8,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
+import { distinctUntilChanged, finalize, map, startWith } from 'rxjs/operators';
 import { _RxVirtualViewObserver } from './model';
 import { RxaResizeObserver } from './resize-observer';
 import { VirtualViewCache } from './virtual-view-cache';
@@ -146,9 +146,7 @@ export class RxVirtualViewObserver implements OnInit, OnDestroy {
       map(([isVisible, forcedHidden]) => (forcedHidden ? false : isVisible)),
       startWith(false),
       distinctUntilChanged(),
-      tap({
-        unsubscribe: () => this.#elements.delete(virtualView),
-      }),
+      finalize(() => this.#elements.delete(virtualView)),
     );
   }
 }

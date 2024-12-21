@@ -1,6 +1,6 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, tap } from 'rxjs/operators';
+import { distinctUntilChanged, finalize } from 'rxjs/operators';
 
 /**
  * A service that observes the resize of the elements.
@@ -34,9 +34,7 @@ export class RxaResizeObserver {
 
     return this.#elements.get(element).pipe(
       distinctUntilChanged(),
-      tap({
-        unsubscribe: () => this.#elements.delete(element),
-      }),
+      finalize(() => this.#elements.delete(element)),
     );
   }
 }
