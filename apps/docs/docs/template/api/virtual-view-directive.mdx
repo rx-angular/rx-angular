@@ -35,25 +35,26 @@ the user.
 
 ![rx-virtual-view](../../../static/img/template/rx-virtual-view/rx-virtual-view.jpg)
 
-## Usage
+## Basic Usage
 
 RxVirtualView is designed to work in combination with related directives:
 
+- `rxVirtualViewObserver`: Defines the node being used for the `IntersectionObserver`. Provides cache & other services.
 - `rxVirtualView`: Defines the DOM node being observed for visibility.
 - `rxVirtualViewTemplate`: Defines the template shown when the observed node is visible.
-- `rxVirtualViewPlaceholder`: Defines the placeholder shown when the observed node isn't visible.
-- `rxVirtualViewObserver`: Defines the node being used for the `IntersectionObserver`. Provides cache & other services.
+- `rxVirtualViewPlaceholder`: (Optional) Defines the placeholder shown when the observed node isn't visible.
 
-### Basic Usage
+### Show a widget when it's visible, otherwise show a placeholder
 
 ```html
 <!-- use the root node (html) for the IntersectionObserver -->
 <div rxVirtualViewObserver [root]="null">
-  <div class="item" rxVirtualView>
-    <!-- this will be the template when .item is visible to the user -->
-    <div *rxVirtualViewTemplate>Virtual View 1</div>
-    <!-- this will be the template when .item isn't visible to the user -->
-    <div *rxVirtualViewPlaceholder>
+  <!-- observe the visibility of `.widget` -->
+  <div class="widget" rxVirtualView>
+    <!-- this will be the template when .widget is visible to the user -->
+    <widget *rxVirtualViewTemplate />
+    <!-- this will be the template when .widget isn't visible to the user -->
+    <div *rxVirtualViewPlaceholder class="widget-placeholder">
       Placeholder
       <div></div>
     </div>
@@ -67,25 +68,6 @@ This setup will:
 2. Render the content of rxVirtualViewTemplate when the element is visible.
 3. Show the rxVirtualViewPlaceholder when the element is not visible.
 
-### Advanced Usage
-
-You can further customize the behavior of RxVirtualView using these optional inputs:
-
-- `cacheEnabled`: Whether to cache the templates and placeholders.
-- `startWithPlaceholderAsap`: Whether to render the placeholder immediately.
-- `keepLastKnownSize`: Whether to keep the last known size of the element.
-- `useContentVisibility`: Whether to use the content-visibility CSS property.
-- `useContainment`: Whether to use the contain CSS property.
-- `placeholderStrategy`: The rendering strategy for the placeholder.
-- `templateStrategy`: The rendering strategy for the template.
-
-## Examples
-
-### Optimizing Lists
-
-This example demonstrates how to use RxVirtualView to optimize a long list by only rendering the visible list items.
-We are only rendering the `item` component when it's visible to the user. Otherwise, it gets replaced by an empty div.
-
 :::tip Define placeholder dimensions
 
 The placeholder is what makes or breaks your experience with `RxVirtualView`. In best case it's just
@@ -94,6 +76,11 @@ an empty container which has just the same dimensions as its template it should 
 This will make sure you don't run into stuttery scrolling behavior and layout shifts.
 
 :::
+
+### Optimize lists with @for
+
+This example demonstrates how to use RxVirtualView to optimize lists by only rendering the visible list items.
+We are only rendering the `item` component when it's visible to the user. Otherwise, it gets replaced by an empty div.
 
 ```html
 <div rxVirtualViewObserver class="container">
@@ -104,4 +91,94 @@ This will make sure you don't run into stuttery scrolling behavior and layout sh
   </div>
   }
 </div>
+```
+
+## Configuration & Inputs
+
+### RxVirtualViewObserver Inputs
+
+| Input        | Type                               | description                                                                                                                                                                                              |
+| ------------ | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `root`       | ` ElementRef \ HTMLElement \ null` | The element where the IntersectionObserver is applied to. `null` referes to the browser viewport. See more [here](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#root)       |
+| `rootMargin` | `string`                           | Margin around the root. See more [here](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#rootMargin)                                                                           |
+| `threshold`  | `number \ number[]`                | Indicate at what percentage of the target's visibility the observer's callback should be executed. See more [here](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#threshold) |
+
+### RxVirtualView Inputs
+
+| Input                      | Type      | description                                                                                                                                                                                                                                                                                                                                                  |
+| -------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --- | ------------------- |
+| `cacheEnabled`             | `boolean` | Useful when we want to cache the templates and placeholders to optimize view rendering.                                                                                                                                                                                                                                                                      |
+| `startWithPlaceholderAsap` | `boolean` | Whether to start with the placeholder asap or not. If `true`, the placeholder will be rendered immediately, without waiting for the template to be visible. This is useful when you want to render the placeholder immediately, but you don't want to wait for the template to be visible. This is to counter concurrent rendering, and to avoid flickering. |
+| `keepLastKnownSize`        | `boolean` | This will keep the last known size of the host element while the template is visible. It sets 'minHeight' to the host node                                                                                                                                                                                                                                   |
+| `useContentVisibility`     | `boolean` | It will add the `content-visibility` CSS class to the host element, together with `contain-intrinsic-width` and `contain-intrinsic-height` CSS properties.                                                                                                                                                                                                   |
+| `useContainment`           | `boolean` | It will add `contain` css property with: <br/> - `size layout paint`: if `useContentVisibility` is `true` && placeholder is visible <br/> - `content`: if `useContentVisibility` is `false`                                                                                                                                                                  |     | template is visible |
+| `placeholderStrategy`      | `boolean` | The strategy to use for rendering the placeholder. <br/> Defaults to: `low` <br/> [Read more about strategies](../../cdk/render-strategies/strategies/concurrent-strategies)                                                                                                                                                                                 |
+| `templateStrategy`         | `boolean` | The strategy to use for rendering the template. <br/> Defaults to: `normal` <br/> [Read more about strategies](../../cdk/render-strategies/strategies/concurrent-strategies)                                                                                                                                                                                 |
+
+### RxVirtualViewConfig
+
+Defines an interface representing all configuration that can be adjusted on provider level.
+
+```typescript
+interface RxVirtualViewConfig {
+  keepLastKnownSize: boolean;
+  useContentVisibility: boolean;
+  useContainment: boolean;
+  placeholderStrategy: RxStrategyNames<string>;
+  templateStrategy: RxStrategyNames<string>;
+  cacheEnabled: boolean;
+  startWithPlaceholderAsap: boolean;
+  cache: {
+    /**
+     * The maximum number of templates that can be stored in the cache.
+     * Defaults to 20.
+     */
+    maxTemplates: number;
+
+    /**
+     * The maximum number of placeholders that can be stored in the cache.
+     * Defaults to 20.
+     */
+    maxPlaceholders: number;
+  };
+}
+```
+
+### Customize the config
+
+When you want to customize the default configuration on provider level, you can use the `provideVirtualViewConfig` function.
+
+```typescript
+import { ApplicationConfig } from '@angular/core';
+import { provideVirtualViewConfig } from '@rx-angular/template/virtual-view';
+
+const appConfig: ApplicationConfig = {
+  providers: [
+    provideVirtualViewConfig({
+      /* your custom configuration */
+    }),
+  ],
+};
+```
+
+### Default configuration
+
+This is the default configuration which will be used when no other config was provided.
+
+```typescript
+
+{
+  keepLastKnownSize: false,
+  useContentVisibility: false,
+  useContainment: true,
+  placeholderStrategy: 'low',
+  templateStrategy: 'normal',
+  startWithPlaceholderAsap: false,
+  cacheEnabled: true,
+  cache: {
+    maxTemplates: 20,
+    maxPlaceholders: 20,
+  },
+};
+
 ```
