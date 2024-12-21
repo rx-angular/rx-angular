@@ -59,6 +59,9 @@
       "@rx-angular/template/let": ["libs/template/let/src/index.ts"],
       "@rx-angular/template/push": ["libs/template/push/src/index.ts"],
       "@rx-angular/template/unpatch": ["libs/template/unpatch/src/index.ts"],
+      "@rx-angular/template/virtual-view": [
+        "libs/template/virtual-view/src/index.ts"
+      ],
       "@test-helpers/rx-angular": ["libs/test-helpers/src/index.ts"]
     }
   },
