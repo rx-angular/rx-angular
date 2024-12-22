@@ -8,7 +8,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, finalize, map, startWith } from 'rxjs/operators';
+import { distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import { _RxVirtualViewObserver } from './model';
 import { RxaResizeObserver } from './resize-observer';
 import { VirtualViewCache } from './virtual-view-cache';
@@ -144,9 +144,11 @@ export class RxVirtualViewObserver implements OnInit, OnDestroy {
 
     return combineLatest([isVisible$, this.#forcedHidden$]).pipe(
       map(([isVisible, forcedHidden]) => (forcedHidden ? false : isVisible)),
-      startWith(false),
       distinctUntilChanged(),
-      finalize(() => this.#elements.delete(virtualView)),
+      finalize(() => {
+        this.#observer.unobserve(virtualView);
+        this.#elements.delete(virtualView);
+      }),
     );
   }
 }

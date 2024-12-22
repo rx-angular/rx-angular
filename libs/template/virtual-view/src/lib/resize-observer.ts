@@ -34,7 +34,10 @@ export class RxaResizeObserver {
 
     return this.#elements.get(element).pipe(
       distinctUntilChanged(),
-      finalize(() => this.#elements.delete(element)),
+      finalize(() => {
+        this.#resizeObserver.unobserve(element);
+        this.#elements.delete(element);
+      }),
     );
   }
 }
