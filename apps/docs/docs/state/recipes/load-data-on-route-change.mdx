@@ -4,6 +4,9 @@ title: Load data on route change
 # Renamed from libs/state/docs/snippets/loading-state-and-data-fetching.md
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Load data on route change
 
 On every URL change fetch users from the back end and deal with loading flags
@@ -48,6 +51,10 @@ export class MyComponent {
 
 ## Reactive
 
+<Tabs>
+
+<TabItem value="class-based" label="Class Based (Classic)">
+
 ```typescript
 @Component({
   selector: 'my-comp',
@@ -64,18 +71,58 @@ export class MyComponent {
   constructor(
     private router: Router,
     private userService: UserService,
-    private state: RxState<{ user: string; isLoading: boolean }>
+    private state: RxState<{ user: string; isLoading: boolean }>,
   ) {
     const fetchUserOnUrlChange$ = this.router.params.pipe(
       switchMap((p) =>
         this.userService.getUser(p.user).pipe(
           map((res) => ({ user: res.user })),
           startWith({ isLoading: true }),
-          endWith({ isLoading: false })
-        )
-      )
+          endWith({ isLoading: false }),
+        ),
+      ),
     );
     this.state.connect(fetchUserOnUrlChange$);
   }
 }
 ```
+
+</TabItem>
+
+<TabItem value="new" label="Functional Creation (NEW)">
+
+```typescript
+@Component({
+  selector: 'my-comp',
+  template: `
+    <loading [isLoading]="isLoading$ | push"></loading>
+    <div>{{ user$ | push }}</div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MyComponent {
+  readonly #state = rxState<{ user: string; isLoading: boolean }>();
+  readonly user$ = this.#state.select('user');
+  readonly isLoading$ = this.#state.select('isLoading');
+
+  constructor(
+    private router: Router,
+    private userService: UserService,
+  ) {
+    const fetchUserOnUrlChange$ = this.router.params.pipe(
+      switchMap((p) =>
+        this.userService.getUser(p.user).pipe(
+          map((res) => ({ user: res.user })),
+          startWith({ isLoading: true }),
+          endWith({ isLoading: false }),
+        ),
+      ),
+    );
+    this.#state.connect(fetchUserOnUrlChange$);
+  }
+}
+```
+
+</TabItem>
+
+</Tabs>
