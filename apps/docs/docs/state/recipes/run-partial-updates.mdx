@@ -16,7 +16,9 @@ An instance of `RxState` typed with `T` accepts `Partial<T>` in the `set` and `c
 The partial update can happen directly by providing a `Partial<T>` or over a reduce function `(oldState, change) => newState`.
 
 <Tabs>
+
 <TabItem value="class-based" label="Class Based (Classic)">
+
 ```typescript
 import { RxState } from `rx-angular/state`;
 interface ComponentState {
@@ -35,9 +37,12 @@ this.connect(this.globalState$.list$({ list: [], loading: false }));
 }
 }
 
-````
+```
+
 </TabItem>
+
 <TabItem value="new" label="Functional Creation (NEW)">
+
 ```typescript
 import { rxState } from `rx-angular/state`;
 interface ComponentState {
@@ -56,9 +61,10 @@ class AnyComponent {
     this.#state.connect(this.globalState$.list$({ list: [], loading: false }));
   }
 }
-````
+```
 
 </TabItem>
+
 </Tabs>
 
 Internally the state update looks like this:

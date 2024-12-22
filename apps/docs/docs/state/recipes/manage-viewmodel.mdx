@@ -62,7 +62,9 @@ It returns an Observable that emits a distinct subset of the received object.
 Utilizing it inside of the `RxState#select` method enables you to pluck a _distinct_ `ViewModel` directly out of your state.
 
 <Tabs>
+
 <TabItem value="class-based" label="Class Based (Classic)">
+
 ```typescript
 @Component()
 export class ViewModelComponent extends RxState<ComponentState> {
@@ -72,18 +74,19 @@ export class ViewModelComponent extends RxState<ComponentState> {
       title,
       created,
       total: list.length,
-      visibleItems: list.filter((item) =>
-        visibleItemIds.some((itemId) => itemId === item.id)
-      ),
-    }))
+      visibleItems: list.filter((item) => visibleItemIds.some((itemId) => itemId === item.id)),
+    })),
   );
   constructor() {
     super();
   }
 }
 ```
+
 </TabItem>
+
 <TabItem value="new" label="Functional Creation (NEW)">
+
 ```typescript
 @Component()
 export class ViewModelComponent {
@@ -94,10 +97,8 @@ export class ViewModelComponent {
       title,
       created,
       total: list.length,
-      visibleItems: list.filter((item) =>
-        visibleItemIds.some((itemId) => itemId === item.id)
-      ),
-    }))
+      visibleItems: list.filter((item) => visibleItemIds.some((itemId) => itemId === item.id)),
+    })),
   );
 }
 ```
@@ -129,7 +130,9 @@ This way you may achieve more control over what to render when, e.g. lazy render
 ```
 
 <Tabs>
+
 <TabItem value="class-based" label="Class Based (Classic)">
+
 ```typescript
 interface ComponentViewModel {
   main$: Observable<{ title: string; created: Date }>;
@@ -138,26 +141,26 @@ interface ComponentViewModel {
 
 @Component()
 export class ViewModelComponent extends RxState<ComponentState> {
-readonly viewModel: ComponentViewModel = {
-main$: this.state.select(selectSlice(['title', 'created'])),
+  readonly viewModel: ComponentViewModel = {
+    main$: this.state.select(selectSlice(['title', 'created'])),
     list$: this.state.select(
-selectSlice(['list', 'visibleItemIds']),
-map(({ list, visibleItemIds }) => ({
-total: list.length,
-visibleItems: list.filter((item) =>
-visibleItemIds.some((itemId) => itemId === item.id)
-),
-}))
-),
-};
-constructor() {
-super();
+      selectSlice(['list', 'visibleItemIds']),
+      map(({ list, visibleItemIds }) => ({
+        total: list.length,
+        visibleItems: list.filter((item) => visibleItemIds.some((itemId) => itemId === item.id)),
+      })),
+    ),
+  };
+  constructor() {
+    super();
+  }
 }
-}
+```
 
-````
 </TabItem>
+
 <TabItem value="new" label="Functional Creation (NEW)">
+
 ```typescript
 interface ComponentViewModel {
   main$: Observable<{ title: string; created: Date }>;
@@ -173,14 +176,13 @@ export class ViewModelComponent {
       selectSlice(['list', 'visibleItemIds']),
       map(({ list, visibleItemIds }) => ({
         total: list.length,
-        visibleItems: list.filter((item) =>
-          visibleItemIds.some((itemId) => itemId === item.id)
-        ),
-      }))
+        visibleItems: list.filter((item) => visibleItemIds.some((itemId) => itemId === item.id)),
+      })),
     ),
   };
 }
-````
+```
 
 </TabItem>
+
 </Tabs>

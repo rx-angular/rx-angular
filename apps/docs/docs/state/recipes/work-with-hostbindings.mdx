@@ -40,7 +40,9 @@ all `HostBindings`. If our component doesn't get flagged as dirty, our `HostBind
 sure that state changes that are related to the `HostBindings` value are actually triggering a re-render.
 
 <Tabs>
+
 <TabItem value="class-based" label="Class Based (Classic)">
+
 ```typescript
 @Component({
   providers: [RxState],
@@ -59,12 +61,14 @@ export class RxComponent {
     return `${this.state.get().maxHeight}px`;
   }
 
-constructor(private state: RxState<ComponentState>) {}
+  constructor(private state: RxState<ComponentState>) {}
 }
+```
 
-````
 </TabItem>
+
 <TabItem value="new" label="Functional Creation (NEW)">
+
 ```typescript
 @Component({...})
 export class RxComponent {
@@ -82,9 +86,10 @@ export class RxComponent {
     return `${this.#state.get().maxHeight}px`;
   }
 }
-````
+```
 
 </TabItem>
+
 </Tabs>
 
 With this setup in place we have two options to get things done.
@@ -95,7 +100,9 @@ Since rendering is a side-effect, we could utilize the `hold` method and registe
 a function which handles change detection for us.
 
 <Tabs>
+
 <TabItem value="class-based" label="Class Based (Classic)">
+
 ```typescript
 @Component({
   providers: [RxState],
@@ -114,17 +121,19 @@ export class RxComponent {
     return `${this.state.get().maxHeight}px`;
   }
 
-constructor(
-private state: RxState<ComponentState>,
-private cdRef: ChangeDetectorRef
-) {
-state.hold(state.select(), () => this.cdRef.markForCheck());
+  constructor(
+    private state: RxState<ComponentState>,
+    private cdRef: ChangeDetectorRef,
+  ) {
+    state.hold(state.select(), () => this.cdRef.markForCheck());
+  }
 }
-}
+```
 
-````
 </TabItem>
+
 <TabItem value="new" label="Functional Creation (NEW)">
+
 ```typescript
 @Component({...})
 export class RxComponent {
@@ -149,9 +158,10 @@ export class RxComponent {
     this.#effects.register(this.#state.select(), () => this.cdRef.markForCheck());
   }
 }
-````
+```
 
 </TabItem>
+
 </Tabs>
 
 By calling `ChangeDetectorRef#markForCheck` after every state change, we flag our component dirty when needed and let angular's
@@ -189,7 +199,9 @@ We will utilize the `ElementRef` itself for this purpose and manipulate the DOM 
 Feel free to use angular's `Renderer2` if you want an abstraction layer, should work the exact same way.
 
 <Tabs>
+
 <TabItem value="class-based" label="Class Based (Classic)">
+
 ```typescript
 @Component({
   providers: [RxState],
@@ -198,7 +210,7 @@ export class RxComponent {
   constructor(
     private state: RxState<ComponentState>,
     private elementRef: ElementRef<HTMLElement>,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
   ) {
     // optional: cdRef.detach();
     this.state.hold(this.state.select(), ({ visible, top, maxHeight }) => {
@@ -210,16 +222,17 @@ export class RxComponent {
         'is-hidden': !visible,
       };
       Object.keys(classList).forEach((cls) => {
-        classList[cls]
-          ? nativeElement.classList.add(cls)
-          : nativeElement.classList.remove(cls);
+        classList[cls] ? nativeElement.classList.add(cls) : nativeElement.classList.remove(cls);
       });
     });
   }
 }
 ```
+
 </TabItem>
+
 <TabItem value="new" label="Functional Creation (NEW)">
+
 ```typescript
 @Component({...})
 export class RxComponent {
@@ -247,5 +260,7 @@ export class RxComponent {
   }
 }
 ```
+
 </TabItem>
+
 </Tabs>
