@@ -202,10 +202,6 @@ export class RxVirtualView
         'RxVirtualView expects you to provide a RxVirtualViewObserver',
       );
     }
-    this.#observer
-      .register(this.#elementRef.nativeElement)
-      .pipe(takeUntilDestroyed())
-      .subscribe((visible) => this.#visible$.next(visible));
   }
 
   ngAfterContentInit() {
@@ -217,6 +213,10 @@ export class RxVirtualView
     if (this.startWithPlaceholderAsap()) {
       this.renderPlaceholder();
     }
+    this.#observer
+      .register(this.#elementRef.nativeElement)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((visible) => this.#visible$.next(visible));
     this.#visible$
       .pipe(
         distinctUntilChanged(),
