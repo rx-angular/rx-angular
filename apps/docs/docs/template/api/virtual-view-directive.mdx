@@ -1,0 +1,184 @@
+---
+sidebar_label: 'RxVirtualView'
+sidebar_position: 7
+title: 'RxVirtualView'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::info Developer preview
+
+This feature is under developer preview. It won't follow semver.
+
+:::
+
+## Motivation
+
+A large number of DOM elements can significantly impact performance, leading to slow initial load times and sluggish interactions.
+
+Especially mobile users have a very limited viewport available. Most of the pages contents are hidden below
+the fold. So why render them at all?
+
+When dealing with large lists or data sets there is a technique, known as virtual scrolling or windowing.
+It drastically improves the performance of your Angular applications.
+
+However, if you are not working with plain lists, or highly dynamic components, the concept of virtual scrolling isn't applicable.
+This is true for:
+
+- masonry layouts
+- dynamic grids
+- landing pages with widgets
+
+This is where the RxVirtualView directive comes in. It provides a simple way to only display the elements that are currently visible to
+the user.
+
+![rx-virtual-view](../../../static/img/template/rx-virtual-view/rx-virtual-view.jpg)
+
+## Basic Usage
+
+RxVirtualView is designed to work in combination with related directives:
+
+- `rxVirtualViewObserver`: Defines the node being used for the `IntersectionObserver`. Provides cache & other services.
+- `rxVirtualView`: Defines the DOM node being observed for visibility.
+- `rxVirtualViewContent`: Defines the content shown when the observed node is visible.
+- `rxVirtualViewPlaceholder`: (Optional) Defines the placeholder shown when the observed node isn't visible.
+
+### Show a widget when it's visible, otherwise show a placeholder
+
+```html
+<!-- use the root node (html) for the IntersectionObserver -->
+<div rxVirtualViewObserver [root]="null">
+  <!-- observe the visibility of `.widget` -->
+  <div class="widget" rxVirtualView>
+    <!-- this will be the template when .widget is visible to the user -->
+    <widget *rxVirtualViewContent />
+    <!-- this will be the template when .widget isn't visible to the user -->
+    <div *rxVirtualViewPlaceholder class="widget-placeholder">
+      Placeholder
+      <div></div>
+    </div>
+  </div>
+</div>
+```
+
+This setup will:
+
+1. Use rxVirtualViewObserver to monitor the visibility of the rxVirtualView element.
+2. Render the content of rxVirtualViewContent when the element is visible.
+3. Show the rxVirtualViewPlaceholder when the element is not visible.
+
+:::tip Define placeholder dimensions
+
+The placeholder is what makes or breaks your experience with `RxVirtualView`. In best case it's just
+an empty container which has just the same dimensions as its content it should replace.
+
+This will make sure you don't run into stuttery scrolling behavior and layout shifts.
+
+:::
+
+### Optimize lists with @for
+
+This example demonstrates how to use RxVirtualView to optimize lists by only rendering the visible list items.
+We are only rendering the `item` component when it's visible to the user. Otherwise, it gets replaced by an empty div.
+
+```html
+<div rxVirtualViewObserver class="container">
+  @for (item of items; track item.id) {
+  <div class="item" rxVirtualView>
+    <item *rxVirtualViewContent [item]="item" />
+    <div *rxVirtualViewPlaceholder style="height: 50px;"></div>
+  </div>
+  }
+</div>
+```
+
+## Configuration & Inputs
+
+### RxVirtualViewObserver Inputs
+
+| Input        | Type                               | description                                                                                                                                                                                              |
+| ------------ | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `root`       | ` ElementRef \ HTMLElement \ null` | The element where the IntersectionObserver is applied to. `null` referes to the browser viewport. See more [here](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#root)       |
+| `rootMargin` | `string`                           | Margin around the root. See more [here](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#rootMargin)                                                                           |
+| `threshold`  | `number \ number[]`                | Indicate at what percentage of the target's visibility the observer's callback should be executed. See more [here](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#threshold) |
+
+### RxVirtualView Inputs
+
+| Input                      | Type      | description                                                                                                                                                                                                                                                                                                                                                |
+| -------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cacheEnabled`             | `boolean` | Useful when we want to cache the contents and placeholders to optimize view rendering.                                                                                                                                                                                                                                                                     |
+| `startWithPlaceholderAsap` | `boolean` | Whether to start with the placeholder asap or not. If `true`, the placeholder will be rendered immediately, without waiting for the content to be visible. This is useful when you want to render the placeholder immediately, but you don't want to wait for the content to be visible. This is to counter concurrent rendering, and to avoid flickering. |
+| `keepLastKnownSize`        | `boolean` | This will keep the last known size of the host element while the content is visible. It sets 'minHeight' to the host node                                                                                                                                                                                                                                  |
+| `useContentVisibility`     | `boolean` | It will add the `content-visibility` CSS class to the host element, together with `contain-intrinsic-width` and `contain-intrinsic-height` CSS properties.                                                                                                                                                                                                 |
+| `useContainment`           | `boolean` | It will add `contain` css property with: <br/> - `size layout paint`: if `useContentVisibility` is `true` && placeholder is visible <br/> - `content`: if `useContentVisibility` is `false` or content is visible                                                                                                                                          |
+| `placeholderStrategy`      | `boolean` | The strategy to use for rendering the placeholder. <br/> Defaults to: `low` <br/> [Read more about strategies](../../cdk/render-strategies/strategies/concurrent-strategies)                                                                                                                                                                               |
+| `contentStrategy`          | `boolean` | The strategy to use for rendering the content. <br/> Defaults to: `normal` <br/> [Read more about strategies](../../cdk/render-strategies/strategies/concurrent-strategies)                                                                                                                                                                                |
+
+### RxVirtualViewConfig
+
+Defines an interface representing all configuration that can be adjusted on provider level.
+
+```typescript
+export interface RxVirtualViewConfig {
+  keepLastKnownSize: boolean;
+  useContentVisibility: boolean;
+  useContainment: boolean;
+  placeholderStrategy: RxStrategyNames<string>;
+  contentStrategy: RxStrategyNames<string>;
+  cacheEnabled: boolean;
+  startWithPlaceholderAsap: boolean;
+  cache: {
+    /**
+     * The maximum number of contents that can be stored in the cache.
+     * Defaults to 20.
+     */
+    contentCacheSize: number;
+
+    /**
+     * The maximum number of placeholders that can be stored in the cache.
+     * Defaults to 20.
+     */
+    placeholderCacheSize: number;
+  };
+}
+```
+
+### Customize the config
+
+When you want to customize the default configuration on any provider level (e.g. component, appConfig, route, ...), you can use the `provideVirtualViewConfig` function.
+
+```typescript
+import { ApplicationConfig } from '@angular/core';
+import { provideVirtualViewConfig } from '@rx-angular/template/virtual-view';
+
+const appConfig: ApplicationConfig = {
+  providers: [
+    provideVirtualViewConfig({
+      /* your custom configuration */
+    }),
+  ],
+};
+```
+
+### Default configuration
+
+This is the default configuration which will be used when no other config was provided.
+
+```typescript
+
+{
+  keepLastKnownSize: false,
+  useContentVisibility: false,
+  useContainment: true,
+  placeholderStrategy: 'low',
+  contentStrategy: 'normal',
+  startWithPlaceholderAsap: false,
+  cacheEnabled: true,
+  cache: {
+    contentCacheSize: 20,
+    placeholderCacheSize: 20,
+  },
+};
+
+```
