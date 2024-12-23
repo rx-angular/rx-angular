@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [19.0.1](https://github.com/rx-angular/rx-angular/compare/cdk@19.0.0...cdk@19.0.1) (2024-12-23)
+
+
+### Bug Fixes
+
+* replace toObservableMicrotask private API with proper solution ([339b2e3](https://github.com/rx-angular/rx-angular/commit/339b2e3e69e2ed49d368f33c45fa0bdaac8820f4))
+
+
+
 # [19.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@18.0.0...cdk@19.0.0) (2024-12-05)
 
 
