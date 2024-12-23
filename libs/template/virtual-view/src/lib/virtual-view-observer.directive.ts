@@ -101,7 +101,7 @@ export class RxVirtualViewObserver
       (entries) => {
         entries.forEach((entry) => {
           if (this.#elements.has(entry.target))
-            this.#elements.get(entry.target).next(entry.isIntersecting);
+            this.#elements.get(entry.target)?.next(entry.isIntersecting);
         });
       },
       {
@@ -116,7 +116,6 @@ export class RxVirtualViewObserver
     this.#elements.clear();
     this.#observer?.disconnect();
     this.#observer = null;
-    this.#elementRef = null;
   }
 
   /**
@@ -151,13 +150,13 @@ export class RxVirtualViewObserver
     this.#elements.set(virtualView, isVisible$);
 
     // Start observing the virtual view immediately.
-    this.#observer.observe(virtualView);
+    this.#observer?.observe(virtualView);
 
     return combineLatest([isVisible$, this.#forcedHidden$]).pipe(
       map(([isVisible, forcedHidden]) => (forcedHidden ? false : isVisible)),
       distinctUntilChanged(),
       finalize(() => {
-        this.#observer.unobserve(virtualView);
+        this.#observer?.unobserve(virtualView);
         this.#elements.delete(virtualView);
       }),
     );

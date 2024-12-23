@@ -13,7 +13,7 @@ export class RxaResizeObserver {
   #resizeObserver = new ResizeObserver((entries) => {
     entries.forEach((entry) => {
       if (this.#elements.has(entry.target))
-        this.#elements.get(entry.target).next(entry);
+        this.#elements.get(entry.target)!.next(entry);
     });
   });
 
@@ -35,7 +35,7 @@ export class RxaResizeObserver {
     this.#elements.set(element, resizeEvent$);
     this.#resizeObserver.observe(element, options);
 
-    return this.#elements.get(element).pipe(
+    return resizeEvent$.pipe(
       distinctUntilChanged(),
       finalize(() => {
         this.#resizeObserver.unobserve(element);

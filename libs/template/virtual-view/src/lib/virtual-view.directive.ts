@@ -82,8 +82,8 @@ export class RxVirtualView
   readonly #destroyRef = inject(DestroyRef);
   readonly #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
 
-  #template: _RxVirtualViewTemplate;
-  #placeholder?: _RxVirtualViewPlaceholder;
+  #template: _RxVirtualViewTemplate | null = null;
+  #placeholder: _RxVirtualViewPlaceholder | null = null;
 
   /**
    * Useful when we want to cache the templates and placeholders to optimize view rendering.
@@ -230,10 +230,12 @@ export class RxVirtualView
     if (this.startWithPlaceholderAsap()) {
       this.renderPlaceholder();
     }
+
     this.#observer
-      .observeElementVisibility(this.#elementRef.nativeElement)
+      ?.observeElementVisibility(this.#elementRef.nativeElement)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((visible) => this.#visible$.next(visible));
+
     this.#visible$
       .pipe(
         distinctUntilChanged(),
@@ -243,7 +245,7 @@ export class RxVirtualView
               ? NEVER
               : this.showTemplate$().pipe(
                   switchMap((view) => {
-                    const resize$ = this.#observer.observeElementSize(
+                    const resize$ = this.#observer!.observeElementSize(
                       this.#elementRef.nativeElement,
                       this.resizeObserverOptions(),
                     );
@@ -257,7 +259,7 @@ export class RxVirtualView
           return this.#placeholderVisible() ? NEVER : this.showPlaceholder$();
         }),
         finalize(() => {
-          this.#viewCache.clear(this);
+          this.#viewCache!.clear(this);
         }),
         takeUntilDestroyed(this.#destroyRef),
       )
@@ -265,7 +267,6 @@ export class RxVirtualView
   }
 
   ngOnDestroy() {
-    // WE DON'T NEED THAT... but enea insists!
     this.#template = null;
     this.#placeholder = null;
   }
@@ -287,16 +288,16 @@ export class RxVirtualView
       () => {
         this.#templateIsShown = true;
         this.#placeholderVisible.set(false);
-        const placeHolder = this.#template.viewContainerRef.detach();
+        const placeHolder = this.#template!.viewContainerRef.detach();
         if (this.cacheEnabled() && placeHolder) {
-          this.#viewCache.storePlaceholder(this, placeHolder);
+          this.#viewCache!.storePlaceholder(this, placeHolder);
         } else if (!this.cacheEnabled() && placeHolder) {
           placeHolder.destroy();
         }
         const tmpl =
-          (this.#viewCache.getTemplate(this) as EmbeddedViewRef<unknown>) ??
-          this.#template.templateRef.createEmbeddedView({});
-        this.#template.viewContainerRef.insert(tmpl);
+          (this.#viewCache!.getTemplate(this) as EmbeddedViewRef<unknown>) ??
+          this.#template!.templateRef.createEmbeddedView({});
+        this.#template!.viewContainerRef.insert(tmpl);
         placeHolder?.detectChanges();
 
         return tmpl;
@@ -331,11 +332,11 @@ export class RxVirtualView
     this.#placeholderVisible.set(true);
     this.#templateIsShown = false;
 
-    const template = this.#template.viewContainerRef.detach();
+    const template = this.#template!.viewContainerRef.detach();
 
     if (template) {
       if (this.cacheEnabled()) {
-        this.#viewCache.storeTemplate(this, template);
+        this.#viewCache!.storeTemplate(this, template);
       } else {
         template.destroy();
       }
@@ -345,10 +346,10 @@ export class RxVirtualView
 
     if (this.#placeholder) {
       const placeholderRef =
-        this.#viewCache.getPlaceholder(this) ??
+        this.#viewCache!.getPlaceholder(this) ??
         this.#placeholder.templateRef.createEmbeddedView({});
 
-      this.#template.viewContainerRef.insert(placeholderRef);
+      this.#template!.viewContainerRef.insert(placeholderRef);
       placeholderRef.detectChanges();
     }
   }
