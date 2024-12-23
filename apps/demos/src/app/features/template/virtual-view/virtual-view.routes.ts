@@ -13,4 +13,11 @@ export const VIRTUAL_VIEW_ROUTES: Routes = [
         (m) => m.VirtualViewDemoComponent,
       ),
   },
+  {
+    path: 'cool-example',
+    loadComponent: () =>
+      import('./virtual-view-cool-demo.component').then(
+        (m) => m.VirtualViewCoolDemoComponent,
+      ),
+  },
 ];
