@@ -18,10 +18,13 @@ export class RxaResizeObserver {
   });
 
   /** @internal */
-  #elements = new WeakMap<Element, Subject<ResizeObserverEntry>>();
+  #elements = new Map<Element, Subject<ResizeObserverEntry>>();
 
   constructor() {
-    this.#destroyRef.onDestroy(() => this.#resizeObserver.disconnect());
+    this.#destroyRef.onDestroy(() => {
+      this.#elements.clear();
+      this.#resizeObserver.disconnect();
+    });
   }
 
   observeElement(

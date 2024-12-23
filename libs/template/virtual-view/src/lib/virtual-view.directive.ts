@@ -17,14 +17,19 @@ import {
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import { NEVER, Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, finalize, switchMap, tap } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  finalize,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import {
   _RxVirtualView,
   _RxVirtualViewObserver,
   _RxVirtualViewPlaceholder,
   _RxVirtualViewTemplate,
 } from './model';
-import { RxaResizeObserver } from './resize-observer';
 import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 import { VirtualViewCache } from './virtual-view-cache';
 
@@ -74,7 +79,6 @@ export class RxVirtualView
   readonly #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly #strategyProvider = inject<RxStrategyProvider>(RxStrategyProvider);
   readonly #viewCache = inject(VirtualViewCache, { optional: true });
-  readonly #resizeObserver = inject(RxaResizeObserver, { optional: true });
   readonly #destroyRef = inject(DestroyRef);
   readonly #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
 
@@ -147,6 +151,19 @@ export class RxVirtualView
     this.#config.templateStrategy,
   );
 
+  /**
+   * A function extracting width & height from a ResizeObserverEntry
+   */
+  readonly extractSize =
+    input<(entry: ResizeObserverEntry) => { width: number; height: number }>(
+      defaultExtractSize,
+    );
+
+  /**
+   * ResizeObserverOptions
+   */
+  readonly resizeObserverOptions = input<ResizeObserverOptions>();
+
   readonly #placeholderVisible = signal(false);
 
   #templateIsShown = false;
@@ -214,7 +231,7 @@ export class RxVirtualView
       this.renderPlaceholder();
     }
     this.#observer
-      .register(this.#elementRef.nativeElement)
+      .observeElementVisibility(this.#elementRef.nativeElement)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((visible) => this.#visible$.next(visible));
     this.#visible$
@@ -226,16 +243,15 @@ export class RxVirtualView
               ? NEVER
               : this.showTemplate$().pipe(
                   switchMap((view) => {
-                    const resize$ = this.observeElementSize$();
+                    const resize$ = this.#observer.observeElementSize(
+                      this.#elementRef.nativeElement,
+                      this.resizeObserverOptions(),
+                    );
                     view.detectChanges();
                     return resize$;
                   }),
-                  tap(({ borderBoxSize }) => {
-                    this.size.set({
-                      width: borderBoxSize[0].inlineSize,
-                      height: borderBoxSize[0].blockSize,
-                    });
-                  }),
+                  map(this.extractSize()),
+                  tap(({ width, height }) => this.size.set({ width, height })),
                 );
           }
           return this.#placeholderVisible() ? NEVER : this.showPlaceholder$();
@@ -336,12 +352,9 @@ export class RxVirtualView
       placeholderRef.detectChanges();
     }
   }
-
-  /**
-   * Observes the element size and emits the size as an observable. This is used to calculate the containment.
-   * @private
-   */
-  private observeElementSize$() {
-    return this.#resizeObserver.observeElement(this.#elementRef.nativeElement);
-  }
 }
+
+const defaultExtractSize = (entry: ResizeObserverEntry) => ({
+  width: entry.borderBoxSize[0].inlineSize,
+  height: entry.borderBoxSize[0].blockSize,
+});

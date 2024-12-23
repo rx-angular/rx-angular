@@ -7,7 +7,13 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, ReplaySubject, Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  Observable,
+  ReplaySubject,
+  Subject,
+} from 'rxjs';
 import { distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import { _RxVirtualViewObserver } from './model';
 import { RxaResizeObserver } from './resize-observer';
@@ -44,6 +50,8 @@ export class RxVirtualViewObserver implements OnInit, OnDestroy {
   #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   #observer: IntersectionObserver | null = null;
+
+  #resizeObserver = inject(RxaResizeObserver, { self: true });
 
   /**
    * The root element to observe.
@@ -150,5 +158,12 @@ export class RxVirtualViewObserver implements OnInit, OnDestroy {
         this.#elements.delete(virtualView);
       }),
     );
+  }
+
+  observeElementSize(
+    element: Element,
+    options?: ResizeObserverOptions,
+  ): Observable<ResizeObserverEntry> {
+    return this.#resizeObserver.observeElement(element, options);
   }
 }

@@ -20,7 +20,13 @@ export interface _RxVirtualViewPlaceholder {
  * @internal
  */
 export abstract class _RxVirtualViewObserver {
-  abstract register(virtualView: HTMLElement): Observable<boolean>;
+  abstract observeElementVisibility(
+    virtualView: HTMLElement,
+  ): Observable<boolean>;
+  abstract observeElementSize(
+    element: Element,
+    options?: ResizeObserverOptions,
+  ): Observable<ResizeObserverEntry>;
 }
 
 /**
