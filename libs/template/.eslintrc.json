@@ -21,7 +21,7 @@
           }
         ],
         "@angular-eslint/no-input-rename": "off",
-        "@typescript-eslint/no-non-null-assertion": "warn"
+        "@typescript-eslint/no-non-null-assertion": "off"
       }
     },
     {
