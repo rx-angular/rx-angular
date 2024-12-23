@@ -5,15 +5,15 @@ import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { tap } from 'rxjs';
 import { provideVirtualViewConfig } from '../virtual-view.config';
 import { RxVirtualView } from '../virtual-view.directive';
+import { RxVirtualViewContent } from '../virtual-view-content.directive';
 import { RxVirtualViewObserver } from '../virtual-view-observer.directive';
 import { RxVirtualViewPlaceholder } from '../virtual-view-placeholder.directive';
-import { RxVirtualViewTemplate } from '../virtual-view-template.directive';
 
 @Component({
   template: `
     <div class="container" rxVirtualViewObserver [root]="null">
       <div rxVirtualView class="widget">
-        <div *rxVirtualViewTemplate class="template">ze-template</div>
+        <div *rxVirtualViewContent class="template">ze-template</div>
         @if (withPlaceholder()) {
           <div *rxVirtualViewPlaceholder class="placeholder">
             ze-placeholder
@@ -27,7 +27,7 @@ import { RxVirtualViewTemplate } from '../virtual-view-template.directive';
     RxVirtualViewObserver,
     RxVirtualView,
     RxVirtualViewPlaceholder,
-    RxVirtualViewTemplate,
+    RxVirtualViewContent,
   ],
 })
 class VirtualViewTestComponent {
@@ -98,7 +98,7 @@ describe('RxVirtualView', () => {
         },
         provideVirtualViewConfig({
           placeholderStrategy: 'sync',
-          templateStrategy: 'sync',
+          contentStrategy: 'sync',
         }),
       ],
     });

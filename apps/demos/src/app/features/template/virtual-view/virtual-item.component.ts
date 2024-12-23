@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   RxVirtualViewPlaceholder,
-  RxVirtualViewTemplate,
+  RxVirtualViewContent,
 } from '@rx-angular/template/virtual-view';
 
 @Component({
   selector: 'virtual-item',
   template: `
-    <div class="content" *rxVirtualViewTemplate>
+    <div class="content" *rxVirtualViewContent>
       {{ item().content }}
     </div>
     <div class="content placeholder" *rxVirtualViewPlaceholder>
@@ -15,7 +15,7 @@ import {
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RxVirtualViewTemplate, RxVirtualViewPlaceholder],
+  imports: [RxVirtualViewContent, RxVirtualViewPlaceholder],
 })
 export class VirtualItem {
   item = input<{ id: number; content: string }>();

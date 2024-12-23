@@ -26,9 +26,9 @@ import {
 } from 'rxjs/operators';
 import {
   _RxVirtualView,
+  _RxVirtualViewContent,
   _RxVirtualViewObserver,
   _RxVirtualViewPlaceholder,
-  _RxVirtualViewTemplate,
 } from './model';
 import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 import { VirtualViewCache } from './virtual-view-cache';
@@ -39,7 +39,7 @@ import { VirtualViewCache } from './virtual-view-cache';
  * It can be used on an element/component to create a virtual view.
  *
  * It works by using 3 directives:
- * - `rxVirtualViewTemplate`: The template to render when the virtual view is visible.
+ * - `rxVirtualViewContent`: The content to render when the virtual view is visible.
  * - `rxVirtualViewPlaceholder`: The placeholder to render when the virtual view is not visible.
  * - `rxVirtualViewObserver`: The directive that observes the virtual view and emits a boolean value indicating whether the virtual view is visible.
  *
@@ -50,7 +50,7 @@ import { VirtualViewCache } from './virtual-view-cache';
  * ```html
  * <div rxVirtualViewObserver>
  *   <div rxVirtualView>
- *     <div *rxVirtualViewTemplate>Virtual View 1</div>
+ *     <div *rxVirtualViewContent>Virtual View 1</div>
  *     <div *rxVirtualViewPlaceholder>Loading...</div>
  *   </div>
  * </div>
@@ -82,7 +82,7 @@ export class RxVirtualView
   readonly #destroyRef = inject(DestroyRef);
   readonly #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
 
-  #template: _RxVirtualViewTemplate | null = null;
+  #content: _RxVirtualViewContent | null = null;
   #placeholder: _RxVirtualViewPlaceholder | null = null;
 
   /**
@@ -97,8 +97,8 @@ export class RxVirtualView
   /**
    * Whether to start with the placeholder asap or not.
    *
-   * If `true`, the placeholder will be rendered immediately, without waiting for the template to be visible.
-   * This is useful when you want to render the placeholder immediately, but you don't want to wait for the template to be visible.
+   * If `true`, the placeholder will be rendered immediately, without waiting for the content to be visible.
+   * This is useful when you want to render the placeholder immediately, but you don't want to wait for the content to be visible.
    *
    * This is to counter concurrent rendering, and to avoid flickering.
    */
@@ -110,7 +110,7 @@ export class RxVirtualView
   );
 
   /**
-   * This will keep the last known size of the host element while the template is visible.
+   * This will keep the last known size of the host element while the content is visible.
    */
   readonly keepLastKnownSize = input(this.#config.keepLastKnownSize, {
     transform: booleanAttribute,
@@ -131,7 +131,7 @@ export class RxVirtualView
    *
    * It will add `contain` css property with:
    * - `size layout paint`: if `useContentVisibility` is `true` && placeholder is visible
-   * - `content`: if `useContentVisibility` is `false` || template is visible
+   * - `content`: if `useContentVisibility` is `false` || content is visible
    */
   readonly useContainment = input(this.#config.useContainment, {
     transform: booleanAttribute,
@@ -145,10 +145,10 @@ export class RxVirtualView
   );
 
   /**
-   * The strategy to use for rendering the template.
+   * The strategy to use for rendering the content.
    */
-  readonly templateStrategy = input<RxStrategyNames<string>>(
-    this.#config.templateStrategy,
+  readonly contentStrategy = input<RxStrategyNames<string>>(
+    this.#config.contentStrategy,
   );
 
   /**
@@ -166,7 +166,7 @@ export class RxVirtualView
 
   readonly #placeholderVisible = signal(false);
 
-  #templateIsShown = false;
+  #contentIsShown = false;
 
   readonly #visible$ = new ReplaySubject<boolean>(1);
 
@@ -222,9 +222,9 @@ export class RxVirtualView
   }
 
   ngAfterContentInit() {
-    if (!this.#template) {
+    if (!this.#content) {
       throw new Error(
-        'RxVirtualView expects you to provide a RxVirtualViewTemplate',
+        'RxVirtualView expects you to provide a RxVirtualViewContent',
       );
     }
     if (this.startWithPlaceholderAsap()) {
@@ -241,9 +241,9 @@ export class RxVirtualView
         distinctUntilChanged(),
         switchMap((visible) => {
           if (visible) {
-            return this.#templateIsShown
+            return this.#contentIsShown
               ? NEVER
-              : this.showTemplate$().pipe(
+              : this.showContent$().pipe(
                   switchMap((view) => {
                     const resize$ = this.#observer!.observeElementSize(
                       this.#elementRef.nativeElement,
@@ -267,12 +267,12 @@ export class RxVirtualView
   }
 
   ngOnDestroy() {
-    this.#template = null;
+    this.#content = null;
     this.#placeholder = null;
   }
 
-  registerTemplate(template: _RxVirtualViewTemplate) {
-    this.#template = template;
+  registerContent(content: _RxVirtualViewContent) {
+    this.#content = content;
   }
 
   registerPlaceholder(placeholder: _RxVirtualViewPlaceholder) {
@@ -280,29 +280,29 @@ export class RxVirtualView
   }
 
   /**
-   * Shows the template using the configured rendering strategy (by default: normal).
+   * Shows the content using the configured rendering strategy (by default: normal).
    * @private
    */
-  private showTemplate$(): Observable<EmbeddedViewRef<unknown>> {
+  private showContent$(): Observable<EmbeddedViewRef<unknown>> {
     return this.#strategyProvider.schedule(
       () => {
-        this.#templateIsShown = true;
+        this.#contentIsShown = true;
         this.#placeholderVisible.set(false);
-        const placeHolder = this.#template!.viewContainerRef.detach();
+        const placeHolder = this.#content!.viewContainerRef.detach();
         if (this.cacheEnabled() && placeHolder) {
           this.#viewCache!.storePlaceholder(this, placeHolder);
         } else if (!this.cacheEnabled() && placeHolder) {
           placeHolder.destroy();
         }
         const tmpl =
-          (this.#viewCache!.getTemplate(this) as EmbeddedViewRef<unknown>) ??
-          this.#template!.templateRef.createEmbeddedView({});
-        this.#template!.viewContainerRef.insert(tmpl);
+          (this.#viewCache!.getContent(this) as EmbeddedViewRef<unknown>) ??
+          this.#content!.templateRef.createEmbeddedView({});
+        this.#content!.viewContainerRef.insert(tmpl);
         placeHolder?.detectChanges();
 
         return tmpl;
       },
-      { scope: this, strategy: this.templateStrategy() },
+      { scope: this, strategy: this.contentStrategy() },
     );
   }
 
@@ -318,9 +318,9 @@ export class RxVirtualView
   }
 
   /**
-   * Renders a placeholder within the view container, and hides the template.
+   * Renders a placeholder within the view container, and hides the content.
    *
-   * If we already have a template and cache enabled, we store the template in
+   * If we already have a content and cache enabled, we store the content in
    * the cache, so we can reuse it later.
    *
    * When we want to render the placeholder, we try to get it from the cache,
@@ -330,18 +330,18 @@ export class RxVirtualView
    */
   private renderPlaceholder() {
     this.#placeholderVisible.set(true);
-    this.#templateIsShown = false;
+    this.#contentIsShown = false;
 
-    const template = this.#template!.viewContainerRef.detach();
+    const content = this.#content!.viewContainerRef.detach();
 
-    if (template) {
+    if (content) {
       if (this.cacheEnabled()) {
-        this.#viewCache!.storeTemplate(this, template);
+        this.#viewCache!.storeContent(this, content);
       } else {
-        template.destroy();
+        content.destroy();
       }
 
-      template?.detectChanges();
+      content?.detectChanges();
     }
 
     if (this.#placeholder) {
@@ -349,7 +349,7 @@ export class RxVirtualView
         this.#viewCache!.getPlaceholder(this) ??
         this.#placeholder.templateRef.createEmbeddedView({});
 
-      this.#template!.viewContainerRef.insert(placeholderRef);
+      this.#content!.viewContainerRef.insert(placeholderRef);
       placeholderRef.detectChanges();
     }
   }

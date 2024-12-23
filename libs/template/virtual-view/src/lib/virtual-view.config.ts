@@ -12,21 +12,21 @@ export interface RxVirtualViewConfig {
   useContentVisibility: boolean;
   useContainment: boolean;
   placeholderStrategy: RxStrategyNames<string>;
-  templateStrategy: RxStrategyNames<string>;
+  contentStrategy: RxStrategyNames<string>;
   cacheEnabled: boolean;
   startWithPlaceholderAsap: boolean;
   cache: {
     /**
-     * The maximum number of templates that can be stored in the cache.
+     * The maximum number of contents that can be stored in the cache.
      * Defaults to 20.
      */
-    maxTemplates: number;
+    contentCacheSize: number;
 
     /**
      * The maximum number of placeholders that can be stored in the cache.
      * Defaults to 20.
      */
-    maxPlaceholders: number;
+    placeholderCacheSize: number;
   };
 }
 
@@ -35,12 +35,12 @@ export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
   useContentVisibility: false,
   useContainment: true,
   placeholderStrategy: 'low',
-  templateStrategy: 'normal',
+  contentStrategy: 'normal',
   startWithPlaceholderAsap: false,
   cacheEnabled: true,
   cache: {
-    maxTemplates: 20,
-    maxPlaceholders: 20,
+    contentCacheSize: 20,
+    placeholderCacheSize: 20,
   },
 };
 
@@ -50,8 +50,8 @@ export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
  * Can be used to customize the behavior of the `VirtualView` service.
  *
  * Default configuration:
- * - maxTemplates: 20
- * - maxPlaceholders: 20
+ * - contentCacheSize: 20
+ * - placeholderCacheSize: 20
  *
  * Example usage:
  *
@@ -61,8 +61,8 @@ export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
  * const appConfig: ApplicationConfig = {
  *   providers: [
  *     provideVirtualViewConfig({
- *       maxTemplates: 50,
- *       maxPlaceholders: 50,
+ *       contentCacheSize: 50,
+ *       placeholderCacheSize: 50,
  *     }),
  *   ],
  * };

@@ -29,7 +29,7 @@ import { VirtualViewCache } from './virtual-view-cache';
  * ```html
  * <div rxVirtualViewObserver>
  *   <div rxVirtualView>
- *     <div *rxVirtualViewTemplate>Virtual View 1</div>
+ *     <div *rxVirtualViewContent>Virtual View 1</div>
  *     <div *rxVirtualViewPlaceholder>Loading...</div>
  *   </div>
  * </div>

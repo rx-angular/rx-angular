@@ -12,7 +12,7 @@ import { _RxVirtualView, _RxVirtualViewPlaceholder } from './model';
  * ```html
  * <div rxVirtualViewObserver>
  *   <div rxVirtualView>
- *     <div *rxVirtualViewTemplate>Virtual View 1</div>
+ *     <div *rxVirtualViewContent>Virtual View 1</div>
  *     <div *rxVirtualViewPlaceholder>Loading...</div>
  *   </div>
  * </div>

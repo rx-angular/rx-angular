@@ -8,7 +8,7 @@ import {
   RxVirtualView,
   RxVirtualViewObserver,
   RxVirtualViewPlaceholder,
-  RxVirtualViewTemplate,
+  RxVirtualViewContent,
 } from '@rx-angular/template/virtual-view';
 import { VirtualContent } from './virtual-content.component';
 import { VirtualItem } from './virtual-item.component';
@@ -34,7 +34,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         <h2>Inline, no placeholder, keepLastKnownSize</h2>
         @for (item of values; track item.id) {
           <div rxVirtualView keepLastKnownSize class="item">
-            <div class="content" *rxVirtualViewTemplate>
+            <div class="content" *rxVirtualViewContent>
               {{ item.content }}
             </div>
           </div>
@@ -45,7 +45,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         @for (item of values; track item.id) {
           <div rxVirtualView class="item">
             <div>content before</div>
-            <div class="content" *rxVirtualViewTemplate>
+            <div class="content" *rxVirtualViewContent>
               {{ item.content }}
             </div>
             <div>content after</div>
@@ -60,7 +60,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         @for (item of values; track item.id) {
           <div rxVirtualView startWithPlaceholderAsap class="item">
             <div>content before</div>
-            <div class="content" *rxVirtualViewTemplate>
+            <div class="content" *rxVirtualViewContent>
               {{ item.content }}
             </div>
             <div>content after</div>
@@ -77,7 +77,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
             <virtual-content
               class="content"
               [item]="item"
-              *rxVirtualViewTemplate
+              *rxVirtualViewContent
             />
             <virtual-placeholder
               class="content placeholder"
@@ -96,7 +96,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         <h2>Category 3</h2>
         @for (item of values; track item.id) {
           <div rxVirtualView class="item">
-            <div class="content" *rxVirtualViewTemplate>
+            <div class="content" *rxVirtualViewContent>
               {{ item.content }}
             </div>
             <div class="content placeholder" *rxVirtualViewPlaceholder>
@@ -109,7 +109,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         <h2>Category 4</h2>
         @for (item of values; track item.id) {
           <div rxVirtualView class="item">
-            <div class="content" *rxVirtualViewTemplate>
+            <div class="content" *rxVirtualViewContent>
               {{ item.content }}
             </div>
             <div class="content placeholder" *rxVirtualViewPlaceholder>
@@ -156,7 +156,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
   imports: [
     RxVirtualViewObserver,
     RxVirtualView,
-    RxVirtualViewTemplate,
+    RxVirtualViewContent,
     RxVirtualViewPlaceholder,
     VirtualPlaceholder,
     VirtualContent,

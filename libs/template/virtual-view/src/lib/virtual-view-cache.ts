@@ -11,14 +11,14 @@ import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 export class VirtualViewCache implements OnDestroy {
   #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
 
-  // Maximum number of templates that can be stored in the cache.
-  #maxTemplates = this.#config.cache.maxTemplates;
+  // Maximum number of content that can be stored in the cache.
+  #contentCacheSize = this.#config.cache.contentCacheSize;
 
-  // Cache for storing template views, identified by a unique key, which is the directive instance.
-  #templateCache = new Map<unknown, ViewRef>();
+  // Cache for storing content views, identified by a unique key, which is the directive instance.
+  #contentCache = new Map<unknown, ViewRef>();
 
   // Maximum number of placeholders that can be stored in the cache.
-  #maxPlaceholders = this.#config.cache.maxPlaceholders;
+  #placeholderCacheSize = this.#config.cache.placeholderCacheSize;
 
   // Cache for storing placeholder views, identified by a unique key.
   #placeholderCache = new Map<unknown, ViewRef>();
@@ -31,11 +31,11 @@ export class VirtualViewCache implements OnDestroy {
    * @param view - The ViewRef of the placeholder to cache.
    */
   storePlaceholder(key: unknown, view: ViewRef) {
-    if (this.#maxPlaceholders <= 0) {
+    if (this.#placeholderCacheSize <= 0) {
       view.destroy();
       return;
     }
-    if (this.#placeholderCache.size >= this.#maxPlaceholders) {
+    if (this.#placeholderCache.size >= this.#placeholderCacheSize) {
       this.#removeOldestEntry(this.#placeholderCache);
     }
     this.#placeholderCache.set(key, view);
@@ -54,43 +54,43 @@ export class VirtualViewCache implements OnDestroy {
   }
 
   /**
-   * Stores a template view in the cache. When the cache reaches its limit,
+   * Stores a content view in the cache. When the cache reaches its limit,
    * the oldest entry is removed.
    *
-   * @param key - The key used to identify the template in the cache.
-   * @param view - The ViewRef of the template to cache.
+   * @param key - The key used to identify the content in the cache.
+   * @param view - The ViewRef of the content to cache.
    */
-  storeTemplate(key: unknown, view: ViewRef) {
-    if (this.#maxTemplates <= 0) {
+  storeContent(key: unknown, view: ViewRef) {
+    if (this.#contentCacheSize <= 0) {
       view.destroy();
       return;
     }
-    if (this.#templateCache.size >= this.#maxTemplates) {
-      this.#removeOldestEntry(this.#templateCache);
+    if (this.#contentCache.size >= this.#contentCacheSize) {
+      this.#removeOldestEntry(this.#contentCache);
     }
-    this.#templateCache.set(key, view);
+    this.#contentCache.set(key, view);
   }
 
   /**
-   * Retrieves a cached template view using the specified key.
+   * Retrieves a cached content view using the specified key.
    *
-   * @param key - The key of the template to retrieve.
-   * @returns The ViewRef of the cached template, or undefined if not found.
+   * @param key - The key of the content to retrieve.
+   * @returns The ViewRef of the cached content, or undefined if not found.
    */
-  getTemplate(key: unknown) {
-    const view = this.#templateCache.get(key);
-    this.#templateCache.delete(key);
+  getContent(key: unknown) {
+    const view = this.#contentCache.get(key);
+    this.#contentCache.delete(key);
     return view;
   }
 
   /**
-   * Clears both template and placeholder caches for a given key.
+   * Clears both content and placeholder caches for a given key.
    *
-   * @param key - The key of the template and placeholder to remove.
+   * @param key - The key of the content and placeholder to remove.
    */
   clear(key: unknown) {
-    this.#templateCache.get(key)?.destroy();
-    this.#templateCache.delete(key);
+    this.#contentCache.get(key)?.destroy();
+    this.#contentCache.delete(key);
     this.#placeholderCache.get(key)?.destroy();
     this.#placeholderCache.delete(key);
   }
@@ -99,9 +99,9 @@ export class VirtualViewCache implements OnDestroy {
    * Clears all cached resources when the service is destroyed.
    */
   ngOnDestroy() {
-    this.#templateCache.forEach((view) => view.destroy());
+    this.#contentCache.forEach((view) => view.destroy());
     this.#placeholderCache.forEach((view) => view.destroy());
-    this.#templateCache.clear();
+    this.#contentCache.clear();
     this.#placeholderCache.clear();
   }
 

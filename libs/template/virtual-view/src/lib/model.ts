@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 /**
  * @internal
  */
-export interface _RxVirtualViewTemplate {
+export interface _RxVirtualViewContent {
   viewContainerRef: ViewContainerRef;
   templateRef: TemplateRef<unknown>;
 }
@@ -33,6 +33,6 @@ export abstract class _RxVirtualViewObserver {
  * @internal
  */
 export abstract class _RxVirtualView {
-  abstract registerTemplate(template: _RxVirtualViewTemplate): void;
+  abstract registerContent(content: _RxVirtualViewContent): void;
   abstract registerPlaceholder(placeholder: _RxVirtualViewPlaceholder): void;
 }
