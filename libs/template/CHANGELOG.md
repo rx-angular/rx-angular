@@ -2,6 +2,36 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [19.1.0](https://github.com/rx-angular/rx-angular/compare/template@19.0.0...template@19.1.0) (2024-12-23)
+
+
+### Bug Fixes
+
+* replace toObservableMicrotask private API with proper solution ([339b2e3](https://github.com/rx-angular/rx-angular/commit/339b2e3e69e2ed49d368f33c45fa0bdaac8820f4))
+* **template:** destroy cached views ([ce61bd9](https://github.com/rx-angular/rx-angular/commit/ce61bd9fd01e8856471b6f4147a648741f87ab14))
+* **template:** fix API usage ([7c21631](https://github.com/rx-angular/rx-angular/commit/7c21631ddde6b53d92734696c5c1bb20c68ba8f0))
+* **template:** fix memory leaks in observers ([c15f3fd](https://github.com/rx-angular/rx-angular/commit/c15f3fdde25a39ea9ed94e51fcea099f4db09169))
+* **template:** properly handle subscriptions & cleanup ([8accd30](https://github.com/rx-angular/rx-angular/commit/8accd30f36236ee1032b46ae69ceec73e1f2d279))
+* **template:** rxjs 6 compat ([061b4fa](https://github.com/rx-angular/rx-angular/commit/061b4fa453eff5748fe58aebde1f9876f3575a8b))
+
+
+### Features
+
+* **template:** add developer preview jsdoc ([4bc010f](https://github.com/rx-angular/rx-angular/commit/4bc010fd058f38b7b95156c9c3decb390bcfbc35))
+* **template:** add jsdocs and token-based configuration ([a8460cf](https://github.com/rx-angular/rx-angular/commit/a8460cf1c08852c7c619c7ba56b3b1f546b6e14a))
+* **template:** add more docs for directives ([441a2e7](https://github.com/rx-angular/rx-angular/commit/441a2e7865c85013f17f2f40ef982cf7a030bce0))
+* **template:** introduce rx-virtual-view ([ca4c7d0](https://github.com/rx-angular/rx-angular/commit/ca4c7d0153a9419c76b585cd1e923fdbf9629655))
+* **template:** make virtual-view use config defaults ([caf5cf4](https://github.com/rx-angular/rx-angular/commit/caf5cf4df559d954d442f347b83e7173881b4396))
+* **template:** rename template to content ([70f7426](https://github.com/rx-angular/rx-angular/commit/70f7426c693a8353002aec8bd9991996cf9d005c))
+* **template:** slightly better types ([98a447e](https://github.com/rx-angular/rx-angular/commit/98a447e0bd427ac062e5a9a8f2f6fc0d148d8f45))
+
+
+### Performance Improvements
+
+* **template:** fix memory leaks in view cache ([4c496b4](https://github.com/rx-angular/rx-angular/commit/4c496b447056f97ff02cbffbf472274671d8cbdb))
+
+
+
 # [19.0.0](https://github.com/rx-angular/rx-angular/compare/template@18.0.3...template@19.0.0) (2024-12-05)
 
 
