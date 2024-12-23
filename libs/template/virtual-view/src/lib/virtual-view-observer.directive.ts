@@ -46,7 +46,10 @@ import { VirtualViewCache } from './virtual-view-cache';
     { provide: _RxVirtualViewObserver, useExisting: RxVirtualViewObserver },
   ],
 })
-export class RxVirtualViewObserver implements OnInit, OnDestroy {
+export class RxVirtualViewObserver
+  extends _RxVirtualViewObserver
+  implements OnInit, OnDestroy
+{
   #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   #observer: IntersectionObserver | null = null;
@@ -140,7 +143,7 @@ export class RxVirtualViewObserver implements OnInit, OnDestroy {
     this.#forcedHidden$.next(false);
   }
 
-  register(virtualView: HTMLElement) {
+  observeElementVisibility(virtualView: HTMLElement) {
     const isVisible$ = new ReplaySubject<boolean>(1);
 
     // Store the view and the visibility state in the map.
