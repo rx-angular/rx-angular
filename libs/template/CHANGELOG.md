@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [19.1.1](https://github.com/rx-angular/rx-angular/compare/template@19.1.0...template@19.1.1) (2024-12-24)
+
+
+### Bug Fixes
+
+* **template:** expose virtual-view config tokens ([9817f4b](https://github.com/rx-angular/rx-angular/commit/9817f4b8d9817bc98c45f5329a5a4b00f3b51633))
+
+
+
 # [19.1.0](https://github.com/rx-angular/rx-angular/compare/template@19.0.0...template@19.1.0) (2024-12-23)
 
 
