@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [19.1.2](https://github.com/rx-angular/rx-angular/compare/template@19.1.1...template@19.1.2) (2024-12-28)
+
+
+### Bug Fixes
+
+* **template:** update peerDependency to cdk ([5528b68](https://github.com/rx-angular/rx-angular/commit/5528b689688de828cccb30418af3a55ac24fcaf3))
+
+
+
 ## [19.1.1](https://github.com/rx-angular/rx-angular/compare/template@19.1.0...template@19.1.1) (2024-12-24)
 
 
