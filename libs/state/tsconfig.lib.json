@@ -18,6 +18,7 @@
     "strictMetadataEmit": true,
     "enableResourceInlining": true
   },
+  "include": ["**/*.ts"],
   "exclude": [
     "./test-setup.ts",
     "**/*.spec.ts",
