@@ -103,6 +103,7 @@ import { delay, filter, map, mapTo, share } from 'rxjs/operators';
     style: 'display: block;',
   },
   providers: [],
+  standalone: false,
 })
 export class RxQueryComponent {
   search$ = new Subject<string>();
@@ -110,7 +111,7 @@ export class RxQueryComponent {
     'character',
     this.search$,
     (search: string) =>
-      this.service.getCharacter({ name: search }).pipe(delay(200))
+      this.service.getCharacter({ name: search }).pipe(delay(200)),
   );
 
   loadingMap = {
@@ -119,23 +120,23 @@ export class RxQueryComponent {
   };
   status$ = this.charactersQueryResult$.pipe(
     map((v) => v.status),
-    share()
+    share(),
   );
 
   suspenseTrg$ = this.status$.pipe(
     map((s) => this.loadingMap[s]),
-    filter((v) => !!v)
+    filter((v) => !!v),
   );
   characters$ = this.charactersQueryResult$.pipe(
-    map((res) => res?.data?.results)
+    map((res) => res?.data?.results),
   );
   errorTrg$ = this.charactersQueryResult$.pipe(
     filter((res) => res?.status === 'error'),
-    mapTo(true)
+    mapTo(true),
   );
 
   constructor(
     public strategyProvider: RxStrategyProvider,
-    public service: RickAndMortyService
+    public service: RickAndMortyService,
   ) {}
 }

@@ -76,6 +76,7 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
       </div>
     </rxa-visualizer>
   `,
+  standalone: false,
   changeDetection: ChangeDetectionStrategy.Default,
   host: {
     class: 'm-1 p-1',

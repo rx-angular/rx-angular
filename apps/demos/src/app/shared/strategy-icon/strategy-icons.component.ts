@@ -3,15 +3,17 @@ import { RxState } from '@rx-angular/state';
 
 @Component({
   selector: 'rxa-strategy-icon',
-  template: `
-    <mat-icon *rxLet="strategy$; let strategy">{{strategy}}</mat-icon>`
+  template: ` <mat-icon *rxLet="strategy$; let strategy">{{
+    strategy
+  }}</mat-icon>`,
+  standalone: false,
 })
 export class StrategyIconComponent extends RxState<{ strategy: string }> {
   strategies = {
-    'local': 'call_split',
-    'global': 'vertical_align_bottom',
-    'noop': 'block',
-    'native': 'find_replace'
+    local: 'call_split',
+    global: 'vertical_align_bottom',
+    noop: 'block',
+    native: 'find_replace',
   };
   strategy$ = this.select('strategy');
 
@@ -22,5 +24,4 @@ export class StrategyIconComponent extends RxState<{ strategy: string }> {
     }
     this.set({ strategy: this.strategies.local });
   }
-
 }
