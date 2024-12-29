@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { Hooks } from '../hooks';
 import { RxState } from '@rx-angular/state';
@@ -10,13 +17,18 @@ import { isObservable, Observable, of } from 'rxjs';
   selector: 'rxa-ripple',
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-    {{dirty()}}
-    <div class="d-inline-flex align-items-center indicator-ripple" matRipple
-         [matRippleColor]="color" [matRippleRadius]="0">
-        <ng-content></ng-content>
+    {{ dirty() }}
+    <div
+      class="d-inline-flex align-items-center indicator-ripple"
+      matRipple
+      [matRippleColor]="color"
+      [matRippleRadius]="0"
+    >
+      <ng-content></ng-content>
     </div>
   `,
-  providers: [RxState]
+  providers: [RxState],
+  standalone: false,
 })
 export class RippleComponent extends Hooks {
   @ViewChild(MatRipple) ripple: MatRipple;
@@ -46,28 +58,32 @@ export class RippleComponent extends Hooks {
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private configService: AppConfigService,
-    private state: RxState<{ value: any }>
+    private state: RxState<{ value: any }>,
   ) {
     super();
     this.state.hold(this.afterViewInit$, (v) => {
-      console.log('hold: ', this.elementRef.nativeElement.children[0].children[0]);
-      this.displayElem = this.elementRef.nativeElement.children[0].children[0]
+      console.log(
+        'hold: ',
+        this.elementRef.nativeElement.children[0].children[0],
+      );
+      this.displayElem = this.elementRef.nativeElement.children[0].children[0];
     });
     this.state.hold(
       this.afterViewInit$.pipe(switchMap(() => this.state.select('value'))),
-      (v) => this.render(v)
+      (v) => this.render(v),
     );
   }
 
   dirty() {
-    if(this.always) {
-      this.render('')
+    if (this.always) {
+      this.render('');
     }
   }
 
   render(value: any) {
     this.rippleOn && this.ripple && this.ripple.launch(this.rippleEffect);
-    this.displayElem && this.renderer.setProperty(this.displayElem, 'innerHTML', value + '');
+    this.displayElem &&
+      this.renderer.setProperty(this.displayElem, 'innerHTML', value + '');
     console.log(this.name, ' called');
   }
 }
