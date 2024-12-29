@@ -23,4 +23,4 @@ yarn add @rx-angular/template
 
 ## Documentation
 
-- [RxFor](https://rx-angular.io/docs/template/api/rx-for-directive)
+- [RxFor](https://rx-angular.io/docs/template/rx-for-directive)

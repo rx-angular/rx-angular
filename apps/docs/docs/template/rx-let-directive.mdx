@@ -118,8 +118,8 @@ It mostly is used in combination with state management libs to handle user inter
 By default `*rxLet` is optimized for performance out of the box.
 This includes:
 
-- The default render strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
-  - This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../../cdk/render-strategies/strategies/basic-strategies.md) if you want to change it.
+- The default render strategy is [`normal`](../cdk/render-strategies/strategies/concurrent-strategies.md).
+  - This ensures non-blocking rendering but can cause other side-effects. See [strategy configuration](../cdk/render-strategies/strategies/basic-strategies.md) if you want to change it.
 - Creates templates lazy and manages multiple template instances
 
 :::
@@ -188,7 +188,7 @@ export class CounterComponent {
 
 ![Contextual-State--template-vs-variable](https://user-images.githubusercontent.com/10064416/192660150-643c4d37-5326-4ba2-ad84-e079890b3f2f.png)
 
-A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state](../concepts/reactive-context.md) in the template:
+A nice feature of the `*rxLet` directive is, it provides 2 ways to access the [reactive context state](./concepts/reactive-context.md) in the template:
 
 - context variables
 - context templates
@@ -224,7 +224,7 @@ You can use the as like this:
 
 ### Context Templates
 
-You can also use template anchors to display the [contextual state](../concepts/reactive-context.md) in the template:
+You can also use template anchors to display the [contextual state](./concepts/reactive-context.md) in the template:
 
 ```html
 <ng-container
@@ -384,10 +384,10 @@ export class AppComponent {
 
 ## Concepts
 
-- [Local variables](../concepts/local-variables.md)
-- [Local template](../concepts/local-templates.md)
-- [Reactive context](../concepts/reactive-context.md)
-- [Render strategies](../../cdk/render-strategies/render-strategies.mdx)
+- [Local variables](./concepts/local-variables.md)
+- [Local template](./concepts/local-templates.md)
+- [Reactive context](./concepts/reactive-context.md)
+- [Render strategies](../cdk/render-strategies/render-strategies.mdx)
 
 ## Features
 
@@ -406,7 +406,7 @@ export class AppComponent {
 - lazy template creation (done by render strategies)
 - triggers change-detection on `EmbeddedView` level
 - distinct same values in a row (over-rendering)
-- concurrent mode (read more about this [here](../../cdk/render-strategies/strategies/concurrent-strategies))
+- concurrent mode (read more about this [here](../cdk/render-strategies/strategies/concurrent-strategies))
 
 ## Inputs
 
@@ -431,12 +431,12 @@ export class AppComponent {
 
 **Rendering**
 
-| Input                 | Type                                                               | description                                                                                                                                                                                                                                                                                      |
-| --------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `patchZone`           | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` will operate out of `NgZone`. See [NgZone optimizations](../performance-issues/ngzone-optimizations.md)                                                                                                                                         |
-| `parent` (deprecated) | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md) |
-| `strategy`            | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                             |
-| `renderCallback`      | `Subject<U>`                                                       | giving the developer the exact timing when the `RxLet` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                              |
+| Input                 | Type                                                               | description                                                                                                                                                                                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patchZone`           | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` will operate out of `NgZone`. See [NgZone optimizations](./performance-issues/ngzone-optimizations.md)                                                                                                                                         |
+| `parent` (deprecated) | `boolean`                                                          | _default: `true`_ if set to `false`, the `RxLet` won't inform its host component about changes being made to the template. More performant, `@ViewChild` and `@ContentChild` queries won't work. [Handling view and content queries](./performance-issues/handling-view-and-content-queries.md) |
+| `strategy`            | `Observable<RxStrategyNames \ string> \ RxStrategyNames \ string>` | _default: `normal`_ configure the `RxStrategyRenderStrategy` used to detect changes.                                                                                                                                                                                                            |
+| `renderCallback`      | `Subject<U>`                                                       | giving the developer the exact timing when the `RxLet` created, updated, removed its template. Useful for situations where you need to know when rendering is done.                                                                                                                             |
 
 ## Advanced Usage
 
@@ -445,7 +445,7 @@ export class AppComponent {
 You can change the used `RenderStrategy` by using the `strategy` input of the `*rxFor`. It accepts
 an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
 
-The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md#normal).
+The default value for strategy is [`normal`](../cdk/render-strategies/strategies/concurrent-strategies.md#normal).
 
 ```html
 <ng-container *rxLet="item$; let item; strategy: strategy"> {{ item }} </ng-container>
@@ -463,7 +463,7 @@ export class AppComponent {
 }
 ```
 
-Learn more about the general concept of [`RenderStrategies`](../../cdk/render-strategies) especially the section [usage-in-the-template](../../cdk/render-strategies#usage-in-the-template) if you need more clarity.
+Learn more about the general concept of [`RenderStrategies`](../cdk/render-strategies) especially the section [usage-in-the-template](../cdk/render-strategies#usage-in-the-template) if you need more clarity.
 
 #### Local strategies and view/content queries (`parent`)
 
@@ -572,7 +572,7 @@ The result of the `renderCallback` will contain the currently rendered value of 
 Event listeners normally trigger zone. Especially high frequently events cause performance issues.
 By using we can run all event listener inside `rxLet` outside zone.
 
-For more details read about [NgZone optimizations](../performance-issues/ngzone-optimizations.md)
+For more details read about [NgZone optimizations](./performance-issues/ngzone-optimizations.md)
 
 ```ts
 @Component({
@@ -636,9 +636,9 @@ const setupTestComponent = (): void => {
 
 > do not forget to set the primary strategy to `native` in test environments
 
-In test environments it is recommended to configure rx-angular to use the [`native` strategy](../../cdk/render-strategies/strategies/basic-strategies.md#native),
+In test environments it is recommended to configure rx-angular to use the [`native` strategy](../cdk/render-strategies/strategies/basic-strategies.md#native),
 as it will run change detection synchronously.
-Using the [`concurrent strategies`](../../cdk/render-strategies/strategies/concurrent-strategies.md) is possible, but
+Using the [`concurrent strategies`](../cdk/render-strategies/strategies/concurrent-strategies.md) is possible, but
 requires more effort when writing the tests, as updates will be processed asynchronously.
 
 ```ts

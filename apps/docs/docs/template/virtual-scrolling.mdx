@@ -180,10 +180,10 @@ all pre-packaged ScrollStrategies as well as control the majority of inputs.
 
 ## Concepts
 
-- [Local variables](../concepts/local-variables.md)
-- [Handling view and content queries](../performance-issues/handling-view-and-content-queries.md)
-- [NgZone optimizations](../performance-issues/ngzone-optimizations.md)
-- [Render strategies](../../cdk/render-strategies/render-strategies.mdx) especially the section [usage-in-the-template](../../cdk/render-strategies#usage-in-the-template)
+- [Local variables](./concepts/local-variables.md)
+- [Handling view and content queries](./performance-issues/handling-view-and-content-queries.md)
+- [NgZone optimizations](./performance-issues/ngzone-optimizations.md)
+- [Render strategies](../cdk/render-strategies/render-strategies.mdx) especially the section [usage-in-the-template](../cdk/render-strategies#usage-in-the-template)
 
 ## Features
 
@@ -196,8 +196,8 @@ all pre-packaged ScrollStrategies as well as control the majority of inputs.
 
 **Performance Features**
 
-- lazy template creation (done by [Render Strategies](../../cdk/render-strategies/))
-- non-blocking rendering of lists [Concurrent Strategies](../../cdk/render-strategies/strategies/concurrent-strategies.md)
+- lazy template creation (done by [Render Strategies](../cdk/render-strategies/))
+- non-blocking rendering of lists [Concurrent Strategies](../cdk/render-strategies/strategies/concurrent-strategies.md)
 - configurable frame budget (defaults to 60 FPS)
 - Super efficient layouting with css transformations
 - Scoped layouting with css containment
@@ -562,7 +562,7 @@ given in our demos application
 You can change the used `RenderStrategy` by using the `strategy` input of the `*rxVirtualFor`. It accepts
 an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/main/libs/cdk/render-strategies/src/lib/model.ts#L43).
 
-The default value for strategy is [`normal`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
+The default value for strategy is [`normal`](../cdk/render-strategies/strategies/concurrent-strategies.md).
 
 ```html
 <rx-virtual-scroll-viewport [itemSize]="50">
@@ -595,12 +595,12 @@ export class AppComponent {
 }
 ```
 
-Learn more about the general concept of [`RenderStrategies`](../../cdk/render-strategies) especially the section [usage-in-the-template](../../cdk/render-strategies#usage-in-the-template) if you need more clarity.
+Learn more about the general concept of [`RenderStrategies`](../cdk/render-strategies) especially the section [usage-in-the-template](../cdk/render-strategies#usage-in-the-template) if you need more clarity.
 
 #### Local strategies and view/content queries (`parent`)
 
 By default, `*rxVirtualFor` has turned the `parent` flag off. This means you are unable to rely on any content or view queries.
-Read more about this at [handling view and content queries](../performance-issues/handling-view-and-content-queries.md)
+Read more about this at [handling view and content queries](./performance-issues/handling-view-and-content-queries.md)
 
 ### Use the `renderCallback`
 
@@ -651,7 +651,7 @@ The default value is **true** (configurable via `RxRenderStrategiesConfig` or as
 
 Event listeners normally trigger zone. Especially high frequently events cause performance issues.
 
-For more details read about [NgZone optimizations](../performance-issues/ngzone-optimizations.md)
+For more details read about [NgZone optimizations](./performance-issues/ngzone-optimizations.md)
 
 **Example with `patchZone: false`**
 
@@ -964,7 +964,7 @@ this section covers a brief feature comparison between both implementations and 
 | NgZone agnostic                         | ✅                                                                                            | ❌                                                      |
 | layout containment                      | ✅                                                                                            | ✅                                                      |
 | layout technique                        | absolutely position each view                                                                 | transform a container within the viewport               |
-| scheduling technique                    | [`RenderStrategies`](../../cdk/render-strategies/strategies/concurrent-strategies.md)         | `requestAnimationFrame`                                 |
+| scheduling technique                    | [`RenderStrategies`](../cdk/render-strategies/strategies/concurrent-strategies.md)            | `requestAnimationFrame`                                 |
 | renderCallback                          | ✅                                                                                            | ❌                                                      |
 | SSR                                     | ⚠ - to be tested                                                                             | ✅                                                      |
 | Define visible view buffer              | configurable amount of views displayed in scroll direction,<br/>and opposite scroll direction | configurable buffer in px                               |
@@ -987,7 +987,7 @@ The biggest difference between the two implementations lies within the applied l
 Two main tasks have to be considered when layouting a virtual viewport. The sizing of the scrollable area (runway) and
 keeping the viewport (visible part to the user) in sync with the user defined scroll position.
 
-![viewport and runway](../../../static/img/template/virtual-scrolling/viewport-and-runway.png)
+![viewport and runway](../../static/img/template/virtual-scrolling/viewport-and-runway.png)
 
 _screenshot taken from https://developer.chrome.com/blog/infinite-scroller/_
 
@@ -998,13 +998,13 @@ The Angular CDK implementation sizes its viewport by adjusting the `height` styl
 This results in one extremely large layer that puts pressure on the devices memory by storing a
 texture on the graphics card that potentially has a height of a couple of hundred thousand pixels.
 
-![cdk-container-size](../../../static/img/template/virtual-scrolling/cdk-container-size.png)
+![cdk-container-size](../../static/img/template/virtual-scrolling/cdk-container-size.png)
 
 In this example, the layers tool estimates a memory footprint of ~5GB for a runway with 30.000 items.
 This number is only an estimate, and we couldn't see such high memory consumption on the actual device, but it
 stresses the point.
 
-![layer-memory-estimate](../../../static/img/template/virtual-scrolling/layer-memory-estimate.png)
+![layer-memory-estimate](../../static/img/template/virtual-scrolling/layer-memory-estimate.png)
 
 > 💡 You can counter this issue by making sure this layer is completely empty. It will be empty if it has no own paint area (e.g. background-color)
 > and all items are forced into their own layers (e.g. using `will-change: transform`)
@@ -1012,7 +1012,7 @@ stresses the point.
 Another minor, but notable point is that changing an elements `height` property always forces the browser to perform a layout operation.
 In certain situations this can lead to more work than actually needed.
 
-![css-triggers height](../../../static/img/template/virtual-scrolling/css-triggers-height.png)
+![css-triggers height](../../static/img/template/virtual-scrolling/css-triggers-height.png)
 
 _screenshot taken from https://www.lmame-geek.com/_
 
@@ -1021,12 +1021,12 @@ DOM element won't grow beyond its boundaries.
 While this alone is already an improvement, in best case still all items within the runway are enforced on their own layer (e.g. using `will-change: transform`) to make sure
 the runway layer is completely empty.
 
-![rxa-scroll-sentinel](../../../static/img/template/virtual-scrolling/rxa-scroll-sentinel.png)
+![rxa-scroll-sentinel](../../static/img/template/virtual-scrolling/rxa-scroll-sentinel.png)
 
 As the runway is sized using the `transform` css property, we also don't run into the situation where resizing the runway would cause any layout
 work for the browser.
 
-![css-triggers transform](../../../static/img/template/virtual-scrolling/css-triggers-transform.png)
+![css-triggers transform](../../static/img/template/virtual-scrolling/css-triggers-transform.png)
 
 _screenshot taken from https://www.lmame-geek.com/_
 
@@ -1036,7 +1036,7 @@ The Angular CDK implementation positions its list-items relative, letting the br
 a separate container element which is only as large as the items it contains. It is absolutely positioned to the viewport. To keep the visible items
 with the viewport in sync, the whole container is moved by the css `transform` on scroll events.
 
-![cdk-container-transform](../../../static/img/template/virtual-scrolling/cdk-container-transform.png)
+![cdk-container-transform](../../static/img/template/virtual-scrolling/cdk-container-transform.png)
 
 As a user scrolls the viewport, the cdk virtual scroller calculates the range of items to be displayed. The transform value for the container is derived
 from the range and the actual view sizes.
@@ -1050,7 +1050,7 @@ this._viewport.setRenderedContentOffset(this._itemSize * newRange.start);
 
 The RxAngular implementation calculates the position for each list item within the runway and absolutely positions each item individually with transforms.
 
-![rxa-item-transform](../../../static/img/template/virtual-scrolling/rxa-item-transform.png)
+![rxa-item-transform](../../static/img/template/virtual-scrolling/rxa-item-transform.png)
 
 As the layout is done entirely manually, it essentially removes the need for the browser to layout any item within the viewport. This is especially true
 for updates, moves and insertions from cache.
@@ -1073,17 +1073,17 @@ into a single task. Especially when using a weak device or rendering heavy compo
 long tasks and can result in scroll stuttering. See the [Performance Comparison section](#performance-comparison) for more information about the
 actual runtime performance.
 
-![cdk-fixed-size--throttled](../../../static/img/template/virtual-scrolling/cdk-fixed-size--throttled.png)
+![cdk-fixed-size--throttled](../../static/img/template/virtual-scrolling/cdk-fixed-size--throttled.png)
 
 RxAngular's virtual scrolling implementation also uses the `requestAnimationFrame` scheduler, but not for change detection.
 It is used for coalescing scroll events and calculation of changes to the view range.
 
-The scheduling being used for running change detection is configurable, by default it uses the [`normal Concurrent Strategy`](../../cdk/render-strategies/strategies/concurrent-strategies.md).
+The scheduling being used for running change detection is configurable, by default it uses the [`normal Concurrent Strategy`](../cdk/render-strategies/strategies/concurrent-strategies.md).
 In short, the concurrent strategies batch work into pieces to match a certain frame budget (60fps by default).
 Changes to the view range get translated into individual work packages to insert, move, update, delete and position views. The work packages
 are then processed individually by keeping the frame budget in mind.
 
-![rxa-fixed-size--throttled](../../../static/img/template/virtual-scrolling/rxa-fixed-size--throttled.png)
+![rxa-fixed-size--throttled](../../static/img/template/virtual-scrolling/rxa-fixed-size--throttled.png)
 
 This technique excels in keeping long tasks at a minimum and is especially helpful to render hefty components and/or supporting
 weak devices. It helps keeping the scrolling and bootstrap behavior buttery smooth.
@@ -1134,9 +1134,9 @@ Comparison between [RxAngular FixedSizeVirtualScrollStrategy](#fixedsizevirtuals
 Both solutions do fine without throttling. But, the `CdkFixedSizeVirtualScroll` already struggles with the frame rate. We can already spot `partially presented frames`.
 Also, the javascript tasks are taking longer compared to the `RxAngular FixedSizeVirtualScrollStrategy`.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                          | `@angular/cdk/scrolling`                                                                                       |
-| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| ![rxa-fixed-size--unthrottled](../../../static/img/template/virtual-scrolling/rxa-fixed-size--unthrottled.png) | ![cdk-fixed-size--unthrottled](../../../static/img/template/virtual-scrolling/cdk-fixed-size--unthrottled.png) |
+| `@rx-angular/template/experimental/virtual-scrolling`                                                       | `@angular/cdk/scrolling`                                                                                    |
+| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| ![rxa-fixed-size--unthrottled](../../static/img/template/virtual-scrolling/rxa-fixed-size--unthrottled.png) | ![cdk-fixed-size--unthrottled](../../static/img/template/virtual-scrolling/cdk-fixed-size--unthrottled.png) |
 
 **4x CPU throttling**
 
@@ -1144,9 +1144,9 @@ With throttling enabled, the `CdkFixedSizeVirtualScroll` already struggles a lot
 the amount of `partially presented frames` increases.
 The `RxAngular FixedSizeVirtualScrollStrategy` has no issues whatsoever keeping the frame rate above 30fps on 4x times throttling.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                      | `@angular/cdk/scrolling`                                                                                   |
-| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| ![rxa-fixed-size--throttled](../../../static/img/template/virtual-scrolling/rxa-fixed-size--throttled.png) | ![cdk-fixed-size--throttled](../../../static/img/template/virtual-scrolling/cdk-fixed-size--throttled.png) |
+| `@rx-angular/template/experimental/virtual-scrolling`                                                   | `@angular/cdk/scrolling`                                                                                |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| ![rxa-fixed-size--throttled](../../static/img/template/virtual-scrolling/rxa-fixed-size--throttled.png) | ![cdk-fixed-size--throttled](../../static/img/template/virtual-scrolling/cdk-fixed-size--throttled.png) |
 
 ### Dynamic Size Strategy
 
@@ -1174,9 +1174,9 @@ correct position based on an index.
 Both solutions do fine without throttling. But, the `CDK AutoSizeVirtualScrollStrategy` struggles with the frame rate. We can already spot lots of `partially presented frames`.
 The `RxAngular DynamicSizeVirtualScrollStrategy` implementation easily maintains a stable framerate around 45fps.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                                  | `@angular/cdk/scrolling`                                                                                       |
-| ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| ![rxa-dynamic-size--unthrottled.png](../../../static/img/template/virtual-scrolling/rxa-dynamic-size--unthrottled.png) | ![cdk-autosize--unthrottled.png](../../../static/img/template/virtual-scrolling/cdk-autosize--unthrottled.png) |
+| `@rx-angular/template/experimental/virtual-scrolling`                                                               | `@angular/cdk/scrolling`                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| ![rxa-dynamic-size--unthrottled.png](../../static/img/template/virtual-scrolling/rxa-dynamic-size--unthrottled.png) | ![cdk-autosize--unthrottled.png](../../static/img/template/virtual-scrolling/cdk-autosize--unthrottled.png) |
 
 **4x CPU throttling**
 
@@ -1185,9 +1185,9 @@ the amount of `partially presented frames` increases.
 The `RxAngular DynamicSizeVirtualScrollStrategy` has no issues whatsoever keeping the frame rate above 30fps on 4x times throttling. The javascript execution time is still very low, the style
 recalculations and layouting phases are increasing, though. This will also depend very much on the actual use case.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                              | `@angular/cdk/scrolling`                                                                                   |
-| ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
-| ![rxa-dynamic-size--throttled.png](../../../static/img/template/virtual-scrolling/rxa-dynamic-size--throttled.png) | ![cdk-autosize--throttled.png](../../../static/img/template/virtual-scrolling/cdk-autosize--throttled.png) |
+| `@rx-angular/template/experimental/virtual-scrolling`                                                           | `@angular/cdk/scrolling`                                                                                |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| ![rxa-dynamic-size--throttled.png](../../static/img/template/virtual-scrolling/rxa-dynamic-size--throttled.png) | ![cdk-autosize--throttled.png](../../static/img/template/virtual-scrolling/cdk-autosize--throttled.png) |
 
 ### Autosize Strategy
 
@@ -1218,9 +1218,9 @@ the scrolling performance benefits from this approach. Anyway, that's why we suc
 Nodes that were visited once are not queried again, scrolling the same path twice will differ in runtime performance. All consequent attempts should be as fast as the fixed or dynamic
 size implementations.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                          | `@angular/cdk/scrolling`                                                                                       |
-| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| ![rxa-autosize--unthrottled.png](../../../static/img/template/virtual-scrolling/rxa-autosize--unthrottled.png) | ![cdk-autosize--unthrottled.png](../../../static/img/template/virtual-scrolling/cdk-autosize--unthrottled.png) |
+| `@rx-angular/template/experimental/virtual-scrolling`                                                       | `@angular/cdk/scrolling`                                                                                    |
+| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| ![rxa-autosize--unthrottled.png](../../static/img/template/virtual-scrolling/rxa-autosize--unthrottled.png) | ![cdk-autosize--unthrottled.png](../../static/img/template/virtual-scrolling/cdk-autosize--unthrottled.png) |
 
 **4x CPU throttling**
 
@@ -1229,9 +1229,9 @@ For the `CDK AutoSizeVirtualScrollStrategy`, the same is true as for the compari
 Even with 4x CPU throttling enabled, the `RxAngular AutoSizeVirtualScrollStrategy` keeps a reasonable frame rate and only sometimes produces partially presented frames.
 Thanks to the concurrent strategies, users will never encounter long tasks while scrolling.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                      | `@angular/cdk/scrolling`                                                                                   |
-| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| ![rxa-autosize--throttled.png](../../../static/img/template/virtual-scrolling/rxa-autosize--throttled.png) | ![cdk-autosize--throttled.png](../../../static/img/template/virtual-scrolling/cdk-autosize--throttled.png) |
+| `@rx-angular/template/experimental/virtual-scrolling`                                                   | `@angular/cdk/scrolling`                                                                                |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| ![rxa-autosize--throttled.png](../../static/img/template/virtual-scrolling/rxa-autosize--throttled.png) | ![cdk-autosize--throttled.png](../../static/img/template/virtual-scrolling/cdk-autosize--throttled.png) |
 
 ## Further Improvements
 

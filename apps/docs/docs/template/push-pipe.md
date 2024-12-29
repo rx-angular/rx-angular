@@ -24,7 +24,7 @@ components and does not work in zone-less mode.
 
 ## Solution
 
-`push` pipe solves that problem. It contains intelligent handling of change detection by leveraging a [RenderStrategy](../../cdk/render-strategies/render-strategies.mdx) under the hood, which in turn, takes care of optimizing the `ChangeDetection` of your component. The `push` pipe can be used in zone-full as well as zone-less mode without any changes to the code.
+`push` pipe solves that problem. It contains intelligent handling of change detection by leveraging a [RenderStrategy](../cdk/render-strategies/render-strategies.mdx) under the hood, which in turn, takes care of optimizing the `ChangeDetection` of your component. The `push` pipe can be used in zone-full as well as zone-less mode without any changes to the code.
 
 _Example_
 
@@ -46,7 +46,7 @@ _Example_
 - Handling null and undefined values in a clean unified/structured way
 - Distinct same values in a row to increase performance
 - Coalescing of change detection calls to boost performance
-- Lazy rendering (see [RxLet](./rx-let-directive.mdx))
+- Lazy rendering (see [RxLet](rx-let-directive.mdx))
 - Chunked rendering
 
 ## Signature

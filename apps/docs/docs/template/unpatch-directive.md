@@ -18,7 +18,7 @@ The current way of binding events to DOM:
 ```
 
 The problem is that every event registered via `()`, e.g. `(mousemove)` (or custom `@Output()`)
-marks the component and all its ancestors as dirty and re-renders the whole component tree. [Read more about this here](../performance-issues/rendering-issues-in-angular.md)
+marks the component and all its ancestors as dirty and re-renders the whole component tree. [Read more about this here](performance-issues/rendering-issues-in-angular.md)
 
 So even if your eventListener is not related to any change at all, your app will re-render the whole component tree.
 This can lead to very bad user experiences, especially if you work with frequently fired events such as `mousemove`.
