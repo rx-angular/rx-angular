@@ -59,7 +59,7 @@ export function coalesceWith<T>(
       outerObserver: Subscriber<T>,
       rootSubscription: Subscription
     ): Observer<T> {
-      let actionSubscription: Unsubscribable;
+      let actionSubscription: Unsubscribable | undefined;
       let latestValue: T | undefined;
 
       const tryEmitLatestValue = () => {
