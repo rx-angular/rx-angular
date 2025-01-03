@@ -1,13 +1,11 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "es2015",
     "inlineSources": true,
     "declaration": true,
     "declarationMap": true,
     "strictNullChecks": true,
-    "noImplicitAny": true,
-    "lib": ["dom", "es2018"]
+    "noImplicitAny": true
   },
   "angularCompilerOptions": {
     "enableIvy": true,

@@ -1,13 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "es2015",
     "inlineSources": true,
-    "importHelpers": true,
-    "lib": ["dom", "es2018"],
-    "paths": {
-      "@rx-angular/cdk/*": ["dist/libs/cdk/*"]
-    }
+    "importHelpers": true
   },
   "angularCompilerOptions": {
     "enableIvy": true,

@@ -8,7 +8,7 @@
     "build-lib": {
       "executor": "@angular-devkit/build-angular:ng-packagr",
       "options": {
-        "tsConfig": "libs/template/tsconfig.lib.json",
+        "tsConfig": "libs/template/tsconfig.prod.json",
         "project": "libs/template/ng-package.json"
       },
       "dependsOn": ["^build"],
