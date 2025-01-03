@@ -14,8 +14,7 @@
       "executor": "@angular-devkit/build-angular:browser-esbuild",
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/demos",
-        "baseHref": "/rx-angular/demos/",
+        "outputPath": "dist/apps/demos",
         "index": "apps/demos/src/index.html",
         "main": "apps/demos/src/main.ts",
         "polyfills": "apps/demos/src/polyfills.ts",
