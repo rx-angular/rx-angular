@@ -12,8 +12,10 @@ The current way of binding an observable to the view looks like that:
 
 ```html
 {{ observable$ | async }}
+
 <ng-container *ngIf="observable$ | async as o">{{ o }}</ng-container>
-<component [value]="observable$ | async"></component>
+
+<component [value]="observable$ | async" />
 ```
 
 ## Problems with `async` pipe
@@ -29,7 +31,7 @@ components and does not work in zone-less mode.
 _Example_
 
 ```html
-<hero-search [term]="searchTerm$ | push"> </hero-search> <hero-list-component [heroes]="heroes$ | push"> </hero-list-component>
+<hero-search [term]="searchTerm$ | push" /> <hero-list-component [heroes]="heroes$ | push" />
 ```
 
 The rendering behavior can be configured per RxPush instance using the strategy parameter.
@@ -37,7 +39,7 @@ The rendering behavior can be configured per RxPush instance using the strategy 
 _Example_
 
 ```html
-<hero-search [term]="searchTerm$ | push: 'global'"> </hero-search> <hero-list-component [heroes]="heroes$ | push: 'global'"> </hero-list-component>
+<hero-search [term]="searchTerm$ | push: 'global'" /> <hero-list-component [heroes]="heroes$ | push: 'global'" />
 ```
 
 ## Included features
