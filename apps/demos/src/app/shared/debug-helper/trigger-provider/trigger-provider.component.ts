@@ -42,6 +42,7 @@ import { Subject } from 'rxjs';
     </button>
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TriggerProviderComponent {
   suspense$ = new Subject<void>();

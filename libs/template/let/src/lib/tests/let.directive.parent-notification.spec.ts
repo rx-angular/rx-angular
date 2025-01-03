@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -32,6 +33,7 @@ import { RxLet } from '../let.directive';
       {{ (value | json) || 'undefined' }}
     </div>
   `,
+  imports: [RxLet, JsonPipe],
 })
 class LetDirectiveTestStrategyComponent {
   @ViewChild('letChild') viewChild: ElementRef;
@@ -59,8 +61,7 @@ describe('LetDirective parent notification', () => {
   // beforeAll(() => mockConsole());
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LetDirectiveTestStrategyComponent],
-      imports: [RxLet],
+      imports: [LetDirectiveTestStrategyComponent],
       teardown: { destroyAfterEach: true },
     });
   });
@@ -92,7 +93,7 @@ describe('LetDirective parent notification', () => {
             behavior({
               work: () => {},
             }),
-            delay(0, asapScheduler)
+            delay(0, asapScheduler),
           )
           .subscribe(() => {
             expect(componentInstance.viewChild).toBeDefined();
@@ -112,7 +113,7 @@ describe('LetDirective parent notification', () => {
             behavior({
               work: () => {},
             }),
-            delay(0, asapScheduler)
+            delay(0, asapScheduler),
           )
           .subscribe(() => {
             expect(cdRef.detectChanges).toHaveBeenCalled();
@@ -132,7 +133,7 @@ describe('LetDirective parent notification', () => {
             behavior({
               work: () => {},
             }),
-            delay(0, asapScheduler)
+            delay(0, asapScheduler),
           )
           .subscribe(() => {
             expect(cdRef.detectChanges).toHaveBeenCalledTimes(1);
@@ -155,7 +156,7 @@ describe('LetDirective parent notification', () => {
             behavior({
               work: () => {},
             }),
-            delay(0, asapScheduler)
+            delay(0, asapScheduler),
           )
           .subscribe(() => {
             expect(componentInstance.viewChild).not.toBeDefined();
@@ -175,7 +176,7 @@ describe('LetDirective parent notification', () => {
             behavior({
               work: () => {},
             }),
-            delay(0, asapScheduler)
+            delay(0, asapScheduler),
           )
           .subscribe(() => {
             expect(cdRef.detectChanges).not.toHaveBeenCalled();

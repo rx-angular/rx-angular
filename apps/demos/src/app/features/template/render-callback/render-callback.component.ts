@@ -4,29 +4,36 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { concat, defer, Subject } from 'rxjs';
-import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take, tap } from 'rxjs/operators';
+import {
+  map,
+  scan,
+  shareReplay,
+  startWith,
+  switchMap,
+  switchMapTo,
+  take,
+  tap,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-render-callback',
   template: `
     <h1 class="mat-header">Render Callback</h1>
     <h4 class="mat-subheader">Height calculation using rendered$ Event</h4>
-    <button mat-raised-button [unpatch] (click)="updateClick.next(undefined)">Update content</button>
+    <button mat-raised-button [unpatch] (click)="updateClick.next(undefined)">
+      Update content
+    </button>
     <div class="example-results">
       <div class="example-result">
         <h4>Calculated after renderCallback</h4>
-        <strong>{{ (
-                     calculatedAfterRender$ | push
-                   ) + 'px' }}</strong>
+        <strong>{{ (calculatedAfterRender$ | push) + 'px' }}</strong>
       </div>
       <div class="example-result">
         <h4>Calculated after value changed</h4>
-        <strong>{{ (
-                     calculatedAfterValue$ | push
-                   ) + 'px' }}</strong>
+        <strong>{{ (calculatedAfterValue$ | push) + 'px' }}</strong>
       </div>
     </div>
     <h4>Value</h4>
@@ -73,57 +80,51 @@ import { map, scan, shareReplay, startWith, switchMap, switchMapTo, take, tap } 
         width: 300px;
         outline: 1px solid red;
       }
-    `
+    `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RenderCallbackComponent implements AfterViewInit {
-
   @ViewChild('box') box: ElementRef<HTMLElement>;
 
   readonly rendered$ = new Subject<number>();
   readonly updateClick = new Subject();
   readonly content$ = this.updateClick.pipe(
     startWith(false),
-    scan(a => !a, false),
-    map(b => b ? sentence() : paragraph()),
-    shareReplay({ bufferSize: 1, refCount: true })
+    scan((a) => !a, false),
+    map((b) => (b ? sentence() : paragraph())),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   readonly calculatedAfterRender$ = defer(() =>
     this.rendered$.pipe(
       map(() => this.box.nativeElement.getBoundingClientRect().height),
-      tap(v => console.log('height', v))
-    )
+      tap((v) => console.log('height', v)),
+    ),
   );
 
   readonly calculatedAfterValue$ = defer(() =>
     concat(
       this.rendered$.pipe(take(1)),
       this.content$.pipe(
-        map(() => this.box.nativeElement.getBoundingClientRect().height)
-      )
-    )
+        map(() => this.box.nativeElement.getBoundingClientRect().height),
+      ),
+    ),
   );
 
-  constructor(
-    private cdRef: ChangeDetectorRef
-  ) {
-  }
+  constructor(private cdRef: ChangeDetectorRef) {}
 
-  reset() {
-  }
+  reset() {}
 
   ngAfterViewInit(): void {
     this.reset();
   }
-
 }
 
 function sentence(): string {
   return text(3, 12);
 }
-
 
 function paragraph(): string {
   return text(35, 102);

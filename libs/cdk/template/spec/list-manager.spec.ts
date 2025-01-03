@@ -52,6 +52,7 @@ class ErrorTestComponent {
     </ng-template>
     <span #host></span>
   `,
+  imports: [ErrorTestComponent],
 })
 class ListTemplateManagerSpecComponent implements AfterViewInit {
   @ViewChild('tmpl', { read: TemplateRef })
@@ -72,7 +73,7 @@ class ListTemplateManagerSpecComponent implements AfterViewInit {
     private eRef: ElementRef,
     private vcRef: ViewContainerRef,
     private strategyProvider: RxStrategyProvider,
-    public errorHandler: ErrorHandler
+    public errorHandler: ErrorHandler,
   ) {}
 
   ngAfterViewInit() {
@@ -106,7 +107,7 @@ class ListTemplateManagerSpecComponent implements AfterViewInit {
 /** @internal */
 const createViewContext = (
   item: any,
-  computedContext: RxListViewComputedContext
+  computedContext: RxListViewComputedContext,
 ): RxDefaultListViewContext<number> => {
   return new RxDefaultListViewContext<number>(item, computedContext);
 };
@@ -115,7 +116,7 @@ const createViewContext = (
 const updateViewContext = (
   item: number,
   view: EmbeddedViewRef<RxListViewContext<number>>,
-  computedContext: RxListViewComputedContext
+  computedContext: RxListViewComputedContext,
 ): void => {
   view.context.updateContext(computedContext);
   view.context.$implicit = item;
@@ -136,7 +137,7 @@ let componentInstance: {
 let componentNativeElement: any;
 const setupListManagerComponent = (): void => {
   TestBed.configureTestingModule({
-    declarations: [ListTemplateManagerSpecComponent, ErrorTestComponent],
+    imports: [ListTemplateManagerSpecComponent],
     providers: [
       { provide: ErrorHandler, useValue: customErrorHandler },
       ViewContainerRef,

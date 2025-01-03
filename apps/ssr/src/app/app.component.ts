@@ -9,7 +9,6 @@ import { of } from 'rxjs';
 
 @Component({
   selector: 'rx-angular-root',
-  standalone: true,
   template: `
     <div id="let" *rxLet="color$; let color">{{ color }}</div>
     <div id="push">{{ color$ | push }}</div>
@@ -23,7 +22,7 @@ export class AppComponent implements OnInit {
     ({ set, connect }) => {
       set('color', () => 'red');
       connect('colors', of(['red']));
-    }
+    },
   );
 
   readonly color$ = this.state.select('color');

@@ -31,7 +31,7 @@ const ROUTES: Routes = [
     path: 'rx-virtual-for',
     loadChildren: () =>
       import('./rx-virtual-for/rx-virtual-for.module').then(
-        (m) => m.RxVirtualForDemoModule
+        (m) => m.RxVirtualForDemoModule,
       ),
   },
   {
@@ -48,7 +48,7 @@ const ROUTES: Routes = [
     path: 'rx-context',
     loadChildren: () =>
       import('./rx-context/rx-context.routed.module').then(
-        (m) => m.RxContextRoutedModule
+        (m) => m.RxContextRoutedModule,
       ),
   },
   {
@@ -60,14 +60,21 @@ const ROUTES: Routes = [
     path: 'view-port-prio',
     loadChildren: () =>
       import('./viewport-prio/viewport-prio-demo.module').then(
-        (m) => m.ViewportPrioModule
+        (m) => m.ViewportPrioModule,
+      ),
+  },
+  {
+    path: 'virtual-view',
+    loadChildren: () =>
+      import('./virtual-view/virtual-view.routes').then(
+        (m) => m.VIRTUAL_VIEW_ROUTES,
       ),
   },
   {
     path: 'render-callback',
     loadChildren: () =>
       import('./render-callback/render-callback.module').then(
-        (m) => m.RenderCallbackModule
+        (m) => m.RenderCallbackModule,
       ),
   },
 ];

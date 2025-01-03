@@ -17,7 +17,11 @@ import { Subject } from 'rxjs';
           <h2 class="mat-subheading-1">*rxFor</h2>
           <div class="d-flex flex-wrap">
             <rxa-error-handling-child
-              *rxFor="let child of arrayP.array$; let i = index; trackBy: trackItem"
+              *rxFor="
+                let child of arrayP.array$;
+                let i = index;
+                trackBy: trackItem
+              "
               [index]="i"
             ></rxa-error-handling-child>
           </div>
@@ -26,21 +30,22 @@ import { Subject } from 'rxjs';
           <h2 class="mat-subheading-1">*ngFor</h2>
           <div class="d-flex flex-wrap">
             <rxa-error-handling-child
-              *ngFor="let child of arrayP.array$ | async; let i = index; trackBy: trackItem"
+              *ngFor="
+                let child of arrayP.array$ | async;
+                let i = index;
+                trackBy: trackItem
+              "
               [index]="i"
             ></rxa-error-handling-child>
           </div>
         </div>
       </div>
-
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [
-  ]
+  styles: [],
+  standalone: false,
 })
 export class ErrorHandlingParentComponent {
-
   trackItem = (i: number, item: any) => item.id;
-
 }

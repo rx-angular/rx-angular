@@ -2,6 +2,38 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [19.0.2](https://github.com/rx-angular/rx-angular/compare/state@19.0.1...state@19.0.2) (2024-12-28)
+
+
+### Bug Fixes
+
+* **state:** update peerDependency to cdk ([715edad](https://github.com/rx-angular/rx-angular/commit/715edade00b12f2df12221ab717d9099373668ca))
+
+
+
+## [19.0.1](https://github.com/rx-angular/rx-angular/compare/state@19.0.0...state@19.0.1) (2024-12-23)
+
+
+### Bug Fixes
+
+* replace toObservableMicrotask private API with proper solution ([339b2e3](https://github.com/rx-angular/rx-angular/commit/339b2e3e69e2ed49d368f33c45fa0bdaac8820f4))
+
+
+
+# [19.0.0](https://github.com/rx-angular/rx-angular/compare/state@18.1.0...state@19.0.0) (2024-12-05)
+
+
+### Features
+
+* **state:** upgrade to ng-19 ([cd6941e](https://github.com/rx-angular/rx-angular/commit/cd6941e23558ebd7c0d463703f2810a8889e6c36))
+
+
+### BREAKING CHANGES
+
+* **state:** bump peerDependency to angular 19
+
+
+
 # [18.1.0](https://github.com/rx-angular/rx-angular/compare/state@18.0.0...state@18.1.0) (2024-10-03)
 
 

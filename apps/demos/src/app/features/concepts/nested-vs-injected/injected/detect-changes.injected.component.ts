@@ -8,8 +8,7 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <rxa-cd-default>
-            <rxa-cd-on-push>
-            </rxa-cd-on-push>
+            <rxa-cd-on-push> </rxa-cd-on-push>
           </rxa-cd-default>
         </div>
         <div class="col-sm-12 col-md-6">
@@ -21,8 +20,7 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
     </rxa-cd-default>
   `,
   changeDetection: ChangeDetectionStrategy.Default,
-  providers: [CdHelper]
+  providers: [CdHelper],
+  standalone: false,
 })
-export class DetectChangesInjectedComponent {
-
-}
+export class DetectChangesInjectedComponent {}

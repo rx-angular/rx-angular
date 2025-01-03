@@ -1,0 +1,26 @@
+diff --git a/src/executors/browser/executor.js b/src/executors/browser/executor.js
+index b8d8b074e4d9565be6cb399f733b80fd9f500215..6e46f96c52f9b82c4b44762c7133a6b2241768ef 100644
+--- a/src/executors/browser/executor.js
++++ b/src/executors/browser/executor.js
+@@ -7,7 +7,7 @@ const path_1 = require("path");
+ function runExecutor(options, context) {
+     var _a;
+     return tslib_1.__asyncGenerator(this, arguments, function* runExecutor_1() {
+-        const projectRoot = path.join(context.root, context.workspace.projects[(_a = context.projectName) !== null && _a !== void 0 ? _a : ''].root);
++        const projectRoot = path.join(context.root, context.projectsConfigurations.projects[(_a = context.projectName) !== null && _a !== void 0 ? _a : ''].root);
+         try {
+             yield tslib_1.__await((0, lib_1.build)(projectRoot, {
+                 bundleAnalyzer: options.bundleAnalyzer,
+diff --git a/src/executors/dev-server/executor.js b/src/executors/dev-server/executor.js
+index e9e7867cfde26eb2e1c68079ddcf494f957c3417..1ccaf1f06702090da39b1d1541412027558067dd 100644
+--- a/src/executors/dev-server/executor.js
++++ b/src/executors/dev-server/executor.js
+@@ -6,7 +6,7 @@ const path = require("path");
+ function runExecutor(options, context) {
+     var _a;
+     return tslib_1.__asyncGenerator(this, arguments, function* runExecutor_1() {
+-        const projectRoot = path.join(context.root, context.workspace.projects[(_a = context.projectName) !== null && _a !== void 0 ? _a : ''].root);
++        const projectRoot = path.join(context.root, context.projectsConfigurations.projects[(_a = context.projectName) !== null && _a !== void 0 ? _a : ''].root);
+         const port = options.port.toString();
+         yield tslib_1.__await((0, lib_1.start)(projectRoot, {
+             port,

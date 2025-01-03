@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  Output,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { ProvidedValues } from '../model';
@@ -7,28 +13,39 @@ import { PrimitivesProviderService } from '../primitives-provider.service';
 @Component({
   selector: 'rxa-value-provider',
   exportAs: 'rxaValueProvider',
-  template: `
-    <ng-container *ngIf="buttons">
-
+  template: ` <ng-container *ngIf="buttons">
       <button mat-raised-button (click)="reset()">
         Reset
-        <rxa-zone-patched-icon class="mat-icon" zoneState="patched"></rxa-zone-patched-icon>
+        <rxa-zone-patched-icon
+          class="mat-icon"
+          zoneState="patched"
+        ></rxa-zone-patched-icon>
       </button>
       <button mat-raised-button [unpatch]="unpatched" (click)="next()">
         Next
-        <rxa-zone-patched-icon class="mat-icon" [zoneState]="getZoneState()"></rxa-zone-patched-icon>
+        <rxa-zone-patched-icon
+          class="mat-icon"
+          [zoneState]="getZoneState()"
+        ></rxa-zone-patched-icon>
       </button>
       <button mat-raised-button [unpatch]="unpatched" (click)="error()">
         Error
-        <rxa-zone-patched-icon class="mat-icon" [zoneState]="getZoneState()"></rxa-zone-patched-icon>
+        <rxa-zone-patched-icon
+          class="mat-icon"
+          [zoneState]="getZoneState()"
+        ></rxa-zone-patched-icon>
       </button>
       <button mat-raised-button [unpatch]="unpatched" (click)="complete()">
         Complete
-        <rxa-zone-patched-icon class="mat-icon" [zoneState]="getZoneState()"></rxa-zone-patched-icon>
+        <rxa-zone-patched-icon
+          class="mat-icon"
+          [zoneState]="getZoneState()"
+        ></rxa-zone-patched-icon>
       </button>
     </ng-container>
     <ng-content></ng-content>`,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ValueProviderComponent extends PrimitivesProviderService {
   @Input()
@@ -55,7 +72,7 @@ export class ValueProviderComponent extends PrimitivesProviderService {
 
   constructor(
     protected state: RxState<ProvidedValues>,
-    protected cdRef: ChangeDetectorRef
+    protected cdRef: ChangeDetectorRef,
   ) {
     super(state, cdRef);
   }

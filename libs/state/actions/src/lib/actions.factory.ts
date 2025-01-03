@@ -70,7 +70,9 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
    * actions.search$.subscribe(); // string Observable
    *
    */
-  create<U extends ActionTransforms<T> = {}>(transforms?: U): RxActions<T, U> {
+  create<U extends ActionTransforms<T> = object>(
+    transforms?: U,
+  ): RxActions<T, U> {
     const subjectMap: SubjectMap<T> = {} as SubjectMap<T>;
     const effectMap: EffectMap<T> = {} as EffectMap<T>;
     this.subjects.push(subjectMap);
@@ -85,7 +87,7 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
         effectMap,
         transformsMap: transforms,
         errorHandler: this.errorHandler ?? null,
-      })
+      }),
     ) as any as RxActions<T, U>;
   }
 

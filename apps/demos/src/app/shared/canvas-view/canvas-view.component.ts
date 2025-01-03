@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { Hooks } from '../debug-helper/hooks';
 import { Observable } from 'rxjs';
 import { RxState } from '@rx-angular/state';
@@ -11,13 +17,13 @@ import { RxState } from '@rx-angular/state';
     </div>
   `,
   host: {
-    class: 'd-block w-100'
+    class: 'd-block w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [RxState]
+  providers: [RxState],
+  standalone: false,
 })
 export class CanvasViewComponent extends Hooks {
-
   canvas: HTMLCanvasElement;
 
   @Input()
@@ -30,7 +36,7 @@ export class CanvasViewComponent extends Hooks {
 
   constructor(
     private elemRef: ElementRef,
-    private rxState: RxState<{ img: HTMLImageElement }>
+    private rxState: RxState<{ img: HTMLImageElement }>,
   ) {
     super();
     this.rxState.hold(this.afterViewInit$, () => {
@@ -50,5 +56,4 @@ export class CanvasViewComponent extends Hooks {
     this.canvas.className = 'pixel-canvas';
     parent.appendChild(this.canvas);
   }
-
 }

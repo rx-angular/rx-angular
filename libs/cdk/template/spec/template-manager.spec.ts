@@ -9,7 +9,6 @@ import { RxTemplateManager } from '../src/lib/template-manager';
 import {
   createTestComponent,
   DEFAULT_TEMPLATE,
-  ErrorTestComponent,
   TemplateManagerSpecComponent,
 } from './fixtures';
 
@@ -29,7 +28,7 @@ let componentInstance: {
 let componentNativeElement: HTMLElement;
 const setupTemplateManagerComponent = (template = DEFAULT_TEMPLATE): void => {
   TestBed.configureTestingModule({
-    declarations: [TemplateManagerSpecComponent, ErrorTestComponent],
+    imports: [TemplateManagerSpecComponent],
     providers: [
       { provide: ErrorHandler, useValue: customErrorHandler },
       ViewContainerRef,
@@ -136,8 +135,8 @@ describe('template-manager', () => {
         <ng-template #error let-v>error</ng-template>
         <ng-template #complete let-v>complete</ng-template>
         <span #host></span>
-      `
-      )
+      `,
+      ),
     );
 
     it('should render suspense template', () => {
@@ -204,8 +203,8 @@ describe('template-manager', () => {
           <ng-container *ngIf="complete">complete</ng-container>
 </ng-template>
         <span #host></span>
-      `
-      )
+      `,
+      ),
     );
 
     it('should not render initial suspense template', () => {

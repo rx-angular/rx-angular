@@ -2,6 +2,56 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [19.1.2](https://github.com/rx-angular/rx-angular/compare/template@19.1.1...template@19.1.2) (2024-12-28)
+
+
+### Bug Fixes
+
+* **template:** update peerDependency to cdk ([5528b68](https://github.com/rx-angular/rx-angular/commit/5528b689688de828cccb30418af3a55ac24fcaf3))
+
+
+
+## [19.1.1](https://github.com/rx-angular/rx-angular/compare/template@19.1.0...template@19.1.1) (2024-12-24)
+
+
+### Bug Fixes
+
+* **template:** expose virtual-view config tokens ([9817f4b](https://github.com/rx-angular/rx-angular/commit/9817f4b8d9817bc98c45f5329a5a4b00f3b51633))
+
+
+
+# [19.1.0](https://github.com/rx-angular/rx-angular/compare/template@19.0.0...template@19.1.0) (2024-12-23)
+
+
+### Bug Fixes
+
+* replace toObservableMicrotask private API with proper solution ([339b2e3](https://github.com/rx-angular/rx-angular/commit/339b2e3e69e2ed49d368f33c45fa0bdaac8820f4))
+
+
+### Features
+
+* **template:** introduce virtual-view subpackage ([0bfa4fe9](https://github.com/rx-angular/rx-angular/commit/0bfa4fe9b2e395d0df7a534f8277e37134f2d5ff))
+
+
+# [19.0.0](https://github.com/rx-angular/rx-angular/compare/template@18.0.3...template@19.0.0) (2024-12-05)
+
+
+### Bug Fixes
+
+* **template:** switch to native ng-packagr executor ([2e2cd39](https://github.com/rx-angular/rx-angular/commit/2e2cd394a089a1ea62d50fdb7592d90fdb875d4e))
+
+
+### Features
+
+* **template:** upgrade to ng-19 ([01f0022](https://github.com/rx-angular/rx-angular/commit/01f00220fd9dcd0274705caa478cf6b8c3e4dc31))
+
+
+### BREAKING CHANGES
+
+* **template:** bump peerDependency to angular 19
+
+
+
 ## [18.0.3](https://github.com/rx-angular/rx-angular/compare/template@18.0.2...template@18.0.3) (2024-10-03)
 
 

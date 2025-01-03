@@ -18,11 +18,11 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import {
   coerceDistinctWith,
   coerceObservableWith,
 } from '@rx-angular/cdk/coercing';
+import { toObservableMicrotaskInternal } from '@rx-angular/cdk/internals/core';
 import {
   RxStrategyNames,
   RxStrategyProvider,
@@ -63,7 +63,7 @@ declare const ngDevMode: boolean;
  * This technique enables non-blocking rendering of lists and can be referred to as `concurrent mode`.
  *
  * Read more about this in the [strategies
- * section](https://www.rx-angular.io/docs/template/api/rx-for-directive#rxfor-with-concurrent-strategies).
+ * section](https://www.rx-angular.io/docs/template/rx-for-directive#rxfor-with-concurrent-strategies).
  *
  * Furthermore, `RxFor` provides hooks to react to rendered items in form of a `renderCallback: Subject`.
  *
@@ -71,7 +71,7 @@ declare const ngDevMode: boolean;
  * and transparent for the developer.
  * Each instance of `RxFor` can be configured to render with different settings.
  *
- * Read more in the [official docs](https://www.rx-angular.io/docs/template/api/rx-for-directive)
+ * Read more in the [official docs](https://www.rx-angular.io/docs/template/rx-for-directive)
  *
  * @docsCategory RxFor
  * @docsPage RxFor
@@ -132,7 +132,9 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       this.staticValue = undefined;
       this.renderStatic = false;
       this.observables$.next(
-        toObservable(potentialSignalOrObservable, { injector: this.injector }),
+        toObservableMicrotaskInternal(potentialSignalOrObservable, {
+          injector: this.injector,
+        }),
       );
     } else if (!isObservable(potentialSignalOrObservable)) {
       this.staticValue = potentialSignalOrObservable;
@@ -166,7 +168,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * [`normal`](https://www.rx-angular.io/docs/template/cdk/render-strategies/strategies/concurrent-strategies).
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/rx-for-directive#use-render-strategies-strategy).
+   * [official docs](https://www.rx-angular.io/docs/template/rx-for-directive#use-render-strategies-strategy).
    *
    * @example
    *
@@ -213,7 +215,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * - `@ContentChildren`
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/rx-for-directive#local-strategies-and-view-content-queries-parent).
+   * [official docs](https://www.rx-angular.io/docs/template/rx-for-directive#local-strategies-and-view-content-queries-parent).
    *
    * @example
    * \@Component({
@@ -251,7 +253,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * Event listeners normally trigger zone. Especially high frequently events cause performance issues.
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/rx-for-directive#working-with-event-listeners-patchzone).
+   * [official docs](https://www.rx-angular.io/docs/template/rx-for-directive#working-with-event-listeners-patchzone).
    *
    * @example
    * \@Component({

@@ -16,8 +16,8 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import { toObservableMicrotaskInternal } from '@rx-angular/cdk/internals/core';
 import {
   createTemplateNotifier,
   RxNotification,
@@ -74,7 +74,7 @@ export interface RxLetViewContext<T> extends RxViewContext<T> {
  * * it leads to too many subscriptions in the template
  * * it is cumbersome to work with values in the template
  *
- * read more about the LetDirective in the [official docs](https://www.rx-angular.io/docs/template/api/let-directive)
+ * read more about the LetDirective in the [official docs](https://www.rx-angular.io/docs/template/let-directive)
  *
  * **Conclusion - Structural directives**
  *
@@ -150,7 +150,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    * [`normal`](https://www.rx-angular.io/docs/template/cdk/render-strategies/strategies/concurrent-strategies).
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/let-directive#use-render-strategies-strategy).
+   * [official docs](https://www.rx-angular.io/docs/template/let-directive#use-render-strategies-strategy).
    *
    * @example
    *
@@ -432,7 +432,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    *
    * Read more about this in the
    * [official
-   * docs](https://www.rx-angular.io/docs/template/api/let-directive#local-strategies-and-view-content-queries-parent).
+   * docs](https://www.rx-angular.io/docs/template/let-directive#local-strategies-and-view-content-queries-parent).
    *
    * @example
    * \@Component({
@@ -469,7 +469,7 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
    * Event listeners normally trigger zone. Especially high frequently events cause performance issues.
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/let-directive#working-with-event-listeners-patchzone).
+   * [official docs](https://www.rx-angular.io/docs/template/let-directive#working-with-event-listeners-patchzone).
    *
    * @example
    * \@Component({
@@ -590,7 +590,9 @@ export class RxLet<U> implements OnInit, OnDestroy, OnChanges {
     if (changes.rxLet) {
       if (isSignal(this.rxLet)) {
         this.observablesHandler.next(
-          toObservable(this.rxLet, { injector: this.injector }),
+          toObservableMicrotaskInternal(this.rxLet, {
+            injector: this.injector,
+          }),
         );
       } else {
         this.observablesHandler.next(this.rxLet);

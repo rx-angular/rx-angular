@@ -20,6 +20,7 @@ describe(RxUnpatch.name, () => {
         (mouseenter)="log(LogEvent.Mouseenter)"
       ></div>
     `,
+    imports: [RxUnpatch],
   })
   class TestComponent {
     unpatch?: string[];
@@ -33,8 +34,7 @@ describe(RxUnpatch.name, () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RxUnpatch],
-      declarations: [TestComponent],
+      imports: [TestComponent],
       teardown: { destroyAfterEach: true },
     });
   });
@@ -50,11 +50,11 @@ describe(RxUnpatch.name, () => {
     const div = fixture.debugElement.query(By.css('div'));
     const addEventListener = jest.spyOn(
       div.nativeElement,
-      Zone.__symbol__('addEventListener')
+      Zone.__symbol__('addEventListener'),
     );
     const removeEventListener = jest.spyOn(
       div.nativeElement,
-      'removeEventListener'
+      'removeEventListener',
     );
 
     // Act
@@ -87,11 +87,11 @@ describe(RxUnpatch.name, () => {
     const div = fixture.debugElement.query(By.css('div'));
     const addEventListener = jest.spyOn(
       div.nativeElement,
-      Zone.__symbol__('addEventListener')
+      Zone.__symbol__('addEventListener'),
     );
     const removeEventListener = jest.spyOn(
       div.nativeElement,
-      'removeEventListener'
+      'removeEventListener',
     );
 
     // Act

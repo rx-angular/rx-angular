@@ -87,7 +87,6 @@ import {
   ],
   providers: [RxState],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     RxVirtualScrollViewportComponent,
     AutoSizeVirtualScrollStrategy,

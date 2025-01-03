@@ -5,17 +5,15 @@ import { Component, Input } from '@angular/core';
   selector: 'rxa-counter-display',
   template: `
     <span class="position" *ngFor="let d of count$ | push | toArray">
-        <span class="digit static">{{ d }}</span>
+      <span class="digit static">{{ d }}</span>
     </span>
   `,
   host: {
-    class: 'count'
-  }
+    class: 'count',
+  },
+  standalone: false,
 })
 export class CounterDisplayComponent {
   @Input()
   count$ = EMPTY;
-
 }
-
-

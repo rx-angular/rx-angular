@@ -12,6 +12,7 @@ import { startWith } from 'rxjs';
 
 @Directive({
   selector: '[rxaContentChild]',
+  standalone: false,
 })
 export class ContentChildDirective {}
 
@@ -19,6 +20,7 @@ export class ContentChildDirective {}
   selector: 'rxa-content-parent',
   template: ` <ng-content></ng-content> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ContentParent implements AfterContentInit {
   // @ContentChildren(ContentChildDirective) children: QueryList<ContentChildDirective>;

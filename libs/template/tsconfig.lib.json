@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "es2020",
     "module": "es2015",
     "inlineSources": true,
     "importHelpers": true,
@@ -20,6 +19,7 @@
     "strictInjectionParameters": true,
     "enableResourceInlining": true
   },
+  "include": ["**/*.ts"],
   "exclude": [
     "src/test-setup.ts",
     "**/*.spec.ts",

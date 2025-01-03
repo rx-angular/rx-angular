@@ -192,7 +192,6 @@ import { Message, MessageService } from './messages/messages.service';
     </div>-->
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     RxVirtualScrollViewportComponent,
     RxVirtualFor,

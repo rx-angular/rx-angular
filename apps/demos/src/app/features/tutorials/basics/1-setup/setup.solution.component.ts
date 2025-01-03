@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -24,21 +31,18 @@ const initComponentState = {
 @Component({
   selector: 'rxa-setup-solution',
   template: `
-    <h3>
-      Setup
-    </h3>
-    {{model$  | async | json}}
+    <h3>Setup</h3>
+    {{ model$ | async | json }}
     <mat-expansion-panel
       (expandedChange)="listExpanded = $event; listExpandedChanges.next($event)"
-      [expanded]="listExpanded">
+      [expanded]="listExpanded"
+    >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title>
-          List
-        </mat-panel-title>
+        <mat-panel-title> List </mat-panel-title>
         <mat-panel-description>
           <span
-          >{{ (storeList$ | async)?.length }} Repositories Updated every:
+            >{{ (storeList$ | async)?.length }} Repositories Updated every:
             {{ _refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -82,18 +86,22 @@ const initComponentState = {
       .list .mat-expansion-panel-content .mat-expansion-panel-body {
         padding-top: 10px;
       }
-    `
+    `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class SetupSolution extends RxState<ComponentState> implements OnInit, OnDestroy {
+export class SetupSolution
+  extends RxState<ComponentState>
+  implements OnInit, OnDestroy
+{
   model$ = this.select();
 
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
     map(this.parseListItems),
-    startWith(initComponentState.list)
+    startWith(initComponentState.list),
   );
 
   _refreshInterval: number = initComponentState.refreshInterval;

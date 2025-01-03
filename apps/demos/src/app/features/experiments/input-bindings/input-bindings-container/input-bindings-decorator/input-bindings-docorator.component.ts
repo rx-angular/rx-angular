@@ -16,11 +16,10 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class InputBindingsDecoratorComponent {
-
   @Input()
   value$;
-
 }

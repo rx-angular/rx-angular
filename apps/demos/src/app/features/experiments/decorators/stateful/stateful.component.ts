@@ -1,8 +1,18 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { renderOnChange } from '../../../../rx-angular-pocs/cdk/decorators/stateful';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 
-interface Sibling { id: number; color: string }
+interface Sibling {
+  id: number;
+  color: string;
+}
 
 @Component({
   selector: 'rxa-stateful',
@@ -23,8 +33,7 @@ interface Sibling { id: number; color: string }
           class="sibling"
           [ngStyle]="{ background: a.color }"
           *rxFor="let a of siblings; let index = index; trackBy: trackSibling"
-        >
-        </div>
+        ></div>
       </div>
     </rxa-visualizer>
   `,
@@ -43,9 +52,9 @@ interface Sibling { id: number; color: string }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class StatefulComponent implements OnInit, AfterViewInit {
-
   test: string;
   siblings: Sibling[];
 
@@ -53,7 +62,7 @@ export class StatefulComponent implements OnInit, AfterViewInit {
 
   constructor(private cdRef: ChangeDetectorRef) {
     renderOnChange(this, ['siblings'], {
-      cdRef
+      cdRef,
     });
   }
 
@@ -67,16 +76,16 @@ export class StatefulComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataService.array$.subscribe(arr => {
-      this.siblings = arr.map(sibling => ({
+    this.dataService.array$.subscribe((arr) => {
+      this.siblings = arr.map((sibling) => ({
         ...sibling,
-        color: this.color(sibling.value)
+        color: this.color(sibling.value),
       }));
-    })
+    });
   }
 
   color(a) {
-    return '#' +Math.floor(a*16777215).toString(16);
+    return '#' + Math.floor(a * 16777215).toString(16);
   }
 
   update(): void {

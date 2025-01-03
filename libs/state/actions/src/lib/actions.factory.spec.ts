@@ -20,7 +20,7 @@ class TestComponent {
     },
   });
   constructor(
-    private actions: RxActionFactory<{ search: string; resize: number }>
+    private actions: RxActionFactory<{ search: string; resize: number }>,
   ) {}
 }
 
@@ -151,7 +151,7 @@ describe('RxActionFactory', () => {
       handleError: jest.fn(),
     };
     await TestBed.configureTestingModule({
-      declarations: [TestComponent],
+      imports: [TestComponent],
       providers: [
         {
           provide: ErrorHandler,
@@ -165,7 +165,7 @@ describe('RxActionFactory', () => {
     fixture.componentInstance.ui.resize(42);
 
     expect(custom.handleError).toHaveBeenCalledWith(
-      new Error('something went wrong')
+      new Error('something went wrong'),
     );
   });
 });

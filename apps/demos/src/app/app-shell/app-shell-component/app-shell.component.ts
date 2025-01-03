@@ -1,5 +1,10 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+} from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
@@ -18,6 +23,7 @@ interface AppShellState {
   styleUrls: ['./app-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
+  standalone: false,
 })
 export class AppShellComponent implements AfterViewInit {
   readonly viewState$ = this.state.select();
@@ -75,8 +81,7 @@ export class AppShellComponent implements AfterViewInit {
         }
         return {
           showBackButton: root.data?.showBackButton || false,
-          backButtonNavigation:
-            root.data?.backButtonNavigation || null,
+          backButtonNavigation: root.data?.backButtonNavigation || null,
         };
       },
     );

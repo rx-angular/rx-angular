@@ -60,7 +60,6 @@ interface TodoState {
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgForOf],
   styles: [
     `
@@ -84,9 +83,9 @@ export class SignalStateComponent {
   readonly filteredTodos = this.state.computed(({ todos, query }) =>
     query()
       ? todos().filter(({ title }) =>
-          title.toLowerCase().includes(query().toLowerCase())
+          title.toLowerCase().includes(query().toLowerCase()),
         )
-      : todos()
+      : todos(),
   );
 
   // mutations
@@ -95,7 +94,7 @@ export class SignalStateComponent {
   }
   toggleDone(todo: Todo) {
     this.state.set('todos', ({ todos }) =>
-      update(todos, { ...todo, done: !todo.done }, 'id')
+      update(todos, { ...todo, done: !todo.done }, 'id'),
     );
   }
   addTodo(todo: Todo) {

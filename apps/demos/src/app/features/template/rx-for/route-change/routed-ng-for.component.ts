@@ -26,25 +26,16 @@ function getItems(num: number) {
       <div>Selected</div>
       <div class="d-flex align-items-center">
         <span class="mr-2">ID</span>
-        <button
-          mat-icon-button
-          (click)="sorting.toggleSortBy('id')"
-        >
-
-            <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
-            <mat-icon *ngIf="sorting.isDesc()">arrow_downward</mat-icon>
-
+        <button mat-icon-button (click)="sorting.toggleSortBy('id')">
+          <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
+          <mat-icon *ngIf="sorting.isDesc()">arrow_downward</mat-icon>
         </button>
       </div>
       <div class="d-flex align-items-center">
         <span class="mr-2">Value</span>
-        <button
-          mat-icon-button
-          (click)="sorting.toggleSortBy('value')"
-        >
-            <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
-            <mat-icon *ngIf="sorting.isDesc()">arrow_downward</mat-icon>
-
+        <button mat-icon-button (click)="sorting.toggleSortBy('value')">
+          <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
+          <mat-icon *ngIf="sorting.isDesc()">arrow_downward</mat-icon>
         </button>
       </div>
       <div>Index</div>
@@ -117,13 +108,14 @@ function getItems(num: number) {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SortingPresenter],
+  standalone: false,
 })
 export class RoutedNgForComponent {
   items = [] as TestItem[];
 
   constructor(
     private activeRoute: ActivatedRoute,
-    public sorting: SortingPresenter<TestItem>
+    public sorting: SortingPresenter<TestItem>,
   ) {
     this.sorting.property = 'id';
     this.activeRoute.params.subscribe(({ count }: { count: number }) => {

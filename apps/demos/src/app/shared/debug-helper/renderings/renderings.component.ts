@@ -46,6 +46,7 @@ import { AppConfigService } from '../../../app-config.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxEffects],
+  standalone: false,
 })
 export class RenderingsComponent extends Hooks {
   sub: Subscription;
@@ -58,9 +59,9 @@ export class RenderingsComponent extends Hooks {
         switchAll(),
         distinctUntilChanged(),
         scan((a) => ++a, 0),
-        tap(() => this.rippleOn && this.ripple.launch({ centered: true }))
-      )
-    )
+        tap(() => this.rippleOn && this.ripple.launch({ centered: true })),
+      ),
+    ),
   );
 
   @Input()
@@ -85,7 +86,7 @@ export class RenderingsComponent extends Hooks {
 
   constructor(
     private configService: AppConfigService,
-    private rxEf: RxEffects
+    private rxEf: RxEffects,
   ) {
     super();
     this.rxEf.register(this.configService.$.pipe(select('rippleOn')), (r) => {

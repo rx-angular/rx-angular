@@ -1,4 +1,4 @@
-import { CommonEngine } from '@angular/ssr';
+import { CommonEngine } from '@angular/ssr/node';
 import { ModifyHtmlCallbackFn } from '@rx-angular/isr/models';
 import { ISRHandler } from '@rx-angular/isr/server';
 import express, { Request } from 'express';
@@ -55,7 +55,10 @@ export function app(): express.Express {
   server.get(
     '*',
     // Serve page if it exists in cache
-    async (req, res, next) => await isr.serveFromCache(req, res, next),
+    async (req, res, next) =>
+      await isr.serveFromCache(req, res, next, {
+        providers: [{ provide: RESPONSE, useValue: res }],
+      }),
 
     // Server side render the page and add to cache if needed
     async (req, res, next) =>

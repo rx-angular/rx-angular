@@ -19,6 +19,7 @@ interface ComponentState {
     </div>
   `,
   changeDetection: environment.changeDetection,
+  standalone: false,
 })
 export class RxStateParentSubscriptionLessComponent implements OnDestroy {
   subscription = new Subscription();
@@ -30,8 +31,8 @@ export class RxStateParentSubscriptionLessComponent implements OnDestroy {
         ...state,
         ...slices,
       }),
-      {}
-    )
+      {},
+    ),
   );
 
   source1$ = this.source.$.pipe(map((v) => ({ value: v })));

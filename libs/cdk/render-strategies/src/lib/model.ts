@@ -4,7 +4,7 @@ import { RxNotification } from '@rx-angular/cdk/notifications';
 import { Observable } from 'rxjs';
 
 export interface ScheduleOnStrategyOptions {
-  scope?: {};
+  scope?: object;
   strategy?: string;
   patchZone?: false | NgZone;
 }
@@ -12,7 +12,7 @@ export interface ScheduleOnStrategyOptions {
 export type RxRenderWork = <T = unknown>(
   cdRef: ChangeDetectorRef,
   scope?: coalescingObj,
-  notification?: RxNotification<T>
+  notification?: RxNotification<T>,
 ) => void;
 export type RxRenderBehavior = <T = unknown>(params: {
   work: () => any;

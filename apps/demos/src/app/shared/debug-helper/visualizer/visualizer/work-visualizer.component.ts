@@ -55,6 +55,7 @@ import { Hooks } from '../../hooks';
       }
     `,
   ],
+  standalone: false,
 })
 export class WorkVisualizerComponent extends Hooks {
   @Input()
@@ -105,13 +106,13 @@ export class WorkVisualizerComponent extends Hooks {
         this.changeO$.pipe(
           distinctUntilChanged(),
           switchMap((o$) =>
-            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$
+            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$,
           ),
           distinctUntilChanged(),
-          tap((v) => console.log('value', v))
-        )
-      )
-    )
+          tap((v) => console.log('value', v)),
+        ),
+      ),
+    ),
   );
 
   constructor() {

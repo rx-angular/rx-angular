@@ -1,6 +1,8 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import { Component, ErrorHandler, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { RxFor } from '../for.directive';
 
 export let thisArg: any;
 
@@ -8,7 +10,11 @@ export function setThis(arg: any) {
   thisArg = arg;
 }
 
-@Component({ selector: 'rx-test-cmp', template: '' })
+@Component({
+  selector: 'rx-test-cmp',
+  template: '',
+  imports: [RxFor, NgIf, AsyncPipe],
+})
 export class TestComponent {
   value: any;
   items: any[] = [1, 2];

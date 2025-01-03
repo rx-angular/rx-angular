@@ -17,17 +17,16 @@ import { isObservable, Observable, of } from 'rxjs';
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class InputBindingsProxyComponent {
-
   @Input()
   value$: number | Observable<number>;
 
   constructor() {
     return proxyProps(['value$'], this);
   }
-
 }
 
 function proxyProps(props: string[], target) {
@@ -52,6 +51,6 @@ function proxyProps(props: string[], target) {
       } else {
         return observables[name];
       }
-    }
+    },
   });
 }

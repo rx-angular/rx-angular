@@ -1,4 +1,10 @@
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild } from '@angular/core';
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+} from '@angular/core';
 import { ContentChildComponent } from './content-child.component';
 
 @Component({
@@ -10,9 +16,9 @@ import { ContentChildComponent } from './content-child.component';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ViewChildComponent {
-
   _renders = 0;
 
   renders() {
@@ -21,10 +27,11 @@ export class ViewChildComponent {
 
   @ContentChild(ContentChildComponent)
   set cc(v) {
-    console.log('ContentChild in ViewChildComponent of type ContentChildComponent: ', v)
-  };
-
+    console.log(
+      'ContentChild in ViewChildComponent of type ContentChildComponent: ',
+      v,
+    );
+  }
 
   constructor(private cdRef: ChangeDetectorRef) {}
-
 }

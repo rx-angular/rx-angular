@@ -77,7 +77,6 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
   host: {
     class: 'rx-virtual-scroll-viewport',
   },
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIf],
 })
@@ -154,7 +153,7 @@ export class RxVirtualScrollViewportComponent
   constructor() {
     if (NG_DEV_MODE && !this.scrollStrategy) {
       throw Error(
-        'Error: rx-virtual-scroll-viewport requires an `RxVirtualScrollStrategy` to be set.'
+        'Error: rx-virtual-scroll-viewport requires an `RxVirtualScrollStrategy` to be set.',
       );
     }
     observeElementSize(
@@ -165,14 +164,14 @@ export class RxVirtualScrollViewportComponent
           height: Math.round(entries[0].contentRect.height),
           width: Math.round(entries[0].contentRect.width),
         }),
-      }
+      },
     )
       .pipe(
         distinctUntilChanged(
           ({ height: prevHeight, width: prevWidth }, { height, width }) =>
-            prevHeight === height && prevWidth === width
+            prevHeight === height && prevWidth === width,
         ),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       )
       .subscribe(this._containerRect$);
   }
@@ -188,7 +187,7 @@ export class RxVirtualScrollViewportComponent
         .pipe(
           filter((size) => size > 0),
           take(1),
-          takeUntil(this.destroy$)
+          takeUntil(this.destroy$),
         )
         .subscribe(() => {
           this.scrollToIndex(this.initialScrollIndex);
@@ -200,7 +199,7 @@ export class RxVirtualScrollViewportComponent
   ngAfterContentInit(): void {
     if (ngDevMode && !this.viewRepeater) {
       throw Error(
-        'Error: rx-virtual-scroll-viewport requires a `RxVirtualViewRepeater` to be provided.'
+        'Error: rx-virtual-scroll-viewport requires a `RxVirtualViewRepeater` to be provided.',
       );
     }
     this.scrollStrategy.attach(this, this.viewRepeater);

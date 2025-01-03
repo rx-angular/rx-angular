@@ -101,6 +101,7 @@ import { RxState } from '@rx-angular/state';
     `,
   ],
   providers: [RxState],
+  standalone: false,
 })
 export class ErrorHandlingComponent {
   numbersSubject$ = new Subject<string>();
@@ -118,7 +119,7 @@ export class ErrorHandlingComponent {
         return n;
       }),
       scan((a, n) => (n === 0 ? ++a : n)),
-      share()
+      share(),
     );
   }
 

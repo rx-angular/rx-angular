@@ -18,58 +18,43 @@ import { CounterState, INITIAL_STATE } from '../shared/model';
         </span>
       </div>
 
-      <button mat-raised-button>
-        Start
-      </button>
+      <button mat-raised-button>Start</button>
 
-      <button mat-raised-button>
-        Pause
-      </button>
+      <button mat-raised-button>Pause</button>
 
-      <button mat-raised-button>
-        Reset
-      </button>
+      <button mat-raised-button>Reset</button>
 
-      <br/>
+      <br />
 
-      <button mat-raised-button>
-        Set To
-      </button>
+      <button mat-raised-button>Set To</button>
 
       <mat-form-field>
         <label>Count</label>
-        <input type="number" min="0" matInput/>
+        <input type="number" min="0" matInput />
       </mat-form-field>
-      <br/>
+      <br />
 
-      <button mat-raised-button>
-        Count Up
-      </button>
+      <button mat-raised-button>Count Up</button>
 
-      <button mat-raised-button>
-        Count Down
-      </button>
+      <button mat-raised-button>Count Down</button>
 
-      <br/>
+      <br />
       <mat-form-field>
         <label>Tick Speed</label>
-        <input type="number" min="0" matInput/>
+        <input type="number" min="0" matInput />
       </mat-form-field>
       <mat-form-field>
         <label>CountDiff</label>
-        <input type="number" min="0" matInput/>
+        <input type="number" min="0" matInput />
       </mat-form-field>
     </div>
-  `
+  `,
+  standalone: false,
 })
 export class StarterComponent {
   readonly initialCounterState: CounterState = INITIAL_STATE;
 
   readonly count$: Observable<string>;
 
-  constructor() {
-
-  }
+  constructor() {}
 }
-
-

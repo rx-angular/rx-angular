@@ -95,7 +95,8 @@ import { PokemonStateService } from './states/pokemon-state.service';
       }
     `,
   ],
-  providers: [PokemonStateService], // provide StateService at the Component level
+  providers: [PokemonStateService],
+  standalone: false,
 })
 export class PokemonComponent {
   vm$ = this.pokemonStateService.vm$;

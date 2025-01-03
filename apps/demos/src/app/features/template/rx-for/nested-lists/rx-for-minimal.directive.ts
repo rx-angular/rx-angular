@@ -43,12 +43,12 @@ type RxForTemplateNames = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
 export class RxForViewContext<
   T extends object,
   U extends NgIterable<T> = NgIterable<T>,
-  K = keyof T
+  K = keyof T,
 > {
   private readonly _record = new ReplaySubject<T>(1);
   private readonly _record$ = this._record.pipe(
     distinctUntilChanged(this.distinctBy),
-    share()
+    share(),
   );
   private readonly _index = new BehaviorSubject<number>(-1);
   private _implicit: T;
@@ -56,7 +56,7 @@ export class RxForViewContext<
   constructor(
     private _$implicit: T,
     public rxFor: U,
-    private distinctBy: (a: T, b: T) => boolean = (a, b) => a === b
+    private distinctBy: (a: T, b: T) => boolean = (a, b) => a === b,
   ) {
     this._record.next(_$implicit);
   }
@@ -83,9 +83,9 @@ export class RxForViewContext<
       map((r) =>
         props.reduce(
           (acc, prop) => ({ ...acc, [prop as any]: r[prop as any] }),
-          {}
-        )
-      )
+          {},
+        ),
+      ),
     );
   };
 }
@@ -102,11 +102,13 @@ export interface RecordViewTuple<T extends object, U extends NgIterable<T>> {
 @Directive({
   selector: '[rxMinimalFor]',
   providers: [RxEffects],
+  standalone: false,
 })
 export class RxMinimalForOf<
-  T extends object,
-  U extends NgIterable<T> = NgIterable<T>
-> implements OnInit, OnDestroy
+    T extends object,
+    U extends NgIterable<T> = NgIterable<T>,
+  >
+  implements OnInit, OnDestroy
 {
   private evMap: Map<string, EmbeddedViewRef<RxForViewContext<T, U>>> =
     new Map();
@@ -124,11 +126,11 @@ export class RxMinimalForOf<
           ...records,
           [o$.key]: o$.pipe(distinctUntilChanged(this.rxMinimalForDistinctBy)),
         }),
-        {}
+        {},
       ),
       mergeAll(),
-      shareReplay({ refCount: true, bufferSize: 1 })
-    )
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    ),
   );
 
   @Input()
@@ -138,7 +140,7 @@ export class RxMinimalForOf<
 
   @Input()
   set rxMinimalForOf(
-    potentialObservable: ObservableInput<U> | null | undefined
+    potentialObservable: ObservableInput<U> | null | undefined,
   ) {
     this.observables$.next(potentialObservable);
   }
@@ -161,7 +163,7 @@ export class RxMinimalForOf<
     private cdRef: ChangeDetectorRef,
     private readonly templateRef: TemplateRef<RxForViewContext<T, U>>,
     private readonly viewContainerRef: ViewContainerRef,
-    private iterableDiffers: IterableDiffers
+    private iterableDiffers: IterableDiffers,
   ) {}
 
   initDiffer(iterable: U = [] as U) {
@@ -173,15 +175,15 @@ export class RxMinimalForOf<
         startWith(iterable),
         map((i) => ({ diff: this.differ.diff(i), iterable: i })),
         filter((r) => r.diff != null),
-        shareReplay(1)
+        shareReplay(1),
       ),
-      (r) => this.applyChanges(r.diff, r.iterable)
+      (r) => this.applyChanges(r.diff, r.iterable),
     );
   }
 
   ngOnInit() {
     this.rxEffects.register(this.values$.pipe(take(1)), (value) =>
-      this.initDiffer(value)
+      this.initDiffer(value),
     );
   }
 
@@ -194,7 +196,7 @@ export class RxMinimalForOf<
       (
         r: IterableChangeRecord<T>,
         previousIndex: number | null,
-        currentIndex: number | null
+        currentIndex: number | null,
       ) => {
         const idx = currentIndex == null ? undefined : currentIndex;
         const recordId = r.item[this._rxTrackBy];
@@ -206,18 +208,18 @@ export class RxMinimalForOf<
           const evc = new RxForViewContext(
             r.item,
             iterable,
-            this.rxMinimalForDistinctBy
+            this.rxMinimalForDistinctBy,
           );
           const view = this.viewContainerRef.createEmbeddedView(
             this.templateRef,
             evc,
-            idx
+            idx,
           );
           this.evMap.set(evName, view);
           view.detectChanges();
         } else if (currentIndex == null) {
           this.viewContainerRef.remove(
-            previousIndex === null ? undefined : previousIndex
+            previousIndex === null ? undefined : previousIndex,
           );
         } else if (previousIndex !== null) {
           const view = <EmbeddedViewRef<RxForViewContext<T, U>>>(
@@ -226,7 +228,7 @@ export class RxMinimalForOf<
           this.viewContainerRef.move(view, idx);
           view.context.$implicit = r.item;
         }
-      }
+      },
     );
 
     changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
@@ -298,7 +300,7 @@ export class RxMinimalForOf<
 
   private _perViewChange(
     view: EmbeddedViewRef<RxForViewContext<T, U>>,
-    record: IterableChangeRecord<T>
+    record: IterableChangeRecord<T>,
   ) {
     view.context.$implicit = record.item;
     view.detectChanges();

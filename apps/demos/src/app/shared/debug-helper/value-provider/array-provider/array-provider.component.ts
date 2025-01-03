@@ -113,6 +113,7 @@ import { ArrayProviderService } from '../array-provider.service';
     </div>
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ArrayProviderComponent
   extends ArrayProviderService

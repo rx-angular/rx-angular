@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -19,21 +20,21 @@ import { RxPush } from '../push.pipe';
 function wrapWithSpace(str: string): string {
   return '' + str + '';
 }
-
-@Component({
-  template: ` {{ (value$ | push : strategy | json) || 'undefined' }} `,
-})
-class PushPipeTestComponent {
-  value$: Observable<number> = of(42);
-  strategy?: string;
-}
-
 @Component({
   selector: 'rx-child',
   template: `{{ value }}`,
 })
 class ChildComponent {
   @Input() value: string;
+}
+
+@Component({
+  template: ` {{ (value$ | push: strategy | json) || 'undefined' }} `,
+  imports: [RxPush, JsonPipe, ChildComponent],
+})
+class PushPipeTestComponent {
+  value$: Observable<number> = of(42);
+  strategy?: string;
 }
 
 describe('RxPush', () => {
@@ -46,11 +47,10 @@ describe('RxPush', () => {
   let strategyProvider: RxStrategyProvider;
 
   const setupPushPipeComponent = (
-    template = `{{ (value$ | push : strategy | json) || 'undefined' }}`
+    template = `{{ (value$ | push : strategy | json) || 'undefined' }}`,
   ) => {
     TestBed.configureTestingModule({
-      declarations: [PushPipeTestComponent, ChildComponent],
-      imports: [RxPush],
+      imports: [PushPipeTestComponent],
       providers: [
         RxPush,
         ChangeDetectorRef,
@@ -77,7 +77,7 @@ describe('RxPush', () => {
 
     fixturePushPipeTestComponent = TestBed.overrideTemplate(
       PushPipeTestComponent,
-      template
+      template,
     ).createComponent(PushPipeTestComponent);
     pushPipeTestComponent = fixturePushPipeTestComponent.componentInstance;
     componentNativeElement = fixturePushPipeTestComponent.nativeElement;
@@ -101,7 +101,7 @@ describe('RxPush', () => {
       pushPipeTestComponent.value$ = undefined;
       fixturePushPipeTestComponent.detectChanges();
       expect(componentNativeElement.textContent).toBe(
-        wrapWithSpace('undefined')
+        wrapWithSpace('undefined'),
       );
     });
 
@@ -121,7 +121,7 @@ describe('RxPush', () => {
       pushPipeTestComponent.value$ = of(undefined);
       fixturePushPipeTestComponent.detectChanges();
       expect(componentNativeElement.textContent).toBe(
-        wrapWithSpace('undefined')
+        wrapWithSpace('undefined'),
       );
     });
 
@@ -135,7 +135,7 @@ describe('RxPush', () => {
       pushPipeTestComponent.value$ = EMPTY;
       fixturePushPipeTestComponent.detectChanges();
       expect(componentNativeElement.textContent).toBe(
-        wrapWithSpace('undefined')
+        wrapWithSpace('undefined'),
       );
     });
 
@@ -143,7 +143,7 @@ describe('RxPush', () => {
       pushPipeTestComponent.value$ = NEVER;
       fixturePushPipeTestComponent.detectChanges();
       expect(componentNativeElement.textContent).toBe(
-        wrapWithSpace('undefined')
+        wrapWithSpace('undefined'),
       );
     });
 
@@ -190,7 +190,7 @@ describe('RxPush', () => {
         pushPipeTestComponent.value$ = value$;
         fixturePushPipeTestComponent.detectChanges();
         expect(componentNativeElement.textContent).toBe(
-          wrapWithSpace('undefined')
+          wrapWithSpace('undefined'),
         );
         await Promise.resolve();
         expect(cdSpy).toBeCalledTimes(1);
@@ -210,7 +210,7 @@ describe('RxPush', () => {
         pushPipeTestComponent.value$ = value$;
         fixturePushPipeTestComponent.detectChanges();
         expect(componentNativeElement.textContent).toBe(
-          wrapWithSpace('undefined')
+          wrapWithSpace('undefined'),
         );
         await unpatchedPromise.resolve();
         await fixturePushPipeTestComponent.whenStable();
@@ -223,7 +223,7 @@ describe('RxPush', () => {
         pushPipeTestComponent.value$ = value$;
         fixturePushPipeTestComponent.detectChanges();
         expect(componentNativeElement.textContent).toBe(
-          wrapWithSpace('undefined')
+          wrapWithSpace('undefined'),
         );
         await Promise.resolve();
         expect(cdSpy).toBeCalledTimes(1);
@@ -235,7 +235,7 @@ describe('RxPush', () => {
         pushPipeTestComponent.value$ = value$;
         fixturePushPipeTestComponent.detectChanges();
         expect(componentNativeElement.textContent).toBe(
-          wrapWithSpace('undefined')
+          wrapWithSpace('undefined'),
         );
         await new Promise((resolve) => {
           setTimeout(resolve);
@@ -275,13 +275,13 @@ describe('RxPush', () => {
   describe('used as input', () => {
     beforeEach(() => {
       setupPushPipeComponent(
-        `<rx-child [value]="value$ | push: { patchZone: false, strategy: 'custom' }" />`
+        `<rx-child [value]="value$ | push: { patchZone: false, strategy: 'custom' }" />`,
       );
     });
 
     it('should pass values to child component', async () => {
       const child = fixturePushPipeTestComponent.debugElement.query(
-        By.directive(ChildComponent)
+        By.directive(ChildComponent),
       );
 
       pushPipeTestComponent.value$ = timer(0).pipe(map(() => 44));

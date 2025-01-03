@@ -12,16 +12,16 @@
 
 ## Sub Modules
 
-- [RxLet (\*rxLet)](https://rx-angular.io/docs/template/api/rx-let-directive)
-- [RxFor (\*rxFor)](https://rx-angular.io/docs/template/api/rx-for-directive)
-- [RxIf (\*rxIf)](https://rx-angular.io/docs/template/api/rx-if-directive)
-- [RxUnpatch (unpatch)](https://rx-angular.io/docs/template/api/unpatch-directive)
-- [RxPush (push)](https://rx-angular.io/docs/template/api/push-pipe)
+- [RxLet (\*rxLet)](https://rx-angular.io/docs/template/rx-let-directive)
+- [RxFor (\*rxFor)](https://rx-angular.io/docs/template/rx-for-directive)
+- [RxIf (\*rxIf)](https://rx-angular.io/docs/template/rx-if-directive)
+- [RxUnpatch (unpatch)](https://rx-angular.io/docs/template/unpatch-directive)
+- [RxPush (push)](https://rx-angular.io/docs/template/push-pipe)
 
 **Experimental features**
 
-- [🧪 Virtual Scrolling (virtual-scrolling)](https://www.rx-angular.io/docs/template/api/virtual-scrolling)
-- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/api/viewport-prio-directive)
+- [🧪 Virtual Scrolling (virtual-scrolling)](https://www.rx-angular.io/docs/template/virtual-scrolling)
+- [🧪 Viewport Priority (viewport-prio)](https://rx-angular.io/docs/template/viewport-prio-directive)
 
 All experimental features are very stable and already tested in production apps for multiple months. The reason to have them in experimental is so we can make small typing changes without breaking changes.
 
@@ -67,7 +67,7 @@ export class AnyComponent {}
 ## Version Compatibility
 
 | RxAngular | Angular    |
-|-----------|------------|
+| --------- | ---------- |
 | `^18.0.0` | `^18.0.0`  |
 | `^17.0.0` | `^17.0.0`  |
 | `^16.0.0` | `^16.0.0`  |
@@ -77,4 +77,3 @@ export class AnyComponent {}
 | `^1.0.0`  | `>=12.0.0` |
 
 Regarding the compatibility with RxJS, we generally stick to the compatibilities of the Angular framework itself, for more information about the compatibilities of Angular itself see the [official guide](https://angular.dev/reference/versions).
-

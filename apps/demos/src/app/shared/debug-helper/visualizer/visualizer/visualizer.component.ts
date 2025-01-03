@@ -29,6 +29,7 @@ import { Hooks } from '../../hooks';
     '[style.width.px]': 'size',
     '[class]': 'classNames',
   },
+  standalone: false,
 })
 export class VisualizerComponent extends Hooks {
   @Input()
@@ -80,13 +81,13 @@ export class VisualizerComponent extends Hooks {
         this.changeO$.pipe(
           distinctUntilChanged(),
           switchMap((o$) =>
-            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$
+            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$,
           ),
           distinctUntilChanged(),
-          tap((v) => console.log('value', v))
-        )
-      )
-    )
+          tap((v) => console.log('value', v)),
+        ),
+      ),
+    ),
   );
 
   constructor() {

@@ -162,6 +162,7 @@ import {
 @Directive({
   selector: '[rxLet]',
   providers: [],
+  standalone: false,
 })
 export class RxLet<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';
@@ -240,11 +241,11 @@ export class RxLet<U> implements OnInit, OnDestroy {
    */
   @Input('rxLetCompleteTpl')
   set rxComplete(
-    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>
+    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>,
   ) {
     this.templateManager.addTemplateRef(
       RxLetTemplateNames.complete,
-      templateRef
+      templateRef,
     );
   }
 
@@ -264,7 +265,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
    */
   @Input('rxLetErrorTpl')
   set rxError(
-    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>
+    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>,
   ) {
     this.templateManager.addTemplateRef(RxLetTemplateNames.error, templateRef);
   }
@@ -285,18 +286,18 @@ export class RxLet<U> implements OnInit, OnDestroy {
    */
   @Input('rxLetSuspenseTpl')
   set rxSuspense(
-    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>
+    templateRef: TemplateRef<RxLetViewContext<U | undefined | null> | null>,
   ) {
     this.templateManager.addTemplateRef(
       RxLetTemplateNames.suspense,
-      templateRef
+      templateRef,
     );
   }
 
   @Input('rxLetCompleteTrg')
   set rxCompleteTrigger(trigger$: Observable<any>) {
     this.triggerHandler.next(
-      trigger$.pipe(mapTo(toRxCompleteNotification() as any))
+      trigger$.pipe(mapTo(toRxCompleteNotification() as any)),
     );
   }
 
@@ -308,7 +309,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
   @Input('rxLetSuspenseTrg')
   set rxSuspenseTrigger(trigger$: Observable<any>) {
     this.triggerHandler.next(
-      trigger$.pipe(map(toRxSuspenseNotification as any))
+      trigger$.pipe(map(toRxSuspenseNotification as any)),
     );
   }
 
@@ -328,18 +329,18 @@ export class RxLet<U> implements OnInit, OnDestroy {
     private ngZone: NgZone,
     private readonly nextTemplateRef: TemplateRef<RxLetViewContext<U>>,
     private readonly viewContainerRef: ViewContainerRef,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
   ) {}
 
   /** @internal */
   private observablesHandler = createTemplateNotifier<U>();
   private strategyHandler = coerceAllFactory<string>(
     () => new Subject(),
-    mergeAll()
+    mergeAll(),
   );
   private triggerHandler = coerceAllFactory<RxNotificationKind>(
     () => new Subject(),
-    mergeAll()
+    mergeAll(),
   );
 
   private _renderObserver: NextObserver<any>;
@@ -359,7 +360,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
   /** @internal */
   static ngTemplateContextGuard<U>(
     dir: RxLet<U>,
-    ctx: unknown | null | undefined
+    ctx: unknown | null | undefined,
   ): ctx is RxLetViewContext<U> {
     return true;
   }
@@ -392,7 +393,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
     });
     this.templateManager.addTemplateRef(
       RxLetTemplateNames.next,
-      this.nextTemplateRef
+      this.nextTemplateRef,
     );
     this.templateManager.nextStrategy(this.strategyHandler.values$);
     this.subscription.add(
@@ -401,7 +402,7 @@ export class RxLet<U> implements OnInit, OnDestroy {
         .subscribe((n) => {
           this.rendered$.next(n);
           this._renderObserver?.next(n);
-        })
+        }),
     );
   }
 

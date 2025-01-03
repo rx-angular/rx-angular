@@ -48,6 +48,7 @@ const strategiesUiConfig = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
+  standalone: false,
 })
 export class StrategySelectComponent {
   readonly strategiesUiConfig = strategiesUiConfig;
