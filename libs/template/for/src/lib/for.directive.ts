@@ -8,7 +8,6 @@ import {
   Injector,
   Input,
   isSignal,
-  IterableDiffers,
   NgIterable,
   NgZone,
   OnDestroy,
@@ -27,11 +26,7 @@ import {
   RxStrategyNames,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
-import {
-  createListTemplateManager,
-  RxListManager,
-  RxListViewComputedContext,
-} from '@rx-angular/cdk/template';
+import { RxListViewComputedContext } from '@rx-angular/cdk/template';
 import {
   isObservable,
   Observable,
@@ -41,6 +36,7 @@ import {
 } from 'rxjs';
 import { shareReplay, switchAll } from 'rxjs/operators';
 import { RxForViewContext } from './for-view-context';
+import { injectReconciler } from './inject-reconciler';
 
 /**
  * @description Will be provided through Terser global definitions by Angular CLI
@@ -84,8 +80,6 @@ declare const ngDevMode: boolean;
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, DoCheck, OnDestroy
 {
-  /** @internal */
-  private iterableDiffers = inject(IterableDiffers);
   /** @internal */
   private cdRef = inject(ChangeDetectorRef);
   /** @internal */
@@ -162,7 +156,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @description
    *
    * You can change the used `RenderStrategy` by using the `strategy` input of the `*rxFor`. It accepts
-   * an `Observable<RxStrategyNames>` or [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
+   * an `Observable<RxStrategyNames>` or
+   *   [`RxStrategyNames`](https://github.com/rx-angular/rx-angular/blob/b0630f69017cc1871d093e976006066d5f2005b9/libs/cdk/render-strategies/src/lib/model.ts#L52).
    *
    * The default value for strategy is
    * [`normal`](https://www.rx-angular.io/docs/template/cdk/render-strategies/strategies/concurrent-strategies).
@@ -215,7 +210,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * - `@ContentChildren`
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/rx-for-directive#local-strategies-and-view-content-queries-parent).
+   * [official
+   *   docs](https://www.rx-angular.io/docs/template/rx-for-directive#local-strategies-and-view-content-queries-parent).
    *
    * @example
    * \@Component({
@@ -240,7 +236,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param {boolean} renderParent
    *
-   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content queries
+   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content
+   *   queries
    */
   @Input('rxForParent') renderParent = this.strategyProvider.config.parent;
 
@@ -253,7 +250,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * Event listeners normally trigger zone. Especially high frequently events cause performance issues.
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/rx-for-directive#working-with-event-listeners-patchzone).
+   * [official
+   *   docs](https://www.rx-angular.io/docs/template/rx-for-directive#working-with-event-listeners-patchzone).
    *
    * @example
    * \@Component({
@@ -279,6 +277,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @param {boolean} patchZone
    */
   @Input('rxForPatchZone') patchZone = this.strategyProvider.config.patchZone;
+
+  private defaultTrackBy: TrackByFunction<unknown> = (i, item) => item;
 
   /**
    * @description
@@ -352,7 +352,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
       );
     }
     if (trackByFnOrKey == null) {
-      this._trackBy = null;
+      this._trackBy = this.defaultTrackBy;
     } else {
       this._trackBy =
         typeof trackByFnOrKey !== 'function'
@@ -437,15 +437,14 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   private readonly strategy$ = this.strategyInput$.pipe(coerceDistinctWith());
 
   /** @internal */
-  private listManager: RxListManager<T>;
-
-  /** @internal */
   private _subscription = new Subscription();
 
   /** @internal */
-  _trackBy: TrackByFunction<T>;
+  _trackBy: TrackByFunction<T> = this.defaultTrackBy;
   /** @internal */
   _distinctBy = (a: T, b: T) => a === b;
+
+  private reconciler = injectReconciler();
 
   constructor(
     private readonly templateRef: TemplateRef<RxForViewContext<T, U>>,
@@ -454,29 +453,21 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   /** @internal */
   ngOnInit() {
     this._subscription.add(this.values$.subscribe((v) => (this.values = v)));
-    this.listManager = createListTemplateManager<T, RxForViewContext<T>>({
-      iterableDiffers: this.iterableDiffers,
-      renderSettings: {
-        cdRef: this.cdRef,
-        strategies: this.strategyProvider.strategies as any, // TODO: move strategyProvider
-        defaultStrategyName: this.strategyProvider.primaryStrategy,
-        parent: !!this.renderParent,
-        patchZone: this.patchZone ? this.ngZone : false,
-        errorHandler: this.errorHandler,
-      },
-      templateSettings: {
+    this._subscription.add(
+      this.reconciler({
+        values$: this.values$,
+        strategy$: this.strategy$,
         viewContainerRef: this.viewContainerRef,
-        templateRef: this.template,
+        template: this.template,
+        strategyProvider: this.strategyProvider,
+        errorHandler: this.errorHandler,
+        cdRef: this.cdRef,
+        trackBy: this._trackBy,
         createViewContext: this.createViewContext.bind(this),
         updateViewContext: this.updateViewContext.bind(this),
-      },
-      trackBy: this._trackBy,
-    });
-    this.listManager.nextStrategy(this.strategy$);
-    this._subscription.add(
-      this.listManager
-        .render(this.values$)
-        .subscribe((v) => this._renderCallback?.next(v)),
+        parent: !!this.renderParent,
+        patchZone: this.patchZone ? this.ngZone : undefined,
+      }).subscribe((values) => this._renderCallback?.next(values)),
     );
   }
 
