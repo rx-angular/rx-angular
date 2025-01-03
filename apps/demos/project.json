@@ -12,6 +12,7 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser-esbuild",
+      "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/demos",
         "baseHref": "/rx-angular/demos/",
