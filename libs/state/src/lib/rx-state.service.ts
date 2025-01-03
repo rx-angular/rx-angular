@@ -1,10 +1,10 @@
 import {
   computed,
+  DestroyRef,
   inject,
   Injectable,
   Injector,
   isSignal,
-  OnDestroy,
   Signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -75,9 +75,8 @@ export type ReadOnly = 'get' | 'select' | 'computed' | 'signal';
  * @docsPage RxState
  */
 @Injectable()
-export class RxState<State extends object>
-  implements OnDestroy, Subscribable<State>
-{
+export class RxState<State extends object> implements Subscribable<State> {
+  private readonly destroyRef = inject(DestroyRef);
   private subscription = new Subscription();
 
   protected scheduler = inject(RX_STATE_SCHEDULER, { optional: true });
@@ -109,6 +108,8 @@ export class RxState<State extends object>
    */
   constructor() {
     this.subscription.add(this.subscribe());
+
+    this.destroyRef.onDestroy(() => this.ngOnDestroy());
   }
 
   /**
