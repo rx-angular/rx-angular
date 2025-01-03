@@ -1,7 +1,7 @@
 ---
-sidebar_label: 'RxVirtualView'
+sidebar_label: '🧪 RxVirtualView'
 sidebar_position: 7
-title: 'RxVirtualView'
+title: '🧪 RxVirtualView'
 ---
 
 import Tabs from '@theme/Tabs';
@@ -33,7 +33,7 @@ This is true for:
 This is where the RxVirtualView directive comes in. It provides a simple way to only display the elements that are currently visible to
 the user.
 
-![rx-virtual-view](../../../static/img/template/rx-virtual-view/rx-virtual-view.jpg)
+![rx-virtual-view](../../static/img/template/rx-virtual-view/rx-virtual-view.jpg)
 
 ## Basic Usage
 
@@ -112,8 +112,8 @@ We are only rendering the `item` component when it's visible to the user. Otherw
 | `keepLastKnownSize`        | `boolean` | This will keep the last known size of the host element while the content is visible. It sets 'minHeight' to the host node                                                                                                                                                                                                                                  |
 | `useContentVisibility`     | `boolean` | It will add the `content-visibility` CSS class to the host element, together with `contain-intrinsic-width` and `contain-intrinsic-height` CSS properties.                                                                                                                                                                                                 |
 | `useContainment`           | `boolean` | It will add `contain` css property with: <br/> - `size layout paint`: if `useContentVisibility` is `true` && placeholder is visible <br/> - `content`: if `useContentVisibility` is `false` or content is visible                                                                                                                                          |
-| `placeholderStrategy`      | `boolean` | The strategy to use for rendering the placeholder. <br/> Defaults to: `low` <br/> [Read more about strategies](../../cdk/render-strategies/strategies/concurrent-strategies)                                                                                                                                                                               |
-| `contentStrategy`          | `boolean` | The strategy to use for rendering the content. <br/> Defaults to: `normal` <br/> [Read more about strategies](../../cdk/render-strategies/strategies/concurrent-strategies)                                                                                                                                                                                |
+| `placeholderStrategy`      | `boolean` | The strategy to use for rendering the placeholder. <br/> Defaults to: `low` <br/> [Read more about strategies](../cdk/render-strategies/strategies/concurrent-strategies)                                                                                                                                                                                  |
+| `contentStrategy`          | `boolean` | The strategy to use for rendering the content. <br/> Defaults to: `normal` <br/> [Read more about strategies](../cdk/render-strategies/strategies/concurrent-strategies)                                                                                                                                                                                   |
 
 ### RxVirtualViewConfig
 

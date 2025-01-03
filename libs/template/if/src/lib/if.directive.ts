@@ -57,7 +57,7 @@ import {
  * or triggering global change detection.
  *
  * Read more about the RxIf directive in the [official
- *   docs](https://www.rx-angular.io/docs/template/api/rx-if-directive).
+ *   docs](https://www.rx-angular.io/docs/template/rx-if-directive).
  *
  * @example
  * <app-item *rxIf="show$"></app-item>
@@ -125,7 +125,7 @@ export class RxIf<T = unknown>
    * [`normal`](https://www.rx-angular.io/docs/template/cdk/render-strategies/strategies/concurrent-strategies).
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/rx-if-directive#use-render-strategies-strategy).
+   * [official docs](https://www.rx-angular.io/docs/template/rx-if-directive#use-render-strategies-strategy).
    *
    * @example
    *
@@ -370,7 +370,7 @@ export class RxIf<T = unknown>
    *
    * Read more about this in the
    * [official
-   *   docs](https://www.rx-angular.io/docs/template/api/rx-if-directive#local-strategies-and-view-content-queries-parent).
+   *   docs](https://www.rx-angular.io/docs/template/rx-if-directive#local-strategies-and-view-content-queries-parent).
    *
    * @example
    * \@Component({
@@ -406,7 +406,7 @@ export class RxIf<T = unknown>
    * Especially high frequency events can cause performance issues.
    *
    * Read more about this in the
-   * [official docs](https://www.rx-angular.io/docs/template/api/let-directive#working-with-event-listeners-patchzone).
+   * [official docs](https://www.rx-angular.io/docs/template/let-directive#working-with-event-listeners-patchzone).
    *
    * @example
    * \@Component({

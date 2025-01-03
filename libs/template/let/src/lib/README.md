@@ -23,4 +23,4 @@ yarn add @rx-angular/template
 
 ## Documentation
 
-- [RxLet](https://rx-angular.io/docs/template/api/let-directive)
+- [RxLet](https://rx-angular.io/docs/template/let-directive)
