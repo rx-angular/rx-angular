@@ -1,4 +1,10 @@
-import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
+import {
+  DestroyRef,
+  ErrorHandler,
+  inject,
+  Injectable,
+  Optional,
+} from '@angular/core';
 import {
   EMPTY,
   from,
@@ -65,11 +71,16 @@ import { toHook, untilDestroyed } from './utils';
  * NOTE: Avoid calling register/unregister/subscribe inside the side-effect function.
  */
 @Injectable()
-export class RxEffects implements OnDestroy, OnDestroy$ {
+export class RxEffects implements OnDestroy$ {
   constructor(
     @Optional()
-    private readonly errorHandler: ErrorHandler | null
-  ) {}
+    private readonly errorHandler: ErrorHandler | null,
+  ) {
+    inject(DestroyRef).onDestroy(() => {
+      this._hooks$.next({ destroy: true });
+      this.subscription.unsubscribe();
+    });
+  }
 
   private static nextId = 0;
   readonly _hooks$ = new Subject<DestroyProp>();
@@ -95,7 +106,7 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
    */
   register<T>(
     sourceObs: ObservableInput<T>,
-    sideEffectFn: (value: T) => void
+    sideEffectFn: (value: T) => void,
   ): number;
 
   /**
@@ -119,7 +130,7 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
   register<T>(
     sourceObs: ObservableInput<T>,
     // tslint:disable-next-line: unified-signatures
-    observer: PartialObserver<T>
+    observer: PartialObserver<T>,
   ): number;
 
   /**
@@ -152,7 +163,7 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
 
   register<T>(
     obsOrSub: ObservableInput<T> | Subscription,
-    fnOrObj?: ((value: T) => void) | PartialObserver<T>
+    fnOrObj?: ((value: T) => void) | PartialObserver<T>,
   ): number | void {
     if (obsOrSub instanceof Subscription) {
       this.subscription.add(obsOrSub);
@@ -170,8 +181,8 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
             this.errorHandler?.handleError(err);
             return EMPTY;
           }),
-          applyBehavior
-        )
+          applyBehavior,
+        ),
       );
     } else {
       this.observables$.next(from(obsOrSub).pipe(applyBehavior));
@@ -223,15 +234,7 @@ export class RxEffects implements OnDestroy, OnDestroy$ {
     return <V>(source: Observable<V>) =>
       source.pipe(
         untilDestroyed(this),
-        takeUntil(this.effects$.pipe(filter((eId) => eId === effectId)))
+        takeUntil(this.effects$.pipe(filter((eId) => eId === effectId))),
       );
-  }
-
-  /**
-   * @internal
-   */
-  ngOnDestroy(): void {
-    this._hooks$.next({ destroy: true });
-    this.subscription.unsubscribe();
   }
 }

@@ -364,7 +364,7 @@ describe('RxEffects', () => {
 
     service.method1.mockClear();
 
-    (component as any).effects.ngOnDestroy();
+    fixture.destroy();
 
     store.state$.next('bar');
 
