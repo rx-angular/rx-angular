@@ -1,3 +1,4 @@
+export { LiveCollection, reconcile } from './lib/list-reconciliation';
 export {
   createListTemplateManager,
   RxListManager,
@@ -13,6 +14,7 @@ export {
   RxRenderAware,
   RxViewContext,
 } from './lib/model';
+export { RxLiveCollection } from './lib/rx-live-collection';
 export {
   createTemplateManager,
   RxNotificationTemplateNameMap,
