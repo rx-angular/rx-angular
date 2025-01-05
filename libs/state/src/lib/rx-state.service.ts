@@ -76,7 +76,6 @@ export type ReadOnly = 'get' | 'select' | 'computed' | 'signal';
  */
 @Injectable()
 export class RxState<State extends object> implements Subscribable<State> {
-  private readonly destroyRef = inject(DestroyRef);
   private subscription = new Subscription();
 
   protected scheduler = inject(RX_STATE_SCHEDULER, { optional: true });
@@ -109,14 +108,7 @@ export class RxState<State extends object> implements Subscribable<State> {
   constructor() {
     this.subscription.add(this.subscribe());
 
-    this.destroyRef.onDestroy(() => this.ngOnDestroy());
-  }
-
-  /**
-   * @internal
-   */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    inject(DestroyRef).onDestroy(() => this.subscription.unsubscribe());
   }
 
   /**

@@ -21,7 +21,6 @@ import {
   rxState,
   RxStateSetupFn,
 } from '../src/lib/rx-state';
-import { RxState } from '../src/lib/rx-state.service';
 
 describe(rxState, () => {
   it('should create rxState', () => {
@@ -134,14 +133,6 @@ describe(rxState, () => {
       /// @ts-expect-error Observable<{ fail: boolean }> is not assignable to Observable<{ count: number }>
       connect(of({ fail: true }));
     });
-  });
-
-  it('should call ngOnDestroy', () => {
-    RxState.prototype.ngOnDestroy = jest.fn();
-    const { fixture } = setupComponent();
-    expect(RxState.prototype.ngOnDestroy).not.toHaveBeenCalled();
-    fixture.destroy();
-    expect(RxState.prototype.ngOnDestroy).toHaveBeenCalled();
   });
 
   describe('signals', () => {
