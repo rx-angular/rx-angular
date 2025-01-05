@@ -1,24 +1,36 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
   NgZone,
   QueryList,
+  signal,
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import { asyncScheduler } from 'rxjs-zone-less';
+import { coalesceWith } from '@rx-angular/cdk/coalescing';
+import { RxState } from '@rx-angular/state';
 import {
+  animationFrameScheduler,
   BehaviorSubject,
+  combineLatest,
   defer,
   merge,
-  Observable,
   scheduled,
   Subject,
 } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
+import { asyncScheduler } from 'rxjs-zone-less';
+import {
+  delay,
+  map,
+  shareReplay,
+  switchMap,
+  switchMapTo,
+} from 'rxjs/operators';
+import { Hooks } from '../../../../shared/debug-helper/hooks';
 import {
   ArrayProviderService,
   removeItemsImmutable,
@@ -26,9 +38,6 @@ import {
   TestItem,
 } from '../../../../shared/debug-helper/value-provider';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
-import { RxState } from '@rx-angular/state';
-import { Hooks } from '../../../../shared/debug-helper/hooks';
-import { map, switchMap, switchMapTo } from 'rxjs/operators';
 
 let itemIdx = 0;
 
@@ -149,96 +158,175 @@ const moveChangeSet1 = [items5k];
   selector: 'rxa-rx-for-list-actions',
   template: `
     <rxa-visualizer>
-      <div visualizerHeader class="row">
-        <div class="col-sm-12">
-          <h2>Reactive Iterable Differ</h2>
-          <rxa-array-provider
-            [unpatched]=""
-            [buttons]="true"
-            #arrayP="rxaArrayProvider"
-          ></rxa-array-provider>
-          <rxa-strategy-select
-            (strategyChange)="strategy$.next($event)"
-          ></rxa-strategy-select>
-          <mat-button-toggle-group
-            name="visibleExamples"
-            *rxLet="view; let viewMode"
-            aria-label="Visible Examples"
-            [value]="viewMode"
-            #group="matButtonToggleGroup"
-          >
-            <mat-button-toggle value="tile" (click)="view.next('tile')"
-              >Tile
-            </mat-button-toggle>
-            <mat-button-toggle value="list" (click)="view.next('list')"
-              >List
-            </mat-button-toggle>
-          </mat-button-toggle-group>
-          <button mat-raised-button (click)="triggerChangeSet.next()">
-            ChangeSet
-          </button>
-          <button mat-raised-button (click)="triggerMoveSet.next()">
-            MoveSet
-          </button>
-          <button mat-raised-button (click)="triggerMoveSetSwapped.next()">
-            MoveSet Swapped
-          </button>
-          <p *rxLet="rendered$; let rendered">
-            <strong>Rendered</strong> {{ rendered }}
-          </p>
-          <p *rxLet="viewBroken$; let viewBroken">
-            <ng-container>
-              <span [ngStyle]="{ color: viewBroken ? 'red' : 'green' }"
-                >VIEW BROKEN {{ viewBroken }}</span
-              >
-            </ng-container>
-          </p>
+      <ng-container visualizerHeader>
+        <div class="row">
+          <div class="col-sm-12">
+            <h2>Reactive Iterable Differ</h2>
+            <rxa-array-provider
+              [unpatched]=""
+              [buttons]="true"
+              #arrayP="rxaArrayProvider"
+            ></rxa-array-provider>
+            <rxa-strategy-select
+              (strategyChange)="strategy$.next($event)"
+            ></rxa-strategy-select>
+            <mat-button-toggle-group
+              name="visibleExamples"
+              *rxLet="view; let viewMode"
+              aria-label="Visible Examples"
+              [value]="viewMode"
+              #group="matButtonToggleGroup"
+            >
+              <mat-button-toggle value="tile" (click)="view.next('tile')"
+                >Tile
+              </mat-button-toggle>
+              <mat-button-toggle value="list" (click)="view.next('list')"
+                >List
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+            <mat-button-toggle-group
+              [value]="reconciler()"
+              #group="matButtonToggleGroup"
+            >
+              <mat-button-toggle
+                value="experimental"
+                (click)="reconciler.set('experimental')"
+                >experimental
+              </mat-button-toggle>
+              <mat-button-toggle
+                value="legacy"
+                (click)="reconciler.set('legacy')"
+                >legacy
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+            <button mat-raised-button (click)="triggerChangeSet.next()">
+              ChangeSet
+            </button>
+            <button mat-raised-button (click)="triggerMoveSet.next()">
+              MoveSet
+            </button>
+            <button mat-raised-button (click)="triggerMoveSetSwapped.next()">
+              MoveSet Swapped
+            </button>
+          </div>
         </div>
-      </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div>
+              <input
+                type="text"
+                placeholder="filter"
+                #searchInput
+                (input)="filter$.next(searchInput.value)"
+              />
+            </div>
+            <p *rxLet="rendered$; let rendered">
+              <strong>Rendered</strong> {{ rendered }}
+            </p>
+            <!--<p *rxLet="viewBroken$; let viewBroken">
+              <ng-container>
+                <span [ngStyle]="{ color: viewBroken ? 'red' : 'green' }"
+                  >VIEW BROKEN {{ viewBroken }}</span
+                >
+              </ng-container>
+            </p>-->
+          </div>
+        </div>
+      </ng-container>
       <div class="d-flex flex-column justify-content-start w-100">
         <div
           class="work-container d-flex flex-wrap w-100"
           [class.list-view]="viewMode === 'list'"
           *rxLet="view; let viewMode"
         >
-          <div
-            #workChild
-            class="work-child d-flex"
-            *rxFor="
-              let a of data$;
-              let index = index;
-              let count = count;
-              let even = even;
-              let odd = odd;
-              let first = first;
-              let last = last;
-              renderCallback: renderCallback;
-              trackBy: trackById;
-              strategy: strategy$
-            "
-            [title]="a.id + '_' + index + '_' + count"
-            [class.even]="even"
-          >
-            <div class="child-bg" [ngStyle]="{ background: color(a) }"></div>
-            <!--<div class="child-bg" [class.even]="even"></div>-->
-            <div class="child-context flex-column flex-wrap">
-              <button (click)="clickMe()">click me</button>
-              <!--<small>{{ a }}</small>-->
-              <small>id: {{ a.id }}</small>
-              <small>value: {{ a.value }}</small>
-              <small>index: {{ index }}</small>
-              <small>count: {{ count }}</small>
-              <small>even: {{ even }}</small>
-              <small>odd: {{ odd }}</small>
-              <small>first: {{ first }}</small>
-              <small>last: {{ last }}</small>
-            </div>
-          </div>
+          @if (reconciler() === 'experimental') {
+            <ng-container provideExperimentalReconciliation>
+              <div
+                #workChild
+                class="work-child d-flex"
+                *rxFor="
+                  let a of data$;
+                  let index = index;
+                  let count = count;
+                  let even = even;
+                  let odd = odd;
+                  let first = first;
+                  let last = last;
+                  renderCallback: renderCallback;
+                  trackBy: trackById;
+                  strategy: strategy$
+                "
+                [title]="a.id + '_' + index + '_' + count"
+                [class.even]="even"
+              >
+                <list-action-item>
+                  <div
+                    class="child-bg"
+                    [ngStyle]="{ background: color(a) }"
+                  ></div>
+                  <!--<div class="child-bg" [class.even]="even"></div>-->
+                  <div class="child-context flex-column flex-wrap">
+                    <button (click)="clickMe()">click me</button>
+                    <!--<small>{{ a }}</small>-->
+                    <small>id: {{ a.id }}</small>
+                    <small>value: {{ a.value }}</small>
+                    <small>index: {{ index }}</small>
+                    <small>count: {{ count }}</small>
+                    <small>even: {{ even }}</small>
+                    <small>odd: {{ odd }}</small>
+                    <small>first: {{ first }}</small>
+                    <small>last: {{ last }}</small>
+                  </div>
+                </list-action-item>
+              </div>
+            </ng-container>
+          } @else {
+            <ng-container provideLegacyReconciliation>
+              <div
+                #workChild
+                class="work-child d-flex"
+                *rxFor="
+                  let a of data$;
+                  let index = index;
+                  let count = count;
+                  let even = even;
+                  let odd = odd;
+                  let first = first;
+                  let last = last;
+                  renderCallback: renderCallback;
+                  trackBy: trackById;
+                  strategy: strategy$
+                "
+                [title]="a.id + '_' + index + '_' + count"
+                [class.even]="even"
+              >
+                <list-action-item>
+                  <div
+                    class="child-bg"
+                    [ngStyle]="{ background: color(a) }"
+                  ></div>
+                  <!--<div class="child-bg" [class.even]="even"></div>-->
+                  <div class="child-context flex-column flex-wrap">
+                    <button (click)="clickMe()">click me</button>
+                    <!--<small>{{ a }}</small>-->
+                    <small>id: {{ a.id }}</small>
+                    <small>value: {{ a.value }}</small>
+                    <small>index: {{ index }}</small>
+                    <small>count: {{ count }}</small>
+                    <small>even: {{ even }}</small>
+                    <small>odd: {{ odd }}</small>
+                    <small>first: {{ first }}</small>
+                    <small>last: {{ last }}</small>
+                  </div>
+                </list-action-item>
+              </div>
+            </ng-container>
+          }
         </div>
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: environment.changeDetection,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [ArrayProviderService],
   styles: [
@@ -291,18 +379,24 @@ const moveChangeSet1 = [items5k];
       .work-child .child-bg.even {
         background-color: red;
       }
+      .work-child.broken {
+        outline: 3px solid red;
+      }
     `,
   ],
   standalone: false,
 })
 export class ListActionsComponent extends Hooks implements AfterViewInit {
-  @ViewChild('arrayP', { read: ArrayProviderComponent, static: true }) arrayP;
+  @ViewChild('arrayP', { read: ArrayProviderComponent, static: true })
+  arrayP: ArrayProviderComponent;
 
   @ViewChildren('workChild') workChildren: QueryList<ElementRef<HTMLElement>>;
 
   private numRendered = 0;
 
   readonly view = new BehaviorSubject<'list' | 'tile'>('list');
+  readonly reconciler = signal<'experimental' | 'legacy'>('experimental');
+  readonly filter$ = new BehaviorSubject<string>('');
   readonly triggerChangeSet = new Subject<void>();
   readonly activeChangeSet$ = this.triggerChangeSet.pipe(
     switchMapTo(scheduled(customChangeSet, asyncScheduler)),
@@ -317,11 +411,21 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
   );
 
   readonly data$ = defer(() =>
-    merge(this.arrayP.array$, this.activeChangeSet$, this.activeMoveSet$),
-  );
+    combineLatest([
+      merge(this.arrayP.array$, this.activeChangeSet$, this.activeMoveSet$),
+      this.filter$,
+    ]).pipe(
+      map(([items, search]) => {
+        return items.filter((item) =>
+          (item.value * 100).toString().startsWith(search),
+        );
+      }),
+    ),
+  ).pipe(shareReplay(1));
   readonly renderCallback = new Subject();
   readonly rendered$ = this.renderCallback.pipe(map(() => ++this.numRendered));
   readonly viewBroken$ = this.renderCallback.pipe(
+    coalesceWith(scheduled([], asyncScheduler), (this.cdRef as any).context),
     map(() => {
       const children = Array.from(
         document.getElementsByClassName('work-child'),
@@ -335,6 +439,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
           (!even && child.classList.contains('even'))
         ) {
           broken = true;
+          child.classList.add('broken');
           break;
         }
         i++;

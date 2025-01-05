@@ -15,6 +15,11 @@ import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks'
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/value-providers.module';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { RecursiveModule } from '../../../../shared/template-structures/recursive/recursive.module';
+import {
+  LegacyReconciliationProvider,
+  NewReconciliationProvider,
+} from '../reconciliation-provider-directives';
+import { ListActionItemComponent } from './list-action-item.component';
 import { ListActionsComponent } from './list-actions.component';
 import { ROUTES } from './list-actions.routes';
 import { RxIf } from '@rx-angular/template/if';
@@ -43,6 +48,9 @@ const DECLARATIONS = [ListActionsComponent];
     RxLet,
     RxFor,
     RxIf,
+    NewReconciliationProvider,
+    LegacyReconciliationProvider,
+    ListActionItemComponent,
   ],
   exports: [DECLARATIONS],
 })

@@ -43,6 +43,7 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
   protected moveItemsMutableSubject = new Subject<number | undefined>();
   protected updateItemsMutableSubject = new Subject<number[] | undefined>();
   protected removeItemsMutableSubject = new Subject<number[] | undefined>();
+  protected swapItemsSubject = new Subject<void>();
 
   private resetAll = () => {
     this.resetObservables();
@@ -106,6 +107,18 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
       addItemImmutable([], itemsToAdd ?? 0),
     );
 
+    this.connect('array', this.swapItemsSubject, (state) => {
+      const data = state?.array || [];
+      if (data.length > 2) {
+        const first = data[0];
+        const last = data[data.length - 1];
+        data[0] = last;
+        data[data.length - 1] = first;
+        return [...data];
+      }
+      return data;
+    });
+
     this.resetAll();
   }
 
@@ -125,6 +138,10 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
     from([0, 1, 2]).subscribe((v) => {
       this.shuffleItemsImmutable();
     });
+  }
+
+  swap() {
+    this.swapItemsSubject.next();
   }
 
   shuffleItemsImmutable(): void {

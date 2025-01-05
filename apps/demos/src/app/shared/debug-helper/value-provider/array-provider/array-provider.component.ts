@@ -91,6 +91,9 @@ import { ArrayProviderService } from '../array-provider.service';
         >
           Shuffle Attack
         </button>
+        <button mat-raised-button [unpatch]="unpatched" (click)="swap()">
+          Swap
+        </button>
         <button
           mat-raised-button
           [unpatch]="unpatched"
