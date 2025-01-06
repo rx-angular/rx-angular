@@ -116,8 +116,7 @@
           "buildTarget": "demos:build:development",
           "open": true,
           "liveReload": true,
-          "watch": true,
-          "proxyConfig": "apps/demos/proxy.conf.json"
+          "watch": true
         }
       }
     },
