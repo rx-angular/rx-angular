@@ -59,7 +59,6 @@ export class PrimitivesProviderService {
   };
 
   private resetObservables = () => {
-    this.state.ngOnDestroy();
     runInInjectionContext(
       this.injector,
       () => (this.state = new RxState<ProvidedValues>()),
