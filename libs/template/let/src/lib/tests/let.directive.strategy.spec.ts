@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import { Component, NgZone } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
@@ -19,6 +20,7 @@ import SpyInstance = jest.SpyInstance;
       >{{ (value | json) || 'undefined' }}</ng-container
     >
   `,
+  imports: [RxLet, JsonPipe],
 })
 class LetDirectiveTestStrategyComponent {
   value$: Observable<number> = new BehaviorSubject<number>(42);
@@ -36,8 +38,7 @@ let strategyProvider: RxStrategyProvider;
 describe('LetDirective strategies', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LetDirectiveTestStrategyComponent],
-      imports: [RxLet],
+      imports: [LetDirectiveTestStrategyComponent],
       teardown: { destroyAfterEach: true },
     });
   });

@@ -57,6 +57,7 @@ import { RxActionFactory, rxActions } from '@rx-angular/state/actions';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ProjectedViewsComponent {
   @ViewChildren('test') set testDif(t) {

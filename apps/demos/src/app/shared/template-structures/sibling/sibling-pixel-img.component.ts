@@ -67,6 +67,7 @@ const chunk = (arr, n) =>
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SiblingPixelImgComponent extends RxState<
   {
@@ -84,7 +85,7 @@ export class SiblingPixelImgComponent extends RxState<
   fillColor$ = this.select('fillColor');
   color$ = this.select(
     selectSlice(['filled', 'fillColor']),
-    map(({ filled, fillColor }) => (filled ? fillColor : ''))
+    map(({ filled, fillColor }) => (filled ? fillColor : '')),
   );
 
   @Input()
@@ -94,8 +95,8 @@ export class SiblingPixelImgComponent extends RxState<
         map((i) => ({
           ...i,
           colorPriority: computeColorPrio(i.colors),
-        }))
-      )
+        })),
+      ),
     );
   }
 
@@ -142,13 +143,13 @@ export class SiblingPixelImgComponent extends RxState<
       '206206206',
     ].includes([r, g, b].join(''));
     const rand = Object.keys(
-      this.strategyProvider.strategies[this.strategyProvider.primaryStrategy]
+      this.strategyProvider.strategies[this.strategyProvider.primaryStrategy],
     )[toInt(undefined, 0, this.strategyProvider.strategyNames.length)];
 
     return transparency
       ? 'reactIdle'
       : black
-      ? 'reactImmediate'
-      : 'reactNormal';
+        ? 'reactImmediate'
+        : 'reactNormal';
   }
 }

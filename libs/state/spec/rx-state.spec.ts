@@ -425,7 +425,7 @@ function setupComponent<State extends { count: number }>(
   }
 
   TestBed.configureTestingModule({
-    declarations: [TestComponent],
+    imports: [TestComponent],
   });
 
   const fixture = TestBed.createComponent(TestComponent);

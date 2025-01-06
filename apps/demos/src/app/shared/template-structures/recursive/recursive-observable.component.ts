@@ -4,26 +4,30 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'rxa-recursive-observable',
   template: `
-    <ng-container *ngIf="level === 0; else: branch">
+    <ng-container *ngIf="level === 0; else branch">
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total - level}}</p>
+        <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-renders [value$]="value$"></rxa-renders>
       </rxa-visualizer>
     </ng-container>
     <ng-template #branch>
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total - level}}</p>
-        <rxa-recursive-observable [total]="total" [level]="level-1" [value$]="value$"></rxa-recursive-observable>
+        <p visualizerHeader>Level {{ total - level }}</p>
+        <rxa-recursive-observable
+          [total]="total"
+          [level]="level - 1"
+          [value$]="value$"
+        ></rxa-recursive-observable>
       </rxa-visualizer>
     </ng-template>
   `,
   host: {
-    class: 'd-flex w-100'
+    class: 'd-flex w-100',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RecursiveObservableComponent {
-
   @Input()
   set depth(d) {
     this.total = d;
@@ -37,5 +41,4 @@ export class RecursiveObservableComponent {
   level = 0;
 
   @Input() value$: Observable<any>;
-
 }

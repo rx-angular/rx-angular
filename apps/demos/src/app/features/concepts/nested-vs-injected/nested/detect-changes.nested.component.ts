@@ -3,13 +3,9 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
 
 @Component({
   selector: 'rxa-cd-nested',
-  template: `
-    <rxa-cd-default-1>
-    </rxa-cd-default-1>
-  `,
+  template: ` <rxa-cd-default-1> </rxa-cd-default-1> `,
   changeDetection: ChangeDetectionStrategy.Default,
-  providers: [CdHelper]
+  providers: [CdHelper],
+  standalone: false,
 })
-export class DetectChangesNestedComponent {
-
-}
+export class DetectChangesNestedComponent {}

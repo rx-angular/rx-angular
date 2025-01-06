@@ -8,7 +8,6 @@ import {
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { startWith, tap, throwError } from 'rxjs';
-import { RxIf } from '../if.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 
 describe('rxIf directive signal values', () => {
@@ -24,8 +23,7 @@ describe('rxIf directive signal values', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TestComponent],
-      imports: [RxIf],
+      imports: [TestComponent],
       providers: [
         {
           provide: RX_RENDER_STRATEGIES_CONFIG,

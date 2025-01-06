@@ -15,13 +15,14 @@ import { of, Subject } from 'rxjs';
       </rxa-state-child-selections>
     </div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
+  standalone: false,
 })
 export class RxStateParentSelectionsComponent {
   values$ = new Subject();
 
   formGroupModel$ = of({
     name: '',
-    age: 0
+    age: 0,
   });
 }

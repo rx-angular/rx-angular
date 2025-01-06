@@ -23,56 +23,19 @@ env:
   NODE_OPTIONS: --max-old-space-size=6144
   docs-name: docs
   docs-path: dist/apps/docs
-  NX_CLOUD_DISTRIBUTED_EXECUTION: true # this enables DTE
-  NX_CLOUD_DISTRIBUTED_EXECUTION_AGENT_COUNT: 4 # expected number of agents
   NX_BRANCH: ${{ github.event.number || github.ref_name }}
 
+permissions:
+  actions: read
+  contents: read
+
 jobs:
-  dte_agents:
-    name: DTE Agent ${{ matrix.agent }}
+  main:
+    name: Main CI
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    # The Free GitHub plan has a limit of 20 concurrent jobs on Ubuntu images
-    # Reference: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration
-    # If we need to, we can optimize for 2 simultaneous workflow runs:
-    # 2 x 1 main job   =  2 concurrent jobs
-    # 2 x 9 agent jobs = 18 concurrent jobs
-    # Total            = 20 concurrent jobs
-    #
-    # However, we don't have many projects or targets in this workspace, so we
-    # lower the number of agents to reduce spent compute time.
-    strategy:
-      matrix:
-        # Must match the argument passed to `nx-cloud --agent-count` in the dte_coordinator job
-        agent: [1, 2, 3, 4]
 
     steps:
-      - name: Checkout all commits
-        uses: actions/checkout@v3
-
-      - name: Set up dependencies
-        uses: ./.github/actions/setup
-
-      - name: Start Nx Cloud DTE Agent
-        run: yarn nx-cloud start-agent
-        env:
-          NX_AGENT_NAME: ${{ matrix.agent }}
-
-  # We're using Nx Cloud for Distributed Task Execution
-  # Reference: https://nx.dev/using-nx/dte
-  #
-  # The coordinator outputs the combination of task outputs from the agents,
-  # both terminal and file outputs
-  dte_coordinator:
-    name: DTE Coordinator
-    runs-on: ubuntu-latest
-    env:
-      NX_CLOUD_DISTRIBUTED_EXECUTION: true
-      NX_DISTRIBUTED_TASK_EXECUTION: true
-
-    steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout [Pull Request]
         if: ${{ github.event_name == 'pull_request' }}
         with:
@@ -81,53 +44,27 @@ jobs:
           # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Checkout [Default Branch]
         if: ${{ github.event_name != 'pull_request' }}
         with:
           # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
 
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
+
+      - name: Initialize the Nx Cloud distributed CI run
+        run: npx nx-cloud start-ci-run --distribute-on="./nx/workflows/dynamic-changesets.yml" --stop-agents-after="e2e" --require-explicit-completion
+
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
-      - name: Initialize the Nx Cloud distributed CI run
-        run: yarn nx-cloud start-ci-run
-
       - name: Run commands in parallel
         run: |
-          pids=()
-          # list of commands to be run on main has env flag NX_CLOUD_DISTRIBUTED_EXECUTION set to false
-          NX_CLOUD_DISTRIBUTED_EXECUTION=false yarn nx-cloud record -- yarn nx format:check & pids+=($!)
-
-          # list of commands to be run on agents
-          yarn nx affected -t lint --parallel=3 &
-          pids+=($!)
-
-          yarn nx affected -t test --parallel=3 &
-          pids+=($!)
-
-          yarn nx affected -t build --exclude=docs --parallel=3 &
-          pids+=($!)
-
-          yarn nx affected -t e2e --parallel=1 &
-          pids+=($!)
-
-          yarn nx affected -t component-test --parallel=1 &
-          pids+=($!)
-
-          # run all commands in parallel and bail if one of them fails
-          for pid in ${pids[*]}; do
-            if ! wait $pid; then
-              exit 1
-            fi
-          done
-
-          exit 0
-
-      - name: Stop Nx Cloud DTE agents
-        if: ${{ always() }}
-        run: yarn nx-cloud stop-all-agents
+          npx nx-cloud record -- npx nx format:check
+          npx nx affected -t lint build test component-test e2e --parallel=4 --exclude=docs
+          npx nx-cloud complete-ci-run
 
       # Upload coverage reports to Codecov
       - name: Upload coverage
@@ -142,27 +79,21 @@ jobs:
   build-docs:
     name: Build docs
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
 
     steps:
       - name: Checkout all commits
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up dependencies
         uses: ./.github/actions/setup
 
       - name: Build docs
-        env:
-          NX_CLOUD_DISTRIBUTED_EXECUTION: false
-          NX_DISTRIBUTED_TASK_EXECUTION: false
         run: yarn nx build docs
 
       - name: '[Merge] Upload docs'
         if: github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.docs-name }}
           path: ${{ env.docs-path }}
@@ -186,13 +117,13 @@ jobs:
 
     steps:
       - name: Download docs
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.docs-name }}
           path: ${{ env.docs-path }}
 
       - name: Set up GitHub Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v4
 
       - name: Upload docs to GitHub Pages
         uses: actions/upload-pages-artifact@v1

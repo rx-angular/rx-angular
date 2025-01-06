@@ -6,7 +6,7 @@
   "prefix": "rx",
   "targets": {
     "build-lib": {
-      "executor": "@nx/angular:package",
+      "executor": "@angular-devkit/build-angular:ng-packagr",
       "options": {
         "tsConfig": "libs/template/tsconfig.lib.json",
         "project": "libs/template/ng-package.json"

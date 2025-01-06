@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { distinctUntilKeyChanged, map, tap } from 'rxjs/operators';
@@ -18,15 +25,13 @@ interface ComponentState {
 const initComponentState = {
   refreshInterval: 10000,
   listExpanded: false,
-  list: []
+  list: [],
 };
 
 @Component({
   selector: 'rxa-presenter-pattern-start',
   template: `
-    <h3>
-      Presenter Pattern
-    </h3>
+    <h3>Presenter Pattern</h3>
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
       (expandedChange)="listExpandedChanges.next($event)"
@@ -34,12 +39,10 @@ const initComponentState = {
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title>
-          List
-        </mat-panel-title>
+        <mat-panel-title> List </mat-panel-title>
         <mat-panel-description>
           <span
-          >{{ vm.list.length }} Repositories Updated every:
+            >{{ vm.list.length }} Repositories Updated every:
             {{ vm.refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -66,10 +69,13 @@ const initComponentState = {
       </ng-template>
     </mat-expansion-panel>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class PresenterPatternStart extends RxState<ComponentState>
-  implements OnInit, OnDestroy {
+export class PresenterPatternStart
+  extends RxState<ComponentState>
+  implements OnInit, OnDestroy
+{
   model$ = this.select();
 
   intervalSubscription = new Subscription();
@@ -85,7 +91,10 @@ export class PresenterPatternStart extends RxState<ComponentState>
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
+  listExpandedChange = this.$.pipe(
+    distinctUntilKeyChanged('listExpanded'),
+    map((s) => s.listExpanded),
+  );
 
   constructor(private listService: ListService) {
     super();

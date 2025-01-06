@@ -7,7 +7,8 @@ import {
   OnDestroy,
   Signal,
 } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservableMicrotaskInternal } from '@rx-angular/cdk/internals/core';
 import {
   AccumulationFn,
   createAccumulationObservable,
@@ -570,7 +571,9 @@ export class RxState<State extends object>
 
     if (isSignal(keyOrInputOrSlice$) && !projectOrSlices$ && !projectValueFn) {
       this.accumulator.nextSliceObservable(
-        toObservable(keyOrInputOrSlice$, { injector: this.injector }),
+        toObservableMicrotaskInternal(keyOrInputOrSlice$, {
+          injector: this.injector,
+        }),
       );
       return;
     }
@@ -596,7 +599,7 @@ export class RxState<State extends object>
       !projectValueFn
     ) {
       const projectionStateFn = projectOrSlices$;
-      const slice$ = toObservable(keyOrInputOrSlice$, {
+      const slice$ = toObservableMicrotaskInternal(keyOrInputOrSlice$, {
         injector: this.injector,
       }).pipe(
         map((v) => projectionStateFn(this.accumulator.state, v as Value)),
@@ -622,7 +625,7 @@ export class RxState<State extends object>
       isSignal(projectOrSlices$) &&
       !projectValueFn
     ) {
-      const slice$ = toObservable(projectOrSlices$, {
+      const slice$ = toObservableMicrotaskInternal(projectOrSlices$, {
         injector: this.injector,
       }).pipe(map((value) => ({ ...{}, [keyOrInputOrSlice$]: value })));
       this.accumulator.nextSliceObservable(slice$);
@@ -653,7 +656,7 @@ export class RxState<State extends object>
       isSignal(projectOrSlices$)
     ) {
       const key: Key = keyOrInputOrSlice$;
-      const slice$ = toObservable(projectOrSlices$, {
+      const slice$ = toObservableMicrotaskInternal(projectOrSlices$, {
         injector: this.injector,
       }).pipe(
         map((value) => ({

@@ -1,7 +1,6 @@
 import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { RxFor } from '../for.directive';
 import { createTestComponent, TestComponent } from './fixtures';
 
 const customErrorHandler: ErrorHandler = {
@@ -23,11 +22,10 @@ describe('rxFor strategies', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TestComponent],
-      imports: [RxFor],
+      imports: [TestComponent],
     });
     fixture = createTestComponent(
-      `<div><span *rxFor="let item of items; strategy: strategy; renderCallback: renderedValue$">{{item.toString()}};</span></div>`
+      `<div><span *rxFor="let item of items; strategy: strategy; renderCallback: renderedValue$">{{item.toString()}};</span></div>`,
     );
     component = fixture.componentInstance;
     nativeElement = fixture.nativeElement;

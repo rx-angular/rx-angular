@@ -12,8 +12,5 @@
     {
       "path": "./cypress/tsconfig.cy.json"
     }
-  ],
-  "compilerOptions": {
-    "target": "es2020"
-  }
+  ]
 }

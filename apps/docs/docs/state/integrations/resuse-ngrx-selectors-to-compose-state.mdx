@@ -1,0 +1,76 @@
+---
+sidebar_position: 1
+sidebar_label: Reuse ngrx selectors to compose state
+title: Reusing ngrx selectors to compose state
+# Renamed from libs/state/docs/snippets/composing-state-using-ngrx-selectors.md
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+_Author: [@Phhansen](https://github.com/Phhansen)_
+
+# Reusing ngrx selectors to compose state
+
+Here is an example of using [NgRx selectors](https://ngrx.io/guide/store/selectors) alongside `@rx-angular/state` to compose reusable state selectors.
+
+Imagine the following `ComponentState` setup:
+
+```typescript
+interface Item {
+  id: string;
+  name: string;
+}
+
+interface ComponentState {
+  items: { [id: string]: Item };
+  visibleIds: string[];
+}
+```
+
+Now we want to derive a list of visible items based on all `items` and the array of `visibleIds`. We can do so by using the `createSelector()` function from NgRx.
+
+```typescript
+const selectItems = (state: ComponentState) => state.items;
+
+const selectVisibleIds = (state: ComponentState) => state.visibleIds;
+
+const selectVisibleItems = createSelector(selectVisibleIds, selectItems, (visibleIds, items) => visibleIds.map((id) => items[id]));
+```
+
+Using this in our component will look like this:
+
+<Tabs>
+
+<TabItem value="class-based" label="Class Based (Classic)">
+
+```typescript
+import { select } from '@ngrx/store';
+
+@Component()
+export class ItemListComponent extends RxState<ComponentState> {
+  readonly visibleItems$ = this.state.select(select(selectVisibleItems));
+
+  constructor() {
+    super();
+  }
+}
+```
+
+</TabItem>
+
+<TabItem value="new" label="Functional Creation (NEW)">
+
+```typescript
+import { select } from '@ngrx/store';
+
+@Component()
+export class ItemListComponent {
+  readonly #state = rxState<ComponentState>();
+  readonly visibleItems$ = this.#state.select(select(selectVisibleItems));
+}
+```
+
+</TabItem>
+
+</Tabs>

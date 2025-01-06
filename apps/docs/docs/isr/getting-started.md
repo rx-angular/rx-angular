@@ -82,7 +82,7 @@ Now you need to configure the ISR handler in your **server.ts** file.
 4. Comment out default handler, because it's will be handled in ISR render method.
 
 ```typescript title="server.ts"
-import { CommonEngine } from '@angular/ssr';
+import { CommonEngine } from '@angular/ssr/node';
 import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';

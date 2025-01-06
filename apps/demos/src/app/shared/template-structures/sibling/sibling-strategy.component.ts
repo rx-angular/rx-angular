@@ -36,6 +36,7 @@ const chunk = (arr, n) =>
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SiblingStrategyComponent extends RxState<{
   siblings: { filled: boolean; id: number; color: string }[];
@@ -60,16 +61,16 @@ export class SiblingStrategyComponent extends RxState<{
       'siblings',
       num$.pipe(
         map((num) => {
-          this.siblings = toBooleanArray(
-            parseInt(num as any, 10)
-          ).map((filled, id) => ({
-            color: this.color(Math.random()),
-            filled,
-            id,
-          }));
+          this.siblings = toBooleanArray(parseInt(num as any, 10)).map(
+            (filled, id) => ({
+              color: this.color(Math.random()),
+              filled,
+              id,
+            }),
+          );
           return this.siblings;
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -92,9 +93,7 @@ export class SiblingStrategyComponent extends RxState<{
     return '#' + Math.floor(a * 16777215).toString(16);
   }
 
-  constructor(
-    private strategyProvider: RxStrategyProvider
-  ) {
+  constructor(private strategyProvider: RxStrategyProvider) {
     super();
     this.set({
       strategy: strategyProvider.primaryStrategy,

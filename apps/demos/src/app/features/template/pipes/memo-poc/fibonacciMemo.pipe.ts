@@ -4,12 +4,12 @@ import { getMemoizedFn } from '../../../../rx-angular-pocs';
 
 @Pipe({
   name: 'fibonacciMemo',
-  pure: true
+  pure: true,
+  standalone: false,
 })
 export class FibonacciMemoPipe implements PipeTransform {
-  fibonacciMemoized = getMemoizedFn(fibonacci)
+  fibonacciMemoized = getMemoizedFn(fibonacci);
   transform(value: any, ...args: unknown[]): unknown {
     return this.fibonacciMemoized(value);
   }
-
 }

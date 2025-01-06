@@ -1,12 +1,5 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Injector,
-  Signal,
-  signal,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { JsonPipe } from '@angular/common';
+import { Component, Injector, Signal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   ComponentFixture,
@@ -20,7 +13,6 @@ import { mockConsole } from '@test-helpers/rx-angular';
 import { interval, NEVER, Subject, throwError } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 import { RxLet } from '../let.directive';
-import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
   template: `
@@ -50,6 +42,7 @@ import { MockChangeDetectorRef } from './fixtures';
     <ng-template #error>error</ng-template>
     <ng-template #suspense>suspense</ng-template>
   `,
+  imports: [RxLet, JsonPipe],
 })
 class LetDirectiveAllTemplatesTestComponent {
   valueSignal: Signal<number> = signal(1);
@@ -67,12 +60,8 @@ let injector: Injector;
 
 const setupTestComponent = () => {
   TestBed.configureTestingModule({
-    declarations: [LetDirectiveAllTemplatesTestComponent],
-    imports: [RxLet],
+    imports: [LetDirectiveAllTemplatesTestComponent],
     providers: [
-      { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      TemplateRef,
-      ViewContainerRef,
       {
         provide: RX_RENDER_STRATEGIES_CONFIG,
         useValue: {
@@ -90,7 +79,6 @@ const setupTestComponent = () => {
         },
       },
     ],
-    teardown: { destroyAfterEach: true },
   });
 };
 

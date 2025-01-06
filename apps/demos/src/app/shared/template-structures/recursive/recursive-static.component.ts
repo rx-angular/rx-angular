@@ -3,26 +3,30 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 @Component({
   selector: 'rxa-recursive-static',
   template: `
-    <ng-container *ngIf="level === 0; else: branch">
+    <ng-container *ngIf="level === 0; else branch">
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total - level}}</p>
+        <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-renders [value$]="value"></rxa-renders>
       </rxa-visualizer>
     </ng-container>
     <ng-template #branch>
       <rxa-visualizer>
-        <p visualizerHeader>Level {{total - level}}</p>
-        <rxa-recursive-static [total]="total" [level]="level-1" [value]="value"></rxa-recursive-static>
+        <p visualizerHeader>Level {{ total - level }}</p>
+        <rxa-recursive-static
+          [total]="total"
+          [level]="level - 1"
+          [value]="value"
+        ></rxa-recursive-static>
       </rxa-visualizer>
     </ng-template>
   `,
   host: {
-    class: 'd-flex w-100'
+    class: 'd-flex w-100',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class RecursiveStaticComponent {
-
   @Input()
   set depth(d) {
     this.total = d;
@@ -37,5 +41,4 @@ export class RecursiveStaticComponent {
 
   @Input()
   value;
-
 }

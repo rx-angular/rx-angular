@@ -23,6 +23,7 @@ import { DomSanitizer } from '@angular/platform-browser';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class PreloadingImagesComponent {
   sh = schedulingHelper();

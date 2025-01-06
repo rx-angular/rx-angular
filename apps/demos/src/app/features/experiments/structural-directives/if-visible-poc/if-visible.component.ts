@@ -9,9 +9,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </div>
       <div class="mt-5 row w-100 d-flex">
         <div style="margin-top: 300px" class="col-6 dh-embedded-view p-2">
-          <div *ifVisible>
-            Content Under The Fold
-          </div>
+          <div *ifVisible>Content Under The Fold</div>
         </div>
       </div>
     </rxa-visualizer>
@@ -19,16 +17,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.Default,
   host: {
     class: 'm-1 p-1',
-    style: 'display: block;'
+    style: 'display: block;',
   },
-  providers: []
+  providers: [],
+  standalone: false,
 })
 export class IfVisibleComponent {
-
-
   log(n) {
     console.log('render', n);
     return n;
   }
-
 }

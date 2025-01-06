@@ -12,6 +12,7 @@ export class ISRLogger {
    * @internal
    */
   log(message?: string, ...optionalParams: unknown[]): void {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.showLogs && console.log(message, ...optionalParams);
   }
 }

@@ -58,10 +58,14 @@ class TestComponent {
   providers: [RxEffects],
 })
 class TestUntilEffectComponent {
-  constructor(store: Store, service: Service, private effects: RxEffects) {
+  constructor(
+    store: Store,
+    service: Service,
+    private effects: RxEffects,
+  ) {
     const effectId1 = effects.register(
       store.select((v) => v === 'effectTrigger'),
-      () => void 0
+      () => void 0,
     );
     store.state$
       .pipe(effects.untilEffect(effectId1))
@@ -75,7 +79,11 @@ class TestUntilEffectComponent {
   providers: [RxEffects],
 })
 class TestOnDestroyComponent {
-  constructor(store: Store, service: Service, private effects: RxEffects) {
+  constructor(
+    store: Store,
+    service: Service,
+    private effects: RxEffects,
+  ) {
     effects.registerOnDestroy(service.method1);
   }
 }
@@ -92,11 +100,11 @@ class TestUnregisterComponent {
   constructor(
     store: Store,
     service: Service,
-    private readonly effects: RxEffects
+    private readonly effects: RxEffects,
   ) {
     this.effectId1 = effects.register(store.select(selector1), service.method1);
     this.effectId2 = effects.register(
-      store.select(selector2).pipe(tap(service.method2))
+      store.select(selector2).pipe(tap(service.method2)),
     );
   }
 
@@ -122,7 +130,7 @@ describe('RxEffects', () => {
       method4: jest.fn(),
     };
     await TestBed.configureTestingModule({
-      declarations: [TestComponent],
+      imports: [TestComponent],
       providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     TestBed.createComponent(TestComponent);
@@ -151,7 +159,7 @@ describe('RxEffects', () => {
       method4: jest.fn(),
     };
     await TestBed.configureTestingModule({
-      declarations: [TestComponent],
+      imports: [TestComponent],
       providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     const fixture = TestBed.createComponent(TestComponent);
@@ -192,7 +200,7 @@ describe('RxEffects', () => {
       handleError: jest.fn(),
     };
     await TestBed.configureTestingModule({
-      declarations: [TestComponent],
+      imports: [TestComponent],
       providers: [
         Store,
         { provide: Service, useValue: service },
@@ -208,7 +216,7 @@ describe('RxEffects', () => {
     store.state$.next('foo');
 
     expect(customErrorHandler.handleError).toHaveBeenCalledWith(
-      new Error('something went wrong')
+      new Error('something went wrong'),
     );
 
     expect(service.method2).toHaveBeenCalledWith('foo2');
@@ -225,7 +233,7 @@ describe('RxEffects', () => {
       method4OnComplete: jest.fn(),
     };
     await TestBed.configureTestingModule({
-      declarations: [TestComponent],
+      imports: [TestComponent],
       providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     TestBed.createComponent(TestComponent);
@@ -254,10 +262,10 @@ describe('RxEffects', () => {
       .mockImplementation((selector) =>
         selector === selector4
           ? throwError(new Error('something went wrong'))
-          : EMPTY
+          : EMPTY,
       );
     await TestBed.configureTestingModule({
-      declarations: [TestComponent],
+      imports: [TestComponent],
       providers: [
         Store,
         { provide: Service, useValue: service },
@@ -275,7 +283,7 @@ describe('RxEffects', () => {
     store.state$.next('foo');
 
     expect(service.method4OnError).toHaveBeenCalledWith(
-      new Error('something went wrong')
+      new Error('something went wrong'),
     );
   });
 
@@ -285,7 +293,7 @@ describe('RxEffects', () => {
       method2: jest.fn(),
     };
     await TestBed.configureTestingModule({
-      declarations: [TestUnregisterComponent],
+      imports: [TestUnregisterComponent],
       providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     const fixture = TestBed.createComponent(TestUnregisterComponent);
@@ -319,7 +327,7 @@ describe('RxEffects', () => {
       method1: jest.fn(),
     };
     await TestBed.configureTestingModule({
-      declarations: [TestUntilEffectComponent],
+      imports: [TestUntilEffectComponent],
       providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     const fixture = TestBed.createComponent(TestUntilEffectComponent);
@@ -345,7 +353,7 @@ describe('RxEffects', () => {
       method1: jest.fn(),
     };
     await TestBed.configureTestingModule({
-      declarations: [TestOnDestroyComponent],
+      imports: [TestOnDestroyComponent],
       providers: [Store, { provide: Service, useValue: service }],
     }).compileComponents();
     const fixture = TestBed.createComponent(TestOnDestroyComponent);

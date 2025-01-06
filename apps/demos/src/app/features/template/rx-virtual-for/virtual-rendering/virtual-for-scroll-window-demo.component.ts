@@ -364,6 +364,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
   ],
   providers: [RxState],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class VirtualForScrollWindowDemoComponent
   implements OnInit, AfterViewInit
@@ -389,11 +390,11 @@ export class VirtualForScrollWindowDemoComponent
   components$ = new BehaviorSubject<'cdk' | 'rxa' | 'both'>('both');
 
   showRxa$ = this.components$.pipe(
-    map((components) => components === 'rxa' || components === 'both')
+    map((components) => components === 'rxa' || components === 'both'),
   );
 
   showCdk$ = this.components$.pipe(
-    map((components) => components === 'cdk' || components === 'both')
+    map((components) => components === 'cdk' || components === 'both'),
   );
 
   cdkScrolledIndex$ = new ReplaySubject<number>(1);
@@ -406,9 +407,9 @@ export class VirtualForScrollWindowDemoComponent
     map(
       () =>
         this.virtualViewport['elementRef'].nativeElement.querySelectorAll(
-          '.item'
-        ).length
-    )
+          '.item',
+        ).length,
+    ),
   );
 
   data$ = this.state.select('data');
@@ -442,7 +443,7 @@ export class VirtualForScrollWindowDemoComponent
 
   trackItem = (
     idx: number,
-    item: TestItem & { tmpl: TemplateRef<any>; content: string }
+    item: TestItem & { tmpl: TemplateRef<any>; content: string },
   ): number => item.id;
 
   constructor(
@@ -451,7 +452,7 @@ export class VirtualForScrollWindowDemoComponent
       runwayItems: number;
       runwayItemsOpposite: number;
       scrollStrategy: 'fixed' | 'auto' | 'dynamic';
-    }>
+    }>,
   ) {
     state.set({
       runwayItems: 20,
@@ -483,9 +484,9 @@ export class VirtualForScrollWindowDemoComponent
               ...item,
               content,
             };
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   }
 

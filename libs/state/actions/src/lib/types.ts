@@ -19,18 +19,17 @@ type Select<U, K> = K extends keyof U ? U[K] : never;
 type ExtractString<T extends object> = Extract<keyof T, string>;
 
 // Helper to get either the params of the transform function, or if the function is not present a fallback type
-type FunctionParamsOrValueType<U, K, F> = InferArguments<
-  Select<U, K>
-> extends never
-  ? [F]
-  : InferArguments<Select<U, K>>;
+type FunctionParamsOrValueType<U, K, F> =
+  InferArguments<Select<U, K>> extends never
+    ? [F]
+    : InferArguments<Select<U, K>>;
 
-export type Actions = {};
+export type Actions = object;
 
 export type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
 export type EffectMap<T> = { [K in keyof T]: Subscription };
 
-export type ActionTransforms<T extends {}> = Partial<{
+export type ActionTransforms<T extends object> = Partial<{
   [K in keyof T]: (...args: any[]) => T[K];
 }>;
 
@@ -38,7 +37,7 @@ export type ActionDispatchFn<O extends unknown[]> = (
   ...value: InstanceOrType<O>
 ) => void;
 
-export type ActionDispatchers<T extends Actions, U extends {}> = {
+export type ActionDispatchers<T extends Actions, U extends object> = {
   [K in keyof T]: ActionDispatchFn<
     FunctionParamsOrValueType<U, K, Select<T, K>>
   >;
@@ -51,14 +50,14 @@ export type ActionObservables<T extends Actions> = {
 export type ActionEffects<T extends Actions, O = T> = {
   [K in ExtractString<T> as `on${Capitalize<string & K>}`]: <R>(
     fn: OperatorFunction<T[K], R>,
-    sideEffectFn?: (value: R) => void
+    sideEffectFn?: (value: R) => void,
   ) => () => void;
 };
 
-export type RxActions<T extends Actions, U extends {} = T> = ActionDispatchers<
-  T,
-  U
-> &
+export type RxActions<
+  T extends Actions,
+  U extends object = T,
+> = ActionDispatchers<T, U> &
   ActionObservables<T> &
   ActionEffects<T> &
   ((slice: Partial<T>) => void) & {

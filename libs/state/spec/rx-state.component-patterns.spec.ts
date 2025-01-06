@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -23,6 +24,7 @@ const initialChildState = { str: 'initialChildState' };
       (str$ | async) == null ? 'undefined' : (str$ | async)
     }}</span>
   `,
+  imports: [AsyncPipe],
 })
 export class RxStateGlueComponent
   extends RxState<{ str: string }>
@@ -67,6 +69,7 @@ export class RxStateGlueComponent
     >
     </rx-angular-state-glue-test>
   `,
+  imports: [AsyncPipe, RxStateGlueComponent],
 })
 export class RxStateGlueContainerComponent
   extends RxState<PrimitiveState & { strWrong: string }>
@@ -97,7 +100,7 @@ describe('GlueTestComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RxStateGlueComponent, RxStateGlueContainerComponent],
+      imports: [RxStateGlueContainerComponent],
       teardown: { destroyAfterEach: true },
     });
     parentFixture = TestBed.createComponent(RxStateGlueContainerComponent);

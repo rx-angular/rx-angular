@@ -69,7 +69,10 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
               <li>{{ item.id }} - {{ item.value }}</li>
             </ul>
 
-            <div class="tpl rx-suspense-tpl d-flex justify-content-center align-items-center" rxSuspense>
+            <div
+              class="tpl rx-suspense-tpl d-flex justify-content-center align-items-center"
+              rxSuspense
+            >
               <mat-progress-spinner
                 [diameter]="80"
                 [color]="'accent'"
@@ -77,10 +80,16 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
               ></mat-progress-spinner>
             </div>
 
-            <div class="tpl rx-complete-tpl  d-flex justify-content-center align-items-center" rxComplete>
+            <div
+              class="tpl rx-complete-tpl  d-flex justify-content-center align-items-center"
+              rxComplete
+            >
               <mat-icon>thumb_up</mat-icon>
             </div>
-            <div class="tpl rx-error-tpl  d-flex justify-content-center align-items-center" rxError>
+            <div
+              class="tpl rx-error-tpl  d-flex justify-content-center align-items-center"
+              rxError
+            >
               <mat-icon>thumb_down</mat-icon>
             </div>
           </div>
@@ -169,7 +178,7 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
       .ctx.custom .rx-error-tpl,
       .ctx.custom .rx-complete-tpl,
       .ctx.custom .rx-suspense-tpl {
-        background-color: rgba(0,0,0,0.75);
+        background-color: rgba(0, 0, 0, 0.75);
         position: absolute;
         top: 0;
         left: 0;
@@ -192,16 +201,16 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
         stroke: #536dfe !important;
       }
 
-      .ctx.custom .rx-error-tpl{
+      .ctx.custom .rx-error-tpl {
         color: #dc0030;
       }
 
-      .ctx.custom .rx-complete-tpl{
+      .ctx.custom .rx-complete-tpl {
         color: #008800;
       }
-
     `,
   ],
+  standalone: false,
 })
 export class RxContextComponent {
   constructor(public strategyProvider: RxStrategyProvider) {}

@@ -103,6 +103,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
       }
     `,
   ],
+  standalone: false,
 })
 export class LetTemplateBindingSignalExampleComponent {
   errorStub = new Error('Template observable error!');

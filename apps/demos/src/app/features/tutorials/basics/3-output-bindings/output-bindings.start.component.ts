@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 //👇 Import { map }
@@ -25,9 +32,7 @@ const initComponentState = {
 @Component({
   selector: 'rxa-output-bindings-start',
   template: `
-    <h3>
-      Output Bindings
-    </h3>
+    <h3>Output Bindings</h3>
     <!--👇 Refactor the state binding -->
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
@@ -36,12 +41,10 @@ const initComponentState = {
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title>
-          List
-        </mat-panel-title>
+        <mat-panel-title> List </mat-panel-title>
         <mat-panel-description>
           <span
-          >{{ (storeList$ | async)?.length }} Repositories Updated every:
+            >{{ (storeList$ | async)?.length }} Repositories Updated every:
             {{ vm.refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -71,16 +74,19 @@ const initComponentState = {
     </mat-expansion-panel>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class OutputBindingsStart extends RxState<ComponentState>
-  implements OnInit, OnDestroy {
+export class OutputBindingsStart
+  extends RxState<ComponentState>
+  implements OnInit, OnDestroy
+{
   model$ = this.select();
 
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
     map(this.parseListItems),
-    startWith(initComponentState.list)
+    startWith(initComponentState.list),
   );
 
   @Input()

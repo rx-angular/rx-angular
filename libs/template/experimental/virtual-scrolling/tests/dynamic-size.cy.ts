@@ -1,6 +1,9 @@
+import { NgIf } from '@angular/common';
+import { Component, Input, NgIterable, output, Type } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { createOutputSpy, mount } from 'cypress/angular';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {
   DynamicSizeVirtualScrollStrategy,
   ListRange,
@@ -23,11 +26,136 @@ interface DynamicVirtualScrollMountConfig
   dynamicSize?: (item: Item) => number;
 }
 
+const testComponentImports = [
+  RxVirtualScrollViewportComponent,
+  RxVirtualFor,
+  DynamicSizeVirtualScrollStrategy,
+  RxVirtualScrollWindowDirective,
+  RxVirtualScrollElementDirective,
+  NgIf,
+];
+
+@Component({
+  template: `<rx-virtual-scroll-viewport
+    (scrolledIndexChange)="scrolledIndex.emit($event)"
+    (viewRange)="viewRange.emit($event)"
+    data-cy="viewport"
+    [style.height.px]="containerHeight"
+    [runwayItems]="runwayItems"
+    [runwayItemsOpposite]="runwayItemsOpposite"
+    [dynamic]="dynamicSize"
+  >
+    <div
+      [style.height.px]="dynamicSize(item)"
+      *rxVirtualFor="
+        let item of items;
+        renderCallback: renderCallback;
+        templateCacheSize: viewCache;
+        strategy: strategy;
+        trackBy: trackBy
+      "
+      [attr.data-cy]="'item'"
+    >
+      <div>{{ item.id }}</div>
+      <div *ngIf="showItemDescription && item.description">
+        {{ item.description }}
+      </div>
+    </div>
+  </rx-virtual-scroll-viewport>`,
+  imports: testComponentImports,
+})
+class DynamicSizeTestComponent {
+  @Input() containerHeight: number;
+  @Input() runwayItems: number;
+  @Input() runwayItemsOpposite: number;
+  @Input() viewCache: number;
+  @Input() trackBy: keyof Item | ((idx: number, i: Item) => unknown);
+  @Input() dynamicSize: (item: Item) => number;
+  @Input() strategy:
+    | RxStrategyNames<string>
+    | Observable<RxStrategyNames<string>>;
+  @Input() items:
+    | Observable<NgIterable<Item>>
+    | NgIterable<Item>
+    | null
+    | undefined;
+  @Input() renderCallback: Subject<any>;
+  @Input() showItemDescription: boolean;
+  viewRange = output<ListRange>();
+  scrolledIndex = output<number>();
+}
+
+@Component({
+  template: ` <div
+    rxVirtualScrollElement
+    style="height: ${defaultMountConfig.containerHeight}px; width: 100vw;"
+  >
+    <div style="height: 50px;">Content Before</div>
+    <rx-virtual-scroll-viewport
+      (scrolledIndexChange)="scrolledIndex.emit($event)"
+      (viewRange)="viewRange.emit($event)"
+      data-cy="viewport"
+      [runwayItems]="runwayItems"
+      [runwayItemsOpposite]="runwayItemsOpposite"
+      [dynamic]="dynamicSize"
+    >
+      <div
+        [style.height.px]="dynamicSize(item)"
+        *rxVirtualFor="
+          let item of items;
+          renderCallback: renderCallback;
+          templateCacheSize: viewCache;
+          strategy: strategy;
+          trackBy: trackBy
+        "
+        [attr.data-cy]="'item'"
+      >
+        {{ item.id }}
+      </div>
+    </rx-virtual-scroll-viewport>
+    <div style="height: 25px;">Content After</div>
+  </div>`,
+  imports: testComponentImports,
+})
+class DynamicSizeCustomScrollElementTestComponent extends DynamicSizeTestComponent {}
+
+@Component({
+  template: `
+    <div style="height: 50px;">Content Before</div>
+    <rx-virtual-scroll-viewport
+      scrollWindow
+      (scrolledIndexChange)="scrolledIndex.emit($event)"
+      (viewRange)="viewRange.emit($event)"
+      data-cy="viewport"
+      [runwayItems]="runwayItems"
+      [runwayItemsOpposite]="runwayItemsOpposite"
+      [dynamic]="dynamicSize"
+    >
+      <div
+        [style.height.px]="dynamicSize(item)"
+        *rxVirtualFor="
+          let item of items;
+          renderCallback: renderCallback;
+          templateCacheSize: viewCache;
+          strategy: strategy;
+          trackBy: trackBy
+        "
+        [attr.data-cy]="'item'"
+      >
+        {{ item.id }}
+      </div>
+    </rx-virtual-scroll-viewport>
+    <div style="height: 25px;">Content After</div>
+  `,
+  imports: testComponentImports,
+})
+class DynamicSizeWindowScrollTestComponent extends DynamicSizeTestComponent {}
+
 const defaultDynamicSize = (item: Item) => (item.description ? 100 : 50);
 
 function mountDynamicSize(
   config?: DynamicVirtualScrollMountConfig,
-  itemTemplate = `<div>{{ item.id }}</div><div *ngIf="item.description">{{item.description}}</div>`
+  type: Type<DynamicSizeTestComponent> = DynamicSizeTestComponent,
 ) {
   const {
     runwayItems,
@@ -37,6 +165,7 @@ function mountDynamicSize(
     trackBy,
     strategy,
     containerHeight,
+    showItemDescription,
     dynamicSize,
   } = {
     dynamicSize: defaultDynamicSize,
@@ -46,55 +175,29 @@ function mountDynamicSize(
   const renderCallback$ = new Subject<Item[]>();
   const renderCallbackSpy = createOutputSpy<Item[]>('renderCallback');
   renderCallback$.subscribe((rendered) => renderCallbackSpy.emit(rendered));
-  return mount(
-    config?.template ??
-      `
-    <rx-virtual-scroll-viewport
-      (scrolledIndexChange)="scrolledIndex.emit($event)"
-      (viewRange)="viewRange.emit($event)"
-      data-cy="viewport"
-      [style.height.px]="containerHeight"
-      [runwayItems]="runwayItems"
-      [runwayItemsOpposite]="runwayItemsOpposite"
-      [dynamic]="dynamicSize">
-      <div
-        [style.height.px]="dynamicSize(item)"
-        *rxVirtualFor="
-          let item of items;
-          renderCallback: renderCallback;
-          templateCacheSize: viewCache;
-          strategy: strategy;
-          trackBy: trackBy;
-        "
-        [attr.data-cy]="'item'"
-      >
-        ${itemTemplate}
-      </div>
-    </rx-virtual-scroll-viewport>
-  `,
-    {
-      componentProperties: {
-        containerHeight,
-        runwayItems,
-        runwayItemsOpposite,
-        viewCache,
-        trackBy,
-        dynamicSize,
-        strategy,
-        items,
-        renderCallback: renderCallback$,
-        viewRange: createOutputSpy<ListRange>('viewRange'),
-        scrolledIndex: createOutputSpy<number>('scrolledIndex'),
-      },
-      imports: [
-        RxVirtualScrollViewportComponent,
-        RxVirtualFor,
-        DynamicSizeVirtualScrollStrategy,
-        RxVirtualScrollElementDirective,
-        RxVirtualScrollWindowDirective,
-      ],
-    }
-  );
+  return mount(type, {
+    componentProperties: {
+      containerHeight,
+      runwayItems,
+      runwayItemsOpposite,
+      viewCache,
+      trackBy,
+      dynamicSize,
+      showItemDescription,
+      strategy,
+      items,
+      renderCallback: renderCallback$,
+      viewRange: createOutputSpy<ListRange>('viewRange'),
+      scrolledIndex: createOutputSpy<number>('scrolledIndex'),
+    },
+    imports: [
+      RxVirtualScrollViewportComponent,
+      RxVirtualFor,
+      DynamicSizeVirtualScrollStrategy,
+      RxVirtualScrollElementDirective,
+      RxVirtualScrollWindowDirective,
+    ],
+  });
 }
 
 function totalItemHeight(items: Item[]) {
@@ -105,14 +208,14 @@ function expectedRange(
   config: DynamicVirtualScrollMountConfig,
   items: Item[],
   scrolledIndex = 0,
-  scrollDirection = 'up'
+  scrollDirection = 'up',
 ): ListRange {
   const { containerHeight, runwayItems, runwayItemsOpposite, dynamicSize } =
     config;
   const start = Math.max(
     0,
     scrolledIndex -
-      (scrollDirection === 'up' ? runwayItems : runwayItemsOpposite)
+      (scrollDirection === 'up' ? runwayItems : runwayItemsOpposite),
   );
   let size = 0;
   let i = scrolledIndex;
@@ -124,7 +227,7 @@ function expectedRange(
   }
   const end = Math.min(
     items.length,
-    i + (scrollDirection === 'up' ? runwayItemsOpposite : runwayItems)
+    i + (scrollDirection === 'up' ? runwayItemsOpposite : runwayItems),
   );
   return { start, end };
 }
@@ -134,11 +237,11 @@ describe('viewport', () => {
     mountDynamicSize().then(({ fixture }) => {
       fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
-        By.css('.rx-virtual-scroll__sentinel')
+        By.css('.rx-virtual-scroll__sentinel'),
       );
       const items = fixture.componentInstance.items as Item[];
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${totalItemHeight(items) - 1}px)`
+        `translate(0px, ${totalItemHeight(items) - 1}px)`,
       );
     });
   });
@@ -148,15 +251,15 @@ describe('viewport', () => {
       items.push(...generateItems(1));
       fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
-        By.css('.rx-virtual-scroll__sentinel')
+        By.css('.rx-virtual-scroll__sentinel'),
       );
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${totalItemHeight(items) - 1}px)`
+        `translate(0px, ${totalItemHeight(items) - 1}px)`,
       );
       items.splice(0, 1);
       fixture.detectChanges();
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
-        `translate(0px, ${totalItemHeight(items) - 1}px)`
+        `translate(0px, ${totalItemHeight(items) - 1}px)`,
       );
     });
   });
@@ -191,7 +294,7 @@ describe('rendering, scrolling & positioning', () => {
       cy.get('@viewRange').should('have.been.calledWith', range);
       cy.get('@renderCallback').should(
         'have.been.calledWith',
-        items.filter((v, i) => i < range.end)
+        items.filter((v, i) => i < range.end),
       );
     });
   });
@@ -214,7 +317,7 @@ describe('rendering, scrolling & positioning', () => {
       cy.get('@viewRange').should('have.been.calledWith', range);
       cy.get('@renderCallback').should(
         'have.been.calledWith',
-        items.filter((v, i) => i < range.end)
+        items.filter((v, i) => i < range.end),
       );
     });
   });
@@ -234,7 +337,7 @@ describe('rendering, scrolling & positioning', () => {
       cy.get('@viewRange').should('have.been.calledWith', range);
       cy.get('@renderCallback').should(
         'have.been.calledWith',
-        items.filter((v, i) => i < range.end)
+        items.filter((v, i) => i < range.end),
       );
     });
   });
@@ -246,7 +349,7 @@ describe('rendering, scrolling & positioning', () => {
       const viewportComponent = getViewportComponent(fixture);
       const scrolledIndex = 20;
       const scrollTo = totalItemHeight(
-        items.filter((i) => i.id < scrolledIndex)
+        items.filter((i) => i.id < scrolledIndex),
       );
       // scroll to somewhere
       viewportComponent.scrollTo(scrollTo);
@@ -267,7 +370,7 @@ describe('rendering, scrolling & positioning', () => {
           cy.get('@viewRange').should('have.been.calledWith', range);
           cy.get('[data-cy=item]').should(
             'have.length',
-            range.end - range.start
+            range.end - range.start,
           );
         });
     });
@@ -286,7 +389,7 @@ describe('rendering, scrolling & positioning', () => {
           fixture.detectChanges();
           cy.get('[data-cy=item]').should(
             'have.length',
-            range.end - range.start
+            range.end - range.start,
           );
           cy.get('@viewRange').should('have.been.calledWith', range);
         });
@@ -309,7 +412,7 @@ describe('rendering, scrolling & positioning', () => {
 describe('data mutations', () => {
   describe('without trackBy', () => {
     it('should add item', () => {
-      mountDynamicSize({}, `{{item.id}}`).then(({ fixture }) => {
+      mountDynamicSize({ showItemDescription: false }).then(({ fixture }) => {
         const mountedComponent = fixture.componentInstance;
         const newItem = generateItems(1, 500)[0];
         (mountedComponent.items as Item[]).splice(0, 0, newItem);
@@ -318,14 +421,14 @@ describe('data mutations', () => {
           .first()
           .then((item) => {
             expect(item.text().trim()).to.be.eq(
-              `${(mountedComponent.items as Item[]).length - 1}`
+              `${(mountedComponent.items as Item[]).length - 1}`,
             );
             expect(item.attr('style')).to.contain(`translateY(0px)`);
           });
       });
     });
     it('should remove item', () => {
-      mountDynamicSize({}, `{{item.id}}`).then(({ fixture }) => {
+      mountDynamicSize({ showItemDescription: false }).then(({ fixture }) => {
         const mountedComponent = fixture.componentInstance;
         (mountedComponent.items as Item[]).splice(0, 1);
         fixture.detectChanges();
@@ -338,48 +441,52 @@ describe('data mutations', () => {
       });
     });
     it('should render mutable sort', () => {
-      mountDynamicSize({}, `{{item.id}}`).then(({ fixture, component }) => {
-        const items = component.items as Item[];
-        cy.get('[data-cy=item]')
-          .each((item, index) => {
-            expect(item.text().trim()).to.be.eq(`${index}`);
-          })
-          .then(() => {
-            items.sort((a, b) => b.id - a.id);
-            fixture.detectChanges();
-            const range = expectedRange(component, items, 0);
-            cy.get('@viewRange').should('have.been.calledWith', range);
-            cy.get('@renderCallback').should(
-              'have.been.calledWith',
-              items.filter((item, i) => i < range.end)
-            );
-            cy.get('[data-cy=item]').each((item, index) => {
-              expect(item.text().trim()).to.be.eq(
-                `${items.length - 1 - index}`
-              );
-            });
-          });
-      });
-    });
-    it('should render mutable update', () => {
-      mountDynamicSize(defaultMountConfig, `{{ item.content }}`).then(
+      mountDynamicSize({ showItemDescription: false }).then(
         ({ fixture, component }) => {
-          const items = fixture.componentInstance.items as Item[];
+          const items = component.items as Item[];
           cy.get('[data-cy=item]')
             .each((item, index) => {
-              expect(item.text().trim()).to.be.eq(`${items[index].content}`);
+              expect(item.text().trim()).to.be.eq(`${index}`);
             })
             .then(() => {
-              items[0].content = 'abcdefg';
+              items.sort((a, b) => b.id - a.id);
               fixture.detectChanges();
-              cy.get('[data-cy=item]')
-                .first()
-                .then((item) => {
-                  expect(item.text().trim()).eq(`${items[0].content}`);
-                });
+              const range = expectedRange(component, items, 0);
+              cy.get('@viewRange').should('have.been.calledWith', range);
+              cy.get('@renderCallback').should(
+                'have.been.calledWith',
+                items.filter((item, i) => i < range.end),
+              );
+              cy.get('[data-cy=item]').each((item, index) => {
+                expect(item.text().trim()).to.be.eq(
+                  `${items.length - 1 - index}`,
+                );
+              });
             });
-        }
+        },
       );
+    });
+    it('should render mutable update', () => {
+      mountDynamicSize().then(({ fixture, component }) => {
+        const items = fixture.componentInstance.items as Item[];
+        cy.get('[data-cy=item]')
+          .each((item, index) => {
+            expect(item.text().replace(' ', '').trim()).to.be.eq(
+              `${items[index].id}${items[index].description}`,
+            );
+          })
+          .then(() => {
+            items[0].description = 'abcdefg';
+            fixture.detectChanges();
+            cy.get('[data-cy=item]')
+              .first()
+              .then((item) => {
+                expect(item.text().replace(' ', '').trim()).eq(
+                  `${items[0].id}${items[0].description}`,
+                );
+              });
+          });
+      });
     });
   });
   describe('with trackBy', () => {
@@ -387,7 +494,7 @@ describe('data mutations', () => {
       mountDynamicSize({ trackBy: {} as any }).then(() => {
         cy.on('uncaught:exception', (e) => {
           expect(e.message).eq(
-            'trackBy must be typeof function or keyof T, but received {}'
+            'trackBy must be typeof function or keyof T, but received {}',
           );
         });
       });
@@ -395,47 +502,15 @@ describe('data mutations', () => {
   });
 });
 
-const customScrollableTemplate = `
-  <div rxVirtualScrollElement style="height: ${defaultMountConfig.containerHeight}px; width: 100vw;">
-    <div style="height: 50px;">
-      Content Before
-    </div>
-    <rx-virtual-scroll-viewport
-      (scrolledIndexChange)="scrolledIndex.emit($event)"
-      (viewRange)="viewRange.emit($event)"
-      data-cy="viewport"
-      [runwayItems]="runwayItems"
-      [runwayItemsOpposite]="runwayItemsOpposite"
-      [dynamic]="dynamicSize">
-      <div
-        [style.height.px]="dynamicSize(item)"
-        *rxVirtualFor="
-          let item of items;
-          renderCallback: renderCallback;
-          templateCacheSize: viewCache;
-          strategy: strategy;
-          trackBy: trackBy;
-        "
-        [attr.data-cy]="'item'"
-      >
-        {{ item.id }}
-      </div>
-    </rx-virtual-scroll-viewport>
-    <div style="height: 25px;">
-      Content After
-    </div>
-  </div>
-`;
-
 describe('custom scrollable', () => {
   it('displays and positions items', () => {
-    mountDynamicSize({ template: customScrollableTemplate }).then(
+    mountDynamicSize({}, DynamicSizeCustomScrollElementTestComponent).then(
       ({ component }) => {
         const items = component.items as Item[];
         const range = expectedRange(
           { ...component, containerHeight: component.containerHeight - 50 },
           items,
-          0
+          0,
         );
         cy.get('[data-cy=item]').should('have.length', range.end - range.start);
         let position = 0;
@@ -448,20 +523,20 @@ describe('custom scrollable', () => {
         cy.get('@viewRange').should('have.been.calledWith', range);
         cy.get('@renderCallback').should(
           'have.been.calledWith',
-          items.filter((v, i) => i < range.end)
+          items.filter((v, i) => i < range.end),
         );
-      }
+      },
     );
   });
   it('reacts to scroll events', () => {
-    mountDynamicSize({ template: customScrollableTemplate }).then(
+    mountDynamicSize({}, DynamicSizeCustomScrollElementTestComponent).then(
       ({ component, fixture }) => {
         const items = component.items as Item[];
         fixture.detectChanges();
         const viewportComponent = getViewportComponent(fixture);
         const scrolledIndex = 20;
         const scrollTo = totalItemHeight(
-          items.filter((i) => i.id < scrolledIndex)
+          items.filter((i) => i.id < scrolledIndex),
         );
         // scroll to somewhere
         viewportComponent.scrollTo(scrollTo + 50);
@@ -469,11 +544,11 @@ describe('custom scrollable', () => {
 
         cy.get('@scrolledIndex').should('have.been.calledWith', scrolledIndex);
         cy.get('@viewRange').should('have.been.calledWith', range);
-      }
+      },
     );
   });
   it('scrolls to an index', () => {
-    mountDynamicSize({ template: customScrollableTemplate }).then(
+    mountDynamicSize({}, DynamicSizeCustomScrollElementTestComponent).then(
       ({ fixture, component }) => {
         fixture.detectChanges();
         const viewportComponent = getViewportComponent(fixture);
@@ -482,53 +557,22 @@ describe('custom scrollable', () => {
         const range = expectedRange(component, items, 340, 'down');
         cy.get('@scrolledIndex').should('have.been.calledWith', 340);
         cy.get('@viewRange').should('have.been.calledWith', range);
-      }
+      },
     );
   });
 });
-
-const windowScrollableTemplate = `
-  <div style="height: 50px;">
-      Content Before
-    </div>
-  <rx-virtual-scroll-viewport
-      scrollWindow
-      (scrolledIndexChange)="scrolledIndex.emit($event)"
-      (viewRange)="viewRange.emit($event)"
-      data-cy="viewport"
-      [runwayItems]="runwayItems"
-      [runwayItemsOpposite]="runwayItemsOpposite"
-      [dynamic]="dynamicSize">
-      <div
-        [style.height.px]="dynamicSize(item)"
-        *rxVirtualFor="
-          let item of items;
-          renderCallback: renderCallback;
-          templateCacheSize: viewCache;
-          strategy: strategy;
-          trackBy: trackBy;
-        "
-        [attr.data-cy]="'item'"
-      >
-        {{ item.id }}
-      </div>
-    </rx-virtual-scroll-viewport>
-    <div style="height: 25px;">
-      Content After
-    </div>
-`;
 
 describe('window scrolling', () => {
   it('displays and positions items', () => {
     let containerHeight = 0;
     cy.window().then((w) => (containerHeight = w.innerHeight));
-    mountDynamicSize({ template: windowScrollableTemplate }).then(
+    mountDynamicSize({}, DynamicSizeWindowScrollTestComponent).then(
       ({ component }) => {
         const items = component.items as Item[];
         const range = expectedRange(
           { ...component, containerHeight: containerHeight - 50 },
           items,
-          0
+          0,
         );
         cy.get('[data-cy=item]').should('have.length', range.end - range.start);
         let position = 0;
@@ -541,39 +585,39 @@ describe('window scrolling', () => {
         cy.get('@viewRange').should('have.been.calledWith', range);
         cy.get('@renderCallback').should(
           'have.been.calledWith',
-          items.filter((v, i) => i < range.end)
+          items.filter((v, i) => i < range.end),
         );
-      }
+      },
     );
   });
   it('reacts to scroll events', () => {
     let containerHeight = 0;
     cy.window().then((w) => (containerHeight = w.innerHeight));
-    mountDynamicSize({ template: windowScrollableTemplate }).then(
+    mountDynamicSize({}, DynamicSizeWindowScrollTestComponent).then(
       ({ fixture, component }) => {
         const items = component.items as Item[];
         fixture.detectChanges();
         const viewportComponent = getViewportComponent(fixture);
         const scrolledIndex = 50;
         const scrollTo = totalItemHeight(
-          items.filter((i) => i.id < scrolledIndex)
+          items.filter((i) => i.id < scrolledIndex),
         );
         const range = expectedRange(
           { ...component, containerHeight },
           items,
           scrolledIndex,
-          'down'
+          'down',
         );
         // scroll to somewhere
         viewportComponent.scrollTo(scrollTo + 50);
         cy.get('@viewRange').should('have.been.calledWith', { ...range });
-      }
+      },
     );
   });
   it('scrolls to an index', () => {
     let containerHeight = 0;
     cy.window().then((w) => (containerHeight = w.innerHeight));
-    mountDynamicSize({ template: windowScrollableTemplate }).then(
+    mountDynamicSize({}, DynamicSizeWindowScrollTestComponent).then(
       ({ fixture, component }) => {
         fixture.detectChanges();
         const viewportComponent = getViewportComponent(fixture);
@@ -584,11 +628,11 @@ describe('window scrolling', () => {
           { ...component, containerHeight },
           items,
           340,
-          'down'
+          'down',
         );
         cy.get('@scrolledIndex').should('have.been.calledWith', 340);
         cy.get('@viewRange').should('have.been.calledWith', range);
-      }
+      },
     );
   });
 });

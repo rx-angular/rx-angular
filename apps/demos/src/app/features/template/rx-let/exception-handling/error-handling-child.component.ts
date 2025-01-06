@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
-  Component, DoCheck, ElementRef,
+  Component,
+  DoCheck,
+  ElementRef,
   Input,
   OnInit,
 } from '@angular/core';
@@ -10,6 +12,7 @@ import {
   template: `{{ _index }}<ng-content></ng-content>`,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ErrorHandlingChildComponent implements OnInit, DoCheck {
   _index: number;
@@ -23,9 +26,7 @@ export class ErrorHandlingChildComponent implements OnInit, DoCheck {
 
   private removed = false;
 
-  constructor(
-    private el: ElementRef
-  ) {}
+  constructor(private el: ElementRef) {}
 
   ngOnInit(): void {}
 

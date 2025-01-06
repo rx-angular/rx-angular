@@ -7,6 +7,7 @@ import { RX_VIRTUAL_FOR_MENU_ITEMS } from './rx-virtual-for/rx-virtual-for.menu'
 import { MENU_ITEMS as VIEWPORT_PRIO_MENU_ITEMS } from './viewport-prio/viewport-prio.menu';
 import { MENU_ITEMS as STRATEGY_MENU_ITEMS } from './strategies/concurrent-strategies.menu';
 import { MENU_ITEMS as PIPES_MENU_ITEMS } from './pipes/pipes.menu';
+import { VIRTUAL_VIEW_MENU_ITEMS } from './virtual-view/virtual-view.menu';
 
 export const TEMPLATE_MENU = [
   {
@@ -61,5 +62,10 @@ export const TEMPLATE_MENU = [
     label: 'ViewPort Prio',
     link: 'view-port-prio',
     children: VIEWPORT_PRIO_MENU_ITEMS,
+  },
+  {
+    label: 'Virtual View',
+    link: 'virtual-view',
+    children: VIRTUAL_VIEW_MENU_ITEMS,
   },
 ];

@@ -48,6 +48,7 @@ import { stateful } from '@rx-angular/state/selections';
     </rxa-visualizer>
   `,
   changeDetection: environment.changeDetection,
+  standalone: false,
 })
 export class RxSwitchPocComponent {
   value$ = new BehaviorSubject<unknown>('1');

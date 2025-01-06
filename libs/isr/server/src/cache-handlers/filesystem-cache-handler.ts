@@ -42,7 +42,7 @@ export class FileSystemCacheHandler extends CacheHandler {
   }
 
   async add(
-    route: string,
+    cacheKey: string,
     html: string,
     config?: CacheISRConfig,
   ): Promise<void> {
@@ -51,13 +51,13 @@ export class FileSystemCacheHandler extends CacheHandler {
 
       // convert route to file name (replace / with __)
       // ex. /details/user/1 => /details__user__1.html
-      const fileName = convertRouteToFileName(route) + '.html';
+      const fileName = convertCacheKeyToFileName(cacheKey) + '.html';
       const filePath = getFileFullPath(fileName, this.cacheFolderPath);
 
       fs.writeFile(filePath, html, 'utf-8', (err) => {
         if (err) reject('Error: 💥 The request was not cached!');
 
-        this.cache.set(route, {
+        this.cache.set(cacheKey, {
           htmlFilePath: filePath,
           options: config || { revalidate: null },
           createdAt: Date.now(),
@@ -68,26 +68,26 @@ export class FileSystemCacheHandler extends CacheHandler {
     });
   }
 
-  get(route: string): Promise<CacheData> {
+  get(cacheKey: string): Promise<CacheData> {
     return new Promise((resolve, reject) => {
       // ex: route is like: / or /details/user/1
       // cachedUrl is like: { html: 'full-path-to-cache/__filename.html', options: { revalidate: 60 } }
-      const cachedRoute = this.cache.get(route);
+      const cachedMeta = this.cache.get(cacheKey);
 
-      if (cachedRoute) {
+      if (cachedMeta) {
         // on html field we have saved path to file
-        this.readFromFile(cachedRoute.htmlFilePath)
+        this.readFromFile(cachedMeta.htmlFilePath)
           .then((html) => {
             const cacheData: CacheData = {
               html,
-              options: cachedRoute.options,
-              createdAt: cachedRoute.createdAt,
+              options: cachedMeta.options,
+              createdAt: cachedMeta.createdAt,
             };
             resolve(cacheData);
           })
           .catch((err) => {
             reject(
-              `Error: 💥 Cannot read cache file for route ${route}: ${cachedRoute.htmlFilePath}, ${err}`,
+              `Error: 💥 Cannot read cache file for route ${cacheKey}: ${cachedMeta.htmlFilePath}, ${err}`,
             );
           });
       } else {
@@ -96,29 +96,29 @@ export class FileSystemCacheHandler extends CacheHandler {
     });
   }
 
-  has(route: string): Promise<boolean> {
-    return Promise.resolve(this.cache.has(route));
+  has(cacheKey: string): Promise<boolean> {
+    return Promise.resolve(this.cache.has(cacheKey));
   }
 
-  delete(route: string): Promise<boolean> {
+  delete(cacheKey: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const cacheData = this.cache.get(route);
+      const cacheMeta = this.cache.get(cacheKey);
 
-      if (cacheData) {
-        fs.unlink(cacheData.htmlFilePath, (err) => {
+      if (cacheMeta) {
+        fs.unlink(cacheMeta.htmlFilePath, (err) => {
           if (err) {
             reject(
               'Error: 💥 Cannot delete cache file for route ' +
-                route +
-                `: ${cacheData.htmlFilePath}`,
+                cacheKey +
+                `: ${cacheMeta.htmlFilePath}`,
             );
           } else {
-            this.cache.delete(route);
+            this.cache.delete(cacheKey);
             resolve(true);
           }
         });
       } else {
-        reject(`Error: 💥 Route: ${route} is not cached.`);
+        reject(`Error: 💥 CacheKey: ${cacheKey} is not cached.`);
       }
     });
   }
@@ -170,18 +170,18 @@ export class FileSystemCacheHandler extends CacheHandler {
       const filePath = join(this.cacheFolderPath, file);
 
       const fileName = file.replace('.html', ''); // remove .html extension
-      const route = convertFileNameToRoute(fileName);
+      const cacheKey = convertFileNameToCacheKey(fileName);
 
       const html = fs.readFileSync(filePath, 'utf-8');
       const { revalidate, errors } = getRouteISRDataFromHTML(html);
 
-      this.cache.set(route, {
+      this.cache.set(cacheKey, {
         htmlFilePath: filePath, // full path to file
         options: { revalidate, errors },
         createdAt: Date.now(),
       });
 
-      console.log('The request was stored in cache! Route: ', route);
+      console.log('The request was stored in cache! Route: ', cacheKey);
     }
   }
 
@@ -230,16 +230,16 @@ export class FileSystemCacheHandler extends CacheHandler {
         '',
       );
 
-      let route = '';
+      let cacheKey = '';
       if (pathWithoutPrerenderedPagesPath === '/index.html') {
-        route = '/';
+        cacheKey = '/';
       } else {
-        route = pathWithoutPrerenderedPagesPath
+        cacheKey = pathWithoutPrerenderedPagesPath
           .substring(0)
           .replace('/index.html', '');
       }
 
-      const newFileName = convertRouteToFileName(route);
+      const newFileName = convertCacheKeyToFileName(cacheKey);
       const newFilePath =
         getFileFullPath(newFileName, this.cacheFolderPath) + '.html';
 
@@ -341,12 +341,12 @@ function getFileFullPath(fileName: string, cacheFolderPath: string): string {
  * This function takes a string parameter 'route' and replaces all '/' characters in it with '__' and returns the modified string.
  *
  * @internal
- * @param {string} route - The string representing the route to be converted into a file name.
+ * @param {string} cacheKey - The string representing the route to be converted into a file name.
  * @returns {string} The modified string representing the file name obtained by replacing '/' characters with '__'.
  */
-export function convertRouteToFileName(route: string): string {
+export function convertCacheKeyToFileName(cacheKey: string): string {
   // replace all occurrences of '/' character in the 'route' string with '__' using regular expression
-  return route
+  return cacheKey
     .replace(new RegExp('/', 'g'), '__')
     .replace(new RegExp('\\?', 'g'), '++');
 }
@@ -355,7 +355,7 @@ export function convertRouteToFileName(route: string): string {
  * This function takes a string parameter 'fileName' and replaces all '__' strings in it with '/' and returns the modified string.
  * @param fileName - The string representing the file name to be converted into a route.
  */
-export function convertFileNameToRoute(fileName: string): string {
+export function convertFileNameToCacheKey(fileName: string): string {
   // replace all occurrences of '__' string in the 'fileName' string with '/' using regular expression
   return fileName
     .replace(new RegExp('\\+\\+', 'g'), '?')

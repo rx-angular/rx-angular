@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { distinctUntilKeyChanged, map, startWith, tap } from 'rxjs/operators';
@@ -24,9 +31,7 @@ const initComponentState = {
 @Component({
   selector: 'rxa-output-bindings-solution',
   template: `
-    <h3>
-      Output Bindings
-    </h3>
+    <h3>Output Bindings</h3>
     <mat-expansion-panel
       *ngIf="model$ | async as vm"
       (expandedChange)="listExpandedChanges.next($event)"
@@ -34,12 +39,10 @@ const initComponentState = {
     >
       <mat-expansion-panel-header class="list">
         <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title>
-          List
-        </mat-panel-title>
+        <mat-panel-title> List </mat-panel-title>
         <mat-panel-description>
           <span
-          >{{ (storeList$ | async)?.length }} Repositories Updated every:
+            >{{ (storeList$ | async)?.length }} Repositories Updated every:
             {{ vm.refreshInterval }} ms
           </span>
         </mat-panel-description>
@@ -69,16 +72,19 @@ const initComponentState = {
     </mat-expansion-panel>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
-export class OutputBindingsSolution extends RxState<ComponentState>
-  implements OnInit, OnDestroy {
+export class OutputBindingsSolution
+  extends RxState<ComponentState>
+  implements OnInit, OnDestroy
+{
   model$ = this.select();
 
   intervalSubscription = new Subscription();
   listExpandedChanges = new Subject<boolean>();
   storeList$ = this.listService.list$.pipe(
     map(this.parseListItems),
-    startWith(initComponentState.list)
+    startWith(initComponentState.list),
   );
 
   @Input()
@@ -91,12 +97,15 @@ export class OutputBindingsSolution extends RxState<ComponentState>
 
   listExpanded: boolean = initComponentState.listExpanded;
   @Output()
-  listExpandedChange = this.$.pipe(distinctUntilKeyChanged('listExpanded'), map(s => s.listExpanded));
+  listExpandedChange = this.$.pipe(
+    distinctUntilKeyChanged('listExpanded'),
+    map((s) => s.listExpanded),
+  );
 
   constructor(private listService: ListService) {
     super();
     this.set(initComponentState);
-    this.connect('listExpanded', this.listExpandedChanges)
+    this.connect('listExpanded', this.listExpandedChanges);
   }
 
   ngOnDestroy(): void {

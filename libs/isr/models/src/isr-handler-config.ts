@@ -1,5 +1,5 @@
 import { Provider } from '@angular/core';
-import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr';
+import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr/node';
 import { Request } from 'express';
 import { CacheHandler, RenderVariant } from './cache-handler';
 
@@ -124,6 +124,11 @@ export interface ISRHandlerConfig {
    * If set to true, the server will provide the cached HTML as soon as possible and will revalidate the cache in the background.
    */
   backgroundRevalidation?: boolean;
+
+  /**
+   * This callback lets you use custom cache key generation logic. If not provided, it will use the default cache key generation logic.
+   */
+  cacheKeyGenerator?: CacheKeyGeneratorFn;
 }
 
 export interface ServeFromCacheConfig {
@@ -143,6 +148,12 @@ export interface ServeFromCacheConfig {
 export interface InvalidateConfig {
   providers?: Provider[];
 }
+
+export type CacheKeyGeneratorFn = (
+  url: string,
+  allowedQueryParams: string[] | null | undefined,
+  variant: RenderVariant | null,
+) => string;
 
 export type ModifyHtmlCallbackFn = (
   req: Request,

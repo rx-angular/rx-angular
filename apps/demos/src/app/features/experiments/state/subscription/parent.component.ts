@@ -12,7 +12,8 @@ import { SubscriptionHandlingService } from './subscription.service';
     <div class="case-content">Process running internally</div>
   `,
   changeDetection: environment.changeDetection,
-  providers: [SubscriptionHandlingService]
+  providers: [SubscriptionHandlingService],
+  standalone: false,
 })
 export class RxStateParentSubscriptionComponent implements OnDestroy {
   subscription = new Subscription();
@@ -21,12 +22,12 @@ export class RxStateParentSubscriptionComponent implements OnDestroy {
   process1$ = this.source.$.pipe(
     tap((num) => {
       console.log('New value: ', num);
-    })
+    }),
   );
 
   constructor(
     private source: SourceService,
-    private subs: SubscriptionHandlingService
+    private subs: SubscriptionHandlingService,
   ) {
     this.process1$.pipe(takeUntil(this.onDestroy$)).subscribe();
   }

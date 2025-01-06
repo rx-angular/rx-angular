@@ -39,5 +39,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class NgIfHackRxLetComponent {}

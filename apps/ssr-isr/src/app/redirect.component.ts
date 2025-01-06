@@ -13,7 +13,6 @@ export const RESPONSE = new InjectionToken<Response>('RESPONSE');
 
 @Component({
   selector: 'app-redirect',
-  standalone: true,
   imports: [CommonModule],
   template: ``,
   styles: ``,

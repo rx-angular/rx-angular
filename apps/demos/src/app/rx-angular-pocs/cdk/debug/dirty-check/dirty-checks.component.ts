@@ -20,7 +20,7 @@ import {
       }
     `,
   ],
-  //changeDetection: ChangeDetectionStrategy.OnPush
+  standalone: false,
 })
 export class DirtyChecksComponent implements AfterViewInit {
   displayElem;
@@ -29,7 +29,10 @@ export class DirtyChecksComponent implements AfterViewInit {
   @Input()
   log;
 
-  constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private elementRef: ElementRef,
+    private renderer: Renderer2,
+  ) {}
 
   ngAfterViewInit() {
     this.displayElem = this.elementRef.nativeElement.children[0].children[0];

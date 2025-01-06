@@ -18,10 +18,11 @@ import { map } from 'rxjs/operators';
     <rxa-presenter-pattern-start [refreshInterval]="refreshInterval$ | async">
     </rxa-presenter-pattern-start>
   `,
+  standalone: false,
 })
 export class PresenterPatternContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();
   refreshInterval$ = this.refreshIntervalInput$.pipe(
-    map((e: any) => e.target.value)
+    map((e: any) => e.target.value),
   );
 }

@@ -63,6 +63,7 @@ import { environment } from '../../../../environments/environment';
     </div>
   `,
   changeDetection: environment.changeDetection,
+  standalone: false,
 })
 export class RxLetVsPushComponent {
   showLetAutoTest = false;

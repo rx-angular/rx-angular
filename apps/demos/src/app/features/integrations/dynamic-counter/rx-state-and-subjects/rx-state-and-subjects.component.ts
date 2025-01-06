@@ -81,6 +81,7 @@ import { updateCount } from '../shared/utils';
       </mat-form-field>
     </div>
   `,
+  standalone: false,
 })
 export class RxStateAndSubjectsComponent extends RxState<CounterState> {
   initialCounterState: CounterState = INITIAL_STATE;
@@ -94,15 +95,15 @@ export class RxStateAndSubjectsComponent extends RxState<CounterState> {
 
   private readonly updateCountTrigger$ = this.select(
     selectSlice(['isTicking', 'tickSpeed']),
-    switchMap((s) => (s.isTicking ? timer(0, s.tickSpeed) : EMPTY))
+    switchMap((s) => (s.isTicking ? timer(0, s.tickSpeed) : EMPTY)),
   );
 
   readonly count$: Observable<string> = this.select(map((s) => s.count + ''));
   readonly tickSpeed$: Observable<string> = this.select(
-    map((s) => s.tickSpeed + '')
+    map((s) => s.tickSpeed + ''),
   );
   readonly countDiff$: Observable<string> = this.select(
-    map((s) => s.countDiff + '')
+    map((s) => s.countDiff + ''),
   );
 
   constructor() {
@@ -112,12 +113,14 @@ export class RxStateAndSubjectsComponent extends RxState<CounterState> {
     this.connect(
       'isTicking',
       this.isTickingToggle.pipe(
-        scan((a) => !a, this.initialCounterState.isTicking)
-      )
+        scan((a) => !a, this.initialCounterState.isTicking),
+      ),
     );
     this.connect(
       'countUp',
-      this.countUpToggle.pipe(scan((a) => !a, this.initialCounterState.countUp))
+      this.countUpToggle.pipe(
+        scan((a) => !a, this.initialCounterState.countUp),
+      ),
     );
     this.connect('countDiff', this.countDiffChange.pipe(toInt()));
     this.connect('tickSpeed', this.tickSpeedChange.pipe(toInt()));
@@ -125,8 +128,8 @@ export class RxStateAndSubjectsComponent extends RxState<CounterState> {
       'count',
       this.setToClick.pipe(
         toLatestFrom(this.countChange, this.initialCounterState.count + ''),
-        toInt()
-      )
+        toInt(),
+      ),
     );
 
     this.connect('count', this.updateCountTrigger$, updateCount);

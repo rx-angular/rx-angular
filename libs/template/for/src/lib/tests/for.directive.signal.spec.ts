@@ -1,9 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-import { RxFor } from '../for.directive';
 import {
   createErrorHandler,
   createTestComponent as utilCreateTestComponent,
@@ -47,8 +45,7 @@ describe('rxFor with signals', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TestComponent],
-      imports: [CommonModule, RxFor],
+      imports: [TestComponent],
       providers: [
         {
           provide: ErrorHandler,

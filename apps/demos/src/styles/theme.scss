@@ -41,8 +41,10 @@ $rx-state-theme: mat.m2-define-dark-theme(
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.core();
-@include mat.core-theme($rx-state-theme);
+@include mat.elevation-classes();
+@include mat.app-background();
+@include mat.elevation-classes();
+@include mat.app-background();
 @include mat.all-component-themes($rx-state-theme);
 @import '../app/app-shell/app-shell.theme';
 @include app-shell-theme($rx-state-theme);
