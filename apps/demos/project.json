@@ -83,12 +83,21 @@
             }
           ],
           "polyfills": ""
+        },
+        "development": {
+          "sourceMap": true,
+          "optimization": false,
+          "namedChunks": true,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "buildOptimizer": false
         }
       },
       "outputs": ["{options.outputPath}"]
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
+      "defaultConfiguration": "development",
       "options": {
         "port": 4300,
         "buildTarget": "demos:build"
@@ -102,6 +111,13 @@
         },
         "zoneless": {
           "buildTarget": "demos:build:zoneless"
+        },
+        "development": {
+          "buildTarget": "demos:build:development",
+          "open": true,
+          "liveReload": true,
+          "watch": true,
+          "proxyConfig": "apps/demos/proxy.conf.json"
         }
       }
     },
