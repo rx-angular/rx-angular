@@ -19,7 +19,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           let value;
           suspense: suspenseView;
           error: errorView;
-          rxComplete: completeView
+          complete: completeView
         "
       >
         value: {{ value | json }}<br />

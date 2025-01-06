@@ -200,7 +200,6 @@ import { Message, MessageService } from './messages/messages.service';
     DatePipe,
     MatButtonToggleModule,
     MatInputModule,
-    RxIf,
     RxLet,
     StrategySelectModule,
     FixedSizeVirtualScrollStrategy,
