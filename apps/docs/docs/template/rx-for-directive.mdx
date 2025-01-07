@@ -6,6 +6,7 @@ title: 'RxFor'
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import ReactPlayer from 'react-player';
 
 ## Motivation
 
@@ -46,13 +47,17 @@ Each instance of `RxFor` can be configured to render with different settings.
 
 <TabItem value="signal" label="Usage with signals">
 
+:::info
+You don't need to unwrap the signal, just pass its reference to `rxFor`, it'll do the rest for you.
+:::
+
 ```html title="src/list.component.html"
 <div class="movie-list">
   <movie *rxFor="let movie of movies;" [movie]="movie" />
 </div>
 ```
 
-```typescript title="src/list.component.html"
+```typescript title="src/list.component.ts"
 import { RxFor } from '@rx-angular/template/for';
 import { Component } from '@angular/core';
 
@@ -76,7 +81,7 @@ export class ListComponent {
 </div>
 ```
 
-```typescript title="src/list.component.html"
+```typescript title="src/list.component.ts"
 import { RxFor } from '@rx-angular/template/for';
 import { Component } from '@angular/core';
 
@@ -105,7 +110,7 @@ export class ListComponent {
 </div>
 ```
 
-```typescript title="src/list.component.html"
+```typescript title="src/list.component.ts"
 import { RxFor } from '@rx-angular/template/for';
 import { Component } from '@angular/core';
 
@@ -167,7 +172,7 @@ You can pass any valid property from the given input type as a shortcut instead 
 </div>
 ```
 
-```typescript title="src/list.component.html"
+```typescript title="src/list.component.ts"
 import { RxFor } from '@rx-angular/template/for';
 import { Component } from '@angular/core';
 
@@ -191,7 +196,7 @@ export class ListComponent {
 </div>
 ```
 
-```typescript title="src/list.component.html"
+```typescript title="src/list.component.ts"
 import { RxFor } from '@rx-angular/template/for';
 import { Component } from '@angular/core';
 
@@ -329,6 +334,126 @@ The following context variables are available for each template:
 | `even$`       | `Observable<boolean>`                                          | even as `Observable`                                                                                                                                                                                              |
 | `odd$`        | `Observable<boolean>`                                          | odd as `Observable`                                                                                                                                                                                               |
 | `select`      | `(keys: (keyof T)[], distinctByMap) => Observable<Partial<T>>` | returns a selection function which accepts an array of properties to pluck out of every list item. The function returns the selected properties of the current list item as distinct `Observable` key-value-pair. |
+
+## Use the new reconciliation algorithm
+
+You can opt in to use the new reconciliation algorithm, which was shipped by the
+angular team as part of the new `@for` control flow.
+
+The original implementations can be found [here](https://github.com/angular/angular/blob/main/packages/core/src/render3/list_reconciliation.ts) & [here](https://github.com/angular/angular/blob/f8d22a9ba4e426f14f9c7fd608e1ad752cd44eb5/packages/core/src/render3/instructions/control_flow.ts#L281)
+
+By default, `rxFor` uses the `IterableDiffer` to calculate the operations it needs to apply
+when an update to the bound iterable happened.
+
+<Tabs>
+
+<TabItem value="opt-in" label="new reconciliation">
+
+```typescript
+import { provideExperimentalRxForReconciliation } from '@rx-angular/template/for';
+
+const appConfig: AppConfig = {
+  providers: [provideExperimentalRxForReconciliation()],
+};
+```
+
+</TabItem>
+
+<TabItem value="opt-out" label="legacy IterableDiffer">
+
+In case you want to opt-out at some level of the injector tree, you can use the `provideLegacyRxForReconciliation` provider function.
+
+```typescript
+import { provideLegacyRxForReconciliation } from '@rx-angular/template/for';
+
+@Component({
+  providers: [provideLegacyRxForReconciliation()],
+})
+export class MyComponent {}
+```
+
+</TabItem>
+
+</Tabs>
+
+### Impact
+
+In general, the new reconciliation algorithm diffs two lists with fewer operations to achieve the same goal as the legacy `IterableDiffer` approach. However, this only applies for move / swap operations.
+
+It's also more memory efficient than the iterable differ.
+
+For `rxFor` specifically, there are also **behavioral impacts**.
+Instead of actually moving around DOM, the new reconciliation works by `detaching` & `attaching` views.
+As rxFor by default uses the concurrent mode, it splits each individual task (attach, detach, update, remove) and works them off in a queue.
+As we are operating on the DOM, we have to run tasks in the given order.
+The biggest impact is that you'll visually see views disappearing from the screen when the whole data set is being shuffled around.
+
+This leads to visual instability on the one hand, but also makes sure no view is ever in the wrong position as in the legacy approach.
+
+#### Swap
+
+Swapping the first item with the last item. This shows off the advantages of the new reconciliation in the most impressive way.
+
+<Tabs>
+<TabItem value="experimental-swap" label="Swap new reconciliation">
+
+The new reconciliation algorithm only needs 4 operations (detach x2, attach x2) to achieve the end result.
+
+<ReactPlayer playing controls url={require('@site/static/img/template/rx-for/swap-experimental.mp4').default} />
+
+</TabItem>
+<TabItem value="legacy-swap" label="Swap IterableDiffer">
+
+The `IterableDiffer` approach needs to move around each item in the whole list to achieve the final result.
+
+<ReactPlayer playing controls url={require('@site/static/img/template/rx-for/swap-legacy.mp4').default} />
+
+</TabItem>
+</Tabs>
+
+#### Random Shuffle
+
+Randomly shuffle elements in the array. This example shows the behavioral changes.
+
+<Tabs>
+<TabItem value="experimental-shuffle" label="Shuffle new reconciliation">
+
+As stated before, the new reconciliation algorithm doesn't move dom, it detaches & attaches nodes.
+As rxFor schedules & runs all operations in order, it's possible that you will end up with a temporary state where nodes are detached
+but not attached yet.
+
+<ReactPlayer playing controls url={require('@site/static/img/template/rx-for/shuffle-experimental.mp4').default} />
+
+</TabItem>
+<TabItem value="legacy-shuffle" label="Shuffle IterableDiffer">
+
+The legacy approach just moves around views until the final result is stable. This has the downside that a couple of views
+might be temporarily out of order.
+
+<ReactPlayer playing controls url={require('@site/static/img/template/rx-for/shuffle-legacy.mp4').default} />
+
+</TabItem>
+</Tabs>
+
+#### Filter
+
+Filter items and remove the filter again. Both approaches work the same in this scenario.
+
+<Tabs>
+<TabItem value="experimental-swap" label="Swap new reconciliation">
+
+<ReactPlayer playing controls url={require('@site/static/img/template/rx-for/filter-experimental.mp4').default} />
+
+</TabItem>
+<TabItem value="legacy-swap" label="Swap IterableDiffer">
+
+The legacy approach just moves around views until the final result is stable. This has the downside that a couple of views
+might be temporarily out of order.
+
+<ReactPlayer playing controls url={require('@site/static/img/template/rx-for/filter-legacy.mp4').default} />
+
+</TabItem>
+</Tabs>
 
 ## Advanced Usage
 
