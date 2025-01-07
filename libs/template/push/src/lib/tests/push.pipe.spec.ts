@@ -9,7 +9,7 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
-  RX_RENDER_STRATEGIES_CONFIG,
+  provideRxRenderStrategies,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
@@ -54,24 +54,21 @@ describe('RxPush', () => {
       providers: [
         RxPush,
         ChangeDetectorRef,
-        {
-          provide: RX_RENDER_STRATEGIES_CONFIG,
-          useValue: {
-            primaryStrategy: 'native',
-            customStrategies: {
-              custom: {
-                name: 'custom',
-                work: (cdRef) => {
-                  cdRef.detectChanges();
-                },
-                behavior:
-                  ({ work }) =>
-                  (o$) =>
-                    o$.pipe(tap(() => work())),
+        provideRxRenderStrategies({
+          primaryStrategy: 'native',
+          customStrategies: {
+            custom: {
+              name: 'custom',
+              work: (cdRef) => {
+                cdRef.detectChanges();
               },
+              behavior:
+                ({ work }) =>
+                (o$) =>
+                  o$.pipe(tap(() => work())),
             },
           },
-        },
+        }),
       ],
     });
 

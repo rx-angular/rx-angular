@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { createTestComponent, TestComponent } from './fixtures';
 
 describe('rxIf directive', () => {
@@ -17,14 +17,7 @@ describe('rxIf directive', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestComponent],
-      providers: [
-        {
-          provide: RX_RENDER_STRATEGIES_CONFIG,
-          useValue: {
-            primaryStrategy: 'native',
-          },
-        },
-      ],
+      providers: [provideRxRenderStrategies({ primaryStrategy: 'native' })],
     });
   });
 

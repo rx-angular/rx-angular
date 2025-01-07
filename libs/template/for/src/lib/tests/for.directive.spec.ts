@@ -1,7 +1,7 @@
 import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { provideExperimentalRxForReconciliation } from '../provide-experimental-reconciler';
 import { provideLegacyRxForReconciliation } from '../provide-legacy-reconciler';
 import {
@@ -43,12 +43,7 @@ describe('rxFor', () => {
             provide: ErrorHandler,
             useValue: customErrorHandler,
           },
-          {
-            provide: RX_RENDER_STRATEGIES_CONFIG,
-            useValue: {
-              primaryStrategy: 'native',
-            },
-          },
+          provideRxRenderStrategies({ primaryStrategy: 'native' }),
           conciler === 'legacy'
             ? provideLegacyRxForReconciliation()
             : provideExperimentalRxForReconciliation(),
