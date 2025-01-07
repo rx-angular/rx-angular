@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, Provider } from '@angular/core';
 import { RX_CONCURRENT_STRATEGIES } from './concurrent-strategies';
 import {
   RxCustomStrategyCredentials,
@@ -38,9 +38,7 @@ export function mergeDefaultConfig<T extends string>(
 ): Required<RxRenderStrategiesConfig<T | RxDefaultStrategyNames>> {
   const custom: RxRenderStrategiesConfig<T> = cfg
     ? cfg
-    : ({
-        customStrategies: {},
-      } as any);
+    : ({ customStrategies: {} } as any);
   return {
     ...RX_RENDER_STRATEGIES_DEFAULTS,
     ...custom,
@@ -49,4 +47,50 @@ export function mergeDefaultConfig<T extends string>(
       ...RX_RENDER_STRATEGIES_DEFAULTS.customStrategies,
     },
   };
+}
+
+/**
+ * @description
+ * Can be used to set the default render strategy or create custom render strategies.
+ *
+ * With this function you can customize the behavior of:
+ * - `rxLet` directive
+ * - `rxFor` directive
+ * - `rxIf` directive
+ * - `rxVirtualFor` directive
+ * - `rxVirtualView` directive
+ * - `RxStrategyProvider` service.
+ *
+ * @example
+ * import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
+ *
+ * const appConfig: ApplicationConfig = {
+ *   providers: [
+ *     provideRxRenderStrategies({
+ *       primaryStrategy: 'sync',
+ *       customStrategies: {
+ *         sync: {
+ *           name: 'sync',
+ *           work: (cdRef) => { cdRef.detectChanges(); },
+ *           behavior: ({ work }) => (o$) => o$.pipe(tap(() => work()))
+ *          },
+ *         asap: {
+ *           name: 'asap',
+ *           work: (cdRef) => { cdRef.detectChanges(); },
+ *           behavior: ({ work }) => (o$) => o$.pipe(delay(0, asapScheduler), tap(() => work()))
+ *        },
+ *     }),
+ *   ],
+ * };
+ *
+ * @param config - The configuration object.
+ * @returns A provider that can be used to set the default render strategy or create custom render strategies.
+ */
+export function provideRxRenderStrategies(
+  config: RxRenderStrategiesConfig<string>,
+): Provider {
+  return {
+    provide: RX_RENDER_STRATEGIES_CONFIG,
+    useValue: mergeDefaultConfig(config),
+  } satisfies Provider;
 }
