@@ -38,18 +38,28 @@ export class AppComponent {
 }
 ```
 
-## RX_RENDER_STRATEGIES_CONFIG
+## provideRxRenderStrategies
 
-You can also set the `patchZone` config globally by providing a `RX_RENDER_STRATEGIES_CONFIG`.
+You can also set the `patchZone` config globally by using `provideRxRenderStrategies` function.
 See more about configuration under [render strategies](../../cdk/render-strategies/render-strategies.mdx) especially the section [usage-in-the-template](../../cdk/render-strategies/render-strategies.mdx#global)
 
 ```ts
+const appConfig: ApplicationConfig = {
+  providers: [
+    // ... other providers
+    provideRxRenderStrategies({
+      patchZone: false, // this applies to all RxLets
+    }),
+  ],
+};
+
+// OR in NgModule-based apps
 @NgModule({
-  providers: [{
-    provide: RX_RENDER_STRATEGIES_CONFIG,
-    useValue: {
-      patchZone: false // this applies to all RxLets
-    }
-  }]
+  providers: [
+    provideRxRenderStrategies({
+      patchZone: false, // this applies to all RxLets
+    }),
+  ],
 })
+export class AppModule {}
 ```
