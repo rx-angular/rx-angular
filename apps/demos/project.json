@@ -114,9 +114,7 @@
         },
         "development": {
           "buildTarget": "demos:build:development",
-          "open": true,
-          "liveReload": true,
-          "watch": true
+          "open": true
         }
       }
     },
