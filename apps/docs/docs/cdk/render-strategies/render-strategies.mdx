@@ -5,6 +5,9 @@ title: 'Render strategies'
 hide_title: true
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # @rx-angular/cdk/render-strategies
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
@@ -41,9 +44,9 @@ yarn add @rx-angular/cdk
 ## Documentation
 
 - [Render Strategies](https://rx-angular.io/docs/cdk/render-strategies)
-  - [Strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies)
-    - [Basic Strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies/basic-strategies)
-    - [Concurrent-strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies/concurrent-strategies)
+- [Strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies)
+- [Basic Strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies/basic-strategies)
+- [Concurrent-strategies](https://rx-angular.io/docs/cdk/render-strategies/strategies/concurrent-strategies)
 
 ## Render strategies
 
@@ -172,80 +175,78 @@ By default the following configurations are set:
 - primaryStrategy: `normal`
 - patchZone: `true`
 
-### Global
-
-1. Module Import
+<Tabs>
+  <TabItem value="appConfig" label="Configure in appConfig">
 
 ```typescript
-...
-import {RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG} from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 
-const CUSTOM_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> = {
-  primaryStrategy: 'global',
-  patchZone: false
-}
-
-@Module({
+const appConfig: ApplicationConfig = {
   providers: [
-    {
-      provide: RX_RENDER_STRATEGIES_CONFIG,
-      useValue: CUSTOM_RX_ANGULAR_CONFIG
-    }
-  ]
-})
-export class AnyModule {
-
-}
+    // ... other providers
+    provideRxRenderStrategies({
+      primaryStrategy: 'userBlocking',
+      patchZone: false,
+    }),
+  ],
+};
 ```
 
-### Feature Module
+  </TabItem>
+  <TabItem value="ngModule" label="Configure in NgModules">
+
+This can be done in any NgModule, AppModule or any feature module.
 
 ```typescript
-...
-import {RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG} from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 
-const FEATURE_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> = {
-  primaryStrategy: 'global',
-  patchZone: false
-}
-
-@Module({
+@NgModule({
   providers: [
-    {
-      provide: RX_RENDER_STRATEGIES_CONFIG,
-      useValue: FEATURE_RX_ANGULAR_CONFIG
-    }
-  ]
+    provideRxRenderStrategies({
+      primaryStrategy: 'global',
+      patchZone: false,
+    }),
+  ],
 })
-export class AnyFeatureModule {
-
-}
+export class AnyModule {}
 ```
 
-### Component
+  </TabItem>
+
+  <TabItem value="route" label="Configure at route level">
 
 ```typescript
-...
-import {RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG} from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 
-const COMPONENT_RX_ANGULAR_CONFIG: RxRenderStrategiesConfig<string> = {
-  primaryStrategy: 'global',
-  patchZone: false
-}
+export const routes: Routes = [
+  {
+    path: 'any-route',
+    component: AnyComponent,
+    providers: [provideRxRenderStrategies({ primaryStrategy: 'userBlocking' })],
+    children: [
+      // ... any child routes
+    ],
+  },
+];
+```
+
+  </TabItem>
+
+  <TabItem value="component" label="Configure at component level">
+
+```typescript
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 
 @Component({
   selector: 'any-component',
-  providers: [
-    {
-      provide: RX_RENDER_STRATEGIES_CONFIG,
-      useValue: COMPONENT_RX_ANGULAR_CONFIG
-    }
-  ]
+  providers: [provideRxRenderStrategies({ primaryStrategy: 'userBlocking', patchZone: false })],
 })
-export class AnyComponent {
-
-}
+export class AnyComponent {}
 ```
+
+  </TabItem>
+
+</Tabs>
 
 ## Usage
 
@@ -273,18 +274,18 @@ In this case, we span an overlay with the `immediate` strategy to get the best U
 The reason for the strategy choice is primarily because user interaction needs to give feedback instantly to align with the user's expectations.
 
 ```typescript
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+
 @Component({
   selector: 'any-component',
   template: ` ... `,
 })
 export class AnyComponent {
-  constructor(
-    public strategyProvider: RxStrategyProvider,
-    public changeDetectorRef: ChangeDetectorRef
-  ) {}
+  private strategyProvider = inject(RxStrategyProvider);
+  private cdr = inject(ChangeDetectorRef);
 
   openDialog() {
-    this.strategyProvider.scheduleCD(this.changeDetectorRef, {
+    this.strategyProvider.scheduleCD(this.cdr, {
       strategy: 'immediate',
     });
   }
@@ -334,26 +335,18 @@ In this case, we can use a low priority.
 Again, `RxStrategyProvider` needs to get imported, and the scheduling APIs needs to be used.
 
 ```typescript
-@Injectable({
-  providedIn: 'root',
-})
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+
+@Injectable({ providedIn: 'root' })
 export class AnyService {
-  constructor(
-    public strategyProvider: RxStrategyProvider,
-    private apiService: ApiService
-  ) {}
+  private strategyProvider = inject(RxStrategyProvider);
+  private apiService = inject(ApiService);
 
   getData() {
-    this.strategyProvider
-      .schedule(() => this.apiService.sendRequest(), { strategy: 'low' })
-      .subscribe();
+    this.strategyProvider.schedule(() => this.apiService.sendRequest(), { strategy: 'low' }).subscribe();
   }
 }
 ```
 
 > **⚠ Notice:**
 > The component that introduces the change does not know where in the template it sits. The whole template needs to be re-evaluated.
-
-## Testing
-
-@TODO
