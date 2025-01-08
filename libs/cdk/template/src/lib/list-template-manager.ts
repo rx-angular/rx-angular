@@ -43,7 +43,7 @@ export interface RxListManager<T> {
 
 export function createListTemplateManager<
   T,
-  C extends RxListViewContext<T>
+  C extends RxListViewContext<T>,
 >(config: {
   renderSettings: RxRenderSettings;
   templateSettings: RxListTemplateSettings<T, C, RxListViewComputedContext> & {
@@ -92,7 +92,7 @@ export function createListTemplateManager<
       strategyHandling$.next(nextConfig);
     },
     render(
-      values$: Observable<NgIterable<T>>
+      values$: Observable<NgIterable<T>>,
     ): Observable<NgIterable<T> | null> {
       return values$.pipe(render());
     },
@@ -105,7 +105,7 @@ export function createListTemplateManager<
           partiallyFinished = false;
           errorHandler.handleError(err);
           return of(null);
-        })
+        }),
       );
   }
 
@@ -116,24 +116,30 @@ export function createListTemplateManager<
         strategyHandling$.strategy$.pipe(distinctUntilChanged()),
       ]).pipe(
         map(([iterable, strategy]) => {
-          const differ = getDiffer(iterable);
-          let changes: IterableChanges<T>;
-          if (differ) {
-            if (partiallyFinished) {
-              const currentIterable = [];
-              for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
-                const viewRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
-                currentIterable[i] = viewRef.context.$implicit;
+          try {
+            const differ = getDiffer(iterable);
+            let changes: IterableChanges<T>;
+            if (differ) {
+              if (partiallyFinished) {
+                const currentIterable = [];
+                for (let i = 0, ilen = viewContainerRef.length; i < ilen; i++) {
+                  const viewRef = <EmbeddedViewRef<C>>viewContainerRef.get(i);
+                  currentIterable[i] = viewRef.context.$implicit;
+                }
+                differ.diff(currentIterable);
               }
-              differ.diff(currentIterable);
+              changes = differ.diff(iterable);
             }
-            changes = differ.diff(iterable);
+            return {
+              changes,
+              iterable,
+              strategy,
+            };
+          } catch {
+            throw new Error(
+              `Error trying to diff '${iterable}'. Only arrays and iterables are allowed`,
+            );
           }
-          return {
-            changes,
-            iterable,
-            strategy,
-          };
         }),
         // Cancel old renders
         switchMap(({ changes, iterable, strategy }) => {
@@ -149,25 +155,25 @@ export function createListTemplateManager<
           const applyChanges$ = getObservablesFromChangesArray(
             changesArr,
             strategy,
-            items.length
+            items.length,
           );
           partiallyFinished = true;
           notifyParent = insertedOrRemoved && parent;
           return combineLatest(
-            applyChanges$.length > 0 ? applyChanges$ : [of(null)]
+            applyChanges$.length > 0 ? applyChanges$ : [of(null)],
           ).pipe(
             tap(() => (partiallyFinished = false)),
             notifyAllParentsIfNeeded(
               injectingViewCdRef,
               strategy,
               () => notifyParent,
-              ngZone
+              ngZone,
             ),
             handleError(),
-            map(() => iterable)
+            map(() => iterable),
           );
         }),
-        handleError()
+        handleError(),
       );
   }
 
@@ -185,7 +191,7 @@ export function createListTemplateManager<
   function getObservablesFromChangesArray(
     changes: RxListTemplateChange<T>[],
     strategy: RxStrategyCredentials,
-    count: number
+    count: number,
   ): Observable<RxListTemplateChangeType>[] {
     return changes.length > 0
       ? changes.map((change) => {
@@ -203,7 +209,7 @@ export function createListTemplateManager<
                     payload[2],
                     payload[0],
                     payload[1],
-                    count
+                    count,
                   );
                   break;
                 case RxListTemplateChangeType.remove:
@@ -216,12 +222,12 @@ export function createListTemplateManager<
                   listViewHandler.updateUnchangedContext(
                     payload[0],
                     payload[1],
-                    count
+                    count,
                   );
                   break;
               }
             },
-            { ngZone }
+            { ngZone },
           );
         })
       : [of(null)];
