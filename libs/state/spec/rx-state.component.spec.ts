@@ -136,7 +136,7 @@ describe('InheritanceTestComponent', () => {
 
   it('should create', () => {
     stateChecker.checkSubscriptions(component, 1);
-    component.ngOnDestroy();
+    fixture.destroy();
     stateChecker.checkSubscriptions(component, 0);
   });
 });

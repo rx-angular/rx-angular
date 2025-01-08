@@ -63,7 +63,7 @@ describe('RxStateService', () => {
 
   it('should unsubscribe on ngOnDestroy call', () => {
     stateChecker.checkSubscriptions(service, 1);
-    service.ngOnDestroy();
+    TestBed.resetTestingModule();
     stateChecker.checkSubscriptions(service, 0);
   });
 
@@ -550,7 +550,7 @@ describe('RxStateService', () => {
         const tick$ = hot('aaaaaaaaaaaaaaa|', { a: 1 });
         const subs = '(^!)';
         state.connect(tick$.pipe(map((num) => ({ num }))));
-        state.ngOnDestroy();
+        TestBed.resetTestingModule();
         expectObservable(state.select()).toBe('');
         expectSubscriptions(tick$.subscriptions).toBe(subs);
       });
@@ -562,7 +562,7 @@ describe('RxStateService', () => {
         const tick$ = hot('aaaaaaaaaaaaaaa|', { a: 1 });
         const subs = '(^!)';
         state.connect('num' as any, tick$);
-        state.ngOnDestroy();
+        TestBed.resetTestingModule();
         expectSubscriptions(tick$.subscriptions).toBe(subs);
         expectObservable(state.select()).toBe('');
       });
@@ -574,7 +574,7 @@ describe('RxStateService', () => {
         const tick$ = hot('aaaaaaaaaaaaaaa|', { a: 1 });
         const subs = '(^!)';
         state.connect(tick$, (s, v) => ({ num: v * 42 }));
-        state.ngOnDestroy();
+        TestBed.resetTestingModule();
         expectObservable(state.select()).toBe('');
         expectSubscriptions(tick$.subscriptions).toBe(subs);
       });
@@ -586,7 +586,7 @@ describe('RxStateService', () => {
         const tick$ = hot('aaaaaaaaaaaaaaa|', { a: 1 });
         const subs = '(^!)';
         state.connect('num', tick$, (s, v) => v * 42);
-        state.ngOnDestroy();
+        TestBed.resetTestingModule();
         expectObservable(state.select()).toBe('');
         expectSubscriptions(tick$.subscriptions).toBe(subs);
       });
@@ -608,7 +608,7 @@ describe('RxStateService', () => {
           ),
         ).toBe('');
         expectSubscriptions(interval$.subscriptions).toBe(subs);
-        state.ngOnDestroy();
+        TestBed.resetTestingModule();
       });
     });
 

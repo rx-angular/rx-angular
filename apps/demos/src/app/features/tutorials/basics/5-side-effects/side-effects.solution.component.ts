@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -74,7 +73,7 @@ const initComponentState = {
 })
 export class SideEffectsSolution
   extends RxState<ComponentState>
-  implements OnInit, OnDestroy
+  implements OnInit
 {
   model$ = this.select();
 

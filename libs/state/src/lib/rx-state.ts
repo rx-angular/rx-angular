@@ -1,4 +1,4 @@
-import { assertInInjectionContext, DestroyRef, inject } from '@angular/core';
+import { assertInInjectionContext } from '@angular/core';
 import { RxState as LegacyState } from './rx-state.service';
 
 export type RxState<T extends object> = Pick<
@@ -52,9 +52,6 @@ export function rxState<State extends object>(
   assertInInjectionContext(rxState);
 
   const legacyState = new LegacyState<State>();
-  const destroyRef = inject(DestroyRef);
-
-  destroyRef.onDestroy(() => legacyState.ngOnDestroy());
 
   const state: RxState<State> = {
     get: legacyState.get.bind(legacyState),

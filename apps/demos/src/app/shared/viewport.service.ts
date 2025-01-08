@@ -1,5 +1,9 @@
-import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { Injectable, OnDestroy } from '@angular/core';
+import {
+  BreakpointObserver,
+  Breakpoints,
+  BreakpointState,
+} from '@angular/cdk/layout';
+import { Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
@@ -20,7 +24,7 @@ interface ViewportServiceState {
 @Injectable({
   providedIn: 'root',
 })
-export class ViewportService implements OnDestroy {
+export class ViewportService {
   private readonly state = new RxState<ViewportServiceState>();
 
   readonly viewport$ = this.state.select('viewport');
@@ -52,15 +56,10 @@ export class ViewportService implements OnDestroy {
       );
     this.state.connect(viewport$, (oldState, viewportChange) => ({
       viewport: viewportChange,
-      isHandset:
-        viewportChange === 'mobile' || viewportChange === 'tablet',
+      isHandset: viewportChange === 'mobile' || viewportChange === 'tablet',
       isMobile: viewportChange === 'mobile',
       isTablet: viewportChange === 'tablet',
       isDesktop: viewportChange === 'desktop',
     }));
-  }
-
-  ngOnDestroy() {
-    this.state.ngOnDestroy();
   }
 }
