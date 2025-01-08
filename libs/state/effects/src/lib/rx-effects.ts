@@ -31,7 +31,7 @@ function getInjectorFromOptions<
   SetupFn extends Function,
   Options extends { injector?: Injector },
 >(setupFnOrOptions?: SetupFn | Options, options?: Options) {
-  if (options) {
+  if (options?.injector) {
     return options.injector;
   }
   if (setupFnOrOptions && typeof setupFnOrOptions !== 'function') {
