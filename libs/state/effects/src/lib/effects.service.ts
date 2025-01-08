@@ -1,10 +1,4 @@
-import {
-  DestroyRef,
-  ErrorHandler,
-  inject,
-  Injectable,
-  Optional,
-} from '@angular/core';
+import { DestroyRef, ErrorHandler, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   EMPTY,
@@ -75,6 +69,7 @@ import { toHook } from './utils';
 export class RxEffects implements OnDestroy$ {
   private static nextId = 0;
   private readonly destroyRef = inject(DestroyRef);
+  private readonly errorHandler = inject(ErrorHandler, { optional: true });
   readonly _hooks$ = new Subject<DestroyProp>();
   private readonly observables$ = new Subject<Observable<unknown>>();
   // we have to use publish here to make it hot (composition happens without subscriber)
@@ -83,10 +78,7 @@ export class RxEffects implements OnDestroy$ {
   onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
   private readonly destroyers: Record<number, Subject<void>> = {};
 
-  constructor(
-    @Optional()
-    private readonly errorHandler: ErrorHandler | null,
-  ) {
+  constructor() {
     this.destroyRef.onDestroy(() => {
       this._hooks$.next({ destroy: true });
       this.subscription.unsubscribe();
