@@ -13,7 +13,7 @@ import {
 import {
   catchError,
   filter,
-  mapTo,
+  map,
   mergeAll,
   share,
   takeUntil,
@@ -165,7 +165,10 @@ export class RxEffects implements OnDestroy$ {
     }
     const effectId = RxEffects.nextId++;
     const destroy$ = (this.destroyers[effectId] = new Subject<void>());
-    const applyBehavior = pipe(mapTo(effectId), takeUntil(destroy$));
+    const applyBehavior = pipe(
+      map(() => effectId),
+      takeUntil(destroy$),
+    );
     if (fnOrObj != null) {
       this.observables$.next(
         from(obsOrSub).pipe(
