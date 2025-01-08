@@ -5,6 +5,7 @@ import {
   Injectable,
   Optional,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   EMPTY,
   from,
@@ -25,7 +26,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { DestroyProp, OnDestroy$ } from './model';
-import { toHook, untilDestroyed } from './utils';
+import { toHook } from './utils';
 
 /**
  * @deprecated - use rxEffects instead
@@ -72,17 +73,8 @@ import { toHook, untilDestroyed } from './utils';
  */
 @Injectable()
 export class RxEffects implements OnDestroy$ {
-  constructor(
-    @Optional()
-    private readonly errorHandler: ErrorHandler | null,
-  ) {
-    inject(DestroyRef).onDestroy(() => {
-      this._hooks$.next({ destroy: true });
-      this.subscription.unsubscribe();
-    });
-  }
-
   private static nextId = 0;
+  private readonly destroyRef = inject(DestroyRef);
   readonly _hooks$ = new Subject<DestroyProp>();
   private readonly observables$ = new Subject<Observable<unknown>>();
   // we have to use publish here to make it hot (composition happens without subscriber)
@@ -90,6 +82,16 @@ export class RxEffects implements OnDestroy$ {
   private readonly subscription = this.effects$.subscribe();
   onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
   private readonly destroyers: Record<number, Subject<void>> = {};
+
+  constructor(
+    @Optional()
+    private readonly errorHandler: ErrorHandler | null,
+  ) {
+    this.destroyRef.onDestroy(() => {
+      this._hooks$.next({ destroy: true });
+      this.subscription.unsubscribe();
+    });
+  }
 
   /**
    * Performs a side-effect whenever a source observable emits, and handles its subscription.
@@ -233,7 +235,7 @@ export class RxEffects implements OnDestroy$ {
   untilEffect(effectId: number) {
     return <V>(source: Observable<V>) =>
       source.pipe(
-        untilDestroyed(this),
+        takeUntilDestroyed(this.destroyRef),
         takeUntil(this.effects$.pipe(filter((eId) => eId === effectId))),
       );
   }
