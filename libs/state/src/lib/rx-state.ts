@@ -1,4 +1,9 @@
-import { assertInInjectionContext } from '@angular/core';
+import {
+  assertInInjectionContext,
+  inject,
+  Injector,
+  runInInjectionContext,
+} from '@angular/core';
 import { RxState as LegacyState } from './rx-state.service';
 
 export type RxState<T extends object> = Pick<
@@ -21,6 +26,23 @@ export type RxStateSetupFn<State extends object> = (
     'connect' | 'set' | 'get' | 'select' | 'setAccumulator'
   >,
 ) => void;
+
+export type RxStateOptions = {
+  injector?: Injector;
+};
+
+function getInjectorFromOptions<
+  SetupFn extends Function,
+  Options extends { injector?: Injector },
+>(setupFnOrOptions?: SetupFn | Options, options?: Options) {
+  if (options) {
+    return options.injector;
+  }
+  if (setupFnOrOptions && typeof setupFnOrOptions !== 'function') {
+    return setupFnOrOptions.injector;
+  }
+  return undefined;
+}
 
 /**
  * @description
@@ -46,27 +68,48 @@ export type RxStateSetupFn<State extends object> = (
  * @docsPage RxState
  *
  */
+export function rxState<State extends object>(): RxState<State>;
 export function rxState<State extends object>(
-  setupFn?: RxStateSetupFn<State>,
+  setupFn: RxStateSetupFn<State>,
+): RxState<State>;
+export function rxState<State extends object>(
+  options: RxStateOptions,
+): RxState<State>;
+export function rxState<State extends object>(
+  setupFn: RxStateSetupFn<State>,
+  options: RxStateOptions,
+): RxState<State>;
+export function rxState<State extends object>(
+  setupFnOrOptions?: RxStateSetupFn<State> | RxStateOptions,
+  options?: RxStateOptions,
 ): RxState<State> {
-  assertInInjectionContext(rxState);
+  const injectorFromOptions = getInjectorFromOptions(setupFnOrOptions, options);
+  if (!injectorFromOptions) {
+    assertInInjectionContext(rxState);
+  }
 
-  const legacyState = new LegacyState<State>();
+  const injector = injectorFromOptions ?? inject(Injector);
 
-  const state: RxState<State> = {
-    get: legacyState.get.bind(legacyState),
-    set: legacyState.set.bind(legacyState),
-    connect: legacyState.connect.bind(legacyState),
-    select: legacyState.select.bind(legacyState),
-    signal: legacyState.signal.bind(legacyState),
-    computed: legacyState.computed.bind(legacyState),
-    computedFrom: legacyState.computedFrom.bind(legacyState),
-    $: legacyState.$,
-    setAccumulator: legacyState.setAccumulator.bind(legacyState),
-    asReadOnly: legacyState.asReadOnly.bind(legacyState),
-  };
+  return runInInjectionContext(injector, () => {
+    const legacyState = new LegacyState<State>();
 
-  setupFn?.(state);
+    const state: RxState<State> = {
+      get: legacyState.get.bind(legacyState),
+      set: legacyState.set.bind(legacyState),
+      connect: legacyState.connect.bind(legacyState),
+      select: legacyState.select.bind(legacyState),
+      signal: legacyState.signal.bind(legacyState),
+      computed: legacyState.computed.bind(legacyState),
+      computedFrom: legacyState.computedFrom.bind(legacyState),
+      $: legacyState.$,
+      setAccumulator: legacyState.setAccumulator.bind(legacyState),
+      asReadOnly: legacyState.asReadOnly.bind(legacyState),
+    };
 
-  return state;
+    if (setupFnOrOptions && typeof setupFnOrOptions === 'function') {
+      setupFnOrOptions?.(state);
+    }
+
+    return state;
+  });
 }
