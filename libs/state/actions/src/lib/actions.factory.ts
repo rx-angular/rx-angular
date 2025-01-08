@@ -1,4 +1,10 @@
-import { ErrorHandler, Injectable, OnDestroy, Optional } from '@angular/core';
+import {
+  DestroyRef,
+  ErrorHandler,
+  inject,
+  Injectable,
+  Optional,
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { actionProxyHandler } from './proxy';
 import { Actions, ActionTransforms, EffectMap, RxActions } from './types';
@@ -22,10 +28,12 @@ type SubjectMap<T> = { [K in keyof T]: Subject<T[K]> };
  * }
  */
 @Injectable()
-export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
-  private subjects: SubjectMap<T>[] = [] as SubjectMap<T>[];
+export class RxActionFactory<T extends Partial<Actions>> {
+  private readonly subjects: SubjectMap<T>[] = [] as SubjectMap<T>[];
 
-  constructor(@Optional() private readonly errorHandler?: ErrorHandler) {}
+  constructor(@Optional() private readonly errorHandler?: ErrorHandler) {
+    inject(DestroyRef).onDestroy(() => this.destroy());
+  }
 
   /*
    * Returns a object based off of the provided typing with a separate setter `[prop](value: T[K]): void` and observable stream `[prop]$: Observable<T[K]>`;
@@ -95,13 +103,5 @@ export class RxActionFactory<T extends Partial<Actions>> implements OnDestroy {
     this.subjects.forEach((s) => {
       Object.values(s).forEach((subject: any) => subject.complete());
     });
-  }
-
-  /**
-   * @internal
-   * Internally used to clean up potential subscriptions to the subjects. (For Actions it is most probably a rare case but still important to care about)
-   */
-  ngOnDestroy() {
-    this.destroy();
   }
 }
