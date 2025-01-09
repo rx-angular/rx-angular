@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EnvironmentInjector } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { Observable, of, Subject, tap, timer } from 'rxjs';
@@ -104,6 +104,24 @@ describe(rxEffects, () => {
     expect(spyInternalOnCleanup).toHaveBeenCalled();
     expect(spyOnCleanup).toHaveBeenCalled();
   });
+
+  describe('without injection context', () => {
+    it('should throw when invoked without injection context', () => {
+      const { rxEffects } = setUpWithoutInjectionContext();
+      expect(() => rxEffects(() => {}, {})).toThrow(
+        /rxEffects\(\) can only be used within an injection context/,
+      );
+    });
+
+    it('should be able to use a custom Injector', () => {
+      const { rxEffects } = setUpWithoutInjectionContext();
+
+      const envInjector = TestBed.inject(EnvironmentInjector);
+
+      const effects = rxEffects(() => {}, { injector: envInjector });
+      expect(effects).toBeDefined();
+    });
+  });
 });
 
 function setupComponent(setupFn?: RxEffectsSetupFn) {
@@ -121,5 +139,14 @@ function setupComponent(setupFn?: RxEffectsSetupFn) {
   return {
     fixture,
     component: fixture.componentInstance,
+  };
+}
+
+function setUpWithoutInjectionContext() {
+  return {
+    rxEffects(...args: Parameters<typeof rxEffects>) {
+      const effects = rxEffects(...args);
+      return effects;
+    },
   };
 }
