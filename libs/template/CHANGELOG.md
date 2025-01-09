@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [19.2.0](https://github.com/rx-angular/rx-angular/compare/template@19.1.2...template@19.2.0) (2025-01-09)
+
+
+### Bug Fixes
+
+* properly include files in tsconfig ([7d26e82](https://github.com/rx-angular/rx-angular/commit/7d26e8200b0e11449e2f1273893c2644eee506da))
+
+
+### Features
+
+* **template:** implement new reconciliation algorithm ([01c770a](https://github.com/rx-angular/rx-angular/commit/01c770a4f87a9add6b5d2fab0b054ea982ff6599))
+
+
+
 ## [19.1.2](https://github.com/rx-angular/rx-angular/compare/template@19.1.1...template@19.1.2) (2024-12-28)
 
 
