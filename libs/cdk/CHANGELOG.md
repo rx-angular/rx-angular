@@ -2,6 +2,21 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [19.1.0](https://github.com/rx-angular/rx-angular/compare/cdk@19.0.1...cdk@19.1.0) (2025-01-09)
+
+
+### Bug Fixes
+
+* properly include files in tsconfig ([7d26e82](https://github.com/rx-angular/rx-angular/commit/7d26e8200b0e11449e2f1273893c2644eee506da))
+
+
+### Features
+
+* **cdk:** added provideRxRenderStrategies provider function ([5c78bbf](https://github.com/rx-angular/rx-angular/commit/5c78bbfea23237e079e3334fd6393d25794d1b1b))
+* **cdk:** introduce new reconciliation algorithm & RxLiveCollection ([568d8b1](https://github.com/rx-angular/rx-angular/commit/568d8b1e2024662305c8d9783264de6cd54c267b))
+
+
+
 ## [19.0.1](https://github.com/rx-angular/rx-angular/compare/cdk@19.0.0...cdk@19.0.1) (2024-12-23)
 
 
