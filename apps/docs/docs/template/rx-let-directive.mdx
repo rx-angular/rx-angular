@@ -482,21 +482,11 @@ You can do so by providing a custom `RxRenderStrategiesConfig`, see the followin
 
 ```typescript
 // import
-import { RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-
-// create configuration with parent flag to be false
-const rxaConfig: RxRenderStrategiesConfig<string> = {
-  parent: false,
-};
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 
 // provide it, in best case on root level
 {
-  providers: [
-    {
-      provide: RX_RENDER_STRATEGIES_CONFIG,
-      useValue: rxaConfig,
-    },
-  ];
+  providers: [provideRxRenderStrategies({ parent: false })];
 }
 ```
 
@@ -598,7 +588,7 @@ This helps to exclude all side effects from special render strategies.
 ```typescript
 import { ChangeDetectorRef, Component, TemplateRef, ViewContainerRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { RxLet } from '@rx-angular/template/let';
 
 @Component({
@@ -616,13 +606,8 @@ const setupTestComponent = (): void => {
   TestBed.configureTestingModule({
     declarations: [RxLet, TestComponent],
     providers: [
-      {
-        // don't forget to configure the primary strategy to 'native'
-        provide: RX_RENDER_STRATEGIES_CONFIG,
-        useValue: {
-          primaryStrategy: 'native',
-        },
-      },
+      // don't forget to configure the primary strategy to 'native'
+      provideRxRenderStrategies({ primaryStrategy: 'native' }),
     ],
   });
 
@@ -645,13 +630,8 @@ requires more effort when writing the tests, as updates will be processed asynch
 TestBed.configureTestingModule({
   declarations: [RxLet, TestComponent],
   providers: [
-    {
-      // don't forget to configure the primary strategy to 'native'
-      provide: RX_RENDER_STRATEGIES_CONFIG,
-      useValue: {
-        primaryStrategy: 'native',
-      },
-    },
+    // don't forget to configure the primary strategy to 'native'
+    provideRxRenderStrategies({ primaryStrategy: 'native' }),
   ],
 });
 ```

@@ -1,10 +1,10 @@
 import { ErrorHandler, TemplateRef, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
 import { of, ReplaySubject, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { provideRxRenderStrategies } from '../../render-strategies/src';
 import { RxTemplateManager } from '../src/lib/template-manager';
 import {
   createTestComponent,
@@ -32,22 +32,19 @@ const setupTemplateManagerComponent = (template = DEFAULT_TEMPLATE): void => {
     providers: [
       { provide: ErrorHandler, useValue: customErrorHandler },
       ViewContainerRef,
-      {
-        provide: RX_RENDER_STRATEGIES_CONFIG,
-        useValue: {
-          primaryStrategy: 'test',
-          customStrategies: {
-            test: {
-              name: 'test',
-              work: (cdRef) => cdRef.detectChanges(),
-              behavior:
-                ({ work }) =>
-                (o$) =>
-                  o$.pipe(tap(() => work())),
-            },
+      provideRxRenderStrategies({
+        primaryStrategy: 'test',
+        customStrategies: {
+          test: {
+            name: 'test',
+            work: (cdRef) => cdRef.detectChanges(),
+            behavior:
+              ({ work }) =>
+              (o$) =>
+                o$.pipe(tap(() => work())),
           },
         },
-      },
+      }),
     ],
     teardown: { destroyAfterEach: true },
   });

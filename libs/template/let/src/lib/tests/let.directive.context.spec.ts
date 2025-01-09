@@ -11,7 +11,7 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
 import {
   BehaviorSubject,
@@ -72,22 +72,19 @@ const setupTestComponent = () => {
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
       ViewContainerRef,
-      {
-        provide: RX_RENDER_STRATEGIES_CONFIG,
-        useValue: {
-          primaryStrategy: 'urgent',
-          customStrategies: {
-            urgent: {
-              name: 'urgent',
-              work: (cdRef) => cdRef.detectChanges(),
-              behavior:
-                ({ work }) =>
-                (o$) =>
-                  o$.pipe(tap(() => work())),
-            },
+      provideRxRenderStrategies({
+        primaryStrategy: 'urgent',
+        customStrategies: {
+          urgent: {
+            name: 'urgent',
+            work: (cdRef) => cdRef.detectChanges(),
+            behavior:
+              ({ work }) =>
+              (o$) =>
+                o$.pipe(tap(() => work())),
           },
         },
-      },
+      }),
     ],
   });
 };

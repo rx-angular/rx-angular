@@ -15,20 +15,14 @@ You can do so by providing a custom `RxRenderStrategiesConfig`, see the followin
 
 ```typescript
 // import
-import { RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-
-// create configuration with parent flag to be false
-const rxaConfig: RxRenderStrategiesConfig<string> = {
-  parent: false,
-};
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 
 // provide it, in best case on root level
 {
   providers: [
-    {
-      provide: RX_RENDER_STRATEGIES_CONFIG,
-      useValue: rxaConfig,
-    },
+    provideRxRenderStrategies({
+      parent: false,
+    }),
   ];
 }
 ```
@@ -129,18 +123,17 @@ Take a look at the following example:
 export class AppListComponent {}
 ```
 
-## RX_RENDER_STRATEGIES_CONFIG
+## provideRxRenderStrategies
 
-You can also set the `parent` config globally by providing a `RX_RENDER_STRATEGIES_CONFIG`.
+You can also set the `parent` config globally by using `provideRxRenderStrategies` function.
 See more about configuration under [render strategies](../../cdk/render-strategies) especially the section [usage-in-the-template](../../cdk/render-strategies#usage-in-the-template)
 
 ```ts
 @NgModule({
-  providers: [{
-    provide: RX_RENDER_STRATEGIES_CONFIG,
-    useValue: {
+  providers: [
+    provideRxRenderStrategies({
       parent: false // this applies to all RxLets
-    }
-  }]
+    }),
+  ]
 })
 ```

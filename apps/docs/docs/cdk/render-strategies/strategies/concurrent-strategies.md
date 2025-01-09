@@ -198,12 +198,12 @@ Tooltips should be displayed immediately on mouse over. Any delay will be very n
 ```typescript
 @Component({
   selector: 'item-image',
-  template: ` <img [src]="src" (mouseenter)="showTooltip()" (mouseleave)="hideTooltip()" /> `,
+  template: ` <img [src]="src()" (mouseenter)="showTooltip()" (mouseleave)="hideTooltip()" /> `,
 })
 export class ItemsListComponent {
-  @Input() src: string;
+  private strategyProvider = inject(RxStrategyProvider);
 
-  constructor(private strategyProvider: RxStrategyProvider) {}
+  readonly src = input.required<string>();
 
   showTooltip() {
     this.strategyProvider
@@ -257,22 +257,24 @@ Dropdowns should be displayed right away on user interaction.
   selector: 'item-dropdown',
   template: `
     <div id="collapse" (mouseenter)="showDropdown()" (mouseleave)="hideDropdown()">
-      {{ text }}
+      {{ text() }}
     </div>
   `,
 })
 export class DropdownComponent {
-  @Input() text: string;
+  private strategyProvider = inject(RxStrategyProvider);
 
-  constructor(private strategyProvider: RxStrategyProvider) {}
+  readonly text = input.required<string>();
 
   showDropdown() {
-    this.strategyProvider.schedule(
-      () => {
-        // create dropdown
-      },
-      { strategy: 'userBlocking' },
-    );
+    this.strategyProvider
+      .schedule(
+        () => {
+          // create dropdown
+        },
+        { strategy: 'userBlocking' },
+      )
+      .subscribe();
   }
 
   hideDropdown() {
@@ -318,7 +320,7 @@ It is often the case that rendering of big lists blocks user interactions. In co
   selector: 'items-list',
   template: `
     <div id="items-list">
-      <div *rxFor="let item of items$; strategy: 'normal'>
+      <div *rxFor="let item of state.items$; strategy: 'normal'>
         <item-image [src]="item.image"></item-image>
         <item-dropdown [text]="item.text"></item-dropdown>
       </div>
@@ -326,8 +328,7 @@ It is often the case that rendering of big lists blocks user interactions. In co
   `,
 })
 export class ItemsListComponent {
-  items$ = this.state.items$;
-  constructor(private state: StateService) {}
+  protected state = inject(StateService);
 }
 ```
 
@@ -354,7 +355,7 @@ Good use case for this strategy will be lazy loading of the components. For exam
   selector: 'items-list',
   template: `
     <div id="items-list">
-      <div *rxFor="let item of items$; strategy: 'normal'>
+      <div *rxFor="let item of state.items$; strategy: 'normal'>
         <item-image [src]="item.image"></item-image>
         <item-dropdown [text]="item.text"></item-dropdown>
       </div>
@@ -364,12 +365,8 @@ Good use case for this strategy will be lazy loading of the components. For exam
   `,
 })
 export class ItemsListComponent {
-  items$ = this.state.items$;
-
-  constructor(
-    private state: StateService,
-    private strategyProvider: RxStrategyProvider,
-  ) {}
+  protected state = inject(StateService);
+  private strategyProvider = inject(RxStrategyProvider);
 
   openCreateItemPopup() {
     this.strategyProvider
@@ -410,7 +407,7 @@ This strategy is especially useful for logic meant to run in the background. Goo
   selector: 'items-list',
   template: `
     <div id="items-list">
-      <div *rxFor="let item of items$; strategy: 'normal'>
+      <div *rxFor="let item of state.items$; strategy: 'normal'>
         {{item.name}}
       </div>
     </div>
@@ -421,14 +418,12 @@ This strategy is especially useful for logic meant to run in the background. Goo
   `,
 })
 export class ItemsListComponent {
-  items$ = this.state.items$;
+  private strategyProvider = inject(RxStrategyProvider);
+  private webSocket = inject(WebSocketService);
+  protected state = inject(StateService);
 
-  constructor(
-    private state: StateService,
-    private strategyProvider: RxStrategyProvider,
-    private webSocket: WebSocketService,
-  ) {
-    this.items$.pipe(this.strategyProvider.scheduleWith((items) => this.webSocket.syncItems(items), { strategy: 'idle' })).subscribe();
+  constructor() {
+    this.state.items$.pipe(this.strategyProvider.scheduleWith((items) => this.webSocket.syncItems(items), { strategy: 'idle' })).subscribe();
   }
 
   openCreateItemPopup() {

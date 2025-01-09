@@ -497,21 +497,11 @@ You can do so by providing a custom `RxRenderStrategiesConfig`, see the followin
 
 ```typescript
 // import
-import { RxRenderStrategiesConfig, RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
-
-// create configuration with parent flag to be false
-const rxaConfig: RxRenderStrategiesConfig<string> = {
-  parent: false,
-};
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 
 // provide it, in best case on root level
 {
-  providers: [
-    {
-      provide: RX_RENDER_STRATEGIES_CONFIG,
-      useValue: rxaConfig,
-    },
-  ];
+  providers: [provideRxRenderStrategies({ parent: false })];
 }
 ```
 
@@ -689,12 +679,9 @@ This can be configured as a `StaticProvider`.
 **Setting the default strategy**
 
 ```ts
-export const RX_ANGULAR_TEST_PROVIDER: StaticProvider = {
-  provide: RX_RENDER_STRATEGIES_CONFIG,
-  useValue: {
-    primaryStrategy: 'native',
-  },
-};
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
+
+export const RX_ANGULAR_TEST_PROVIDER = provideRxRenderStrategies({ primaryStrategy: 'native' });
 ```
 
 **Overriding a strategy**
@@ -706,18 +693,15 @@ In order to still use the `native` strategy in your test environment, you can si
 with the native one.
 
 ```ts
-export const RX_ANGULAR_TEST_PROVIDER: StaticProvider = {
-  provide: RX_RENDER_STRATEGIES_CONFIG,
-  useValue: {
-    primaryStrategy: 'native',
-    customStrategies: {
-      userBlocking: {
-        ...RX_NATIVE_STRATEGIES.native,
-        name: 'userBlocking',
-      },
+export const RX_ANGULAR_TEST_PROVIDER = provideRxRenderStrategies({
+  primaryStrategy: 'native',
+  customStrategies: {
+    userBlocking: {
+      ...RX_NATIVE_STRATEGIES.native,
+      name: 'userBlocking',
     },
   },
-};
+});
 ```
 
 If you have done your desired configuration, declare it in the providers entry of the `TestModule`.

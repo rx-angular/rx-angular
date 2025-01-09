@@ -5,7 +5,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { RxLet } from '../let.directive';
@@ -40,12 +40,7 @@ const setupLetDirectiveTestComponent = (): void => {
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
       TemplateRef,
       ViewContainerRef,
-      {
-        provide: RX_RENDER_STRATEGIES_CONFIG,
-        useValue: {
-          primaryStrategy: 'native',
-        },
-      },
+      provideRxRenderStrategies({ primaryStrategy: 'native' }),
     ],
     teardown: { destroyAfterEach: true },
   });

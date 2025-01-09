@@ -5,7 +5,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
 import {
   BehaviorSubject,
@@ -52,22 +52,19 @@ const setupTestComponent = () => {
   TestBed.configureTestingModule({
     imports: [TestComponent],
     providers: [
-      {
-        provide: RX_RENDER_STRATEGIES_CONFIG,
-        useValue: {
-          primaryStrategy: 'urgent',
-          customStrategies: {
-            urgent: {
-              name: 'urgent',
-              work: (cdRef) => cdRef.detectChanges(),
-              behavior:
-                ({ work }) =>
-                (o$) =>
-                  o$.pipe(tap(() => work())),
-            },
+      provideRxRenderStrategies({
+        primaryStrategy: 'urgent',
+        customStrategies: {
+          urgent: {
+            name: 'urgent',
+            work: (cdRef) => cdRef.detectChanges(),
+            behavior:
+              ({ work }) =>
+              (o$) =>
+                o$.pipe(tap(() => work())),
           },
         },
-      },
+      }),
     ],
   });
 };

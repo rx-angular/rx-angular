@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { tap } from 'rxjs';
 import { provideVirtualViewConfig } from '../virtual-view.config';
 import { RxVirtualView } from '../virtual-view.directive';
@@ -78,24 +78,21 @@ describe('RxVirtualView', () => {
     TestBed.configureTestingModule({
       imports: [VirtualViewTestComponent],
       providers: [
-        {
-          provide: RX_RENDER_STRATEGIES_CONFIG,
-          useValue: {
-            primaryStrategy: 'sync',
-            customStrategies: {
-              sync: {
-                name: 'sync',
-                work: (cdRef) => {
-                  cdRef.detectChanges();
-                },
-                behavior:
-                  ({ work }) =>
-                  (o$) =>
-                    o$.pipe(tap(() => work())),
+        provideRxRenderStrategies({
+          primaryStrategy: 'sync',
+          customStrategies: {
+            sync: {
+              name: 'sync',
+              work: (cdRef) => {
+                cdRef.detectChanges();
               },
+              behavior:
+                ({ work }) =>
+                (o$) =>
+                  o$.pipe(tap(() => work())),
             },
           },
-        },
+        }),
         provideVirtualViewConfig({
           placeholderStrategy: 'sync',
           contentStrategy: 'sync',

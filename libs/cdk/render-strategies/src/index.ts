@@ -3,6 +3,7 @@ export {
   RxConcurrentStrategies,
 } from './lib/concurrent-strategies';
 export {
+  provideRxRenderStrategies,
   RX_RENDER_STRATEGIES_CONFIG,
   RxRenderStrategiesConfig,
 } from './lib/config';

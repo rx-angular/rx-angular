@@ -35,23 +35,21 @@ Strategies give us a way to control how Angular's rendering is executed and whic
 ### Configure existing features
 
 ```typescript
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+
 @Component({
   selector: 'immediate',
-  template: `
-    <button id="btn" (mouseenter)="showTooltip()" (mouseleave)="hideTooltip()">
-      Button with Tooltip
-    </button>
-  `,
+  template: ` <button id="btn" (mouseenter)="showTooltip()" (mouseleave)="hideTooltip()">Button with Tooltip</button> `,
 })
 export class RenderCallbackComponent {
-  constructor(private strategyProvider: RxStrategyProvider) {}
+  private strategyProvider = inject(RxStrategyProvider);
 
   showTooltip() {
     this.strategyProvider.schedule(
       () => {
         // create tooltip
       },
-      { strategy: 'immediate' }
+      { strategy: 'immediate' },
     );
   }
 
@@ -60,7 +58,7 @@ export class RenderCallbackComponent {
       () => {
         // destroy tooltip
       },
-      { strategy: 'immediate' }
+      { strategy: 'immediate' },
     );
   }
 }
@@ -68,17 +66,12 @@ export class RenderCallbackComponent {
 
 ### Custom strategies
 
-```typescript
-export type RxRenderWork = <T = unknown>(
-  cdRef: ChangeDetectorRef,
-  scope?: coalescingObj,
-  notification?: RxNotification<T>
-) => void;
+In case you want to create your own strategy, these are the types that you need to implement:
 
-export type RxRenderBehavior = <T = unknown>(
-  work: any,
-  scope?: coalescingObj
-) => (o: Observable<T>) => Observable<T>;
+```typescript
+export type RxRenderWork = <T = unknown>(cdRef: ChangeDetectorRef, scope?: coalescingObj, notification?: RxNotification<T>) => void;
+
+export type RxRenderBehavior = <T = unknown>(work: any, scope?: coalescingObj) => (o: Observable<T>) => Observable<T>;
 
 export interface RxStrategyCredentials<S = string> {
   name: S;
@@ -86,27 +79,15 @@ export interface RxStrategyCredentials<S = string> {
   behavior: RxRenderBehavior;
 }
 
-export type RxCustomStrategyCredentials<T extends string> = Record<
-  T,
-  RxStrategyCredentials
->;
+export type RxCustomStrategyCredentials<T extends string> = Record<T, RxStrategyCredentials>;
 export type RxNativeStrategyNames = 'native' | 'local' | 'global' | 'noop';
 
-export type RxConcurrentStrategyNames =
-  | 'immediate'
-  | 'userBlocking'
-  | 'normal'
-  | 'low'
-  | 'idle';
+export type RxConcurrentStrategyNames = 'immediate' | 'userBlocking' | 'normal' | 'low' | 'idle';
 
-export type RxDefaultStrategyNames =
-  | RxNativeStrategyNames
-  | RxConcurrentStrategyNames;
+export type RxDefaultStrategyNames = RxNativeStrategyNames | RxConcurrentStrategyNames;
 
 export type RxStrategyNames<T> = RxDefaultStrategyNames | T;
-export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
-  RxStrategyNames<T>
->;
+export type RxStrategies<T extends string> = RxCustomStrategyCredentials<RxStrategyNames<T>>;
 
 export interface RxRenderStrategiesConfig<T extends string> {
   primaryStrategy?: RxStrategyNames<T>;

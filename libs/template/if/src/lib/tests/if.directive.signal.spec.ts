@@ -6,7 +6,7 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { RX_RENDER_STRATEGIES_CONFIG } from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { startWith, tap, throwError } from 'rxjs';
 import { createTestComponent, TestComponent } from './fixtures';
 
@@ -25,24 +25,21 @@ describe('rxIf directive signal values', () => {
     TestBed.configureTestingModule({
       imports: [TestComponent],
       providers: [
-        {
-          provide: RX_RENDER_STRATEGIES_CONFIG,
-          useValue: {
-            primaryStrategy: 'custom',
-            customStrategies: {
-              custom: {
-                name: 'custom',
-                work: (cdRef) => {
-                  cdRef.detectChanges();
-                },
-                behavior:
-                  ({ work }) =>
-                  (o$) =>
-                    o$.pipe(tap(() => work())),
+        provideRxRenderStrategies({
+          primaryStrategy: 'custom',
+          customStrategies: {
+            custom: {
+              name: 'custom',
+              work: (cdRef) => {
+                cdRef.detectChanges();
               },
+              behavior:
+                ({ work }) =>
+                (o$) =>
+                  o$.pipe(tap(() => work())),
             },
           },
-        },
+        }),
       ],
     });
   });
