@@ -182,8 +182,6 @@ describe(rxState, () => {
       const state = component.state;
 
       fixture.detectChanges();
-      // TODO @edbzn: Remove detecting changes twice when we have a better solution
-      fixture.detectChanges();
 
       expect(state.get('count')).toBe(1337);
       expect(fixture.nativeElement.textContent.trim()).toBe('1337');
@@ -209,8 +207,6 @@ describe(rxState, () => {
       const state = component.state;
 
       fixture.detectChanges();
-      // TODO @edbzn: Remove detecting changes twice when we have a better solution
-      fixture.detectChanges();
 
       expect(state.get('count')).toBe(4);
       expect(fixture.nativeElement.textContent.trim()).toBe('4');
@@ -233,8 +229,6 @@ describe(rxState, () => {
       );
       const state = component.state;
 
-      fixture.detectChanges();
-      // TODO @edbzn: Remove detecting changes twice when we have a better solution
       fixture.detectChanges();
 
       expect(state.get('count')).toBe(1337);
