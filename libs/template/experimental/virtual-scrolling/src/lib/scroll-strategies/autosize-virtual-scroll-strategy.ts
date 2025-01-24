@@ -15,7 +15,6 @@ import {
   MonoTypeOperatorFunction,
   Observable,
   of,
-  pairwise,
   ReplaySubject,
   Subject,
 } from 'rxjs';
@@ -27,6 +26,7 @@ import {
   groupBy,
   map,
   mergeMap,
+  pairwise,
   startWith,
   switchMap,
   take,
