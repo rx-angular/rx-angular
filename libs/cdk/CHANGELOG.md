@@ -2,6 +2,10 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [19.1.1](https://github.com/rx-angular/rx-angular/compare/cdk@19.1.0...cdk@19.1.1) (2025-01-28)
+
+
+
 # [19.1.0](https://github.com/rx-angular/rx-angular/compare/cdk@19.0.1...cdk@19.1.0) (2025-01-09)
 
 
