@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [19.0.3](https://github.com/rx-angular/rx-angular/compare/state@19.0.2...state@19.0.3) (2025-01-28)
+
+
+### Bug Fixes
+
+* properly include files in tsconfig ([7d26e82](https://github.com/rx-angular/rx-angular/commit/7d26e8200b0e11449e2f1273893c2644eee506da))
+
+
+
 ## [19.0.2](https://github.com/rx-angular/rx-angular/compare/state@19.0.1...state@19.0.2) (2024-12-28)
 
 
