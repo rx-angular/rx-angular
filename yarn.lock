@@ -7378,9 +7378,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jscutlery/semver@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "@jscutlery/semver@npm:4.1.0"
+"@jscutlery/semver@npm:^5.5.1":
+  version: 5.5.1
+  resolution: "@jscutlery/semver@npm:5.5.1"
   dependencies:
     chalk: "npm:4.1.2"
     conventional-changelog: "npm:^5.1.0"
@@ -7400,8 +7400,8 @@ __metadata:
     inquirer: "npm:8.2.6"
     rxjs: "npm:7.8.1"
   peerDependencies:
-    "@nx/devkit": ^17.0.0
-  checksum: 10c0/7e3ce1e307c6f68ed93b2feaa45fcb9ff812f3316cbb19e450f7cbc9d5468e1f71d3f12d75ef42c03b05b72a87194a260248938955f1eae5be58cbd7f4f12190
+    "@nx/devkit": ^18.0.0 || ^19.0.0 || ^20.0.0
+  checksum: 10c0/a515d11f713471c805b730cfcd0b39739ab51cc5b26dce6538667b56e65dfdf9d47dfcf0b987c4f3eb7c18ba7b71e200df9bcdef48dfb8fc6cf3c772ef840f1c
   languageName: node
   linkType: hard
 
@@ -27462,7 +27462,7 @@ __metadata:
     "@angular/ssr": "npm:19.0.0"
     "@commitlint/cli": "npm:^19.2.1"
     "@commitlint/config-angular": "npm:^19.1.0"
-    "@jscutlery/semver": "npm:^4.1.0"
+    "@jscutlery/semver": "npm:^5.5.1"
     "@nx-plus/docusaurus": "patch:@nx-plus/docusaurus@npm%3A14.1.0#~/.yarn/patches/@nx-plus-docusaurus-npm-14.1.0-b526e34c01.patch"
     "@nx/angular": "npm:20.1.0"
     "@nx/cypress": "npm:20.1.0"
