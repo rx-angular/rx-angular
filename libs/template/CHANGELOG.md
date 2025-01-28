@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [19.2.1](https://github.com/rx-angular/rx-angular/compare/template@19.2.0...template@19.2.1) (2025-01-28)
+
+
+### Bug Fixes
+
+* **template:** move import in virtual scrolling to rxjs/operators ([9d61704](https://github.com/rx-angular/rx-angular/commit/9d61704d95ee83304c31c7b0f34488c6aa479dc0))
+
+
+
 # [19.2.0](https://github.com/rx-angular/rx-angular/compare/template@19.1.2...template@19.2.0) (2025-01-09)
 
 
