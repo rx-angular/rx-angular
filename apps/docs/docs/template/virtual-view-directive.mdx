@@ -47,23 +47,18 @@ RxVirtualView is designed to work in combination with related directives:
 ### Show a widget when it's visible, otherwise show a placeholder
 
 ```typescript
-import {
-  RxVirtualView,
-  RxVirtualViewContent,
-  RxVirtualViewObserver,
-  RxVirtualViewPlaceholder,
-} from '@rx-angular/template/virtual-view';
+import { RxVirtualView, RxVirtualViewContent, RxVirtualViewObserver, RxVirtualViewPlaceholder } from '@rx-angular/template/virtual-view';
 // Other imports...
 
 @Component({
   selector: 'my-list',
-  imports: [RxVirtualView,  RxVirtualViewContent,  RxVirtualViewObserver,  RxVirtualViewPlaceholder],
+  imports: [RxVirtualView, RxVirtualViewContent, RxVirtualViewObserver, RxVirtualViewPlaceholder],
   templateUrl: './my-list.component.html',
   styleUrls: ['./my-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyListComponent {
-// Component code
+  // Component code
 }
 ```
 
@@ -104,23 +99,18 @@ This example demonstrates how to use RxVirtualView to optimize lists by only ren
 We are only rendering the `item` component when it's visible to the user. Otherwise, it gets replaced by an empty div.
 
 ```typescript
-import {
-  RxVirtualView,
-  RxVirtualViewContent,
-  RxVirtualViewObserver,
-  RxVirtualViewPlaceholder,
-} from '@rx-angular/template/virtual-view';
+import { RxVirtualView, RxVirtualViewContent, RxVirtualViewObserver, RxVirtualViewPlaceholder } from '@rx-angular/template/virtual-view';
 // Other imports...
 
 @Component({
   selector: 'my-list',
-  imports: [RxVirtualView,  RxVirtualViewContent,  RxVirtualViewObserver,  RxVirtualViewPlaceholder],
+  imports: [RxVirtualView, RxVirtualViewContent, RxVirtualViewObserver, RxVirtualViewPlaceholder],
   templateUrl: './my-list.component.html',
   styleUrls: ['./my-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyListComponent {
-// Component code
+  // Component code
 }
 ```
 
