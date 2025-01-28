@@ -1,10 +1,5 @@
-import {
-  DestroyRef,
-  ErrorHandler,
-  inject,
-  Injectable,
-  Optional,
-} from '@angular/core';
+import { DestroyRef, ErrorHandler, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   EMPTY,
   from,
@@ -18,14 +13,14 @@ import {
 import {
   catchError,
   filter,
-  mapTo,
+  map,
   mergeAll,
   share,
   takeUntil,
   tap,
 } from 'rxjs/operators';
 import { DestroyProp, OnDestroy$ } from './model';
-import { toHook, untilDestroyed } from './utils';
+import { toHook } from './utils';
 
 /**
  * @deprecated - use rxEffects instead
@@ -72,17 +67,9 @@ import { toHook, untilDestroyed } from './utils';
  */
 @Injectable()
 export class RxEffects implements OnDestroy$ {
-  constructor(
-    @Optional()
-    private readonly errorHandler: ErrorHandler | null,
-  ) {
-    inject(DestroyRef).onDestroy(() => {
-      this._hooks$.next({ destroy: true });
-      this.subscription.unsubscribe();
-    });
-  }
-
   private static nextId = 0;
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly errorHandler = inject(ErrorHandler, { optional: true });
   readonly _hooks$ = new Subject<DestroyProp>();
   private readonly observables$ = new Subject<Observable<unknown>>();
   // we have to use publish here to make it hot (composition happens without subscriber)
@@ -90,6 +77,13 @@ export class RxEffects implements OnDestroy$ {
   private readonly subscription = this.effects$.subscribe();
   onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
   private readonly destroyers: Record<number, Subject<void>> = {};
+
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      this._hooks$.next({ destroy: true });
+      this.subscription.unsubscribe();
+    });
+  }
 
   /**
    * Performs a side-effect whenever a source observable emits, and handles its subscription.
@@ -171,7 +165,10 @@ export class RxEffects implements OnDestroy$ {
     }
     const effectId = RxEffects.nextId++;
     const destroy$ = (this.destroyers[effectId] = new Subject<void>());
-    const applyBehavior = pipe(mapTo(effectId), takeUntil(destroy$));
+    const applyBehavior = pipe(
+      map(() => effectId),
+      takeUntil(destroy$),
+    );
     if (fnOrObj != null) {
       this.observables$.next(
         from(obsOrSub).pipe(
@@ -233,7 +230,7 @@ export class RxEffects implements OnDestroy$ {
   untilEffect(effectId: number) {
     return <V>(source: Observable<V>) =>
       source.pipe(
-        untilDestroyed(this),
+        takeUntilDestroyed(this.destroyRef),
         takeUntil(this.effects$.pipe(filter((eId) => eId === effectId))),
       );
   }
