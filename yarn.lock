@@ -9455,7 +9455,7 @@ __metadata:
     tslib: "npm:^2.4.1"
   peerDependencies:
     "@angular/core": ^19.0.0
-    "@rx-angular/cdk": ^19.0.1
+    "@rx-angular/cdk": ^19.1.0
     rxjs: ^6.5.3 || ^7.4.0
   languageName: unknown
   linkType: soft
@@ -9468,7 +9468,7 @@ __metadata:
     tslib: "npm:^2.4.1"
   peerDependencies:
     "@angular/core": ^19.0.0
-    "@rx-angular/cdk": ^19.0.1
+    "@rx-angular/cdk": ^19.1.0
     rxjs: ^6.5.3 || ^7.4.0
   languageName: unknown
   linkType: soft
