@@ -173,11 +173,11 @@ export class RxVirtualView
   readonly size = signal({ width: 0, height: 0 });
 
   readonly width = computed(() =>
-    this.size().width ? `${this.size().width}px` : 'auto',
+    this.size().width ? `${this.size().width}px` : null,
   );
 
   readonly height = computed(() =>
-    this.size().height ? `${this.size().height}px` : 'auto',
+    this.size().height ? `${this.size().height}px` : null,
   );
 
   readonly containment = computed(() => {
