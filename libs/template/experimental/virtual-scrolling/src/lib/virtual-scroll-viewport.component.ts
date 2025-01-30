@@ -73,7 +73,6 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
   ],
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./virtual-scroll-viewport.component.scss'],
-  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     class: 'rx-virtual-scroll-viewport',
   },

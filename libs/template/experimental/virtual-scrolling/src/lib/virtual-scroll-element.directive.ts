@@ -10,7 +10,6 @@ import { unpatchedScroll } from './util';
       useExisting: RxVirtualScrollElementDirective,
     },
   ],
-  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     class: 'rx-virtual-scroll-element',
   },
