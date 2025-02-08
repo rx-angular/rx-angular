@@ -265,7 +265,11 @@ export class FixedSizeVirtualScrollStrategy<
         valueCache = {};
         valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
         if (scrollTo !== this.scrolledIndex) {
-          this.scrollToIndex(scrollTo);
+          this.scrollToIndex(
+            scrollTo,
+            undefined,
+            this.scrollTop % this._itemSize,
+          );
         }
       });
     const dataLengthChanged$ = valueArray$.pipe(
@@ -359,9 +363,13 @@ export class FixedSizeVirtualScrollStrategy<
       .subscribe((range) => (this.renderedRange = range));
   }
 
-  scrollToIndex(index: number, behavior?: ScrollBehavior): void {
+  scrollToIndex(
+    index: number,
+    behavior?: ScrollBehavior,
+    offset: number = 0,
+  ): void {
     const scrollTop = this.itemSize * index;
-    this.viewport!.scrollTo(this.viewportOffset + scrollTop, behavior);
+    this.viewport!.scrollTo(this.viewportOffset + scrollTop + offset, behavior);
   }
 
   private untilDetached$<A>(): MonoTypeOperatorFunction<A> {
