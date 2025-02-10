@@ -1013,7 +1013,7 @@ export class AutoSizeVirtualScrollStrategy<
     const isCached = this._virtualItems[index].cached;
     const size = isCached
       ? oldSize
-      : this.getElementSize(this.getElement(view));
+      : this.getElementSize(this.getElement(view)) || this.tombstoneSize;
     this._virtualItems[index].size = size;
     this._virtualItems[index].cached = true;
     return [size, size - oldSize];
