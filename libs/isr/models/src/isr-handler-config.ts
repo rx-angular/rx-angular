@@ -129,6 +129,11 @@ export interface ISRHandlerConfig {
    * This callback lets you use custom cache key generation logic. If not provided, it will use the default cache key generation logic.
    */
   cacheKeyGenerator?: CacheKeyGeneratorFn;
+
+  /**
+   * If set to true, the server will only cache successful responses. See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#successful_responses
+   */
+  onlyCacheSuccessfulResponses?: boolean;
 }
 
 export interface ServeFromCacheConfig {

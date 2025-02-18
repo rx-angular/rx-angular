@@ -123,6 +123,16 @@ export class CacheGeneration {
 
       // add the regenerated page to cache
       const addToCache = () => {
+        if (
+          this.isrConfig.onlyCacheSuccessfulResponses &&
+          !this.isSuccessfulResponse(res)
+        ) {
+          this.logger.log(
+            `The url: ${cacheKey} was not successfull (Status code:${res.statusCode}) and therefore not cached.`,
+          );
+          return new Promise<void>(() => {});
+        }
+
         return this.cache.add(cacheKey, finalHtml, {
           revalidate,
           buildId: this.isrConfig.buildId,
@@ -157,5 +167,9 @@ export class CacheGeneration {
       }
       throw error;
     }
+  }
+
+  private isSuccessfulResponse(res: Response) {
+    return res.statusCode >= 200 && res.statusCode < 300;
   }
 }
