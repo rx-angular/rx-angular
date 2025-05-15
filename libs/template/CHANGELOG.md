@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [19.2.2](https://github.com/rx-angular/rx-angular/compare/template@19.2.1...template@19.2.2) (2025-05-15)
+
+
+### Bug Fixes
+
+* **template:** using tombstoneSize for non-cached items with 0 height ([40b5c07](https://github.com/rx-angular/rx-angular/commit/40b5c0703e5b66971f88e693a00b9215863404b0))
+
+
+
 ## [19.2.1](https://github.com/rx-angular/rx-angular/compare/template@19.2.0...template@19.2.1) (2025-01-28)
 
 
