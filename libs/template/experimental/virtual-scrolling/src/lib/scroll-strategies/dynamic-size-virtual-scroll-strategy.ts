@@ -273,13 +273,17 @@ export class DynamicSizeVirtualScrollStrategy<
     this.detached$.next();
   }
 
-  scrollToIndex(index: number, behavior?: ScrollBehavior): void {
+  scrollToIndex(
+    index: number,
+    behavior?: ScrollBehavior,
+    offset: number = 0,
+  ): void {
     const _index = Math.min(Math.max(index, 0), this.contentLength - 1);
     let scrollTo = 0;
     for (let i = 0; i < _index; i++) {
       scrollTo += this._virtualItems[i].size;
     }
-    this.scrollTo(scrollTo, behavior);
+    this.scrollTo(scrollTo + offset, behavior);
   }
 
   private scrollTo(scrollTo: number, behavior?: ScrollBehavior): void {
@@ -394,7 +398,7 @@ export class DynamicSizeVirtualScrollStrategy<
         valueCache = {};
         valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
         if (scrollTo !== this.scrolledIndex) {
-          this.scrollToIndex(scrollTo);
+          this.scrollToIndex(scrollTo, undefined, this.anchorItem.offset);
         }
       });
   }
