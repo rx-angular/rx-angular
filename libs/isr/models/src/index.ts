@@ -8,6 +8,7 @@ export {
 } from './cache-handler';
 export {
   CacheKeyGeneratorFn,
+  CompressHtmlFn,
   InvalidateConfig,
   ISRHandlerConfig,
   ModifyHtmlCallbackFn,

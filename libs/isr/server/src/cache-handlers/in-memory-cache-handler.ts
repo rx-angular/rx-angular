@@ -17,7 +17,7 @@ export class InMemoryCacheHandler extends CacheHandler {
 
   add(
     cacheKey: string,
-    html: string,
+    html: string | Buffer,
     config: CacheISRConfig = defaultCacheISRConfig,
   ): Promise<void> {
     return new Promise((resolve) => {
