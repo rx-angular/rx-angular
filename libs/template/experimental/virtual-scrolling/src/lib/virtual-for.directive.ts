@@ -34,6 +34,7 @@ import { Promise } from '@rx-angular/cdk/zone-less/browser';
 import {
   combineLatest,
   concat,
+  ConnectableObservable,
   isObservable,
   MonoTypeOperatorFunction,
   NEVER,
@@ -55,6 +56,8 @@ import {
   tap,
 } from 'rxjs/operators';
 import {
+  CollectionViewer,
+  DataSource,
   ListRange,
   RxVirtualForViewContext,
   RxVirtualScrollStrategy,
@@ -241,6 +244,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     potentialSignalOrObservable:
       | Observable<(U & NgIterable<T>) | undefined | null>
       | Signal<(U & NgIterable<T>) | undefined | null>
+      | DataSource<T>
       | (U & NgIterable<T>)
       | null
       | undefined,
@@ -251,6 +255,21 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       this.observables$.next(
         toObservable(potentialSignalOrObservable, { injector: this.injector }),
       );
+    } else if (this.isDataSource(potentialSignalOrObservable)) {
+      this.staticValue = undefined;
+      this.renderStatic = false;
+
+      const collectionViewer: CollectionViewer = {
+        viewChange: this.scrollStrategy.renderedRange$,
+      };
+
+      this.observables$.next(
+        potentialSignalOrObservable.connect(collectionViewer),
+      );
+
+      this._destroy$.pipe(take(1)).subscribe(() => {
+        potentialSignalOrObservable.disconnect(collectionViewer);
+      });
     } else if (!isObservable(potentialSignalOrObservable)) {
       this.staticValue = potentialSignalOrObservable;
       this.renderStatic = true;
@@ -259,6 +278,24 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       this.renderStatic = false;
       this.observables$.next(potentialSignalOrObservable);
     }
+  }
+
+  /** @internal */
+  private isDataSource(
+    value:
+      | (U & NgIterable<T>)
+      | Observable<U & NgIterable<T>>
+      | DataSource<T>
+      | null
+      | undefined,
+  ): value is DataSource<T> {
+    return (
+      value !== null &&
+      value !== undefined &&
+      'connect' in value &&
+      typeof value.connect === 'function' &&
+      !(value instanceof ConnectableObservable)
+    );
   }
 
   /**
