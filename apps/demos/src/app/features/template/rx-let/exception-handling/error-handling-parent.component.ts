@@ -25,10 +25,9 @@ import { Subject } from 'rxjs';
         <div>
           <h2 class="mat-subheading-1">async pipe</h2>
           <div class="d-flex flex-wrap">
-            <rxa-error-handling-child
-              *ngIf="valueProvider.int$ | async as v"
-              [index]="v"
-            ></rxa-error-handling-child>
+            @if (valueProvider.int$ | async; as v) {
+              <rxa-error-handling-child [index]="v"></rxa-error-handling-child>
+            }
           </div>
         </div>
       </div>

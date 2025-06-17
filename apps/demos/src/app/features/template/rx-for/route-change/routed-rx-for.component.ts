@@ -30,8 +30,12 @@ function getItems(num: number) {
         <span class="mr-2">ID</span>
         <button mat-icon-button (click)="toggleSortBy$.next('id')">
           <ng-container *rxIf="sorting.isSortedBy$('id')">
-            <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
-            <mat-icon *ngIf="sorting.isDesc()">arrow_downward </mat-icon>
+            @if (sorting.isAsc()) {
+              <mat-icon>arrow_upward</mat-icon>
+            }
+            @if (sorting.isDesc()) {
+              <mat-icon>arrow_downward </mat-icon>
+            }
           </ng-container>
         </button>
       </div>
@@ -39,8 +43,12 @@ function getItems(num: number) {
         <span class="mr-2">Value</span>
         <button mat-icon-button (click)="toggleSortBy$.next('value')">
           <ng-container *rxIf="sorting.isSortedBy$('value')">
-            <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
-            <mat-icon *ngIf="sorting.isDesc()">arrow_downward </mat-icon>
+            @if (sorting.isAsc()) {
+              <mat-icon>arrow_upward</mat-icon>
+            }
+            @if (sorting.isDesc()) {
+              <mat-icon>arrow_downward </mat-icon>
+            }
           </ng-container>
         </button>
       </div>

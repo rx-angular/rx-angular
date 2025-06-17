@@ -32,44 +32,42 @@ import { RxEffects } from '@rx-angular/state/effects';
           Toggle All
         </button>
       </div>
-      <div class="w-100 row" *ngIf="isVisible">
-        <div
-          class="col"
-          *ngIf="
+      @if (isVisible) {
+        <div class="w-100 row">
+          @if (
             group.value === displayStates.ngIf ||
             group.value === displayStates.all
-          "
-        >
-          <rxa-ngif-hack-static></rxa-ngif-hack-static>
-        </div>
-        <div
-          class="col"
-          *ngIf="
+          ) {
+            <div class="col">
+              <rxa-ngif-hack-static></rxa-ngif-hack-static>
+            </div>
+          }
+          @if (
             group.value === displayStates.ngIfAsync ||
             group.value === displayStates.all
-          "
-        >
-          <rxa-ngif-hack-ng-if-async></rxa-ngif-hack-ng-if-async>
-        </div>
-        <div
-          class="col"
-          *ngIf="
+          ) {
+            <div class="col">
+              <rxa-ngif-hack-ng-if-async></rxa-ngif-hack-ng-if-async>
+            </div>
+          }
+          @if (
             group.value === displayStates.ngIfPush ||
             group.value === displayStates.all
-          "
-        >
-          <rxa-ngif-hack-ng-if-push></rxa-ngif-hack-ng-if-push>
-        </div>
-        <div
-          class="col"
-          *ngIf="
+          ) {
+            <div class="col">
+              <rxa-ngif-hack-ng-if-push></rxa-ngif-hack-ng-if-push>
+            </div>
+          }
+          @if (
             group.value === displayStates.rxLet ||
             group.value === displayStates.all
-          "
-        >
-          <rxa-ngif-hack-rx-let></rxa-ngif-hack-rx-let>
+          ) {
+            <div class="col">
+              <rxa-ngif-hack-rx-let></rxa-ngif-hack-rx-let>
+            </div>
+          }
         </div>
-      </div>
+      }
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

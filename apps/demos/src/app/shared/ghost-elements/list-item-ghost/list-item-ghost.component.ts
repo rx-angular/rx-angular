@@ -3,15 +3,17 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
 @Component({
   selector: 'rxa-list-item-ghost',
   template: `
-    <div *ngFor="let n of numItems" class="list-item-ghost">
-      <ngx-skeleton-loader
-        class="icon-ghost"
-        [appearance]="'circle'"
-      ></ngx-skeleton-loader>
-      <div class="text-ghost">
-        <ngx-skeleton-loader [count]="3"></ngx-skeleton-loader>
+    @for (n of numItems; track n) {
+      <div class="list-item-ghost">
+        <ngx-skeleton-loader
+          class="icon-ghost"
+          [appearance]="'circle'"
+        ></ngx-skeleton-loader>
+        <div class="text-ghost">
+          <ngx-skeleton-loader [count]="3"></ngx-skeleton-loader>
+        </div>
       </div>
-    </div>
+    }
   `,
   encapsulation: ViewEncapsulation.None,
   styles: [

@@ -13,7 +13,7 @@ import { PrimitivesProviderService } from '../primitives-provider.service';
 @Component({
   selector: 'rxa-value-provider',
   exportAs: 'rxaValueProvider',
-  template: ` <ng-container *ngIf="buttons">
+  template: ` @if (buttons) {
       <button mat-raised-button (click)="reset()">
         Reset
         <rxa-zone-patched-icon
@@ -42,7 +42,7 @@ import { PrimitivesProviderService } from '../primitives-provider.service';
           [zoneState]="getZoneState()"
         ></rxa-zone-patched-icon>
       </button>
-    </ng-container>
+    }
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,

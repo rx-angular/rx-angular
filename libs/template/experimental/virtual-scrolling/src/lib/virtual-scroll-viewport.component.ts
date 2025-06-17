@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -57,11 +56,9 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
       class="rx-virtual-scroll__runway"
       [class.rx-virtual-scroll-element]="!scrollElement"
     >
-      <div
-        #sentinel
-        class="rx-virtual-scroll__sentinel"
-        *ngIf="!this.scrollElement"
-      ></div>
+      @if (!this.scrollElement) {
+        <div #sentinel class="rx-virtual-scroll__sentinel"></div>
+      }
       <ng-content></ng-content>
     </div>
   `,
@@ -73,12 +70,11 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
   ],
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./virtual-scroll-viewport.component.scss'],
-  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     class: 'rx-virtual-scroll-viewport',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf],
+  imports: [],
 })
 export class RxVirtualScrollViewportComponent
   implements

@@ -19,9 +19,11 @@ import { RxState } from '@rx-angular/state';
           [ngClass]="{ 'let-error': e }"
           *rxLet="numbers$; let r; let e = error; suspense: suspenseView"
         >
-          <div *ngIf="e" class="error-message">
-            {{ e }}
-          </div>
+          @if (e) {
+            <div class="error-message">
+              {{ e }}
+            </div>
+          }
           <mat-form-field>
             <label>Age</label>
             <input

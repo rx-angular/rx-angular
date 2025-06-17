@@ -14,42 +14,47 @@ export interface DemoBasicsItem {
   selector: 'rxa-presenter-pattern-solution',
   template: `
     <h3>Presenter Pattern</h3>
-    <mat-expansion-panel
-      *ngIf="ps.vm$ | async as m"
-      (expandedChange)="ps.listExpandedChanges.next($event)"
-      [expanded]="m.listExpanded"
-    >
-      <mat-expansion-panel-header>
-        <mat-panel-title> User Name </mat-panel-title>
-        <mat-panel-description>
-          <span *ngIf="!m.listExpanded"
-            >{{ m.list.length }} Repositories Updated every:
-            {{ m.refreshInterval }} ms</span
-          >
-          <span *ngIf="m.listExpanded">{{ m.list.length }}</span>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="ps.refreshClicks.next($event)"
+    @if (ps.vm$ | async; as m) {
+      <mat-expansion-panel
+        (expandedChange)="ps.listExpandedChanges.next($event)"
+        [expanded]="m.listExpanded"
       >
-        Refresh List
-      </button>
-
-      <div *ngIf="m.list.length; else noList">
-        <mat-list>
-          <mat-list-item *ngFor="let item of m.list">
-            {{ item.name }}
-          </mat-list-item>
-        </mat-list>
-      </div>
-
-      <ng-template #noList>
-        <mat-card>No list given!</mat-card>
-      </ng-template>
-    </mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> User Name </mat-panel-title>
+          <mat-panel-description>
+            @if (!m.listExpanded) {
+              <span
+                >{{ m.list.length }} Repositories Updated every:
+                {{ m.refreshInterval }} ms</span
+              >
+            }
+            @if (m.listExpanded) {
+              <span>{{ m.list.length }}</span>
+            }
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="ps.refreshClicks.next($event)"
+        >
+          Refresh List
+        </button>
+        @if (m.list.length) {
+          <div>
+            <mat-list>
+              @for (item of m.list; track item) {
+                <mat-list-item>
+                  {{ item.name }}
+                </mat-list-item>
+              }
+            </mat-list>
+          </div>
+        } @else {
+          <mat-card>No list given!</mat-card>
+        }
+      </mat-expansion-panel>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [Presenter, Adapter],

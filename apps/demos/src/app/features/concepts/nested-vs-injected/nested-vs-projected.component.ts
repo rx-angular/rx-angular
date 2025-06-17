@@ -25,16 +25,22 @@ import { CdHelper } from '../../../shared/utils/cd-helper';
           Toggle visibility to reset
         </button>
       </div>
-      <div class="row" *ngIf="isVisible">
-        <div class="col" *ngIf="visible(group, displayStates.nested)">
-          <h2>Nested</h2>
-          <rxa-cd-nested></rxa-cd-nested>
+      @if (isVisible) {
+        <div class="row">
+          @if (visible(group, displayStates.nested)) {
+            <div class="col">
+              <h2>Nested</h2>
+              <rxa-cd-nested></rxa-cd-nested>
+            </div>
+          }
+          @if (visible(group, displayStates.projected)) {
+            <div class="col">
+              <h2>Projected</h2>
+              <rxa-cd-injected></rxa-cd-injected>
+            </div>
+          }
         </div>
-        <div class="col" *ngIf="visible(group, displayStates.projected)">
-          <h2>Projected</h2>
-          <rxa-cd-injected></rxa-cd-injected>
-        </div>
-      </div>
+      }
     </rxa-visualizer>
   `,
   providers: [CdHelper],

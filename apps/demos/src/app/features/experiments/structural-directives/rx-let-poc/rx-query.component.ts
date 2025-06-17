@@ -52,17 +52,20 @@ import { delay, filter, map, mapTo, share } from 'rxjs/operators';
               "
             >
               suspenseVal : {{ suspenseVal }}
-              <mat-progress-bar
-                *ngIf="suspenseVal"
-                [mode]="suspenseVal"
-              ></mat-progress-bar>
-              <mat-card *ngIf="errorVal">
-                <mat-card-title>Error</mat-card-title>
-              </mat-card>
+              @if (suspenseVal) {
+                <mat-progress-bar [mode]="suspenseVal"></mat-progress-bar>
+              }
+              @if (errorVal) {
+                <mat-card>
+                  <mat-card-title>Error</mat-card-title>
+                </mat-card>
+              }
               <ul>
-                <li *ngFor="let character of characters">
-                  <a [routerLink]="character.id">{{ character.name }}</a>
-                </li>
+                @for (character of characters; track character) {
+                  <li>
+                    <a [routerLink]="character.id">{{ character.name }}</a>
+                  </li>
+                }
               </ul>
             </div>
           </div>
@@ -79,9 +82,11 @@ import { delay, filter, map, mapTo, share } from 'rxjs/operators';
             "
           >
             <ul>
-              <li *ngFor="let character of characters">
-                <a [routerLink]="character.id">{{ character.name }}</a>
-              </li>
+              @for (character of characters; track character) {
+                <li>
+                  <a [routerLink]="character.id">{{ character.name }}</a>
+                </li>
+              }
             </ul>
           </div>
           <!-- Templates -->

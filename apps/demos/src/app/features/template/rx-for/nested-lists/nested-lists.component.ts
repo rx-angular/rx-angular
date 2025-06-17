@@ -76,110 +76,107 @@ import { immutableArr } from './utils';
 
       <div class="row w-100">
         <!--  -->
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.native ||
-            group.value === displayStates.all
-          "
-        >
-          <h2>*ngFor</h2>
-          <p>
-            <button mat-raised-button (click)="changeOneClick$.next(1)">
-              update
-            </button>
-            <button mat-raised-button (click)="changeAllClick$.next(10)">
-              Change all
-            </button>
-            <button mat-raised-button (click)="toggleIntervalClick$.next(10)">
-              toggle interval
-            </button>
-          </p>
-          <rxa-visualizer
-            viewType="embedded-view"
-            *ngFor="let value of array$ | async; trackBy: trackById"
-          >
-            <ng-container *ngFor="let i of value.arr; trackBy: trackById">
-              <rxa-rx-for-value
-                [value]="i"
-                [strategy$]="native$"
-              ></rxa-rx-for-value>
-            </ng-container>
-          </rxa-visualizer>
-        </div>
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.rxAngularReactive2 ||
-            group.value === displayStates.all
-          "
-        >
-          <h2>*rxFor</h2>
-          <p *rxLet="table$; let t">
-            <button
-              mat-raised-button
-              [unpatch]
-              (click)="changeOneClick$.next(1)"
-            >
-              update
-            </button>
-            <button
-              mat-raised-button
-              [unpatch]
-              (click)="changeAllClick$.next(t.changes)"
-            >
-              Change many
-            </button>
-            <button
-              mat-raised-button
-              [unpatch]
-              (click)="toggleIntervalClick$.next(10)"
-            >
-              toggle interval
-            </button>
-            <rxa-strategy-select
-              [unpatch]="['strategyChange']"
-              (strategyChange)="strategy$.next($event)"
-            ></rxa-strategy-select>
-          </p>
-          <!--
-                 <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
-                   Rendercallback: <strong>{{ childrenRendered }}</strong>
-                 </ng-container>
-       -->
-          <rxa-visualizer
-            viewType="embedded-view"
-            *rxFor="
-              let a of array$;
-              let i;
-              let r$ = item$;
-              strategy: strategy$;
-              trackBy: trackById;
-              parent: true;
-              patchZone: false;
-              let select = select;
-              renderCallback: childrenRendered$
-            "
-          >
-            <span #spanChild></span>
-            <ng-container
+        @if (
+          group.value === displayStates.native ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <h2>*ngFor</h2>
+            <p>
+              <button mat-raised-button (click)="changeOneClick$.next(1)">
+                update
+              </button>
+              <button mat-raised-button (click)="changeAllClick$.next(10)">
+                Change all
+              </button>
+              <button mat-raised-button (click)="toggleIntervalClick$.next(10)">
+                toggle interval
+              </button>
+            </p>
+            @for (value of array$ | async; track trackById($index, value)) {
+              <rxa-visualizer viewType="embedded-view">
+                @for (i of value.arr; track trackById($index, i)) {
+                  <rxa-rx-for-value
+                    [value]="i"
+                    [strategy$]="native$"
+                  ></rxa-rx-for-value>
+                }
+              </rxa-visualizer>
+            }
+          </div>
+        }
+        @if (
+          group.value === displayStates.rxAngularReactive2 ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <h2>*rxFor</h2>
+            <p *rxLet="table$; let t">
+              <button
+                mat-raised-button
+                [unpatch]
+                (click)="changeOneClick$.next(1)"
+              >
+                update
+              </button>
+              <button
+                mat-raised-button
+                [unpatch]
+                (click)="changeAllClick$.next(t.changes)"
+              >
+                Change many
+              </button>
+              <button
+                mat-raised-button
+                [unpatch]
+                (click)="toggleIntervalClick$.next(10)"
+              >
+                toggle interval
+              </button>
+              <rxa-strategy-select
+                [unpatch]="['strategyChange']"
+                (strategyChange)="strategy$.next($event)"
+              ></rxa-strategy-select>
+            </p>
+            <!--
+                <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
+                  Rendercallback: <strong>{{ childrenRendered }}</strong>
+                </ng-container>
+                -->
+            <rxa-visualizer
+              viewType="embedded-view"
               *rxFor="
-                select(['arr']);
+                let a of array$;
+                let i;
+                let r$ = item$;
                 strategy: strategy$;
                 trackBy: trackById;
-                parent: false;
+                parent: true;
                 patchZone: false;
-                let o;
-                let v$ = item$
+                let select = select;
+                renderCallback: childrenRendered$
               "
             >
-              <rxa-rx-for-value
-                [strategy$]="strategy$"
-                [value]="v$"
-              ></rxa-rx-for-value>
-            </ng-container>
-          </rxa-visualizer>
-        </div>
+              <span #spanChild></span>
+              <ng-container
+                *rxFor="
+                  select(['arr']);
+                  strategy: strategy$;
+                  trackBy: trackById;
+                  parent: false;
+                  patchZone: false;
+                  let o;
+                  let v$ = item$
+                "
+              >
+                <rxa-rx-for-value
+                  [strategy$]="strategy$"
+                  [value]="v$"
+                ></rxa-rx-for-value>
+              </ng-container>
+            </rxa-visualizer>
+          </div>
+        }
       </div>
     </rxa-visualizer>
   `,

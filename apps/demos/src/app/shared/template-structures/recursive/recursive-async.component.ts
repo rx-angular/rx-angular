@@ -4,13 +4,12 @@ import { ReplaySubject } from 'rxjs';
 @Component({
   selector: 'rxa-recursive-async',
   template: `
-    <ng-container *ngIf="level === 0; else branch">
+    @if (level === 0) {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-renders [value$]="value$ | async"></rxa-renders>
       </rxa-visualizer>
-    </ng-container>
-    <ng-template #branch>
+    } @else {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-recursive-async
@@ -19,7 +18,7 @@ import { ReplaySubject } from 'rxjs';
           [value]="value$ | async"
         ></rxa-recursive-async>
       </rxa-visualizer>
-    </ng-template>
+    }
   `,
   host: {
     class: 'd-flex w-100',

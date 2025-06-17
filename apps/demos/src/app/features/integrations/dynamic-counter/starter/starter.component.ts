@@ -11,11 +11,13 @@ import { CounterState, INITIAL_STATE } from '../shared/model';
     <h1>Counter</h1>
     <div class="counter">
       <div class="count">
-        <span class="position" *ngFor="let d of count$ | push | toArray">
-          <span class="digit static">
-            {{ d }}
+        @for (d of count$ | push | toArray; track d) {
+          <span class="position">
+            <span class="digit static">
+              {{ d }}
+            </span>
           </span>
-        </span>
+        }
       </div>
 
       <button mat-raised-button>Start</button>

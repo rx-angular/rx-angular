@@ -23,9 +23,9 @@ import { UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
           <form [formGroup]="form">
             <label for="phone"
               >Value
-              <span *ngIf="!form.get('value').valid"
-                >- {{ form.get('value').value }}</span
-              >
+              @if (!form.get('value').valid) {
+                <span>- {{ form.get('value').value }}</span>
+              }
             </label>
             <input
               type="text"

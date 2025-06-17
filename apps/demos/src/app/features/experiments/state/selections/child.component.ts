@@ -8,12 +8,16 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
   selector: 'rxa-state-child-selections',
   template: `
     <div class="case-content">
-      <form *ngIf="formGroup$ | async as formGroup" [formGroup]="formGroup">
-        <mat-form-field *ngFor="let c of formGroup.controls | keyvalue">
-          <label>{{ c.key }}</label>
-          <input matInput [formControlName]="c.key" />
-        </mat-form-field>
-      </form>
+      @if (formGroup$ | async; as formGroup) {
+        <form [formGroup]="formGroup">
+          @for (c of formGroup.controls | keyvalue; track c) {
+            <mat-form-field>
+              <label>{{ c.key }}</label>
+              <input matInput [formControlName]="c.key" />
+            </mat-form-field>
+          }
+        </form>
+      }
     </div>
   `,
   changeDetection: environment.changeDetection,

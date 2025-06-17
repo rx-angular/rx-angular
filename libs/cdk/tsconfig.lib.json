@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "inlineSources": true,
-    "importHelpers": true
+    "importHelpers": true,
+    "moduleResolution": "bundler"
   },
   "angularCompilerOptions": {
     "enableIvy": true,

@@ -13,13 +13,11 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
         <h3>Resolving over async/await</h3>
         <button mat-raised-button (click)="toggle()">Toggle</button>
       </div>
-      <ng-template #suspenseView>
+      @if (componentAwait) {
+        <ng-container [ngComponentOutlet]="componentAwait"></ng-container>
+      } @else {
         <rxa-list-item-ghost></rxa-list-item-ghost>
-      </ng-template>
-      <ng-container
-        [ngComponentOutlet]="componentAwait"
-        *ngIf="componentAwait; else suspenseView"
-      ></ng-container>
+      }
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

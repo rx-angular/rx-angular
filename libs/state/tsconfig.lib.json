@@ -5,7 +5,8 @@
     "declaration": true,
     "declarationMap": true,
     "strictNullChecks": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "moduleResolution": "bundler"
   },
   "angularCompilerOptions": {
     "enableIvy": true,

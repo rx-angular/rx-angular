@@ -6,7 +6,9 @@
       "files": ["*.ts"],
       "extends": ["plugin:@nx/angular"],
       "rules": {
-        "@typescript-eslint/no-non-null-assertion": "warn"
+        "@typescript-eslint/no-non-null-assertion": "warn",
+        "@angular-eslint/prefer-standalone": "off",
+        "@angular-eslint/prefer-inject": "off"
       }
     }
   ]

@@ -1,6 +1,6 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, mergeApplicationConfig } from '@angular/core';
-import { provideServerRendering } from '@angular/platform-server';
+import { provideServerRendering } from '@angular/ssr';
 import { isrHttpInterceptors, provideISR } from '@rx-angular/isr/server';
 import { appConfig } from './app.config';
 

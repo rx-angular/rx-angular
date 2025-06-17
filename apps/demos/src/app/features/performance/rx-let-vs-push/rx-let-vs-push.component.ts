@@ -21,16 +21,18 @@ import { environment } from '../../../../environments/environment';
             Open Manual test for Push pipe
           </button>
         </div>
-        <rxa-list-toggle-test
-          *ngIf="showPushAutoTest"
-          type="push"
-          [auto]="true"
-        ></rxa-list-toggle-test>
-        <rxa-list-toggle-test
-          *ngIf="showPush"
-          type="push"
-          [auto]="false"
-        ></rxa-list-toggle-test>
+        @if (showPushAutoTest) {
+          <rxa-list-toggle-test
+            type="push"
+            [auto]="true"
+          ></rxa-list-toggle-test>
+        }
+        @if (showPush) {
+          <rxa-list-toggle-test
+            type="push"
+            [auto]="false"
+          ></rxa-list-toggle-test>
+        }
       </div>
 
       <div class="col-sm-12 col-md-6">
@@ -49,16 +51,18 @@ import { environment } from '../../../../environments/environment';
             Open Manual test for Let directive
           </button>
         </div>
-        <rxa-list-toggle-test
-          *ngIf="showLetAutoTest"
-          type="rxLet"
-          [auto]="true"
-        ></rxa-list-toggle-test>
-        <rxa-list-toggle-test
-          *ngIf="showLet"
-          type="rxLet"
-          [auto]="false"
-        ></rxa-list-toggle-test>
+        @if (showLetAutoTest) {
+          <rxa-list-toggle-test
+            type="rxLet"
+            [auto]="true"
+          ></rxa-list-toggle-test>
+        }
+        @if (showLet) {
+          <rxa-list-toggle-test
+            type="rxLet"
+            [auto]="false"
+          ></rxa-list-toggle-test>
+        }
       </div>
     </div>
   `,
