@@ -1,4 +1,7 @@
-import 'jest-preset-angular/setup-jest';
+import { setupZoneTestEnv } from 'jest-preset-angular/setup-env/zone';
+
+setupZoneTestEnv();
+
 import { TextDecoder } from 'util';
 
 /* @Notice: schematics have long-running tests that timeout if no cache hit. */

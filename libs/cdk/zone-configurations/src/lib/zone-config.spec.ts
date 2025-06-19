@@ -21,13 +21,13 @@ describe('zone-config', () => {
     .map((property) => [property, w[property]]);
 
   beforeAll(async () => {
-    Zone['ProxyZoneSpec'] = undefined;
-    w.Zone = undefined;
+    /*Zone['ProxyZoneSpec'] = undefined;
+    w.Zone = undefined;*/
   });
 
   afterAll(() => {
-    Zone['ProxyZoneSpec'] = ProxyZoneSpec;
-    w.Zone = Zone;
+    /*Zone['ProxyZoneSpec'] = ProxyZoneSpec;
+    w.Zone = Zone;*/
 
     properties.forEach(([property, method]) => {
       w[property] = method;
@@ -103,7 +103,7 @@ describe('zone-config', () => {
 
     it('should have EventTargetLegacy present', () => {
       expect(typeof zoneConfig.global.disable.EventTargetLegacy).toBe(
-        'function'
+        'function',
       );
       expect(w.__Zone_disable_EventTargetLegacy).toBe(undefined);
       zoneConfig.global.disable.EventTargetLegacy();
@@ -140,7 +140,7 @@ describe('zone-config', () => {
 
     it('should have MutationObserver present', () => {
       expect(typeof zoneConfig.global.disable.MutationObserver).toBe(
-        'function'
+        'function',
       );
       expect(w.__Zone_disable_MutationObserver).toBe(undefined);
       zoneConfig.global.disable.MutationObserver();
@@ -149,7 +149,7 @@ describe('zone-config', () => {
 
     it('should have IntersectionObserver present', () => {
       expect(typeof zoneConfig.global.disable.IntersectionObserver).toBe(
-        'function'
+        'function',
       );
       expect(w.__Zone_disable_IntersectionObserver).toBe(undefined);
       zoneConfig.global.disable.IntersectionObserver();
@@ -193,7 +193,7 @@ describe('zone-config', () => {
 
     it('should have ZoneAwarePromise present', () => {
       expect(typeof zoneConfig.global.disable.ZoneAwarePromise).toBe(
-        'function'
+        'function',
       );
       expect(w.__Zone_disable_ZoneAwarePromise).toBe(undefined);
       zoneConfig.global.disable.ZoneAwarePromise();
@@ -203,14 +203,14 @@ describe('zone-config', () => {
     it('should have DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION present', () => {
       expect(
         typeof zoneConfig.global.disable
-          .DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION
+          .DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION,
       ).toBe('function');
       expect(w.__zone_symbol__DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION).toBe(
-        undefined
+        undefined,
       );
       zoneConfig.global.disable.DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION();
       expect(w.__zone_symbol__DISABLE_WRAPPING_UNCAUGHT_PROMISE_REJECTION).toBe(
-        true
+        true,
       );
     });
   });
@@ -226,20 +226,20 @@ describe('zone-config', () => {
 
     it('should have fakeAsyncAutoFakeAsyncWhenClockPatched present', () => {
       expect(
-        typeof zoneConfig.test.disable.fakeAsyncAutoFakeAsyncWhenClockPatched
+        typeof zoneConfig.test.disable.fakeAsyncAutoFakeAsyncWhenClockPatched,
       ).toBe('function');
       expect(w.__zone_symbol__fakeAsyncAutoFakeAsyncWhenClockPatched).toBe(
-        undefined
+        undefined,
       );
       zoneConfig.test.disable.fakeAsyncAutoFakeAsyncWhenClockPatched();
       expect(w.__zone_symbol__fakeAsyncAutoFakeAsyncWhenClockPatched).toBe(
-        true
+        true,
       );
     });
 
     it('should have fakeAsyncDisablePatchingClock present', () => {
       expect(typeof zoneConfig.test.disable.fakeAsyncDisablePatchingClock).toBe(
-        'function'
+        'function',
       );
       expect(w.__zone_symbol__fakeAsyncDisablePatchingClock).toBe(undefined);
       zoneConfig.test.disable.fakeAsyncDisablePatchingClock();
@@ -248,10 +248,10 @@ describe('zone-config', () => {
 
     it('should have supportWaitUnResolvedChainedPromise present', () => {
       expect(
-        typeof zoneConfig.test.disable.supportWaitUnResolvedChainedPromise
+        typeof zoneConfig.test.disable.supportWaitUnResolvedChainedPromise,
       ).toBe('function');
       expect(w.__zone_symbol__supportWaitUnResolvedChainedPromise).toBe(
-        undefined
+        undefined,
       );
       zoneConfig.test.disable.supportWaitUnResolvedChainedPromise();
       expect(w.__zone_symbol__supportWaitUnResolvedChainedPromise).toBe(true);
@@ -297,7 +297,7 @@ describe('zone-config', () => {
 
     it('should have UNPATCHED_EVENTS present', () => {
       expect(typeof zoneConfig.events.disable.UNPATCHED_EVENTS).toBe(
-        'function'
+        'function',
       );
       expect(w.__zone_symbol__UNPATCHED_EVENTS).toBe(undefined);
       zoneConfig.events.disable.UNPATCHED_EVENTS(['test']);
@@ -316,7 +316,7 @@ describe('zone-config', () => {
 
     it('should have ignoreConsoleErrorUncaughtError present', () => {
       expect(
-        typeof zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError
+        typeof zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError,
       ).toBe('function');
       expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(undefined);
       zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
