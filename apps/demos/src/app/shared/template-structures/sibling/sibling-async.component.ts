@@ -11,13 +11,11 @@ const chunk = (arr, n) =>
     <rxa-visualizer>
       <p visualizerHeader>{{ siblings.length }} Async</p>
       <div class="w-100 siblings">
-        <span
-          class="sibling"
-          [ngClass]="{ filled: sibling }"
-          *ngFor="let sibling of siblings$ | async; trackBy: trackBy"
-        >
-          <div [ngClass]="{ filled: filled }">&nbsp;</div>
-        </span>
+        @for (sibling of siblings$ | async; track trackBy($index)) {
+          <span class="sibling" [ngClass]="{ filled: sibling }">
+            <div [ngClass]="{ filled: filled }">&nbsp;</div>
+          </span>
+        }
       </div>
     </rxa-visualizer>
   `,

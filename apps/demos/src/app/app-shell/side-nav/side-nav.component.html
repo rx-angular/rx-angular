@@ -17,13 +17,11 @@
       [rxaAppShellSideNavItemLevel]="level"
       class="w-100 text-left"
     >
-      <mat-icon
-        *ngIf="navItem.icon"
-        class="mr-1"
-        [svgIcon]="navItem.icon.svgIcon"
-      >
-        {{ navItem.icon.matIcon }}
-      </mat-icon>
+      @if (navItem.icon) {
+        <mat-icon class="mr-1" [svgIcon]="navItem.icon.svgIcon">
+          {{ navItem.icon.matIcon }}
+        </mat-icon>
+      }
       {{ navItem.label }}
     </a>
   </cdk-nested-tree-node>
@@ -39,13 +37,11 @@
       cdkTreeNodeToggle
       class="w-100 text-left"
     >
-      <mat-icon
-        *ngIf="navItem.icon"
-        class="mr-1"
-        [svgIcon]="navItem.icon.svgIcon"
-      >
-        {{ navItem.icon.matIcon }}
-      </mat-icon>
+      @if (navItem.icon) {
+        <mat-icon class="mr-1" [svgIcon]="navItem.icon.svgIcon">
+          {{ navItem.icon.matIcon }}
+        </mat-icon>
+      }
       <strong>{{ navItem.label }}</strong>
     </a>
     <div [hidden]="!treeControl.isExpanded(navItem)">

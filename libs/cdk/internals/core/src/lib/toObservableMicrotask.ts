@@ -34,8 +34,7 @@ export function toObservableMicrotaskInternal<T>(
       }
       untracked(() => subject.next(value));
     },
-    // forceRoot will ensure that the effect will be scheduled as a microtask
-    { injector, manualCleanup: true, forceRoot: true },
+    { injector, manualCleanup: true },
   );
 
   injector.get(DestroyRef).onDestroy(() => {

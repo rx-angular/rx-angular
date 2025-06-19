@@ -66,6 +66,7 @@
         "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/no-unsafe-function-type": "off",
+        "@angular-eslint/prefer-inject": "off",
         "prefer-rest-params": "warn",
         "no-prototype-builtins": "warn",
         "no-empty": "warn",

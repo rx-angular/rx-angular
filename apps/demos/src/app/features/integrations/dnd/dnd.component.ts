@@ -16,21 +16,24 @@ import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx
     <div cdkDropList (cdkDropListDropped)="drop($event)">
       <h3>ngFor</h3>
       <ul>
-        <li cdkDrag *ngFor="let item of items$ | async">{{ item.value }}</li>
+        @for (item of items$ | async; track item) {
+          <li cdkDrag>{{ item.value }}</li>
+        }
       </ul>
     </div>
 
     <div cdkDropList (cdkDropListDropped)="drop($event)">
       <h3>ngFor with error</h3>
       <ul>
-        <li
-          cdkDrag
-          (cdkDragStarted)="dragging$.next(true)"
-          (cdkDragEnded)="dragging$.next(false)"
-          *ngFor="let item of errorItems$ | async; trackBy: trackItem"
-        >
-          {{ item.value }}
-        </li>
+        @for (item of errorItems$ | async; track trackItem($index, item)) {
+          <li
+            cdkDrag
+            (cdkDragStarted)="dragging$.next(true)"
+            (cdkDragEnded)="dragging$.next(false)"
+          >
+            {{ item.value }}
+          </li>
+        }
       </ul>
     </div>
 

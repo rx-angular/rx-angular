@@ -43,11 +43,9 @@ import { PokemonStateService } from './states/pokemon-state.service';
         <tr mat-header-row *matHeaderRowDef="['name', 'url']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['name', 'url']"></tr>
       </table>
-      <mat-spinner
-        *ngIf="vm.status === 'loading'"
-        mode="indeterminate"
-        color="primary"
-      ></mat-spinner>
+      @if (vm.status === 'loading') {
+        <mat-spinner mode="indeterminate" color="primary"></mat-spinner>
+      }
     </ng-container>
   `,
   styles: [

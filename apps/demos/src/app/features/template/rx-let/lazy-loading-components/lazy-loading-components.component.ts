@@ -27,33 +27,30 @@ import { RxEffects } from '@rx-angular/state/effects';
         <br />
       </div>
       <div class="w-100 row">
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.await ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-lazy-loading-components-async-await></rxa-lazy-loading-components-async-await>
-        </div>
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.promise ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-lazy-loading-components-promise></rxa-lazy-loading-components-promise>
-        </div>
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.observable ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-lazy-loading-components-observable></rxa-lazy-loading-components-observable>
-        </div>
+        @if (
+          group.value === displayStates.await ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-lazy-loading-components-async-await></rxa-lazy-loading-components-async-await>
+          </div>
+        }
+        @if (
+          group.value === displayStates.promise ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-lazy-loading-components-promise></rxa-lazy-loading-components-promise>
+          </div>
+        }
+        @if (
+          group.value === displayStates.observable ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-lazy-loading-components-observable></rxa-lazy-loading-components-observable>
+          </div>
+        }
       </div>
     </rxa-visualizer>
   `,

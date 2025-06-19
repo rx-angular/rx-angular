@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { Directive, ElementRef, inject } from '@angular/core';
+import { Directive, DOCUMENT, ElementRef, inject } from '@angular/core';
 import { RxVirtualScrollElement } from './model';
 import { unpatchedScroll } from './util';
 

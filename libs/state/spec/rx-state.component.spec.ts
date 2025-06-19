@@ -40,6 +40,7 @@ export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
 export class RxStateInjectionComponent {
   num$ = this.state.select();
 
+  // eslint-disable-next-line @angular-eslint/prefer-inject
   constructor(public state: RxState<PrimitiveState>) {}
 }
 

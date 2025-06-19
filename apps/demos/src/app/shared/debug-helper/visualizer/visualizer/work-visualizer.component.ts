@@ -11,16 +11,16 @@ import { Hooks } from '../../hooks';
         style="margin-right: 1rem"
         [radius]="radius"
       ></rxa-dirty-check>
-      <rxa-renders
-        *ngIf="renderingsOn"
-        [value$]="valuesO$"
-        [radius]="radius"
-      ></rxa-renders>
+      @if (renderingsOn) {
+        <rxa-renders [value$]="valuesO$" [radius]="radius"></rxa-renders>
+      }
     </div>
     <div class="d-flex flex-wrap w-100">
-      <div class="work-child" *ngFor="let child of getChildren()">
-        <div [ngClass]="{ filled: child % 2 === 0 }">&nbsp;</div>
-      </div>
+      @for (child of getChildren(); track child) {
+        <div class="work-child">
+          <div [ngClass]="{ filled: child % 2 === 0 }">&nbsp;</div>
+        </div>
+      }
     </div>
     <ng-content select="[visualizerHeader]"> </ng-content>
     <div
