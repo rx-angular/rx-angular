@@ -1,24 +1,32 @@
 import {
   AfterViewInit,
+  DestroyRef,
   Directive,
   ElementRef,
+  inject,
   Input,
   NgZone,
-  OnDestroy,
+  ɵZONELESS_ENABLED as ZONELESS_ENABLED,
 } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Directive({
   selector: '[runOutsideZone]',
   standalone: false,
 })
-export class RunOutsideZoneDirective implements AfterViewInit, OnDestroy {
-  subscription = new Subscription();
+export class RunOutsideZoneDirective implements AfterViewInit {
+  private isZoneless = inject(ZONELESS_ENABLED);
+  private destroyRef = inject(DestroyRef);
+
   events$ = new BehaviorSubject<string[]>(['click']);
 
   @Input('runOutsideZone')
   set events(value: string[]) {
+    if (this.isZoneless) {
+      return;
+    }
     if (value && value.length > 0) {
       this.events$.next(value);
     } else {
@@ -37,14 +45,15 @@ export class RunOutsideZoneDirective implements AfterViewInit, OnDestroy {
     private ngZone: NgZone,
   ) {}
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
   ngAfterViewInit(): void {
-    this.subscription = this.events$
+    if (this.isZoneless) {
+      return;
+    }
+
+    this.events$
       .pipe(
         tap((eventList) => this.reapplyEventListenersZoneUnPatched(eventList)),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
   }
