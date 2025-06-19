@@ -16,7 +16,7 @@ import { tap } from 'rxjs/operators';
         <h1>B<small>v2</small></h1>
         <div class="d-flex">
           @for (i of numExpressions; track i) {
-            <rxa-dirty-check></rxa-dirty-check>
+            <rxa-dirty-check />
           }
         </div>
       </div>

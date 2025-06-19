@@ -41,5 +41,5 @@ export class SiblingPushComponent {
   @Input()
   value: any;
 
-  trackBy = (i) => i;
+  trackBy = (i: number, sibling: boolean) => i;
 }

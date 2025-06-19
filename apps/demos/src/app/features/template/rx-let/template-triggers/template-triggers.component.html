@@ -96,5 +96,8 @@
       ></mat-progress-spinner>
       <strong>Last valid value: {{ value }}</strong>
     </ng-template>
+    <ng-template #complete let-value>
+      <div>Completed!</div>
+    </ng-template>
   </div>
 </rxa-visualizer>

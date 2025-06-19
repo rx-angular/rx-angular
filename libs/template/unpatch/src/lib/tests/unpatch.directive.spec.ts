@@ -83,6 +83,7 @@ describe(RxUnpatch.name, () => {
     // Arrange
     const fixture = TestBed.createComponent(TestComponent);
     fixture.componentInstance.unpatch = ['mouseenter'];
+    fixture.detectChanges();
     const appRef = TestBed.inject(ApplicationRef);
     const div = fixture.debugElement.query(By.css('div'));
     const addEventListener = jest.spyOn(
@@ -95,7 +96,6 @@ describe(RxUnpatch.name, () => {
     );
 
     // Act
-    fixture.detectChanges();
     const tick = jest.spyOn(appRef, 'tick');
     div.nativeElement.dispatchEvent(new Event('click'));
     div.nativeElement.dispatchEvent(new Event('mouseenter'));

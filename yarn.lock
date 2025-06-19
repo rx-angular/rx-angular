@@ -745,9 +745,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/ssr@npm:20.0.2":
-  version: 20.0.2
-  resolution: "@angular/ssr@npm:20.0.2"
+"@angular/ssr@npm:20.0.3":
+  version: 20.0.3
+  resolution: "@angular/ssr@npm:20.0.3"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
@@ -758,7 +758,7 @@ __metadata:
   peerDependenciesMeta:
     "@angular/platform-server":
       optional: true
-  checksum: 10c0/9d8ca69788f0b5031845fe5dc165537301e968f796b09ef07f3cabf7cdf66a9633aa508bba38aaebcb60e53298fa58118fa1bdebe13bc723371d5124d121ea06
+  checksum: 10c0/285abfdfb6cbc428b934b794a710ef9576e2c6db49935b8a906d624b29bc180552603bafa4c6e5398f74dbc1cfe69e1b51ed02fcf72c95fb01e0209d59cffcaf
   languageName: node
   linkType: hard
 
@@ -24409,9 +24409,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ng-packagr@npm:20.0.0":
-  version: 20.0.0
-  resolution: "ng-packagr@npm:20.0.0"
+"ng-packagr@npm:20.0.1":
+  version: 20.0.1
+  resolution: "ng-packagr@npm:20.0.1"
   dependencies:
     "@ampproject/remapping": "npm:^2.3.0"
     "@rollup/plugin-json": "npm:^6.1.0"
@@ -24436,7 +24436,7 @@ __metadata:
     sass: "npm:^1.81.0"
     tinyglobby: "npm:^0.2.12"
   peerDependencies:
-    "@angular/compiler-cli": ^20.0.0 || ^20.0.0-next.0 || ^20.1.0-next.0
+    "@angular/compiler-cli": ^20.0.0 || ^20.1.0-next.0
     tailwindcss: ^2.0.0 || ^3.0.0 || ^4.0.0
     tslib: ^2.3.0
     typescript: ">=5.8 <5.9"
@@ -24448,7 +24448,7 @@ __metadata:
       optional: true
   bin:
     ng-packagr: src/cli/main.js
-  checksum: 10c0/df554f070401f8ceb5d047aa5382eaa708d25f1677db8839183c4d8e33fdbde37557f56778d11f07e785df5e5f1d944b44b9de14f0765c34967f0e7847bf4a74
+  checksum: 10c0/4520298e192a62edfaf13f21e9706e083f0bd8f0584b808c5d1906d97cc5faeae5b86ddd72943d52d6ea128035f803c384a7205a64d27d60fe836eb0fa29dd7c
   languageName: node
   linkType: hard
 
@@ -28857,7 +28857,7 @@ __metadata:
     "@angular/platform-browser-dynamic": "npm:20.0.3"
     "@angular/platform-server": "npm:20.0.3"
     "@angular/router": "npm:20.0.3"
-    "@angular/ssr": "npm:20.0.2"
+    "@angular/ssr": "npm:20.0.3"
     "@commitlint/cli": "npm:^19.2.1"
     "@commitlint/config-angular": "npm:^19.1.0"
     "@jscutlery/semver": "npm:^5.5.1"
@@ -28904,7 +28904,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     markdown-link-check: "npm:^3.11.2"
     ng-morph: "npm:^4.8.4"
-    ng-packagr: "npm:20.0.0"
+    ng-packagr: "npm:20.0.1"
     ngx-skeleton-loader: "npm:^7.0.0"
     normalize-css: "npm:^2.3.1"
     nx: "npm:21.2.0"

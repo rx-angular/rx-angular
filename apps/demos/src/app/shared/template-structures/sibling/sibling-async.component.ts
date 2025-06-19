@@ -41,5 +41,5 @@ export class SiblingAsyncComponent {
   @Input()
   value: any;
 
-  trackBy = (i) => i;
+  trackBy = (i: number, sibling: boolean) => i;
 }

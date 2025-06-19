@@ -1,10 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ViewContainerRef } from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -76,7 +71,6 @@ const setupTestComponent = () => {
     imports: [LetDirectiveAllTemplatesTestComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      TemplateRef,
       ViewContainerRef,
       provideRxRenderStrategies({
         primaryStrategy: 'urgent',
