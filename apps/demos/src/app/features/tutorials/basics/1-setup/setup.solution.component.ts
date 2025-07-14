@@ -38,7 +38,9 @@ const initComponentState = {
       [expanded]="listExpanded"
     >
       <mat-expansion-panel-header class="list">
-        <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
+        @if (false) {
+          <mat-progress-bar [mode]="'query'"></mat-progress-bar>
+        }
         <mat-panel-title> List </mat-panel-title>
         <mat-panel-description>
           <span
@@ -56,19 +58,21 @@ const initComponentState = {
         Refresh List
       </button>
 
-      <ng-container *ngIf="storeList$ | async as list">
-        <div *ngIf="list?.length; else noList">
-          <mat-list>
-            <mat-list-item *ngFor="let item of list">
-              {{ item.name }}
-            </mat-list-item>
-          </mat-list>
-        </div>
-      </ng-container>
-
-      <ng-template #noList>
-        <mat-card>No list given!</mat-card>
-      </ng-template>
+      @if (storeList$ | async; as list) {
+        @if (list?.length) {
+          <div>
+            <mat-list>
+              @for (item of list; track item) {
+                <mat-list-item>
+                  {{ item.name }}
+                </mat-list-item>
+              }
+            </mat-list>
+          </div>
+        } @else {
+          <mat-card>No list given!</mat-card>
+        }
+      }
     </mat-expansion-panel>
   `,
   styles: [

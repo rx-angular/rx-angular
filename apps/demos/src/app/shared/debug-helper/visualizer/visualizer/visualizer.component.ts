@@ -11,12 +11,12 @@ import { Hooks } from '../../hooks';
         style="margin-right: 1rem"
         [radius]="radius"
       ></rxa-dirty-check>
-      <rxa-renders
-        *ngIf="renderingsOn"
-        [value$]="valuesO$"
-        [radius]="radius"
-      ></rxa-renders>
-      <span *ngIf="cDS">{{ cDS }}</span>
+      @if (renderingsOn) {
+        <rxa-renders [value$]="valuesO$" [radius]="radius"></rxa-renders>
+      }
+      @if (cDS) {
+        <span>{{ cDS }}</span>
+      }
     </div>
     <ng-content select="[visualizerHeader]"></ng-content>
     <div

@@ -33,42 +33,38 @@ import { DataService } from './shared/data.service';
         </mat-button-toggle-group>
       </div>
       <div class="row w-100">
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.native ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-v1-a></rxa-v1-a>
-        </div>
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.push ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-v2-a></rxa-v2-a>
-        </div>
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.rxLet ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-v3-a></rxa-v3-a>
-        </div>
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.rxForm ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-v4-a></rxa-v4-a>
-        </div>
+        @if (
+          group.value === displayStates.native ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-v1-a></rxa-v1-a>
+          </div>
+        }
+        @if (
+          group.value === displayStates.push ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-v2-a></rxa-v2-a>
+          </div>
+        }
+        @if (
+          group.value === displayStates.rxLet ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-v3-a></rxa-v3-a>
+          </div>
+        }
+        @if (
+          group.value === displayStates.rxForm ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-v4-a></rxa-v4-a>
+          </div>
+        }
       </div>
     </rxa-visualizer>
   `,

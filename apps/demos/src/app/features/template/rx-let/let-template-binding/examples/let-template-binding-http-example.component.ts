@@ -33,30 +33,17 @@ import {
       </mat-card-content>
 
       <mat-card-actions>
-        <button
-          mat-button
-          [unpatch]
-          *ngIf="!(heroes$ | push)"
-          (click)="startFetch()"
-        >
-          START
-        </button>
-        <button
-          mat-button
-          [unpatch]
-          *ngIf="heroes$ | push"
-          (click)="completeFetch()"
-        >
-          COMPLETE
-        </button>
-        <button
-          mat-button
-          [unpatch]
-          *ngIf="heroes$ | push"
-          (click)="errorFetch()"
-        >
-          ERROR
-        </button>
+        @if (!(heroes$ | push)) {
+          <button mat-button [unpatch] (click)="startFetch()">START</button>
+        }
+        @if (heroes$ | push) {
+          <button mat-button [unpatch] (click)="completeFetch()">
+            COMPLETE
+          </button>
+        }
+        @if (heroes$ | push) {
+          <button mat-button [unpatch] (click)="errorFetch()">ERROR</button>
+        }
       </mat-card-actions>
     </mat-card>
 

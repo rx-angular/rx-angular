@@ -4,13 +4,12 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'rxa-recursive-observable-work-push',
   template: `
-    <ng-container *ngIf="level === 0; else branch">
+    @if (level === 0) {
       <rxa-work-visualizer [work]="work">
         <p visualizerHeader>Level {{ total - level }}</p>
         {{ value$ | push }}
       </rxa-work-visualizer>
-    </ng-container>
-    <ng-template #branch>
+    } @else {
       <rxa-work-visualizer [work]="work">
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-recursive-observable-work-push
@@ -20,7 +19,7 @@ import { Observable } from 'rxjs';
           [value$]="value$"
         ></rxa-recursive-observable-work-push>
       </rxa-work-visualizer>
-    </ng-template>
+    }
   `,
   host: {
     class: 'd-flex w-100',

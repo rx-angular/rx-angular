@@ -4,6 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/ssr/src",
   "prefix": "rx-angular",
+  "tags": ["type:app"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -62,7 +63,8 @@
         "production": {
           "buildTarget": "ssr:build:production"
         }
-      }
+      },
+      "continuous": true
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
@@ -111,7 +113,8 @@
           "browserTarget": "ssr:build:production",
           "serverTarget": "ssr:server:production"
         }
-      }
+      },
+      "continuous": true
     },
     "e2e": {
       "executor": "@nx/cypress:cypress",
@@ -130,6 +133,5 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["type:app"]
+  }
 }

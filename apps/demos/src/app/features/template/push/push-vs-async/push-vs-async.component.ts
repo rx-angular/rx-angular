@@ -50,44 +50,50 @@ import { distinctUntilChanged, map, share, shareReplay } from 'rxjs/operators';
           </div>
         </div>
       </ng-container>
-      <div class="row w-100" *ngIf="isVisible">
-        <div class="col" *ngIf="visible(group, displayStates.push)">
-          <h2 class="mat-subheader">Push</h2>
-          <rxa-value-provider
-            [min]="min"
-            [max]="max"
-            [changes$]="btnBothClick$"
-            #staticVal="rxaValueProvider"
-          ></rxa-value-provider>
-          <div class="mb-1">
-            <button mat-mini-fab (click)="staticVal.next()">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-          <rxa-recursive-observable-work-push
-            [depth]="depth"
-            [value$]="staticVal.int$"
-          ></rxa-recursive-observable-work-push>
+      @if (isVisible) {
+        <div class="row w-100">
+          @if (visible(group, displayStates.push)) {
+            <div class="col">
+              <h2 class="mat-subheader">Push</h2>
+              <rxa-value-provider
+                [min]="min"
+                [max]="max"
+                [changes$]="btnBothClick$"
+                #staticVal="rxaValueProvider"
+              ></rxa-value-provider>
+              <div class="mb-1">
+                <button mat-mini-fab (click)="staticVal.next()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              <rxa-recursive-observable-work-push
+                [depth]="depth"
+                [value$]="staticVal.int$"
+              ></rxa-recursive-observable-work-push>
+            </div>
+          }
+          @if (visible(group, displayStates.async)) {
+            <div class="col">
+              <h2 class="mat-subheader">Async</h2>
+              <rxa-value-provider
+                [min]="min"
+                [max]="max"
+                [changes$]="btnBothClick$"
+                #observableVal="rxaValueProvider"
+              ></rxa-value-provider>
+              <div class="mb-1">
+                <button mat-mini-fab (click)="observableVal.next()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              <rxa-recursive-observable-work-async
+                [depth]="depth"
+                [value$]="observableVal.int$"
+              ></rxa-recursive-observable-work-async>
+            </div>
+          }
         </div>
-        <div class="col" *ngIf="visible(group, displayStates.async)">
-          <h2 class="mat-subheader">Async</h2>
-          <rxa-value-provider
-            [min]="min"
-            [max]="max"
-            [changes$]="btnBothClick$"
-            #observableVal="rxaValueProvider"
-          ></rxa-value-provider>
-          <div class="mb-1">
-            <button mat-mini-fab (click)="observableVal.next()">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-          <rxa-recursive-observable-work-async
-            [depth]="depth"
-            [value$]="observableVal.int$"
-          ></rxa-recursive-observable-work-async>
-        </div>
-      </div>
+      }
     </rxa-visualizer>
   `,
   styles: [``],

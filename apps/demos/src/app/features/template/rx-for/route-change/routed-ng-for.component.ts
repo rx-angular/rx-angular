@@ -27,48 +27,57 @@ function getItems(num: number) {
       <div class="d-flex align-items-center">
         <span class="mr-2">ID</span>
         <button mat-icon-button (click)="sorting.toggleSortBy('id')">
-          <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
-          <mat-icon *ngIf="sorting.isDesc()">arrow_downward</mat-icon>
+          @if (sorting.isAsc()) {
+            <mat-icon>arrow_upward</mat-icon>
+          }
+          @if (sorting.isDesc()) {
+            <mat-icon>arrow_downward</mat-icon>
+          }
         </button>
       </div>
       <div class="d-flex align-items-center">
         <span class="mr-2">Value</span>
         <button mat-icon-button (click)="sorting.toggleSortBy('value')">
-          <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
-          <mat-icon *ngIf="sorting.isDesc()">arrow_downward</mat-icon>
+          @if (sorting.isAsc()) {
+            <mat-icon>arrow_upward</mat-icon>
+          }
+          @if (sorting.isDesc()) {
+            <mat-icon>arrow_downward</mat-icon>
+          }
         </button>
       </div>
       <div>Index</div>
       <div>Action</div>
     </div>
-    <div
-      [style.height.px]="item.value * 300 + 40"
-      class="d-flex py-3 w-100 align-items-center justify-content-around item"
-      *ngFor="
-        let item of items;
-        let i = index;
-        let c = count;
-        trackBy: trackById
-      "
-    >
-      <div>
-        <mat-checkbox></mat-checkbox>
+    @for (
+      item of items;
+      track trackById(i, item);
+      let i = $index;
+      let c = $count
+    ) {
+      <div
+        [style.height.px]="item.value * 300 + 40"
+        class="d-flex py-3 w-100 align-items-center justify-content-around item"
+      >
+        <div>
+          <mat-checkbox></mat-checkbox>
+        </div>
+        <div>{{ item.id }}</div>
+        <div class="d-flex align-items-center">
+          <span class="box" [style.background]="item.value | bgColor"></span
+          >{{ item.value }}
+        </div>
+        <div>{{ i }}</div>
+        <button mat-raised-button>
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+        <button mat-raised-button>
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
       </div>
-      <div>{{ item.id }}</div>
-      <div class="d-flex align-items-center">
-        <span class="box" [style.background]="item.value | bgColor"></span
-        >{{ item.value }}
-      </div>
-      <div>{{ i }}</div>
-      <button mat-raised-button>
-        <mat-icon>delete</mat-icon>
-        Delete
-      </button>
-      <button mat-raised-button>
-        <mat-icon>edit</mat-icon>
-        Edit
-      </button>
-    </div>
+    }
   `,
   styles: [
     `

@@ -55,14 +55,16 @@ import { map, tap } from 'rxjs/operators';
             trackBy: trackByStrategyName
           "
         >
-          <div class="col d-flex flex-column" *ngIf="strategy.checked">
-            <h2 class="mat-subheader">{{ strategy.name }}</h2>
-            <rxa-sibling-strategy
-              [strategy]="strategy.name"
-              [count]="count$"
-              [filled]="filled$"
-            ></rxa-sibling-strategy>
-          </div>
+          @if (strategy.checked) {
+            <div class="col d-flex flex-column">
+              <h2 class="mat-subheader">{{ strategy.name }}</h2>
+              <rxa-sibling-strategy
+                [strategy]="strategy.name"
+                [count]="count$"
+                [filled]="filled$"
+              ></rxa-sibling-strategy>
+            </div>
+          }
         </ng-container>
       </div>
     </rxa-visualizer>

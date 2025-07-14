@@ -15,7 +15,9 @@ import { tap } from 'rxjs/operators';
       <div visualizerHeader>
         <h1>B<small>v2</small></h1>
         <div class="d-flex">
-          <rxa-dirty-check *ngFor="let i of numExpressions"></rxa-dirty-check>
+          @for (i of numExpressions; track i) {
+            <rxa-dirty-check />
+          }
         </div>
       </div>
       <div class="row w-100">

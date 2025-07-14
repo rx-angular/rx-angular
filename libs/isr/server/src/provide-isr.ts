@@ -1,5 +1,6 @@
-import { DOCUMENT, isPlatformServer } from '@angular/common';
+import { isPlatformServer } from '@angular/common';
 import {
+  DOCUMENT,
   EnvironmentProviders,
   inject,
   makeEnvironmentProviders,

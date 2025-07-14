@@ -1,9 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
@@ -35,8 +30,6 @@ const setupLetDirectiveTestComponentComplete = (): void => {
     imports: [LetDirectiveTestCompleteComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      TemplateRef,
-      ViewContainerRef,
       provideRxRenderStrategies({ primaryStrategy: 'native' }),
     ],
     teardown: { destroyAfterEach: true },

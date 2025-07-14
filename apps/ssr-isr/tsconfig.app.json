@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": ["node"]
+    "types": ["node"],
+    "moduleResolution": "bundler"
   },
   "files": ["src/main.ts", "src/main.server.ts", "server.ts"],
   "include": ["src/**/*.d.ts"],

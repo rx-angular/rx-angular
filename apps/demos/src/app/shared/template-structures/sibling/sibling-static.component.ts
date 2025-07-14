@@ -7,13 +7,11 @@ import { toBooleanArray } from './utils';
     <rxa-visualizer>
       <p visualizerHeader>{{ siblings.length }} Siblings Static</p>
       <div class="w-100 siblings">
-        <span
-          class="sibling"
-          [ngClass]="{ filled: sibling }"
-          *ngFor="let sibling of siblings; trackBy: trackBy"
-        >
-          <div [ngClass]="{ filled: filled }">&nbsp;</div>
-        </span>
+        @for (sibling of siblings; track trackBy($index, sibling)) {
+          <span class="sibling" [ngClass]="{ filled: sibling }">
+            <div [ngClass]="{ filled: filled }">&nbsp;</div>
+          </span>
+        }
       </div>
     </rxa-visualizer>
   `,
@@ -36,5 +34,5 @@ export class SiblingStaticComponent {
   @Input()
   value: any;
 
-  trackBy = (i) => i;
+  trackBy = (i: number, sibling: boolean) => i;
 }

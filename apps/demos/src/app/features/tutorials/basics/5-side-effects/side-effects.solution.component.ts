@@ -31,42 +31,45 @@ const initComponentState = {
   selector: 'rxa-side-effects-solution',
   template: `
     <h3>Side Effects</h3>
-    <mat-expansion-panel
-      *ngIf="model$ | async as vm"
-      (expandedChange)="listExpandedChanges.next($event)"
-      [expanded]="vm.listExpanded"
-    >
-      <mat-expansion-panel-header class="list">
-        <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title> List </mat-panel-title>
-        <mat-panel-description>
-          <span
-            >{{ vm.list.length }} Repositories Updated every:
-            {{ vm.refreshInterval }} ms
-          </span>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="refreshClicks$.next($event)"
+    @if (model$ | async; as vm) {
+      <mat-expansion-panel
+        (expandedChange)="listExpandedChanges.next($event)"
+        [expanded]="vm.listExpanded"
       >
-        Refresh List
-      </button>
-
-      <div *ngIf="vm.list?.length; else noList">
-        <mat-list>
-          <mat-list-item *ngFor="let item of vm.list">
-            {{ item.name }}
-          </mat-list-item>
-        </mat-list>
-      </div>
-
-      <ng-template #noList>
-        <mat-card>No list given!</mat-card>
-      </ng-template>
-    </mat-expansion-panel>
+        <mat-expansion-panel-header class="list">
+          @if (false) {
+            <mat-progress-bar [mode]="'query'"></mat-progress-bar>
+          }
+          <mat-panel-title> List </mat-panel-title>
+          <mat-panel-description>
+            <span
+              >{{ vm.list.length }} Repositories Updated every:
+              {{ vm.refreshInterval }} ms
+            </span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="refreshClicks$.next($event)"
+        >
+          Refresh List
+        </button>
+        @if (vm.list?.length) {
+          <div>
+            <mat-list>
+              @for (item of vm.list; track item) {
+                <mat-list-item>
+                  {{ item.name }}
+                </mat-list-item>
+              }
+            </mat-list>
+          </div>
+        } @else {
+          <mat-card>No list given!</mat-card>
+        }
+      </mat-expansion-panel>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,

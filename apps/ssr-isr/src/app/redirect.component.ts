@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformServer } from '@angular/common';
+import { isPlatformServer } from '@angular/common';
 import {
   Component,
   Inject,
@@ -13,7 +13,7 @@ export const RESPONSE = new InjectionToken<Response>('RESPONSE');
 
 @Component({
   selector: 'app-redirect',
-  imports: [CommonModule],
+  imports: [],
   template: ``,
   styles: ``,
 })

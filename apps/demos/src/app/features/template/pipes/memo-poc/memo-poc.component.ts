@@ -40,46 +40,42 @@ import { fibonacci } from '../../../../shared/debug-helper/work/fibonacci';
     </div>
     <rxa-dirty-check></rxa-dirty-check>
     <div class="row">
-      <div
-        class="col"
-        *ngIf="
-          group.value === displayStates.fnInTpl ||
-          group.value === displayStates.all
-        "
-      >
-        <div class="mat-headline">Function Binding</div>
-        <div>{{ fibonacci(numPositions) }}</div>
-      </div>
-      <div
-        class="col"
-        *ngIf="
-          group.value === displayStates.purePipe ||
-          group.value === displayStates.all
-        "
-      >
-        <div class="mat-headline">Pure Pipe</div>
-        <div>{{ numPositions | fibonacci }}</div>
-      </div>
-      <div
-        class="col"
-        *ngIf="
-          group.value === displayStates.pureMemoPipe ||
-          group.value === displayStates.all
-        "
-      >
-        <div class="mat-headline">Pure Pipe with memoization</div>
-        <div>{{ numPositions | fibonacciMemo }}</div>
-      </div>
-      <div
-        class="col"
-        *ngIf="
-          group.value === displayStates.memoPipe ||
-          group.value === displayStates.all
-        "
-      >
-        <div class="mat-headline">Memo Pipe with fn as argument</div>
-        <div>{{ numPositions | memo: fibonacci }}</div>
-      </div>
+      @if (
+        group.value === displayStates.fnInTpl ||
+        group.value === displayStates.all
+      ) {
+        <div class="col">
+          <div class="mat-headline">Function Binding</div>
+          <div>{{ fibonacci(numPositions) }}</div>
+        </div>
+      }
+      @if (
+        group.value === displayStates.purePipe ||
+        group.value === displayStates.all
+      ) {
+        <div class="col">
+          <div class="mat-headline">Pure Pipe</div>
+          <div>{{ numPositions | fibonacci }}</div>
+        </div>
+      }
+      @if (
+        group.value === displayStates.pureMemoPipe ||
+        group.value === displayStates.all
+      ) {
+        <div class="col">
+          <div class="mat-headline">Pure Pipe with memoization</div>
+          <div>{{ numPositions | fibonacciMemo }}</div>
+        </div>
+      }
+      @if (
+        group.value === displayStates.memoPipe ||
+        group.value === displayStates.all
+      ) {
+        <div class="col">
+          <div class="mat-headline">Memo Pipe with fn as argument</div>
+          <div>{{ numPositions | memo: fibonacci }}</div>
+        </div>
+      }
     </div>
   `,
   styles: [``],

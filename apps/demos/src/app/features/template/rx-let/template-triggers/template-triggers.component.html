@@ -36,16 +36,21 @@
           suspenseTrigger: triggerProvider.suspense$
         "
       >
-        <ng-container *ngIf="c; then complete"></ng-container>
-        <ng-container *ngIf="s">
+        @if (c) {
+          <div>
+            <mat-icon class="complete-icon">thumb_up</mat-icon>
+            <h2>Completed!</h2>
+          </div>
+        }
+        @if (s) {
           <ng-template
             [ngTemplateOutlet]="suspense"
             [ngTemplateOutletContext]="{
               $implicit: state
             }"
           ></ng-template>
-        </ng-container>
-        <ng-container *ngIf="e">
+        }
+        @if (e) {
           <ng-template
             [ngTemplateOutlet]="error"
             [ngTemplateOutletContext]="{
@@ -53,7 +58,7 @@
               $error: e
             }"
           ></ng-template>
-        </ng-container>
+        }
 
         <div>{{ state }}</div>
       </ng-container>
@@ -76,12 +81,6 @@
         <div>{{ state }}</div>
       </ng-container>
     </div>
-    <ng-template #complete>
-      <div>
-        <mat-icon class="complete-icon">thumb_up</mat-icon>
-        <h2>Completed!</h2>
-      </div>
-    </ng-template>
     <ng-template #error let-value let-error="$error">
       <div>
         <mat-icon class="error-icon">thumb_down</mat-icon>
@@ -96,6 +95,9 @@
         [mode]="'indeterminate'"
       ></mat-progress-spinner>
       <strong>Last valid value: {{ value }}</strong>
+    </ng-template>
+    <ng-template #complete let-value>
+      <div>Completed!</div>
     </ng-template>
   </div>
 </rxa-visualizer>

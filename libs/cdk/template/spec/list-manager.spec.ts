@@ -1,4 +1,3 @@
-import 'jest-preset-angular/setup-jest'; // TODO: move this into test-setup when zone-config.spec is in its own lib
 import {
   AfterViewInit,
   ChangeDetectorRef,

@@ -18,10 +18,9 @@ import { RxEffects } from '@rx-angular/state/effects';
       </ng-container>
       <div class="w-100 d-flex flex-wrap">
         <div class="w-100 mb-2">
-          <mat-progress-bar
-            *ngIf="imgConverter?.loading$ | push"
-            [mode]="'buffer'"
-          ></mat-progress-bar>
+          @if (imgConverter?.loading$ | push) {
+            <mat-progress-bar [mode]="'buffer'"></mat-progress-bar>
+          }
 
           <rxa-color-prio class="w-100" [colors$]="colors$"></rxa-color-prio>
         </div>
