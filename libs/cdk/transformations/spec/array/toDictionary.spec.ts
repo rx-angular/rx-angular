@@ -81,7 +81,7 @@ describe('toDictionary', () => {
     it('should create dictionary by symbol', () => {
       const dictionaryResult = toDictionary(
         Object.values(dictionaryBySymbol),
-        genus
+        genus,
       );
 
       expect(dictionaryResult).toEqual(dictionaryBySymbol);
@@ -140,6 +140,75 @@ describe('toDictionary', () => {
       const arr2: any[] = undefined as any;
       expect(toDictionary(arr, '')).toEqual(null);
       expect(toDictionary(arr2, '')).toEqual(undefined);
+    });
+  });
+
+  describe('prototype preservation', () => {
+    class TestClass {
+      constructor(
+        public id: number,
+        public value: string,
+      ) {}
+
+      getDescription(): string {
+        return `${this.id}: ${this.value}`;
+      }
+    }
+
+    it('should preserve prototype chain when converting class instances to dictionary', () => {
+      const instances = [new TestClass(1, 'first'), new TestClass(2, 'second')];
+
+      const result = toDictionary(instances, 'id');
+
+      expect(result['1']).toBeInstanceOf(TestClass);
+      expect(result['2']).toBeInstanceOf(TestClass);
+
+      expect(result['1'].getDescription()).toBe('1: first');
+      expect(result['2'].getDescription()).toBe('2: second');
+    });
+
+    it('should preserve prototype chain with string keys', () => {
+      const instances = [new TestClass(1, 'cat'), new TestClass(2, 'dog')];
+
+      const result = toDictionary(instances, 'value');
+
+      expect(result['cat']).toBeInstanceOf(TestClass);
+      expect(result['dog']).toBeInstanceOf(TestClass);
+
+      expect(result['cat'].getDescription()).toBe('1: cat');
+      expect(result['dog'].getDescription()).toBe('2: dog');
+    });
+
+    it('should preserve prototype chain with symbol keys', () => {
+      const testSymbol = Symbol('test');
+
+      class SymbolClass {
+        [testSymbol]: string;
+
+        constructor(
+          public id: number,
+          symbolValue: string,
+        ) {
+          this[testSymbol] = symbolValue;
+        }
+
+        getSymbolValue(): string {
+          return this[testSymbol];
+        }
+      }
+
+      const instances = [
+        new SymbolClass(1, 'first'),
+        new SymbolClass(2, 'second'),
+      ];
+
+      const result = toDictionary(instances, testSymbol);
+
+      expect(result['first']).toBeInstanceOf(SymbolClass);
+      expect(result['second']).toBeInstanceOf(SymbolClass);
+
+      expect(result['first'].getSymbolValue()).toBe('first');
+      expect(result['second'].getSymbolValue()).toBe('second');
     });
   });
 });

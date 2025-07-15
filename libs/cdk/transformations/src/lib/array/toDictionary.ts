@@ -1,4 +1,8 @@
-import { isDefined, isKeyOf, OnlyKeysOfSpecificType } from '../_internals/guards';
+import {
+  isDefined,
+  isKeyOf,
+  OnlyKeysOfSpecificType,
+} from '../_internals/guards';
 
 /**
  * @description
@@ -53,7 +57,7 @@ export function toDictionary<T extends object>(
   key:
     | OnlyKeysOfSpecificType<T, number>
     | OnlyKeysOfSpecificType<T, string>
-    | OnlyKeysOfSpecificType<T, symbol>
+    | OnlyKeysOfSpecificType<T, symbol>,
 ): { [key: string]: T } {
   if (!isDefined(source)) {
     return source;
@@ -73,7 +77,10 @@ export function toDictionary<T extends object>(
   let i = 0;
 
   for (i; i < length; i++) {
-    dictionary[`${source[i][key]}`] = Object.assign({}, source[i]);
+    dictionary[`${source[i][key]}`] = Object.assign(
+      Object.create(Object.getPrototypeOf(source[i])),
+      source[i],
+    );
   }
 
   return dictionary;
