@@ -8,14 +8,14 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { inject, Injectable, Provider } from '@angular/core';
+import { IsrService } from 'libs/isr/browser/src';
 import { catchError, Observable, throwError } from 'rxjs';
-import { IsrServerService } from './isr-server.service';
 
 export const httpErrorInterceptorISR: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ) => {
-  const isrService = inject(IsrServerService);
+  const isrService = inject(IsrService);
 
   return next(req).pipe(
     catchError((err) => {
@@ -27,7 +27,7 @@ export const httpErrorInterceptorISR: HttpInterceptorFn = (
 
 @Injectable()
 export class HttpErrorsInterceptor implements HttpInterceptor {
-  constructor(private isrService: IsrServerService) {}
+  constructor(private isrService: IsrService) {}
 
   intercept(
     request: HttpRequest<unknown>,

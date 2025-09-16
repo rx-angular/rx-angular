@@ -8,12 +8,9 @@ import {
 } from '@angular/core';
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
 import { IsrService } from '@rx-angular/isr/browser';
-import {
-  HTTP_ERROR_PROVIDER_ISR,
-  httpErrorInterceptorISR,
-} from './http-errors.interceptor';
+import { addIsrDataBeforeSerialized } from '../../utils/src/add-isr-data-before-serialized';
+import { HTTP_ERROR_PROVIDER_ISR, httpErrorInterceptorISR } from '../../utils/src/http-errors.interceptor';
 import { IsrServerService } from './isr-server.service';
-import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serialized';
 
 /**
  * @description

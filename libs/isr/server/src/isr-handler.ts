@@ -8,10 +8,10 @@ import {
   VariantRebuildItem,
 } from '@rx-angular/isr/models';
 import { NextFunction, Request, Response } from 'express';
-import { CacheGeneration } from './cache-generation';
-import { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
+import { CacheGeneration } from '../node/src/cache-generation';
+import { InMemoryCacheHandler } from '../node/src/cache-handlers/in-memory-cache-handler';
+import { getVariant } from '../node/src/cache-utils';
 import { ISRLogger } from './isr-logger';
-import { getVariant } from './utils/cache-utils';
 
 export class ISRHandler {
   protected cache!: CacheHandler;

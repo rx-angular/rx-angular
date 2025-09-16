@@ -14,7 +14,7 @@ export function addIsrDataBeforeSerialized(
 }
 
 // append script with revalidate and errors data for the current route
-function addISRDataToBody(
+export function addISRDataToBody(
   doc: Document,
   { revalidate, errors, extra }: IsrState,
 ): Promise<void> {
@@ -35,3 +35,4 @@ function addISRDataToBody(
     resolve();
   });
 }
+

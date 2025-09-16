@@ -6,11 +6,11 @@ import {
   RenderVariant,
 } from '@rx-angular/isr/models';
 import { Request, Response } from 'express';
-import { ISRLogger } from './isr-logger';
-import { defaultModifyGeneratedHtml } from './modify-generated-html';
-import { defaultCacheKeyGenerator, getVariant } from './utils/cache-utils';
-import { getRouteISRDataFromHTML } from './utils/get-isr-options';
-import { renderUrl, RenderUrlConfig } from './utils/render-url';
+import { getRouteISRDataFromHTML } from '../../../utils/src/get-isr-options';
+import { ISRLogger } from '../../src/isr-logger';
+import { defaultModifyGeneratedHtml } from '../../src/modify-generated-html';
+import { defaultCacheKeyGenerator, getVariant } from './cache-utils';
+import { renderUrl, RenderUrlConfig } from './render-url';
 
 export interface IGeneratedResult {
   html?: string;

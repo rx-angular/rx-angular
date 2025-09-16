@@ -1,4 +1,4 @@
-import { RenderVariant } from '@rx-angular/isr/models';
+import { RenderVariant } from 'libs/isr/models/src';
 import { Request } from 'express';
 
 export const defaultCacheKeyGenerator = (
