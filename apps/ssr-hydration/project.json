@@ -1,0 +1,87 @@
+{
+  "name": "ssr-hydration",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/ssr-hydration/src",
+  "tags": ["type:app"],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/ssr-hydration",
+        "browser": "apps/ssr-hydration/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/ssr-hydration/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/ssr-hydration/public"
+          }
+        ],
+        "styles": ["apps/ssr-hydration/src/styles.scss"],
+        "server": "apps/ssr-hydration/src/main.server.ts",
+        "ssr": {
+          "entry": "apps/ssr-hydration/src/server.ts"
+        },
+        "outputMode": "server"
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "ssr-hydration:build:production"
+        },
+        "development": {
+          "buildTarget": "ssr-hydration:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n",
+      "options": {
+        "buildTarget": "ssr-hydration:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "ssr-hydration:build",
+        "staticFilePath": "dist/apps/ssr-hydration/browser",
+        "spa": true
+      }
+    }
+  }
+}
