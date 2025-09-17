@@ -76,7 +76,8 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/ssr"],
       "options": {
-        "jestConfig": "apps/ssr/jest.config.ts"
+        "jestConfig": "apps/ssr/jest.config.ts",
+        "tsConfig": "apps/ssr/tsconfig.spec.json"
       }
     },
     "server": {

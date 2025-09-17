@@ -146,7 +146,7 @@ describe('rxFor with signals', () => {
       const errorSpy = jest.spyOn(errorHandler, 'handleError');
 
       expectText('');
-      expect(errorSpy).toBeCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
       errorSpy.mockClear();
     }));
 
@@ -164,7 +164,7 @@ describe('rxFor with signals', () => {
       getComponent().itemsHotSignal.set([1, 2, 3]);
       fixture.detectChanges();
       expectText('1;2;3;');
-      expect(errorSpy).toBeCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
       errorSpy.mockClear();
     }));
 
@@ -514,7 +514,7 @@ describe('rxFor with signals', () => {
         fixture = createTestComponent(template);
         fixture.componentInstance.value = 0;
         fixture.detectChanges();
-        expect(warnSpy).toBeCalledTimes(1);
+        expect(warnSpy).toHaveBeenCalledTimes(1);
       }));
 
       it('should track by identity when trackBy is to `null` or `undefined`', waitForAsync(() => {
@@ -525,7 +525,7 @@ describe('rxFor with signals', () => {
         detectChangesAndExpectText('abc');
         fixture.componentInstance.value = undefined;
         detectChangesAndExpectText('abc');
-        expect(warnSpy).toBeCalledTimes(0);
+        expect(warnSpy).toHaveBeenCalledTimes(0);
       }));
 
       it('should set the context to the component instance', waitForAsync(() => {

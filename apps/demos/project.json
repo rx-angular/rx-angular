@@ -129,7 +129,8 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/demos/jest.config.ts"
+        "jestConfig": "apps/demos/jest.config.ts",
+        "tsConfig": "apps/demos/tsconfig.spec.json"
       },
       "outputs": ["{workspaceRoot}/coverage/apps/demos"]
     }

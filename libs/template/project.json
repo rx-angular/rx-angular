@@ -4,6 +4,7 @@
   "projectType": "library",
   "sourceRoot": "libs/template/src",
   "prefix": "rx",
+  "tags": ["type:lib", "template"],
   "targets": {
     "build-lib": {
       "executor": "@angular-devkit/build-angular:ng-packagr",
@@ -33,7 +34,8 @@
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/template/jest.config.ts",
-        "codeCoverage": true
+        "codeCoverage": true,
+        "tsConfig": "libs/template/tsconfig.spec.json"
       },
       "outputs": ["{workspaceRoot}/coverage/template"]
     },
@@ -55,6 +57,5 @@
         "devServerTarget": "demos:build"
       }
     }
-  },
-  "tags": ["type:lib", "template"]
+  }
 }

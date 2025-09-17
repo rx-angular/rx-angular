@@ -4,6 +4,7 @@
   "projectType": "library",
   "sourceRoot": "libs/state/src",
   "prefix": "rx",
+  "tags": ["type:lib", "state"],
   "targets": {
     "build-lib": {
       "executor": "@nx/angular:package",
@@ -33,7 +34,8 @@
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/state/jest.config.ts",
-        "codeCoverage": true
+        "codeCoverage": true,
+        "tsConfig": "libs/state/tsconfig.spec.json"
       },
       "outputs": ["{workspaceRoot}/coverage/state"]
     },
@@ -63,6 +65,5 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["type:lib", "state"]
+  }
 }
