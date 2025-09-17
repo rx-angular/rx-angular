@@ -62,7 +62,7 @@ describe('select', () => {
         const source = cold('a|', values);
         expectObservable(source.pipe(select(map((v) => v * 2)))).toBe(
           'b|',
-          values
+          values,
         );
       });
     });
@@ -78,9 +78,9 @@ describe('select', () => {
               map((v) => v / 2),
               map((v) => v * 2),
               map((v) => v / 2),
-              map((v) => v * 2)
-            )
-          )
+              map((v) => v * 2),
+            ),
+          ),
         ).toBe('b|', values);
       });
     });
@@ -106,7 +106,7 @@ describe('select', () => {
         a: initialNestedState,
       });
       expectObservable(
-        source.pipe(select('obj', 'key1', 'key11', 'key111'))
+        source.pipe(select('obj', 'key1', 'key11', 'key111')),
       ).toBe('a|', { a: 'test' });
     });
   });
@@ -138,7 +138,9 @@ describe('select', () => {
         a: primitiveState,
       });
       expectObservable(
-        source.pipe(select(['num', 'str'], ({ num, str }) => `${str} (${num})`))
+        source.pipe(
+          select(['num', 'str'], ({ num, str }) => `${str} (${num})`),
+        ),
       ).toBe('a|', {
         a: 'string (42)',
       });
@@ -171,9 +173,9 @@ describe('select', () => {
           select(
             ['num', 'obj'],
             ({ num, obj }) => `${num}: ${obj.key1.key11.key111}`,
-            { obj: (a, b) => a.key1.key11.key111 === b.key1.key11.key111 }
-          )
-        )
+            { obj: (a, b) => a.key1.key11.key111 === b.key1.key11.key111 },
+          ),
+        ),
       ).toBe('a-c-e|', {
         a: '42: foo',
         c: '69: foo',
@@ -204,16 +206,16 @@ describe('select', () => {
             map((s) => s.obj),
             map((s) => s.key1),
             map((s) => s.key11),
-            map((s) => s.key111)
-          )
-        )
+            map((s) => s.key111),
+          ),
+        ),
       ).toBe('a|', { a: 'test' });
     });
   });
 
   it('should throw with wrong params', () => {
-    expect(() => of().pipe(select(true as any))).toThrowError(
-      'wrong params passed to select'
+    expect(() => of().pipe(select(true as any))).toThrow(
+      'wrong params passed to select',
     );
   });
 });

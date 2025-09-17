@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/eslint-plugin/src",
   "projectType": "library",
+  "tags": ["type:lib"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -31,6 +32,5 @@
     },
     "version": {},
     "github": {}
-  },
-  "tags": ["type:lib"]
+  }
 }

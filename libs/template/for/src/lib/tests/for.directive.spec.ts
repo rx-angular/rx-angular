@@ -117,7 +117,7 @@ describe('rxFor', () => {
       const errorSpy = jest.spyOn(errorHandler, 'handleError');
 
       detectChangesAndExpectText('');
-      expect(errorSpy).toBeCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
       errorSpy.mockClear();
     }));
 
@@ -130,7 +130,7 @@ describe('rxFor', () => {
 
       getComponent().items = null!;
       detectChangesAndExpectText('');
-      expect(errorSpy).toBeCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
 
       getComponent().items = [1, 2, 3];
       detectChangesAndExpectText('1;2;3;');
@@ -340,7 +340,7 @@ describe('rxFor', () => {
         fixture = createTestComponent(template);
         fixture.componentInstance.value = 0;
         fixture.detectChanges();
-        expect(warnSpy).toBeCalledTimes(1);
+        expect(warnSpy).toHaveBeenCalledTimes(1);
       }));
 
       it('should track by identity when trackBy is to `null` or `undefined`', waitForAsync(() => {
@@ -351,7 +351,7 @@ describe('rxFor', () => {
         detectChangesAndExpectText('abc');
         fixture.componentInstance.value = undefined;
         detectChangesAndExpectText('abc');
-        expect(warnSpy).toBeCalledTimes(0);
+        expect(warnSpy).toHaveBeenCalledTimes(0);
       }));
 
       it('should set the context to the component instance', waitForAsync(() => {
