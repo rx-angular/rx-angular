@@ -1,7 +1,11 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { Provider, StaticProvider } from '@angular/core';
 import { ɵSERVER_CONTEXT as SERVER_CONTEXT } from '@angular/platform-server';
-import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr/node';
+import {
+  AngularNodeAppEngine,
+  CommonEngine,
+  CommonEngineRenderOptions,
+} from '@angular/ssr/node';
 import { Request, Response } from 'express';
 
 export interface RenderUrlConfig {
@@ -11,6 +15,7 @@ export interface RenderUrlConfig {
   indexHtml: string;
   providers?: Provider[];
   commonEngine?: CommonEngine;
+  angularAppEngine?: AngularNodeAppEngine;
   bootstrap?: CommonEngineRenderOptions['bootstrap'];
   browserDistFolder?: string;
   inlineCriticalCss?: boolean;
@@ -29,6 +34,7 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
     indexHtml,
     providers,
     commonEngine,
+    angularAppEngine,
     bootstrap,
     browserDistFolder,
     inlineCriticalCss,
@@ -50,7 +56,22 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
       ? [...providers, ...EXTRA_PROVIDERS] // if providers are provided, we add them to the list
       : [...EXTRA_PROVIDERS, BASE_URL_PROVIDER]; // if not, we add the default providers
 
-    if (commonEngine) {
+    if (angularAppEngine) {
+      angularAppEngine
+        .handle(req)
+        .then((response) => {
+          if (response) {
+            return response.text();
+          }
+          throw new Error('No response from Angular App Engine');
+        })
+        .then((html) => {
+          resolve(html);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    } else if (commonEngine) {
       commonEngine
         .render({
           bootstrap,
