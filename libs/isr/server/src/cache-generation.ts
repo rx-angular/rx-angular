@@ -85,6 +85,7 @@ export class CacheGeneration {
       indexHtml: this.isrConfig.indexHtml,
       providers,
       commonEngine: this.isrConfig.commonEngine,
+      angularAppEngine: this.isrConfig.angularAppEngine,
       bootstrap: this.isrConfig.bootstrap,
       browserDistFolder: this.isrConfig.browserDistFolder,
       inlineCriticalCss: this.isrConfig.inlineCriticalCss,
