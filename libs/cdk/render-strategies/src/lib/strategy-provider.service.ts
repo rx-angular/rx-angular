@@ -1,9 +1,11 @@
 import {
   ChangeDetectorRef,
   Inject,
+  inject,
   Injectable,
   NgZone,
   Optional,
+  PendingTasks,
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -12,6 +14,7 @@ import {
   Observable,
 } from 'rxjs';
 import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
+import { setPendingTasks } from './concurrent-strategies';
 import {
   mergeDefaultConfig,
   RX_RENDER_STRATEGIES_CONFIG,
@@ -142,6 +145,7 @@ export class RxStrategyProvider<T extends string = string> {
     @Inject(RX_RENDER_STRATEGIES_CONFIG)
     cfg: RxRenderStrategiesConfig<T>,
   ) {
+    setPendingTasks(inject(PendingTasks));
     this._cfg = mergeDefaultConfig(cfg);
     this._strategies$.next(this._cfg.customStrategies as any);
     this.primaryStrategy = this.config.primaryStrategy;
