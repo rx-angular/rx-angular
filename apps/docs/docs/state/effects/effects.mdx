@@ -186,9 +186,7 @@ export class EffectsService {
   readonly effects = rxEffects();
 
   // share only some APIs if you like
-  register: typeof this.effects.register = this.effects.register.bind(
-    this.effects
-  );
+  register: typeof this.effects.register = this.effects.register.bind(this.effects);
 }
 ```
 
@@ -347,32 +345,28 @@ class MyComponent {
   readonly effects = rxEffects(({ register }) => {
     register(
       this.login$.pipe(
-        exhaustMap(({ user, pass }) =>
-          this.http.post('/auth/', { user, pass })
-        ),
+        exhaustMap(({ user, pass }) => this.http.post('/auth/', { user, pass })),
         // retry when an error occurs
-        retry()
+        retry(),
       ),
       (data) => {
         alert(`welcome ${data.user}`);
-      }
+      },
     );
 
     register(
       this.login$.pipe(
-        exhaustMap(({ user, pass }) =>
-          this.http.post('/auth/', { user, pass })
-        ),
+        exhaustMap(({ user, pass }) => this.http.post('/auth/', { user, pass })),
         // catch the error and return a custom value
         catchError((err) => {
           return of(null);
-        })
+        }),
       ),
       (data) => {
         if (data) {
           alert(`welcome ${data.user}`);
         }
-      }
+      },
     );
   });
 }
@@ -391,14 +385,10 @@ export class ChartComponent {
   chartVisible$ = new Subject<boolean>();
   chartData$ = this.ngRxStore.select(getListData());
 
-  pollingTrigger$ = this.chartVisible$.pipe(
-    switchMap((isPolling) => (isPolling ? interval(2000) : EMPTY))
-  );
+  pollingTrigger$ = this.chartVisible$.pipe(switchMap((isPolling) => (isPolling ? interval(2000) : EMPTY)));
 
   readonly effects = rxEffects(({ register }) => {
-    register(this.pollingTrigger$, () =>
-      this.ngRxStore.dispatch(refreshAction())
-    );
+    register(this.pollingTrigger$, () => this.ngRxStore.dispatch(refreshAction()));
   });
 }
 ```
@@ -653,6 +643,12 @@ export class MyComponent {
 The `untilEffect` top level API was dropped. You would need to build your own workaround for this.
 
 :::
+
+### Injection context
+
+`rxEffects` must be initialized in an [injection context](https://angular.dev/guide/di/dependency-injection-context).
+
+If you want to initialize `rxEffects` outside of an injection context you can pass an `injector` via the `options` parameter.
 
 ## Testing
 

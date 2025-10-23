@@ -1,4 +1,9 @@
-import { Component, isSignal, signal } from '@angular/core';
+import {
+  Component,
+  EnvironmentInjector,
+  isSignal,
+  signal,
+} from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { selectSlice } from '@rx-angular/state/selections';
 import {
@@ -389,6 +394,24 @@ describe(rxState, () => {
       }).toThrow('readOnlyState.connect is not a function');
     });
   });
+
+  describe('without injection context', () => {
+    it('should throw when invoked without injection context', () => {
+      const { rxState } = setUpWithoutInjectionContext();
+      expect(() => rxState(() => {}, {})).toThrow(
+        /rxState\(\) can only be used within an injection context/,
+      );
+    });
+
+    it('should be able to use a custom Injector', () => {
+      const { rxState } = setUpWithoutInjectionContext();
+
+      const envInjector = TestBed.inject(EnvironmentInjector);
+
+      const state = rxState(() => {}, { injector: envInjector });
+      expect(state).toBeDefined();
+    });
+  });
 });
 
 type ITestComponent<State extends object> = {
@@ -418,5 +441,14 @@ function setupComponent<State extends { count: number }>(
   return {
     fixture,
     component: fixture.componentInstance,
+  };
+}
+
+function setUpWithoutInjectionContext() {
+  return {
+    rxState<T extends object>(...args: Parameters<typeof rxState<T>>) {
+      const state = rxState(...args);
+      return state;
+    },
   };
 }
