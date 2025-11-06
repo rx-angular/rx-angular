@@ -94,7 +94,7 @@ import { ComparableData } from '../interfaces/comparable-data-type';
 export function upsert<T>(
   source: T[],
   update: Partial<T>[] | Partial<T>,
-  compare?: ComparableData<T>
+  compare?: ComparableData<T>,
 ): T[] {
   // check inputs for validity
   const updatesAsArray =
@@ -120,7 +120,7 @@ export function upsert<T>(
   // process updates/inserts
   for (const item of updatesAsArray) {
     const match = source.findIndex((sourceItem) =>
-      valuesComparer(item as T, sourceItem, compare)
+      valuesComparer(item as T, sourceItem, compare),
     );
     // if item already exists, save it as update
     if (match !== -1) {
@@ -128,8 +128,9 @@ export function upsert<T>(
     } else {
       // otherwise consider this as insert
       if (isObjectGuard(item)) {
-        // create a shallow copy if item is an object
-        inserts.push({ ...(item as T) });
+        inserts.push(
+          Object.assign(Object.create(Object.getPrototypeOf(item)), item) as T,
+        );
       } else {
         // otherwise just push it
         inserts.push(item);
@@ -142,7 +143,11 @@ export function upsert<T>(
     // process the updated
     if (updatedItem !== null && updatedItem !== undefined) {
       if (isObjectGuard(item)) {
-        return { ...item, ...updatedItem } as T;
+        return Object.assign(
+          Object.create(Object.getPrototypeOf(item)),
+          item,
+          updatedItem,
+        ) as T;
       } else {
         return updatedItem as T;
       }
