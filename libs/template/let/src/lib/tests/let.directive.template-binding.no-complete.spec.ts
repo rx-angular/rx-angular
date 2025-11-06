@@ -1,10 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ViewContainerRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
@@ -37,7 +32,6 @@ const setupTestComponent = () => {
     imports: [LetDirectiveNoCompleteTemplateTestComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      TemplateRef,
       ViewContainerRef,
       provideRxRenderStrategies({ primaryStrategy: 'native' }),
     ],

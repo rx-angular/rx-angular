@@ -87,8 +87,17 @@ export function mergeDefaultConfig<T extends string>(
  * @returns A provider that can be used to set the default render strategy or create custom render strategies.
  */
 export function provideRxRenderStrategies(
-  config: RxRenderStrategiesConfig<string>,
+  config:
+    | RxRenderStrategiesConfig<string>
+    | (() => RxRenderStrategiesConfig<string>),
 ): Provider {
+  if (typeof config === 'function') {
+    return {
+      provide: RX_RENDER_STRATEGIES_CONFIG,
+      useFactory: () => mergeDefaultConfig(config()),
+    } satisfies Provider;
+  }
+
   return {
     provide: RX_RENDER_STRATEGIES_CONFIG,
     useValue: mergeDefaultConfig(config),

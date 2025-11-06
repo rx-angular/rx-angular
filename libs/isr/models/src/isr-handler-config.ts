@@ -1,5 +1,9 @@
 import { Provider } from '@angular/core';
-import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr/node';
+import {
+  AngularNodeAppEngine,
+  CommonEngine,
+  CommonEngineRenderOptions,
+} from '@angular/ssr/node';
 import { Request } from 'express';
 import { CacheHandler, RenderVariant } from './cache-handler';
 
@@ -31,6 +35,12 @@ export interface ISRHandlerConfig {
    * rendering the HTML of the application.
    */
   commonEngine?: CommonEngine;
+
+  /**
+   * An instance of an Angular App Engine. This engine is responsible for
+   * rendering the HTML of the application.
+   */
+  angularAppEngine?: AngularNodeAppEngine;
 
   /**
    * The bootstrap function of the application. This function is responsible for

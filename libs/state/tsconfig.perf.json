@@ -5,12 +5,9 @@
     "rootDir": ".",
     "module": "commonjs",
     "target": "es5",
-    "types": [
-      "node"
-    ],
-    "downlevelIteration": true
+    "types": ["node"],
+    "downlevelIteration": true,
+    "moduleResolution": "bundler"
   },
-  "include": [
-    "./perf/**/*.ts"
-  ]
+  "include": ["./perf/**/*.ts"]
 }

@@ -4,13 +4,12 @@ import { ReplaySubject } from 'rxjs';
 @Component({
   selector: 'rxa-recursive-component-let',
   template: `
-    <ng-container *ngIf="level === 0; else branch">
+    @if (level === 0) {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-renders *poc1Let="value$; let v" [value$]="v"></rxa-renders>
       </rxa-visualizer>
-    </ng-container>
-    <ng-template #branch>
+    } @else {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-recursive-component-let
@@ -20,7 +19,7 @@ import { ReplaySubject } from 'rxjs';
           [value]="v"
         ></rxa-recursive-component-let>
       </rxa-visualizer>
-    </ng-template>
+    }
   `,
   host: {
     class: 'd-flex w-100',

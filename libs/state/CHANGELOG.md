@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [20.0.0](https://github.com/rx-angular/rx-angular/compare/state@19.0.3...state@20.0.0) (2025-07-14)
+
+
+### Features
+
+* **state:** bump peerDependency to @angular/core ^20 ([c675292](https://github.com/rx-angular/rx-angular/commit/c6752920d7d61b57b53fc3def36f2c013eb92a20))
+
+
+### BREAKING CHANGES
+
+* **state:** bump ng to version 20
+
+
+
 ## [19.0.3](https://github.com/rx-angular/rx-angular/compare/state@19.0.2...state@19.0.3) (2025-01-28)
 
 

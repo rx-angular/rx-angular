@@ -1,4 +1,3 @@
-import { NgForOf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -51,16 +50,18 @@ interface TodoState {
       </button>
     </div>
     <div class="d-flex flex-wrap todo-list">
-      <div class="todo" *ngFor="let todo of filteredTodos()">
-        <div>#{{ todo.id }}</div>
-        <div>{{ todo.title }}</div>
-        <button (click)="toggleDone(todo)">Done: {{ todo.done }}</button>
-        <button (click)="removeTodo(todo)">remove</button>
-      </div>
+      @for (todo of filteredTodos(); track todo) {
+        <div class="todo">
+          <div>#{{ todo.id }}</div>
+          <div>{{ todo.title }}</div>
+          <button (click)="toggleDone(todo)">Done: {{ todo.done }}</button>
+          <button (click)="removeTodo(todo)">remove</button>
+        </div>
+      }
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgForOf],
+  imports: [],
   styles: [
     `
       .todo-list {

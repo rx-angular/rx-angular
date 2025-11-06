@@ -29,14 +29,13 @@ import { Subject } from 'rxjs';
         <div>
           <h2 class="mat-subheading-1">*ngFor</h2>
           <div class="d-flex flex-wrap">
-            <rxa-error-handling-child
-              *ngFor="
-                let child of arrayP.array$ | async;
-                let i = index;
-                trackBy: trackItem
-              "
-              [index]="i"
-            ></rxa-error-handling-child>
+            @for (
+              child of arrayP.array$ | async;
+              track trackItem(i, child);
+              let i = $index
+            ) {
+              <rxa-error-handling-child [index]="i"></rxa-error-handling-child>
+            }
           </div>
         </div>
       </div>

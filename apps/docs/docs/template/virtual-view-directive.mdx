@@ -84,14 +84,20 @@ This setup will:
 2. Render the content of rxVirtualViewContent when the element is visible.
 3. Show the rxVirtualViewPlaceholder when the element is not visible.
 
-:::tip Define placeholder dimensions
+### Define placeholder dimensions
 
 The placeholder is what makes or breaks your experience with `RxVirtualView`. In best case it's just
-an empty container which has just the same dimensions as its content it should replace.
+an empty container that has just the same dimensions as its content it should replace.
 
 This will make sure you don't run into stuttery scrolling behavior and layout shifts.
 
-:::
+You can use the `--rx-vw-h` and `--rx-vw-w` CSS variables to define the placeholder dimensions after the virtual view is rendered at least once.
+
+```html
+<div style="min-height: var(--rx-vw-h, 100px); min-width: var(--rx-vw-w, 50px);"></div>
+```
+
+If the virtual view is not rendered at least once, the 100px and 50px values will be used as fallback the first time, and after that, the values will be updated to the actual dimensions of the virtual view.
 
 ### Optimize lists with @for
 

@@ -4,6 +4,7 @@
   "projectType": "library",
   "sourceRoot": "libs/cdk/src",
   "prefix": "rx-angular",
+  "tags": ["type:lib", "cdk"],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -32,7 +33,8 @@
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/cdk/jest.config.ts",
-        "codeCoverage": true
+        "codeCoverage": true,
+        "tsConfig": "libs/cdk/tsconfig.spec.json"
       },
       "outputs": ["{workspaceRoot}/coverage/cdk"]
     },
@@ -45,6 +47,5 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["type:lib", "cdk"]
+  }
 }

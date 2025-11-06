@@ -8,16 +8,15 @@
     "build": {
       "executor": "@nx/angular:package",
       "options": {
-        "project": "libs/isr/ng-package.json"
+        "project": "libs/isr/ng-package.json",
+        "tsConfig": "libs/isr/tsconfig.lib.json"
       },
       "outputs": ["{workspaceRoot}/dist/libs/isr"],
       "configurations": {
         "production": {
           "tsConfig": "libs/isr/tsconfig.lib.prod.json"
         },
-        "development": {
-          "tsConfig": "libs/isr/tsconfig.lib.json"
-        }
+        "development": {}
       },
       "defaultConfiguration": "production"
     },
@@ -26,7 +25,8 @@
       "outputs": ["{workspaceRoot}/coverage/isr"],
       "options": {
         "jestConfig": "libs/isr/jest.config.ts",
-        "codeCoverage": true
+        "codeCoverage": true,
+        "tsConfig": "libs/isr/tsconfig.spec.json"
       }
     },
     "lint": {

@@ -190,7 +190,7 @@ describe('RxPush', () => {
           wrapWithSpace('undefined'),
         );
         await Promise.resolve();
-        expect(cdSpy).toBeCalledTimes(1);
+        expect(cdSpy).toHaveBeenCalledTimes(1);
         expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
       });
 
@@ -211,7 +211,7 @@ describe('RxPush', () => {
         );
         await unpatchedPromise.resolve();
         await fixturePushPipeTestComponent.whenStable();
-        expect(cdSpy).toBeCalledTimes(1);
+        expect(cdSpy).toHaveBeenCalledTimes(1);
         expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
       });
 
@@ -223,7 +223,7 @@ describe('RxPush', () => {
           wrapWithSpace('undefined'),
         );
         await Promise.resolve();
-        expect(cdSpy).toBeCalledTimes(1);
+        expect(cdSpy).toHaveBeenCalledTimes(1);
         expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
       });
 
@@ -237,7 +237,7 @@ describe('RxPush', () => {
         await new Promise((resolve) => {
           setTimeout(resolve);
         });
-        expect(cdSpy).toBeCalledTimes(1);
+        expect(cdSpy).toHaveBeenCalledTimes(1);
         expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
       });
     });

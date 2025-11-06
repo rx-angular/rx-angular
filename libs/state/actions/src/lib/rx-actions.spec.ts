@@ -94,13 +94,13 @@ describe('actions fn', () => {
 
     component.actions.onProp(dummyBehaviour, spyT);
     component.actions.prop('p');
-    expect(spyT).toBeCalledTimes(1);
-    expect(spyT).toBeCalledWith('p');
+    expect(spyT).toHaveBeenCalledTimes(1);
+    expect(spyT).toHaveBeenCalledWith('p');
 
     component.actions.onLongPropName(dummyBehaviour, spyF);
     component.actions.longPropName('p');
-    expect(spyF).toBeCalledTimes(1);
-    expect(spyF).toBeCalledWith('p');
+    expect(spyF).toHaveBeenCalledTimes(1);
+    expect(spyF).toHaveBeenCalledWith('p');
   });
 
   it('should apply behaviour to trigger', () => {
@@ -126,7 +126,7 @@ describe('actions fn', () => {
     const unsub = component.actions.onProp(dummyBehaviour, spyT);
     unsub(); // stop listening to the emissions
     component.actions.prop('p');
-    expect(spyT).toBeCalledTimes(0);
+    expect(spyT).toHaveBeenCalledTimes(0);
   });
 
   it('should destroy all created actions and subscriptions on component destroy', (done) => {
@@ -143,26 +143,26 @@ describe('actions fn', () => {
     const ef = component.actions.onProp(dummyBehaviour, spyEffect);
     const ef2 = component.actions2.onProp(dummyBehaviour, spyEffect2);
 
-    expect(spyEmission).toBeCalledTimes(0);
-    expect(spyEffect).toBeCalledTimes(0);
+    expect(spyEmission).toHaveBeenCalledTimes(0);
+    expect(spyEffect).toHaveBeenCalledTimes(0);
 
-    expect(spyEmission2).toBeCalledTimes(0);
+    expect(spyEmission2).toHaveBeenCalledTimes(0);
     component.actions.prop('');
     component.actions2.prop('');
-    expect(spyEmission).toBeCalledTimes(1);
-    expect(spyEffect).toBeCalledTimes(1);
+    expect(spyEmission).toHaveBeenCalledTimes(1);
+    expect(spyEffect).toHaveBeenCalledTimes(1);
 
-    expect(spyEmission2).toBeCalledTimes(1);
-    expect(spyEffect2).toBeCalledTimes(1);
+    expect(spyEmission2).toHaveBeenCalledTimes(1);
+    expect(spyEffect2).toHaveBeenCalledTimes(1);
 
     fixture.destroy();
     component.actions.prop('');
     component.actions2.prop('');
-    expect(spyEmission).toBeCalledTimes(1);
-    expect(spyEffect).toBeCalledTimes(1);
+    expect(spyEmission).toHaveBeenCalledTimes(1);
+    expect(spyEffect).toHaveBeenCalledTimes(1);
 
-    expect(spyEmission2).toBeCalledTimes(1);
-    expect(spyEffect2).toBeCalledTimes(1);
+    expect(spyEmission2).toHaveBeenCalledTimes(1);
+    expect(spyEffect2).toHaveBeenCalledTimes(1);
 
     done();
   });

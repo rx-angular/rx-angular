@@ -1,6 +1,6 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -13,6 +13,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewChildren,
+  DOCUMENT,
 } from '@angular/core';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { patch, toDictionary, update } from '@rx-angular/cdk/transformations';
@@ -167,106 +168,112 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
           </div>
           <ng-container
             *rxLet="rxVirtualForState$; let state; strategy: 'native'"
-            [ngSwitch]="state.scrollStrategy"
           >
-            <rx-virtual-scroll-viewport
-              scrollWindow
-              (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
-              *ngSwitchCase="'fixed'"
-              [itemSize]="itemSize"
-              [runwayItemsOpposite]="state.runwayItemsOpposite"
-              [runwayItems]="state.runwayItems"
-              class="viewport"
-            >
-              <div
-                *rxVirtualFor="
-                  let item of data$;
-                  let i = index;
-                  trackBy: trackItem;
-                  renderCallback: rendered;
-                  strategy: $any(strategy$)
-                "
-                class="item"
-                [style.height.px]="itemSize"
-              >
-                {{ i }} {{ item.content }}
-              </div>
-            </rx-virtual-scroll-viewport>
-            <rx-virtual-scroll-viewport
-              scrollWindow
-              *ngSwitchCase="'auto'"
-              (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
-              autosize
-              withSyncScrollbar
-              [resizeObserverConfig]="{
-                extractSize: extractSize
-              }"
-              [runwayItemsOpposite]="state.runwayItemsOpposite"
-              [runwayItems]="state.runwayItems"
-              class="viewport"
-            >
-              <div
-                *rxVirtualFor="
-                  let item of data$;
-                  let i = index;
-                  trackBy: trackItem;
-                  renderCallback: rendered;
-                  strategy: $any(strategy$)
-                "
-                class="item"
-                #div
-              >
-                <div class="content">{{ i }} {{ item.content }}</div>
-                <!--<div *rxLet="[]" class="content">
-                  {{ i }} {{ item.content }}
-                </div>
-                <div *rxLet="[]" class="content">
-                  {{ i }} {{ item.content }}
-                </div>
-                <div *rxLet="[]" class="content">
-                  {{ i }} {{ item.content }}
-                </div>
-                <div *rxLet="[]" class="content">
-                  {{ i }} {{ item.content }}
-                </div>
-                <div *rxLet="[]" class="content">
-                  {{ i }} {{ item.content }}
-                </div>
-                <div *rxLet="[]" class="content">
-                  {{ i }} {{ item.content }}
-                </div>-->
-                <!--<button (click)="div.style.height = '170px'">
+            @switch (state.scrollStrategy) {
+              @case ('fixed') {
+                <rx-virtual-scroll-viewport
+                  scrollWindow
+                  (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
+                  [itemSize]="itemSize"
+                  [runwayItemsOpposite]="state.runwayItemsOpposite"
+                  [runwayItems]="state.runwayItems"
+                  class="viewport"
+                >
+                  <div
+                    *rxVirtualFor="
+                      let item of data$;
+                      let i = index;
+                      trackBy: trackItem;
+                      renderCallback: rendered;
+                      strategy: $any(strategy$)
+                    "
+                    class="item"
+                    [style.height.px]="itemSize"
+                  >
+                    {{ i }} {{ item.content }}
+                  </div>
+                </rx-virtual-scroll-viewport>
+              }
+              @case ('auto') {
+                <rx-virtual-scroll-viewport
+                  scrollWindow
+                  (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
+                  autosize
+                  withSyncScrollbar
+                  [resizeObserverConfig]="{
+                    extractSize: extractSize
+                  }"
+                  [runwayItemsOpposite]="state.runwayItemsOpposite"
+                  [runwayItems]="state.runwayItems"
+                  class="viewport"
+                >
+                  <div
+                    *rxVirtualFor="
+                      let item of data$;
+                      let i = index;
+                      trackBy: trackItem;
+                      renderCallback: rendered;
+                      strategy: $any(strategy$)
+                    "
+                    class="item"
+                    #div
+                  >
+                    <div class="content">{{ i }} {{ item.content }}</div>
+                    <!--<div *rxLet="[]" class="content">
+                      {{ i }} {{ item.content }}
+                    </div>
+                    <div *rxLet="[]" class="content">
+                      {{ i }} {{ item.content }}
+                    </div>
+                    <div *rxLet="[]" class="content">
+                      {{ i }} {{ item.content }}
+                    </div>
+                    <div *rxLet="[]" class="content">
+                      {{ i }} {{ item.content }}
+                    </div>
+                    <div *rxLet="[]" class="content">
+                      {{ i }} {{ item.content }}
+                    </div>
+                    <div *rxLet="[]" class="content">
+                      {{ i }} {{ item.content }}
+                    </div>-->
+                    <!--<button (click)="div.style.height = '170px'">
+                    change size
+                  </button>-->
+                  </div>
+                </rx-virtual-scroll-viewport>
+              }
+              @case ('dynamic') {
+                <rx-virtual-scroll-viewport
+                  scrollWindow
+                  (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
+                  [dynamic]="dynamicSize"
+                  [runwayItemsOpposite]="state.runwayItemsOpposite"
+                  [runwayItems]="state.runwayItems"
+                  class="viewport"
+                >
+                  <div
+                    [style.height.px]="dynamicSize(item)"
+                    *rxVirtualFor="
+                      let item of data$;
+                      let i = index;
+                      trackBy: trackItem;
+                      renderCallback: rendered;
+                      strategy: $any(strategy$)
+                    "
+                    class="item"
+                    #div
+                  >
+                    <div class="overflow-hidden">
+                      {{ i }} {{ item.content }}
+                    </div>
+                    <!--<button (click)="div.style.height = '170px'">
                   change size
                 </button>-->
-              </div>
-            </rx-virtual-scroll-viewport>
-            <rx-virtual-scroll-viewport
-              scrollWindow
-              *ngSwitchCase="'dynamic'"
-              (scrolledIndexChange)="rxaScrolledIndex$.next($event)"
-              [dynamic]="dynamicSize"
-              [runwayItemsOpposite]="state.runwayItemsOpposite"
-              [runwayItems]="state.runwayItems"
-              class="viewport"
-            >
-              <div
-                [style.height.px]="dynamicSize(item)"
-                *rxVirtualFor="
-                  let item of data$;
-                  let i = index;
-                  trackBy: trackItem;
-                  renderCallback: rendered;
-                  strategy: $any(strategy$)
-                "
-                class="item"
-                #div
-              >
-                <div class="overflow-hidden">{{ i }} {{ item.content }}</div>
-                <!--<button (click)="div.style.height = '170px'">
-                  change size
-                </button>-->
-              </div>
-            </rx-virtual-scroll-viewport>
+                  </div>
+                </rx-virtual-scroll-viewport>
+              }
+            }
           </ng-container>
         </div>
         <div class="w-50" *rxIf="showCdk$">
@@ -296,42 +303,44 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimen
             </div>
           </div>
           <ng-container *rxLet="scrollStrategy$; let viewMode">
-            <cdk-virtual-scroll-viewport
-              scrollWindow
-              (scrolledIndexChange)="cdkScrolledIndex$.next($event)"
-              *ngIf="viewMode === 'fixed'"
-              class="viewport"
-              [itemSize]="itemSize"
-            >
-              <div
-                *cdkVirtualFor="
-                  let item of data$;
-                  let i = index;
-                  trackBy: trackItem
-                "
-                class="item cdk"
-                [style.height.px]="itemSize"
+            @if (viewMode === 'fixed') {
+              <cdk-virtual-scroll-viewport
+                scrollWindow
+                (scrolledIndexChange)="cdkScrolledIndex$.next($event)"
+                class="viewport"
+                [itemSize]="itemSize"
               >
-                {{ i }} {{ item.content }}
-              </div>
-            </cdk-virtual-scroll-viewport>
-            <cdk-virtual-scroll-viewport
-              *ngIf="viewMode === 'auto'"
-              class="viewport"
-              autosize
-              scrollWindow
-            >
-              <div
-                *cdkVirtualFor="
-                  let item of data$;
-                  let i = index;
-                  trackBy: trackItem
-                "
-                class="item cdk"
+                <div
+                  *cdkVirtualFor="
+                    let item of data$;
+                    let i = index;
+                    trackBy: trackItem
+                  "
+                  class="item cdk"
+                  [style.height.px]="itemSize"
+                >
+                  {{ i }} {{ item.content }}
+                </div>
+              </cdk-virtual-scroll-viewport>
+            }
+            @if (viewMode === 'auto') {
+              <cdk-virtual-scroll-viewport
+                class="viewport"
+                autosize
+                scrollWindow
               >
-                {{ i }} {{ item.content }}
-              </div>
-            </cdk-virtual-scroll-viewport>
+                <div
+                  *cdkVirtualFor="
+                    let item of data$;
+                    let i = index;
+                    trackBy: trackItem
+                  "
+                  class="item cdk"
+                >
+                  {{ i }} {{ item.content }}
+                </div>
+              </cdk-virtual-scroll-viewport>
+            }
           </ng-container>
         </div>
       </div>

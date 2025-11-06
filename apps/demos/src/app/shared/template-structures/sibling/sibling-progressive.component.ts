@@ -14,12 +14,11 @@ const chunk = (arr, n) =>
     <rxa-visualizer>
       <p visualizerHeader>{{ siblings.length }} Siblings Progressive</p>
       <div class="w-100 siblings">
-        <span
-          class="sibling"
-          *ngFor="let sibling of siblings$ | push; trackBy: trackBy"
-        >
-          <div [ngClass]="{ filled: filled }">&nbsp;</div>
-        </span>
+        @for (sibling of siblings$ | push; track trackBy($index, sibling)) {
+          <span class="sibling">
+            <div [ngClass]="{ filled: filled }">&nbsp;</div>
+          </span>
+        }
       </div>
     </rxa-visualizer>
   `,
@@ -55,5 +54,5 @@ export class SiblingProgressiveComponent {
   @Input()
   value: any;
 
-  trackBy = (i) => i;
+  trackBy = (i: number, sibling: boolean) => i;
 }

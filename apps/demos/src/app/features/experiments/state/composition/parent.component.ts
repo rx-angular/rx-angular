@@ -10,9 +10,11 @@ import { SourceService } from './source.service';
     <h2>Composition Handling</h2>
     <label>Visible:</label>
     <input type="checkbox" [(ngModel)]="visible" /><br />
-    <div class="case-content" *ngIf="visible">
-      numberOfEmissions{{ composition1$ | async }}
-    </div>
+    @if (visible) {
+      <div class="case-content">
+        numberOfEmissions{{ composition1$ | async }}
+      </div>
+    }
   `,
   changeDetection: environment.changeDetection,
   standalone: false,

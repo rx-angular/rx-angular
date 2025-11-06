@@ -11,9 +11,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
           #valP="rxaValueProvider"
         ></rxa-value-provider>
       </div>
-      <ng-container *ngIf="valP.boolean$ | push as value">
+      @if (valP.boolean$ | push; as value) {
         *ngIf: {{ value | json }}<br />
-      </ng-container>
+      }
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

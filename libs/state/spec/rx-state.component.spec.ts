@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, Input, Output, ViewChild } from '@angular/core';
+import { Component, inject, Input, Output, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { select } from '@rx-angular/state/selections';
 import { PrimitiveState } from '@test-helpers/rx-angular';
@@ -38,9 +38,9 @@ export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
   providers: [RxState],
 })
 export class RxStateInjectionComponent {
-  num$ = this.state.select();
+  state = inject<RxState<PrimitiveState>>(RxState);
 
-  constructor(public state: RxState<PrimitiveState>) {}
+  num$ = this.state.select();
 }
 
 @Component({

@@ -101,7 +101,7 @@ describe('toDictionary', () => {
       // @ts-ignore
       toDictionary([] as any, 'fakeKey');
 
-      expect(spy).not.toBeCalled();
+      expect(spy).not.toHaveBeenCalled();
     });
 
     it('should call console.warn when key not found and source not empty', () => {
@@ -109,7 +109,7 @@ describe('toDictionary', () => {
       // @ts-ignore
       toDictionary([{ notFake: 1 }] as any, 'fakeKey');
 
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
 
     it('should return empty object if key does not exist', () => {

@@ -197,8 +197,8 @@ describe('RxStateService', () => {
     it('should throw with wrong params', () => {
       const state = setupState({ initialState: initialPrimitiveState });
       const errorMessage = 'wrong params passed to select';
-      expect(() => state.select(true as any)).toThrowError(errorMessage);
-      expect(() => state.asReadOnly().select(true as any)).toThrowError(
+      expect(() => state.select(true as any)).toThrow(errorMessage);
+      expect(() => state.asReadOnly().select(true as any)).toThrow(
         errorMessage,
       );
     });
@@ -338,9 +338,9 @@ describe('RxStateService', () => {
       it('should throw with wrong params', () => {
         const state = setupState({ initialState: initialPrimitiveState });
 
-        expect(() =>
-          state.set('wrong params passed to set' as any),
-        ).toThrowError('wrong param');
+        expect(() => state.set('wrong params passed to set' as any)).toThrow(
+          'wrong param',
+        );
       });
     });
     describe('with state project partial', () => {
@@ -384,7 +384,7 @@ describe('RxStateService', () => {
         }).asReadOnly();
         expect((): void => {
           readOnlyState['set']('num', (state: PrimitiveState) => state.num + 1);
-        }).toThrowError('readOnlyState.set is not a function');
+        }).toThrow('readOnlyState.set is not a function');
       });
     });
   });
@@ -539,7 +539,7 @@ describe('RxStateService', () => {
     it('should throw with wrong params', () => {
       const state = setupState({ initialState: initialPrimitiveState });
 
-      expect(() => state.connect('some string' as any)).toThrowError(
+      expect(() => state.connect('some string' as any)).toThrow(
         'wrong params passed to connect',
       );
     });
@@ -626,7 +626,7 @@ describe('RxStateService', () => {
             ),
             (o, n) => n,
           );
-        }).toThrowError('readOnlyState.connect is not a function');
+        }).toThrow('readOnlyState.connect is not a function');
       });
     });
   });
@@ -703,7 +703,7 @@ describe('RxStateService', () => {
       }).asReadOnly();
       expect((): void => {
         readOnlyState['setAccumulator'](customAcc);
-      }).toThrowError('readOnlyState.setAccumulator is not a function');
+      }).toThrow('readOnlyState.setAccumulator is not a function');
     });
   });
 
@@ -744,7 +744,7 @@ describe('RxStateService', () => {
         const stop: Subject<void> = new Subject();
         expect((): void => {
           readOnlyState['hold'](test$.pipe(takeUntil(stop)));
-        }).toThrowError('readOnlyState.hold is not a function');
+        }).toThrow('readOnlyState.hold is not a function');
       });
     });
   });

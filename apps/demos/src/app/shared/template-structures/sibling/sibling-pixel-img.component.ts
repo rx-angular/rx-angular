@@ -24,9 +24,7 @@ const chunk = (arr, n) =>
       [style.width.px]="width"
       *rxLet="width$; let width; strategy: 'reactNormal'"
     >
-      <ng-container
-        *ngFor="let sibling of pixelArray$ | push; trackBy: trackBy"
-      >
+      @for (sibling of pixelArray$ | push; track trackBy($index, sibling)) {
         <div
           class="pixel"
           [style.width.px]="pixelSize$ | push"
@@ -37,7 +35,7 @@ const chunk = (arr, n) =>
             [ngStyle]="{ background: c ? c : sibling }"
           ></div>
         </div>
-      </ng-container>
+      }
     </div>
   `,
   styles: [
