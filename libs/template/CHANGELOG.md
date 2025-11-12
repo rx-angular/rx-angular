@@ -2,6 +2,16 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [20.1.0](https://github.com/rx-angular/rx-angular/compare/template@20.0.0...template@20.1.0) (2025-11-12)
+
+
+### Features
+
+* **template:** make virtual views not set a height by default ([bf7fa14](https://github.com/rx-angular/rx-angular/commit/bf7fa145b9a338e84ba5cde7d2e5807af3bc15c7))
+* upgrade nx & ng dependencies ([2e48488](https://github.com/rx-angular/rx-angular/commit/2e4848804bb6efbe1ce53f061e4b2c57df161bed))
+
+
+
 # [20.0.0](https://github.com/rx-angular/rx-angular/compare/template@19.2.2...template@20.0.0) (2025-07-14)
 
 
