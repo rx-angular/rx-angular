@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/state",
-  "version": "20.0.0",
+  "version": "20.1.0",
   "description": "@rx-angular/state is a light-weight, flexible, strongly typed and tested tool dedicated to reduce the complexity of managing component state and side effects in angular",
   "publishConfig": {
     "access": "public"
@@ -43,7 +43,7 @@
   },
   "peerDependencies": {
     "@angular/core": "^20.0.0",
-    "@rx-angular/cdk": "^20.0.0",
+    "@rx-angular/cdk": "^20.1.0",
     "rxjs": "^6.5.3 || ^7.4.0"
   },
   "dependencies": {

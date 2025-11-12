@@ -2,6 +2,15 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [20.1.0](https://github.com/rx-angular/rx-angular/compare/state@20.0.0...state@20.1.0) (2025-11-12)
+
+
+### Features
+
+* upgrade nx & ng dependencies ([2e48488](https://github.com/rx-angular/rx-angular/commit/2e4848804bb6efbe1ce53f061e4b2c57df161bed))
+
+
+
 # [20.0.0](https://github.com/rx-angular/rx-angular/compare/state@19.0.3...state@20.0.0) (2025-07-14)
 
 
