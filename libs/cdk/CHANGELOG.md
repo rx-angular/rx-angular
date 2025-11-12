@@ -2,6 +2,20 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [20.1.0](https://github.com/rx-angular/rx-angular/compare/cdk@20.0.0...cdk@20.1.0) (2025-11-12)
+
+
+### Bug Fixes
+
+* **cdk:** preserve prototype chains in array helpers ([#1874](https://github.com/rx-angular/rx-angular/issues/1874)) ([8534203](https://github.com/rx-angular/rx-angular/commit/8534203f41e0e175c959018b07a40d1e61ffd16e))
+
+
+### Features
+
+* upgrade nx & ng dependencies ([2e48488](https://github.com/rx-angular/rx-angular/commit/2e4848804bb6efbe1ce53f061e4b2c57df161bed))
+
+
+
 # [20.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@19.1.0...cdk@20.0.0) (2025-07-14)
 
 
