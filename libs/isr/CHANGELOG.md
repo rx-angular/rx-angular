@@ -2,6 +2,22 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [20.0.0](https://github.com/rx-angular/rx-angular/compare/isr@19.0.0...isr@20.0.0) (2025-11-12)
+
+
+### Features
+
+* **isr:** add AngularNodeAppEngine as a render engine option ([#1888](https://github.com/rx-angular/rx-angular/issues/1888)) ([a9fecc0](https://github.com/rx-angular/rx-angular/commit/a9fecc09d8c52bff3bbd9f83e4399c3527a1d966))
+* **isr:** bump peerDependency to @angular/core ^20 ([#1883](https://github.com/rx-angular/rx-angular/issues/1883)) ([73d0743](https://github.com/rx-angular/rx-angular/commit/73d07438941927d48fd3907a8db0c8f7f7764da7))
+* upgrade nx & ng dependencies ([2e48488](https://github.com/rx-angular/rx-angular/commit/2e4848804bb6efbe1ce53f061e4b2c57df161bed))
+
+
+### BREAKING CHANGES
+
+* **isr:** bump ng to version 20
+
+
+
 # [19.0.0](https://github.com/rx-angular/rx-angular/compare/isr@18.1.0...isr@19.0.0) (2024-12-05)
 
 
