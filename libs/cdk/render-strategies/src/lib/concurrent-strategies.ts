@@ -1,4 +1,4 @@
-import { NgZone } from '@angular/core';
+import { NgZone, PendingTasks } from '@angular/core';
 import { coalescingManager, coalescingObj } from '@rx-angular/cdk/coalescing';
 import {
   cancelCallback,
@@ -17,6 +17,14 @@ import {
 // set default to 60fps
 forceFrameRate(60);
 
+let pendingTasks: PendingTasks | undefined;
+
+export function setPendingTasks(p: PendingTasks) {
+  if (!pendingTasks) {
+    pendingTasks = p;
+  }
+}
+
 const immediateStrategy: RxStrategyCredentials = {
   name: 'immediate',
   work: (cdRef) => cdRef.detectChanges(),
@@ -27,7 +35,7 @@ const immediateStrategy: RxStrategyCredentials = {
           ngZone,
           priority: PriorityLevel.ImmediatePriority,
           scope,
-        })
+        }),
       );
   },
 };
@@ -42,7 +50,7 @@ const userBlockingStrategy: RxStrategyCredentials = {
           ngZone,
           priority: PriorityLevel.UserBlockingPriority,
           scope,
-        })
+        }),
       );
   },
 };
@@ -57,7 +65,7 @@ const normalStrategy: RxStrategyCredentials = {
           ngZone,
           priority: PriorityLevel.NormalPriority,
           scope,
-        })
+        }),
       );
   },
 };
@@ -72,7 +80,7 @@ const lowStrategy: RxStrategyCredentials = {
           ngZone,
           priority: PriorityLevel.LowPriority,
           scope,
-        })
+        }),
       );
   },
 };
@@ -87,7 +95,7 @@ const idleStrategy: RxStrategyCredentials = {
           ngZone,
           priority: PriorityLevel.IdlePriority,
           scope,
-        })
+        }),
       );
   },
 };
@@ -99,7 +107,7 @@ function scheduleOnQueue<T>(
     scope: coalescingObj;
     delay?: number;
     ngZone: NgZone;
-  }
+  },
 ): MonoTypeOperatorFunction<T> {
   const scope = (options.scope as Record<string, unknown>) || {};
   return (o$: Observable<T>): Observable<T> =>
@@ -108,21 +116,24 @@ function scheduleOnQueue<T>(
       switchMap((v) =>
         new Observable<T>((subscriber) => {
           coalescingManager.add(scope);
+          const cleanup = pendingTasks?.add();
           const task = scheduleCallback(
             options.priority,
             () => {
               work();
               coalescingManager.remove(scope);
               subscriber.next(v);
+              cleanup?.();
             },
-            { delay: options.delay, ngZone: options.ngZone }
+            { delay: options.delay, ngZone: options.ngZone },
           );
           return () => {
             coalescingManager.remove(scope);
             cancelCallback(task);
+            cleanup?.();
           };
-        }).pipe(mapTo(v))
-      )
+        }).pipe(mapTo(v)),
+      ),
     );
 }
 
