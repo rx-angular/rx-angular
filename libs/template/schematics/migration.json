@@ -20,6 +20,11 @@
       "version": "16.0.0",
       "description": "Migrate to standalone components",
       "factory": "./src/migrations/drop-modules/index"
+    },
+    "virtual-scrolling-stable": {
+      "version": "21.0.0",
+      "description": "Migrate virtual-scrolling imports from experimental package",
+      "factory": "./src/migrations/virtual-scrolling-stable/index"
     }
   }
 }
