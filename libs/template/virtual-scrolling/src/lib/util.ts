@@ -37,7 +37,7 @@ export function unpatchedScroll(el: EventTarget): Observable<void> {
         el,
         'scroll',
         listener,
-        { passive: true }
+        { passive: true },
       );
     };
   });
@@ -53,7 +53,7 @@ export function parseScrollTopBoundaries(
   scrollTop: number,
   offset: number,
   contentSize: number,
-  containerSize: number
+  containerSize: number,
 ): {
   scrollTopWithOutOffset: number;
   scrollTopAfterOffset: number;
@@ -82,7 +82,7 @@ export function parseScrollTopBoundaries(
 export function calculateVisibleContainerSize(
   containerSize: number,
   scrollTopWithOutOffset: number,
-  scrollTopAfterOffset: number
+  scrollTopAfterOffset: number,
 ) {
   let clamped = containerSize;
   if (scrollTopWithOutOffset < 0) {

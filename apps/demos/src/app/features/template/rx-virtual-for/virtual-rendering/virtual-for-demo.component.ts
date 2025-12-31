@@ -14,7 +14,7 @@ import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
-import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimental/virtual-scrolling';
+import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   selector: 'rxa-virtual-for-feature-showcase',

@@ -52,8 +52,8 @@
       "@rx-angular/template/experimental/viewport-prio": [
         "libs/template/experimental/viewport-prio/src/index.ts"
       ],
-      "@rx-angular/template/experimental/virtual-scrolling": [
-        "libs/template/experimental/virtual-scrolling/src/index.ts"
+      "@rx-angular/template/virtual-scrolling": [
+        "libs/template/virtual-scrolling/src/index.ts"
       ],
       "@rx-angular/template/for": ["libs/template/for/src/index.ts"],
       "@rx-angular/template/if": ["libs/template/if/src/index.ts"],

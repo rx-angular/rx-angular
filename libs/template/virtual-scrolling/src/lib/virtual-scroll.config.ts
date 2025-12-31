@@ -17,7 +17,7 @@ export const RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS =
     {
       providedIn: 'root',
       factory: RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS_FACTORY,
-    }
+    },
   );
 
 /** @internal */
