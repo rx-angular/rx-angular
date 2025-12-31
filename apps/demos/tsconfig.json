@@ -12,5 +12,9 @@
     {
       "path": "./tsconfig.editor.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "module": "preserve",
+    "moduleResolution": "bundler"
+  }
 }
