@@ -5,6 +5,12 @@
     "types": [],
     "moduleResolution": "bundler"
   },
-  "files": ["src/main.ts", "src/polyfills.ts"],
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts",
+    "src/main.server.ts",
+    "server.ts",
+    "src/app/app.config.server.ts"
+  ],
   "exclude": ["jest.config.ts"]
 }
