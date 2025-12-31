@@ -1,7 +1,7 @@
 ---
-sidebar_label: '🧪 Virtual Scrolling'
+sidebar_label: 'Virtual Scrolling'
 sidebar_position: 6
-title: '🧪 Virtual Scrolling'
+title: 'Virtual Scrolling'
 ---
 
 import ReactPlayer from 'react-player';
@@ -21,13 +21,11 @@ explained in great detail by @DasSurma in his blog post about the
 of 60 frames per second. To avoid this, we are taking the burden of layout onto ourselves and use absolutely positioned
 elements with transforms." [(@DasSurma)](https://twitter.com/dassurma)
 
-:::note
+:::info
 
-This package is currently experimental, the public API can potentially change
+The `@rx-angular/template/virtual-scrolling` package is a performance focused alternative to the official `@angular/cdk/scrolling`.
 
 :::
-
-The `@rx-angular/template/experimental/virtual-scrolling` package is a performance focused alternative to the official `@angular/cdk/scrolling`.
 
 The API is heavily inspired by the CDK implementation and is divided into multiple core components which have to be glued together:
 
@@ -58,7 +56,7 @@ import {
   FixedSizeVirtualScrollStrategy, // choose any strategy you like
   RxVirtualScrollViewportComponent,
   RxVirtualFor,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   standalone: true,
@@ -88,7 +86,7 @@ import {
   FixedSizeVirtualScrollStrategy, // choose any strategy you like
   RxVirtualScrollViewportComponent,
   RxVirtualFor,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   standalone: true,
@@ -127,7 +125,7 @@ import {
   FixedSizeVirtualScrollStrategy, // choose any strategy you like
   RxVirtualScrollViewportComponent,
   RxVirtualFor,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   standalone: true,
@@ -152,7 +150,7 @@ import {
   FixedSizeVirtualScrollStrategy, // choose any strategy you like
   RxVirtualScrollViewportComponent,
   RxVirtualFor,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   standalone: true,
@@ -225,7 +223,7 @@ import {
   FixedSizeVirtualScrollStrategy, // ScrollStrategy
   RxVirtualScrollViewportComponent, // Viewport
   RxVirtualFor, // ViewRepeater
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 ```
 
 Module based setup:
@@ -489,7 +487,7 @@ See the following example implementation.
   <TabItem value="component" label="Component">
 
 ```typescript title="reverse-infinite-list.component.ts"
-import { AutoSizeVirtualScrollStrategy, ListRange, RxVirtualFor, RxVirtualScrollViewportComponent } from '@rx-angular/template/experimental/virtual-scrolling';
+import { AutoSizeVirtualScrollStrategy, ListRange, RxVirtualFor, RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   imports: [RxVirtualScrollViewportComponent, RxVirtualFor, AutoSizeVirtualScrollStrategy],
@@ -757,7 +755,7 @@ import {
   FixedSizeVirtualScrollStrategyModule,
   RxVirtualScrollViewportComponent,
   RxVirtualFor,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   /**/,
@@ -802,7 +800,7 @@ import {
   DynamicSizeVirtualScrollStrategy,
   RxVirtualScrollViewportComponent,
   RxVirtualFor,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   /**/,
@@ -855,7 +853,7 @@ import {
   AutoSizeVirtualScrollStrategy,
   RxVirtualScrollViewportComponent,
   RxVirtualFor,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   /**/,
@@ -883,10 +881,10 @@ export class MyComponent {
 ### RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS
 
 By providing a `RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS` token, you can pre-configure default settings for
-the directives of the `@rx-angular/template/experimental/virtual-scrolling` package.
+the directives of the `@rx-angular/template/virtual-scrolling` package.
 
 ```ts
-import { RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS } from '@rx-angular/template/experimental/virtual-scrolling';
+import { RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS } from '@rx-angular/template/virtual-scrolling';
 
 @NgModule({
   providers: [{
@@ -939,7 +937,7 @@ To provide a custom `RxVirtualScrollStrategy`, you want to create a new directiv
 and also implement its interface. You might want to `extend` from `RxVirtualScrollStrategy` as it already has some helper functions implemented.
 
 ```ts
-import { RxVirtualScrollStrategy } from '@rx-angular/template/experimental/virtual-scrolling';
+import { RxVirtualScrollStrategy } from '@rx-angular/template/virtual-scrolling';
 
 @Directive({
   selector: 'rx-virtual-scroll-viewport[custom]',
@@ -1122,10 +1120,10 @@ Comparison between [RxAngular FixedSizeVirtualScrollStrategy](#fixedsizevirtuals
 
 #### Features
 
-| Feature           | `@rx-angular/template/experimental/virtual-scrolling` | `@angular/cdk/scrolling` |
-| ----------------- | ----------------------------------------------------- | ------------------------ |
-| `scrolledIndex$`  | ✅                                                    | ✅                       |
-| `scrollToIndex()` | ✅                                                    | ✅                       |
+| Feature           | `@rx-angular/template/virtual-scrolling` | `@angular/cdk/scrolling` |
+| ----------------- | ---------------------------------------- | ------------------------ |
+| `scrolledIndex$`  | ✅                                       | ✅                       |
+| `scrollToIndex()` | ✅                                       | ✅                       |
 
 #### Performance
 
@@ -1134,7 +1132,7 @@ Comparison between [RxAngular FixedSizeVirtualScrollStrategy](#fixedsizevirtuals
 Both solutions do fine without throttling. But, the `CdkFixedSizeVirtualScroll` already struggles with the frame rate. We can already spot `partially presented frames`.
 Also, the javascript tasks are taking longer compared to the `RxAngular FixedSizeVirtualScrollStrategy`.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                       | `@angular/cdk/scrolling`                                                                                    |
+| `@rx-angular/template/virtual-scrolling`                                                                    | `@angular/cdk/scrolling`                                                                                    |
 | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | ![rxa-fixed-size--unthrottled](../../static/img/template/virtual-scrolling/rxa-fixed-size--unthrottled.png) | ![cdk-fixed-size--unthrottled](../../static/img/template/virtual-scrolling/cdk-fixed-size--unthrottled.png) |
 
@@ -1144,7 +1142,7 @@ With throttling enabled, the `CdkFixedSizeVirtualScroll` already struggles a lot
 the amount of `partially presented frames` increases.
 The `RxAngular FixedSizeVirtualScrollStrategy` has no issues whatsoever keeping the frame rate above 30fps on 4x times throttling.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                   | `@angular/cdk/scrolling`                                                                                |
+| `@rx-angular/template/virtual-scrolling`                                                                | `@angular/cdk/scrolling`                                                                                |
 | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | ![rxa-fixed-size--throttled](../../static/img/template/virtual-scrolling/rxa-fixed-size--throttled.png) | ![cdk-fixed-size--throttled](../../static/img/template/virtual-scrolling/cdk-fixed-size--throttled.png) |
 
@@ -1162,10 +1160,10 @@ As an experimental package, the `CDK AutoSizeVirtualScrollStrategy` does not emi
 The `RxAngular DynamicSizeVirtualScrollStrategy` is able to do both! It emits the current valid scrolledIndex and is able to properly scroll to the
 correct position based on an index.
 
-| Feature           | `@rx-angular/template/experimental/virtual-scrolling` | `@angular/cdk/scrolling` |
-| ----------------- | ----------------------------------------------------- | ------------------------ |
-| `scrolledIndex$`  | ✅                                                    | ❌                       |
-| `scrollToIndex()` | ✅                                                    | ❌                       |
+| Feature           | `@rx-angular/template/virtual-scrolling` | `@angular/cdk/scrolling` |
+| ----------------- | ---------------------------------------- | ------------------------ |
+| `scrolledIndex$`  | ✅                                       | ❌                       |
+| `scrollToIndex()` | ✅                                       | ❌                       |
 
 #### Performance
 
@@ -1174,7 +1172,7 @@ correct position based on an index.
 Both solutions do fine without throttling. But, the `CDK AutoSizeVirtualScrollStrategy` struggles with the frame rate. We can already spot lots of `partially presented frames`.
 The `RxAngular DynamicSizeVirtualScrollStrategy` implementation easily maintains a stable framerate around 45fps.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                               | `@angular/cdk/scrolling`                                                                                    |
+| `@rx-angular/template/virtual-scrolling`                                                                            | `@angular/cdk/scrolling`                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | ![rxa-dynamic-size--unthrottled.png](../../static/img/template/virtual-scrolling/rxa-dynamic-size--unthrottled.png) | ![cdk-autosize--unthrottled.png](../../static/img/template/virtual-scrolling/cdk-autosize--unthrottled.png) |
 
@@ -1185,7 +1183,7 @@ the amount of `partially presented frames` increases.
 The `RxAngular DynamicSizeVirtualScrollStrategy` has no issues whatsoever keeping the frame rate above 30fps on 4x times throttling. The javascript execution time is still very low, the style
 recalculations and layouting phases are increasing, though. This will also depend very much on the actual use case.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                           | `@angular/cdk/scrolling`                                                                                |
+| `@rx-angular/template/virtual-scrolling`                                                                        | `@angular/cdk/scrolling`                                                                                |
 | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | ![rxa-dynamic-size--throttled.png](../../static/img/template/virtual-scrolling/rxa-dynamic-size--throttled.png) | ![cdk-autosize--throttled.png](../../static/img/template/virtual-scrolling/cdk-autosize--throttled.png) |
 
@@ -1201,10 +1199,10 @@ As an experimental package, the `CDK AutoSizeVirtualScrollStrategy` does not emi
 The `RxAngular AutoSizeVirtualScrollStrategy` is able to do both! It emits the current valid scrolledIndex and is able to properly scroll to the
 correct position based on an index.
 
-| Feature           | `@rx-angular/template/experimental/virtual-scrolling` | `@angular/cdk/scrolling` |
-| ----------------- | ----------------------------------------------------- | ------------------------ |
-| `scrolledIndex$`  | ✅                                                    | ❌                       |
-| `scrollToIndex()` | ✅                                                    | ❌                       |
+| Feature           | `@rx-angular/template/virtual-scrolling` | `@angular/cdk/scrolling` |
+| ----------------- | ---------------------------------------- | ------------------------ |
+| `scrolledIndex$`  | ✅                                       | ❌                       |
+| `scrollToIndex()` | ✅                                       | ❌                       |
 
 #### Performance
 
@@ -1218,7 +1216,7 @@ the scrolling performance benefits from this approach. Anyway, that's why we suc
 Nodes that were visited once are not queried again, scrolling the same path twice will differ in runtime performance. All consequent attempts should be as fast as the fixed or dynamic
 size implementations.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                       | `@angular/cdk/scrolling`                                                                                    |
+| `@rx-angular/template/virtual-scrolling`                                                                    | `@angular/cdk/scrolling`                                                                                    |
 | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | ![rxa-autosize--unthrottled.png](../../static/img/template/virtual-scrolling/rxa-autosize--unthrottled.png) | ![cdk-autosize--unthrottled.png](../../static/img/template/virtual-scrolling/cdk-autosize--unthrottled.png) |
 
@@ -1229,7 +1227,7 @@ For the `CDK AutoSizeVirtualScrollStrategy`, the same is true as for the compari
 Even with 4x CPU throttling enabled, the `RxAngular AutoSizeVirtualScrollStrategy` keeps a reasonable frame rate and only sometimes produces partially presented frames.
 Thanks to the concurrent strategies, users will never encounter long tasks while scrolling.
 
-| `@rx-angular/template/experimental/virtual-scrolling`                                                   | `@angular/cdk/scrolling`                                                                                |
+| `@rx-angular/template/virtual-scrolling`                                                                | `@angular/cdk/scrolling`                                                                                |
 | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | ![rxa-autosize--throttled.png](../../static/img/template/virtual-scrolling/rxa-autosize--throttled.png) | ![cdk-autosize--throttled.png](../../static/img/template/virtual-scrolling/cdk-autosize--throttled.png) |
 
@@ -1239,7 +1237,7 @@ The following section describes features that are currently not implemented, but
 
 ### Support other orientations
 
-Right now, the `@rx-angular/template/experimental/virtual-scrolling` package only supports vertical scrolling. In the future, it should also
+Right now, the `@rx-angular/template/virtual-scrolling` package only supports vertical scrolling. In the future, it should also
 be able to support horizontal scrolling.
 
 This is currently supported by [`@angular/cdk/scrolling`](https://material.angular.io/cdk/scrolling/overview#viewport-orientation).
@@ -1254,7 +1252,7 @@ Issue link: https://github.com/rx-angular/rx-angular/issues/1550
 
 ### Support viewport and scrolling element separation
 
-Right now, the `@rx-angular/template/experimental/virtual-scrolling` package only supports the `RxVirtualScrollViewportComponent` to be the
+Right now, the `@rx-angular/template/virtual-scrolling` package only supports the `RxVirtualScrollViewportComponent` to be the
 scrolling element. However, there are cases where you want to define a separate scrolling element, e.g. to support window scrolling.
 
 This is currently supported by [`@angular/cdk/scrolling`](https://material.angular.io/cdk/scrolling/overview#separate-viewport-and-scrolling-element) and is planned for RxAngular as well.
