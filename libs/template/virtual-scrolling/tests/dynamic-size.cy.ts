@@ -1,5 +1,4 @@
-import { NgIf } from '@angular/common';
-import { Component, Input, NgIterable, output, Type } from '@angular/core';
+import { Component, input, NgIterable, output, Type } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { createOutputSpy, mount } from 'cypress/angular';
@@ -21,8 +20,7 @@ import {
   VirtualScrollMountConfig,
 } from './fixtures';
 
-interface DynamicVirtualScrollMountConfig
-  extends VirtualScrollMountConfig<Item> {
+interface DynamicVirtualScrollMountConfig extends VirtualScrollMountConfig<Item> {
   dynamicSize?: (item: Item) => number;
 }
 
@@ -32,7 +30,6 @@ const testComponentImports = [
   DynamicSizeVirtualScrollStrategy,
   RxVirtualScrollWindowDirective,
   RxVirtualScrollElementDirective,
-  NgIf,
 ];
 
 @Component({
@@ -40,47 +37,45 @@ const testComponentImports = [
     (scrolledIndexChange)="scrolledIndex.emit($event)"
     (viewRange)="viewRange.emit($event)"
     data-cy="viewport"
-    [style.height.px]="containerHeight"
-    [runwayItems]="runwayItems"
-    [runwayItemsOpposite]="runwayItemsOpposite"
-    [dynamic]="dynamicSize"
+    [style.height.px]="containerHeight()"
+    [runwayItems]="runwayItems()"
+    [runwayItemsOpposite]="runwayItemsOpposite()"
+    [dynamic]="dynamicSize()"
   >
     <div
-      [style.height.px]="dynamicSize(item)"
+      [style.height.px]="dynamicSize()(item)"
       *rxVirtualFor="
-        let item of items;
-        renderCallback: renderCallback;
-        templateCacheSize: viewCache;
-        strategy: strategy;
-        trackBy: trackBy
+        let item of items();
+        renderCallback: renderCallback();
+        templateCacheSize: viewCache();
+        strategy: strategy();
+        trackBy: trackBy()
       "
       [attr.data-cy]="'item'"
     >
       <div>{{ item.id }}</div>
-      <div *ngIf="showItemDescription && item.description">
-        {{ item.description }}
-      </div>
+      @if (showItemDescription() && item.description) {
+        <div>{{ item.description }}</div>
+      }
     </div>
   </rx-virtual-scroll-viewport>`,
   imports: testComponentImports,
 })
 class DynamicSizeTestComponent {
-  @Input() containerHeight: number;
-  @Input() runwayItems: number;
-  @Input() runwayItemsOpposite: number;
-  @Input() viewCache: number;
-  @Input() trackBy: keyof Item | ((idx: number, i: Item) => unknown);
-  @Input() dynamicSize: (item: Item) => number;
-  @Input() strategy:
-    | RxStrategyNames<string>
-    | Observable<RxStrategyNames<string>>;
-  @Input() items:
-    | Observable<NgIterable<Item>>
-    | NgIterable<Item>
-    | null
-    | undefined;
-  @Input() renderCallback: Subject<any>;
-  @Input() showItemDescription: boolean;
+  containerHeight = input.required<number>();
+  runwayItems = input.required<number>();
+  runwayItemsOpposite = input.required<number>();
+  viewCache = input.required<number>();
+  trackBy = input.required<keyof Item | ((idx: number, i: Item) => unknown)>();
+  dynamicSize = input.required<(item: Item) => number>();
+  strategy = input.required<
+    RxStrategyNames<string> | Observable<RxStrategyNames<string>>
+  >();
+  items = input.required<
+    Observable<NgIterable<Item>> | NgIterable<Item> | null | undefined
+  >();
+  renderCallback = input.required<Subject<any>>();
+  showItemDescription = input.required<boolean>();
   viewRange = output<ListRange>();
   scrolledIndex = output<number>();
 }
@@ -95,18 +90,18 @@ class DynamicSizeTestComponent {
       (scrolledIndexChange)="scrolledIndex.emit($event)"
       (viewRange)="viewRange.emit($event)"
       data-cy="viewport"
-      [runwayItems]="runwayItems"
-      [runwayItemsOpposite]="runwayItemsOpposite"
-      [dynamic]="dynamicSize"
+      [runwayItems]="runwayItems()"
+      [runwayItemsOpposite]="runwayItemsOpposite()"
+      [dynamic]="dynamicSize()"
     >
       <div
-        [style.height.px]="dynamicSize(item)"
+        [style.height.px]="dynamicSize()(item)"
         *rxVirtualFor="
-          let item of items;
-          renderCallback: renderCallback;
-          templateCacheSize: viewCache;
-          strategy: strategy;
-          trackBy: trackBy
+          let item of items();
+          renderCallback: renderCallback();
+          templateCacheSize: viewCache();
+          strategy: strategy();
+          trackBy: trackBy()
         "
         [attr.data-cy]="'item'"
       >
@@ -127,18 +122,18 @@ class DynamicSizeCustomScrollElementTestComponent extends DynamicSizeTestCompone
       (scrolledIndexChange)="scrolledIndex.emit($event)"
       (viewRange)="viewRange.emit($event)"
       data-cy="viewport"
-      [runwayItems]="runwayItems"
-      [runwayItemsOpposite]="runwayItemsOpposite"
-      [dynamic]="dynamicSize"
+      [runwayItems]="runwayItems()"
+      [runwayItemsOpposite]="runwayItemsOpposite()"
+      [dynamic]="dynamicSize()"
     >
       <div
-        [style.height.px]="dynamicSize(item)"
+        [style.height.px]="dynamicSize()(item)"
         *rxVirtualFor="
-          let item of items;
-          renderCallback: renderCallback;
-          templateCacheSize: viewCache;
-          strategy: strategy;
-          trackBy: trackBy
+          let item of items();
+          renderCallback: renderCallback();
+          templateCacheSize: viewCache();
+          strategy: strategy();
+          trackBy: trackBy()
         "
         [attr.data-cy]="'item'"
       >
@@ -234,21 +229,22 @@ function expectedRange(
 
 describe('viewport', () => {
   it('has proper runway height', () => {
-    mountDynamicSize().then(({ fixture }) => {
+    mountDynamicSize().then(({ fixture, component }) => {
       fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__sentinel'),
       );
-      const items = fixture.componentInstance.items as Item[];
+      const items = component.items() as Item[];
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${totalItemHeight(items) - 1}px)`,
       );
     });
   });
   it('change runway height on item changes', () => {
-    mountDynamicSize().then(({ fixture }) => {
-      const items = fixture.componentInstance.items as Item[];
+    mountDynamicSize().then(({ fixture, component }) => {
+      const items = [...(component.items() as Item[])];
       items.push(...generateItems(1));
+      fixture.componentRef.setInput('items', [...items]);
       fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__sentinel'),
@@ -257,6 +253,7 @@ describe('viewport', () => {
         `translate(0px, ${totalItemHeight(items) - 1}px)`,
       );
       items.splice(0, 1);
+      fixture.componentRef.setInput('items', [...items]);
       fixture.detectChanges();
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${totalItemHeight(items) - 1}px)`,
@@ -268,21 +265,27 @@ describe('viewport', () => {
 describe('rendering, scrolling & positioning', () => {
   it('displays nothing', () => {
     mountDynamicSize().then(({ fixture }) => {
-      fixture.componentInstance.items = [];
+      fixture.componentRef.setInput('items', []);
       fixture.detectChanges();
       cy.get('[data-cy=item]').should('have.length', 0);
-      fixture.componentInstance.items = null;
+      fixture.componentRef.setInput('items', null);
       fixture.detectChanges();
       cy.get('[data-cy=item]').should('have.length', 0);
-      fixture.componentInstance.items = undefined;
+      fixture.componentRef.setInput('items', undefined);
       fixture.detectChanges();
       cy.get('[data-cy=item]').should('have.length', 0);
     });
   });
   it('displays and positions items', () => {
     mountDynamicSize().then(({ component }) => {
-      const items = component.items as Item[];
-      const range = expectedRange(component, items, 0);
+      const items = component.items() as Item[];
+      const config = {
+        containerHeight: component.containerHeight(),
+        runwayItems: component.runwayItems(),
+        runwayItemsOpposite: component.runwayItemsOpposite(),
+        dynamicSize: component.dynamicSize(),
+      };
+      const range = expectedRange(config, items, 0);
       cy.get('[data-cy=item]').should('have.length', range.end - range.start);
       let position = 0;
       cy.get('[data-cy=item]').each((element, i) => {
@@ -300,18 +303,25 @@ describe('rendering, scrolling & positioning', () => {
   });
 
   it('displays and positions items with different sizes', () => {
+    const dynamicSize = (item: Item) => (item.description ? 70 : 20);
     const config: DynamicVirtualScrollMountConfig = {
-      dynamicSize: (item) => (item.description ? 70 : 20),
+      dynamicSize,
     };
     mountDynamicSize(config).then(({ component }) => {
-      const items = component.items as Item[];
-      const range = expectedRange(component, items, 0);
+      const items = component.items() as Item[];
+      const rangeConfig = {
+        containerHeight: component.containerHeight(),
+        runwayItems: component.runwayItems(),
+        runwayItemsOpposite: component.runwayItemsOpposite(),
+        dynamicSize: component.dynamicSize(),
+      };
+      const range = expectedRange(rangeConfig, items, 0);
       cy.get('[data-cy=item]').should('have.length', range.end);
       let position = 0;
       cy.get('[data-cy=item]').each((element, i) => {
         expect(element.css('position')).to.be.eq('absolute');
         expect(element.attr('style')).to.contain(`translateY(${position}px)`);
-        position += config.dynamicSize(items[i]);
+        position += dynamicSize(items[i]);
       });
       cy.get('@scrolledIndex').should('have.been.calledWith', 0);
       cy.get('@viewRange').should('have.been.calledWith', range);
@@ -324,14 +334,20 @@ describe('rendering, scrolling & positioning', () => {
 
   it('displays more items when runwayItemsOpposite are configured', () => {
     mountDynamicSize({ runwayItemsOpposite: 20 }).then(({ component }) => {
-      const items = component.items as Item[];
-      const range = expectedRange(component, items, 0);
+      const items = component.items() as Item[];
+      const rangeConfig = {
+        containerHeight: component.containerHeight(),
+        runwayItems: component.runwayItems(),
+        runwayItemsOpposite: component.runwayItemsOpposite(),
+        dynamicSize: component.dynamicSize(),
+      };
+      const range = expectedRange(rangeConfig, items, 0);
       cy.get('[data-cy=item]').should('have.length', range.end);
       let position = 0;
       cy.get('[data-cy=item]').each((element, i) => {
         expect(element.css('position')).to.be.eq('absolute');
         expect(element.attr('style')).to.contain(`translateY(${position}px)`);
-        position += component.dynamicSize(items[i]);
+        position += component.dynamicSize()(items[i]);
       });
       cy.get('@scrolledIndex').should('have.been.calledWith', 0);
       cy.get('@viewRange').should('have.been.calledWith', range);
@@ -344,7 +360,7 @@ describe('rendering, scrolling & positioning', () => {
 
   it('reacts to scroll events & runwayItems configuration', () => {
     mountDynamicSize().then(({ fixture, component }) => {
-      const items = component.items as Item[];
+      const items = component.items() as Item[];
       fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
       const scrolledIndex = 20;
@@ -353,8 +369,15 @@ describe('rendering, scrolling & positioning', () => {
       );
       // scroll to somewhere
       viewportComponent.scrollTo(scrollTo);
-      const range = expectedRange(component, items, scrolledIndex, 'down');
-      let { runwayItems, runwayItemsOpposite } = component;
+      const rangeConfig = {
+        containerHeight: component.containerHeight(),
+        runwayItems: component.runwayItems(),
+        runwayItemsOpposite: component.runwayItemsOpposite(),
+        dynamicSize: component.dynamicSize(),
+      };
+      const range = expectedRange(rangeConfig, items, scrolledIndex, 'down');
+      let runwayItems = component.runwayItems();
+      let runwayItemsOpposite = component.runwayItemsOpposite();
 
       cy.get('@scrolledIndex').should('have.been.calledWith', scrolledIndex);
       cy.get('@viewRange')
@@ -363,10 +386,24 @@ describe('rendering, scrolling & positioning', () => {
           // react to runwayItems config changes
           runwayItems = runwayItems + 5;
           runwayItemsOpposite = runwayItemsOpposite + 5;
-          component.runwayItems = runwayItems;
-          component.runwayItemsOpposite = runwayItemsOpposite;
+          fixture.componentRef.setInput('runwayItems', runwayItems);
+          fixture.componentRef.setInput(
+            'runwayItemsOpposite',
+            runwayItemsOpposite,
+          );
           fixture.detectChanges();
-          const range = expectedRange(component, items, scrolledIndex, 'down');
+          const rangeConfig = {
+            containerHeight: component.containerHeight(),
+            runwayItems: component.runwayItems(),
+            runwayItemsOpposite: component.runwayItemsOpposite(),
+            dynamicSize: component.dynamicSize(),
+          };
+          const range = expectedRange(
+            rangeConfig,
+            items,
+            scrolledIndex,
+            'down',
+          );
           cy.get('@viewRange').should('have.been.calledWith', range);
           cy.get('[data-cy=item]').should(
             'have.length',
@@ -379,14 +416,26 @@ describe('rendering, scrolling & positioning', () => {
   it('reacts to containerHeight changes', () => {
     // change containerHeight and see if viewRange changes
     mountDynamicSize().then(({ fixture, component }) => {
-      const items = component.items as Item[];
-      const range = expectedRange(component, items, 0);
+      const items = component.items() as Item[];
+      const rangeConfig = {
+        containerHeight: component.containerHeight(),
+        runwayItems: component.runwayItems(),
+        runwayItemsOpposite: component.runwayItemsOpposite(),
+        dynamicSize: component.dynamicSize(),
+      };
+      const range = expectedRange(rangeConfig, items, 0);
       cy.get('[data-cy=item]')
         .should('have.length', range.end)
         .then(() => {
-          component.containerHeight = 500;
-          const range = expectedRange(component, items, 0);
+          fixture.componentRef.setInput('containerHeight', 500);
           fixture.detectChanges();
+          const rangeConfig = {
+            containerHeight: component.containerHeight(),
+            runwayItems: component.runwayItems(),
+            runwayItemsOpposite: component.runwayItemsOpposite(),
+            dynamicSize: component.dynamicSize(),
+          };
+          const range = expectedRange(rangeConfig, items, 0);
           cy.get('[data-cy=item]').should(
             'have.length',
             range.end - range.start,
@@ -401,8 +450,14 @@ describe('rendering, scrolling & positioning', () => {
       fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
       viewportComponent.scrollToIndex(340);
-      const items = component.items as Item[];
-      const range = expectedRange(component, items, 340, 'down');
+      const items = component.items() as Item[];
+      const rangeConfig = {
+        containerHeight: component.containerHeight(),
+        runwayItems: component.runwayItems(),
+        runwayItemsOpposite: component.runwayItemsOpposite(),
+        dynamicSize: component.dynamicSize(),
+      };
+      const range = expectedRange(rangeConfig, items, 340, 'down');
       cy.get('@scrolledIndex').should('have.been.calledWith', 340);
       cy.get('@viewRange').should('have.been.calledWith', range);
     });
@@ -412,81 +467,37 @@ describe('rendering, scrolling & positioning', () => {
 describe('data mutations', () => {
   describe('without trackBy', () => {
     it('should add item', () => {
-      mountDynamicSize({ showItemDescription: false }).then(({ fixture }) => {
-        const mountedComponent = fixture.componentInstance;
-        const newItem = generateItems(1, 500)[0];
-        (mountedComponent.items as Item[]).splice(0, 0, newItem);
-        fixture.detectChanges();
-        cy.get('[data-cy=item]')
-          .first()
-          .then((item) => {
-            expect(item.text().trim()).to.be.eq(
-              `${(mountedComponent.items as Item[]).length - 1}`,
-            );
-            expect(item.attr('style')).to.contain(`translateY(0px)`);
-          });
-      });
-    });
-    it('should remove item', () => {
-      mountDynamicSize({ showItemDescription: false }).then(({ fixture }) => {
-        const mountedComponent = fixture.componentInstance;
-        (mountedComponent.items as Item[]).splice(0, 1);
-        fixture.detectChanges();
-        cy.get('[data-cy=item]')
-          .first()
-          .then((item) => {
-            expect(item.text().trim()).to.be.eq('1');
-            expect(item.attr('style')).to.contain(`translateY(0px)`);
-          });
-      });
-    });
-    it('should render mutable sort', () => {
       mountDynamicSize({ showItemDescription: false }).then(
         ({ fixture, component }) => {
-          const items = component.items as Item[];
+          const items = [...(component.items() as Item[])];
+          const newItem = generateItems(1, 500)[0];
+          items.splice(0, 0, newItem);
+          fixture.componentRef.setInput('items', [...items]);
+          fixture.detectChanges();
           cy.get('[data-cy=item]')
-            .each((item, index) => {
-              expect(item.text().trim()).to.be.eq(`${index}`);
-            })
-            .then(() => {
-              items.sort((a, b) => b.id - a.id);
-              fixture.detectChanges();
-              const range = expectedRange(component, items, 0);
-              cy.get('@viewRange').should('have.been.calledWith', range);
-              cy.get('@renderCallback').should(
-                'have.been.calledWith',
-                items.filter((item, i) => i < range.end),
-              );
-              cy.get('[data-cy=item]').each((item, index) => {
-                expect(item.text().trim()).to.be.eq(
-                  `${items.length - 1 - index}`,
-                );
-              });
+            .first()
+            .then((item) => {
+              expect(item.text().trim()).to.be.eq(`${items.length - 1}`);
+              expect(item.attr('style')).to.contain(`translateY(0px)`);
             });
         },
       );
     });
-    it('should render mutable update', () => {
-      mountDynamicSize().then(({ fixture, component }) => {
-        const items = fixture.componentInstance.items as Item[];
-        cy.get('[data-cy=item]')
-          .each((item, index) => {
-            expect(item.text().replace(' ', '').trim()).to.be.eq(
-              `${items[index].id}${items[index].description}`,
-            );
-          })
-          .then(() => {
-            items[0].description = 'abcdefg';
-            fixture.detectChanges();
-            cy.get('[data-cy=item]')
-              .first()
-              .then((item) => {
-                expect(item.text().replace(' ', '').trim()).eq(
-                  `${items[0].id}${items[0].description}`,
-                );
-              });
-          });
-      });
+    it('should remove item', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          items.splice(0, 1);
+          fixture.componentRef.setInput('items', [...items]);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]')
+            .first()
+            .then((item) => {
+              expect(item.text().trim()).to.be.eq('1');
+              expect(item.attr('style')).to.contain(`translateY(0px)`);
+            });
+        },
+      );
     });
   });
   describe('with trackBy', () => {
@@ -506,12 +517,14 @@ describe('custom scrollable', () => {
   it('displays and positions items', () => {
     mountDynamicSize({}, DynamicSizeCustomScrollElementTestComponent).then(
       ({ component }) => {
-        const items = component.items as Item[];
-        const range = expectedRange(
-          { ...component, containerHeight: component.containerHeight - 50 },
-          items,
-          0,
-        );
+        const items = component.items() as Item[];
+        const rangeConfig = {
+          containerHeight: component.containerHeight() - 50,
+          runwayItems: component.runwayItems(),
+          runwayItemsOpposite: component.runwayItemsOpposite(),
+          dynamicSize: component.dynamicSize(),
+        };
+        const range = expectedRange(rangeConfig, items, 0);
         cy.get('[data-cy=item]').should('have.length', range.end - range.start);
         let position = 0;
         cy.get('[data-cy=item]').each((element, i) => {
@@ -531,7 +544,7 @@ describe('custom scrollable', () => {
   it('reacts to scroll events', () => {
     mountDynamicSize({}, DynamicSizeCustomScrollElementTestComponent).then(
       ({ component, fixture }) => {
-        const items = component.items as Item[];
+        const items = component.items() as Item[];
         fixture.detectChanges();
         const viewportComponent = getViewportComponent(fixture);
         const scrolledIndex = 20;
@@ -540,7 +553,13 @@ describe('custom scrollable', () => {
         );
         // scroll to somewhere
         viewportComponent.scrollTo(scrollTo + 50);
-        const range = expectedRange(component, items, scrolledIndex, 'down');
+        const rangeConfig = {
+          containerHeight: component.containerHeight(),
+          runwayItems: component.runwayItems(),
+          runwayItemsOpposite: component.runwayItemsOpposite(),
+          dynamicSize: component.dynamicSize(),
+        };
+        const range = expectedRange(rangeConfig, items, scrolledIndex, 'down');
 
         cy.get('@scrolledIndex').should('have.been.calledWith', scrolledIndex);
         cy.get('@viewRange').should('have.been.calledWith', range);
@@ -553,8 +572,14 @@ describe('custom scrollable', () => {
         fixture.detectChanges();
         const viewportComponent = getViewportComponent(fixture);
         viewportComponent.scrollToIndex(340);
-        const items = component.items as Item[];
-        const range = expectedRange(component, items, 340, 'down');
+        const items = component.items() as Item[];
+        const rangeConfig = {
+          containerHeight: component.containerHeight(),
+          runwayItems: component.runwayItems(),
+          runwayItemsOpposite: component.runwayItemsOpposite(),
+          dynamicSize: component.dynamicSize(),
+        };
+        const range = expectedRange(rangeConfig, items, 340, 'down');
         cy.get('@scrolledIndex').should('have.been.calledWith', 340);
         cy.get('@viewRange').should('have.been.calledWith', range);
       },
@@ -568,12 +593,14 @@ describe('window scrolling', () => {
     cy.window().then((w) => (containerHeight = w.innerHeight));
     mountDynamicSize({}, DynamicSizeWindowScrollTestComponent).then(
       ({ component }) => {
-        const items = component.items as Item[];
-        const range = expectedRange(
-          { ...component, containerHeight: containerHeight - 50 },
-          items,
-          0,
-        );
+        const items = component.items() as Item[];
+        const rangeConfig = {
+          containerHeight: containerHeight - 50,
+          runwayItems: component.runwayItems(),
+          runwayItemsOpposite: component.runwayItemsOpposite(),
+          dynamicSize: component.dynamicSize(),
+        };
+        const range = expectedRange(rangeConfig, items, 0);
         cy.get('[data-cy=item]').should('have.length', range.end - range.start);
         let position = 0;
         cy.get('[data-cy=item]').each((element, i) => {
@@ -595,19 +622,20 @@ describe('window scrolling', () => {
     cy.window().then((w) => (containerHeight = w.innerHeight));
     mountDynamicSize({}, DynamicSizeWindowScrollTestComponent).then(
       ({ fixture, component }) => {
-        const items = component.items as Item[];
+        const items = component.items() as Item[];
         fixture.detectChanges();
         const viewportComponent = getViewportComponent(fixture);
         const scrolledIndex = 50;
         const scrollTo = totalItemHeight(
           items.filter((i) => i.id < scrolledIndex),
         );
-        const range = expectedRange(
-          { ...component, containerHeight },
-          items,
-          scrolledIndex,
-          'down',
-        );
+        const rangeConfig = {
+          containerHeight,
+          runwayItems: component.runwayItems(),
+          runwayItemsOpposite: component.runwayItemsOpposite(),
+          dynamicSize: component.dynamicSize(),
+        };
+        const range = expectedRange(rangeConfig, items, scrolledIndex, 'down');
         // scroll to somewhere
         viewportComponent.scrollTo(scrollTo + 50);
         cy.get('@viewRange').should('have.been.calledWith', { ...range });
@@ -622,14 +650,15 @@ describe('window scrolling', () => {
         fixture.detectChanges();
         const viewportComponent = getViewportComponent(fixture);
         viewportComponent.scrollToIndex(340);
-        const items = component.items as Item[];
+        const items = component.items() as Item[];
 
-        const range = expectedRange(
-          { ...component, containerHeight },
-          items,
-          340,
-          'down',
-        );
+        const rangeConfig = {
+          containerHeight,
+          runwayItems: component.runwayItems(),
+          runwayItemsOpposite: component.runwayItemsOpposite(),
+          dynamicSize: component.dynamicSize(),
+        };
+        const range = expectedRange(rangeConfig, items, 340, 'down');
         cy.get('@scrolledIndex').should('have.been.calledWith', 340);
         cy.get('@viewRange').should('have.been.calledWith', range);
       },

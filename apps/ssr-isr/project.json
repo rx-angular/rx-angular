@@ -7,8 +7,7 @@
   "tags": ["type:app"],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:application",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@nx/angular:application",
       "options": {
         "outputPath": "dist/apps/ssr-isr",
         "index": "apps/ssr-isr/src/index.html",
@@ -20,12 +19,11 @@
         "styles": ["apps/ssr-isr/src/styles.scss"],
         "scripts": [],
         "server": "apps/ssr-isr/src/main.server.ts",
-        "prerender": {
-          "discoverRoutes": false
-        },
+        "prerender": false,
         "ssr": {
           "entry": "apps/ssr-isr/server.ts"
-        }
+        },
+        "outputMode": "server"
       },
       "configurations": {
         "production": {
@@ -52,7 +50,7 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:dev-server",
       "configurations": {
         "production": {
           "buildTarget": "ssr-isr:build:production"

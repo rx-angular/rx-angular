@@ -4,7 +4,8 @@
     "outDir": "../../out-tsc/server",
     "target": "es2020",
     "types": ["node"],
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "module": "preserve"
   },
   "files": ["src/main.server.ts", "server.ts"],
   "angularCompilerOptions": {

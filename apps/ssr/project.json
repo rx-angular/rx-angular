@@ -7,22 +7,24 @@
   "tags": ["type:app"],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@nx/angular:application",
       "options": {
-        "outputPath": "dist/apps/ssr/browser",
+        "outputPath": "dist/apps/ssr",
         "index": "apps/ssr/src/index.html",
-        "main": "apps/ssr/src/main.ts",
-        "polyfills": "apps/ssr/src/polyfills.ts",
+        "browser": "apps/ssr/src/main.ts",
+        "server": "apps/ssr/src/main.server.ts",
+        "ssr": {
+          "entry": "apps/ssr/server.ts"
+        },
+        "polyfills": ["apps/ssr/src/polyfills.ts"],
         "tsConfig": "apps/ssr/tsconfig.app.json",
         "assets": ["apps/ssr/src/favicon.ico", "apps/ssr/src/assets"],
         "styles": ["apps/ssr/src/styles.css"],
         "scripts": [],
-        "vendorChunk": true,
+        "outputMode": "server",
         "extractLicenses": false,
-        "buildOptimizer": false,
         "sourceMap": true,
-        "optimization": false,
-        "namedChunks": true
+        "optimization": false
       },
       "configurations": {
         "production": {
@@ -35,10 +37,7 @@
           "optimization": true,
           "outputHashing": "all",
           "sourceMap": false,
-          "namedChunks": false,
           "extractLicenses": true,
-          "vendorChunk": false,
-          "buildOptimizer": true,
           "budgets": [
             {
               "type": "initial",
@@ -55,7 +54,7 @@
       }
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:dev-server",
       "options": {
         "buildTarget": "ssr:build"
       },
@@ -80,49 +79,12 @@
         "tsConfig": "apps/ssr/tsconfig.spec.json"
       }
     },
-    "server": {
-      "executor": "@angular-devkit/build-angular:server",
-      "options": {
-        "outputPath": "dist/apps/ssr/server",
-        "main": "apps/ssr/server.ts",
-        "tsConfig": "apps/ssr/tsconfig.server.json",
-        "sourceMap": true,
-        "optimization": false
-      },
-      "configurations": {
-        "production": {
-          "outputHashing": "media",
-          "fileReplacements": [
-            {
-              "replace": "apps/ssr/src/environments/environment.ts",
-              "with": "apps/ssr/src/environments/environment.prod.ts"
-            }
-          ],
-          "sourceMap": false,
-          "optimization": true
-        }
-      }
-    },
-    "serve-ssr": {
-      "executor": "@angular-devkit/build-angular:ssr-dev-server",
-      "options": {
-        "browserTarget": "ssr:build",
-        "serverTarget": "ssr:server"
-      },
-      "configurations": {
-        "production": {
-          "browserTarget": "ssr:build:production",
-          "serverTarget": "ssr:server:production"
-        }
-      },
-      "continuous": true
-    },
     "e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/ssr/cypress.config.ts",
         "testingType": "e2e",
-        "devServerTarget": "ssr:serve-ssr"
+        "devServerTarget": "ssr:serve"
       },
       "configurations": {
         "production": {

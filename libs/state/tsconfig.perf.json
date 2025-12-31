@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../dist/out-tsc/tools",
     "rootDir": ".",
-    "module": "commonjs",
+    "module": "preserve",
     "target": "es5",
     "types": ["node"],
     "downlevelIteration": true,
