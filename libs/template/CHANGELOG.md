@@ -2,6 +2,23 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+# [21.0.0](https://github.com/rx-angular/rx-angular/compare/template@20.1.0...template@21.0.0) (2025-12-31)
+
+
+### Features
+
+* **template:** bump peerDependencies ([ad6f291](https://github.com/rx-angular/rx-angular/commit/ad6f291f60877496fcbab30fa77401ddc53b43ec))
+* **template:** create auto migration from experimental to stable path ([f9920ae](https://github.com/rx-angular/rx-angular/commit/f9920ae17df62c211daccec7538a970acda9dd58))
+* **template:** virtual-scrolling considered stable ([878427a](https://github.com/rx-angular/rx-angular/commit/878427ab198553d4480c973affaf07a9f952c24c))
+
+
+### BREAKING CHANGES
+
+* **template:** bump angular peerDependencies to version 21
+* **template:** the virtual-scrolling package is widely considered as stable and has moved from @rx-angular/template/experimental/virtual-scrolling to @rx-angular/template/virtual-scrolling
+
+
+
 # [20.1.0](https://github.com/rx-angular/rx-angular/compare/template@20.0.0...template@20.1.0) (2025-11-12)
 
 
