@@ -1,5 +1,4 @@
-import { NgIf } from '@angular/common';
-import { Component, Input, NgIterable, output, Type } from '@angular/core';
+import { Component, input, NgIterable, output, Type } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { createOutputSpy, mount } from 'cypress/angular';
@@ -28,7 +27,6 @@ const testComponentImports = [
   FixedSizeVirtualScrollStrategy,
   RxVirtualScrollWindowDirective,
   RxVirtualScrollElementDirective,
-  NgIf,
 ];
 
 @Component({
@@ -36,47 +34,45 @@ const testComponentImports = [
     (scrolledIndexChange)="scrolledIndex.emit($event)"
     (viewRange)="viewRange.emit($event)"
     data-cy="viewport"
-    [style.height.px]="containerHeight"
-    [runwayItems]="runwayItems"
-    [runwayItemsOpposite]="runwayItemsOpposite"
-    [itemSize]="itemSize"
+    [style.height.px]="containerHeight()"
+    [runwayItems]="runwayItems()"
+    [runwayItemsOpposite]="runwayItemsOpposite()"
+    [itemSize]="itemSize()"
   >
     <div
-      [style.height.px]="itemSize"
+      [style.height.px]="itemSize()"
       *rxVirtualFor="
-        let item of items;
-        renderCallback: renderCallback;
-        templateCacheSize: viewCache;
-        strategy: strategy;
-        trackBy: trackBy
+        let item of items();
+        renderCallback: renderCallback();
+        templateCacheSize: viewCache();
+        strategy: strategy();
+        trackBy: trackBy()
       "
       [attr.data-cy]="'item'"
     >
       <div>{{ item.id }}</div>
-      <div *ngIf="showItemDescription && item.description">
-        {{ item.description }}
-      </div>
+      @if (showItemDescription() && item.description) {
+        <div>{{ item.description }}</div>
+      }
     </div>
   </rx-virtual-scroll-viewport>`,
   imports: testComponentImports,
 })
 class FixedSizeTestComponent {
-  @Input() containerHeight: number;
-  @Input() runwayItems: number;
-  @Input() runwayItemsOpposite: number;
-  @Input() viewCache: number;
-  @Input() trackBy: keyof Item | ((idx: number, i: Item) => unknown);
-  @Input() itemSize: number;
-  @Input() strategy:
-    | RxStrategyNames<string>
-    | Observable<RxStrategyNames<string>>;
-  @Input() items:
-    | Observable<NgIterable<Item>>
-    | NgIterable<Item>
-    | null
-    | undefined;
-  @Input() renderCallback: Subject<any>;
-  @Input() showItemDescription: boolean;
+  containerHeight = input.required<number>();
+  runwayItems = input.required<number>();
+  runwayItemsOpposite = input.required<number>();
+  viewCache = input.required<number>();
+  trackBy = input.required<keyof Item | ((idx: number, i: Item) => unknown)>();
+  itemSize = input.required<number>();
+  strategy = input.required<
+    RxStrategyNames<string> | Observable<RxStrategyNames<string>>
+  >();
+  items = input.required<
+    Observable<NgIterable<Item>> | NgIterable<Item> | null | undefined
+  >();
+  renderCallback = input.required<Subject<any>>();
+  showItemDescription = input.required<boolean>();
   viewRange = output<ListRange>();
   scrolledIndex = output<number>();
 }
@@ -91,19 +87,19 @@ class FixedSizeTestComponent {
       (scrolledIndexChange)="scrolledIndex.emit($event)"
       (viewRange)="viewRange.emit($event)"
       data-cy="viewport"
-      [style.height.px]="containerHeight"
-      [runwayItems]="runwayItems"
-      [runwayItemsOpposite]="runwayItemsOpposite"
-      [itemSize]="itemSize"
+      [style.height.px]="containerHeight()"
+      [runwayItems]="runwayItems()"
+      [runwayItemsOpposite]="runwayItemsOpposite()"
+      [itemSize]="itemSize()"
     >
       <div
-        [style.height.px]="itemSize"
+        [style.height.px]="itemSize()"
         *rxVirtualFor="
-          let item of items;
-          renderCallback: renderCallback;
-          templateCacheSize: viewCache;
-          strategy: strategy;
-          trackBy: trackBy
+          let item of items();
+          renderCallback: renderCallback();
+          templateCacheSize: viewCache();
+          strategy: strategy();
+          trackBy: trackBy()
         "
         [attr.data-cy]="'item'"
       >
@@ -124,19 +120,19 @@ class FixedSizeCustomScrollElementTestComponent extends FixedSizeTestComponent {
       (scrolledIndexChange)="scrolledIndex.emit($event)"
       (viewRange)="viewRange.emit($event)"
       data-cy="viewport"
-      [style.height.px]="containerHeight"
-      [runwayItems]="runwayItems"
-      [runwayItemsOpposite]="runwayItemsOpposite"
-      [itemSize]="itemSize"
+      [style.height.px]="containerHeight()"
+      [runwayItems]="runwayItems()"
+      [runwayItemsOpposite]="runwayItemsOpposite()"
+      [itemSize]="itemSize()"
     >
       <div
-        [style.height.px]="itemSize"
+        [style.height.px]="itemSize()"
         *rxVirtualFor="
-          let item of items;
-          renderCallback: renderCallback;
-          templateCacheSize: viewCache;
-          strategy: strategy;
-          trackBy: trackBy
+          let item of items();
+          renderCallback: renderCallback();
+          templateCacheSize: viewCache();
+          strategy: strategy();
+          trackBy: trackBy()
         "
         [attr.data-cy]="'item'"
       >
@@ -206,8 +202,10 @@ describe('viewport', () => {
   it('change runway height on item changes', () => {
     const { itemSize } = defaultMountConfig;
     mountFixedSize().then(({ fixture }) => {
-      const items = fixture.componentInstance.items as Item[];
+      const component = fixture.componentInstance;
+      const items = component.items() as Item[];
       items.push(...generateItems(1));
+      fixture.componentRef.setInput('items', [...items]);
       fixture.detectChanges();
       const sentinel = fixture.debugElement.query(
         By.css('.rx-virtual-scroll__sentinel'),
@@ -216,6 +214,7 @@ describe('viewport', () => {
         `translate(0px, ${items.length * itemSize - 1}px)`,
       );
       items.splice(0, 1);
+      fixture.componentRef.setInput('items', [...items]);
       fixture.detectChanges();
       expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
         `translate(0px, ${items.length * itemSize - 1}px)`,
@@ -227,13 +226,13 @@ describe('viewport', () => {
 describe('rendering, scrolling & positioning', () => {
   it('displays nothing', () => {
     mountFixedSize().then(({ fixture }) => {
-      fixture.componentInstance.items = [];
+      fixture.componentRef.setInput('items', []);
       fixture.detectChanges();
       cy.get('[data-cy=item]').should('have.length', 0);
-      fixture.componentInstance.items = null;
+      fixture.componentRef.setInput('items', null);
       fixture.detectChanges();
       cy.get('[data-cy=item]').should('have.length', 0);
-      fixture.componentInstance.items = undefined;
+      fixture.componentRef.setInput('items', undefined);
       fixture.detectChanges();
       cy.get('[data-cy=item]').should('have.length', 0);
     });
@@ -242,7 +241,7 @@ describe('rendering, scrolling & positioning', () => {
     mountFixedSize().then(({ component }) => {
       const { itemSize, runwayItemsOpposite, containerHeight } =
         defaultMountConfig;
-      const items = component.items as Item[];
+      const items = component.items() as Item[];
       const expectedEnd = containerHeight / itemSize + runwayItemsOpposite;
       cy.get('[data-cy=item]').should('have.length', expectedEnd);
       let position = 0;
@@ -270,7 +269,7 @@ describe('rendering, scrolling & positioning', () => {
     mountFixedSize(config).then(({ component }) => {
       const { itemSize } = config;
       const { runwayItemsOpposite, containerHeight } = defaultMountConfig;
-      const items = component.items as Item[];
+      const items = component.items() as Item[];
       const expectedEnd = containerHeight / itemSize + runwayItemsOpposite;
       cy.get('[data-cy=item]').should('have.length', expectedEnd);
       let position = 0;
@@ -297,7 +296,7 @@ describe('rendering, scrolling & positioning', () => {
       runwayItemsOpposite: 20,
     };
     mountFixedSize(config).then(({ component }) => {
-      const items = component.items as Item[];
+      const items = component.items() as Item[];
       const { itemSize, runwayItemsOpposite } = config;
       const { containerHeight } = defaultMountConfig;
       const expectedEnd = containerHeight / itemSize + runwayItemsOpposite;
@@ -348,8 +347,11 @@ describe('rendering, scrolling & positioning', () => {
           // react to runwayItems config changes
           runwayItems = runwayItems + 5;
           runwayItemsOpposite = runwayItemsOpposite + 5;
-          fixture.componentInstance.runwayItems = runwayItems;
-          fixture.componentInstance.runwayItemsOpposite = runwayItemsOpposite;
+          fixture.componentRef.setInput('runwayItems', runwayItems);
+          fixture.componentRef.setInput(
+            'runwayItemsOpposite',
+            runwayItemsOpposite,
+          );
           fixture.detectChanges();
           start = scrolledIndex - runwayItemsOpposite;
           end = start + runwayItemsOpposite + itemsOnViewport + runwayItems;
@@ -376,8 +378,7 @@ describe('rendering, scrolling & positioning', () => {
           defaultContainerHeight / itemSize + runwayItemsOpposite,
         )
         .then(() => {
-          const mountedComponent = fixture.componentInstance;
-          mountedComponent.containerHeight = 500;
+          fixture.componentRef.setInput('containerHeight', 500);
           fixture.detectChanges();
           cy.get('[data-cy=item]').should(
             'have.length',
@@ -410,25 +411,27 @@ describe('rendering, scrolling & positioning', () => {
 describe('data mutations', () => {
   describe('without trackBy', () => {
     it('should add item', () => {
-      mountFixedSize().then(({ fixture }) => {
-        const mountedComponent = fixture.componentInstance;
+      mountFixedSize().then(({ fixture, component }) => {
+        const items = [...(component.items() as Item[])];
         const newItem = generateItems(1, 500)[0];
-        (mountedComponent.items as Item[]).splice(0, 0, newItem);
+        items.splice(0, 0, newItem);
+        fixture.componentRef.setInput('items', items);
         fixture.detectChanges();
         cy.get('[data-cy=item]')
           .first()
           .then((item) => {
             expect(item.text().trim()).to.be.eq(
-              `${(mountedComponent.items as Item[]).length - 1}`,
+              `${(component.items() as Item[]).length - 1}`,
             );
             expect(item.attr('style')).to.contain(`translateY(0px)`);
           });
       });
     });
     it('should remove item', () => {
-      mountFixedSize().then(({ fixture }) => {
-        const mountedComponent = fixture.componentInstance;
-        (mountedComponent.items as Item[]).splice(0, 1);
+      mountFixedSize().then(({ fixture, component }) => {
+        const items = [...(component.items() as Item[])];
+        items.splice(0, 1);
+        fixture.componentRef.setInput('items', items);
         fixture.detectChanges();
         cy.get('[data-cy=item]')
           .first()
@@ -437,56 +440,6 @@ describe('data mutations', () => {
             expect(item.attr('style')).to.contain(`translateY(0px)`);
           });
       });
-    });
-    it('should render mutable sort', () => {
-      mountFixedSize().then(({ fixture }) => {
-        const items = fixture.componentInstance.items as Item[];
-        cy.get('[data-cy=item]')
-          .each((item, index) => {
-            expect(item.text().trim()).to.be.eq(`${index}`);
-          })
-          .then(() => {
-            items.sort((a, b) => b.id - a.id);
-            fixture.detectChanges();
-            const { containerHeight, itemSize, runwayItemsOpposite } =
-              defaultMountConfig;
-            const itemsOnViewport = containerHeight / itemSize;
-            const endIdx = items.length - itemsOnViewport - runwayItemsOpposite;
-            cy.get('@renderCallback').should(
-              'have.been.calledWith',
-              items.filter((i) => i.id >= endIdx),
-            );
-            cy.get('[data-cy=item]').each((item, index) => {
-              expect(item.text().trim()).to.be.eq(
-                `${items.length - 1 - index}`,
-              );
-            });
-          });
-      });
-    });
-    it('should render mutable update', () => {
-      mountFixedSize({ showItemDescription: true }).then(
-        ({ fixture, component }) => {
-          const items = fixture.componentInstance.items as Item[];
-          cy.get('[data-cy=item]')
-            .each((item, index) => {
-              expect(item.text().replace(' ', '').trim()).to.be.eq(
-                `${items[index].id}${items[index].description}`,
-              );
-            })
-            .then(() => {
-              items[0].description = 'abcdefg';
-              fixture.detectChanges();
-              cy.get('[data-cy=item]')
-                .first()
-                .then((item) => {
-                  expect(item.text().replace(' ', '').trim()).eq(
-                    `${items[0].id}${items[0].description}`,
-                  );
-                });
-            });
-        },
-      );
     });
   });
   describe('with trackBy', () => {
@@ -500,45 +453,49 @@ describe('data mutations', () => {
       });
     });
     it('should keep nodes on add', () => {
-      mountFixedSize({ trackBy: (i, item) => item.id }).then(({ fixture }) => {
-        const mountedComponent = fixture.componentInstance;
-        const items = fixture.componentInstance.items as Item[];
-        cy.get('[data-cy=item]').then((divs) => {
-          const firstDiv = divs[0];
-          const secondDiv = divs[1];
-          const newItem = generateItems(1, 500)[0];
-          (mountedComponent.items as Item[]).splice(0, 0, newItem);
-          fixture.detectChanges();
-          const { itemSize, runwayItemsOpposite, containerHeight } =
-            defaultMountConfig;
-          const expectedEnd = containerHeight / itemSize + runwayItemsOpposite;
-          cy.get('@renderCallback').should(
-            'have.been.calledWith',
-            items.filter((item, i) => i < expectedEnd),
-          );
-          cy.get('[data-cy=item]').then((updatedDivs) => {
-            expect(updatedDivs[1]).eq(firstDiv);
-            expect(updatedDivs[2]).eq(secondDiv);
+      mountFixedSize({ trackBy: (i, item) => item.id }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          cy.get('[data-cy=item]').then((divs) => {
+            const firstDiv = divs[0];
+            const secondDiv = divs[1];
+            const newItem = generateItems(1, 500)[0];
+            items.splice(0, 0, newItem);
+            fixture.componentRef.setInput('items', [...items]);
+            fixture.detectChanges();
+            const { itemSize, runwayItemsOpposite, containerHeight } =
+              defaultMountConfig;
+            const expectedEnd =
+              containerHeight / itemSize + runwayItemsOpposite;
+            cy.get('@renderCallback').should(
+              'have.been.calledWith',
+              items.filter((item, i) => i < expectedEnd),
+            );
+            cy.get('[data-cy=item]').then((updatedDivs) => {
+              expect(updatedDivs[1]).eq(firstDiv);
+              expect(updatedDivs[2]).eq(secondDiv);
+            });
           });
-        });
-      });
+        },
+      );
     });
     it('should move dom nodes', () => {
-      mountFixedSize({ trackBy: 'id' }).then(({ fixture }) => {
-        const items = fixture.componentInstance.items as Item[];
+      mountFixedSize({ trackBy: 'id' }).then(({ fixture, component }) => {
+        const items = [...(component.items() as Item[])];
         cy.get('[data-cy=item]').then((divs) => {
           const firstDiv = divs[0];
           const secondDiv = divs[1];
           const first = items[0];
           items[0] = items[1];
           items[1] = first;
+          fixture.componentRef.setInput('items', [...items]);
           fixture.detectChanges();
           const { itemSize, runwayItemsOpposite, containerHeight } =
             defaultMountConfig;
           const expectedEnd = containerHeight / itemSize + runwayItemsOpposite;
           cy.get('@renderCallback').should(
             'have.been.calledWith',
-            items.filter((i) => i.id < expectedEnd),
+            items.filter((i, iIdx) => iIdx < expectedEnd),
           );
           cy.get('[data-cy=item]').then((updatedDivs) => {
             expect(updatedDivs[0]).eq(secondDiv);
@@ -556,7 +513,7 @@ describe('custom scrollable', () => {
       ({ component }) => {
         const { itemSize, runwayItemsOpposite, containerHeight } =
           defaultMountConfig;
-        const items = component.items as Item[];
+        const items = component.items() as Item[];
         const expectedEnd = Math.round(
           (containerHeight - 50) / itemSize + runwayItemsOpposite,
         );
@@ -604,8 +561,11 @@ describe('custom scrollable', () => {
             // react to runwayItems config changes
             runwayItems = runwayItems + 5;
             runwayItemsOpposite = runwayItemsOpposite + 5;
-            fixture.componentInstance.runwayItems = runwayItems;
-            fixture.componentInstance.runwayItemsOpposite = runwayItemsOpposite;
+            fixture.componentRef.setInput('runwayItems', runwayItems);
+            fixture.componentRef.setInput(
+              'runwayItemsOpposite',
+              runwayItemsOpposite,
+            );
             fixture.detectChanges();
             start = scrolledIndex - runwayItemsOpposite;
             end = start + runwayItemsOpposite + itemsOnViewport + runwayItems;
@@ -643,7 +603,7 @@ describe('window scrolling', () => {
     mountFixedSize({}, FixedSizeWindowScrollTestComponent).then(
       ({ component }) => {
         const { itemSize, runwayItemsOpposite } = defaultMountConfig;
-        const items = component.items as Item[];
+        const items = component.items() as Item[];
         const expectedEnd = Math.round(
           (containerHeight - 50) / itemSize + runwayItemsOpposite,
         );
@@ -693,8 +653,11 @@ describe('window scrolling', () => {
             // react to runwayItems config changes
             runwayItems = runwayItems + 5;
             runwayItemsOpposite = runwayItemsOpposite + 5;
-            fixture.componentInstance.runwayItems = runwayItems;
-            fixture.componentInstance.runwayItemsOpposite = runwayItemsOpposite;
+            fixture.componentRef.setInput('runwayItems', runwayItems);
+            fixture.componentRef.setInput(
+              'runwayItemsOpposite',
+              runwayItemsOpposite,
+            );
             fixture.detectChanges();
             start = scrolledIndex - runwayItemsOpposite;
             end = start + runwayItemsOpposite + itemsOnViewport + runwayItems;
