@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { RxVirtualScrollViewportComponent } from '@rx-angular/template/experimental/virtual-scrolling';
+import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-scrolling';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({

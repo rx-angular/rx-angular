@@ -37,7 +37,7 @@ import {
   AutoSizeVirtualScrollStrategy,
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   selector: 'rxa-virtual-for-scroll-to',

@@ -15,7 +15,7 @@ import {
   RxVirtualFor,
   RxVirtualScrollWindowDirective,
   RxVirtualScrollElementDirective,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 import { RxFor } from '@rx-angular/template/for';
 import { RxIf } from '@rx-angular/template/if';
 import { RxLet } from '@rx-angular/template/let';

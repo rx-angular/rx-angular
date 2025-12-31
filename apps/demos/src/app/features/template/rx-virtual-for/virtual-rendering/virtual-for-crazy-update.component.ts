@@ -3,7 +3,7 @@ import {
   AutoSizeVirtualScrollStrategy,
   RxVirtualScrollViewportComponent,
   RxVirtualFor,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
