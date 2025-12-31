@@ -12,7 +12,7 @@ export class RxaResizeObserver {
 
   observeElement(
     element: Element,
-    options?: ResizeObserverOptions
+    options?: ResizeObserverOptions,
   ): Observable<ResizeObserverEntry> {
     this.resizeObserver.observe(element, options);
     return new Observable<ResizeObserverEntry>((observer) => {
