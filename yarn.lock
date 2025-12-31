@@ -11145,7 +11145,7 @@ __metadata:
     ng-morph: "npm:^4.0.3"
     tslib: "npm:^2.4.1"
   peerDependencies:
-    "@angular/core": ^20.0.0
+    "@angular/core": ^21.0.0
     rxjs: ^6.5.3 || ^7.4.0
   languageName: unknown
   linkType: soft
@@ -11168,9 +11168,9 @@ __metadata:
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/common": ^20.0.0
-    "@angular/core": ^20.0.0
-    "@angular/ssr": ^20.0.0
+    "@angular/common": ^21.0.0
+    "@angular/core": ^21.0.0
+    "@angular/ssr": ^21.0.0
     "@types/node": ^18.0.0 || ^20.0.0
     express: ^4.15.2
   languageName: unknown
@@ -11183,7 +11183,7 @@ __metadata:
     ng-morph: "npm:^4.0.3"
     tslib: "npm:^2.4.1"
   peerDependencies:
-    "@angular/core": ^20.0.0
+    "@angular/core": ^21.0.0
     "@rx-angular/cdk": ^20.1.0
     rxjs: ^6.5.3 || ^7.4.0
   languageName: unknown
@@ -11196,7 +11196,7 @@ __metadata:
     ng-morph: "npm:^4.0.3"
     tslib: "npm:^2.4.1"
   peerDependencies:
-    "@angular/core": ^20.0.0
+    "@angular/core": ^21.0.0
     "@rx-angular/cdk": ^20.1.0
     rxjs: ^6.5.3 || ^7.4.0
   languageName: unknown
