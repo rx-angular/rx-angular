@@ -132,5 +132,5 @@
     "ts-node": "10.9.1",
     "typescript": "5.9.2"
   },
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.12.0"
 }
