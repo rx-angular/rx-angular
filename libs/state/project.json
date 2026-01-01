@@ -56,11 +56,6 @@
         "buildTarget": "state:perfBuild"
       }
     },
-    "publish": {
-      "command": "npm publish dist/libs/state"
-    },
-    "version": {},
-    "github": {},
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
