@@ -24,3 +24,8 @@ export {
 export { onStrategy } from './lib/onStrategy';
 export { strategyHandling } from './lib/strategy-handling';
 export { RxStrategyProvider } from './lib/strategy-provider.service';
+export {
+  ɵprovideConcurrentSchedulerConfig as provideConcurrentSchedulerConfig,
+  ɵwithInputPending as withExperimentalInputPending,
+  ɵwithFramerate as withFramerate,
+} from '@rx-angular/cdk/internals/scheduler';
