@@ -795,3 +795,9 @@ Not support anymore, please choose either the RxState as a Service approach, or 
 </Tabs>
 
 _Disclaimer_: this doc is work in progress. Not every use case has found its way into the docs. We encourage you to contribute 🙂.
+
+### Injection context
+
+`rxState` must be initialized in an [injection context](https://angular.dev/guide/di/dependency-injection-context).
+
+If you want to initialize `rxState` outside of an injection context you can pass an `injector` via the `options` parameter.
