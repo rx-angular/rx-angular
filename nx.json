@@ -99,6 +99,44 @@
     ],
     "projectSpecificFiles": []
   },
+  "release": {
+    "projects": ["cdk", "template", "isr", "state", "eslint-plugin"],
+    "projectsRelationship": "independent",
+    "conventionalCommits": {
+      "types": {
+        "docs": {
+          "semverBump": "none",
+          "changelog": {
+            "title": "Documentation Changes"
+          },
+          "chore": {
+            "changelog": false
+          }
+        }
+      }
+    },
+    "version": {
+      "conventionalCommits": true,
+      "preVersionCommand": "npx nx run-many -t build -p cdk,template,isr,state,eslint-plugin"
+    },
+    "releaseTag": {
+      "pattern": "{projectName}@{version}",
+      "requireSemver": true,
+      "strictPreid": true,
+      "checkAllBranchesWhen": "main"
+    },
+    "git": {
+      "commit": true,
+      "commitMessage": "chore(release): {version}",
+      "tag": false
+    },
+    "changelog": {
+      "projectChangelogs": {
+        "createRelease": "github"
+      },
+      "workspaceChangelog": false
+    }
+  },
   "targetDefaults": {
     "build": {
       "inputs": ["production", "^production"],
@@ -112,52 +150,8 @@
       "inputs": ["default", "^production"],
       "cache": true
     },
-    "publish": {
-      "dependsOn": ["lint", "test", "version", "build"],
-      "cache": false
-    },
-    "version": {
-      "executor": "@jscutlery/semver:version",
-      "options": {
-        "noVerify": true,
-        "baseBranch": "main",
-        "tagPrefix": "{projectName}@",
-        "commitMessageFormat": "release({projectName}): {version}",
-        "postTargets": ["github"],
-        "push": true
-      }
-    },
-    "github": {
-      "executor": "@jscutlery/semver:github",
-      "options": {
-        "tag": "{tag}",
-        "notes": "{notes}"
-      }
-    },
     "build-lib": {
       "cache": true
-    },
-    "@nx/jest:jest": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "cache": true,
-      "options": {
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
-      }
-    },
-    "@nx/eslint:lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
-      "cache": true
-    },
-    "@angular/build:application": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
     }
   },
   "parallel": 1,

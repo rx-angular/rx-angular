@@ -26,11 +26,6 @@
         "main": "libs/eslint-plugin/src/index.ts",
         "assets": ["libs/eslint-plugin/*.md"]
       }
-    },
-    "publish": {
-      "command": "npm publish dist/libs/eslint-plugin"
-    },
-    "version": {},
-    "github": {}
+    }
   }
 }

@@ -32,11 +32,6 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "publish": {
-      "command": "npm publish dist/libs/isr"
-    },
-    "version": {},
-    "github": {}
+    }
   }
 }
