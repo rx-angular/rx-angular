@@ -80,9 +80,9 @@ const defaultItemSize = () => DEFAULT_ITEM_SIZE;
   standalone: true,
 })
 export class DynamicSizeVirtualScrollStrategy<
-    T,
-    U extends NgIterable<T> = NgIterable<T>,
-  >
+  T,
+  U extends NgIterable<T> = NgIterable<T>,
+>
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
 {
@@ -207,6 +207,7 @@ export class DynamicSizeVirtualScrollStrategy<
   private _virtualItems: VirtualViewItem[] = [];
   /** @internal */
   private scrollTop = 0;
+  private _scrollToIndex: number | null = null;
   /** @internal */
   private scrollTopWithOutOffset = 0;
   /** @internal */
@@ -283,6 +284,7 @@ export class DynamicSizeVirtualScrollStrategy<
     for (let i = 0; i < _index; i++) {
       scrollTo += this._virtualItems[i].size;
     }
+    this._scrollToIndex = _index;
     this.scrollTo(scrollTo + offset, behavior);
   }
 
@@ -377,34 +379,57 @@ export class DynamicSizeVirtualScrollStrategy<
       .pipe(
         // TODO: this might cause issues when turning on/off at runtime
         filter(() => this.keepScrolledIndexOnPrepend),
-        this.until$(),
-      )
-      .subscribe((valueArray) => {
-        const trackBy = this.viewRepeater!._trackBy;
-        let scrollTo = this.scrolledIndex;
-        const dataLength = valueArray.length;
-        const oldDataLength = Object.keys(valueCache).length;
+        map((valueArray) => {
+          const trackBy = this.viewRepeater!._trackBy;
+          let anchorItemIndex = this.anchorItem.index;
+          const dataLength = valueArray.length;
+          const oldDataLength = Object.keys(valueCache).length;
+          let offset = 0;
 
-        if (oldDataLength > 0) {
-          let i = 0;
-          // check for each item from the last known scrolledIndex if it's an insert
-          for (i; i <= scrollTo && i < dataLength; i++) {
-            // item is not in the valueCache, so it was added
-            if (!valueCache[trackBy(i, valueArray[i])]) {
-              scrollTo++;
+          if (oldDataLength > 0) {
+            let i = 0;
+            // check for each item from the last known scrolledIndex if it's an insert
+            for (i; i <= anchorItemIndex && i < dataLength; i++) {
+              // item is not in the valueCache, so it was added
+              if (!valueCache[trackBy(i, valueArray[i])]) {
+                offset += this.itemSize(valueArray[i]);
+                anchorItemIndex++;
+              }
             }
           }
-        }
-        valueCache = {};
-        valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
-        if (scrollTo !== this.scrolledIndex) {
-          this.scrollToIndex(scrollTo, undefined, this.anchorItem.offset);
+          valueCache = {};
+          valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
+          return anchorItemIndex;
+        }),
+        coalesceWith(unpatchedMicroTask()),
+        this.until$(),
+      )
+      .subscribe((anchorItemIndex) => {
+        if (anchorItemIndex !== this.anchorItem.index) {
+          this.scrollToIndex(
+            anchorItemIndex,
+            undefined,
+            Math.min(this.anchorItem.offset, this.getItemSize(anchorItemIndex)),
+            // Math.min(this.anchorItem.offset, this.getItemSize(anchorItemIndex)),
+          );
         }
       });
   }
 
   /** @internal */
   private calcRenderedRange(): void {
+    let removeScrollAnchorOnNextScroll = false;
+    const onlyTriggerWhenStable =
+      <A>() =>
+      (o$: Observable<A>) =>
+        o$.pipe(
+          filter(
+            () =>
+              this.renderedRange.end === 0 ||
+              (this.scrollTop === this.anchorScrollTop &&
+                this._scrollToIndex === null),
+          ),
+        );
     combineLatest([
       this.viewport!.containerRect$.pipe(
         map(({ height }) => {
@@ -412,6 +437,7 @@ export class DynamicSizeVirtualScrollStrategy<
           return height;
         }),
         distinctUntilChanged(),
+        onlyTriggerWhenStable(),
       ),
       this.viewport!.elementScrolled$.pipe(
         startWith(void 0),
@@ -431,11 +457,17 @@ export class DynamicSizeVirtualScrollStrategy<
           this.scrollTopWithOutOffset = scrollTopWithOutOffset;
           this.scrollTopAfterOffset = scrollTopAfterOffset;
           this.scrollTop = scrollTop;
+          if (removeScrollAnchorOnNextScroll) {
+            this._scrollToIndex = null;
+            removeScrollAnchorOnNextScroll = false;
+          } else {
+            removeScrollAnchorOnNextScroll = this._scrollToIndex !== null;
+          }
           this.waitForScroll = false;
         }),
       ),
       this._contentSize$.pipe(distinctUntilChanged()),
-      this.recalculateRange$.pipe(startWith(void 0)),
+      this.recalculateRange$.pipe(onlyTriggerWhenStable(), startWith(void 0)),
     ])
       .pipe(
         // make sure to not over calculate things by coalescing all triggers to the next microtask
@@ -496,23 +528,64 @@ export class DynamicSizeVirtualScrollStrategy<
   private positionElements(): void {
     this.viewRepeater!.renderingStart$.pipe(
       switchMap((batchedUpdates) => {
-        const renderedRange = this.renderedRange;
-        const adjustIndexWith = renderedRange.start;
         const initialIndex = batchedUpdates.size
           ? batchedUpdates.values().next().value + this.renderedRange.start
           : this.renderedRange.start;
-        let position = this.calcInitialPosition(initialIndex);
+        let position = 0;
+        let scrollToAnchorPosition: number | null = null;
         return this.viewRepeater!.viewRendered$.pipe(
-          tap(({ view, index: viewIndex, item }) => {
-            const index = viewIndex + adjustIndexWith;
-            const size = this.getItemSize(index);
+          tap(({ view, item }) => {
+            const itemIndex = view.context.index;
+            if (itemIndex === initialIndex) {
+              this.calcAnchorScrollTop();
+              position = this.calcInitialPosition(initialIndex);
+            }
+            const size = this.getItemSize(itemIndex);
             this.positionElement(this.getElement(view), position);
+            if (this._scrollToIndex === itemIndex) {
+              scrollToAnchorPosition = position + this.anchorItem.offset;
+            }
             position += size;
             this.viewRenderCallback.next({
-              index,
+              index: itemIndex,
               view,
               item,
             });
+          }),
+          coalesceWith(unpatchedMicroTask()),
+          tap(() => {
+            if (this._scrollToIndex === null) {
+              if (this.anchorScrollTop !== this.scrollTop) {
+                this.scrollToIndex(
+                  this.anchorItem.index,
+                  undefined,
+                  Math.min(
+                    this.anchorItem.offset,
+                    this.getItemSize(this.anchorItem.index),
+                  ),
+                );
+              }
+            } else if (scrollToAnchorPosition != null) {
+              if (scrollToAnchorPosition !== this.anchorScrollTop) {
+                if (
+                  scrollToAnchorPosition >
+                  this.contentSize - this.containerSize
+                ) {
+                  // if the anchorItemPosition is larger than the maximum scrollPos,
+                  // we want to scroll until the bottom.
+                  // of course, we need to be sure all the items until the end are positioned
+                  // until we are sure that we need to scroll to the bottom
+                  this._scrollToIndex = null;
+                  this.scrollTo(this.contentSize);
+                } else {
+                  this._scrollToIndex = null;
+                  this.scrollTo(scrollToAnchorPosition);
+                }
+              } else {
+                this._scrollToIndex = null;
+                this.maybeAdjustScrollPosition();
+              }
+            }
           }),
         );
       }),
@@ -566,6 +639,19 @@ export class DynamicSizeVirtualScrollStrategy<
       i++;
     }
     return pos;
+  }
+
+  /**
+   * Adjust the scroll position when the anchorScrollTop differs from
+   * the actual scrollTop.
+   * Trigger a range recalculation if there is empty space
+   *
+   * @internal
+   */
+  private maybeAdjustScrollPosition(): void {
+    if (this.anchorScrollTop !== this.scrollTop) {
+      this.scrollTo(this.anchorScrollTop);
+    }
   }
 
   /** @internal */

@@ -101,9 +101,9 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
   standalone: true,
 })
 export class AutoSizeVirtualScrollStrategy<
-    T,
-    U extends NgIterable<T> = NgIterable<T>,
-  >
+  T,
+  U extends NgIterable<T> = NgIterable<T>,
+>
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
 {
@@ -253,7 +253,6 @@ export class AutoSizeVirtualScrollStrategy<
    * @internal
    * */
   private _scrollToIndex: number | null = null;
-  private _scrollToOffset: number | null = null;
 
   /** @internal */
   private containerSize = 0;
@@ -369,7 +368,6 @@ export class AutoSizeVirtualScrollStrategy<
     if (_index !== this.scrolledIndex) {
       const scrollTop = this.calcInitialPosition(_index);
       this._scrollToIndex = _index;
-      this._scrollToOffset = offset;
       this.scrollToTrigger$.next({ scrollTop, behavior, offset });
     }
   }
@@ -434,7 +432,7 @@ export class AutoSizeVirtualScrollStrategy<
       });
     this.viewRepeater!.values$.pipe(
       this.until$(),
-      tap((values) => {
+      map((values) => {
         const dataArr = Array.isArray(values)
           ? values
           : values
@@ -493,6 +491,18 @@ export class AutoSizeVirtualScrollStrategy<
         }
         existingIds.clear();
         this.contentLength = dataLength;
+        this.contentSize = size;
+        return {
+          size,
+          keepScrolledIndexOnPrepend,
+          dataLength,
+          anchorItemIndex,
+        };
+      }),
+      finalize(() => itemCache.clear()),
+      coalesceWith(unpatchedMicroTask()),
+    ).subscribe(
+      ({ size, keepScrolledIndexOnPrepend, dataLength, anchorItemIndex }) => {
         if (
           keepScrolledIndexOnPrepend &&
           this.anchorItem.index !== anchorItemIndex
@@ -536,10 +546,8 @@ export class AutoSizeVirtualScrollStrategy<
           this.scrollTo(size);
           this.scrollTop = this.anchorScrollTop;
         }
-        this.contentSize = size;
-      }),
-      finalize(() => itemCache.clear()),
-    ).subscribe();
+      },
+    );
   }
 
   /**
@@ -723,7 +731,7 @@ export class AutoSizeVirtualScrollStrategy<
               virtualItem.position = position;
             }
             if (this._scrollToIndex === itemIndex) {
-              scrollToAnchorPosition = position + this._scrollToOffset;
+              scrollToAnchorPosition = position + this.anchorItem.offset;
             }
             position += size;
             // immediately activate the ResizeObserver after initial positioning
