@@ -89,7 +89,7 @@ The impact is introduced by removing the following process:
 - get rid of `markForCheck()` which mark path from target to root as dirty
 - trigger `ApplicationRef#tick`
 
-Check the difference in flame charts: it's a performance snapshot from list view of clickup being scrolled down.
+Check the difference in flame charts: it's a performance snapshot from a list view being scrolled down.
 A second charts is with timer, scroll and xhr events turned off.
 
 ![angular and zone flags performance comparison](https://raw.githubusercontent.com/rx-angular/rx-angular/main/libs/cdk/zone-configurations/docs/images/angular-zone-flags_performance-comparison_michael-hladky.png)
