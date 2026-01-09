@@ -1,7 +1,6 @@
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
-import HomepageReferences from '@site/src/components/HomepageReferences';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
 import React from 'react';
@@ -79,11 +78,6 @@ export default function Home(): JSX.Element {
             <li>✔ Backwards compatible: support for Angular &gt; v11</li>
           </ul>
         </div>
-
-        <div className="text--center padding-horiz--md">
-          <h3>Used by</h3>
-        </div>
-        <HomepageReferences />
       </main>
     </Layout>
   );
