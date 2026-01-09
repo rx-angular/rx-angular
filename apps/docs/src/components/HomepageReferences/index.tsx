@@ -12,13 +12,6 @@ type ReferenceItem = {
 
 const ReferenceList: ReferenceItem[] = [
   {
-    title: 'ClickUp',
-    Svg: require('@site/static/img/references/clickup-logo.svg').default,
-    description: <>Large scale application</>,
-    url: 'https://clickup.com',
-    platforms: ['Web'],
-  },
-  {
     title: 'Tape',
     Svg: require('@site/static/img/references/tape-logo.svg').default,
     description: <>Medium size project</>,
