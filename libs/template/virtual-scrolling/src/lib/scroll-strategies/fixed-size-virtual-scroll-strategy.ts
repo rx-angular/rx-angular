@@ -12,6 +12,8 @@ import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   combineLatest,
   MonoTypeOperatorFunction,
+  Observable,
+  of,
   ReplaySubject,
   Subject,
 } from 'rxjs';
@@ -37,6 +39,7 @@ import {
   parseScrollTopBoundaries,
   toBoolean,
   unpatchedAnimationFrameTick,
+  unpatchedMicroTask,
 } from '../util';
 import {
   DEFAULT_ITEM_SIZE,
@@ -69,9 +72,9 @@ import {
   standalone: true,
 })
 export class FixedSizeVirtualScrollStrategy<
-    T,
-    U extends NgIterable<T> = NgIterable<T>,
-  >
+  T,
+  U extends NgIterable<T> = NgIterable<T>,
+>
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
 {
@@ -142,6 +145,8 @@ export class FixedSizeVirtualScrollStrategy<
     return this._scrolledIndex;
   }
 
+  private _scrollTopTarget: number | null = null;
+
   private readonly _contentSize$ = new ReplaySubject<number>(1);
   readonly contentSize$ = this._contentSize$.asObservable();
   private _contentSize = 0;
@@ -208,14 +213,13 @@ export class FixedSizeVirtualScrollStrategy<
   private positionElements(): void {
     this.viewRepeater!.renderingStart$.pipe(
       switchMap(() => {
-        const start = this.renderedRange.start;
         return this.viewRepeater!.viewRendered$.pipe(
-          tap(({ view, index, item }) => {
-            this._setViewPosition(view, (index + start) * this.itemSize);
+          tap(({ view, item }) => {
+            this._setViewPosition(view, view.context.index * this.itemSize);
             this.viewRenderCallback.next({
               view,
               item,
-              index,
+              index: view.context.index,
             });
           }),
         );
@@ -244,31 +248,37 @@ export class FixedSizeVirtualScrollStrategy<
       .pipe(
         // TODO: this might cause issues when turning on/off
         filter(() => this.keepScrolledIndexOnPrepend),
-        this.untilDetached$(),
-      )
-      .subscribe((valueArray) => {
-        const trackBy = this.viewRepeater!._trackBy;
-        let scrollTo = this.scrolledIndex;
-        const dataLength = valueArray.length;
-        const oldDataLength = Object.keys(valueCache).length;
+        coalesceWith(unpatchedMicroTask()),
+        map((valueArray) => {
+          const trackBy = this.viewRepeater!._trackBy;
+          let scrollTo = this.scrolledIndex;
+          const dataLength = valueArray.length;
+          const oldDataLength = Object.keys(valueCache).length;
 
-        if (oldDataLength > 0) {
-          let i = 0;
-          // check for each item from the last known scrolledIndex if it's an insert
-          for (i; i <= scrollTo && i < dataLength; i++) {
-            // item is not in the valueCache, so it was added
-            if (!valueCache[trackBy(i, valueArray[i])]) {
-              scrollTo++;
+          if (oldDataLength > 0) {
+            // const oldItem = valueCache[scrollTo];
+            let i = 0;
+            // check for each item from the last known scrolledIndex if it's an insert
+            for (i; i <= scrollTo && i < dataLength; i++) {
+              // item is not in the valueCache, so it was added
+              if (!valueCache[trackBy(i, valueArray[i])]) {
+                scrollTo++;
+              }
             }
           }
-        }
-        valueCache = {};
-        valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
+          valueCache = {};
+          valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
+
+          return scrollTo;
+        }),
+        this.untilDetached$(),
+      )
+      .subscribe((scrollTo) => {
         if (scrollTo !== this.scrolledIndex) {
           this.scrollToIndex(
             scrollTo,
             undefined,
-            this.scrollTop % this._itemSize,
+            this.scrollTop - this.scrolledIndex * this.itemSize,
           );
         }
       });
@@ -295,6 +305,15 @@ export class FixedSizeVirtualScrollStrategy<
         this.scrollTopAfterOffset = scrollTopAfterOffset;
         this.scrollTop = scrollTop;
       }),
+      filter(() => {
+        const target = this._scrollTopTarget;
+        this._scrollTopTarget = null;
+        if (target !== null && this.scrollTop !== target) {
+          this.scrollTo(this._scrollTopTarget);
+          return false;
+        }
+        return true;
+      }),
     );
     combineLatest([
       dataLengthChanged$,
@@ -309,6 +328,7 @@ export class FixedSizeVirtualScrollStrategy<
       this.runwayStateChanged$.pipe(startWith(void 0)),
     ])
       .pipe(
+        coalesceWith(unpatchedMicroTask()),
         map(([length]) => {
           const containerSize = calculateVisibleContainerSize(
             this.containerSize,
@@ -360,7 +380,9 @@ export class FixedSizeVirtualScrollStrategy<
         ),
         this.untilDetached$(),
       )
-      .subscribe((range) => (this.renderedRange = range));
+      .subscribe((range) => {
+        this.renderedRange = range;
+      });
   }
 
   scrollToIndex(
@@ -368,8 +390,13 @@ export class FixedSizeVirtualScrollStrategy<
     behavior?: ScrollBehavior,
     offset: number = 0,
   ): void {
-    const scrollTop = this.itemSize * index;
-    this.viewport!.scrollTo(this.viewportOffset + scrollTop + offset, behavior);
+    const scrollTop = this.itemSize * index + offset;
+    this._scrollTopTarget = scrollTop;
+    this.scrollTo(scrollTop, behavior);
+  }
+
+  private scrollTo(scrollTop: number, behavior?: ScrollBehavior): void {
+    this.viewport!.scrollTo(this.viewportOffset + scrollTop, behavior);
   }
 
   private untilDetached$<A>(): MonoTypeOperatorFunction<A> {

@@ -371,7 +371,8 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param renderParent
    *
-   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content queries
+   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content
+   *   queries
    */
   @Input('rxVirtualForParent') renderParent = false;
 
@@ -647,6 +648,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   private render() {
+    let lastRange: ListRange = { start: 0, end: 0 };
     return combineLatest<[T[], ListRange, RxStrategyCredentials]>([
       this.values$.pipe(
         map((values) =>
@@ -665,6 +667,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       ),
       this.strategyHandler.strategy$.pipe(distinctUntilChanged()),
     ]).pipe(
+      tap(([items, range]) => console.log('rendering triggered', items, range)),
       switchMap(([items, range, strategy]) =>
         // wait for scrollStrategy to be stable until computing new state
         this.scrollStrategy.isStable.pipe(
@@ -691,8 +694,35 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
               }
               changes = differ.diff(iterable);
             }
-            if (!changes) {
+            console.log('rendering triggered stable', changes);
+            const rangeChanged =
+              lastRange.end !== range.end || lastRange.start !== range.start;
+            lastRange = { ...range };
+            if (!changes && !rangeChanged) {
               return NEVER;
+            }
+            if (!changes && rangeChanged) {
+              console.log('rangeChanged only');
+              this.renderingStart$.next(new Set());
+              const viewsRendered = new Array(this.viewContainer.length);
+              for (let i = 0; i < this.viewContainer.length; i++) {
+                const v = <EmbeddedViewRef<RxVirtualForViewContext<T, U>>>(
+                  this.viewContainer.get(i)
+                );
+                this.updateViewContext(v.context.$implicit, v, {
+                  index: range.start + i,
+                  count: iterable.length,
+                });
+                v.detectChanges();
+                this.viewRendered$.next({
+                  view: v,
+                  item: v.context.$implicit,
+                  index: v.context.index,
+                });
+                viewsRendered.push(v);
+              }
+              this.viewsRendered$.next(viewsRendered as any);
+              return of(iterable);
             }
             const listChanges = this.templateManager.getListChanges(
               changes,
