@@ -18,6 +18,7 @@ import {
   RxRenderStrategiesConfig,
 } from './config';
 import {
+  RxDefaultStrategyNames,
   RxStrategies,
   RxStrategyCredentials,
   RxStrategyNames,
@@ -58,7 +59,7 @@ import { onStrategy } from './onStrategy';
  * @docsPage RxStrategyProvider
  */
 @Injectable({ providedIn: 'root' })
-export class RxStrategyProvider<T extends string = RxStrategyNames> {
+export class RxStrategyProvider<T extends string = RxDefaultStrategyNames> {
   private _strategies$ = new BehaviorSubject<RxStrategies<T>>(undefined);
   private _primaryStrategy$ = new BehaviorSubject<
     RxStrategyCredentials<RxStrategyNames<T>>

@@ -41,7 +41,9 @@ export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
   RxStrategyNames<T>
 >;
 
-export interface ScheduleOnStrategyOptions<T extends string = string> {
+export interface ScheduleOnStrategyOptions<
+  T extends RxStrategyNames = RxDefaultStrategyNames,
+> {
   scope?: object;
   strategy?: RxStrategyNames<T>;
   patchZone?: false | NgZone;
