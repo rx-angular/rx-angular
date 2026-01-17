@@ -3,12 +3,6 @@ import { coalescingObj } from '@rx-angular/cdk/coalescing';
 import { RxNotification } from '@rx-angular/cdk/notifications';
 import { Observable } from 'rxjs';
 
-export interface ScheduleOnStrategyOptions {
-  scope?: object;
-  strategy?: string;
-  patchZone?: false | NgZone;
-}
-
 export type RxRenderWork = <T = unknown>(
   cdRef: ChangeDetectorRef,
   scope?: coalescingObj,
@@ -46,3 +40,9 @@ export type RxStrategyNames<T extends string = string> =
 export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
   RxStrategyNames<T>
 >;
+
+export interface ScheduleOnStrategyOptions<T extends string = string> {
+  scope?: object;
+  strategy?: RxStrategyNames<T>;
+  patchZone?: false | NgZone;
+}
