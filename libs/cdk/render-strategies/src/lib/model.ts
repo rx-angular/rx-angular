@@ -20,10 +20,6 @@ export interface RxStrategyCredentials<S = string> {
   behavior: RxRenderBehavior;
 }
 
-export type RxCustomStrategyCredentials<T extends string> = Record<
-  T,
-  RxStrategyCredentials
->;
 export type RxNativeStrategyNames = 'native' | 'local' | 'noop';
 export type RxConcurrentStrategyNames =
   | 'immediate'
@@ -37,10 +33,12 @@ export type RxDefaultStrategyNames =
 export type RxStrategyNames<T extends string = string> =
   | RxDefaultStrategyNames
   | T;
-export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
-  RxStrategyNames<T>
+export type RxCustomStrategyCredentials<T extends RxStrategyNames> = Record<
+  T,
+  RxStrategyCredentials
 >;
-
+export type RxStrategies<T extends RxStrategyNames> =
+  RxCustomStrategyCredentials<RxStrategyNames<T>>;
 export interface ScheduleOnStrategyOptions<
   T extends RxStrategyNames = RxDefaultStrategyNames,
 > {

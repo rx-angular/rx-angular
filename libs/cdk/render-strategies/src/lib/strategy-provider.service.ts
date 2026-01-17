@@ -59,7 +59,9 @@ import { onStrategy } from './onStrategy';
  * @docsPage RxStrategyProvider
  */
 @Injectable({ providedIn: 'root' })
-export class RxStrategyProvider<T extends string = RxDefaultStrategyNames> {
+export class RxStrategyProvider<
+  T extends RxStrategyNames = RxDefaultStrategyNames,
+> {
   private _strategies$ = new BehaviorSubject<RxStrategies<T>>(undefined);
   private _primaryStrategy$ = new BehaviorSubject<
     RxStrategyCredentials<RxStrategyNames<T>>
