@@ -9,6 +9,7 @@ import {
   inject,
   input,
   OnDestroy,
+  output,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -70,6 +71,7 @@ import { VirtualViewCache } from './virtual-view-cache';
     '[style.contain-intrinsic-height]': 'intrinsicHeight()',
     '[style.content-visibility]': 'useContentVisibility() ? "auto" : null',
   },
+  exportAs: 'rxVirtualView',
   providers: [{ provide: _RxVirtualView, useExisting: RxVirtualView }],
 })
 export class RxVirtualView
@@ -104,9 +106,7 @@ export class RxVirtualView
    */
   readonly startWithPlaceholderAsap = input(
     this.#config.startWithPlaceholderAsap,
-    {
-      transform: booleanAttribute,
-    },
+    { transform: booleanAttribute },
   );
 
   /**
@@ -163,6 +163,68 @@ export class RxVirtualView
    * ResizeObserverOptions
    */
   readonly resizeObserverOptions = input<ResizeObserverOptions>();
+
+  /**
+   * Emits when the visibility state of the virtual view changes.
+   *
+   * This output fires whenever the virtual view transitions between showing content and showing placeholder.
+   * The emitted value is an object containing the current visibility state of both the content and placeholder.
+   *
+   * @example
+   * ```html
+   * <div rxVirtualViewObserver>
+   *   <div rxVirtualView (visibilityChanged)="onVisibilityChanged($event)">
+   *     <div *rxVirtualViewContent>Virtual View Content</div>
+   *     <div *rxVirtualViewPlaceholder>Loading...</div>
+   *   </div>
+   * </div>
+   * ```
+   *
+   * ```typescript
+   * onVisibilityChanged(event: { content: boolean; placeholder: boolean }) {
+   *   console.log('Content visible:', event.content);
+   *   console.log('Placeholder visible:', event.placeholder);
+   * }
+   * ```
+   */
+  readonly visibilityChanged = output<{
+    content: boolean;
+    placeholder: boolean;
+  }>();
+
+  /**
+   * Returns the current visibility state of the content and placeholder.
+   *
+   * This getter provides synchronous access to the visibility state, which can be useful
+   * when you need to check the current state imperatively or from the template.
+   *
+   * @returns An object containing:
+   * - `content`: `true` if the content is currently visible, `false` otherwise
+   * - `placeholder`: `true` if the placeholder is currently visible, `false` otherwise
+   *
+   * @example
+   * ```html
+   * <!-- Access visibility state in template using exportAs -->
+   * <div rxVirtualViewObserver>
+   *   <div rxVirtualView #virtualView="rxVirtualView">
+   *     <div *rxVirtualViewContent>Virtual View Content</div>
+   *     <div *rxVirtualViewPlaceholder>Loading...</div>
+   *   </div>
+   *
+   *   <!-- Display visibility state -->
+   *   <div>
+   *     Content visible: {{ virtualView.visibility.content }}
+   *     Placeholder visible: {{ virtualView.visibility.placeholder }}
+   *   </div>
+   * </div>
+   * ```
+   */
+  get visibility() {
+    return {
+      content: this.#contentIsShown,
+      placeholder: !this.#contentIsShown,
+    };
+  }
 
   readonly #placeholderVisible = signal(false);
 
@@ -300,6 +362,8 @@ export class RxVirtualView
         this.#content!.viewContainerRef.insert(tmpl);
         placeHolder?.detectChanges();
 
+        this.visibilityChanged.emit({ content: true, placeholder: false });
+
         return tmpl;
       },
       { scope: this, strategy: this.contentStrategy() },
@@ -352,6 +416,8 @@ export class RxVirtualView
       this.#content!.viewContainerRef.insert(placeholderRef);
       placeholderRef.detectChanges();
     }
+
+    this.visibilityChanged.emit({ content: false, placeholder: true });
   }
 }
 
