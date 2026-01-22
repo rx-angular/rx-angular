@@ -237,7 +237,10 @@ describe('RxVirtualView', () => {
             sync: {
               name: 'sync',
               work: (cdRef) => cdRef.detectChanges(),
-              behavior: ({ work }) => (o$) => o$.pipe(tap(() => work())),
+              behavior:
+                ({ work }) =>
+                (o$) =>
+                  o$.pipe(tap(() => work())),
             },
           },
         }),
