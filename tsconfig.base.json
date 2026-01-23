@@ -52,14 +52,14 @@
       "@rx-angular/template/experimental/viewport-prio": [
         "libs/template/experimental/viewport-prio/src/index.ts"
       ],
-      "@rx-angular/template/virtual-scrolling": [
-        "libs/template/virtual-scrolling/src/index.ts"
-      ],
       "@rx-angular/template/for": ["libs/template/for/src/index.ts"],
       "@rx-angular/template/if": ["libs/template/if/src/index.ts"],
       "@rx-angular/template/let": ["libs/template/let/src/index.ts"],
       "@rx-angular/template/push": ["libs/template/push/src/index.ts"],
       "@rx-angular/template/unpatch": ["libs/template/unpatch/src/index.ts"],
+      "@rx-angular/template/virtual-scrolling": [
+        "libs/template/virtual-scrolling/src/index.ts"
+      ],
       "@rx-angular/template/virtual-view": [
         "libs/template/virtual-view/src/index.ts"
       ],

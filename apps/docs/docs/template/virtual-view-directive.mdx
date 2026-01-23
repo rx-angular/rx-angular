@@ -131,6 +131,31 @@ export class MyListComponent {
 </div>
 ```
 
+### React to visibility changes
+
+You can use the `visibilityChanged` output to react to visibility changes of the virtual view.
+Or you can use the `visibility` property to access the current visibility state in your template using `exportAs`.
+
+```html
+<div rxVirtualViewObserver>
+  <div rxVirtualView #virtualView="rxVirtualView" (visibilityChanged)="onVisibilityChanged($event)">
+    <widget *rxVirtualViewContent />
+    <div *rxVirtualViewPlaceholder>Loading...</div>
+  </div>
+
+  @if (virtualView.visibility.placeholder) {
+  <p>Content is currently being virtualized...</p>
+  }
+</div>
+```
+
+```typescript
+onVisibilityChanged(event: { content: boolean; placeholder: boolean }) {
+  console.log('Content visible:', event.content);
+  console.log('Placeholder visible:', event.placeholder);
+}
+```
+
 ## Configuration & Inputs
 
 ### RxVirtualViewObserver Inputs
@@ -152,6 +177,12 @@ export class MyListComponent {
 | `useContainment`           | `boolean` | It will add `contain` css property with: <br/> - `size layout paint`: if `useContentVisibility` is `true` && placeholder is visible <br/> - `content`: if `useContentVisibility` is `false` or content is visible                                                                                                                                          |
 | `placeholderStrategy`      | `boolean` | The strategy to use for rendering the placeholder. <br/> Defaults to: `low` <br/> [Read more about strategies](../cdk/render-strategies/strategies/concurrent-strategies)                                                                                                                                                                                  |
 | `contentStrategy`          | `boolean` | The strategy to use for rendering the content. <br/> Defaults to: `normal` <br/> [Read more about strategies](../cdk/render-strategies/strategies/concurrent-strategies)                                                                                                                                                                                   |
+
+### RxVirtualView Outputs
+
+| Output              | Type                                         | description                                                                                                                                                             |
+| ------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `visibilityChanged` | `{ content: boolean; placeholder: boolean }` | Emits whenever the virtual view transitions between showing content and showing placeholder. The emitted value contains the current visibility state of both templates. |
 
 ### RxVirtualViewConfig
 
