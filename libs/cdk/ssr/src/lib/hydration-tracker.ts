@@ -2,24 +2,28 @@ import { isPlatformBrowser } from '@angular/common';
 import {
   inject,
   Injectable,
+  NgZone,
   OnDestroy,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { HYDRATION_TRACKER_CONFIG_TOKEN } from './config';
 
 /**
  * A high-performance utility to track application hydration status using a MutationObserver,
  * with a timeout safety net.
  *
  * It provides a signal `isFullyHydrated` that becomes true once all components are
- * hydrated or after a 10-second timeout.
+ * hydrated or after a configurable timeout (default: 10 seconds).
+ *
+ * Disclaimer: The service only runs in the browser and is not available on the server.
  */
-@Injectable({
-  providedIn: 'root',
-})
-export class HydrationTrackerService implements OnDestroy {
+@Injectable({ providedIn: 'root' })
+export class HydrationTracker implements OnDestroy {
+  private config = inject(HYDRATION_TRACKER_CONFIG_TOKEN);
   private platformId = inject(PLATFORM_ID);
+  private ngZone = inject(NgZone);
   private observer: MutationObserver | null = null;
   private timeoutId: any = null; // Stores the setTimeout ID
 
@@ -28,6 +32,9 @@ export class HydrationTrackerService implements OnDestroy {
    */
   readonly isFullyHydrated = signal(false);
 
+  /**
+   * A observable that emits `true` when the application is fully hydrated.
+   */
   readonly isFullyHydrated$ = toObservable(this.isFullyHydrated);
 
   constructor() {
@@ -37,19 +44,16 @@ export class HydrationTrackerService implements OnDestroy {
   }
 
   private initializeObserver(): void {
-    const initialUnhydratedElements = document.body.querySelectorAll('[ngh]');
-    let unhydratedCount = initialUnhydratedElements.length;
+    const unhydratedElements = this.getUnhydratedElements();
+    let unhydratedCount = unhydratedElements.length;
 
     if (unhydratedCount === 0) {
       this.isFullyHydrated.set(true);
-      console.log('✅ Application was already hydrated on initialization.');
+      if (this.config.logging) {
+        console.log('✅ Application was already hydrated on initialization.');
+      }
       return;
     }
-
-    // Set a 10-second timeout as a safety net.
-    this.timeoutId = setTimeout(() => {
-      this.completeHydration(true); // `true` indicates it was a timeout
-    }, 10000);
 
     this.observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
@@ -70,12 +74,27 @@ export class HydrationTrackerService implements OnDestroy {
       }
     });
 
-    initialUnhydratedElements.forEach((element) => {
-      this.observer?.observe(element, {
-        attributes: true,
-        attributeFilter: ['ngh'],
+    unhydratedElements.forEach((element) => {
+      this.ngZone.runOutsideAngular(() => {
+        this.observer?.observe(element, {
+          attributes: true,
+          attributeFilter: ['ngh'],
+        });
       });
     });
+
+    if (this.config.timeout) {
+      // Set a timeout as a safety net.
+      this.timeoutId = this.ngZone.runOutsideAngular(() =>
+        setTimeout(() => {
+          this.completeHydration(true); // `true` indicates it was a timeout
+        }, this.config.timeout),
+      );
+    }
+  }
+
+  private getUnhydratedElements(): Element[] {
+    return Array.from(document.body.querySelectorAll('[ngh]'));
   }
 
   private completeHydration(timedOut: boolean): void {
@@ -88,11 +107,15 @@ export class HydrationTrackerService implements OnDestroy {
     this.isFullyHydrated.set(true);
 
     if (timedOut) {
-      console.warn(
-        '🟡 Hydration check timed out after 10 seconds. Forcing completion.',
-      );
+      if (this.config.logging) {
+        console.warn(
+          `🟡 Hydration check timed out after ${this.config.timeout} milliseconds. Forcing completion.`,
+        );
+      }
     } else {
-      console.log('✅ Application is now fully hydrated.');
+      if (this.config.logging) {
+        console.log('✅ Application is now fully hydrated.');
+      }
     }
 
     // Disconnect the observer to free up resources.

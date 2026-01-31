@@ -1,0 +1,162 @@
+---
+sidebar_label: 'Hydration Tracker'
+sidebar_position: 2
+title: 'Hydration Tracker'
+hide_title: true
+---
+
+# @rx-angular/cdk/ssr — Hydration Tracker
+
+> A high-performance utility to track Angular application hydration status using a MutationObserver, with a configurable timeout safety net.
+
+`HydrationTracker` helps you know when your server-rendered app has finished hydrating in the browser. It exposes a **signal** and an **observable** that turn `true` once all components are hydrated or after a configurable timeout.
+
+**Note:** The service only runs in the browser and is not available on the server.
+
+## Key features
+
+- ✅ Reactive `isFullyHydrated` signal and `isFullyHydrated$` observable
+- ✅ Configurable timeout (default: 10 seconds) as a safety net
+- ✅ Optional logging for debugging
+- ✅ Runs outside Angular zone for minimal overhead
+
+## Install
+
+```bash
+npm install --save @rx-angular/cdk
+# or
+yarn add @rx-angular/cdk
+```
+
+## Motivation
+
+With Angular’s non-destructive hydration, the server sends HTML that already has the right structure. The client then “hydrates” that HTML by attaching event listeners and making components interactive. During this phase, Angular marks hydrated nodes by removing the `ngh` attribute.
+
+Knowing when hydration is complete is useful to:
+
+- Defer heavy or non-critical work until after hydration
+- Show loading or placeholders until the app is interactive
+- Avoid layout shifts or flicker by coordinating UI with hydration
+
+`HydrationTracker` observes the DOM for removal of `ngh` attributes and exposes a reactive “fully hydrated” state, with an optional timeout so the app never waits indefinitely.
+
+## Setup
+
+### 1. Provide the tracker (optional config)
+
+Configure the tracker in your app config. If you don’t provide any config, defaults are used (timeout: 10s, logging: false).
+
+```typescript
+import { ApplicationConfig } from '@angular/core';
+import { provideHydrationTracker } from '@rx-angular/cdk/ssr';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideHydrationTracker({
+      timeout: 5000, // ms after which we consider hydration done (default: 10000)
+      logging: false, // set true to log hydration events (default: false)
+    }),
+  ],
+};
+```
+
+### 2. Inject and use HydrationTracker
+
+The service is `providedIn: 'root'`. Inject it where you need to react to hydration completion.
+
+```typescript
+import { Component } from '@angular/core';
+import { HydrationTracker } from '@rx-angular/cdk/ssr';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    @if (hydrationTracker.isFullyHydrated()) {
+      <p>App is fully hydrated and interactive.</p>
+    } @else {
+      <p>Hydrating...</p>
+    }
+  `,
+})
+export class AppComponent {
+  protected readonly hydrationTracker = inject(HydrationTracker);
+}
+```
+
+## API
+
+### HydrationTracker
+
+| Member             | Type                  | Description                                                      |
+| ------------------ | --------------------- | ---------------------------------------------------------------- |
+| `isFullyHydrated`  | `Signal<boolean>`     | Signal that is `true` when the app is considered fully hydrated. |
+| `isFullyHydrated$` | `Observable<boolean>` | Observable that emits `true` when the app is fully hydrated.     |
+
+### Configuration: `HydrationTrackerConfig`
+
+| Property  | Type      | Default | Description                                                                              |
+| --------- | --------- | ------- | ---------------------------------------------------------------------------------------- |
+| `timeout` | `number`  | `10000` | Time in ms after which hydration is considered complete even if some `ngh` nodes remain. |
+| `logging` | `boolean` | `false` | When `true`, logs hydration completion (and timeout) to the console.                     |
+
+### Provider
+
+- **`provideHydrationTracker(config?)`** — Call in `ApplicationConfig.providers` to supply `HydrationTrackerConfig`. Config is optional; defaults apply if omitted.
+
+## Usage examples
+
+### Using the signal in a template
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { HydrationTracker } from '@rx-angular/cdk/ssr';
+
+@Component({
+  selector: 'app-shell',
+  template: `
+    @if (tracker.isFullyHydrated()) {
+      <app-heavy-chart />
+    }
+  `,
+})
+export class ShellComponent {
+  protected readonly tracker = inject(HydrationTracker);
+}
+```
+
+### Using the observable in a component
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { HydrationTracker } from '@rx-angular/cdk/ssr';
+import { filter, take } from 'rxjs';
+
+@Component({
+  /* ... */
+})
+export class AnalyticsComponent {
+  private readonly hydrationTracker = inject(HydrationTracker);
+
+  ngOnInit() {
+    this.hydrationTracker.isFullyHydrated$.pipe(filter(Boolean), take(1)).subscribe(() => {
+      // Run analytics or other post-hydration logic once
+    });
+  }
+}
+```
+
+### With custom config and logging
+
+```typescript
+// app.config.ts
+import { provideHydrationTracker } from '@rx-angular/cdk/ssr';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideHydrationTracker({
+      timeout: 5000,
+      logging: true, // console logs when hydration completes or times out
+    }),
+  ],
+};
+```

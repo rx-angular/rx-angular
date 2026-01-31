@@ -15,6 +15,7 @@ applications
 
 - [⛔ Zone Configuration](https://rx-angular.io/docs/cdk/zone-configurations)
 - [🚫 Zone Less](https://rx-angular.io/docs/cdk/zone-less)
+- [💧 Hydration Tracker](https://rx-angular.io/docs/cdk/hydration-tracker)
 - [🛠 Coercing](https://rx-angular.io/docs/cdk/coercing)
 - [🛠 Coalescing](https://rx-angular.io/docs/cdk/coalescing)
 - [📡 Notifications](https://rx-angular.io/docs/cdk/notifications)
@@ -36,7 +37,7 @@ npm install @rx-angular/cdk
 ## Version Compatibility
 
 | RxAngular | Angular    |
-|-----------|------------|
+| --------- | ---------- |
 | `^18.0.0` | `^18.0.0`  |
 | `^17.0.0` | `^17.0.0`  |
 | `^16.0.0` | `^16.0.0`  |
