@@ -11,12 +11,14 @@ import {
   BehaviorSubject,
   combineLatest,
   Observable,
+  of,
   ReplaySubject,
   Subject,
 } from 'rxjs';
 import { distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import { _RxVirtualViewObserver } from './model';
 import { RxaResizeObserver } from './resize-observer';
+import { PLATFORM } from './util';
 import { VirtualViewCache } from './virtual-view-cache';
 
 /**
@@ -50,6 +52,7 @@ export class RxVirtualViewObserver
   extends _RxVirtualViewObserver
   implements OnInit, OnDestroy
 {
+  #platform = inject(PLATFORM);
   #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   #observer: IntersectionObserver | null = null;
@@ -97,19 +100,21 @@ export class RxVirtualViewObserver
   #forcedHidden$ = new BehaviorSubject(false);
 
   ngOnInit(): void {
-    this.#observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (this.#elements.has(entry.target))
-            this.#elements.get(entry.target)?.next(entry.isIntersecting);
-        });
-      },
-      {
-        root: this.#rootElement(),
-        rootMargin: this.rootMargin(),
-        threshold: this.threshold(),
-      },
-    );
+    if (this.#platform.isBrowser) {
+      this.#observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (this.#elements.has(entry.target))
+              this.#elements.get(entry.target)?.next(entry.isIntersecting);
+          });
+        },
+        {
+          root: this.#rootElement(),
+          rootMargin: this.rootMargin(),
+          threshold: this.threshold(),
+        },
+      );
+    }
   }
 
   ngOnDestroy() {
@@ -143,6 +148,10 @@ export class RxVirtualViewObserver
   }
 
   observeElementVisibility(virtualView: HTMLElement) {
+    if (this.#platform.isServer) {
+      return of(true);
+    }
+
     const isVisible$ = new ReplaySubject<boolean>(1);
 
     // Store the view and the visibility state in the map.
