@@ -413,12 +413,23 @@ export class RxVirtualView
    * @private
    */
   #showContentWhenDisabled() {
-    const content = this.#content();
-    if (content) {
+    const render = (content: _RxVirtualViewContent) => {
       this.#contentIsShown = true;
       this.#placeholderVisible.set(false);
       content.viewContainerRef.createEmbeddedView(content.templateRef);
       this.visibilityChanged.emit({ content: true, placeholder: false });
+    };
+
+    if (this.#content()) {
+      render(this.#content()!);
+    } else {
+      // if the content is not available immediately, we register an effect to wait for it
+      // e.g., when the content is inside a switch block that is not immediately active
+      effectOnceIf(
+        () => this.#content(),
+        (content) => render(content),
+        { injector: this.#injector },
+      );
     }
   }
 
