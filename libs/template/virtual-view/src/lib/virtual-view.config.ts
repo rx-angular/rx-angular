@@ -18,6 +18,13 @@ export interface RxVirtualViewConfig {
   startWithPlaceholderAsap: boolean;
 
   /**
+   * The scroll margin to observe.
+   *
+   * Docs: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#scrollmargin
+   */
+  scrollMargin: string;
+
+  /**
    * Whether to enable the visibility after hydration. (DEFAULT: true)
    *
    * If `false`, the elements that were hydrated, won't go back to render placeholder anymore on hydration.
@@ -50,6 +57,8 @@ export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
   startWithPlaceholderAsap: false,
   cacheEnabled: true,
   enableAfterHydration: true,
+
+  scrollMargin: '100px',
 
   cache: {
     contentCacheSize: 20,

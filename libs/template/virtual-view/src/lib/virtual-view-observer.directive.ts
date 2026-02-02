@@ -19,6 +19,7 @@ import { distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import { _RxVirtualViewObserver } from './model';
 import { RxaResizeObserver } from './resize-observer';
 import { PLATFORM } from './util';
+import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 import { VirtualViewCache } from './virtual-view-cache';
 
 /**
@@ -52,6 +53,7 @@ export class RxVirtualViewObserver
   extends _RxVirtualViewObserver
   implements OnInit, OnDestroy
 {
+  #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
   #platform = inject(PLATFORM);
   #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -72,6 +74,13 @@ export class RxVirtualViewObserver
    * This is useful when you want to observe the virtual view in a specific area of the root element.
    */
   rootMargin = input('');
+
+  /**
+   * The scroll margin to observe.
+   *
+   * This is useful when you want to observe the virtual view in a specific area of the scroll container.
+   */
+  scrollMargin = input(this.#config.scrollMargin);
 
   /**
    * The threshold to observe.
@@ -111,6 +120,8 @@ export class RxVirtualViewObserver
         {
           root: this.#rootElement(),
           rootMargin: this.rootMargin(),
+          // @ts-expect-error - scrollMargin is not available in the type of IntersectionObserverInit
+          scrollMargin: this.scrollMargin(),
           threshold: this.threshold(),
         },
       );
