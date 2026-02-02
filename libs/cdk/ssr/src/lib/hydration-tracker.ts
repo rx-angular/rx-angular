@@ -1,14 +1,7 @@
-import { isPlatformBrowser } from '@angular/common';
-import {
-  inject,
-  Injectable,
-  NgZone,
-  OnDestroy,
-  PLATFORM_ID,
-  signal,
-} from '@angular/core';
+import { inject, Injectable, NgZone, OnDestroy, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { HYDRATION_TRACKER_CONFIG_TOKEN } from './config';
+import { PLATFORM } from './platform';
 
 /**
  * A high-performance utility to track application hydration status using a MutationObserver,
@@ -22,7 +15,7 @@ import { HYDRATION_TRACKER_CONFIG_TOKEN } from './config';
 @Injectable({ providedIn: 'root' })
 export class HydrationTracker implements OnDestroy {
   private config = inject(HYDRATION_TRACKER_CONFIG_TOKEN);
-  private platformId = inject(PLATFORM_ID);
+  private platform = inject(PLATFORM);
   private ngZone = inject(NgZone);
   private observer: MutationObserver | null = null;
   private timeoutId: any = null; // Stores the setTimeout ID
@@ -33,13 +26,15 @@ export class HydrationTracker implements OnDestroy {
   readonly isFullyHydrated = signal(false);
 
   /**
-   * A observable that emits `true` when the application is fully hydrated.
+   * An observable that emits `true` when the application is fully hydrated.
    */
   readonly isFullyHydrated$ = toObservable(this.isFullyHydrated);
 
   constructor() {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.platform.isServerRendered) {
       this.initializeObserver();
+    } else if (this.platform.isBrowser) {
+      this.isFullyHydrated.set(true);
     }
   }
 
@@ -50,7 +45,9 @@ export class HydrationTracker implements OnDestroy {
     if (unhydratedCount === 0) {
       this.isFullyHydrated.set(true);
       if (this.config.logging) {
-        console.log('✅ Application was already hydrated on initialization.');
+        console.log(
+          '[HydrationTracker] ✅ Application was already hydrated on initialization.',
+        );
       }
       return;
     }
@@ -109,12 +106,12 @@ export class HydrationTracker implements OnDestroy {
     if (timedOut) {
       if (this.config.logging) {
         console.warn(
-          `🟡 Hydration check timed out after ${this.config.timeout} milliseconds. Forcing completion.`,
+          `[HydrationTracker] 🟡 Hydration check timed out after ${this.config.timeout} milliseconds. Forcing completion.`,
         );
       }
     } else {
       if (this.config.logging) {
-        console.log('✅ Application is now fully hydrated.');
+        console.log('[HydrationTracker] ✅ Application is now fully hydrated.');
       }
     }
 

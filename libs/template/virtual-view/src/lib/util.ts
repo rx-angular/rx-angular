@@ -1,20 +1,3 @@
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { DOCUMENT, inject, InjectionToken, PLATFORM_ID } from '@angular/core';
-
-export const PLATFORM = new InjectionToken('PLATFORM', {
-  providedIn: 'platform',
-  factory: () => {
-    const platformId = inject(PLATFORM_ID);
-    const document = inject(DOCUMENT);
-
-    const isServer = isPlatformServer(platformId);
-    const isBrowser = isPlatformBrowser(platformId);
-    const isServerRenderer = isBrowser && !!document.getElementById('ng-state');
-
-    return { isServer, isBrowser, isServerRenderer };
-  },
-});
-
 // https://ngxtension.dev/utilities/signals/effect-once-if/
 import {
   CreateEffectOptions,

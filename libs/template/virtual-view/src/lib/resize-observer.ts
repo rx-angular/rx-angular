@@ -1,7 +1,7 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
+import { PLATFORM } from '@rx-angular/cdk/ssr';
 import { EMPTY, Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, finalize } from 'rxjs/operators';
-import { PLATFORM } from './util';
 
 /**
  * A service that observes the resize of the elements.

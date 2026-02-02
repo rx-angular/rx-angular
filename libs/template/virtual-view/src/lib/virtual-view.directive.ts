@@ -19,6 +19,7 @@ import {
   RxStrategyNames,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
+import { PLATFORM } from '@rx-angular/cdk/ssr';
 import { finalize, NEVER, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -27,7 +28,7 @@ import {
   _RxVirtualViewObserver,
   _RxVirtualViewPlaceholder,
 } from './model';
-import { effectOnceIf, PLATFORM } from './util';
+import { effectOnceIf } from './util';
 import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 import { VirtualViewCache } from './virtual-view-cache';
 

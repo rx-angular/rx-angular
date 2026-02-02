@@ -7,6 +7,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { PLATFORM } from '@rx-angular/cdk/ssr';
 import {
   BehaviorSubject,
   combineLatest,
@@ -18,7 +19,6 @@ import {
 import { distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import { _RxVirtualViewObserver } from './model';
 import { RxaResizeObserver } from './resize-observer';
-import { PLATFORM } from './util';
 import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 import { VirtualViewCache } from './virtual-view-cache';
 
