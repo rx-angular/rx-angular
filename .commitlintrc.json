@@ -14,7 +14,8 @@
         "schematics",
         "ci",
         "eslint",
-        "isr"
+        "isr",
+        "release"
       ]
     ],
     "type-empty": [2, "never"],
