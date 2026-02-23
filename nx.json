@@ -109,9 +109,9 @@
           "changelog": {
             "title": "Documentation Changes"
           }
-          },
-          "chore": {
-            "changelog": false
+        },
+        "chore": {
+          "changelog": false
         }
       }
     },
@@ -127,7 +127,6 @@
     },
     "git": {
       "commit": true,
-      "commitMessage": "chore(release): {version}",
       "tag": true
     },
     "changelog": {
