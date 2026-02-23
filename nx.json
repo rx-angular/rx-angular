@@ -128,7 +128,7 @@
     "git": {
       "commit": true,
       "commitMessage": "chore(release): {version}",
-      "tag": false
+      "tag": true
     },
     "changelog": {
       "projectChangelogs": {
