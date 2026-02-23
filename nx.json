@@ -108,10 +108,10 @@
           "semverBump": "none",
           "changelog": {
             "title": "Documentation Changes"
+          }
           },
           "chore": {
             "changelog": false
-          }
         }
       }
     },
