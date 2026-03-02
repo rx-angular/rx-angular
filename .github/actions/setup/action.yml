@@ -5,6 +5,10 @@ inputs:
     description: Node.js version
     required: false
     default: '20.9.0' # latest working version for our CI
+  cache-cypress:
+    description: Whether to cache Cypress executable
+    required: false
+    default: 'true'
 runs:
   using: composite
   steps:
@@ -17,6 +21,7 @@ runs:
         cache: 'yarn'
 
     - name: Cypress executable cache
+      if: ${{ inputs.cache-cypress == 'true' }}
       uses: actions/cache@v3
       with:
         path: |
