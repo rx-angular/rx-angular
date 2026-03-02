@@ -111,6 +111,7 @@
           }
         },
         "chore": {
+          "semverBump": false,
           "changelog": false
         }
       }
