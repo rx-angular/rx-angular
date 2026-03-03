@@ -77,7 +77,6 @@
     "@angular/language-service": "21.0.6",
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-angular": "^20.2.0",
-    "@jscutlery/semver": "^5.5.1",
     "@nx-plus/docusaurus": "patch:@nx-plus/docusaurus@npm%3A14.1.0#~/.yarn/patches/@nx-plus-docusaurus-npm-14.1.0-b526e34c01.patch",
     "@nx/angular": "22.3.3",
     "@nx/cypress": "22.3.3",
