@@ -1,47 +1,59 @@
 # How to release
 
-## 1. Prerequisites
+Releases are done via two manually triggered GitHub Actions workflows.
+Projects are released independently using [Nx Release](https://nx.dev/features/manage-releases) with conventional commits.
 
-### 1.1 Install dependencies
+## 1. Version & Release — `release.yml`
 
-Install [GitHub CLI](https://cli.github.com/) on your machine.
+This workflow versions all release projects based on conventional commits, generates changelogs, creates git commits/tags, and publishes GitHub Releases.
 
-### 1.2 Authenticate to GitHub and NPM
+1. Go to **Actions** → **Release** → **Run workflow**
+2. Select the `main` branch and trigger the workflow
 
-- Login to NPM using `npm login`
-- Login to GitHub using `gh auth login`
-
-### 1.3 Update the repository
-
-- Checkout `main` branch and pull latest changes
-- Run `yarn install`
-
-## 2. Testing the release
-
-To make sure you get the version and the changelog you expect it's recommended to run semver in dry mode:
+Under the hood it runs:
 
 ```
-nx version state --dryRun
+npx nx release --skip-publish
 ```
 
-## 3. Release
+This will:
 
-> [!WARNING]
-> It's important to run `nx` without `yarn` to publish, you can use `nx` globally or `npx`.
+- Determine version bumps from conventional commits
+- Update `package.json` versions
+- Generate project changelogs
+- Commit, tag, and push
+- Create GitHub Releases
 
-Now that you have validated the release you can actually publish, the following command will commit, tag, push, create a GitHub Release and finally publish on NPM:
+## 2. Publish to npm — `publish.yml`
+
+After the release workflow has completed successfully, publish the packages to npm.
+
+1. Go to **Actions** → **Publish** → **Run workflow**
+2. Trigger the workflow
+
+Under the hood it runs:
 
 ```
-nx publish state --skipNxCache
+npx nx release publish
 ```
 
-or:
+Packages are built automatically before publishing (`dependsOn: ["build"]`).
+npm authentication uses OIDC trusted publishers — no npm token needed.
 
-```
-npx nx publish state --skipNxCache
-```
+## Release projects
 
-Projects are released independently, meaning that you have to repeat the process for each project: `state`, `template`, `eslint-plugin`, and `cdk`.
+The following projects are part of the release:
 
-> [!NOTE]
-> If you want to release a major version, it is important to update the peer dependencies accordingly. For instance the `template` project has a peer dependency on `cdk`, so it is necessary to bump the peer dependency in a separate commit before releasing `template`.
+- `cdk`
+- `template`
+- `isr`
+- `state`
+- `eslint-plugin`
+
+This is configured in `nx.json` under `release.projects`.
+
+## Notes
+
+- Both workflows are manually triggered (`workflow_dispatch`).
+- Always run **Release** first, then **Publish**.
+- For major version bumps, update peer dependencies (e.g. `template` depends on `cdk`) in a separate commit before releasing.
