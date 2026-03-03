@@ -43,8 +43,8 @@ export function mergeDefaultConfig<T extends string>(
     ...RX_RENDER_STRATEGIES_DEFAULTS,
     ...custom,
     customStrategies: {
-      ...custom.customStrategies,
       ...RX_RENDER_STRATEGIES_DEFAULTS.customStrategies,
+      ...custom.customStrategies,
     },
   };
 }
