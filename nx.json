@@ -117,8 +117,7 @@
       }
     },
     "version": {
-      "conventionalCommits": true,
-      "preVersionCommand": "npx nx run-many -t build -p cdk,template,isr,state,eslint-plugin"
+      "conventionalCommits": true
     },
     "releaseTag": {
       "pattern": "{projectName}@{version}",
