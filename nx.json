@@ -111,7 +111,7 @@
           }
         },
         "chore": {
-          "semverBump": false,
+          "semverBump": "none",
           "changelog": false
         }
       }
