@@ -15,12 +15,11 @@ jobs:
   release:
     name: Version and release
     runs-on: ubuntu-latest
-    environment: release
     env:
       NX_NON_NATIVE_HASHER: true
       NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
     steps:
-      - name: Authenticate as "PushBased Bot" GitHub App
+      - name: Authenticate as "RxAngular Bot" GitHub App
         uses: actions/create-github-app-token@v2
         id: app-token
         with:
