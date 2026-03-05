@@ -24,7 +24,6 @@ jobs:
   publish:
     name: Publish packages
     runs-on: ubuntu-latest
-    environment: release
     steps:
       - name: Clone the repository
         uses: actions/checkout@v4
