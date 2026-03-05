@@ -1,3 +1,22 @@
+## 21.1.0 (2026-03-05)
+
+### 🚀 Features
+
+- **state:** allow to pass injector to rxEffects ([751994e5](https://github.com/rx-angular/rx-angular/commit/751994e5))
+- **state:** allow to pass injector to rxState ([8ab41bf7](https://github.com/rx-angular/rx-angular/commit/8ab41bf7))
+
+### 🩹 Fixes
+
+- **state:** improve options check on getInjectorFromOptions ([4fb30a39](https://github.com/rx-angular/rx-angular/commit/4fb30a39))
+
+### 🧱 Updated Dependencies
+
+- Updated cdk to 21.0.1
+
+### ❤️ Thank You
+
+- Michael Berger
+
 # Changelog
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).

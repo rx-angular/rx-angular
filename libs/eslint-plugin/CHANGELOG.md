@@ -1,3 +1,13 @@
+# 3.0.0 (2026-03-05)
+
+### 🚀 Features
+
+- upgrade nx & ng dependencies ([2e484880](https://github.com/rx-angular/rx-angular/commit/2e484880))
+
+### ❤️ Thank You
+
+- Julian Jandl @hoebbelsB
+
 # Changelog
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).

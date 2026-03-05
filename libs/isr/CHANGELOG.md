@@ -1,3 +1,7 @@
+## 21.0.1 (2026-03-05)
+
+This was a version bump only for isr to align it with other projects, there were no code changes.
+
 # Changelog
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).

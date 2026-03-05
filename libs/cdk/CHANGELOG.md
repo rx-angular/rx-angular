@@ -1,3 +1,13 @@
+## 21.0.1 (2026-03-05)
+
+### 🩹 Fixes
+
+- **cdk:** ability to override default strategies ([82b539dd](https://github.com/rx-angular/rx-angular/commit/82b539dd))
+
+### ❤️ Thank You
+
+- Julian Jandl @hoebbelsB
+
 # Changelog
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).

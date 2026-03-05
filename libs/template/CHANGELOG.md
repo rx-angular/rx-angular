@@ -1,3 +1,18 @@
+## 21.1.0 (2026-03-05)
+
+### 🚀 Features
+
+- **template:** add visibility state tracking and new outputs to `RxVirtualView` ([0e543664](https://github.com/rx-angular/rx-angular/commit/0e543664))
+- **template:** add visibility state tracking and new outputs to `RxVirtualView` ([2410b60e](https://github.com/rx-angular/rx-angular/commit/2410b60e))
+
+### 🧱 Updated Dependencies
+
+- Updated cdk to 21.0.1
+
+### ❤️ Thank You
+
+- Enea Jahollari @eneajaho
+
 # Changelog
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
