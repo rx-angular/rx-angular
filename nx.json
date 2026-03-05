@@ -99,6 +99,43 @@
     ],
     "projectSpecificFiles": []
   },
+  "release": {
+    "projects": ["cdk", "template", "isr", "state", "eslint-plugin"],
+    "projectsRelationship": "independent",
+    "conventionalCommits": {
+      "types": {
+        "docs": {
+          "semverBump": "none",
+          "changelog": {
+            "title": "Documentation Changes"
+          }
+        },
+        "chore": {
+          "semverBump": "none",
+          "changelog": false
+        }
+      }
+    },
+    "version": {
+      "conventionalCommits": true
+    },
+    "releaseTag": {
+      "pattern": "{projectName}@{version}",
+      "requireSemver": true,
+      "strictPreid": true,
+      "checkAllBranchesWhen": "main"
+    },
+    "git": {
+      "commit": true,
+      "tag": true
+    },
+    "changelog": {
+      "projectChangelogs": {
+        "createRelease": "github"
+      },
+      "workspaceChangelog": false
+    }
+  },
   "targetDefaults": {
     "build": {
       "inputs": ["production", "^production"],
@@ -111,28 +148,6 @@
     "component-test": {
       "inputs": ["default", "^production"],
       "cache": true
-    },
-    "publish": {
-      "dependsOn": ["lint", "test", "version", "build"],
-      "cache": false
-    },
-    "version": {
-      "executor": "@jscutlery/semver:version",
-      "options": {
-        "noVerify": true,
-        "baseBranch": "main",
-        "tagPrefix": "{projectName}@",
-        "commitMessageFormat": "release({projectName}): {version}",
-        "postTargets": ["github"],
-        "push": true
-      }
-    },
-    "github": {
-      "executor": "@jscutlery/semver:github",
-      "options": {
-        "tag": "{tag}",
-        "notes": "{notes}"
-      }
     },
     "build-lib": {
       "cache": true
@@ -154,10 +169,13 @@
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
       "cache": true
     },
-    "@angular/build:application": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+    "nx-release-publish": {
+      "dependsOn": ["build"],
+      "executor": "@nx/js:release-publish",
+      "options": {
+        "packageRoot": "dist/{projectRoot}",
+        "registry": "https://registry.npmjs.org/"
+      }
     }
   },
   "parallel": 1,

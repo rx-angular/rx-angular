@@ -39,11 +39,6 @@
       },
       "outputs": ["{workspaceRoot}/coverage/template"]
     },
-    "publish": {
-      "command": "npm publish dist/libs/template"
-    },
-    "version": {},
-    "github": {},
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]

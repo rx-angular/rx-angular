@@ -4,5 +4,6 @@
   "dependencies": {
     "tslib": "^2.4.1"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "private": true
 }

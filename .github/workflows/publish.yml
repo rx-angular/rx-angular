@@ -1,0 +1,43 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+  #push:
+  #  tags:
+  #    - v*.*.*
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+# configured as trusted publisher (OIDC)
+# https://docs.npmjs.com/trusted-publishers
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  NX_NON_NATIVE_HASHER: true
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+jobs:
+  publish:
+    name: Publish packages
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - name: Clone the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure Git user
+        # https://github.com/actions/checkout/blob/main/README.md#push-a-commit-using-the-built-in-token
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
+        with:
+          cache-cypress: 'false'
+      - name: Publish packages to npm
+        run: npx nx release publish
