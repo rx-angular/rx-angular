@@ -1,7 +1,6 @@
 /* eslint-disable */
 export default {
   displayName: 'eslint-plugin',
-  forceExit: true,
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
