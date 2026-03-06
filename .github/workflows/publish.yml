@@ -38,13 +38,5 @@ jobs:
         uses: ./.github/actions/setup
         with:
           cache-cypress: 'false'
-      - name: Debug auth
-        run: |
-          yarn npm whoami
-          npm whoami
-          node --version
-          npm --version
-          yarn --version
-          cat ~/.npmrc
       - name: Publish packages to npm
         run: npx nx release publish
