@@ -19,6 +19,7 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: 'yarn'
+        registry-url: 'https://registry.npmjs.org'
 
     - name: Cypress executable cache
       if: ${{ inputs.cache-cypress == 'true' }}
