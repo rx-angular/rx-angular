@@ -63,7 +63,7 @@ jobs:
       - name: Run commands in parallel
         run: |
           npx nx-cloud record -- npx nx format:check
-          yarn nx test state
+          npx nx run-many -t test -p state,eslint --parallel=1 --exclude=docs
           npx nx-cloud complete-ci-run
 
       # Upload coverage reports to Codecov
