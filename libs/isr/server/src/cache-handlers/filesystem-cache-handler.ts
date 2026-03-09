@@ -138,8 +138,11 @@ export class FileSystemCacheHandler extends CacheHandler {
 
     if (this.options.addPrerenderedPagesToCache) {
       console.log('Adding prerendered pages to cache...');
-      this.addPrerenderedPagesToCache();
+      // move all prerendered pages to cache folder
+      this.transferPrerenderedPagesToCacheFolder();
     }
+
+    this.loadCachedFilesMetadata();
   }
 
   override clearCache(): Promise<boolean> {
@@ -155,10 +158,7 @@ export class FileSystemCacheHandler extends CacheHandler {
     });
   }
 
-  private addPrerenderedPagesToCache() {
-    // move all prerendered pages to cache folder
-    this.transferPrerenderedPagesToCacheFolder();
-
+  private loadCachedFilesMetadata() {
     // read all files in cache folder and add them to cache
     const files: string[] = fs.readdirSync(this.cacheFolderPath);
 
