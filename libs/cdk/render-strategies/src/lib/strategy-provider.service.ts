@@ -18,6 +18,7 @@ import {
   RxRenderStrategiesConfig,
 } from './config';
 import {
+  RxDefaultStrategyNames,
   RxStrategies,
   RxStrategyCredentials,
   RxStrategyNames,
@@ -58,7 +59,9 @@ import { onStrategy } from './onStrategy';
  * @docsPage RxStrategyProvider
  */
 @Injectable({ providedIn: 'root' })
-export class RxStrategyProvider<T extends string = string> {
+export class RxStrategyProvider<
+  T extends RxStrategyNames = RxDefaultStrategyNames,
+> {
   private _strategies$ = new BehaviorSubject<RxStrategies<T>>(undefined);
   private _primaryStrategy$ = new BehaviorSubject<
     RxStrategyCredentials<RxStrategyNames<T>>
@@ -165,7 +168,7 @@ export class RxStrategyProvider<T extends string = string> {
    */
   scheduleWith<R>(
     work: (v?: R) => void,
-    options?: ScheduleOnStrategyOptions,
+    options?: ScheduleOnStrategyOptions<T>,
   ): MonoTypeOperatorFunction<R> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || {};
@@ -202,7 +205,7 @@ export class RxStrategyProvider<T extends string = string> {
    */
   schedule<R>(
     work: () => R,
-    options?: ScheduleOnStrategyOptions,
+    options?: ScheduleOnStrategyOptions<T>,
   ): Observable<R> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || {};
@@ -233,7 +236,7 @@ export class RxStrategyProvider<T extends string = string> {
    */
   scheduleCD(
     cdRef: ChangeDetectorRef,
-    options?: ScheduleOnStrategyOptions & {
+    options?: ScheduleOnStrategyOptions<T> & {
       afterCD?: () => void;
       abortCtrl?: AbortController;
     },
