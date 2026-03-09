@@ -101,9 +101,9 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
   standalone: true,
 })
 export class AutoSizeVirtualScrollStrategy<
-    T,
-    U extends NgIterable<T> = NgIterable<T>,
-  >
+  T,
+  U extends NgIterable<T> = NgIterable<T>,
+>
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
 {
@@ -234,6 +234,7 @@ export class AutoSizeVirtualScrollStrategy<
   private scrollToTrigger$ = new Subject<{
     scrollTop: number;
     behavior?: ScrollBehavior;
+    offset: number;
   }>();
   /** @internal */
   private _scrolledIndex = 0;
@@ -355,7 +356,11 @@ export class AutoSizeVirtualScrollStrategy<
     this.detached$.next();
   }
 
-  scrollToIndex(index: number, behavior?: ScrollBehavior): void {
+  scrollToIndex(
+    index: number,
+    behavior?: ScrollBehavior,
+    offset: number = 0,
+  ): void {
     const _index = Math.min(
       Math.max(index, 0),
       Math.max(0, this.contentLength - 1),
@@ -363,17 +368,21 @@ export class AutoSizeVirtualScrollStrategy<
     if (_index !== this.scrolledIndex) {
       const scrollTop = this.calcInitialPosition(_index);
       this._scrollToIndex = _index;
-      this.scrollToTrigger$.next({ scrollTop, behavior });
+      this.scrollToTrigger$.next({ scrollTop, behavior, offset });
     }
   }
 
-  private scrollTo(scrollTo: number, behavior?: ScrollBehavior): void {
+  private scrollTo(
+    scrollTo: number,
+    behavior?: ScrollBehavior,
+    offset: number = 0,
+  ): void {
     this.waitForScroll =
       scrollTo !== this.scrollTop && this.contentSize > this.containerSize;
     if (this.waitForScroll) {
       this.isStable$.next(false);
     }
-    this.viewport!.scrollTo(this.viewportOffset + scrollTo, behavior);
+    this.viewport!.scrollTo(this.viewportOffset + scrollTo + offset, behavior);
   }
 
   /**
@@ -423,7 +432,7 @@ export class AutoSizeVirtualScrollStrategy<
       });
     this.viewRepeater!.values$.pipe(
       this.until$(),
-      tap((values) => {
+      map((values) => {
         const dataArr = Array.isArray(values)
           ? values
           : values
@@ -482,11 +491,27 @@ export class AutoSizeVirtualScrollStrategy<
         }
         existingIds.clear();
         this.contentLength = dataLength;
+        this.contentSize = size;
+        return {
+          size,
+          keepScrolledIndexOnPrepend,
+          dataLength,
+          anchorItemIndex,
+        };
+      }),
+      finalize(() => itemCache.clear()),
+      coalesceWith(unpatchedMicroTask()),
+    ).subscribe(
+      ({ size, keepScrolledIndexOnPrepend, dataLength, anchorItemIndex }) => {
         if (
           keepScrolledIndexOnPrepend &&
           this.anchorItem.index !== anchorItemIndex
         ) {
-          this.scrollToIndex(anchorItemIndex);
+          this.scrollToIndex(
+            anchorItemIndex,
+            undefined,
+            this.anchorItem.offset,
+          );
         } else if (dataLength === 0) {
           this.anchorItem = {
             index: 0,
@@ -521,10 +546,8 @@ export class AutoSizeVirtualScrollStrategy<
           this.scrollTo(size);
           this.scrollTop = this.anchorScrollTop;
         }
-        this.contentSize = size;
-      }),
-      finalize(() => itemCache.clear()),
-    ).subscribe();
+      },
+    );
   }
 
   /**
@@ -708,7 +731,7 @@ export class AutoSizeVirtualScrollStrategy<
               virtualItem.position = position;
             }
             if (this._scrollToIndex === itemIndex) {
-              scrollToAnchorPosition = position;
+              scrollToAnchorPosition = position + this.anchorItem.offset;
             }
             position += size;
             // immediately activate the ResizeObserver after initial positioning
@@ -825,8 +848,8 @@ export class AutoSizeVirtualScrollStrategy<
         ),
         this.until$(),
       )
-      .subscribe(({ scrollTop, behavior }) => {
-        this.scrollTo(scrollTop, behavior);
+      .subscribe(({ scrollTop, behavior, offset }) => {
+        this.scrollTo(scrollTop, behavior, offset);
       });
   }
   /** @internal */

@@ -89,7 +89,7 @@ import { Message, MessageService } from './messages/messages.service';
                   state.set({
                     runwayItemsOpposite: toNumber(
                       runwayItemsOppositeInput.value
-                    )
+                    ),
                   })
                 "
                 type="number"
@@ -104,8 +104,8 @@ import { Message, MessageService } from './messages/messages.service';
             #viewport
             autosize
             class="ch-vscroll-viewport"
-            [runwayItems]="state.runwayItems"
-            [runwayItemsOpposite]="state.runwayItemsOpposite"
+            [runwayItems]="2"
+            [runwayItemsOpposite]="2"
             keepScrolledIndexOnPrepend
             [initialScrollIndex]="batchSize - 1"
             (viewRange)="setViewRange($event)"
@@ -128,11 +128,11 @@ import { Message, MessageService } from './messages/messages.service';
         } @else if (state.scrollStrategy === 'fixed') {
           <rx-virtual-scroll-viewport
             #viewport
-            [itemSize]="100"
+            [itemSize]="300"
             class="ch-vscroll-viewport"
             keepScrolledIndexOnPrepend
-            [runwayItems]="state.runwayItems"
-            [runwayItemsOpposite]="state.runwayItemsOpposite"
+            [runwayItems]="2"
+            [runwayItemsOpposite]="2"
             [initialScrollIndex]="batchSize - 1"
             (viewRange)="setViewRange($event)"
             (scrolledIndexChange)="scrolled$.next($event)"
@@ -141,11 +141,16 @@ import { Message, MessageService } from './messages/messages.service';
               *rxVirtualFor="
                 let item of messages$;
                 trackBy: trackMessage;
-                renderCallback: viewsRendered$
+                renderCallback: viewsRendered$;
+                let i = index
               "
               class="chat-bubble fixed"
             >
               <div class="chat-bubble-content">
+                @for (w of work; track w) {
+                  <div></div>
+                }
+                <div>{{ i }}</div>
                 <div>{{ item.message.text }}</div>
                 <div>{{ item.sendAt | date }}</div>
               </div>
@@ -157,8 +162,8 @@ import { Message, MessageService } from './messages/messages.service';
             [dynamic]="dynamicSize"
             class="ch-vscroll-viewport"
             keepScrolledIndexOnPrepend
-            [runwayItems]="state.runwayItems"
-            [runwayItemsOpposite]="state.runwayItemsOpposite"
+            [runwayItems]="2"
+            [runwayItemsOpposite]="2"
             [initialScrollIndex]="batchSize - 1"
             (viewRange)="setViewRange($event)"
             (scrolledIndexChange)="scrolled$.next($event)"
@@ -207,7 +212,7 @@ import { Message, MessageService } from './messages/messages.service';
   styles: [
     `
       .ch-vscroll-viewport {
-        height: 700px;
+        height: 300px;
         overflow-x: hidden;
       }
 
@@ -225,6 +230,8 @@ import { Message, MessageService } from './messages/messages.service';
         overflow-y: hidden;
         /*padding: 2em;*/
         width: 350px;
+        background-color: purple;
+        outline: 1px solid red;
       }
 
       .chat-bubble-content {
@@ -232,7 +239,7 @@ import { Message, MessageService } from './messages/messages.service';
       }
 
       .chat-bubble.fixed {
-        height: 100px;
+        height: 300px;
       }
 
       .notification {
@@ -258,7 +265,7 @@ export class VirtualForReverseInfiniteScrollComponent {
   });
 
   dynamicSize = (item: Message) => {
-    return item.message.text.length;
+    return Math.min(500, item.message.text.length);
   };
 
   rxVirtualForState$ = this.state.select();
@@ -267,7 +274,8 @@ export class VirtualForReverseInfiniteScrollComponent {
 
   readonly messageService = inject(MessageService);
   readonly scrolled$ = new Subject<number>();
-  readonly batchSize = 20;
+  readonly batchSize = 4;
+  work = new Array(1000).fill(0).map((_, i) => i);
 
   strategy$ = new Subject<RxStrategyNames<string>>();
   scrollStrategy$ = this.state.select('scrollStrategy');
