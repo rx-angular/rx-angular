@@ -1,4 +1,4 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, Signal } from '@angular/core';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 
 export const VIRTUAL_VIEW_CONFIG_TOKEN =
@@ -8,6 +8,7 @@ export const VIRTUAL_VIEW_CONFIG_TOKEN =
   });
 
 export interface RxVirtualViewConfig {
+  enabled: boolean | Signal<boolean>;
   keepLastKnownSize: boolean;
   useContentVisibility: boolean;
   useContainment: boolean;
@@ -15,6 +16,22 @@ export interface RxVirtualViewConfig {
   contentStrategy: RxStrategyNames<string>;
   cacheEnabled: boolean;
   startWithPlaceholderAsap: boolean;
+
+  /**
+   * The scroll margin to observe.
+   *
+   * Docs: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#scrollmargin
+   */
+  scrollMargin: string;
+
+  /**
+   * Whether to enable the visibility after hydration. (DEFAULT: true)
+   *
+   * If `false`, the elements that were hydrated, won't go back to render placeholder anymore on hydration.
+   * You can disable this to avoid destroying components that were just hydrated.
+   */
+  enableAfterHydration: boolean;
+
   cache: {
     /**
      * The maximum number of contents that can be stored in the cache.
@@ -31,6 +48,7 @@ export interface RxVirtualViewConfig {
 }
 
 export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
+  enabled: true,
   keepLastKnownSize: false,
   useContentVisibility: false,
   useContainment: true,
@@ -38,6 +56,10 @@ export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
   contentStrategy: 'normal',
   startWithPlaceholderAsap: false,
   cacheEnabled: true,
+  enableAfterHydration: true,
+
+  scrollMargin: '100px',
+
   cache: {
     contentCacheSize: 20,
     placeholderCacheSize: 20,
@@ -74,10 +96,25 @@ export const VIRTUAL_VIEW_CONFIG_DEFAULT: RxVirtualViewConfig = {
  * @returns An object that can be provided to the `VirtualView` service.
  */
 export function provideVirtualViewConfig(
-  config: Partial<
-    RxVirtualViewConfig & { cache?: Partial<RxVirtualViewConfig['cache']> }
-  >,
+  config: VVConfig | (() => VVConfig),
 ): Provider {
+  if (typeof config === 'function') {
+    return {
+      provide: VIRTUAL_VIEW_CONFIG_TOKEN,
+      useFactory: () => {
+        const cfg = config();
+        return {
+          ...VIRTUAL_VIEW_CONFIG_DEFAULT,
+          ...cfg,
+          cache: {
+            ...VIRTUAL_VIEW_CONFIG_DEFAULT.cache,
+            ...(cfg?.cache ?? {}),
+          },
+        };
+      },
+    } satisfies Provider;
+  }
+
   return {
     provide: VIRTUAL_VIEW_CONFIG_TOKEN,
     useValue: {
@@ -87,3 +124,7 @@ export function provideVirtualViewConfig(
     },
   } satisfies Provider;
 }
+
+type VVConfig = Partial<
+  RxVirtualViewConfig & { cache?: Partial<RxVirtualViewConfig['cache']> }
+>;

@@ -1,15 +1,24 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
   effect,
   inject,
   Input,
+  input,
+  OnDestroy,
+  PLATFORM_ID,
   signal,
   untracked,
   ViewEncapsulation,
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HydrationTracker } from '@rx-angular/cdk/ssr';
-import { RxFor } from '@rx-angular/template/for';
+import {
+  RxVirtualView,
+  RxVirtualViewContent,
+  RxVirtualViewObserver,
+  RxVirtualViewPlaceholder,
+} from '@rx-angular/template/virtual-view';
 
 interface User {
   id: number;
@@ -21,7 +30,7 @@ interface User {
 @Component({
   selector: 'app-item',
   template: `
-    <div class="user-card">
+    <div class="user-card" (click)="log()">
       <h3>{{ user.name }}</h3>
       <p class="email">{{ user.email }}</p>
       <span class="role" [class]="'role-' + user.role.toLowerCase()">
@@ -31,11 +40,29 @@ interface User {
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class Item {
+export class Item implements OnDestroy {
+  isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   @Input() user!: User;
+
+  after = input(false);
+  visible = input(false);
 
   constructor() {
     doWork();
+  }
+
+  protected log() {
+    console.log('User clicked -', this.user, this.after());
+  }
+
+  ngOnDestroy() {
+    if (this.isBrowser) {
+      console.log({
+        name: this.user.name,
+        After: this.after(),
+        visible: this.visible(),
+      });
+    }
   }
 }
 
@@ -47,36 +74,87 @@ function doWork() {
 }
 
 @Component({
-  selector: 'app-hydration-demo',
-  imports: [RouterOutlet, RxFor, Item],
+  selector: 'app-vv-hydration-demo',
+  imports: [
+    RouterOutlet,
+    Item,
+    RxVirtualViewObserver,
+    RxVirtualView,
+    RxVirtualViewContent,
+    RxVirtualViewPlaceholder,
+  ],
   encapsulation: ViewEncapsulation.None,
-
   template: `
-    <div class="container">
-      <div class="comparison-container">
-        <div class="rx-for-section">
-          <h2>RxFor Directive (with hydration)</h2>
-          <div class="users-grid">
-            <app-item
-              *rxFor="let user of users(); trackBy: 'id'; strategy: 'low'"
-              [user]="user"
-            />
-          </div>
-        </div>
-
-        @if (loadAfterHydration()) {
-          <div class="rx-for-section">
-            <h2>RxFor Directive (after hydration)</h2>
+    @let a = '1';
+    @if (true) {
+      <div class="container">
+        <div class="comparison-container">
+          <div class="rx-for-section" rxVirtualViewObserver [root]="null">
+            <h2>VirtualView Directive (with hydration)</h2>
             <div class="users-grid">
-              <app-item
-                *rxFor="let user of users(); trackBy: 'id'"
-                [user]="user"
-              />
+              @for (user of users(); track user.id) {
+                <div
+                  rxVirtualView
+                  #vv="rxVirtualView"
+                  [useContainment]="false"
+                  [class]="a"
+                >
+                  <app-item
+                    *rxVirtualViewContent
+                    [user]="user"
+                    [after]="false"
+                    [visible]="vv.visibility.content"
+                  />
+                  <div
+                    *rxVirtualViewPlaceholder
+                    style="min-height: var(--rx-vw-h, 107px); background: red"
+                  ></div>
+                </div>
+              }
             </div>
           </div>
-        }
+
+          @if (loadAfterHydration()) {
+            <div class="rx-for-section">
+              <div class="rx-for-section" rxVirtualViewObserver [root]="null">
+                <h2>VirtualView Directive (after hydration)</h2>
+                <div class="users-grid">
+                  @for (user of users(); track user.id) {
+                    <div
+                      rxVirtualView
+                      #vv="rxVirtualView"
+                      [useContainment]="false"
+                    >
+                      <app-item
+                        *rxVirtualViewContent
+                        [user]="user"
+                        [after]="true"
+                        [visible]="vv.visibility.content"
+                      />
+                      <div
+                        *rxVirtualViewPlaceholder
+                        style="min-height: var(--rx-vw-h, 107px); background: red"
+                      ></div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
       </div>
-    </div>
+    }
+
+    @defer (when true; hydrate never) {
+      <app-item
+        [user]="{
+          id: 1,
+          name: 'John Doe',
+          email: 'john@example.com',
+          role: 'Admin',
+        }"
+      />
+    }
 
     <router-outlet />
   `,
@@ -203,7 +281,7 @@ function doWork() {
     }
   `,
 })
-export class HydrationDemo {
+export class VVHydrationDemo {
   loadAfterHydration = signal(false);
 
   constructor() {
@@ -213,7 +291,7 @@ export class HydrationDemo {
 
       untracked(() => {
         if (isHydrated) {
-          this.loadAfterHydration.set(true);
+          // this.loadAfterHydration.set(true);
         } else {
           this.loadAfterHydration.set(false);
         }

@@ -19,6 +19,7 @@
       "@rx-angular/cdk": ["libs/cdk/src/public_api.ts"],
       "@rx-angular/cdk/coalescing": ["libs/cdk/coalescing/src/index.ts"],
       "@rx-angular/cdk/coercing": ["libs/cdk/coercing/src/index.ts"],
+      "@rx-angular/cdk/ssr": ["libs/cdk/ssr/src/index.ts"],
       "@rx-angular/cdk/internals/core": [
         "libs/cdk/internals/core/src/index.ts"
       ],

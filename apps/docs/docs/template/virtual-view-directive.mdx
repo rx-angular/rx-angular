@@ -156,6 +156,96 @@ onVisibilityChanged(event: { content: boolean; placeholder: boolean }) {
 }
 ```
 
+## Using RxVirtualView with hydration (SSR)
+
+When you use Angular with server-side rendering (SSR) or client hydration, the server sends HTML with full content. If the virtual view were active immediately on the client, it could replace that content with placeholders as soon as the IntersectionObserver runs, causing a flash and destroying components that were just hydrated.
+
+To avoid that, you can **disable** the virtual view until hydration is complete, then optionally **enable** it so that virtual behavior (placeholders when out of view) applies only after the app is interactive.
+
+### 1. Disable virtual behavior until hydrated (`enabled`)
+
+Use the global config option **`enabled`** (a `boolean` or a **`Signal<boolean>`**). When `enabled` is `false`:
+
+- The directive renders **content** synchronously (no IntersectionObserver).
+- No placeholders are shown; everything behaves like normal, non-virtual content.
+
+That way, on the server and during hydration the user sees the full content. Once you set `enabled` to `true` (e.g. when hydration is done), the directive can start observing visibility.
+
+**Example: enable virtual view only after hydration**
+
+Use [HydrationTracker](https://rx-angular.io/docs/cdk/hydration-tracker) from `@rx-angular/cdk/ssr` and pass its signal as `enabled`:
+
+```typescript
+// app.config.ts
+import { ApplicationConfig, inject } from '@angular/core';
+import { provideVirtualViewConfig } from '@rx-angular/template/virtual-view';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideVirtualViewConfig(() => {
+      const hydrationTracker = inject(HydrationTracker);
+      return {
+        enabled: hydrationTracker.isFullyHydrated,
+      };
+    }),
+  ],
+};
+```
+
+Until `isFullyHydrated` is `true`, the virtual view stays disabled and shows content everywhere. After hydration, `enabled` becomes `true` and the directive can start virtualizing.
+
+### 2. Control behavior after hydration (`enableAfterHydration`)
+
+When the directive **starts disabled** (e.g. `enabled` is `false` during SSR/hydration) and later becomes **enabled**, one question is: should it start observing visibility and swap visible content for placeholders when elements scroll out of view?
+
+That’s what **`enableAfterHydration`** controls (provider-level config only).
+
+| Value                | Behavior                                                                                                                                                                                                             |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`true`** (default) | After `enabled` turns `true`, the directive registers the IntersectionObserver. Elements that scroll out of view will show placeholders; virtual behavior is fully active.                                           |
+| **`false`**          | After `enabled` turns `true`, the directive **does not** register the observer. Hydrated content stays as-is and is never replaced by placeholders. Use this to avoid destroying components that were just hydrated. |
+
+**When to use `enableAfterHydration: false`**
+
+- You want the **first paint** to match the server (no placeholders) and you’re okay with **not** virtualizing that page after hydration (e.g. long, mostly-static landing pages).
+- You want to avoid any risk of destroying freshly hydrated components or causing layout shifts right after hydration.
+
+**When to keep `enableAfterHydration: true` (default)**
+
+- You want **full virtual behavior** after hydration: once the app is interactive, elements that leave the viewport should show placeholders again to save DOM and work.
+
+**Example: keep hydrated content, no virtualizing after**
+
+```typescript
+provideVirtualViewConfig(() => {
+  const hydrationTracker = inject(HydrationTracker);
+  return {
+    enabled: hydrationTracker.isFullyHydrated,
+    enableAfterHydration: false, // hydrated nodes stay content; no placeholders later
+  };
+});
+```
+
+**Example: full virtual behavior after hydration (default)**
+
+```typescript
+provideVirtualViewConfig(() => {
+  const hydrationTracker = inject(HydrationTracker);
+  return {
+    enabled: hydrationTracker.isFullyHydrated,
+    enableAfterHydration: true, // after hydration, virtualize as usual (default)
+  };
+});
+```
+
+### Summary
+
+| Config                                                             | Purpose                                                                                                                                         |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled: false` or `enabled: signalThatBecomesTrueAfterHydration` | Turn off virtual behavior on the server and during hydration; turn it on only when appropriate (e.g. after `HydrationTracker.isFullyHydrated`). |
+| `enableAfterHydration: true`                                       | Once `enabled` becomes true, start observing and show placeholders when elements leave the viewport.                                            |
+| `enableAfterHydration: false`                                      | Once `enabled` becomes true, do **not** start observing; keep hydrated content and never replace it with placeholders.                          |
+
 ## Configuration & Inputs
 
 ### RxVirtualViewObserver Inputs
@@ -190,6 +280,8 @@ Defines an interface representing all configuration that can be adjusted on prov
 
 ```typescript
 export interface RxVirtualViewConfig {
+  /** Whether the virtual view is active. Can be a boolean or a signal (e.g. from HydrationTracker). When false, content is rendered synchronously (useful for SSR/hydration). */
+  enabled: boolean | Signal<boolean>;
   keepLastKnownSize: boolean;
   useContentVisibility: boolean;
   useContainment: boolean;
@@ -197,6 +289,8 @@ export interface RxVirtualViewConfig {
   contentStrategy: RxStrategyNames<string>;
   cacheEnabled: boolean;
   startWithPlaceholderAsap: boolean;
+  /** When the directive starts disabled and later becomes enabled: if true (default), register the visibility observer and virtualize; if false, keep showing content and never swap to placeholders. See [Using RxVirtualView with hydration](#using-rxvirtualview-with-hydration-ssr). */
+  enableAfterHydration: boolean;
   cache: {
     /**
      * The maximum number of contents that can be stored in the cache.
@@ -235,19 +329,21 @@ const appConfig: ApplicationConfig = {
 This is the default configuration which will be used when no other config was provided.
 
 ```typescript
-
 {
+  enabled: true,
   keepLastKnownSize: false,
   useContentVisibility: false,
   useContainment: true,
   placeholderStrategy: 'low',
   contentStrategy: 'normal',
   startWithPlaceholderAsap: false,
+  enableAfterHydration: true,
   cacheEnabled: true,
   cache: {
     contentCacheSize: 20,
     placeholderCacheSize: 20,
   },
-};
-
+}
 ```
+
+**Hydration:** For SSR/hydration, set `enabled` to a signal that becomes `true` after hydration (e.g. `HydrationTracker.isFullyHydrated`) and optionally set `enableAfterHydration` to control behavior once virtual view is enabled. See [Using RxVirtualView with hydration (SSR)](#using-rxvirtualview-with-hydration-ssr).

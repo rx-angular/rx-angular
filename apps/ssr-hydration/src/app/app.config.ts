@@ -12,8 +12,9 @@ import {
   provideRxRenderStrategies,
   RX_CONCURRENT_STRATEGIES,
 } from '@rx-angular/cdk/render-strategies';
+import { HydrationTracker } from '@rx-angular/cdk/ssr';
+import { provideVirtualViewConfig } from '@rx-angular/template/virtual-view';
 import { switchMap, tap } from 'rxjs';
-import { HydrationTrackerService } from './hydration-tracker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,7 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
 
     provideRxRenderStrategies(() => {
-      const hydrationTracker = inject(HydrationTrackerService);
+      const hydrationTracker = inject(HydrationTracker);
       const strategyFactory = (name: string) => {
         return {
           [name]: {
@@ -58,6 +59,13 @@ export const appConfig: ApplicationConfig = {
             {},
           ),
         },
+      };
+    }),
+
+    provideVirtualViewConfig(() => {
+      const hydrationTracker = inject(HydrationTracker);
+      return {
+        enabled: hydrationTracker.isFullyHydrated,
       };
     }),
   ],

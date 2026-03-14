@@ -7,16 +7,19 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { PLATFORM } from '@rx-angular/cdk/ssr';
 import {
   BehaviorSubject,
   combineLatest,
   Observable,
+  of,
   ReplaySubject,
   Subject,
 } from 'rxjs';
 import { distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import { _RxVirtualViewObserver } from './model';
 import { RxaResizeObserver } from './resize-observer';
+import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 import { VirtualViewCache } from './virtual-view-cache';
 
 /**
@@ -50,6 +53,8 @@ export class RxVirtualViewObserver
   extends _RxVirtualViewObserver
   implements OnInit, OnDestroy
 {
+  #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
+  #platform = inject(PLATFORM);
   #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   #observer: IntersectionObserver | null = null;
@@ -69,6 +74,13 @@ export class RxVirtualViewObserver
    * This is useful when you want to observe the virtual view in a specific area of the root element.
    */
   rootMargin = input('');
+
+  /**
+   * The scroll margin to observe.
+   *
+   * This is useful when you want to observe the virtual view in a specific area of the scroll container.
+   */
+  scrollMargin = input(this.#config.scrollMargin);
 
   /**
    * The threshold to observe.
@@ -97,19 +109,23 @@ export class RxVirtualViewObserver
   #forcedHidden$ = new BehaviorSubject(false);
 
   ngOnInit(): void {
-    this.#observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (this.#elements.has(entry.target))
-            this.#elements.get(entry.target)?.next(entry.isIntersecting);
-        });
-      },
-      {
-        root: this.#rootElement(),
-        rootMargin: this.rootMargin(),
-        threshold: this.threshold(),
-      },
-    );
+    if (this.#platform.isBrowser) {
+      this.#observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (this.#elements.has(entry.target))
+              this.#elements.get(entry.target)?.next(entry.isIntersecting);
+          });
+        },
+        {
+          root: this.#rootElement(),
+          rootMargin: this.rootMargin(),
+          // @ts-expect-error - scrollMargin is not available in the type of IntersectionObserverInit
+          scrollMargin: this.scrollMargin(),
+          threshold: this.threshold(),
+        },
+      );
+    }
   }
 
   ngOnDestroy() {
@@ -143,6 +159,10 @@ export class RxVirtualViewObserver
   }
 
   observeElementVisibility(virtualView: HTMLElement) {
+    if (this.#platform.isServer) {
+      return of(true);
+    }
+
     const isVisible$ = new ReplaySubject<boolean>(1);
 
     // Store the view and the visibility state in the map.
