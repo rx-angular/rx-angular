@@ -1,7 +1,7 @@
 # @rx-angular/template/let
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)
-![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=master)
+![rx-angular CI](https://github.com/rx-angular/rx-angular/actions/workflows/build-and-test.yml/badge.svg?branch=main)
 
 > This package provides a quick way to create an action channel and some configuration options.
 

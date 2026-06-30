@@ -1,6 +1,6 @@
 [![RxAngular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://rx-angular.io/)
 
-# RxAngular ![RxAngular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
+# RxAngular ![RxAngular CI](https://github.com/rx-angular/rx-angular/actions/workflows/build-and-test.yml/badge.svg?branch=main)
 
 > RxAngular offers a comprehensive toolkit for handling fully reactive Angular applications with the main focus on runtime performance, template rendering, and Developer eXperience.
 
