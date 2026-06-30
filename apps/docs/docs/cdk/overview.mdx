@@ -1,0 +1,35 @@
+---
+sidebar_label: 'Overview'
+sidebar_position: 1
+slug: /cdk
+title: 'CDK'
+hide_title: true
+---
+
+# @rx-angular/cdk
+
+A Component Development Kit for high performance and ergonomic Angular UI libraries and large scale applications.
+
+`@rx-angular/cdk` gives you low level building blocks. You use them to build directives, components, and services that render fast and stay zone friendly. Each building block works on its own, so you pick only the ones you need.
+
+## Install
+
+```sh
+npm install @rx-angular/cdk
+```
+
+## Building blocks
+
+- [Coalescing](./legacy/coalescing.mdx) collapses repeated change detection into a single run.
+- [Coercing](./coercing/coercing.mdx) coerces values like observables and booleans.
+- [Hydration Tracker](./hydration-tracker/hydration-tracker.mdx) inspects hydration during server side rendering.
+- [Notifications](./notifications/notifications.mdx) work with RxJS notification streams.
+- [Render strategies](./render-strategies/render-strategies.mdx) schedule and prioritize change detection.
+- [Template management](./template-management/template-management.mdx) helps you build performant structural directives.
+- [Transformations](./transformations/transformations.mdx) give you immutable array and object helpers.
+- [Zone configurations](./legacy/zone-configurations.mdx) turns off zone patches you do not need.
+- [Zone-less](./legacy/zone-less.mdx) offers APIs that run outside `NgZone`.
+
+## Where to go next
+
+- Install and use your first building block in [Getting started](./getting-started.mdx).

@@ -1,0 +1,64 @@
+---
+sidebar_label: 'Getting started'
+sidebar_position: 2
+title: 'Getting started'
+---
+
+# Getting started
+
+Welcome. This guide takes you from install to your first reactive template binding.
+
+`@rx-angular/template` gives you directives and pipes for high performance rendering that never blocks the main thread. You import only what you need from independent entry points like `@rx-angular/template/let`, `@rx-angular/template/for`, and `@rx-angular/template/push`.
+
+## Before you start
+
+This guide assumes you are comfortable with Angular standalone components. It also helps to know the basics of RxJS observables.
+
+## Install
+
+Install the package with your package manager.
+
+```sh
+npm install @rx-angular/template
+```
+
+You can also use yarn.
+
+```sh
+yarn add @rx-angular/template
+```
+
+## Your first binding with `*rxLet`
+
+`*rxLet` subscribes to an observable for you and renders its latest value. You get this without the `async` pipe and without relying on `NgZone`.
+
+Add `RxLet` to a standalone component and bind an observable in the template.
+
+```ts
+import { Component } from '@angular/core';
+import { RxLet } from '@rx-angular/template/let';
+import { interval, map } from 'rxjs';
+
+@Component({
+  selector: 'app-clock',
+  imports: [RxLet],
+  template: `
+    <ng-container *rxLet="time$; let time">
+      {{ time }}
+    </ng-container>
+  `,
+})
+export class ClockComponent {
+  readonly time$ = interval(1000).pipe(map(() => new Date().toLocaleTimeString()));
+}
+```
+
+Run the app. You will see the time update every second. `*rxLet` did the subscription and the rendering for you.
+
+## Where to go next
+
+Pick the path that fits what you need.
+
+- Solve a specific task in the [Guides](./guides/).
+- Understand the ideas behind the directives in the [Concepts](/docs/concepts).
+- Look up a directive or pipe in the [API reference](./api/).

@@ -1,0 +1,43 @@
+---
+sidebar_label: 'Getting started'
+sidebar_position: 2
+title: 'Getting started'
+---
+
+# Getting started
+
+`@rx-angular/eslint-plugin` gives you lint rules that keep an Angular app reactive, performant, and zone-less. This guide installs the plugin and turns on a ruleset.
+
+## Install
+
+The plugin needs the TypeScript parser. Install it first if you do not have it already.
+
+```bash
+npm install --save-dev @typescript-eslint/parser
+```
+
+Then install the plugin.
+
+```bash
+npm install --save-dev @rx-angular/eslint-plugin
+```
+
+## Enable a configuration
+
+The plugin ships two ready-made configurations. Pick the one that fits your app.
+
+- `@rx-angular/recommended` suits most Angular applications.
+- `@rx-angular/zoneless` is stricter and suits apps that aim to run without Zone.js.
+
+Extend the configuration in your ESLint config.
+
+```json
+{
+  "extends": ["@rx-angular/recommended"]
+}
+```
+
+## Where to go next
+
+- Read about each rule in the [Rules](./rules/) reference.
+- Learn the zone-less model behind these rules in the [CDK Zone-less](/docs/cdk/legacy/zone-less) docs.

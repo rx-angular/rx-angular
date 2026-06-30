@@ -118,34 +118,30 @@ module.exports = {
         },
         items: [
           {
-            docId: 'state/state',
-            label: 'State',
+            type: 'dropdown',
+            label: 'Docs',
             position: 'left',
-            type: 'doc',
+            items: [
+              { type: 'doc', docId: 'state/overview', label: 'State' },
+              { type: 'doc', docId: 'template/overview', label: 'Template' },
+              { type: 'doc', docId: 'cdk/overview', label: 'CDK' },
+              { type: 'doc', docId: 'isr/overview', label: 'ISR' },
+              {
+                type: 'doc',
+                docId: 'eslint-plugin/overview',
+                label: 'ESLint plugin',
+              },
+            ],
           },
           {
-            docId: 'template/template',
-            label: 'Template',
+            to: '/docs/learn',
+            label: 'Learn',
             position: 'left',
-            type: 'doc',
           },
           {
-            docId: 'cdk/cdk',
-            label: 'CDK',
+            to: '/docs/concepts',
+            label: 'Concepts',
             position: 'left',
-            type: 'doc',
-          },
-          {
-            docId: 'isr/isr',
-            label: 'ISR',
-            position: 'left',
-            type: 'doc',
-          },
-          {
-            docId: 'eslint-plugin/eslint-plugin',
-            label: 'ESLint',
-            position: 'left',
-            type: 'doc',
           },
           {
             to: 'blog',
@@ -209,6 +205,10 @@ module.exports = {
           {
             title: 'More',
             items: [
+              {
+                label: 'Contributing',
+                to: 'docs/contributing',
+              },
               {
                 label: 'Blog',
                 to: 'blog',

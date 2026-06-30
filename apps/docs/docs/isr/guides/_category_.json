@@ -1,0 +1,9 @@
+{
+  "label": "Guides",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "title": "ISR guides",
+    "slug": "/isr/guides"
+  }
+}
