@@ -112,9 +112,7 @@ export class AppComponent {
 
   doOtherStuff() {
     // unpatched method of an HTML element
-    getZoneUnPatchedApi(elem, 'addEventListener')('click', () =>
-      console.log('tada!')
-    );
+    getZoneUnPatchedApi(elem, 'addEventListener')('click', () => console.log('tada!'));
   }
 }
 ```
