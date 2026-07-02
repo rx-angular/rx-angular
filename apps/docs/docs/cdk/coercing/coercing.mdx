@@ -8,7 +8,7 @@ hide_title: true
 # @rx-angular/cdk/coercing
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Fcdk.svg)](https://www.npmjs.com/package/%40rx-angular%2Fcdk)
-![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
+![rx-angular CI](https://github.com/rx-angular/rx-angular/actions/workflows/build-and-test.yml/badge.svg?branch=main)
 
 > Convenience helper to easily coerce reactive values.
 
@@ -64,8 +64,7 @@ In general when we apply those techniques our code base starts to maintain repet
 As an example let's look at this snippet of code here:
 
 ```typescript
-const num =
-  !isNaN(parseFloat(valueFromInput)) && !isNaN(Number(valueFromInput));
+const num = !isNaN(parseFloat(valueFromInput)) && !isNaN(Number(valueFromInput));
 ```
 
 Because we receive the value from an input the type is always string. We have to care every time the when we want to pass the value to get a proper number type of it.
@@ -204,9 +203,7 @@ This comes in handy for later processing and improves performance.
 })
 export class AppComponent {
   _prop1 = new Subject<number | Observable<number>>();
-  prop1Observables$: Observable<number> = this._prop1.pipe(
-    coerceDistinctWith()
-  );
+  prop1Observables$: Observable<number> = this._prop1.pipe(coerceDistinctWith());
 
   @Input()
   set prop1(val: Observable<number> | number) {
@@ -241,10 +238,7 @@ A minimal implementation if it would look like this:
 })
 export class AppComponent {
   _prop1 = new Subject<number | Observable<number>>();
-  prop1Changes$: Observable<number> = this._prop1.pipe(
-    coerceDistinctWith(),
-    switchAll()
-  );
+  prop1Changes$: Observable<number> = this._prop1.pipe(coerceDistinctWith(), switchAll());
 
   @Input()
   set prop1(val: Observable<number> | number) {
