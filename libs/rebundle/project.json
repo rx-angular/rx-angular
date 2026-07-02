@@ -1,0 +1,35 @@
+{
+  "name": "rebundle",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/rebundle/src",
+  "projectType": "library",
+  "tags": ["type:lib", "rebundle"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/rebundle"],
+      "options": {
+        "jestConfig": "libs/rebundle/jest.config.ts"
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/rebundle",
+        "tsConfig": "libs/rebundle/tsconfig.lib.json",
+        "packageJson": "libs/rebundle/package.json",
+        "main": "libs/rebundle/src/index.ts",
+        "assets": [
+          "libs/rebundle/generators.json",
+          "libs/rebundle/executors.json",
+          "libs/rebundle/src/generators/**/*.json"
+        ]
+      }
+    }
+  }
+}

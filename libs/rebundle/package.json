@@ -1,0 +1,37 @@
+{
+  "name": "@rx-angular/rebundle",
+  "version": "0.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://rx-angular.io/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rx-angular/rx-angular.git"
+  },
+  "dependencies": {
+    "@nx/devkit": "22.3.3",
+    "esbuild": "^0.19.2",
+    "rolldown": "^1.0.0-beta.34",
+    "rollup": "^4.18.1",
+    "tslib": "^2.4.1"
+  },
+  "peerDependencies": {
+    "nx": ">=22.0.0"
+  },
+  "devDependencies": {
+    "nx": "22.3.3"
+  },
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "require": "./src/index.js",
+      "import": "./src/index.js"
+    }
+  },
+  "generators": "./generators.json",
+  "executors": "./executors.json"
+}

@@ -1,0 +1,14 @@
+{
+  "generators": {
+    "configure": {
+      "factory": "./src/generators/configure/generator",
+      "schema": "./src/generators/configure/schema.json",
+      "description": "Configure rebundle for an Angular application"
+    },
+    "init": {
+      "factory": "./src/generators/init/generator",
+      "schema": "./src/generators/init/schema.json",
+      "description": "Initialize rebundle"
+    }
+  }
+}

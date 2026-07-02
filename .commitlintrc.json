@@ -9,6 +9,7 @@
         "cdk",
         "template",
         "state",
+        "rebundle",
         "docs",
         "demos",
         "schematics",
