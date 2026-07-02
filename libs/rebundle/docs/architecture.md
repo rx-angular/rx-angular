@@ -91,10 +91,7 @@ This fragmentation can result in hundreds of small files being requested at appl
 ## The Solution: Advanced Chunking Strategies
 
 `@rx-angular/rebundle` applies several strategies to merge these fragmented chunks back into logical groupings.
-
-### Reachability Strategy
-
-The reachability strategy attempts to optimize the bundle without any significant increase in bundle size. It traverses the imports and merges chunks based on the paths from which the code is reachable. If a set of static files is only ever reached via a specific dynamic route, they can be merged into that route's chunk.
+See the [Merge Strategies Guide](./merge-strategies/merge-strategies.md) for how the strategies apply a sequence of decisions to solve this issue (such as the default [Reachability strategy](./merge-strategies/reachability.md)).
 
 ### Bundling using Import Attributes
 

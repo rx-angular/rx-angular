@@ -23,7 +23,11 @@ By employing advanced chunking strategies, `@rx-angular/rebundle` consolidates i
 
 For real-world impact data, see this [demo discussion](https://github.com/angular/angular-cli/issues/27715#issuecomment-3398232305).
 
-## Installation
+## Getting Started
+
+Please see the [Setup Guide](./docs/setup.md) for full installation and usage instructions for both Angular CLI and Nx workspaces.
+
+### Installation
 
 Install the package from npm:
 
@@ -33,11 +37,11 @@ npm install @rx-angular/rebundle --save-dev
 yarn add @rx-angular/rebundle -D
 ```
 
-## Usage
+### Usage
 
 As of now, the bundle optimizer is primarily available as an Esbuild plugin and integrates seamlessly with Nx.
 
-### Usage with Nx
+#### Usage with Nx
 
 Add the plugin to your build target in your `project.json`:
 
@@ -52,7 +56,7 @@ Add the plugin to your build target in your `project.json`:
 }
 ```
 
-### Configuration
+#### Configuration
 
 You can specify additional configuration options to fine-tune the chunking behavior. For instance, to explicitly set a maximum number of output chunks:
 
@@ -75,10 +79,14 @@ You can specify additional configuration options to fine-tune the chunking behav
 }
 ```
 
-For advanced settings related to size-based merging, please refer to the [Size-Based Merging Documentation](./docs/size-based-merging.md).
-
-## Architecture
+## Merge Strategies & Configuration
 
 The esbuild chunking algorithm treats every dynamic import as an independent entry point, missing opportunities to merge chunks that are only ever loaded together in the context of an Angular SPA. `@rx-angular/rebundle` fixes this by analyzing the module graph and performing reachability and size-based merging.
 
-Read the [Architecture Documentation](./docs/architecture.md) for more details.
+- **[Merge Strategies Overview](./docs/merge-strategies/merge-strategies.md)**
+  - [Configuration API](./docs/merge-strategies/configuration.md)
+  - [Reachability](./docs/merge-strategies/reachability.md)
+  - [Static Closure](./docs/merge-strategies/static-closure.md)
+  - [Common](./docs/merge-strategies/common.md)
+- **[Size-Based Merging](./docs/size-based-merging.md)**
+- **[Architecture & Problem Statement](./docs/architecture.md)**
