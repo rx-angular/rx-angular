@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@docusaurus/core": "2.0.1",
+    "@docusaurus/plugin-client-redirects": "2.0.1",
     "@docusaurus/preset-classic": "2.0.1",
     "@easyops-cn/docusaurus-search-local": "0.32.1",
     "@mdx-js/react": "^1.6.22",

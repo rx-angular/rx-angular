@@ -5938,6 +5938,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@docusaurus/plugin-client-redirects@npm:2.0.1":
+  version: 2.0.1
+  resolution: "@docusaurus/plugin-client-redirects@npm:2.0.1"
+  dependencies:
+    "@docusaurus/core": "npm:2.0.1"
+    "@docusaurus/logger": "npm:2.0.1"
+    "@docusaurus/utils": "npm:2.0.1"
+    "@docusaurus/utils-common": "npm:2.0.1"
+    "@docusaurus/utils-validation": "npm:2.0.1"
+    eta: "npm:^1.12.3"
+    fs-extra: "npm:^10.1.0"
+    lodash: "npm:^4.17.21"
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    react: ^16.8.4 || ^17.0.0
+    react-dom: ^16.8.4 || ^17.0.0
+  checksum: 10c0/ac706452dc693034ea511a7d361957118998d673b0deec75db56593c6171b27fc6a87377ceda4be4cf0d7794c573d07bf0f0e900b972ed412c40969ce26f0e95
+  languageName: node
+  linkType: hard
+
 "@docusaurus/plugin-content-blog@npm:2.0.1":
   version: 2.0.1
   resolution: "@docusaurus/plugin-content-blog@npm:2.0.1"
@@ -17344,6 +17364,7 @@ __metadata:
   dependencies:
     "@docusaurus/core": "npm:2.0.1"
     "@docusaurus/module-type-aliases": "npm:2.0.1"
+    "@docusaurus/plugin-client-redirects": "npm:2.0.1"
     "@docusaurus/preset-classic": "npm:2.0.1"
     "@easyops-cn/docusaurus-search-local": "npm:0.32.1"
     "@mdx-js/react": "npm:^1.6.22"
