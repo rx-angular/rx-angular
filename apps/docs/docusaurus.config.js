@@ -43,13 +43,13 @@ module.exports = {
         // and get wired when their target lands (wiring a redirect to a missing
         // file breaks the build under onBrokenLinks: 'throw').
         redirects: [
-          { from: '/isr/api', to: '/docs/packages/isr/reference/api' },
+          { from: '/isr/api', to: '/docs/packages/isr/reference/isr-api' },
           {
             from: '/isr/irs-configuration',
-            to: '/docs/packages/isr/reference/render-config',
+            to: '/docs/packages/isr/reference/isr-render-config',
           },
           { from: '/isr/how-it-works', to: '/docs/concepts/E8-how-isr-works' },
-          { from: '/isr/introduction', to: '/docs/packages/isr/introduction' },
+          { from: '/isr/introduction', to: '/docs/packages/isr/isr-introduction' },
           { from: '/isr/benefits', to: '/docs/packages/isr/' },
           { from: '/isr/isr', to: '/docs/packages/isr/' },
           { from: '/isr/getting-started', to: '/docs/packages/isr/how-to/set-up-isr' },
@@ -75,17 +75,17 @@ module.exports = {
           },
           { from: '/docs/isr/extra', to: '/docs/packages/isr/how-to/pass-extra-data' },
           { from: '/docs/isr/isr', to: '/docs/packages/isr/' },
-          { from: '/docs/isr/introduction', to: '/docs/packages/isr/introduction' },
+          { from: '/docs/isr/introduction', to: '/docs/packages/isr/isr-introduction' },
           { from: '/docs/isr/benefits', to: '/docs/packages/isr/' },
           {
             from: '/docs/isr/getting-started',
             to: '/docs/packages/isr/how-to/set-up-isr',
           },
           { from: '/docs/isr/how-it-works', to: '/docs/concepts/E8-how-isr-works' },
-          { from: '/docs/isr/api', to: '/docs/packages/isr/reference/api' },
+          { from: '/docs/isr/api', to: '/docs/packages/isr/reference/isr-api' },
           {
             from: '/docs/isr/irs-configuration',
-            to: '/docs/packages/isr/reference/render-config',
+            to: '/docs/packages/isr/reference/isr-render-config',
           },
           // Phase B: now-unblocked KILL/MOVE salvage redirects. E1
           // (concepts/E1-change-detection.md) and E3
@@ -454,11 +454,11 @@ module.exports = {
           },
           {
             from: '/cdk/transformations/edge-cases-overview',
-            to: '/docs/packages/cdk/reference/transformations/edge-cases',
+            to: '/docs/packages/cdk/reference/transformations/transformations-edge-cases',
           },
           {
             from: '/docs/cdk/transformations/edge-cases-overview',
-            to: '/docs/packages/cdk/reference/transformations/edge-cases',
+            to: '/docs/packages/cdk/reference/transformations/transformations-edge-cases',
           },
           {
             from: '/cdk/transformations/array/insert',
@@ -968,19 +968,19 @@ module.exports = {
             items: [
               {
                 label: '@rx-angular/state',
-                to: 'docs/state/',
+                to: 'docs/packages/state/',
               },
               {
                 label: '@rx-angular/template',
-                to: 'docs/template/',
+                to: 'docs/packages/template/',
               },
               {
                 label: '@rx-angular/cdk',
-                to: 'docs/cdk/',
+                to: 'docs/packages/cdk/',
               },
               {
                 label: '@rx-angular/eslint-plugin',
-                to: 'docs/eslint-plugin/',
+                to: 'docs/packages/eslint-plugin/',
               },
             ],
           },

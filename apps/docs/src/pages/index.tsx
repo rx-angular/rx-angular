@@ -17,7 +17,7 @@ function HomepageHeader(): JSX.Element {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/state"
+            to="/docs/packages/state/"
           >
             Get Started
           </Link>
