@@ -1,11 +1,49 @@
-.features {
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
-  align-items: center;
-  padding: 2rem 0;
-  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
 }
 
-.featureSvg {
-  height: 200px;
-  width: 200px;
+.card {
+  display: flex;
+  flex: 1 1 16rem;
+  max-width: 19rem;
+}
+
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.cardLink:hover {
+  text-decoration: none;
+  border-color: var(--ifm-link-color);
+}
+
+.cardLink:focus-visible {
+  outline: 3px solid var(--ifm-color-primary-light);
+  outline-offset: 2px;
+}
+
+.cardName {
+  font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--ifm-link-color);
+}
+
+.cardBlurb {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.92rem;
+  line-height: 1.5;
 }

@@ -16,7 +16,19 @@
   --ifm-color-primary-lightest: #f9a9e4; /* 60% white */
   --ifm-link-color: var(--ifm-color-primary-dark);
   --ifm-menu-color-active: var(--ifm-color-primary-dark);
-  --ifm-footer-logo-max-width: 106px;
+
+  /* Homepage tokens */
+  --rxa-accent: var(--ifm-color-primary-dark);
+  --rxa-grad-from: #f02abc;
+  --rxa-grad-to: #8b2fd6;
+  --rxa-cta-from: #f02abc;
+  --rxa-cta-to: #8b2fd6;
+  --rxa-hero-subtitle: #4b4551;
+  --rxa-hero-glow: rgba(243, 42, 188, 0.1);
+
+  /* Logo */
+  --ifm-footer-logo-max-width: 64px;
+
   /* Code */
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
@@ -29,10 +41,18 @@
   --ifm-color-primary-dark: #f02abc; /* Same as light mode base color */
   --ifm-color-primary-darker: #c02196; /* 20% black */
   --ifm-color-primary-darkest: #901970; /* 40% black */
+
   /* Primary color used as base color for light colors */
   --ifm-color-primary-light: #f67fd6; /* 20% white */
   --ifm-color-primary-lighter: #f9a9e4; /* 40% white */
   --ifm-color-primary-lightest: #fabae9; /* 60% white */
+
+  /* Homepage tokens */
+  --rxa-accent: #f9a9e4;
+  --rxa-grad-from: #f354c9;
+  --rxa-grad-to: #a56bf5;
+  --rxa-hero-subtitle: #b7adc0;
+  --rxa-hero-glow: rgba(243, 84, 201, 0.16);
 
   /* Code */
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);

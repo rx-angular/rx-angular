@@ -329,7 +329,6 @@ module.exports = {
       },
       footer: {
         copyright: `Funded by netidee: <a href="https://netidee.at/rxangular" title="netidee.at/rxangular" target="_blank">netidee.at/rxangular</a> <br/> Copyright © ${new Date().getFullYear()} RxAngular.`,
-        style: 'dark',
         logo: {
           alt: title,
           href: url,
