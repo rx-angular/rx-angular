@@ -15,7 +15,8 @@
         "ci",
         "eslint",
         "isr",
-        "release"
+        "release",
+        "speculative-link"
       ]
     ],
     "type-empty": [2, "never"],

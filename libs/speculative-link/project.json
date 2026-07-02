@@ -1,0 +1,31 @@
+{
+  "name": "speculative-link",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/speculative-link/src",
+  "prefix": "rx",
+  "tags": ["type:lib", "speculative-link"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "options": {
+        "tsConfig": "libs/speculative-link/tsconfig.lib.json",
+        "project": "libs/speculative-link/ng-package.json"
+      },
+      "outputs": ["{workspaceRoot}/dist/libs/speculative-link"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "libs/speculative-link/jest.config.ts",
+        "codeCoverage": true,
+        "tsConfig": "libs/speculative-link/tsconfig.spec.json"
+      },
+      "outputs": ["{workspaceRoot}/coverage/speculative-link"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}
