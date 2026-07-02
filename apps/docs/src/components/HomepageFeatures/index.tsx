@@ -42,11 +42,11 @@ function Image({
 }: {
   Svg: React.ComponentType<React.ComponentProps<'svg'>>;
 }): JSX.Element {
-  return <Svg className={styles.featureSvg} role="img" />;
+  return <Svg className={styles.featureSvg} aria-hidden="true" />;
 }
 
 function Heading({ title }: { title: string }): JSX.Element {
-  return <h3>{title}</h3>;
+  return <h2>{title}</h2>;
 }
 
 function Feature({ Svg, title, description, url }: FeatureItem): JSX.Element {
@@ -54,7 +54,7 @@ function Feature({ Svg, title, description, url }: FeatureItem): JSX.Element {
     <div className={clsx('col col--4')}>
       <div className="text--center">
         {url ? (
-          <a href={url}>
+          <a href={url} aria-label={title}>
             <Image Svg={Svg} />
           </a>
         ) : (

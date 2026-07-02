@@ -11,7 +11,7 @@ function HomepageHeader(): JSX.Element {
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
-        <img src="img/logo.svg" width="150" height="150" />
+        <img src="img/logo.svg" width="150" height="150" alt="RxAngular" />
         <h1 className="hero__title">{siteConfig.title}</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
@@ -61,7 +61,7 @@ export default function Home(): JSX.Element {
         </div>
 
         <div className="text--center padding-horiz--md">
-          <h3>Benefits</h3>
+          <h2>Benefits</h2>
           <ul>
             <li>
               🔥 It's fast &amp; performance focused: exceptional runtime speed

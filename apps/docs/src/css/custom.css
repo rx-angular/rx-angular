@@ -14,6 +14,8 @@
   --ifm-color-primary-light: #f354c9; /* 20% white */
   --ifm-color-primary-lighter: #f67fd6; /* 40% white */
   --ifm-color-primary-lightest: #f9a9e4; /* 60% white */
+  --ifm-link-color: var(--ifm-color-primary-dark);
+  --ifm-menu-color-active: var(--ifm-color-primary-dark);
   --ifm-footer-logo-max-width: 106px;
   /* Code */
   --ifm-code-font-size: 95%;
@@ -53,4 +55,22 @@ img[src$='img/logo.svg'] {
 
 .wrapper__table {
   overflow: scroll;
+}
+
+.footer__copyright a {
+  color: var(--ifm-link-color);
+}
+
+/* Lighter pink so the footer link clears AA on the dark footer surface. */
+[data-theme='dark'] .footer__copyright a {
+  color: var(--ifm-color-primary-light);
+}
+
+/* Footer: match the navbar exactly and follow the theme like the navbar does. */
+.footer {
+  --ifm-footer-background-color: var(--ifm-navbar-background-color);
+  --ifm-footer-color: var(--ifm-font-color-base);
+  --ifm-footer-link-color: var(--ifm-color-emphasis-700);
+  --ifm-footer-title-color: var(--ifm-font-color-base);
+  border-top: 1px solid var(--ifm-color-emphasis-200);
 }
