@@ -33,7 +33,7 @@ import { isDefined, isKeyOf, isObjectGuard } from '../_internals/guards';
  *
  *    // Imperative implementation
  *    changeName(name: string): void {
- *        this.state.set(setProp(this.get(), 'name', name));
+ *        this.state.set(setProp(this.state.get(), 'name', name));
  *    }
  * }
  *

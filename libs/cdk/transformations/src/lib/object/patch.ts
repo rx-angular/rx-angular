@@ -38,7 +38,7 @@ import { isObjectGuard } from '../_internals/guards';
  *
  *    // Imperative implementation
  *    changeName(name: string): void {
- *        this.state.set(patch(this.get(), { name }));
+ *        this.state.set(patch(this.state.get(), { name }));
  *    }
  * }
  *

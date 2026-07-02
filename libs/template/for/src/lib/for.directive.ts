@@ -211,7 +211,12 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * Read more about this in the
    * [official
-   *   docs](https://www.rx-angular.io/docs/template/rx-for-directive#local-strategies-and-view-content-queries-parent).
+   *   docs](https://www.rx-angular.io/docs/packages/template/how-to/tune-rendering-with-strategies).
+   *
+   * The resolved default is `false` (from `RX_RENDER_STRATEGIES_DEFAULTS.parent`);
+   * set `parent: true` only when you need parent change detection for view/content queries.
+   *
+   * @default false
    *
    * @example
    * \@Component({
@@ -245,7 +250,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
    * @description
    *
    * A flag to control whether *rxFor templates are created within `NgZone` or not.
-   * The default value is `true, `*rxFor` will create it's `EmbeddedViews` inside `NgZone`.
+   * The default value is `true`, so `*rxFor` will create its `EmbeddedViews` inside `NgZone`.
    *
    * Event listeners normally trigger zone. Especially high frequently events cause performance issues.
    *

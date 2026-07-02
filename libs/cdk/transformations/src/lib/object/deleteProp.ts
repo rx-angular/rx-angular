@@ -35,7 +35,7 @@ import { isDefined, isKeyOf, isObjectGuard } from '../_internals/guards';
  *
  *    // Imperative implementation
  *    removeName(): void {
- *        this.state.set(remove(this.get(), 'name'));
+ *        this.state.set(deleteProp(this.state.get(), 'name'));
  *    }
  * }
  *

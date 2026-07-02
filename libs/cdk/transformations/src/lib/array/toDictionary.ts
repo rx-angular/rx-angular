@@ -42,13 +42,13 @@ import {
  *
  *    // Imperative implementation
  *    convertToDictionary(): void {
- *        this.state.set({ creaturesDictionary: toDictionary(this.state.get().creatures, 'id'});
+ *        this.state.set({ creaturesDictionary: toDictionary(this.state.get().creatures, 'id')});
  *    }
  * }
  *
  * @see {@link OnlyKeysOfSpecificType}
  * @param {OnlyKeysOfSpecificType<T, S>} key
- * @returns { [key: string]: T[] }
+ * @returns { [key: string]: T }
  * @docsPage toDictionary
  * @docsCategory transformation-helpers
  */

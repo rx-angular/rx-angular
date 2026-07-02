@@ -153,7 +153,7 @@ export class RxState<State extends object> implements Subscribable<State> {
    * @return void
    *
    * @deprecated
-   * Use `provideRxStateConfig` and provide the accumulator with the `withAccumulator` provider function.
+   * Use `provideRxStateConfig` and provide the accumulator with the `withAccumulatorFn` provider function.
    * Will be removed in future versions.
    */
   setAccumulator(accumulatorFn: AccumulationFn): void {

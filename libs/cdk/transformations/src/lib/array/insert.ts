@@ -45,7 +45,7 @@ import { isDefined } from '../_internals/guards';
  *    }
  *
  *    // Imperative implementation
- *    insertCeature(): void {
+ *    insertCreature(): void {
  *        const creatureToAdd = {id: generateId(), name: 'newCreature', type: 'dinosaur' };
  *        this.state.set({ creatures: insert(this.state.get().creatures, creatureToAdd)});
  *    }

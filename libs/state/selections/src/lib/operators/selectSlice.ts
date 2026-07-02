@@ -21,7 +21,7 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  *
  * // An example with a custom comparison applied to each key
  * import { of } from 'rxjs';
- * import { selectSlice } from 'rx-angular/state';
+ * import { selectSlice } from '@rx-angular/state/selections';
  *
  *
  * const state$: Observable<MyState> = of(
@@ -45,7 +45,7 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  *
  * import { of, Observable } from 'rxjs';
  * import { tap } from 'rxjs/operators';
- * import { selectSlice } from 'rx-angular/state';
+ * import { selectSlice } from '@rx-angular/state/selections';
  *
  * interface MyState {
  *    title: string;

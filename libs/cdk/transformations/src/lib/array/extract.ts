@@ -3,7 +3,7 @@ import { isDefined, isKeyOf } from '../_internals/guards';
 /**
  * @description
  * Accepts an array of objects of type T and single key or array of keys (K extends keyof T).
- * The `exctract` method is pure and immutable, thus not touching the input values and returning a shallow
+ * The `extract` method is pure and immutable, thus not touching the input values and returning a shallow
  * copy of the extracted source.
  *
  * @example
@@ -22,16 +22,16 @@ import { isDefined, isKeyOf } from '../_internals/guards';
  *
  *    constructor(private state: RxState<ComponentState>, private api: ApiService) {
  *      state.connect(
- *        'animals'
+ *        'animals',
  *        this.api.getAnimals(),
  *        (state, animals) => extract(animals, ['id', 'name'])
  *      );
  *    }
  * }
  *
- * @returns T
+ * @returns Pick<T, K>[]
  *
- * @docsPage slice
+ * @docsPage extract
  * @docsCategory transformation-helpers
  */
  export function extract<T extends object, K extends keyof T>(

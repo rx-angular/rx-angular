@@ -26,7 +26,7 @@ function defaultCompare<T>(oldVal: T, newVal: T): boolean {
  * @example
  *
  * import { of } from 'rxjs';
- * import { distinctUntilSomeChanged } from 'rx-angular/state';
+ * import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
  *
  * interface Person {
  *    age: number;
@@ -52,7 +52,7 @@ function defaultCompare<T>(oldVal: T, newVal: T): boolean {
  * @example
  * // An example with `KeyCompareMap`
  * import { of } from 'rxjs';
- * import { distinctUntilSomeChanged } from 'rxjs/operators';
+ * import { distinctUntilSomeChanged } from '@rx-angular/state/selections';
  *
  * interface Person {
  *     age: number;

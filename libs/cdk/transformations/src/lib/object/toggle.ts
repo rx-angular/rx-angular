@@ -31,7 +31,7 @@ import {
  *    ) {
  *      // Reactive implementation
  *      state.connect(
- *        this.api.loadingChange$,
+ *        this.loadingChange$,
  *        (state, _) => {
  *            return toggle(state, 'isLoading');
  *        }
@@ -40,7 +40,7 @@ import {
  *
  *    // Imperative implementation
  *    toggleLoading(): void {
- *      this.set(toggle(state, 'isLoading'));
+ *      this.state.set(toggle(this.state.get(), 'isLoading'));
  *    }
  * }
  *

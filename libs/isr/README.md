@@ -4,7 +4,9 @@
 
 # @rx-angular/isr
 
-A library that enables Angular Universal applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
+A library that enables Angular SSR (`@angular/ssr`) applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
+
+Requires the peer dependency `@angular/ssr` `^21`.
 
 ## Features
 
@@ -12,7 +14,7 @@ A library that enables Angular Universal applications to generate static pages a
 - ▶️ On-demand cache invalidation
 - 🔌 Plugin based cache handlers
 - 👌 No build changes required!
-- 🅰️ Supports Angular Universal
+- 🅰️ Supports Angular SSR (`@angular/ssr`)
 - 🛡️ NgModules & Standalone Compatible
 
 ## Installation

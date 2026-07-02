@@ -29,17 +29,17 @@ import { pipeFromArray } from '../utils/pipe-from-array';
  * @example
  * import { Observable } from 'rxjs';
  * import { map } from 'rxjs/operators';
- * import { stateful } from 'rx-angular/state';
+ * import { stateful } from '@rx-angular/state/selections';
  *
  * const state$: Observable<{ name: string; items: string[] }>;
  * const derivation$ = state$.pipe(
  *   stateful(
- *     map(state => state.list.length),
+ *     map(state => state.items.length),
  *     filter(length => length > 3)
  *   )
  * );
  *
- * @return OperatorFunction<T, NonUndefined<A>>
+ * @return NonUndefined<T>
  *
  * @docsPage stateful
  * @docsCategory operators
@@ -93,12 +93,12 @@ export function stateful<T, A, B, C, D, E>(
  * @example
  * import { Observable } from 'rxjs';
  * import { map } from 'rxjs/operators';
- * import { stateful } from 'rx-angular/state';
+ * import { stateful } from '@rx-angular/state/selections';
  *
  * const state$: Observable<{ name: string; items: string[] }>;
  * const derivation$ = state$.pipe(
  *   stateful(
- *     map(state => state.list.length),
+ *     map(state => state.items.length),
  *     filter(length => length > 3)
  *   )
  * );

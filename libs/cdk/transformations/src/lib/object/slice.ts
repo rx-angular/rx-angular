@@ -21,7 +21,7 @@ import { isDefined, isKeyOf, isObjectGuard } from '../_internals/guards';
  *
  *    constructor(private state: RxState<ComponentState>, private api: ApiService) {
  *      state.connect(
- *        'animals'
+ *        'animals',
  *        this.api.getAnimals(),
  *        (state, animals) => {
  *            return animals.map(animal => slice(animal, ['id', 'name']));
