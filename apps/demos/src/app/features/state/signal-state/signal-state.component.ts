@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { insert, remove, update } from '@rx-angular/cdk/transformations';
 import { rxState } from '@rx-angular/state';
 import { DocsLinkComponent } from '../../../shared/docs-link';
+import { CodeHighlightComponent } from '../../../shared/code-highlight';
 
 type Todo = {
   id: number;
@@ -22,6 +23,47 @@ interface TodoState {
   query: string;
 }
 
+// Shown verbatim on the page via <rxa-code>. Flush-left so it renders cleanly.
+const SIGNAL_STATE_CODE = `interface TodoState {
+  todos: Todo[];
+  query: string;
+}
+
+export class SignalStateComponent {
+  // Seed the store, then connect a reactive source (a signal here).
+  private state = rxState<TodoState>(({ set, connect }) => {
+    set({ todos: [], query: '' });
+    connect('todos', todosDataSignal);
+  });
+
+  // Read state back as a signal and as derived (computed) signals.
+  readonly todos = this.state.signal('todos');
+  readonly filteredTodos = this.state.computed(({ todos, query }) =>
+    query()
+      ? todos().filter((t) => t.title.toLowerCase().includes(query().toLowerCase()))
+      : todos(),
+  );
+  readonly doneCount = this.state.computed(
+    ({ todos }) => todos().filter((t) => t.done).length,
+  );
+
+  // Mutations go through immutable @rx-angular/cdk/transformations helpers.
+  filter(query: string) {
+    this.state.set({ query });
+  }
+  addTodo(todo: Todo) {
+    this.state.set('todos', ({ todos }) => insert(todos, todo));
+  }
+  toggleDone(todo: Todo) {
+    this.state.set('todos', ({ todos }) =>
+      update(todos, { ...todo, done: !todo.done }, 'id'),
+    );
+  }
+  removeTodo(todo: Todo) {
+    this.state.set('todos', ({ todos }) => remove(todos, todo, 'id'));
+  }
+}`;
+
 /**
  * `rxState` is a fully signal-based state container. State is seeded with
  * `set`, connected to reactive sources with `connect`, and read back as
@@ -32,10 +74,10 @@ interface TodoState {
   selector: 'rxa-signal-state',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DocsLinkComponent],
+  imports: [DocsLinkComponent, CodeHighlightComponent],
   template: `
     <rxa-docs-link
-      docs="state/signal-state"
+      docs="packages/state/reference/rx-state-functional"
       source="apps/demos/src/app/features/state/signal-state"
     />
 
@@ -111,6 +153,11 @@ interface TodoState {
         }
       </div>
     </div>
+
+    <section class="code-section">
+      <h3 class="rxa-demo-section-title">Example code</h3>
+      <rxa-code title="signal-state.component.ts" [code]="exampleCode" />
+    </section>
   `,
   styles: [
     `
@@ -203,6 +250,8 @@ interface TodoState {
   ],
 })
 export class SignalStateComponent {
+  protected readonly exampleCode = SIGNAL_STATE_CODE;
+
   private state = rxState<TodoState>(({ set, connect }) => {
     set({ todos: [], query: '' });
 

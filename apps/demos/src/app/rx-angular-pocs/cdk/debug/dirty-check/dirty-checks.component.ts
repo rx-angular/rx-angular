@@ -1,16 +1,10 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  Renderer2,
-} from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 
 @Component({
   selector: 'rxa-dirty-check',
   template: `
     <div class="dirty-check">
-      <span class="indicator">{{ numDirtyChecks() }}</span>
+      <span class="indicator">{{ dirtyChecks() }}</span>
     </div>
   `,
   styles: [
@@ -21,28 +15,16 @@ import {
     `,
   ],
 })
-export class DirtyChecksComponent implements AfterViewInit {
-  displayElem;
-  dirtyChecks = 0;
+export class DirtyChecksComponent {
+  readonly dirtyChecks = signal(0);
 
   @Input()
   log;
 
-  constructor(
-    private elementRef: ElementRef,
-    private renderer: Renderer2,
-  ) {}
-
-  ngAfterViewInit() {
-    this.displayElem = this.elementRef.nativeElement.children[0].children[0];
-    this.numDirtyChecks();
-  }
-
-  numDirtyChecks() {
+  ngDoCheck() {
+    this.dirtyChecks.update((n) => n + 1);
     if (this.log) {
       console.log('dirtyCheck', this.log);
-    } else {
     }
-    return this.dirtyChecks++;
   }
 }

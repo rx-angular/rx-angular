@@ -2,7 +2,12 @@ import { AfterViewInit, Component } from '@angular/core';
 import { AppShellModule } from '../app-shell/index';
 import { AppPresenter } from './app-presenter.service';
 import { MENU_ITEMS } from './app.menu';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import { filter, take, tap } from 'rxjs/operators';
 
 @Component({
@@ -10,7 +15,7 @@ import { filter, take, tap } from 'rxjs/operators';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppPresenter],
-  imports: [AppShellModule, RouterOutlet],
+  imports: [AppShellModule, RouterOutlet, RouterLink],
 })
 export class AppComponent implements AfterViewInit {
   menuItems = MENU_ITEMS;

@@ -36,7 +36,7 @@ import { ValueProviderComponent } from '../../../shared/debug-helper/value-provi
             </p>
           </div>
           <rxa-docs-link
-            docs="template/rx-if-directive"
+            docs="packages/template/reference/rx-if"
             source="apps/demos/src/app/features/template/rx-if"
           />
         </header>

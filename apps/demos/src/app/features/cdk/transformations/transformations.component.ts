@@ -126,7 +126,7 @@ export class JsonAndRefBlock {
   imports: [DocsLinkComponent, JsonAndRefBlock],
   template: `
     <rxa-docs-link
-      docs="cdk/transformations/transformations"
+      docs="packages/cdk/reference/transformations"
       source="apps/demos/src/app/features/cdk/transformations"
     />
 

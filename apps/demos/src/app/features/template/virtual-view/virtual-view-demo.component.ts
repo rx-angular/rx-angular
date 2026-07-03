@@ -27,7 +27,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         </p>
       </div>
       <rxa-docs-link
-        docs="template/virtual-view-directive"
+        docs="packages/template/reference/rx-virtual-view"
         source="apps/demos/src/app/features/template/virtual-view"
       />
     </header>

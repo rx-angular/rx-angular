@@ -9,33 +9,39 @@ import { EXPERIMENTS_MENU as EXPERIMENTS_MENU_ITEMS } from '../features/experime
 
 export const MENU_ITEMS = [
   {
-    label: '🧰 Template',
+    label: 'Template',
     link: 'template',
+    icon: { matIcon: 'dashboard' },
     children: TEMPLATE_MENU,
   },
   {
     label: 'State',
     link: 'state',
+    icon: { matIcon: 'hub' },
     children: STATE_MENU,
   },
   {
-    label: '🛠️ CDK',
+    label: 'CDK',
     link: 'cdk',
+    icon: { matIcon: 'build' },
     children: CDK_MENU,
   },
   {
-    label: '🏁 Concepts',
+    label: 'Concepts',
     link: 'concepts',
+    icon: { matIcon: 'school' },
     children: FUNDAMENTALS_MENU,
   },
   {
-    label: '📋 Tutorials',
+    label: 'Tutorials',
     link: 'tutorials',
+    icon: { matIcon: 'menu_book' },
     children: TUTORIALS_MENU,
   },
   {
-    label: '🧮 Integrations',
+    label: 'Integrations',
     link: 'integrations',
+    icon: { matIcon: 'extension' },
     children: INTEGRATIONS_MENU_ITEMS,
   },
   /* {

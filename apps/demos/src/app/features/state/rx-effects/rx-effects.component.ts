@@ -2,15 +2,52 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { rxEffects } from '@rx-angular/state/effects';
 import { EMPTY, interval, Subject, switchMap } from 'rxjs';
 import { DocsLinkComponent } from '../../../shared/docs-link';
+import { CodeHighlightComponent } from '../../../shared/code-highlight';
+
+// Shown verbatim on the page via <rxa-code>. Flush-left so it renders cleanly.
+const RX_EFFECTS_CODE = `export class RxEffectsComponent {
+  readonly ticks = signal(0);
+  readonly polls = signal(0);
+  private readonly pollingTrigger$ = new Subject<boolean>();
+  private stopFast: (() => void) | null = null;
+
+  // One rxEffects instance; every registered effect is torn down on destroy.
+  private readonly effects = rxEffects(({ register, onDestroy }) => {
+    // Always-on: trigger observable + side-effect callback.
+    register(interval(1000), () => this.ticks.update((t) => t + 1));
+
+    // Trigger-driven: switchMap between polling and idle without re-registering.
+    register(
+      this.pollingTrigger$.pipe(
+        switchMap((isPolling) => (isPolling ? interval(750) : EMPTY)),
+      ),
+      () => this.polls.update((p) => p + 1),
+    );
+
+    onDestroy(() => console.log('effects cleaned up'));
+  });
+
+  start() {
+    // register() returns a cleanup fn to stop just this one effect.
+    this.stopFast = this.effects.register(interval(200), () =>
+      this.fast.update((v) => v + 1),
+    );
+  }
+
+  stop() {
+    this.stopFast?.();
+    this.stopFast = null;
+  }
+}`;
 
 @Component({
   selector: 'rxa-rx-effects-demo',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DocsLinkComponent],
+  imports: [DocsLinkComponent, CodeHighlightComponent],
   template: `
     <rxa-docs-link
-      docs="state/effects/effects"
+      docs="packages/state/reference/rx-effects-api"
       source="apps/demos/src/app/features/state/rx-effects"
     />
 
@@ -84,6 +121,11 @@ import { DocsLinkComponent } from '../../../shared/docs-link';
         and the cleanup runs (check the console).
       </p>
     </div>
+
+    <section class="code-section">
+      <h3 class="rxa-demo-section-title">Example code</h3>
+      <rxa-code title="rx-effects.component.ts" [code]="exampleCode" />
+    </section>
   `,
   styles: [
     `
@@ -97,6 +139,8 @@ import { DocsLinkComponent } from '../../../shared/docs-link';
   ],
 })
 export class RxEffectsComponent {
+  protected readonly exampleCode = RX_EFFECTS_CODE;
+
   // View state (declared before `effects` so the setup callback can read them).
   protected readonly ticks = signal(0);
   protected readonly fast = signal(0);

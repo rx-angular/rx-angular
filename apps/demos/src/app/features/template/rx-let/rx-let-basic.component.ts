@@ -11,7 +11,7 @@ import { StrategySelectComponent } from '../../../shared/debug-helper/strategy-s
 import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 
 @Component({
-  selector: 'rxa-rx-let-poc',
+  selector: 'rxa-rx-let-basic',
   standalone: true,
   imports: [
     RxLet,
@@ -34,7 +34,7 @@ import { ValueProviderComponent } from '../../../shared/debug-helper/value-provi
             </p>
           </div>
           <rxa-docs-link
-            docs="template/rx-let-directive"
+            docs="packages/template/reference/rx-let"
             source="apps/demos/src/app/features/template/rx-let"
           />
         </header>

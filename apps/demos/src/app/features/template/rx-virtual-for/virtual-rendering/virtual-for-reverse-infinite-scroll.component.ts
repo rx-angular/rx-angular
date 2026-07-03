@@ -40,7 +40,7 @@ import { Message, MessageService } from './messages/messages.service';
           </p>
         </div>
         <rxa-docs-link
-          docs="template/virtual-scrolling"
+          docs="packages/template/reference/rx-virtual-for"
           source="apps/demos/src/app/features/template/rx-virtual-for"
         />
       </header>

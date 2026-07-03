@@ -140,6 +140,11 @@
   color: var(--rxa-text);
 }
 
+// Wrapper for a page's "Example code" block (a <rxa-code> and its heading).
+.code-section {
+  margin-top: 1.5rem;
+}
+
 // A rounded card that wraps a virtual-scroll viewport (clips its corners).
 .rxa-viewport-card {
   border: 1px solid var(--rxa-border);

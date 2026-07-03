@@ -3,6 +3,47 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { rxActions } from '@rx-angular/state/actions';
 import { scan } from 'rxjs';
 import { DocsLinkComponent } from '../../../shared/docs-link';
+import { CodeHighlightComponent } from '../../../shared/code-highlight';
+
+// Shown verbatim on the page via <rxa-code>. Flush-left so it renders cleanly.
+const RX_ACTIONS_CODE = `interface CounterActions {
+  add: number;
+  subtract: number;
+  reset: void;
+  setName: string;
+}
+
+export class RxActionsComponent {
+  // One call turns the interface into dispatchers, streams and on* helpers.
+  // The transform maps the raw DOM event to a clean string before it emits, so
+  // the template can call actions.setName($event) directly.
+  readonly actions = rxActions<CounterActions>(({ transforms }) =>
+    transforms({
+      setName: (event: Event) =>
+        (event.target as HTMLInputElement | null)?.value ?? '',
+    }),
+  );
+
+  readonly count = signal(0);
+
+  constructor() {
+    // Every key is also an observable stream: add$, subtract$, setName$ ...
+    this.actions.add$
+      .pipe(takeUntilDestroyed())
+      .subscribe((value) => this.count.update((c) => c + value));
+
+    this.actions.subtract$
+      .pipe(takeUntilDestroyed())
+      .subscribe((value) => this.count.update((c) => c - value));
+  }
+
+  // on* side-effect helper for the reset action (auto-cleaned on destroy).
+  // Returns a fn you can call to stop just this effect.
+  private readonly stopReset = this.actions.onReset(
+    (reset$) => reset$,
+    () => this.count.set(0),
+  );
+}`;
 
 /**
  * The typed action interface. Every key becomes:
@@ -21,10 +62,10 @@ interface CounterActions {
   selector: 'rxa-rx-actions-demo',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DocsLinkComponent],
+  imports: [DocsLinkComponent, CodeHighlightComponent],
   template: `
     <rxa-docs-link
-      docs="state/actions/actions"
+      docs="packages/state/reference/rx-actions-api"
       source="apps/demos/src/app/features/state/rx-actions"
     />
 
@@ -97,6 +138,11 @@ interface CounterActions {
         Hello, <strong>{{ name() || '—' }}</strong>
       </div>
     </div>
+
+    <section class="code-section">
+      <h3 class="rxa-demo-section-title">Example code</h3>
+      <rxa-code title="rx-actions.component.ts" [code]="exampleCode" />
+    </section>
   `,
   styles: [
     `
@@ -110,6 +156,8 @@ interface CounterActions {
   ],
 })
 export class RxActionsComponent {
+  protected readonly exampleCode = RX_ACTIONS_CODE;
+
   // `setName` gets a transform with an explicit `Event` param: the raw DOM
   // event is mapped to its input value before the action emits. Because the
   // transform's parameter type is `Event`, the generated dispatcher

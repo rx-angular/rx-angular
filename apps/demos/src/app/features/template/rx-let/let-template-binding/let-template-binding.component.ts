@@ -22,7 +22,7 @@ import { LetTemplateBindingSubjectExampleComponent } from './examples/let-templa
         </p>
       </div>
       <rxa-docs-link
-        docs="template/rx-let-directive"
+        docs="packages/template/reference/rx-let"
         source="apps/demos/src/app/features/template/rx-let"
       />
     </header>

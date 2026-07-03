@@ -33,7 +33,7 @@ import { DocsLinkComponent } from '../../../../shared/docs-link';
         </p>
       </div>
       <rxa-docs-link
-        docs="template/rx-for-directive"
+        docs="packages/template/reference/rx-for"
         source="apps/demos/src/app/features/template/rx-for"
       />
     </header>

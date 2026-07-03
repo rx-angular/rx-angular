@@ -6,12 +6,12 @@
 // ============================================================================
 
 :root {
-  // Brand & accent
-  --rxa-brand: #c3002f;
-  --rxa-brand-rgb: 195, 0, 47;
-  --rxa-brand-dark: #a30028;
-  --rxa-accent: #6c4cf1;
-  --rxa-accent-dark: #573ad1;
+  // Brand & accent — aligned with the docs site palette (apps/docs custom.css)
+  --rxa-brand: #f02abc;
+  --rxa-brand-rgb: 240, 42, 188;
+  --rxa-brand-dark: #c02196;
+  --rxa-accent: #8b2fd6;
+  --rxa-accent-dark: #7626b8;
 
   // Surfaces & text
   --rxa-bg: #f5f6f8;
@@ -84,7 +84,7 @@ samp {
   font-family: var(--rxa-mono);
   font-size: 0.875em;
   background: var(--rxa-surface-3);
-  color: #5b2bd9;
+  color: var(--rxa-accent-dark);
   padding: 0.1em 0.4em;
   border-radius: 5px;
 }

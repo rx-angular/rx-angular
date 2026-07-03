@@ -27,7 +27,7 @@ import { DocsLinkComponent } from '../../../shared/docs-link';
         </p>
       </div>
       <rxa-docs-link
-        docs="template/push-pipe"
+        docs="packages/template/legacy/push-pipe"
         source="apps/demos/src/app/features/template/push"
       />
     </header>

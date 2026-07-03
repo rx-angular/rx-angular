@@ -15,7 +15,7 @@ const SOURCE_BASE = 'https://github.com/rx-angular/rx-angular/tree/main/';
  * Usage:
  * ```html
  * <rxa-docs-link
- *   docs="template/rx-if-directive"
+ *   docs="packages/template/reference/rx-if"
  *   source="apps/demos/src/app/features/template/rx-if"
  * />
  * ```
@@ -78,12 +78,12 @@ const SOURCE_BASE = 'https://github.com/rx-angular/rx-angular/tree/main/';
       }
 
       .rxa-docs-link__item--docs {
-        background-color: #e3373715;
-        color: #c3002f;
+        background-color: rgba(var(--rxa-brand-rgb), 0.08);
+        color: var(--rxa-brand);
       }
 
       .rxa-docs-link__item--docs:hover {
-        background-color: #c3002f;
+        background-color: var(--rxa-brand);
         color: #fff;
       }
 

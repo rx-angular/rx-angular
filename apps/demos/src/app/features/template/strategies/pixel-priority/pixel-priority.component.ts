@@ -45,7 +45,7 @@ import { CanvasViewComponent } from '../../../../shared/canvas-view/canvas-view.
             </p>
           </div>
           <rxa-docs-link
-            docs="cdk/render-strategies/render-strategies"
+            docs="packages/cdk/reference/concurrent-strategies"
             source="apps/demos/src/app/features/template/strategies"
           />
         </header>

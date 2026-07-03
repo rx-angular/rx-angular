@@ -83,7 +83,7 @@ interface DemoSection {
       }
       code {
         background: #f3f0ff;
-        color: #5b2bd9;
+        color: var(--rxa-accent-dark);
         padding: 0.1rem 0.35rem;
         border-radius: 4px;
       }
@@ -118,7 +118,7 @@ interface DemoSection {
         gap: 0.5rem;
       }
       .card__title:hover {
-        color: #c3002f;
+        color: var(--rxa-brand);
       }
       .card__emoji {
         font-size: 1.4rem;
@@ -153,11 +153,11 @@ interface DemoSection {
         text-decoration: none;
       }
       .btn--primary {
-        background: #c3002f;
+        background: var(--rxa-brand);
         color: #fff;
       }
       .btn--primary:hover {
-        background: #a30028;
+        background: var(--rxa-brand-dark);
       }
       .btn--ghost {
         border: 1px solid #d0d7de;

@@ -34,7 +34,7 @@ interface LogEntry {
   imports: [DocsLinkComponent, AsyncPipe],
   template: `
     <rxa-docs-link
-      docs="cdk/coercing/coercing"
+      docs="packages/cdk/reference/coercing"
       source="apps/demos/src/app/features/cdk/coercing"
     />
 

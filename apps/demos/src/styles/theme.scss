@@ -13,23 +13,86 @@
 //  you can delete this line and instead use:
 //    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$rx-state-primary: mat.m2-define-palette(mat.$m2-red-palette, 700, 400, 900);
-$rx-state-accent: mat.m2-define-palette(
-  mat.$m2-deep-purple-palette,
-  A200,
-  A100,
-  A400
+// Custom palettes matching the docs site brand (apps/docs/src/css/custom.css):
+// a magenta primary (#f02abc) and a purple accent (#8b2fd6), so both apps share
+// the same design system.
+$rxa-magenta-palette: (
+  50: #fcd4f2,
+  100: #f9a9e4,
+  200: #f67fd6,
+  300: #f354c9,
+  400: #f23fc3,
+  500: #f02abc,
+  600: #c02196,
+  700: #901970,
+  800: #60104b,
+  900: #3d0a30,
+  A100: #f9a9e4,
+  A200: #f67fd6,
+  A400: #f354c9,
+  A700: #d81fa5,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: white,
+    A400: white,
+    A700: white,
+  ),
 );
+
+$rxa-purple-palette: (
+  50: #f1e7fb,
+  100: #d9bef5,
+  200: #bf90ee,
+  300: #a462e7,
+  400: #9047e0,
+  500: #8b2fd6,
+  600: #7626b8,
+  700: #5f1f96,
+  800: #491775,
+  900: #2f0f4d,
+  A100: #d0b3ff,
+  A200: #a56bf5,
+  A400: #8b2fd6,
+  A700: #6a1fc0,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: white,
+    A400: white,
+    A700: white,
+  ),
+);
+
+// Define the palettes for your theme. For each palette, you can optionally
+// specify a default, lighter, and darker hue.
+$rx-state-primary: mat.m2-define-palette($rxa-magenta-palette, 500, 300, 700);
+$rx-state-accent: mat.m2-define-palette($rxa-purple-palette, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
 $rx-state-warn: mat.m2-define-palette(mat.$m2-deep-orange-palette);
 
 // Create the theme object (a Sass map containing all of the palettes).
-// A modern, light theme — surfaces are white/neutral and the brand red is the
-// primary accent, matching the design-system tokens used by the demo content.
+// A modern, light theme — surfaces are white/neutral and the brand magenta is
+// the primary accent, matching the design-system tokens used by the demo content.
 $rx-state-theme: mat.m2-define-light-theme(
   (
     color: (

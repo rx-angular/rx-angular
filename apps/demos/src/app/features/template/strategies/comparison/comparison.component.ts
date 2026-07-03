@@ -38,7 +38,7 @@ import { DocsLinkComponent } from '../../../../shared/docs-link';
             </p>
           </div>
           <rxa-docs-link
-            docs="cdk/render-strategies/render-strategies"
+            docs="packages/cdk/legacy/render-strategies-overview"
             source="apps/demos/src/app/features/template/strategies"
           />
         </header>

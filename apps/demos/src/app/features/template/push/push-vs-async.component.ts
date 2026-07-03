@@ -40,7 +40,7 @@ import { ValueProviderComponent } from '../../../shared/debug-helper/value-provi
             </p>
           </div>
           <rxa-docs-link
-            docs="template/push-pipe"
+            docs="packages/template/legacy/push-pipe"
             source="apps/demos/src/app/features/template/push"
           />
         </header>
