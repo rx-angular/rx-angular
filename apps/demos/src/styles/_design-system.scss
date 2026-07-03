@@ -49,6 +49,48 @@
 }
 
 // ---------------------------------------------------------------------------
+//  Dark mode — override the design tokens when .dark-theme is set on <html>.
+//  Every component below reads these var(--rxa-*) tokens, so re-pointing them
+//  here flips the whole demo app to a dark palette in one place.
+// ---------------------------------------------------------------------------
+:root.dark-theme {
+  // Brand & accent — lifted a touch for contrast on dark surfaces
+  --rxa-brand: #ff4fcf;
+  --rxa-brand-rgb: 255, 79, 207;
+  --rxa-brand-dark: #f02abc;
+  --rxa-accent: #b07cf0;
+  --rxa-accent-dark: #9047e0;
+
+  // Surfaces & text
+  --rxa-bg: #0d1117;
+  --rxa-surface: #161b22;
+  --rxa-surface-2: #1c222b;
+  --rxa-surface-3: #21262d;
+  --rxa-text: #e6edf3;
+  --rxa-text-muted: #9198a1;
+  --rxa-border: #2a313a;
+  --rxa-border-strong: #3d444d;
+
+  // Status — brighter foregrounds on translucent tinted backgrounds
+  --rxa-success: #3fb950;
+  --rxa-success-bg: rgba(63, 185, 80, 0.15);
+  --rxa-info: #58a6ff;
+  --rxa-info-bg: rgba(88, 166, 255, 0.15);
+  --rxa-warn: #d29922;
+  --rxa-warn-bg: rgba(210, 153, 34, 0.15);
+  --rxa-danger: #f85149;
+  --rxa-danger-bg: rgba(248, 81, 73, 0.15);
+
+  // Depth — deeper shadows read better against dark backgrounds
+  --rxa-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.5);
+  --rxa-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  --rxa-ring: 0 0 0 3px rgba(var(--rxa-brand-rgb), 0.28);
+
+  // Let the browser paint native controls (scrollbars, form widgets) dark
+  color-scheme: dark;
+}
+
+// ---------------------------------------------------------------------------
 //  Base
 // ---------------------------------------------------------------------------
 body {

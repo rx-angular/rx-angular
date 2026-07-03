@@ -33,7 +33,6 @@ import { DocsLinkComponent } from '../../../shared/docs-link';
     MatInputModule,
     MatProgressSpinnerModule,
     MatBadgeModule,
-    RxUnpatch,
     DocsLinkComponent,
   ],
   template: `
@@ -59,11 +58,11 @@ import { DocsLinkComponent } from '../../../shared/docs-link';
       </mat-card-content>
 
       <mat-card-actions>
-        <button mat-button [unpatch] (click)="reset()">reset</button>
-        <button mat-button [unpatch] (click)="offlineError()">offline</button>
-        <button mat-button [unpatch] (click)="authError()">auth</button>
-        <button mat-button [unpatch] (click)="accessError()">access</button>
-        <button mat-button [unpatch] (click)="serverError()">server</button>
+        <button mat-button (click)="reset()">reset</button>
+        <button mat-button (click)="offlineError()">offline</button>
+        <button mat-button (click)="authError()">auth</button>
+        <button mat-button (click)="accessError()">access</button>
+        <button mat-button (click)="serverError()">server</button>
       </mat-card-actions>
     </mat-card>
   `,

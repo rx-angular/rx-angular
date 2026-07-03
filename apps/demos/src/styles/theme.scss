@@ -106,13 +106,31 @@ $rx-state-theme: mat.m2-define-light-theme(
   )
 );
 
+// The matching dark theme — same brand palettes, dark surfaces. Only its
+// *color* is emitted (scoped under .dark-theme below); the light theme still
+// owns the shared typography/density so we don't duplicate structural CSS.
+$rx-state-dark-theme: mat.m2-define-dark-theme(
+  (
+    color: (
+      primary: $rx-state-primary,
+      accent: $rx-state-accent,
+      warn: $rx-state-warn,
+    ),
+    density: -1,
+  )
+);
+
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.elevation-classes();
 @include mat.app-background();
-@include mat.elevation-classes();
-@include mat.app-background();
 @include mat.all-component-themes($rx-state-theme);
 @import '../app/app-shell/app-shell.theme';
 @include app-shell-theme($rx-state-theme);
+
+// Dark mode — re-colour Material components when .dark-theme is on <html>.
+.dark-theme {
+  @include mat.all-component-colors($rx-state-dark-theme);
+  @include app-shell-theme($rx-state-dark-theme);
+}

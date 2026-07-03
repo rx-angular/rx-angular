@@ -15,10 +15,10 @@ export const MENU_ITEMS = [
     label: 'Exception Handling',
     link: 'exception-handling',
   },
-  {
-    label: 'Http Errors',
-    link: 'http-errors',
-  },
+  // {
+  //   label: 'Http Errors',
+  //   link: 'http-errors',
+  // },
   {
     label: 'Template Bindings',
     link: 'template-bindings',
@@ -27,8 +27,8 @@ export const MENU_ITEMS = [
     label: 'Template Triggers',
     link: 'template-triggers',
   },
-  {
-    label: 'Preloading Techniques',
-    link: 'preloading-images',
-  },
+  // {
+  //   label: 'Preloading Techniques',
+  //   link: 'preloading-images',
+  // },
 ];

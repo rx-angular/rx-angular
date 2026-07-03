@@ -30,6 +30,18 @@
     background-color 0.12s ease,
     color 0.12s ease;
 
+  // Neutralise Angular Material's flat-button surface so the item is flat at
+  // rest and only our own hover / active backgrounds show. Without this the
+  // MDC filled-button container color paints an opaque box behind every item —
+  // invisible on the white light sidenav but an obvious grey block in dark mode.
+  // (Custom properties cascade into MDC's internals regardless of view
+  // encapsulation, so setting the tokens here is enough.)
+  &.mat-mdc-unelevated-button {
+    --mdc-filled-button-container-color: transparent;
+    --mdc-filled-button-label-text-color: currentColor;
+    background-color: transparent;
+  }
+
   &:hover {
     background: var(--rxa-surface-3);
     color: var(--rxa-text);

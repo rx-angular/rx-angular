@@ -78,11 +78,11 @@ interface DemoSection {
       }
       .lead {
         max-width: 70ch;
-        color: #444;
+        color: var(--rxa-text-muted);
         font-size: 1.05rem;
       }
       code {
-        background: #f3f0ff;
+        background: var(--rxa-surface-3);
         color: var(--rxa-accent-dark);
         padding: 0.1rem 0.35rem;
         border-radius: 4px;
@@ -94,10 +94,10 @@ interface DemoSection {
         margin-top: 1.5rem;
       }
       .card {
-        border: 1px solid #e1e4e8;
+        border: 1px solid var(--rxa-border);
         border-radius: 10px;
         padding: 1.1rem;
-        background: #fff;
+        background: var(--rxa-surface);
         display: flex;
         flex-direction: column;
         transition:
@@ -105,14 +105,14 @@ interface DemoSection {
           transform 0.15s ease;
       }
       .card:hover {
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        box-shadow: var(--rxa-shadow);
         transform: translateY(-2px);
       }
       .card__title {
         font-size: 1.15rem;
         font-weight: 700;
         text-decoration: none;
-        color: #1b1f23;
+        color: var(--rxa-text);
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -124,14 +124,14 @@ interface DemoSection {
         font-size: 1.4rem;
       }
       .card__desc {
-        color: #57606a;
+        color: var(--rxa-text-muted);
         font-size: 0.9rem;
         margin: 0.5rem 0;
       }
       .card__highlights {
         margin: 0 0 0.85rem;
         padding-left: 1.1rem;
-        color: #444;
+        color: var(--rxa-text-muted);
         font-size: 0.85rem;
       }
       .card__highlights li {
@@ -160,11 +160,11 @@ interface DemoSection {
         background: var(--rxa-brand-dark);
       }
       .btn--ghost {
-        border: 1px solid #d0d7de;
-        color: #24292f;
+        border: 1px solid var(--rxa-border-strong);
+        color: var(--rxa-text);
       }
       .btn--ghost:hover {
-        background: #f6f8fa;
+        background: var(--rxa-surface-3);
       }
     `,
   ],
