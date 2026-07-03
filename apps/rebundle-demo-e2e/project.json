@@ -1,0 +1,26 @@
+{
+  "name": "rebundle-demo-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/rebundle-demo-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["rebundle-demo"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/rebundle-demo-e2e/cypress.config.ts",
+        "testingType": "e2e",
+        "devServerTarget": "rebundle-demo:serve:production"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "rebundle-demo:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

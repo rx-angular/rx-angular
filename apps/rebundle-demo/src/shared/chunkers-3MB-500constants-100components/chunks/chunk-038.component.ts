@@ -1,0 +1,95 @@
+import { Component } from '@angular/core';
+import { CONSTANT_186 } from '../constants/constant-186';
+import { CONSTANT_187 } from '../constants/constant-187';
+import { CONSTANT_188 } from '../constants/constant-188';
+import { CONSTANT_189 } from '../constants/constant-189';
+import { CONSTANT_190 } from '../constants/constant-190';
+
+@Component({
+  standalone: true,
+  selector: 'app-chunk-038',
+  template: `
+    <div class="chunk-component">
+      <h2>Chunk 038 Component</h2>
+      <p>
+        This component displays 5 constants: CONSTANT_186, CONSTANT_187,
+        CONSTANT_188, CONSTANT_189, CONSTANT_190
+      </p>
+      <div class="constants-container">
+        <div class="constant-display">
+          <h3>CONSTANT_186</h3>
+          <p>{{ CONSTANT_186 }}</p>
+        </div>
+        <div class="constant-display">
+          <h3>CONSTANT_187</h3>
+          <p>{{ CONSTANT_187 }}</p>
+        </div>
+        <div class="constant-display">
+          <h3>CONSTANT_188</h3>
+          <p>{{ CONSTANT_188 }}</p>
+        </div>
+        <div class="constant-display">
+          <h3>CONSTANT_189</h3>
+          <p>{{ CONSTANT_189 }}</p>
+        </div>
+        <div class="constant-display">
+          <h3>CONSTANT_190</h3>
+          <p>{{ CONSTANT_190 }}</p>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: [
+    `
+      .chunk-component {
+        padding: 20px;
+        margin: 10px 0;
+        border: 2px solid #007acc;
+        border-radius: 8px;
+        background: #f0f8ff;
+        font-family: Arial, sans-serif;
+      }
+
+      .chunk-component h2 {
+        color: #007acc;
+        margin: 0 0 10px 0;
+      }
+
+      .constants-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .constant-display {
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+
+      .constant-display h3 {
+        margin: 0 0 5px 0;
+        color: #333;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .constant-display p {
+        margin: 0;
+        word-break: break-all;
+        font-family: monospace;
+        font-size: 10px;
+        color: #666;
+      }
+    `,
+  ],
+})
+export class Chunk038Component {
+  CONSTANT_186 = CONSTANT_186;
+  CONSTANT_187 = CONSTANT_187;
+  CONSTANT_188 = CONSTANT_188;
+  CONSTANT_189 = CONSTANT_189;
+  CONSTANT_190 = CONSTANT_190;
+}
