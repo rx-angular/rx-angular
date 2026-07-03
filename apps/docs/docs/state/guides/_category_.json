@@ -1,9 +1,0 @@
-{
-  "label": "Guides",
-  "position": 4,
-  "link": {
-    "type": "generated-index",
-    "title": "State guides",
-    "slug": "/state/guides"
-  }
-}

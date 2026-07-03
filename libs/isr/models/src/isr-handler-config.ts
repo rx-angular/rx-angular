@@ -10,7 +10,7 @@ import { CacheHandler, RenderVariant } from './cache-handler';
 export interface ISRHandlerConfig {
   /**
    * Path to the HTML file that should be served for any incoming HTTP request.
-   * Most of the time this will be the indexHtml file that Angular Universal has setup for you.
+   * Most of the time this will be the index HTML file that Angular SSR (`@angular/ssr`) produces.
    */
   indexHtml: string;
 

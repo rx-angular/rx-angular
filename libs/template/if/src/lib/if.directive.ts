@@ -370,7 +370,12 @@ export class RxIf<T = unknown>
    *
    * Read more about this in the
    * [official
-   *   docs](https://www.rx-angular.io/docs/template/rx-if-directive#local-strategies-and-view-content-queries-parent).
+   *   docs](https://www.rx-angular.io/docs/packages/template/how-to/tune-rendering-with-strategies).
+   *
+   * The resolved default is `false` (from `RX_RENDER_STRATEGIES_DEFAULTS.parent`);
+   * set `parent: true` only when you need parent change detection for view/content queries.
+   *
+   * @default false
    *
    * @example
    * \@Component({
@@ -400,7 +405,7 @@ export class RxIf<T = unknown>
   /**
    * @description
    * A flag to control whether `*rxIf` templates are created within `NgZone` or not.
-   * The default value is `true, `*rxIf` will create its `EmbeddedView` inside `NgZone`.
+   * The default value is `true`, so `*rxIf` will create its `EmbeddedView` inside `NgZone`.
    *
    * Event listeners normally trigger zone.
    * Especially high frequency events can cause performance issues.

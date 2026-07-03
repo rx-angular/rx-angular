@@ -17,23 +17,23 @@ function HomepageHeader(): JSX.Element {
           height="88"
           alt="RxAngular"
         />
-        <p className={styles.eyebrow}>Signals first. Zoneless by default.</p>
+        <p className={styles.eyebrow}>Smooth rendering, simpler state</p>
         <h1 className={styles.heroTitle}>
           Reactive Angular.{' '}
           <span className={styles.grad}>Without the zone.</span>
         </h1>
         <p className={styles.heroSubtitle}>
-          A reactive toolset for Angular that picks up where signals leave off.
-          It handles state that turns global, complex, or async, and keeps
-          rendering fast without Zone.js.
+          A reactive toolset for Angular that starts where signals stop: state
+          that turns global, complex, or async, and rendering that stays fast in
+          a zoneless app.
         </p>
         <div className={styles.heroCtas}>
-          <Link className={styles.btnPrimary} to="/docs/state">
-            Get started
+          <Link className={styles.btnPrimary} to="/docs/start-here/">
+            Start here
           </Link>
-          <a className={styles.btnGhost} href="#packages">
-            Pick your package
-          </a>
+          <Link className={styles.btnGhost} to="/docs/concepts">
+            Read the concepts
+          </Link>
         </div>
         <p className={styles.heroPackages}>
           state <b>·</b> template <b>·</b> cdk <b>·</b> isr <b>·</b>{' '}
@@ -51,10 +51,10 @@ export default function Home(): JSX.Element {
       <HomepageHeader />
       <main className={styles.main}>
         <section id="packages" className={styles.packages}>
-          <h2 className={styles.sectionTitle}>One toolset. Five packages.</h2>
+          <h2 className={styles.sectionTitle}>Five packages, one job each.</h2>
           <p className={styles.sectionLede}>
-            RxAngular is a toolset for fully reactive Angular apps. The focus is
-            runtime performance and template rendering.
+            Each package stands alone. Reach for signals and native control flow
+            first, then add the one that fits your problem.
           </p>
           <HomepageFeatures />
         </section>
@@ -63,22 +63,23 @@ export default function Home(): JSX.Element {
           <h2 className={styles.sectionTitle}>Why RxAngular</h2>
           <ul className={styles.benefitGrid}>
             <li className={styles.benefitCard}>
-              <strong>Signals first,</strong> so RxAngular fits right into a
-              modern Angular app
+              <strong>Signals-first,</strong> it builds on signals and native
+              control flow.
             </li>
             <li className={styles.benefitCard}>
-              <strong>Fast by default</strong> with a small bundle and
-              exceptional runtime speed
+              <strong>Frame-budgeted rendering,</strong> it yields to the
+              browser so the UI stays responsive.
             </li>
             <li className={styles.benefitCard}>
-              <strong>Well typed and well tested,</strong> reliable as your
-              codebase grows
+              <strong>Strongly typed,</strong> with source-derived signatures
+              that hold up as your codebase grows.
             </li>
             <li className={styles.benefitCard}>
-              <strong>Lean and simple</strong> with no boilerplate
+              <strong>Tree-shakable,</strong> so you ship only the code you use.
             </li>
             <li className={styles.benefitCard}>
-              <strong>Backwards compatible</strong> with older Angular versions
+              <strong>Zoneless-ready,</strong> the way Angular 21 runs by
+              default.
             </li>
           </ul>
         </section>

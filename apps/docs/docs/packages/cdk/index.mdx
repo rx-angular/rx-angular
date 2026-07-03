@@ -1,0 +1,87 @@
+---
+id: cdk-overview
+title: '@rx-angular/cdk'
+diataxis_type: reference
+package: cdk
+legacy_guard: false
+sidebar_label: '@rx-angular/cdk'
+sidebar_position: 0
+hide_title: true
+tags: [cdk, api-reference]
+---
+
+# @rx-angular/cdk
+
+`@rx-angular/cdk` is a **Component Development Kit**, a helper layer of low-level,
+tree-shakable utilities for building ergonomic, high-performance Angular directives,
+components, services, and large-scale applications. It is not a journey of its own:
+the CDK is the **substrate** the RxAngular directives and state container are built
+on, and most of its value surfaces where you meet it: in the **Template**
+journey (rendering and scheduling) and the **State** journey (immutable state
+transformations).
+
+You reach for the CDK directly when you need one of its building blocks: a concurrent,
+priority-based renderer, immutable array/object update helpers, reactive-input coercion,
+stream-level notification materialization, or an app-wide hydration signal.
+
+## Install
+
+```bash
+npm install @rx-angular/cdk
+```
+
+Requires Angular `^21.0.0` (RxAngular `^21`). The CDK targets the modern baseline:
+standalone, `inject()`, signals, and native control flow (`@if`/`@for`/`@switch`).
+
+## Entry points
+
+The CDK ships as a set of independently importable secondary entry points, so you pull
+in only what you use:
+
+| Entry point                           | What it provides                                                                                                                                                                  | Where it surfaces                         |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `@rx-angular/cdk/render-strategies`   | The render-strategy system and the `RxStrategyProvider`: concurrent, priority-based scheduling of change detection.                                                               | Template journey (rendering & scheduling) |
+| `@rx-angular/cdk/transformations`     | Pure, immutable array/object update helpers (`insert`, `remove`, `update`, `upsert`, `toDictionary`, `patch`, `setProp`, `deleteProp`, `slice`, `toggle`, …).                     | State journey (immutable updates)         |
+| `@rx-angular/cdk/coercing`            | Reactive-input coercion: turn Observables or static values into a single Observable input stream.                                                                                 | CDK reference / how-to                    |
+| `@rx-angular/cdk/notifications`       | `RxNotification`, `rxMaterialize`, and `toRx*Notification`: stream-level materialization of the reactive context (suspense / next / error / complete).                            | CDK reference                             |
+| `@rx-angular/cdk/ssr`                 | `HydrationTracker` / `provideHydrationTracker`: an app-wide "fully hydrated" signal for SSR apps.                                                                                 | CDK reference / how-to                    |
+| `@rx-angular/cdk/coalescing`          | The `coalesceWith` RxJS operator for coalescing work over a duration selector.                                                                                                    | Legacy · Zone.js shelf                    |
+| `@rx-angular/cdk/zone-configurations` | Zone.js flag configuration helpers.                                                                                                                                               | Legacy · Zone.js shelf                    |
+| `@rx-angular/cdk/zone-less/browser`   | Zone-unpatched browser APIs: `cancelAnimationFrame`, `clearInterval`, `clearTimeout`, `Promise`, `requestAnimationFrame`, `setInterval`, `setTimeout`, `unpatchAddEventListener`. | Legacy · Zone.js shelf                    |
+| `@rx-angular/cdk/internals/core`      | Low-level internals, including `getZoneUnPatchedApi`.                                                                                                                             | Internals                                 |
+| `@rx-angular/cdk/internals/scheduler` | The concurrent scheduler powering the render strategies.                                                                                                                          | Internals                                 |
+| `@rx-angular/cdk/template`            | EmbeddedView management primitives underpinning the template directives.                                                                                                          | Internals                                 |
+
+## Where to go next
+
+- **Render & schedule**: the concurrent, priority-based rendering system.
+  [Concurrent strategies reference](./reference/concurrent-strategies.md) and the
+  [Concurrent rendering how-to](../template/how-to/concurrent-rendering.md) in the
+  Template journey.
+- **Transform state immutably**:
+  [Transformation helpers reference](./reference/transformations/index.md) for the pure
+  array/object update functions used in the State journey.
+- **Coerce reactive inputs**:
+  [`coercing` reference](./reference/coercing.md) ·
+  [How to coerce reactive inputs](./how-to/coerce-reactive-inputs.md).
+- **Materialize a reactive stream**:
+  [Notifications reference](./reference/notifications.md).
+- **Track SSR hydration**:
+  [`HydrationTracker` reference](./reference/hydration-tracker.md) ·
+  [How to track app hydration](./how-to/track-app-hydration.md).
+- **Concept: [Understanding change detection in Angular](../../concepts/E1-change-detection.md)**,
+  the "why" behind render strategies and the scheduling the CDK provides.
+
+:::note Zone.js history
+
+Older CDK material was framed around Zone.js: configuring zone flags, running
+zone-less, and coalescing zone-triggered change detection. Since Angular v21 change
+detection is **zoneless by default** and Zone.js is dropped from the default bundle, so
+that guidance now lives on the **Legacy · Zone.js** shelf for apps still running
+Zone.js. Only the bare `@rx-angular/cdk/zone-less` entry point was **dropped**
+(rx#1355) and is not a current path; the `@rx-angular/cdk/zone-less/browser`
+sub-entry still ships for apps that need zone-unpatched browser globals directly. To
+reach a zone-unpatched API generically, use `getZoneUnPatchedApi` from
+`@rx-angular/cdk/internals/core`.
+
+:::
