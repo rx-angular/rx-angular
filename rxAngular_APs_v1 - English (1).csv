@@ -1,0 +1,149 @@
+AP-Tätigkeiten,AP-Ergebnisse,"Person
+bzw.
+ext. Firma
+bzw.
+Stich-worte zu Sach-kosten 
+"
+"o) Vertragsprüfung, unterschreiben und an netidee senden 
+
+o) Projektplanung auf Basis excel-Vorlage und an berichte@netidee.at senden
+
+o) Projektwebsite Inhalt überprüft /erster Blog erstellt; Projektteam ergänzt (optional)
+
+o)Förderabrufformular für Förderrate 1 an berichte@netidee.at
+","AP1: Detailplanung und Formales am Projektstart
+
+Vertrag unterschrieben, Detailprojektplan (Arbeitsblatt Arbeitspakete) erstellt und abgenommen,  
+
+detaillierte Liste Projektergebnisse mit Lizenz und Ort der öffentlichen Bereitstellung erstellt und abgenommen (Arbeitsblatt Projektergebnisse)
+
+Projekt-Website in Betrieb & erster Blogeintrag erstellt
+
+erste Förderrate beantragt; ggf. nach Feedback ergänzt 
+
+Förderrate1 genehmigt
+
+
+
+",Michael Hladky
+,,Roman Koller
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+"Diese (wichtigen) Tätigkeiten werden im Projekt 
+im Arbeitspaket 2 durchgeführt:
+
+Tätigkeit A
+Tätigkeit B
+Tätigkeit C
+...
+","AP2: Überarbeitung von Docs und Erstellung von Demo Apps
+
+Eregebnis 1: Die bestehende Entwickler- und Anwenderdokumentation wird grundlegend überarbeitet, um die Verständlichkeit & Sichtbarkeit zu erhöhen. Primär sollen Einstiegshürden eliminiert werden. Ergänzend werden ""Public Best Practices Demos"" erstellt, welche die Vorteile unserer Library praxisnah aufzeigen.
+
+Ergebnis 6: Public API Refinement & Weiterentwicklung: Die bestehende, umfangreiche Programmierschnittstelle (API) wird kontinuierlich verfeinert und gewartet. Der Fokus liegt darauf, die Einstiegshürden für neue Entwickler zu senken und die Erweiterbarkeit für spezifische Anwendungsfälle zu verbessern.",Michael Hladky
+,,Julian Jandl
+,,Enea Jahullari
+,,Kirill Karnaukhov
+,,
+,,
+,,
+,,
+,,
+,,
+"Diese (wichtigen) Tätigkeiten werden im Projekt 
+im Arbeitspaket 3 durchgeführt:
+
+Tätigkeit A
+Tätigkeit B
+Tätigkeit C
+...
+","AP3: Implementierung von ""Instant Navigations""
+
+Ergebnis 2: Implementierung von ""Instant Navigations"" durch Soft-LCP-Optimierung: Das Problem: In SPAs führt ein Klick auf einen Link oft zu spürbaren Verzögerungen, bevor die neue Ansicht erscheint. Wir werden neuartige Algorithmen entwickeln, die Inhalte intelligent vorladen und Übergänge orchestrieren, dass Ladezeiten minimiert.",Michael Hladky
+,,Julian Jandl
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+"Diese (wichtigen) Tätigkeiten werden im Projekt 
+im Arbeitspaket 4 durchgeführt:
+
+Tätigkeit A
+Tätigkeit B
+Tätigkeit C
+...
+","AP4: Entwicklung intelligenten ""esbuild Bundle Optimizer""
+
+Ergebnins 4: Entwicklung eines intelligenten ""esbuild Bundle Optimizers"": Ein Problem moderner Webapps ist die Größe der ausgelieferten JavaScript-Dateien. Tools wie esbuild sind extrem schnell, aber ihre Fähigkeit zum ""Code Splitting"" ist limitiert. Wir werden einen Algorithmus entwickeln, welcher das Code-Splitting optimiert, um Ladezeiten zu optimieren.",Michael Hladky
+,,Julian Jandl
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+"Diese (wichtigen) Tätigkeiten werden im Projekt 
+im Arbeitspaket 5 durchgeführt:
+
+Tätigkeit A
+Tätigkeit B
+Tätigkeit C
+...
+","AP5: Integration Scheduling Techniken und Public API Refinment/ Weiterentwicklung
+
+Ergebnis 3: Integration neuer, browser-nativer Scheduling-Techniken: Moderne Browser bieten heute hocheffiziente, native APIs zur Priorisierung von Aufgaben (z.B. scheduler.postTask). Um die Nachhaltigkeit von RxAngular zu sichern, werden wir den Kern der Bibliothek umbauen, um diese neuen Standards zu nutzen. Dies reduziert den eigenen Code-Fußabdruck.",Michael Hladky
+,,Julian Jandl
+,,Enea Jahullari
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+"o) Laufendes Projektmanagement
+o) Zwischenbericht
+o) 2. und 3. Blog-Post
+o) Fachvorträge und Workshops
+o) Content Creation & Community Management","AP6: Projektmanagement, Sichtbarkeitsmaßnahmen und Zwischenbericht
+
+Ergebnis 5: Fachvorträge und Workshops: Die erfolgreiche Präsentation des Projekts auf Fachkonferenzen wird fortgesetzt.
+Content Creation & Community Management:Regelmäßige Blogs und Anwendungsbeispiele werden über die Projektwebsite und Social-Media-Kanäle wie Twitter/X und LinkedIn verbreitet",Michael Hladky
+,,Hanna Skryl
+,,Enea Jahollari
+,,Julian Jandl
+,,Roman Koller
+,,
+,,
+,,
+,,
+,,
+"o) Projektverlauf im Projektendbericht, Zusammenfassung und Endabrechnung dokumentieren
+
+o) Endbericht, Zusammenfassung, Endabrechnung samt gescannter Originalbelege an berichte@netidee.at übermitteln
+
+o) Förderratenabrufformular für die dritte Förderrate ausgefüllen und an berichte@netidee.at übermitteln 
+
+o) Endbericht, Zusammenfassung, Anwender_innen-Dokumentation und Entwickler_innen-Dokumentation auf die Projektwebsite hochladen
+
+o) Abschließenden Blogbeitrag verfassen
+","APN: Dokumentation und Formales am Projektende
+
+Die geplanten Projektergebnisse (siehe Arbeitsblatt ""Projektergebnisse"") sind erstellt/ funktionsfähig und ausreichend dokumentiert; 
+
+Projekt-Website wurde ein letztes Mal aktualisiert: Projektergebnisse sind unter Angabe der open source bzw. creative commons Lizenz der Öffentlichkeit zur Verfügung gestellt,
+
+Projektendbericht und Endabrechnung sind abgenommen; abschließender Projektblogeintrag;  letzte Förderrate beantragt",Michael Hladky
+,,Roman Koller
