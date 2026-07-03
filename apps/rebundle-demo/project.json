@@ -5,6 +5,7 @@
   "prefix": "app",
   "sourceRoot": "apps/rebundle-demo/src",
   "tags": [],
+  "implicitDependencies": ["rebundle"],
   "targets": {
     "build": {
       "executor": "@nx/angular:application",
