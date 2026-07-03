@@ -1,0 +1,81 @@
+{
+  "name": "rebundle-demo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/rebundle-demo/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/rebundle-demo",
+        "browser": "apps/rebundle-demo/src/main.ts",
+        "tsConfig": "apps/rebundle-demo/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "namedChunks": true,
+        "plugins": ["@rx-angular/rebundle"],
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/rebundle-demo/public"
+          }
+        ],
+        "styles": ["apps/rebundle-demo/src/styles.scss"]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/angular:dev-server",
+      "options": {
+        "port": 4201
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "rebundle-demo:build:production"
+        },
+        "development": {
+          "buildTarget": "rebundle-demo:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "rebundle-demo:build",
+        "port": 4200,
+        "staticFilePath": "dist/apps/rebundle-demo/browser",
+        "spa": true
+      }
+    }
+  }
+}
