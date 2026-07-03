@@ -3,6 +3,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
+import { withSpeculativeLinkPreloading } from '@rx-angular/speculative-link';
 import { ROUTES } from './app/app-component/app.routes';
 import { AppComponent } from './app/app-component/index';
 
@@ -21,7 +22,7 @@ mP.wrap(
         useValue: environment,
       },
       provideZonelessChangeDetection(),
-      provideRouter(ROUTES),
+      provideRouter(ROUTES, withSpeculativeLinkPreloading()),
     ],
   }),
 ).catch((err) => console.error(err));
