@@ -1,27 +1,44 @@
 {
   "name": "@rx-angular/rebundle",
   "version": "0.0.0",
+  "description": "@rx-angular/rebundle is an esbuild bundler plugin for Angular, optimized for reducing the amount of bundles.",
   "publishConfig": {
     "access": "public"
   },
+  "author": "Michael Hladky <michael.hladky@push-based.io>",
   "homepage": "https://rx-angular.io/",
+  "keywords": [
+    "esbuild",
+    "plugin",
+    "angular",
+    "bundler",
+    "rolldown",
+    "nx"
+  ],
+  "contributors": [
+    {
+      "name": "Michael Hladky",
+      "email": "michael.hladky@push-based.io"
+    },
+    {
+      "name": "Christopher Holder",
+      "email": "christopher.holder@push-based.io"
+    },
+    {
+      "name": "Julian Jandl",
+      "email": "julian.jandl@push-based.io"
+    }
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rx-angular/rx-angular.git"
+    "url": "https://github.com/rx-angular/rx-angular.git",
+    "directory": "libs/rebundle"
   },
   "dependencies": {
     "@nx/devkit": "22.3.3",
-    "esbuild": "^0.19.2",
-    "rolldown": "^1.0.0-beta.34",
-    "rollup": "^4.18.1",
-    "tslib": "^2.4.1"
-  },
-  "peerDependencies": {
-    "nx": ">=22.0.0"
-  },
-  "devDependencies": {
-    "nx": "22.3.3"
+    "esbuild": "^0.25.11",
+    "rolldown": "^1.1.4"
   },
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
