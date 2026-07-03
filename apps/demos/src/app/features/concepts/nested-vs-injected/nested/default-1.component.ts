@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CdHelper } from '../../../../shared/utils/cd-helper';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { CdTriggerComponent } from '../../../../shared/debug-helper/cd-trigger/cd-trigger/cd-trigger.component';
+import { CdDefault2Component } from './default-2.component';
+import { CdOnPush3Component } from './push-3.component';
 
 @Component({
   selector: 'rxa-cd-default-1',
@@ -23,7 +27,12 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
   },
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [CdHelper],
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    CdTriggerComponent,
+    CdDefault2Component,
+    CdOnPush3Component,
+  ],
 })
 export class CdDefault1Component {
   constructor(public cdHelper: CdHelper) {}

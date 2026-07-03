@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { DemoBasicsComponent } from './demo-basics.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'rxa-demo-basics4-container',
@@ -21,7 +25,7 @@ import { map } from 'rxjs/operators';
     ></rxa-demo-basics>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatFormField, MatInput, DemoBasicsComponent, AsyncPipe],
 })
 export class DemoBasicsContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();

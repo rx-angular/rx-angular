@@ -1,43 +1,88 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
+import { RxLet } from '@rx-angular/template/let';
 import { filter, map, startWith, tap } from 'rxjs/operators';
+import { DocsLinkComponent } from '../../../../shared/docs-link';
 
 @Component({
   selector: 'rxa-route-change',
+  standalone: true,
+  imports: [
+    FormsModule,
+    MatTabsModule,
+    RouterLink,
+    RouterOutlet,
+    RxLet,
+    DocsLinkComponent,
+  ],
   template: `
-    <div class="d-flex">
-      <input [(ngModel)]="items" (blur)="onInputBlur()" />
-      <nav
-        mat-tab-nav-bar
-        *rxLet="activeRoute$; let activeRoute; patchZone: true"
-      >
-        <a
-          mat-tab-link
-          [active]="
-            activeRoute.indexOf('native') === -1 &&
-            activeRoute.indexOf('rx-for') === -1
-          "
-          [routerLink]="'./'"
+    <header class="rxa-demo-header">
+      <div>
+        <h2>Route Change</h2>
+        <p class="rxa-demo-subtitle">
+          Observe rendering behaviour when navigating between routed
+          <code>*ngFor</code> and <code>*rxFor</code> lists.
+        </p>
+      </div>
+      <rxa-docs-link
+        docs="template/rx-for-directive"
+        source="apps/demos/src/app/features/template/rx-for"
+      />
+    </header>
+    <div class="rxa-demo-toolbar">
+      <section class="rxa-demo-group">
+        <span class="rxa-demo-label">Item count</span>
+        <input
+          class="rxa-demo-input"
+          [(ngModel)]="items"
+          (blur)="onInputBlur()"
+        />
+      </section>
+      <section class="rxa-demo-group">
+        <span class="rxa-demo-label">Route</span>
+        <nav
+          mat-tab-nav-bar
+          [tabPanel]="tabPanel"
+          *rxLet="activeRoute$; let activeRoute; patchZone: true"
         >
-          empty
-        </a>
-        <a
-          mat-tab-link
-          [routerLink]="['native', { count: items }]"
-          [active]="activeRoute.indexOf('native') !== -1"
-        >
-          native
-        </a>
-        <a
-          mat-tab-link
-          [routerLink]="['rx-for', { count: items }]"
-          [active]="activeRoute.indexOf('rx-for') !== -1"
-        >
-          concurrent
-        </a>
-      </nav>
+          <a
+            mat-tab-link
+            [active]="
+              activeRoute.indexOf('native') === -1 &&
+              activeRoute.indexOf('rx-for') === -1
+            "
+            [routerLink]="'./'"
+          >
+            empty
+          </a>
+          <a
+            mat-tab-link
+            [routerLink]="['native', { count: items }]"
+            [active]="activeRoute.indexOf('native') !== -1"
+          >
+            native
+          </a>
+          <a
+            mat-tab-link
+            [routerLink]="['rx-for', { count: items }]"
+            [active]="activeRoute.indexOf('rx-for') !== -1"
+          >
+            concurrent
+          </a>
+        </nav>
+      </section>
     </div>
-    <router-outlet></router-outlet>
+    <mat-tab-nav-panel #tabPanel>
+      <router-outlet></router-outlet>
+    </mat-tab-nav-panel>
   `,
   styles: [
     `
@@ -51,9 +96,11 @@ import { filter, map, startWith, tap } from 'rxjs/operators';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
 })
 export class RouteChangeComponent {
+  private router = inject(Router);
+  private activeRoute = inject(ActivatedRoute);
+
   readonly activeRoute$ = this.router.events.pipe(
     filter((e) => e instanceof NavigationEnd),
     map((e: NavigationEnd) => e.urlAfterRedirects),
@@ -63,11 +110,6 @@ export class RouteChangeComponent {
   );
 
   items = 1000;
-
-  constructor(
-    private router: Router,
-    private activeRoute: ActivatedRoute,
-  ) {}
 
   onInputBlur(): void {
     const url = this.router.url.split('/').pop();

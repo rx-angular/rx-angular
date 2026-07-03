@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { SetupStart } from './setup.start.component';
 
 @Component({
   selector: 'rxa-setup-container',
@@ -22,7 +25,7 @@ import { map } from 'rxjs/operators';
     </rxa-setup-start>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatFormField, MatInput, SetupStart],
 })
 export class SetupContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();

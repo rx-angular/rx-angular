@@ -10,6 +10,7 @@ import { Hooks } from '../hooks';
 import { select } from '@rx-angular/state/selections';
 import { RxEffects } from '@rx-angular/state/effects';
 import { AppConfigService } from '../../../app-config.service';
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'rxa-dirty-check-work',
@@ -37,7 +38,7 @@ import { AppConfigService } from '../../../app-config.service';
     `,
   ],
   providers: [RxEffects],
-  standalone: false,
+  imports: [MatRipple, NgStyle],
 })
 export class DirtyChecksWorkComponent extends Hooks {
   @ViewChild(MatRipple) ripple: MatRipple;

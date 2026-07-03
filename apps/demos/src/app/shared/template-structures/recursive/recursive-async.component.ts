@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'rxa-recursive-async',
@@ -24,7 +27,12 @@ import { ReplaySubject } from 'rxjs';
     class: 'd-flex w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    RenderingsComponent,
+    RecursiveAsyncComponent,
+    AsyncPipe,
+  ],
 })
 export class RecursiveAsyncComponent {
   @Input()

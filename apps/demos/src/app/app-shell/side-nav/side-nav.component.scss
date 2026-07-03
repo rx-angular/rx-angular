@@ -1,18 +1,86 @@
+:host {
+  display: block;
+  padding: 0.5rem;
+}
+
+.rxa-app-shell-tree {
+  display: block;
+}
+
 .app-shell-tree-node {
   display: block;
 }
 
+// Nav item (mat-flat-button anchor) — clean, rounded, full width
 .app-shell-sidenav-item {
-  height: 3rem;
+  position: relative;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  width: 100%;
+  margin: 1px 0;
+  padding-left: 0.85rem;
+  border-radius: var(--rxa-radius-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--rxa-text-muted);
+  letter-spacing: 0;
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease;
+
+  &:hover {
+    background: var(--rxa-surface-3);
+    color: var(--rxa-text);
+  }
+
+  mat-icon {
+    color: inherit;
+  }
+
+  // Chevron indicating expanded / collapsed state, pinned to the right edge
+  .app-shell-expand-icon {
+    margin-left: auto;
+    margin-right: 0.15rem;
+    color: var(--rxa-text-muted);
+    transition: color 0.12s ease;
+  }
+
+  &:hover .app-shell-expand-icon {
+    color: var(--rxa-text);
+  }
+
+  // Top-level (group) labels: bolder, full-contrast
+  strong {
+    font-weight: 700;
+    color: var(--rxa-text);
+  }
+
+  // Active route — brand-tinted pill with a left accent bar
+  &.active {
+    background: rgba(var(--rxa-brand-rgb), 0.1);
+    color: var(--rxa-brand);
+    font-weight: 600;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      border-radius: 0 3px 3px 0;
+      background: var(--rxa-brand);
+    }
+  }
 }
 
 .app-shell-sidenav-item-level-1 {
-  padding-left: 2rem;
+  padding-left: 1.85rem;
 }
 
 .app-shell-sidenav-item-level-2 {
-  padding-left: 3rem;
+  padding-left: 2.85rem;
 }

@@ -7,6 +7,12 @@ import {
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
+import { MatButton } from '@angular/material/button';
+import { UnpatchEventsDirective } from '../../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.directive';
+import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
 
 @Component({
   selector: 'rxa-v2-b',
@@ -39,7 +45,14 @@ import { tap } from 'rxjs/operators';
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    DirtyChecksComponent,
+    MatButton,
+    UnpatchEventsDirective,
+    PushPipe,
+    RxPush,
+  ],
 })
 export class V2BComponent {
   numExpressions = new Array(1).fill(0);

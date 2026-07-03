@@ -1,5 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CdHelper } from '../../../shared/utils/cd-helper';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import {
+  MatButtonToggleGroup,
+  MatButtonToggle,
+} from '@angular/material/button-toggle';
+import { MatButton } from '@angular/material/button';
+import { DetectChangesNestedComponent } from './nested/detect-changes.nested.component';
+import { DetectChangesInjectedComponent } from './injected/detect-changes.injected.component';
 
 @Component({
   selector: 'rxa-cd',
@@ -45,7 +53,14 @@ import { CdHelper } from '../../../shared/utils/cd-helper';
   `,
   providers: [CdHelper],
   changeDetection: ChangeDetectionStrategy.Default,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    MatButton,
+    DetectChangesNestedComponent,
+    DetectChangesInjectedComponent,
+  ],
 })
 export class NestedVsProjectedComponent {
   displayStates = {

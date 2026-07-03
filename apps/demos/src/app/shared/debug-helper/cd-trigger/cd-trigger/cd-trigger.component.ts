@@ -1,5 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { CdHelper } from '../../../utils/cd-helper';
+import { MatButton } from '@angular/material/button';
+import { ZonePatchedIconComponent } from '../../../zone-patched-icon/zone-patched-icon.component';
+import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
 
 @Component({
   selector: 'rxa-cd-trigger',
@@ -39,7 +42,7 @@ import { CdHelper } from '../../../utils/cd-helper';
     class: 'd-flex flex-wrap',
   },
   providers: [CdHelper],
-  standalone: false,
+  imports: [MatButton, ZonePatchedIconComponent, RxUnpatch],
 })
 export class CdTriggerComponent {
   @Input()

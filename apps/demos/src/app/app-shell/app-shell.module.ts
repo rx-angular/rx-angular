@@ -28,7 +28,6 @@ const exportedDeclarations = [
 ];
 
 @NgModule({
-  declarations: [...exportedDeclarations, AppShellSideNavItemDirective],
   imports: [
     CommonModule,
     MatSidenavModule,
@@ -41,6 +40,8 @@ const exportedDeclarations = [
     CdkTreeModule,
     RxLetModule,
     RxIf,
+    ...exportedDeclarations,
+    AppShellSideNavItemDirective,
   ],
   exports: exportedDeclarations,
 })

@@ -1,19 +1,10 @@
 import { Directive } from '@angular/core';
 
-@Directive({
-  selector: '[rxaAppShellSidenavContent]',
-  standalone: false,
-})
+@Directive({ selector: '[rxaAppShellSidenavContent]' })
 export class AppShellSidenavContent {}
 
-@Directive({
-  selector: '[rxaAppShellHeaderContent]',
-  standalone: false,
-})
+@Directive({ selector: '[rxaAppShellHeaderContent]' })
 export class AppShellHeaderContent {}
 
-@Directive({
-  selector: '[rxaAppShellSidenavTitle]',
-  standalone: false,
-})
+@Directive({ selector: '[rxaAppShellSidenavTitle]' })
 export class AppShellSidenavTitle {}

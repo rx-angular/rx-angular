@@ -5,6 +5,7 @@ import {
   RxVirtualFor,
 } from '@rx-angular/template/virtual-scrolling';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { DocsLinkComponent } from '../../../../shared/docs-link';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +13,29 @@ import { BehaviorSubject, Subject } from 'rxjs';
     RxVirtualFor,
     RxVirtualScrollViewportComponent,
     AutoSizeVirtualScrollStrategy,
+    DocsLinkComponent,
   ],
   template: `
-    <rx-virtual-scroll-viewport autosize [tombstoneSize]="63">
+    <header class="rxa-demo-header">
+      <div>
+        <h2>Crazy Update</h2>
+        <p class="rxa-demo-subtitle">
+          Rapidly mutates the <code>*rxVirtualFor</code> source right after the
+          first render to verify the autosized viewport stays consistent.
+        </p>
+      </div>
+      <rxa-docs-link
+        docs="template/virtual-scrolling"
+        source="apps/demos/src/app/features/template/rx-virtual-for"
+      />
+    </header>
+    <rx-virtual-scroll-viewport
+      class="viewport-card"
+      autosize
+      [tombstoneSize]="63"
+    >
       <div
+        class="item"
         *rxVirtualFor="
           let item of items$;
           trackBy: 'id';
@@ -27,6 +47,34 @@ import { BehaviorSubject, Subject } from 'rxjs';
       </div>
     </rx-virtual-scroll-viewport>
   `,
+  styles: [
+    `
+      .viewport-card {
+        box-sizing: border-box;
+        border: 1px solid var(--rxa-border);
+        border-radius: var(--rxa-radius-sm);
+        box-shadow: var(--rxa-shadow-sm);
+        background: var(--rxa-surface);
+      }
+      .item {
+        box-sizing: border-box;
+        overflow: hidden;
+        will-change: transform;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--rxa-border);
+        border-left: 3px solid rgba(var(--rxa-brand-rgb), 0.45);
+        background: var(--rxa-surface);
+        color: var(--rxa-text);
+        font-size: 0.85rem;
+      }
+      .item p {
+        margin: 0;
+      }
+      .item:hover {
+        background: var(--rxa-surface-3);
+      }
+    `,
+  ],
 })
 export class VirtualForCrazyUpdateComponent {
   items = signal(

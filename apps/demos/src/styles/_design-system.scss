@@ -1,0 +1,330 @@
+// ============================================================================
+//  RxAngular Demos — modern design system
+//  Lightweight design tokens + the component classes the demos rely on
+//  (Bootstrap's component CSS is not bundled — only its grid/utilities — so we
+//  provide a clean, modern implementation of .card / .btn / .badge / etc.)
+// ============================================================================
+
+:root {
+  // Brand & accent
+  --rxa-brand: #c3002f;
+  --rxa-brand-rgb: 195, 0, 47;
+  --rxa-brand-dark: #a30028;
+  --rxa-accent: #6c4cf1;
+  --rxa-accent-dark: #573ad1;
+
+  // Surfaces & text
+  --rxa-bg: #f5f6f8;
+  --rxa-surface: #ffffff;
+  --rxa-surface-2: #fafbfc;
+  --rxa-surface-3: #f1f3f5;
+  --rxa-text: #1b1f24;
+  --rxa-text-muted: #5b6573;
+  --rxa-border: #e4e7eb;
+  --rxa-border-strong: #d0d7de;
+
+  // Status
+  --rxa-success: #1a7f37;
+  --rxa-success-bg: #dafbe1;
+  --rxa-info: #0969da;
+  --rxa-info-bg: #ddf4ff;
+  --rxa-warn: #9a6700;
+  --rxa-warn-bg: #fff8c5;
+  --rxa-danger: #cf222e;
+  --rxa-danger-bg: #ffebe9;
+
+  // Shape & depth
+  --rxa-radius: 12px;
+  --rxa-radius-sm: 8px;
+  --rxa-radius-pill: 999px;
+  --rxa-shadow-sm:
+    0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+  --rxa-shadow: 0 6px 24px rgba(16, 24, 40, 0.08);
+  --rxa-ring: 0 0 0 3px rgba(var(--rxa-brand-rgb), 0.18);
+
+  // Typography
+  --rxa-font:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --rxa-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+// ---------------------------------------------------------------------------
+//  Base
+// ---------------------------------------------------------------------------
+body {
+  font-family: var(--rxa-font);
+  color: var(--rxa-text);
+  background: var(--rxa-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--rxa-text);
+}
+
+a {
+  color: var(--rxa-brand);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+code,
+kbd,
+samp {
+  font-family: var(--rxa-mono);
+  font-size: 0.875em;
+  background: var(--rxa-surface-3);
+  color: #5b2bd9;
+  padding: 0.1em 0.4em;
+  border-radius: 5px;
+}
+
+pre {
+  font-family: var(--rxa-mono);
+  background: #0d1117;
+  color: #e6edf3;
+  padding: 1rem;
+  border-radius: var(--rxa-radius-sm);
+  overflow: auto;
+}
+pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+.lead {
+  font-size: 1.05rem;
+  color: var(--rxa-text-muted);
+  line-height: 1.6;
+}
+
+.text-muted {
+  color: var(--rxa-text-muted) !important;
+}
+
+// Modern, subtle scrollbars
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rxa-border-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--rxa-border-strong);
+  border-radius: var(--rxa-radius-pill);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #b6bec8;
+  background-clip: content-box;
+}
+
+// ---------------------------------------------------------------------------
+//  Cards
+// ---------------------------------------------------------------------------
+.card {
+  background: var(--rxa-surface);
+  border: 1px solid var(--rxa-border);
+  border-radius: var(--rxa-radius);
+  box-shadow: var(--rxa-shadow-sm);
+}
+// Generic "demo card" used by the newer demos
+.demo-card {
+  background: var(--rxa-surface);
+  border: 1px solid var(--rxa-border);
+  border-radius: var(--rxa-radius);
+  box-shadow: var(--rxa-shadow-sm);
+}
+
+// ---------------------------------------------------------------------------
+//  Buttons (plain .btn — does not touch Angular Material's .mat-* buttons)
+// ---------------------------------------------------------------------------
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--rxa-radius-sm);
+  border: 1px solid transparent;
+  background: var(--rxa-surface);
+  color: var(--rxa-text);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+.btn:hover {
+  text-decoration: none;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--rxa-ring);
+}
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@mixin rxa-btn-solid($bg, $bg-hover) {
+  background: $bg;
+  border-color: $bg;
+  color: #fff;
+  &:hover {
+    background: $bg-hover;
+    border-color: $bg-hover;
+    color: #fff;
+  }
+}
+@mixin rxa-btn-outline($color) {
+  background: transparent;
+  border-color: var(--rxa-border-strong);
+  color: $color;
+  &:hover {
+    background: rgba($color, 0.06);
+    border-color: $color;
+    color: $color;
+  }
+}
+
+.btn-primary {
+  @include rxa-btn-solid(var(--rxa-brand), var(--rxa-brand-dark));
+}
+.btn-secondary {
+  @include rxa-btn-solid(#5b6573, #474f5c);
+}
+.btn-success {
+  @include rxa-btn-solid(var(--rxa-success), #136a2c);
+}
+.btn-info {
+  @include rxa-btn-solid(var(--rxa-info), #0757b3);
+}
+.btn-danger {
+  @include rxa-btn-solid(var(--rxa-danger), #a40e19);
+}
+.btn-accent {
+  @include rxa-btn-solid(var(--rxa-accent), var(--rxa-accent-dark));
+}
+
+.btn-outline-primary {
+  @include rxa-btn-outline(var(--rxa-brand));
+}
+.btn-outline-secondary {
+  background: transparent;
+  border-color: var(--rxa-border-strong);
+  color: var(--rxa-text);
+  &:hover {
+    background: var(--rxa-surface-3);
+    border-color: var(--rxa-border-strong);
+  }
+}
+.btn-outline-danger {
+  @include rxa-btn-outline(var(--rxa-danger));
+}
+.btn-outline-success {
+  @include rxa-btn-outline(var(--rxa-success));
+}
+.btn-sm {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.65rem;
+}
+
+// ---------------------------------------------------------------------------
+//  Badges
+// ---------------------------------------------------------------------------
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3em 0.6em;
+  border-radius: var(--rxa-radius-pill);
+  background: var(--rxa-surface-3);
+  color: var(--rxa-text);
+  line-height: 1;
+}
+.badge.fs-6 {
+  font-size: 0.85rem;
+}
+.bg-primary {
+  background: var(--rxa-brand) !important;
+  color: #fff !important;
+}
+.bg-secondary {
+  background: #5b6573 !important;
+  color: #fff !important;
+}
+.bg-info {
+  background: var(--rxa-info-bg) !important;
+  color: var(--rxa-info) !important;
+}
+.bg-success {
+  background: var(--rxa-success-bg) !important;
+  color: var(--rxa-success) !important;
+}
+.bg-danger {
+  background: var(--rxa-danger-bg) !important;
+  color: var(--rxa-danger) !important;
+}
+.bg-warning {
+  background: var(--rxa-warn-bg) !important;
+  color: var(--rxa-warn) !important;
+}
+
+// ---------------------------------------------------------------------------
+//  Form controls
+// ---------------------------------------------------------------------------
+.form-control,
+.form-select {
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--rxa-text);
+  background: var(--rxa-surface);
+  border: 1px solid var(--rxa-border-strong);
+  border-radius: var(--rxa-radius-sm);
+  padding: 0.5rem 0.7rem;
+  width: 100%;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.form-control:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--rxa-brand);
+  box-shadow: var(--rxa-ring);
+}
+
+// Small helpers a few legacy templates still use (Bootstrap 4 names)
+.mr-1 {
+  margin-right: 0.25rem !important;
+}
+.text-left {
+  text-align: left !important;
+}

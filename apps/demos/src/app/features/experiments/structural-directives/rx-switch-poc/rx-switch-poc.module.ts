@@ -13,12 +13,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
-import { RxSwichModule } from '../../../../rx-angular-pocs/';
+
 import { RxIf } from '@rx-angular/template/if';
-import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 
 @NgModule({
-  declarations: [RxSwitchPocComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -33,8 +31,7 @@ import { ValueProvidersModule } from '../../../../shared/debug-helper/value-prov
     MatButtonToggleModule,
     MatInputModule,
     RxIf,
-    RxSwichModule,
-    ValueProvidersModule,
+    RxSwitchPocComponent,
   ],
 })
 export class RxSwitchPocModule {}

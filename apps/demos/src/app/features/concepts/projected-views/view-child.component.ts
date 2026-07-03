@@ -6,6 +6,7 @@ import {
   ContentChild,
 } from '@angular/core';
 import { ContentChildComponent } from './content-child.component';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-view-child',
@@ -16,7 +17,7 @@ import { ContentChildComponent } from './content-child.component';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent],
 })
 export class ViewChildComponent {
   _renders = 0;

@@ -4,54 +4,88 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  inject,
   ViewChild,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { RxLet } from '@rx-angular/template/let';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { concat, defer, Subject } from 'rxjs';
-import {
-  map,
-  scan,
-  shareReplay,
-  startWith,
-  switchMap,
-  switchMapTo,
-  take,
-  tap,
-} from 'rxjs/operators';
+import { map, scan, shareReplay, startWith, take, tap } from 'rxjs/operators';
+import { DocsLinkComponent } from '../../../shared/docs-link';
 
 @Component({
   selector: 'rxa-render-callback',
+  standalone: true,
+  imports: [MatButtonModule, RxPush, RxLet, RxUnpatch, DocsLinkComponent],
   template: `
-    <h1 class="mat-header">Render Callback</h1>
-    <h4 class="mat-subheader">Height calculation using rendered$ Event</h4>
-    <button mat-raised-button [unpatch] (click)="updateClick.next(undefined)">
-      Update content
-    </button>
-    <div class="example-results">
-      <div class="example-result">
-        <h4>Calculated after renderCallback</h4>
-        <strong>{{ (calculatedAfterRender$ | push) + 'px' }}</strong>
+    <header class="rxa-demo-header">
+      <div>
+        <h2>Render Callback</h2>
+        <p class="rxa-demo-subtitle">
+          Uses the <code>*rxLet</code> render callback to measure element height
+          only after the view has actually rendered.
+        </p>
       </div>
-      <div class="example-result">
-        <h4>Calculated after value changed</h4>
-        <strong>{{ (calculatedAfterValue$ | push) + 'px' }}</strong>
-      </div>
+      <rxa-docs-link
+        docs="template/rx-let-directive"
+        source="apps/demos/src/app/features/template/render-callback"
+      />
+    </header>
+
+    <div class="rxa-demo-toolbar">
+      <section class="rxa-demo-group">
+        <span class="rxa-demo-label">Actions</span>
+        <div class="rxa-demo-controls">
+          <button
+            mat-raised-button
+            [unpatch]
+            (click)="updateClick.next(undefined)"
+          >
+            Update content
+          </button>
+        </div>
+      </section>
+      <section class="rxa-demo-group">
+        <span class="rxa-demo-label"
+          >Height calculation using rendered$ Event</span
+        >
+        <div class="rxa-stat-row">
+          <div class="rxa-stat">
+            <span class="rxa-stat-label">After renderCallback</span>
+            <span class="rxa-stat-value">{{
+              (calculatedAfterRender$ | push) + 'px'
+            }}</span>
+          </div>
+          <div class="rxa-stat">
+            <span class="rxa-stat-label">After value changed</span>
+            <span class="rxa-stat-value">{{
+              (calculatedAfterValue$ | push) + 'px'
+            }}</span>
+          </div>
+        </div>
+      </section>
     </div>
-    <h4>Value</h4>
-    <div class="example-value p-4">
-      <ng-container *rxLet="content$; let content; renderCallback: rendered$">
-        <div #box class="example-box">
-          {{ content }}
-        </div>
-      </ng-container>
-      <!-- TEMPLATE SYNTAX:
-      <ng-template let-content
-                   [rxLet]="content$"
-                   [rxLetStrategy]="'chunk'"
-                   (rendered)="rendered$.next($event)">
-        <div id="box" class="example-box">
-          {{ content }}
-        </div>
-      </ng-template>-->
+
+    <div class="demo-card">
+      <h3 class="rxa-demo-section-title">Value</h3>
+      <div class="example-value p-4">
+        <ng-container *rxLet="content$; let content; renderCallback: rendered$">
+          <div #box class="example-box">
+            {{ content }}
+          </div>
+        </ng-container>
+        <!-- TEMPLATE SYNTAX:
+        <ng-template let-content
+                     [rxLet]="content$"
+                     [rxLetStrategy]="'chunk'"
+                     (rendered)="rendered$.next($event)">
+          <div id="box" class="example-box">
+            {{ content }}
+          </div>
+        </ng-template>-->
+      </div>
     </div>
   `,
   styles: [
@@ -78,14 +112,15 @@ import {
         justify-content: center;
         align-items: center;
         width: 300px;
-        outline: 1px solid red;
+        outline: 1px dashed rgba(var(--rxa-brand-rgb), 0.4);
       }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
 })
 export class RenderCallbackComponent implements AfterViewInit {
+  private cdRef = inject(ChangeDetectorRef);
+
   @ViewChild('box') box: ElementRef<HTMLElement>;
 
   readonly rendered$ = new Subject<number>();
@@ -99,7 +134,7 @@ export class RenderCallbackComponent implements AfterViewInit {
 
   readonly calculatedAfterRender$ = defer(() =>
     this.rendered$.pipe(
-      map(() => this.box.nativeElement.getBoundingClientRect().height),
+      map(() => this.box?.nativeElement.getBoundingClientRect().height ?? 0),
       tap((v) => console.log('height', v)),
     ),
   );
@@ -108,12 +143,12 @@ export class RenderCallbackComponent implements AfterViewInit {
     concat(
       this.rendered$.pipe(take(1)),
       this.content$.pipe(
-        map(() => this.box.nativeElement.getBoundingClientRect().height),
+        // Reads before the new content has rendered — the whole point of the
+        // demo — so the view child may not exist yet; fall back to 0.
+        map(() => this.box?.nativeElement.getBoundingClientRect().height ?? 0),
       ),
     ),
   );
-
-  constructor(private cdRef: ChangeDetectorRef) {}
 
   reset() {}
 

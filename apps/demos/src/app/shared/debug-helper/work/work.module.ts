@@ -4,13 +4,11 @@ import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
 import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
-import { UtilsModule } from '../../utils/utils.module';
 
 const DEPRECATIONS = [WorkComponent];
 
 @NgModule({
-  declarations: [...DEPRECATIONS],
-  imports: [CommonModule, MatRippleModule, RxPush, UtilsModule, RxLet],
+  imports: [CommonModule, MatRippleModule, RxPush, RxLet, ...DEPRECATIONS],
   exports: [...DEPRECATIONS],
 })
 export class WorkModule {}

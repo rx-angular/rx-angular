@@ -8,6 +8,12 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { BehaviorSubject } from 'rxjs';
 import { toBooleanArray, toFloatArray, toIntArray } from './utils';
 import { map } from 'rxjs/operators';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { StrategySelectComponent } from '../../debug-helper/strategy-select/strategy-select.component';
+import { MatButton } from '@angular/material/button';
+import { RxUnpatch } from '../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import { RxFor } from '../../../rx-angular-pocs/template/directives/for/rx-for.directive';
+import { WorkComponent } from '../../debug-helper/work/work.component';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
@@ -40,7 +46,14 @@ const chunk = (arr, n) =>
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    StrategySelectComponent,
+    MatButton,
+    RxUnpatch,
+    RxFor,
+    WorkComponent,
+  ],
 })
 export class SiblingCustomComponent {
   num = 0;

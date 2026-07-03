@@ -3,18 +3,21 @@ import {
   Component,
   DoCheck,
   ElementRef,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
 
 @Component({
   selector: 'rxa-error-handling-child',
+  standalone: true,
   template: `{{ _index }}<ng-content></ng-content>`,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
 })
 export class ErrorHandlingChildComponent implements OnInit, DoCheck {
+  private el = inject(ElementRef);
+
   _index: number;
   @Input() set index(index: number) {
     console.log(index);
@@ -25,8 +28,6 @@ export class ErrorHandlingChildComponent implements OnInit, DoCheck {
   }
 
   private removed = false;
-
-  constructor(private el: ElementRef) {}
 
   ngOnInit(): void {}
 

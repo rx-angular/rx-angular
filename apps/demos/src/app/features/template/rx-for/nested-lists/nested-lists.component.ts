@@ -1,12 +1,11 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  QueryList,
-  ViewChildren,
-  ViewEncapsulation,
-} from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxFor } from '@rx-angular/template/for';
+import { RxLet } from '@rx-angular/template/let';
 import {
   BehaviorSubject,
   combineLatest,
@@ -16,83 +15,128 @@ import {
   of,
   Subject,
 } from 'rxjs';
-import { scan, share, switchMap, tap } from 'rxjs/operators';
+import { scan, share, switchMap } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
+import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
+import { DocsLinkComponent } from '../../../../shared/docs-link';
 import { environment } from '../../../../../environments/environment';
+import { RxForValueComponent } from './rx-for-value.component';
 import { immutableArr } from './utils';
 
 @Component({
   selector: 'rxa-rx-for-nested-lists',
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    MatButtonToggleModule,
+    MatFormFieldModule,
+    MatInputModule,
+    RxFor,
+    RxLet,
+    VisualizerModule,
+    StrategySelectModule,
+    RxForValueComponent,
+    DocsLinkComponent,
+  ],
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h2>Nested Lists</h2>
-        <div>
-          <p *rxLet="table$; let table; patchZone: false">
-            <mat-form-field>
-              <mat-label>Rows</mat-label>
-              <input
-                matInput
-                min="1"
-                #r
-                type="number"
-                unpatch
-                [value]="table?.rows + ''"
-                (input)="set({ rows: +r.value })"
-              />
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>Columns</mat-label>
-              <input
-                matInput
-                min="1"
-                #c
-                type="number"
-                unpatch
-                [value]="table?.columns + ''"
-                (input)="set({ columns: +c.value })"
-              />
-            </mat-form-field>
-          </p>
-          <mat-button-toggle-group
-            name="visibleExamples"
-            aria-label="Visible Examples"
-            [value]="displayStates.all"
-            #group="matButtonToggleGroup"
-          >
-            <mat-button-toggle [value]="displayStates.native"
-              >*ngFor</mat-button-toggle
+        <header class="rxa-demo-header">
+          <div>
+            <h2>Nested Lists</h2>
+            <p class="rxa-demo-subtitle">
+              Compare native <code>*ngFor</code> with reactive
+              <code>*rxFor</code> when rendering a grid of nested lists.
+            </p>
+          </div>
+          <rxa-docs-link
+            docs="template/rx-for-directive"
+            source="apps/demos/src/app/features/template/rx-for"
+          />
+        </header>
+
+        <div class="rxa-demo-toolbar">
+          <section class="rxa-demo-group">
+            <span class="rxa-demo-label">Table size</span>
+            <div
+              class="rxa-demo-controls"
+              *rxLet="table$; let table; patchZone: false"
             >
-            <mat-button-toggle [value]="displayStates.rxAngularReactive2"
-              >*rxFor
-            </mat-button-toggle>
-            <mat-button-toggle [value]="displayStates.all"
-              >All</mat-button-toggle
+              <mat-form-field>
+                <mat-label>Rows</mat-label>
+                <input
+                  matInput
+                  min="1"
+                  #r
+                  type="number"
+                  [value]="table?.rows + ''"
+                  (input)="set({ rows: +r.value })"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Columns</mat-label>
+                <input
+                  matInput
+                  min="1"
+                  #c
+                  type="number"
+                  [value]="table?.columns + ''"
+                  (input)="set({ columns: +c.value })"
+                />
+              </mat-form-field>
+            </div>
+          </section>
+
+          <section class="rxa-demo-group">
+            <span class="rxa-demo-label">View</span>
+            <mat-button-toggle-group
+              name="visibleExamples"
+              aria-label="Visible Examples"
+              [value]="displayStates.all"
+              #group="matButtonToggleGroup"
             >
-          </mat-button-toggle-group>
-          <br />
+              <mat-button-toggle [value]="displayStates.native"
+                >*ngFor</mat-button-toggle
+              >
+              <mat-button-toggle [value]="displayStates.rxAngularReactive2"
+                >*rxFor
+              </mat-button-toggle>
+              <mat-button-toggle [value]="displayStates.all"
+                >All</mat-button-toggle
+              >
+            </mat-button-toggle-group>
+          </section>
         </div>
       </ng-container>
 
-      <div class="row w-100">
-        <!--  -->
+      <div class="rxa-demo-columns w-100">
         @if (
           group.value === displayStates.native ||
           group.value === displayStates.all
         ) {
-          <div class="col">
-            <h2>*ngFor</h2>
-            <p>
-              <button mat-raised-button (click)="changeOneClick$.next(1)">
+          <div>
+            <h3 class="rxa-demo-section-title">*ngFor</h3>
+            <div class="rxa-demo-controls">
+              <button
+                class="btn btn-outline-primary btn-sm"
+                (click)="changeOneClick$.next(1)"
+              >
                 update
               </button>
-              <button mat-raised-button (click)="changeAllClick$.next(10)">
+              <button
+                class="btn btn-outline-primary btn-sm"
+                (click)="changeAllClick$.next(10)"
+              >
                 Change all
               </button>
-              <button mat-raised-button (click)="toggleIntervalClick$.next(10)">
+              <button
+                class="btn btn-outline-primary btn-sm"
+                (click)="toggleIntervalClick$.next(10)"
+              >
                 toggle interval
               </button>
-            </p>
+            </div>
             @for (value of array$ | async; track trackById($index, value)) {
               <rxa-visualizer viewType="embedded-view">
                 @for (i of value.arr; track trackById($index, i)) {
@@ -109,40 +153,31 @@ import { immutableArr } from './utils';
           group.value === displayStates.rxAngularReactive2 ||
           group.value === displayStates.all
         ) {
-          <div class="col">
-            <h2>*rxFor</h2>
-            <p *rxLet="table$; let t">
+          <div>
+            <h3 class="rxa-demo-section-title">*rxFor</h3>
+            <div class="rxa-demo-controls" *rxLet="table$; let t">
               <button
-                mat-raised-button
-                [unpatch]
+                class="btn btn-outline-primary btn-sm"
                 (click)="changeOneClick$.next(1)"
               >
                 update
               </button>
               <button
-                mat-raised-button
-                [unpatch]
+                class="btn btn-outline-primary btn-sm"
                 (click)="changeAllClick$.next(t.changes)"
               >
                 Change many
               </button>
               <button
-                mat-raised-button
-                [unpatch]
+                class="btn btn-outline-primary btn-sm"
                 (click)="toggleIntervalClick$.next(10)"
               >
                 toggle interval
               </button>
               <rxa-strategy-select
-                [unpatch]="['strategyChange']"
                 (strategyChange)="strategy$.next($event)"
               ></rxa-strategy-select>
-            </p>
-            <!--
-                <ng-container *rxLet="childrenRendered$; let childrenRendered; strategy: strategy$">
-                  Rendercallback: <strong>{{ childrenRendered }}</strong>
-                </ng-container>
-                -->
+            </div>
             <rxa-visualizer
               viewType="embedded-view"
               *rxFor="
@@ -151,21 +186,17 @@ import { immutableArr } from './utils';
                 let r$ = item$;
                 strategy: strategy$;
                 trackBy: trackById;
-                parent: true;
-                patchZone: false;
                 let select = select;
                 renderCallback: childrenRendered$
               "
             >
-              <span #spanChild></span>
               <ng-container
                 *rxFor="
-                  select(['arr']);
+                  let o of select(['arr']);
                   strategy: strategy$;
                   trackBy: trackById;
                   parent: false;
                   patchZone: false;
-                  let o;
                   let v$ = item$
                 "
               >
@@ -182,39 +213,23 @@ import { immutableArr } from './utils';
   `,
   changeDetection: environment.changeDetection,
   encapsulation: ViewEncapsulation.None,
-  standalone: false,
 })
-export class RxForNestedListsComponent
-  extends RxState<{ rows: number; columns: number; changes: number }>
-  implements AfterViewInit
-{
-  @ViewChildren('spanChild') spanChildren: QueryList<ElementRef>;
-
-  tK = 'id';
+export class RxForNestedListsComponent extends RxState<{
+  rows: number;
+  columns: number;
+  changes: number;
+}> {
+  private strategyProvider = inject(RxStrategyProvider);
 
   native$ = of('native');
 
   displayStates = {
-    none: -1,
     all: 0,
     native: 1,
-    nativeReactive: 2,
-    rxAngularReactive: 3,
     rxAngularReactive2: 4,
-    rxAngularMinimalReactive: 5,
   };
 
-  childrenRendered = new Subject<string>();
-  private numChildrenRendered = 0;
-  childrenRendered$ = this.childrenRendered
-    .pipe
-    // tap(v => console.log('rcb', v))
-    ();
-  childrenRendered2 = new Subject<string>();
-  private numChildrenRendered2 = 0;
-  childrenRendered2$ = this.childrenRendered2.pipe(
-    tap((v) => console.log('rcb2', v)),
-  );
+  childrenRendered$ = new Subject<string>();
 
   table$ = this.select();
 
@@ -238,23 +253,16 @@ export class RxForNestedListsComponent
       merge(this.changesFromTick$, this.changeAllClick$),
       this.table$,
     ]).pipe(
-      switchMap(([_, { rows, columns, changes }]) =>
+      switchMap(([_, { rows, columns }]) =>
         immutableArr(rows, columns)(of(rows)),
       ),
     ),
   ).pipe(share());
 
-  load$ = new BehaviorSubject<number>(0);
   trackById = (i, v) => v.id;
 
-  dK = (a, b) => a.value === b.value;
-
-  constructor(private strategyProvider: RxStrategyProvider) {
+  constructor() {
     super();
     this.set({ columns: 5, rows: 10 });
-  }
-
-  ngAfterViewInit() {
-    this.hold(this.spanChildren.changes, console.log);
   }
 }

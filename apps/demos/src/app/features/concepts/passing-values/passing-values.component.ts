@@ -1,5 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import {
+  MatButtonToggleGroup,
+  MatButtonToggle,
+} from '@angular/material/button-toggle';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
+import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
+import { MatIcon } from '@angular/material/icon';
+import { RecursiveStaticComponent } from '../../../shared/template-structures/recursive/recursive-static.component';
+import { RxUnpatch } from '../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import { RecursiveObservableComponent } from '../../../shared/template-structures/recursive/recursive-observable.component';
 
 @Component({
   selector: 'rxa-passing-values',
@@ -96,7 +110,22 @@ import { BehaviorSubject } from 'rxjs';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.Default,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    MatButton,
+    ValueProviderComponent,
+    MatMiniFabButton,
+    MatIcon,
+    RecursiveStaticComponent,
+    RxUnpatch,
+    RecursiveObservableComponent,
+  ],
 })
 export class PassingValuesComponent {
   min = 0;

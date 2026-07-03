@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
 
 @Component({
   selector: 'rxa-recursive-embedded-view-let',
@@ -25,7 +27,11 @@ import { ReplaySubject } from 'rxjs';
     class: 'd-flex w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    RenderingsComponent,
+    RecursiveEmbeddedViewLetComponent,
+  ],
 })
 export class RecursiveEmbeddedViewLetComponent {
   @Input()

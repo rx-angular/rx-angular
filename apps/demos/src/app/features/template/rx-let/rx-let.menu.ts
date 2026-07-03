@@ -20,10 +20,6 @@ export const MENU_ITEMS = [
     link: 'http-errors',
   },
   {
-    label: '*ngif hack',
-    link: 'ng-if-hack',
-  },
-  {
     label: 'Template Bindings',
     link: 'template-bindings',
   },
@@ -34,9 +30,5 @@ export const MENU_ITEMS = [
   {
     label: 'Preloading Techniques',
     link: 'preloading-images',
-  },
-  {
-    label: 'Lazy Components',
-    link: 'lazy-components',
   },
 ];

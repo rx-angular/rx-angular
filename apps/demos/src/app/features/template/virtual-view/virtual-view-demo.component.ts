@@ -10,6 +10,7 @@ import {
   RxVirtualViewPlaceholder,
   RxVirtualViewContent,
 } from '@rx-angular/template/virtual-view';
+import { DocsLinkComponent } from '../../../shared/docs-link';
 import { VirtualContent } from './virtual-content.component';
 import { VirtualItem } from './virtual-item.component';
 import { VirtualPlaceholder } from './virtual-placeholder.component';
@@ -17,21 +18,42 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
 @Component({
   selector: 'virtual-view-demo',
   template: `
-    <div class="container" rxVirtualViewObserver>
+    <header class="rxa-demo-header">
       <div>
-        <label>Force all hidden</label>
-        <input
-          type="checkbox"
-          #checkBox
-          (change)="
-            checkBox.checked
-              ? observer().hideAll()
-              : observer().showAllVisible()
-          "
-        />
+        <h2>Virtual View</h2>
+        <p class="rxa-demo-subtitle">
+          Demonstrates <code>rxVirtualView</code> rendering strategies —
+          placeholders, <code>keepLastKnownSize</code> and embedded components.
+        </p>
+      </div>
+      <rxa-docs-link
+        docs="template/virtual-view-directive"
+        source="apps/demos/src/app/features/template/virtual-view"
+      />
+    </header>
+
+    <div class="container" rxVirtualViewObserver>
+      <div class="rxa-demo-toolbar">
+        <section class="rxa-demo-group">
+          <span class="rxa-demo-label">Visibility</span>
+          <label class="rxa-demo-controls">
+            <input
+              type="checkbox"
+              #checkBox
+              (change)="
+                checkBox.checked
+                  ? observer().hideAll()
+                  : observer().showAllVisible()
+              "
+            />
+            Force all hidden
+          </label>
+        </section>
       </div>
       <div class="item-wrapper">
-        <h2>Inline, no placeholder, keepLastKnownSize</h2>
+        <h3 class="rxa-demo-section-title">
+          Inline, no placeholder, keepLastKnownSize
+        </h3>
         @for (item of values; track item.id) {
           <div rxVirtualView keepLastKnownSize class="item">
             <div class="content" *rxVirtualViewContent>
@@ -41,7 +63,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         }
       </div>
       <div class="item-wrapper">
-        <h2>Inline, with placeholder</h2>
+        <h3 class="rxa-demo-section-title">Inline, with placeholder</h3>
         @for (item of values; track item.id) {
           <div rxVirtualView class="item">
             <div>content before</div>
@@ -56,7 +78,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         }
       </div>
       <div class="item-wrapper">
-        <h2>Inline, startWithPlaceholderAsap</h2>
+        <h3 class="rxa-demo-section-title">Inline, startWithPlaceholderAsap</h3>
         @for (item of values; track item.id) {
           <div rxVirtualView startWithPlaceholderAsap class="item">
             <div>content before</div>
@@ -71,7 +93,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         }
       </div>
       <div class="item-wrapper">
-        <h2>With Components</h2>
+        <h3 class="rxa-demo-section-title">With Components</h3>
         @for (item of values; track item.id) {
           <div rxVirtualView keepLastKnownSize class="item">
             <virtual-content
@@ -87,13 +109,13 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         }
       </div>
       <div class="item-wrapper">
-        <h2>On Component (embedded)</h2>
+        <h3 class="rxa-demo-section-title">On Component (embedded)</h3>
         @for (item of values; track item.id) {
           <virtual-item rxVirtualView [item]="item" class="item" />
         }
       </div>
       <div class="item-wrapper">
-        <h2>Category 3</h2>
+        <h3 class="rxa-demo-section-title">Category 3</h3>
         @for (item of values; track item.id) {
           <div rxVirtualView class="item">
             <div class="content" *rxVirtualViewContent>
@@ -106,7 +128,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         }
       </div>
       <div class="item-wrapper">
-        <h2>Category 4</h2>
+        <h3 class="rxa-demo-section-title">Category 4</h3>
         @for (item of values; track item.id) {
           <div rxVirtualView class="item">
             <div class="content" *rxVirtualViewContent>
@@ -144,9 +166,12 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
         flex-shrink: 0;*/
         /*height: 50px;*/
         /*will-change: transform;*/
-        border: 1px solid green;
-        padding: 10px 0;
-        box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.13);
+        border: 1px solid var(--rxa-border);
+        border-left: 3px solid rgba(var(--rxa-brand-rgb), 0.45);
+        border-radius: var(--rxa-radius-sm);
+        padding: 10px 12px;
+        background: var(--rxa-surface);
+        box-shadow: var(--rxa-shadow-sm);
       }
     `,
   ],
@@ -161,6 +186,7 @@ import { VirtualPlaceholder } from './virtual-placeholder.component';
     VirtualPlaceholder,
     VirtualContent,
     VirtualItem,
+    DocsLinkComponent,
   ],
 })
 export class VirtualViewDemoComponent {

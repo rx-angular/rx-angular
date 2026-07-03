@@ -11,6 +11,17 @@ import { interval, Subject, Subscription } from 'rxjs';
 //👇 Import { map }
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription,
+} from '@angular/material/expansion';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatCard } from '@angular/material/card';
+import { AsyncPipe } from '@angular/common';
 
 export interface DemoBasicsItem {
   id: string;
@@ -79,7 +90,18 @@ const initComponentState = {
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatProgressBar,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatButton,
+    MatList,
+    MatListItem,
+    MatCard,
+    AsyncPipe,
+  ],
 })
 export class OutputBindingsStart
   extends RxState<ComponentState>

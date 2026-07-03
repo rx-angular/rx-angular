@@ -162,7 +162,6 @@ import {
 @Directive({
   selector: '[rxLet]',
   providers: [],
-  standalone: false,
 })
 export class RxLet<U> implements OnInit, OnDestroy {
   static ngTemplateGuard_rxLet: 'binding';

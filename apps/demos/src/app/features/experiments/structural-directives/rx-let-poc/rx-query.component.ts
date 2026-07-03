@@ -4,6 +4,16 @@ import { RickAndMortyService } from './rick-and-morty.service';
 import { query } from 'rx-query';
 import { Observable, Subject } from 'rxjs';
 import { delay, filter, map, mapTo, share } from 'rxjs/operators';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { RxLet } from '../../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { RxLet as RxLet_1 } from '../../../../../../../../libs/template/let/src/lib/let.directive';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatCard, MatCardTitle } from '@angular/material/card';
+import { RouterLink } from '@angular/router';
+import { ListItemGhostComponent } from '../../../../shared/ghost-elements/list-item-ghost/list-item-ghost.component';
 
 @Component({
   selector: 'rxa-rx-query',
@@ -108,7 +118,19 @@ import { delay, filter, map, mapTo, share } from 'rxjs/operators';
     style: 'display: block;',
   },
   providers: [],
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    StrategySelectComponent,
+    MatFormField,
+    MatInput,
+    RxLet,
+    RxLet_1,
+    MatProgressBar,
+    MatCard,
+    MatCardTitle,
+    RouterLink,
+    ListItemGhostComponent,
+  ],
 })
 export class RxQueryComponent {
   search$ = new Subject<string>();

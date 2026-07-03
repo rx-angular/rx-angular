@@ -1,4 +1,5 @@
 import { FUNDAMENTALS_MENU } from '../features/concepts/fundamentals.menu';
+import { CDK_MENU } from '../features/cdk/cdk.menu';
 import { STATE_MENU } from '../features/state/state-shell.menu';
 import { TEMPLATE_MENU } from '../features/template/template-shell.menu';
 import { TUTORIALS_MENU } from '../features/tutorials/tutorials-shell.menu';
@@ -16,6 +17,11 @@ export const MENU_ITEMS = [
     label: 'State',
     link: 'state',
     children: STATE_MENU,
+  },
+  {
+    label: '🛠️ CDK',
+    link: 'cdk',
+    children: CDK_MENU,
   },
   {
     label: '🏁 Concepts',

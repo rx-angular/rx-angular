@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-export const ROUTES: Routes = [
+export const RX_LET_ROUTES: Routes = [
   {
     path: '',
     redirectTo: 'basic',
@@ -8,66 +8,54 @@ export const ROUTES: Routes = [
   },
   {
     path: 'basic',
-    loadChildren: () =>
-      import('./basic/rx-let-basic.module').then((m) => m.RxLetBasicModule),
+    loadComponent: () =>
+      import('./rx-let-basic.component').then((m) => m.RxLetBasicComponent),
   },
   {
     path: 'scoping',
-    loadChildren: () =>
-      import('./scoping/rx-let-scoping.module').then(
-        (m) => m.RxLetScopingModule,
+    loadComponent: () =>
+      import('./scoping/rx-let-scoping.component').then(
+        (m) => m.RxLetScopingComponent,
       ),
   },
   {
     path: 'error-handling',
-    loadChildren: () =>
-      import('./error-handling/error-handing.module').then(
-        (m) => m.ErrorHandingModule,
+    loadComponent: () =>
+      import('./error-handling.component').then(
+        (m) => m.ErrorHandlingComponent,
       ),
   },
   {
     path: 'exception-handling',
-    loadChildren: () =>
-      import('./exception-handling/rx-let-exception-handling.module').then(
-        (m) => m.RxLetExceptionHandlingModule,
+    loadComponent: () =>
+      import('./exception-handling/error-handling-parent.component').then(
+        (m) => m.ErrorHandlingParentComponent,
       ),
   },
   {
     path: 'http-errors',
-    loadChildren: () =>
-      import('./http-errors/http-error.module').then((m) => m.HttpErrorModule),
+    loadComponent: () =>
+      import('./http-errors.component').then((m) => m.HttpErrorsComponent),
   },
   {
     path: 'template-bindings',
-    loadChildren: () =>
-      import('./let-template-binding/let-template-binding.module').then(
-        (m) => m.LetTemplateBindingModule,
+    loadComponent: () =>
+      import('./let-template-binding/let-template-binding.component').then(
+        (m) => m.LetTemplateBindingComponent,
       ),
   },
   {
     path: 'template-triggers',
-    loadChildren: () =>
-      import('./template-triggers/template-triggers.module').then(
-        (m) => m.TemplateTriggersModule,
+    loadComponent: () =>
+      import('./template-triggers/template-triggers.component').then(
+        (m) => m.TemplateTriggersComponent,
       ),
-  },
-  {
-    path: 'ng-if-hack',
-    loadChildren: () =>
-      import('./ng-if-hack/ng-if-hack.module').then((m) => m.NgIfHackModule),
   },
   {
     path: 'preloading-images',
-    loadChildren: () =>
-      import('./preloading-images/preloading-images.module').then(
-        (m) => m.PreloadingImagesModule,
-      ),
-  },
-  {
-    path: 'lazy-components',
-    loadChildren: () =>
-      import('./lazy-loading-components/lazy-loading-components.module').then(
-        (m) => m.LazyLoadingComponentsModule,
+    loadComponent: () =>
+      import('./preloading-images.component').then(
+        (m) => m.PreloadingImagesComponent,
       ),
   },
 ];

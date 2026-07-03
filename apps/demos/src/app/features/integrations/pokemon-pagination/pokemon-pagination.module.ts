@@ -15,7 +15,6 @@ import { ROUTES } from './pokemon-pagination.routes';
 import { PokemonComponent } from './pokemon.component';
 
 @NgModule({
-  declarations: [PokemonComponent],
   imports: [
     CommonModule,
     RxLet,
@@ -25,6 +24,7 @@ import { PokemonComponent } from './pokemon.component';
     MatPaginatorModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    PokemonComponent,
   ],
   providers: [provideHttpClient(withInterceptorsFromDi())],
 })

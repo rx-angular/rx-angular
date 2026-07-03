@@ -16,25 +16,30 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$rx-state-primary: mat.m2-define-palette(mat.$m2-pink-palette);
+$rx-state-primary: mat.m2-define-palette(mat.$m2-red-palette, 700, 400, 900);
 $rx-state-accent: mat.m2-define-palette(
-  mat.$m2-indigo-palette,
+  mat.$m2-deep-purple-palette,
   A200,
   A100,
   A400
 );
 
 // The warn palette is optional (defaults to red).
-$rx-state-warn: mat.m2-define-palette(mat.$m2-red-palette);
+$rx-state-warn: mat.m2-define-palette(mat.$m2-deep-orange-palette);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$rx-state-theme: mat.m2-define-dark-theme(
+// A modern, light theme — surfaces are white/neutral and the brand red is the
+// primary accent, matching the design-system tokens used by the demo content.
+$rx-state-theme: mat.m2-define-light-theme(
   (
     color: (
       primary: $rx-state-primary,
       accent: $rx-state-accent,
       warn: $rx-state-warn,
     ),
+    // Slightly denser controls so buttons and form-fields share a compact,
+    // consistent height and line up cleanly in the demos' ad-hoc control rows.
+    density: -1,
   )
 );
 

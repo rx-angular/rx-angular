@@ -1,7 +1,15 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+} from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { RxLet } from '@rx-angular/template/let';
 import { RxState } from '@rx-angular/state';
 import { isObservable, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import {
   TestItem,
   toBoolean,
@@ -9,6 +17,8 @@ import {
 
 @Component({
   selector: 'rxa-rx-for-value',
+  standalone: true,
+  imports: [MatIconModule, RxLet, DirtyChecksModule],
   template: `
     <ng-container
       *rxLet="
@@ -19,7 +29,7 @@ import {
         patchZone: false
       "
     >
-      <mat-icon class="item" [ngClass]="{ red: !v, green: v }">
+      <mat-icon class="item" [class.red]="!v" [class.green]="v">
         {{ v ? 'check' : 'highlight_off' }}
       </mat-icon>
       <rxa-dirty-check></rxa-dirty-check>
@@ -49,9 +59,10 @@ import {
   },
   providers: [RxState],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
 })
 export class RxForValueComponent {
+  readonly state = inject<RxState<{ item: TestItem }>>(RxState);
+
   value$ = this.state.select(map((s) => toBoolean(s.item.value, 0.5)));
 
   @Input()
@@ -60,6 +71,4 @@ export class RxForValueComponent {
   }
   @Input()
   strategy$: Observable<string>;
-
-  constructor(public state: RxState<{ item: TestItem }>) {}
 }

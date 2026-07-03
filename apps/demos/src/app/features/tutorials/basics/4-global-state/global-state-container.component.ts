@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { GlobalStateStart } from './global-state.start.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'rxa-output-bindings-container',
@@ -22,7 +26,7 @@ import { map } from 'rxjs/operators';
     </rxa-global-state-start>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatFormField, MatInput, GlobalStateStart, AsyncPipe],
 })
 export class GlobalStateContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();

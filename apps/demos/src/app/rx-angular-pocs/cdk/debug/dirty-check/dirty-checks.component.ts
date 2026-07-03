@@ -20,7 +20,6 @@ import {
       }
     `,
   ],
-  standalone: false,
 })
 export class DirtyChecksComponent implements AfterViewInit {
   displayElem;

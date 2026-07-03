@@ -10,13 +10,12 @@ import { RxPush } from '@rx-angular/template/push';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { PassingValuesComponent } from './passing-values.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
-import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
+
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RecursiveModule } from '../../../shared/template-structures/recursive/recursive.module';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [PassingValuesComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -24,7 +23,6 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     MatButtonToggleModule,
-    ValueProvidersModule,
     FormsModule,
     MatIconModule,
     RecursiveModule,
@@ -32,6 +30,7 @@ import { FormsModule } from '@angular/forms';
     RxUnpatch,
     MatButtonModule,
     RxPush,
+    PassingValuesComponent,
   ],
   exports: [],
 })

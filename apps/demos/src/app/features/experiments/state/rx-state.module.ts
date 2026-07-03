@@ -24,15 +24,6 @@ import { RxStateParentSubscriptionLessComponent } from './subscription-less-inte
 import { RxStateSelectSliceComponent } from './selectslice/select-slice.component';
 
 @NgModule({
-  declarations: [
-    RxStateOverviewComponent,
-    RxStateChildSelectionsComponent,
-    RxStateParentCompositionComponent,
-    RxStateParentSelectionsComponent,
-    RxStateParentSubscriptionComponent,
-    RxStateParentSubscriptionLessComponent,
-    RxStateSelectSliceComponent,
-  ],
   imports: [
     CommonModule,
     RouterModule.forChild(RX_STATE_ROUTES),
@@ -49,6 +40,13 @@ import { RxStateSelectSliceComponent } from './selectslice/select-slice.componen
     RxPush,
     FormsModule,
     ReactiveFormsModule,
+    RxStateOverviewComponent,
+    RxStateChildSelectionsComponent,
+    RxStateParentCompositionComponent,
+    RxStateParentSelectionsComponent,
+    RxStateParentSubscriptionComponent,
+    RxStateParentSubscriptionLessComponent,
+    RxStateSelectSliceComponent,
   ],
 })
 export class RxStateModule {}
