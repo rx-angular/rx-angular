@@ -10,7 +10,14 @@ export function rolldownCodeSplitting(
       .filter(([, chunks]) => chunks.length !== 1)
       .map(([name, chunks]) => ({
         name,
-        test: new RegExp(chunks.map(escapeRegExp).join('|'), 'g'),
+        test: new RegExp(
+          '^(?:' +
+            chunks
+              .map((chunk) => chunk.split('/').at(-1) as string)
+              .map(escapeRegExp)
+              .join('|') +
+            ')$',
+        ),
       })),
   };
 }
