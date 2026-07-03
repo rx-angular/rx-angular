@@ -1,10 +1,11 @@
 ---
 id: E6-rxstate-discipline-and-effects
-title: "RxState reactive discipline & effects"
+sidebar_position: 6
+title: 'RxState reactive discipline & effects'
 diataxis_type: explanation
 package: _site
 legacy_guard: false
-sidebar_label: "RxState discipline & effects"
+sidebar_label: 'RxState discipline & effects'
 tags: [state, eslint-plugin, content]
 ---
 
@@ -68,9 +69,7 @@ feeds a `connect`, it is a selection operator like
 not stylistic: use the signal read when the derivation is a plain in-component
 value, and stay in the RxJS pipeline when you are merging multiple streams. Either
 way the principle is the same: **there is one source of truth, and derived values
-are functions of it, never copies of it.** This is the discipline that the retired
-"deriving simple state" guidance and the `stateful` operator were teaching;
-it lives here now, once.
+are functions of it, never copies of it.**
 
 ### The pipeline is disciplined by construction
 

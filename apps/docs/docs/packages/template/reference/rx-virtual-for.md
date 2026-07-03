@@ -1,10 +1,10 @@
 ---
 id: rx-virtual-for
-title: "RxVirtualFor"
+title: 'RxVirtualFor'
 diataxis_type: reference
 package: template
 legacy_guard: false
-sidebar_label: "RxVirtualFor"
+sidebar_label: 'RxVirtualFor'
 tags: [template, api-reference]
 concepts: [E5]
 ---
@@ -18,7 +18,7 @@ the change detection of each child template through concurrent
 [render strategies](../../../concepts/E5-concurrent-scheduling.md).
 
 > **Why this matters:** see [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
-> and [How RxAngular virtual scrolling works](../how-virtual-scrolling-works.md).
+> and [How RxAngular virtual scrolling works](../../../concepts/E10-how-virtual-scrolling-works.md).
 
 ## Import
 
@@ -45,15 +45,15 @@ class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
 The microsyntax input `rxVirtualForOf` accepts an `Observable`, a `Signal`, or a
 static (unwrapped) value.
 
-| Input | Microsyntax alias | Type | Default | Description |
-| --- | --- | --- | --- | --- |
-| `rxVirtualForOf` | `of` / `in` | `Observable<U> \| Signal<U> \| U \| null \| undefined` | — | The iterable to render. A `Signal` or plain array is treated as a static value. |
-| `trackBy` | `trackBy` | `keyof T \| ((index: number, item: T) => unknown)` | — | Identity for items. Accepts a property name shorthand (`trackBy: 'id'`) or a `TrackByFunction`. |
-| `strategy` | `strategy` | `RxStrategyNames<string> \| Observable<RxStrategyNames<string>>` | `'normal'` | The render strategy used to schedule change detection. See [tuning rendering with strategies](../how-to/tune-rendering-with-strategies.md). |
-| `renderCallback` | `renderCallback` | `Subject<U>` | — | Emits the currently rendered set of items whenever the directive finishes rendering a change set. |
-| `templateCacheSize` | `templateCacheSize` | `number` | `20` | Number of views held in cache for re-use while scrolling. `0` disables caching (views are destroyed and re-created on scroll). |
-| `parent` | `parent` | `boolean` | `false` | When `true`, runs change detection on the host component after rendering so `@ContentChild`/`@ViewChild` queries stay in sync. **Deprecated**: no longer required with signal-based view/content queries. See [handling view and content queries](../legacy/view-and-content-queries.md). |
-| `patchZone` | `patchZone` | `boolean` | `true` (from `RxRenderStrategiesConfig`) | When `false`, the directive creates its `EmbeddedView`s outside `NgZone`. |
+| Input               | Microsyntax alias   | Type                                                             | Default                                  | Description                                                                                                                                                                                                                                                                               |
+| ------------------- | ------------------- | ---------------------------------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rxVirtualForOf`    | `of` / `in`         | `Observable<U> \| Signal<U> \| U \| null \| undefined`           | —                                        | The iterable to render. A `Signal` or plain array is treated as a static value.                                                                                                                                                                                                           |
+| `trackBy`           | `trackBy`           | `keyof T \| ((index: number, item: T) => unknown)`               | —                                        | Identity for items. Accepts a property name shorthand (`trackBy: 'id'`) or a `TrackByFunction`.                                                                                                                                                                                           |
+| `strategy`          | `strategy`          | `RxStrategyNames<string> \| Observable<RxStrategyNames<string>>` | `'normal'`                               | The render strategy used to schedule change detection. See [tuning rendering with strategies](../how-to/tune-rendering-with-strategies.md).                                                                                                                                               |
+| `renderCallback`    | `renderCallback`    | `Subject<U>`                                                     | —                                        | Emits the currently rendered set of items whenever the directive finishes rendering a change set.                                                                                                                                                                                         |
+| `templateCacheSize` | `templateCacheSize` | `number`                                                         | `20`                                     | Number of views held in cache for re-use while scrolling. `0` disables caching (views are destroyed and re-created on scroll).                                                                                                                                                            |
+| `parent`            | `parent`            | `boolean`                                                        | `false`                                  | When `true`, runs change detection on the host component after rendering so `@ContentChild`/`@ViewChild` queries stay in sync. **Deprecated**: no longer required with signal-based view/content queries. See [handling view and content queries](../legacy/view-and-content-queries.md). |
+| `patchZone`         | `patchZone`         | `boolean`                                                        | `true` (from `RxRenderStrategiesConfig`) | When `false`, the directive creates its `EmbeddedView`s outside `NgZone`.                                                                                                                                                                                                                 |
 
 :::note Deprecated input
 
@@ -69,27 +69,27 @@ Each rendered template exposes the following context variables.
 
 ### Static context variables (mirrored from `ngFor`)
 
-| Variable | Type | Description |
-| --- | --- | --- |
-| `$implicit` | `T` | The item, accessed by `let item`. |
-| `index` | `number` | Current index of the item. |
-| `count` | `number` | Count of all items in the list. |
-| `first` | `boolean` | `true` if the item is first. |
-| `last` | `boolean` | `true` if the item is last. |
-| `even` | `boolean` | `true` if `index % 2 === 0`. |
-| `odd` | `boolean` | The opposite of `even`. |
+| Variable    | Type      | Description                       |
+| ----------- | --------- | --------------------------------- |
+| `$implicit` | `T`       | The item, accessed by `let item`. |
+| `index`     | `number`  | Current index of the item.        |
+| `count`     | `number`  | Count of all items in the list.   |
+| `first`     | `boolean` | `true` if the item is first.      |
+| `last`      | `boolean` | `true` if the item is last.       |
+| `even`      | `boolean` | `true` if `index % 2 === 0`.      |
+| `odd`       | `boolean` | The opposite of `even`.           |
 
 ### Reactive context variables
 
-| Variable | Type | Description |
-| --- | --- | --- |
-| `item$` | `Observable<T>` | The same value as `$implicit`, as an `Observable`. |
-| `index$` | `Observable<number>` | `index` as an `Observable`. |
-| `count$` | `Observable<number>` | `count` as an `Observable`. |
-| `first$` | `Observable<boolean>` | `first` as an `Observable`. |
-| `last$` | `Observable<boolean>` | `last` as an `Observable`. |
-| `even$` | `Observable<boolean>` | `even` as an `Observable`. |
-| `odd$` | `Observable<boolean>` | `odd` as an `Observable`. |
+| Variable | Type                                     | Description                                                                                                                                   |
+| -------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `item$`  | `Observable<T>`                          | The same value as `$implicit`, as an `Observable`.                                                                                            |
+| `index$` | `Observable<number>`                     | `index` as an `Observable`.                                                                                                                   |
+| `count$` | `Observable<number>`                     | `count` as an `Observable`.                                                                                                                   |
+| `first$` | `Observable<boolean>`                    | `first` as an `Observable`.                                                                                                                   |
+| `last$`  | `Observable<boolean>`                    | `last` as an `Observable`.                                                                                                                    |
+| `even$`  | `Observable<boolean>`                    | `even` as an `Observable`.                                                                                                                    |
+| `odd$`   | `Observable<boolean>`                    | `odd` as an `Observable`.                                                                                                                     |
 | `select` | `(keys: (keyof T)[]) => Observable<any>` | Returns a selection function that plucks the given properties from the current item and emits them as a distinct `Observable` key-value pair. |
 
 ## Configuration
@@ -141,11 +141,7 @@ are not exported as importable symbols; override them through
 
 ```ts
 import { Component, Signal } from '@angular/core';
-import {
-  FixedSizeVirtualScrollStrategy,
-  RxVirtualScrollViewportComponent,
-  RxVirtualFor,
-} from '@rx-angular/template/virtual-scrolling';
+import { FixedSizeVirtualScrollStrategy, RxVirtualScrollViewportComponent, RxVirtualFor } from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   imports: [RxVirtualFor, RxVirtualScrollViewportComponent, FixedSizeVirtualScrollStrategy],
@@ -171,5 +167,5 @@ export class ListComponent {
 - Reference: [Virtual scroll strategies](./rx-virtual-scroll-strategies.md)
 - How-to: [Virtual scroll recipes](../how-to/virtual-scroll-recipes.md)
 - How-to: [Tune rendering with strategies](../how-to/tune-rendering-with-strategies.md)
-- Explanation: [How RxAngular virtual scrolling works](../how-virtual-scrolling-works.md)
+- Explanation: [How RxAngular virtual scrolling works](../../../concepts/E10-how-virtual-scrolling-works.md)
 - Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)

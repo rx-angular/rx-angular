@@ -1,10 +1,10 @@
 ---
 id: isr-landing
-title: "@rx-angular/isr"
+title: '@rx-angular/isr'
 diataxis_type: reference
 package: isr
 legacy_guard: false
-sidebar_label: "Overview"
+sidebar_label: 'Overview'
 sidebar_position: 0
 tags: [isr, api-reference]
 ---
@@ -50,8 +50,5 @@ New to ISR? Start with the [introduction](./introduction.md), then read
 - **Look up:** [`@rx-angular/isr` API](./reference/api.md),
   [`ISRHandlerConfig`](./reference/isr-handler-config.md), and
   [`RenderConfig`](./reference/render-config.md).
-
-<!-- Add a "Do" bullet linking /packages/isr/how-to/set-up-isr once the How-to
-     pages land in Phase A (onBrokenLinks: 'throw'). -->
 
 New to ISR? Start with the [introduction](./introduction.md).

@@ -1,10 +1,10 @@
 ---
 id: cdk-overview
-title: "@rx-angular/cdk"
+title: '@rx-angular/cdk'
 diataxis_type: reference
 package: cdk
 legacy_guard: false
-sidebar_label: "@rx-angular/cdk"
+sidebar_label: '@rx-angular/cdk'
 sidebar_position: 0
 hide_title: true
 tags: [cdk, api-reference]
@@ -38,24 +38,19 @@ standalone, `inject()`, signals, and native control flow (`@if`/`@for`/`@switch`
 The CDK ships as a set of independently importable secondary entry points, so you pull
 in only what you use:
 
-| Entry point | What it provides | Where it surfaces |
-| --- | --- | --- |
-| `@rx-angular/cdk/render-strategies` | The render-strategy system and the `RxStrategyProvider`: concurrent, priority-based scheduling of change detection. | Template journey (rendering & scheduling) |
-| `@rx-angular/cdk/transformations` | Pure, immutable array/object update helpers (`insert`, `remove`, `update`, `upsert`, `toDictionary`, `patch`, `setProp`, `deleteProp`, `slice`, `toggle`, …). | State journey (immutable updates) |
-| `@rx-angular/cdk/coercing` | Reactive-input coercion: turn Observables or static values into a single Observable input stream. | CDK reference / how-to |
-| `@rx-angular/cdk/notifications` | `RxNotification`, `rxMaterialize`, and `toRx*Notification`: stream-level materialization of the reactive context (suspense / next / error / complete). | CDK reference |
-| `@rx-angular/cdk/ssr` | `HydrationTracker` / `provideHydrationTracker`: an app-wide "fully hydrated" signal for SSR apps. | CDK reference / how-to |
-| `@rx-angular/cdk/coalescing` | The `coalesceWith` RxJS operator for coalescing work over a duration selector. | Legacy · Zone.js shelf |
-| `@rx-angular/cdk/zone-configurations` | Zone.js flag configuration helpers. | Legacy · Zone.js shelf |
-| `@rx-angular/cdk/zone-less/browser` | Zone-unpatched browser APIs: `cancelAnimationFrame`, `clearInterval`, `clearTimeout`, `Promise`, `requestAnimationFrame`, `setInterval`, `setTimeout`, `unpatchAddEventListener`. | Legacy · Zone.js shelf |
-| `@rx-angular/cdk/internals/core` | Low-level internals, including `getZoneUnPatchedApi`. | Internals |
-| `@rx-angular/cdk/internals/scheduler` | The concurrent scheduler powering the render strategies. | Internals |
-| `@rx-angular/cdk/template` | EmbeddedView management primitives underpinning the template directives. | Internals |
-
-Some material formerly documented here has moved to the parts of the docs where you use
-it (per the helper-layer positioning): render strategies and concurrent scheduling are
-documented in the **Template** journey; the transformation helpers surface in the
-**State** journey.
+| Entry point                           | What it provides                                                                                                                                                                  | Where it surfaces                         |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `@rx-angular/cdk/render-strategies`   | The render-strategy system and the `RxStrategyProvider`: concurrent, priority-based scheduling of change detection.                                                               | Template journey (rendering & scheduling) |
+| `@rx-angular/cdk/transformations`     | Pure, immutable array/object update helpers (`insert`, `remove`, `update`, `upsert`, `toDictionary`, `patch`, `setProp`, `deleteProp`, `slice`, `toggle`, …).                     | State journey (immutable updates)         |
+| `@rx-angular/cdk/coercing`            | Reactive-input coercion: turn Observables or static values into a single Observable input stream.                                                                                 | CDK reference / how-to                    |
+| `@rx-angular/cdk/notifications`       | `RxNotification`, `rxMaterialize`, and `toRx*Notification`: stream-level materialization of the reactive context (suspense / next / error / complete).                            | CDK reference                             |
+| `@rx-angular/cdk/ssr`                 | `HydrationTracker` / `provideHydrationTracker`: an app-wide "fully hydrated" signal for SSR apps.                                                                                 | CDK reference / how-to                    |
+| `@rx-angular/cdk/coalescing`          | The `coalesceWith` RxJS operator for coalescing work over a duration selector.                                                                                                    | Legacy · Zone.js shelf                    |
+| `@rx-angular/cdk/zone-configurations` | Zone.js flag configuration helpers.                                                                                                                                               | Legacy · Zone.js shelf                    |
+| `@rx-angular/cdk/zone-less/browser`   | Zone-unpatched browser APIs: `cancelAnimationFrame`, `clearInterval`, `clearTimeout`, `Promise`, `requestAnimationFrame`, `setInterval`, `setTimeout`, `unpatchAddEventListener`. | Legacy · Zone.js shelf                    |
+| `@rx-angular/cdk/internals/core`      | Low-level internals, including `getZoneUnPatchedApi`.                                                                                                                             | Internals                                 |
+| `@rx-angular/cdk/internals/scheduler` | The concurrent scheduler powering the render strategies.                                                                                                                          | Internals                                 |
+| `@rx-angular/cdk/template`            | EmbeddedView management primitives underpinning the template directives.                                                                                                          | Internals                                 |
 
 ## Where to go next
 

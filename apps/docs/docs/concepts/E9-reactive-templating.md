@@ -1,25 +1,25 @@
 ---
-id: reactive-templating
-title: "Reactive templating: local templates and local variables"
+id: E9-reactive-templating
+title: 'Reactive templating: local templates and local variables'
 diataxis_type: explanation
-package: template
+package: _site
 legacy_guard: false
-sidebar_label: "Reactive templating"
+sidebar_label: 'Reactive templating'
+sidebar_position: 9
 tags: [template, content]
-concepts: [E4]
 ---
 
 # Reactive templating: local templates and local variables
 
 `@rx-angular/template`'s directives grew out of two small template patterns:
-*local templates* and *local variables*. Modern Angular now expresses the basic
+_local templates_ and _local variables_. Modern Angular now expresses the basic
 form of both with native control flow, so this page explains the ideas and shows
 where native syntax already covers them and where the reactive directives still
 add value.
 
 ## Local templates
 
-A *local template* is a named template slot a structural directive can render in
+A _local template_ is a named template slot a structural directive can render in
 place of its main content. The classic example is the `else` slot of the old
 `*ngIf`:
 
@@ -33,20 +33,18 @@ Native `@if`/`@else` expresses this directly, no named `<ng-template>` needed:
 
 ```html
 @if (isTrue) {
-  <div>Visible if true</div>
-} @else {
-  Visible if false
-}
+<div>Visible if true</div>
+} @else { Visible if false }
 ```
 
-The reactive directives extend the same idea to *reactive* template slots keyed
+The reactive directives extend the same idea to _reactive_ template slots keyed
 off a source's state: a `*rxIf` or `*rxLet` can render distinct templates for
 the loading, error, and complete phases of an `Observable`. That is the reactive
 context, which native `@if` has no equivalent for.
 
 ## Local variables
 
-A *local variable* binds a value into the template so you can name it once and
+A _local variable_ binds a value into the template so you can name it once and
 reuse it, instead of repeating a pipe. The old patterns used the `async`-`as`
 form or the `*rxLet` `let` syntax:
 
@@ -61,8 +59,7 @@ form or the `*rxLet` `let` syntax:
 Native `@let` names a value for reuse and covers the basic case directly:
 
 ```html
-@let n = num$ | async;
-<ng-container> {{ n }} {{ n }} {{ n }} </ng-container>
+@let n = num$ | async; <ng-container> {{ n }} {{ n }} {{ n }} </ng-container>
 ```
 
 Structural directives also expose their own contextual variables. The old
@@ -70,17 +67,13 @@ Structural directives also expose their own contextual variables. The old
 
 ```html
 <!-- old: *ngFor context variables -->
-<ng-container *ngFor="let item of list; let e = even">
-  even: {{ e }}
-</ng-container>
+<ng-container *ngFor="let item of list; let e = even"> even: {{ e }} </ng-container>
 ```
 
 Native `@for` exposes the same contextual variables directly:
 
 ```html
-@for (item of list; track item.id; let e = $even) {
-  even: {{ e }}
-}
+@for (item of list; track item.id; let e = $even) { even: {{ e }} }
 ```
 
 ## When native control flow is enough
@@ -93,4 +86,4 @@ slots driven from a source) and **per-directive render scheduling**.
 
 ## See also
 
-- Concept: [The reactive context](../../concepts/E4-reactive-context.md)
+- Concept: [The reactive context](./E4-reactive-context.md)

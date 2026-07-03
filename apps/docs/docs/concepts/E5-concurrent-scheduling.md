@@ -1,10 +1,11 @@
 ---
 id: E5-concurrent-scheduling
-title: "Concurrent scheduling & the frame budget"
+sidebar_position: 5
+title: 'Concurrent scheduling & the frame budget'
 diataxis_type: explanation
 package: _site
 legacy_guard: false
-sidebar_label: "Concurrent scheduling"
+sidebar_label: 'Concurrent scheduling'
 tags: [cdk, template, content]
 ---
 
@@ -125,8 +126,6 @@ priority should this rendering use?" For that reason this concept is documented
 from the Template journey, even though its machinery sits in the CDK.
 
 ## Referenced by
-
-_(Back-links wired in Phase C.)_
 
 - Render strategies: the CDK overview of the strategy system.
 - [Concurrent strategies](../packages/cdk/reference/concurrent-strategies.md): the reference for the five concurrent priorities.

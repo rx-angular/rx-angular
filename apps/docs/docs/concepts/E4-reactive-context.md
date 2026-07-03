@@ -1,10 +1,11 @@
 ---
 id: E4-reactive-context
-title: "The reactive context"
+sidebar_position: 4
+title: 'The reactive context'
 diataxis_type: explanation
 package: _site
 legacy_guard: false
-sidebar_label: "Reactive context"
+sidebar_label: 'Reactive context'
 tags: [template, cdk, content]
 ---
 
@@ -36,12 +37,12 @@ contexts you can derive from it:
 Mapping a source to these four states is what turns "a value that might not be
 here yet" into a set of template outcomes you can render deterministically:
 
-| Source phase | Reactive context | Typical UI |
-| --- | --- | --- |
-| not yet emitted / `undefined` | `suspense` | loading spinner, skeleton |
-| emitted a value | `next` | the data |
-| threw | `error` | error message, retry |
-| completed | `complete` | done / empty state |
+| Source phase                  | Reactive context | Typical UI                |
+| ----------------------------- | ---------------- | ------------------------- |
+| not yet emitted / `undefined` | `suspense`       | loading spinner, skeleton |
+| emitted a value               | `next`           | the data                  |
+| threw                         | `error`          | error message, retry      |
+| completed                     | `complete`       | done / empty state        |
 
 The mechanism underneath is **stream materialization**: a notification stream
 that carries _which phase_ each emission represents, instead of only the value.
@@ -54,8 +55,7 @@ tagged with its kind: `suspense` / `next` / `error` / `complete`) and the
 import { rxMaterialize, RxNotification } from '@rx-angular/cdk/notifications';
 
 const source$: Observable<number> = interval(3000);
-const materialized$: Observable<RxNotification<number>> =
-  source$.pipe(rxMaterialize());
+const materialized$: Observable<RxNotification<number>> = source$.pipe(rxMaterialize());
 ```
 
 Once a source is expressed this way, a directive can read the tag and pick the
@@ -67,11 +67,7 @@ booleans. That is what the reactive template directives do. `rxLet` and
   swaps in as the phase changes. Conceptually, one source drives four slots:
 
   ```html
-  <ng-container
-    *rxLet="value$; let value; suspense: loading; error: error; complete: done"
-  >
-    {{ value }}
-  </ng-container>
+  <ng-container *rxLet="value$; let value; suspense: loading; error: error; complete: done"> {{ value }} </ng-container>
 
   <ng-template #loading>Loading…</ng-template>
   <ng-template #error>Something went wrong.</ng-template>
@@ -119,8 +115,7 @@ single `@if` would do.
 
 ## Referenced by
 
-The following pages lean on this concept and link in to it (back-links wired in
-Phase C):
+The following pages lean on this concept and link in to it:
 
 - **`rxIf` directive**: derives the reactive context to pick a per-phase template
   or variable.
@@ -130,12 +125,3 @@ Phase C):
   `rxMaterialize` primitives this context is built on.
 - **Tutorial: Loading / error / empty states the reactive way (T4)**: teaches
   wiring one async source to all four states.
-
-<!--
-  Keep this list current as the template + cdk pages relink in Phase C
-  (onBrokenLinks: 'throw'). Add relative links once the targets exist on disk:
-    - rxIf directive        → ../template/rx-if-directive.mdx
-    - rxLet directive       → ../template/rx-let-directive.mdx
-    - Notifications         → ../packages/cdk/reference/notifications.md
-    - Tutorial T4           → ../tutorials/T4-loading-error-empty-states.md
--->

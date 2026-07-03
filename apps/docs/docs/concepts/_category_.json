@@ -7,6 +7,6 @@
     "type": "generated-index",
     "title": "Concepts",
     "slug": "/concepts",
-    "description": "The why behind RxAngular — read-away-from-keyboard explanations of change detection, zoneless rendering, reactive state, the reactive context, and concurrent scheduling."
+    "description": "The why behind RxAngular — read-away-from-keyboard explanations of change detection, zoneless rendering, reactive state, the reactive context, concurrent scheduling, reactive templating, and virtual scrolling."
   }
 }

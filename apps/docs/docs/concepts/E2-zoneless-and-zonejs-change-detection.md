@@ -1,10 +1,11 @@
 ---
 id: E2-zoneless-and-zonejs-change-detection
-title: "Zoneless & how Zone.js affected change detection"
+sidebar_position: 2
+title: 'Zoneless & how Zone.js affected change detection'
 diataxis_type: explanation
 package: _site
 legacy_guard: false
-sidebar_label: "Zoneless & Zone.js"
+sidebar_label: 'Zoneless & Zone.js'
 tags: [cdk, eslint-plugin, content]
 ---
 
@@ -147,15 +148,13 @@ path.
 
 The following pages carry a `<LegacyGuard>` banner (or otherwise document
 zone-based behavior) and link back to this concept as their shared explanation.
-_Back-links are wired in Phase C._
 
 - The six `no-zone-*` ESLint rules (`no-zone-critical-browser-apis`,
   `no-zone-critical-lodash-apis`, `no-zone-critical-rxjs-creation-apis`,
   `no-zone-critical-rxjs-operators`, `no-zone-critical-rxjs-schedulers`,
-  `no-zone-run-apis`) via the shared `<LegacyGuard>` (this collapses the
-  formerly 6× duplicated zone rationale to one place).
-- The CDK zone pages: `cdk/zone-configurations/*`, `cdk/zone-less/zone-less.mdx`,
-  the zone-oriented render-strategies material, and `cdk/coalescing/coalescing.mdx`.
+  `no-zone-run-apis`) via the shared `<LegacyGuard>`.
+- The CDK zone pages: `cdk/zone-configurations/*`, the zone-oriented
+  render-strategies material, and `cdk/coalescing/coalescing.mdx`.
 - The Template legacy-guard bucket: `push-pipe.md`, `unpatch-directive.md`,
   `performance-issues/ngzone-optimizations.md`,
   `performance-issues/change-detection-over-pipes.md`.

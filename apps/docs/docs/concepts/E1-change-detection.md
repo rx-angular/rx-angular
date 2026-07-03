@@ -1,10 +1,11 @@
 ---
 id: E1-change-detection
-title: "Understanding change detection in Angular"
+sidebar_position: 1
+title: 'Understanding change detection in Angular'
 diataxis_type: explanation
 package: _site
 legacy_guard: false
-sidebar_label: "Change detection"
+sidebar_label: 'Change detection'
 tags: [template, cdk, content]
 ---
 
@@ -129,10 +130,10 @@ check to the `EmbeddedView`; **render strategies** decide _when_ that work runs.
 ## Referenced by
 
 The following pages lean on this concept as their shared "why is this slow / why
-does Angular over-render" hub _(back-links wired in Phase C)_:
+does Angular over-render" hub:
 
 - CDK render-strategies overview
-- CDK basic strategies _(page retired; its salvage pointer resolves here)_
+- CDK basic strategies
 - CDK strategies (custom strategies)
 - CDK concurrent strategies
 - Template `rxFor` directive

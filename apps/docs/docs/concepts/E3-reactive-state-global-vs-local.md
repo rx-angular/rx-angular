@@ -1,10 +1,11 @@
 ---
 id: E3-reactive-state-global-vs-local
-title: "Reactive state: global vs local, RxState + signals"
+sidebar_position: 3
+title: 'Reactive state: global vs local, RxState + signals'
 diataxis_type: explanation
 package: _site
 legacy_guard: false
-sidebar_label: "Reactive state: global vs local"
+sidebar_label: 'Reactive state: global vs local'
 tags: [state, content]
 ---
 
@@ -107,12 +108,9 @@ so the [change-detection story](./E1-change-detection.md) is shared ground benea
 
 ## Referenced by
 
-_(back-links wired in Phase C; the pages below will link in to this concept once their
-REPOSITION / `<SignalsFirst>` edits land.)_
-
 - `state.mdx`: the `@rx-angular/state` landing, via the `<SignalsFirst>` note.
 - Getting Started: the state getting-started guide, via the `<SignalsFirst>` note.
-- Determine state type: the global-vs-local recipe whose prose this concept absorbs.
+- Determine state type: the global-vs-local recipe.
 - Start Here: the site landing's signals-first positioning section.
 - Tutorial T1: "Your first reactive state with RxState (alongside signals)," as a
   Next-step link.

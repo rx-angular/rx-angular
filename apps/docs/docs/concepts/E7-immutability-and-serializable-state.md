@@ -1,10 +1,11 @@
 ---
 id: E7-immutability-and-serializable-state
-title: "Immutability & serializable state"
+sidebar_position: 7
+title: 'Immutability & serializable state'
 diataxis_type: explanation
 package: _site
 legacy_guard: false
-sidebar_label: "Immutability & serializable state"
+sidebar_label: 'Immutability & serializable state'
 tags: [cdk, state, content]
 ---
 
@@ -72,10 +73,8 @@ connect(changeName$, (state, name) => patch(state, { name }));
 ```
 
 In both cases the helper hands back a new object; the surrounding machinery sees a new
-reference and re-renders. Stating this guarantee once here is why the eleven
-transformation Reference pages no longer each repeat "returns a shallow copy, does not
-mutate the original"; they carry the operation-specific detail and link back to this
-concept for the _why_.
+reference and re-renders. The transformation Reference pages carry the operation-specific
+detail and link back to this concept for the _why_.
 
 ### The shallow boundary: the load-bearing caveat
 

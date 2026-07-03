@@ -1,10 +1,11 @@
 ---
 id: E8-how-isr-works
-title: "How ISR works"
+sidebar_position: 8
+title: 'How ISR works'
 diataxis_type: explanation
 package: _site
 legacy_guard: false
-sidebar_label: "How ISR works"
+sidebar_label: 'How ISR works'
 tags: [isr, content]
 ---
 
@@ -66,12 +67,3 @@ prefer `provideISR()`.
 
 - [`@rx-angular/isr` overview](../packages/isr/index.md)
 - [ISR introduction](../packages/isr/introduction.md)
-
-<!--
-  Keep this list current as ISR How-to pages land in Phase A. Add backlinks once
-  the target pages exist on disk (onBrokenLinks: 'throw'):
-    - Set up ISR            → /packages/isr/how-to/set-up-isr
-    - Invalidate on demand  → /packages/isr/how-to/invalidate-on-demand
-    - Write a custom cache handler → /packages/isr/how-to/write-a-custom-cache-handler
--->
-

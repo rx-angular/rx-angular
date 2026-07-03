@@ -1,15 +1,12 @@
 ---
-id: how-virtual-scrolling-works
-title: "How RxAngular virtual scrolling works"
+id: E10-how-virtual-scrolling-works
+title: 'How RxAngular virtual scrolling works'
 diataxis_type: explanation
-package: template
+package: _site
 legacy_guard: false
-sidebar_label: "How virtual scrolling works"
+sidebar_label: 'How virtual scrolling works'
+sidebar_position: 10
 tags: [template, content]
-concepts: [E5]
-# NOTE: candidate for promotion to a site-level Concept in Phase D (Open Q3 / N4).
-# The scheduling half already links E5; the layout-technique half is the residual
-# that would become the new Concept if adopted. Tracked in deferrals.
 ---
 
 # How RxAngular virtual scrolling works
@@ -17,11 +14,11 @@ concepts: [E5]
 `@rx-angular/template/virtual-scrolling` solves the same problem as
 [`@angular/cdk/scrolling`](https://material.angular.io/cdk/scrolling/overview), rendering
 only the visible slice of a large list, but it takes the layout burden onto itself to
-keep rendering off the browser's critical path. This page explains the *why* and *how*.
-For the API, see the [`RxVirtualFor`](./reference/rx-virtual-for.md),
-[viewport](./reference/rx-virtual-scroll-viewport.md), and
-[strategy](./reference/rx-virtual-scroll-strategies.md) references. For the general
-scheduling model, see [Concurrent scheduling & the frame budget](../../concepts/E5-concurrent-scheduling.md).
+keep rendering off the browser's critical path. This page explains the _why_ and _how_.
+For the API, see the [`RxVirtualFor`](../packages/template/reference/rx-virtual-for.md),
+[viewport](../packages/template/reference/rx-virtual-scroll-viewport.md), and
+[strategy](../packages/template/reference/rx-virtual-scroll-strategies.md) references. For the general
+scheduling model, see [Concurrent scheduling & the frame budget](./E5-concurrent-scheduling.md).
 
 The technique mirrors the one Twitter uses, described in detail by Surma in
 [The complexities of an infinite scroller](https://developer.chrome.com/blog/infinite-scroller/):
@@ -32,34 +29,33 @@ The technique mirrors the one Twitter uses, described in detail by Surma in
 
 ## Comparison with Angular CDK
 
-| | RxAngular | Angular CDK |
-| --- | --- | --- |
-| NgZone agnostic | ✅ | ❌ |
-| layout containment | ✅ | ✅ |
-| layout technique | absolutely position each view | transform a container within the viewport |
-| scheduling technique | [`RenderStrategies`](../../concepts/E5-concurrent-scheduling.md) | `requestAnimationFrame` |
-| renderCallback | ✅ | ❌ |
-| SSR | ⚠ to be tested | ✅ |
-| define visible view buffer | configurable views in scroll direction and opposite | configurable buffer in px |
-| trackBy | ✅ | ✅ |
-| view recycling | ✅ | ✅ |
-| scrollToIndex | ✅ | ✅ |
-| FixedSizeStrategy | ✅ | ✅ |
-| AutosizeStrategy | ✅ | ⚠️ scrollToIndex & scrolledIndex not supported |
-| DynamicSizeStrategy | ✅ | ❌ |
-| viewport orientation | ❌ planned | ✅ |
-| separate viewport and scrolling element | ❌ planned | ✅ |
-| tombstone / placeholder views | ❌ planned | ❌ |
+|                                         | RxAngular                                           | Angular CDK                                    |
+| --------------------------------------- | --------------------------------------------------- | ---------------------------------------------- |
+| NgZone agnostic                         | ✅                                                  | ❌                                             |
+| layout containment                      | ✅                                                  | ✅                                             |
+| layout technique                        | absolutely position each view                       | transform a container within the viewport      |
+| scheduling technique                    | [`RenderStrategies`](./E5-concurrent-scheduling.md) | `requestAnimationFrame`                        |
+| renderCallback                          | ✅                                                  | ❌                                             |
+| SSR                                     | ⚠ to be tested                                      | ✅                                             |
+| define visible view buffer              | configurable views in scroll direction and opposite | configurable buffer in px                      |
+| trackBy                                 | ✅                                                  | ✅                                             |
+| view recycling                          | ✅                                                  | ✅                                             |
+| scrollToIndex                           | ✅                                                  | ✅                                             |
+| FixedSizeStrategy                       | ✅                                                  | ✅                                             |
+| AutosizeStrategy                        | ✅                                                  | ⚠️ scrollToIndex & scrolledIndex not supported |
+| DynamicSizeStrategy                     | ✅                                                  | ❌                                             |
+| viewport orientation                    | ❌ planned                                          | ✅                                             |
+| separate viewport and scrolling element | ❌ planned                                          | ✅                                             |
+| tombstone / placeholder views           | ❌ planned                                          | ❌                                             |
 
 ## Layout technique
 
 The biggest difference between the two implementations is the layout technique. Two tasks
 must be handled when laying out a virtual viewport: sizing the scrollable area (the
-*runway*), and keeping the visible part (the *viewport*) in sync with the user's scroll
+_runway_), and keeping the visible part (the _viewport_) in sync with the user's scroll
 position.
 
-
-![viewport and runway](../../../static/img/template/virtual-scrolling/viewport-and-runway.png)
+![viewport and runway](../../static/img/template/virtual-scrolling/viewport-and-runway.png)
 
 _screenshot from https://developer.chrome.com/blog/infinite-scroller/_
 
@@ -76,7 +72,7 @@ with `transform` rather than `height`, resizing it costs the browser no layout w
 
 ### Maintaining the viewport
 
-The CDK positions list items *relatively* inside a separate container that is only as
+The CDK positions list items _relatively_ inside a separate container that is only as
 large as its contents, then moves the whole container with a CSS `transform` on scroll:
 
 ```ts
@@ -94,7 +90,7 @@ insertions from cache. It also enables features such as `scrollToIndex` and emit
 
 The other major difference is the scheduling technique used to apply DOM updates.
 
-The CDK uses `requestAnimationFrame` both to debounce view-range calculation *and* to run
+The CDK uses `requestAnimationFrame` both to debounce view-range calculation _and_ to run
 change detection, evaluating all changes synchronously in the same animation-frame
 callback. On weak devices or with heavy list items this concentrates a lot of work into a
 single task, producing long tasks and scroll stutter.
@@ -107,7 +103,7 @@ strategy, by default the `normal` concurrent strategy. The concurrent strategies
 work into pieces that fit a frame budget (60fps by default): view-range changes become
 individual insert / move / update / delete / position work packages, processed one at a
 time while respecting the budget. This keeps long tasks to a minimum and keeps scrolling
-smooth. See [Concurrent scheduling & the frame budget](../../concepts/E5-concurrent-scheduling.md)
+smooth. See [Concurrent scheduling & the frame budget](./E5-concurrent-scheduling.md)
 for the underlying model.
 
 ## Performance comparison
@@ -145,12 +141,12 @@ and tombstone / placeholder views
 
 ## Referenced by
 
-- [`RxVirtualFor` reference](./reference/rx-virtual-for.md)
-- [`RxVirtualScrollViewport` reference](./reference/rx-virtual-scroll-viewport.md)
-- [Virtual scroll strategies reference](./reference/rx-virtual-scroll-strategies.md)
-- [Virtual scroll recipes](./how-to/virtual-scroll-recipes.md)
+- [`RxVirtualFor` reference](../packages/template/reference/rx-virtual-for.md)
+- [`RxVirtualScrollViewport` reference](../packages/template/reference/rx-virtual-scroll-viewport.md)
+- [Virtual scroll strategies reference](../packages/template/reference/rx-virtual-scroll-strategies.md)
+- [Virtual scroll recipes](../packages/template/how-to/virtual-scroll-recipes.md)
 
 ## See also
 
-- Concept: [Concurrent scheduling & the frame budget](../../concepts/E5-concurrent-scheduling.md)
+- Concept: [Concurrent scheduling & the frame budget](./E5-concurrent-scheduling.md)
 - [The complexities of an infinite scroller (Surma)](https://developer.chrome.com/blog/infinite-scroller/)

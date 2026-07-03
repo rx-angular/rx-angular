@@ -49,10 +49,16 @@ module.exports = {
             to: '/docs/packages/isr/reference/isr-render-config',
           },
           { from: '/isr/how-it-works', to: '/docs/concepts/E8-how-isr-works' },
-          { from: '/isr/introduction', to: '/docs/packages/isr/isr-introduction' },
+          {
+            from: '/isr/introduction',
+            to: '/docs/packages/isr/isr-introduction',
+          },
           { from: '/isr/benefits', to: '/docs/packages/isr/' },
           { from: '/isr/isr', to: '/docs/packages/isr/' },
-          { from: '/isr/getting-started', to: '/docs/packages/isr/how-to/set-up-isr' },
+          {
+            from: '/isr/getting-started',
+            to: '/docs/packages/isr/how-to/set-up-isr',
+          },
           {
             from: '/docs/isr/cache-handlers',
             to: '/docs/packages/isr/how-to/write-a-custom-cache-handler',
@@ -73,15 +79,24 @@ module.exports = {
             from: '/docs/isr/on-demand-revalidation',
             to: '/docs/packages/isr/how-to/invalidate-on-demand',
           },
-          { from: '/docs/isr/extra', to: '/docs/packages/isr/how-to/pass-extra-data' },
+          {
+            from: '/docs/isr/extra',
+            to: '/docs/packages/isr/how-to/pass-extra-data',
+          },
           { from: '/docs/isr/isr', to: '/docs/packages/isr/' },
-          { from: '/docs/isr/introduction', to: '/docs/packages/isr/isr-introduction' },
+          {
+            from: '/docs/isr/introduction',
+            to: '/docs/packages/isr/isr-introduction',
+          },
           { from: '/docs/isr/benefits', to: '/docs/packages/isr/' },
           {
             from: '/docs/isr/getting-started',
             to: '/docs/packages/isr/how-to/set-up-isr',
           },
-          { from: '/docs/isr/how-it-works', to: '/docs/concepts/E8-how-isr-works' },
+          {
+            from: '/docs/isr/how-it-works',
+            to: '/docs/concepts/E8-how-isr-works',
+          },
           { from: '/docs/isr/api', to: '/docs/packages/isr/reference/isr-api' },
           {
             from: '/docs/isr/irs-configuration',
@@ -274,19 +289,11 @@ module.exports = {
           },
           {
             from: '/state/integrations/manage-entities-using-ngrx-entity',
-            to: '/docs/packages/state/how-to/manage-entities-ngrx-entity',
+            to: '/docs/packages/state/how-to/manage-entities',
           },
           {
             from: '/docs/state/integrations/manage-entities-using-ngrx-entity',
-            to: '/docs/packages/state/how-to/manage-entities-ngrx-entity',
-          },
-          {
-            from: '/state/integrations/resuse-ngrx-selectors-to-compose-state',
-            to: '/docs/packages/state/how-to/reuse-ngrx-selectors',
-          },
-          {
-            from: '/docs/state/integrations/resuse-ngrx-selectors-to-compose-state',
-            to: '/docs/packages/state/how-to/reuse-ngrx-selectors',
+            to: '/docs/packages/state/how-to/manage-entities',
           },
           // Landing
           { from: '/state/state', to: '/docs/packages/state/' },
@@ -388,19 +395,19 @@ module.exports = {
           // tiny concept files; local-templates/local-variables point at it.
           {
             from: '/template/concepts/local-templates',
-            to: '/docs/packages/template/reactive-templating',
+            to: '/docs/concepts/E9-reactive-templating',
           },
           {
             from: '/docs/template/concepts/local-templates',
-            to: '/docs/packages/template/reactive-templating',
+            to: '/docs/concepts/E9-reactive-templating',
           },
           {
             from: '/template/concepts/local-variables',
-            to: '/docs/packages/template/reactive-templating',
+            to: '/docs/concepts/E9-reactive-templating',
           },
           {
             from: '/docs/template/concepts/local-variables',
-            to: '/docs/packages/template/reactive-templating',
+            to: '/docs/concepts/E9-reactive-templating',
           },
           // Concept-SOURCE retirements (Stage 3.A) — these three pages were
           // absorbed into site Concepts E1 / E4 during Phase B and are deleted
@@ -631,14 +638,6 @@ module.exports = {
             to: '/docs/packages/cdk/legacy/debug-zone-flags',
           },
           {
-            from: '/cdk/zone-less/zone-less',
-            to: '/docs/packages/cdk/legacy/zone-less',
-          },
-          {
-            from: '/docs/cdk/zone-less/zone-less',
-            to: '/docs/packages/cdk/legacy/zone-less',
-          },
-          {
             from: '/cdk/coalescing/coalescing',
             to: '/docs/packages/cdk/legacy/coalescing',
           },
@@ -752,7 +751,10 @@ module.exports = {
             from: '/docs/eslint-plugin/rules/prefer-no-lodash-is-equal',
             to: '/docs/packages/eslint-plugin/reference/prefer-no-lodash-is-equal',
           },
-          { from: '/eslint-plugin/eslint-plugin', to: '/docs/packages/eslint-plugin/' },
+          {
+            from: '/eslint-plugin/eslint-plugin',
+            to: '/docs/packages/eslint-plugin/',
+          },
           {
             from: '/docs/eslint-plugin/eslint-plugin',
             to: '/docs/packages/eslint-plugin/',
@@ -913,34 +915,34 @@ module.exports = {
         },
         items: [
           {
-            docId: 'packages/state/state',
-            label: 'State',
+            type: 'dropdown',
+            label: 'Docs',
             position: 'left',
-            type: 'doc',
+            items: [
+              { type: 'doc', docId: 'packages/state/state', label: 'State' },
+              {
+                type: 'doc',
+                docId: 'packages/template/template-overview',
+                label: 'Template',
+              },
+              { type: 'doc', docId: 'packages/cdk/cdk-overview', label: 'CDK' },
+              { type: 'doc', docId: 'packages/isr/isr-landing', label: 'ISR' },
+              {
+                type: 'doc',
+                docId: 'packages/eslint-plugin/eslint-plugin-overview',
+                label: 'ESLint plugin',
+              },
+            ],
           },
           {
-            docId: 'packages/template/template-overview',
-            label: 'Template',
+            to: '/docs/tutorials',
+            label: 'Learn',
             position: 'left',
-            type: 'doc',
           },
           {
-            docId: 'packages/cdk/cdk-overview',
-            label: 'CDK',
+            to: '/docs/concepts',
+            label: 'Concepts',
             position: 'left',
-            type: 'doc',
-          },
-          {
-            docId: 'packages/isr/isr-landing',
-            label: 'ISR',
-            position: 'left',
-            type: 'doc',
-          },
-          {
-            docId: 'packages/eslint-plugin/eslint-plugin-overview',
-            label: 'ESLint',
-            position: 'left',
-            type: 'doc',
           },
           {
             to: 'blog',
@@ -956,7 +958,6 @@ module.exports = {
       },
       footer: {
         copyright: `Funded by netidee: <a href="https://netidee.at/rxangular" title="netidee.at/rxangular" target="_blank">netidee.at/rxangular</a> <br/> Copyright © ${new Date().getFullYear()} RxAngular.`,
-        style: 'dark',
         logo: {
           alt: title,
           href: url,

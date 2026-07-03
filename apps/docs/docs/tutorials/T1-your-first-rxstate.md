@@ -1,10 +1,10 @@
 ---
 id: T1-your-first-rxstate
-title: "Your first reactive state with RxState (alongside signals)"
+title: 'Your first reactive state with RxState (alongside signals)'
 diataxis_type: tutorial
 package: _site
 legacy_guard: false
-sidebar_label: "First reactive state"
+sidebar_label: 'First reactive state'
 sidebar_position: 1
 tags: [state, examples]
 concepts: [E3]
@@ -56,7 +56,7 @@ Run `ng serve` and click the button. The count increases on screen. A signal is 
 
 ### 2. Add a requirement signals fit poorly
 
-Now the component must also load a list of movies from an **asynchronous source**: an HTTP call that emits over time, not a value you already hold. A plain `signal()` stores a value you set imperatively; it has no built-in way to *connect* to a stream and keep itself in sync as the stream emits. This is where `rxState()` fits and a signal does not. For the split between local signals and reactive state, see [Reactive state: global vs local, RxState + signals](../concepts/E3-reactive-state-global-vs-local.md).
+Now the component must also load a list of movies from an **asynchronous source**: an HTTP call that emits over time, not a value you already hold. A plain `signal()` stores a value you set imperatively; it has no built-in way to _connect_ to a stream and keep itself in sync as the stream emits. This is where `rxState()` fits and a signal does not. For the split between local signals and reactive state, see [Reactive state: global vs local, RxState + signals](../concepts/E3-reactive-state-global-vs-local.md).
 
 The async source we will connect is a plain observable of movies:
 
@@ -137,6 +137,8 @@ export class CounterComponent {
 ```
 
 `connect('movies', …)` keeps the `movies` slice in sync with the stream; `state.signal('movies')` exposes it as a `Signal<Movie[]>` for direct template binding; `state.set(...)` applies an imperative update when you need one.
+
+Beyond replacing a whole slice, when you need to update the `movies` array or a nested object _immutably_ — add one item, update one by id, or patch a field — reach for the pure helpers in [`@rx-angular/cdk/transformations`](../packages/cdk/reference/transformations/index.md). Each returns a new value and never mutates its input, so it drops straight into a `set(...)`, for example `this.state.set({ movies: insert(this.state.get('movies'), newMovie) })`. The helpers are framework-agnostic, so the same `insert` / `patch` / `update` also work on a plain signal via `signal.update(...)`.
 
 ### 5. Select and render, and watch it update
 
