@@ -152,38 +152,44 @@ export class CounterComponent {
 
 ## Update based on previous state
 
-`connect` can take a projection `(oldState, value) => newValue`, letting you compute the next value from the current state and an incoming value, for example filtering a list from a reactive form control:
+`connect` can take a projection `(oldState, value) => newValue`, letting you compute the next value from the current state and an incoming value, for example appending each incoming movie to the list already in state:
 
 ```ts
-import { Component, inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
 import { rxState } from '@rx-angular/state';
 
 @Component({
   template: `
-    <input placeholder="Search" [formControl]="search" />
     @for (movie of movies(); track movie.id) {
       <app-movie [movie]="movie" />
     }
   `,
-  imports: [ReactiveFormsModule],
 })
 export class MovieListComponent {
-  private readonly store = inject<Store<MovieState>>(Store);
-
-  readonly search = new FormControl<string>('', { nonNullable: true });
+  // incoming movies, e.g. from a websocket or an "add" button
+  readonly movieAdded = new Subject<Movie>();
 
   private readonly state = rxState<{ movies: Movie[] }>(({ set, connect }) => {
     set({ movies: [] });
-    connect('movies', this.store.select('movies'));
 
-    // derive the new list from the previous state + the search input
-    connect('movies', this.search.valueChanges, (oldState, searchInput) => oldState.movies.filter((movie) => movie.title.includes(searchInput)));
+    // compute the next `movies` from its own previous value + the new movie
+    connect('movies', this.movieAdded, (oldState, movie) => [...oldState.movies, movie]);
   });
 
   readonly movies = this.state.signal('movies');
 }
 ```
+
+:::tip Derive views, don't overwrite the source
+Use a projection only when the next value genuinely depends on the previous one:
+accumulating, appending, or toggling. To derive a _view_ of your state, like a
+filtered or sorted list, keep the source untouched and build it with
+[`computed`](../reference/rx-state-functional.md) or
+[`select`](../reference/select.md) instead. Connecting a filtered result back
+into the same key overwrites the source, so clearing the filter can no longer
+restore the full list.
+:::
 
 ## Use `rxState` in a service
 

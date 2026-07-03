@@ -79,7 +79,7 @@ export class StatefulComponent {
     sortKey: sortKey(),
   }));
 
-  // Outputs are state derivations
+  // Extra derived values are computed() signals off the view model
   readonly itemCount = computed(() => this.vm().items.length);
 }
 ```

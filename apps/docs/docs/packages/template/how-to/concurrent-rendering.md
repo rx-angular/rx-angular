@@ -31,7 +31,7 @@ first. For the exact strategy names, priorities, and deadlines, see the
 
 ## Schedule one-off work with `RxStrategyProvider`
 
-`RxStrategyProvider.schedule()` runs a callback under a chosen priority and
+[`RxStrategyProvider.schedule()`](../../cdk/reference/rx-strategy-provider.md) runs a callback under a chosen priority and
 returns an `Observable`; subscribe to run it. Pick the priority from how urgent
 the work is to the user (see the [reference](../../cdk/reference/concurrent-strategies.md)
 for the full table):
@@ -106,7 +106,7 @@ export class BackgroundSyncComponent {
 
 ## Render a large collection non-blockingly with `*rxFor`
 
-The `*rxFor` directive schedules the change detection of each rendered item
+The [`*rxFor`](../reference/rx-for.md) directive schedules the change detection of each rendered item
 through the same strategy system, so a long list renders in frame-budgeted chunks
 instead of one blocking synchronous pass. Set the `strategy` input to control the
 priority:
@@ -145,6 +145,13 @@ work completes.
 
 ## See also
 
+- Directive references:
+  - [`*rxFor`](../reference/rx-for.md)
+  - [`*rxIf`](../reference/rx-if.md)
+  - [`*rxLet`](../reference/rx-let.md)
+  - [`*rxVirtualFor`](../reference/rx-virtual-for.md)
+  - [`RxVirtualView`](../reference/rx-virtual-view.md)
+- Reference: [`RxStrategyProvider`](../../cdk/reference/rx-strategy-provider.md): `schedule()` and `scheduleWith()`.
 - Reference: [concurrent strategies](../../cdk/reference/concurrent-strategies.md): the strategy names, priorities, and render deadlines.
 - Reference: [How to tune rendering with strategies](./tune-rendering-with-strategies.md): the `strategy`/`renderCallback`/`parent`/`patchZone` inputs on `*rxFor`, `*rxIf`, `*rxLet`, `*rxVirtualFor`.
 - Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
