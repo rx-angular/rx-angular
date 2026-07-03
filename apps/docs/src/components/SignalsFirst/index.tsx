@@ -15,8 +15,7 @@ type SignalsFirstProps = {
   children?: React.ReactNode;
 };
 
-const CONCEPT_LABEL =
-  'Reactive state: global vs local, RxState + signals';
+const CONCEPT_LABEL = 'Reactive state: global vs local, RxState + signals';
 
 function conceptHref(conceptId: string): string {
   return `/docs/concepts/${conceptId}-reactive-state-global-vs-local`;
@@ -29,15 +28,17 @@ function conceptHref(conceptId: string): string {
 function LocalCopy({ href }: { href: string }): JSX.Element {
   return (
     <p className={styles.signalsFirstIntro}>
-      For <strong>local component state, Angular signals are the default</strong>{' '}
-      — reach for <code>signal()</code>, <code>computed()</code>, and{' '}
-      <code>linkedSignal()</code> first. <strong>RxState complements signals</strong>;
-      it earns its place for{' '}
+      For{' '}
+      <strong>local component state, Angular signals are the default</strong> —
+      reach for <code>signal()</code>, <code>computed()</code>, and{' '}
+      <code>linkedSignal()</code> first.{' '}
+      <strong>RxState complements signals</strong>; it earns its place for{' '}
       <strong>
-        global/shared state, complex derived state, and async-heavy orchestration
+        global/shared state, complex derived state, and async-heavy
+        orchestration
       </strong>{' '}
-      (multi-source <code>connect</code>, actions, effects) bridged into signals —
-      not as a replacement for signals. See{' '}
+      (multi-source <code>connect</code>, actions, effects) bridged into signals
+      — not as a replacement for signals. See{' '}
       <a href={href}>
         <strong>{CONCEPT_LABEL}</strong>
       </a>
@@ -50,9 +51,9 @@ function GlobalCopy({ href }: { href: string }): JSX.Element {
   return (
     <p className={styles.signalsFirstIntro}>
       Angular signals — <code>signal()</code>, <code>computed()</code>, and{' '}
-      <code>linkedSignal()</code> — remain the default for local component state.
-      For <strong>global/shared, async-heavy state</strong>, this is where{' '}
-      <strong>RxState complements signals</strong>: multi-source{' '}
+      <code>linkedSignal()</code> — remain the default for local component
+      state. For <strong>global/shared, async-heavy state</strong>, this is
+      where <strong>RxState complements signals</strong>: multi-source{' '}
       <code>connect</code>, actions, and effects orchestrating asynchronous
       sources, bridged into signals for the template — not a replacement for
       signals. See{' '}

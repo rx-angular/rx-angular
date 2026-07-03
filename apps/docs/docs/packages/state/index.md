@@ -1,10 +1,10 @@
 ---
 id: state
-title: "@rx-angular/state"
+title: '@rx-angular/state'
 diataxis_type: reference
 package: state
 legacy_guard: false
-sidebar_label: "@rx-angular/state"
+sidebar_label: '@rx-angular/state'
 sidebar_position: 1
 hide_title: true
 tags: [state, api-reference]
@@ -41,7 +41,7 @@ For the full mental model of when state is local vs. global and how RxState sits
 alongside signals, see [Reactive state: global vs local, RxState +
 signals](../../concepts/E3-reactive-state-global-vs-local.md).
 
-### When *not* to reach for RxState
+### When _not_ to reach for RxState
 
 If a component only needs a couple of independent pieces of local state and some
 values derived from them, plain `signal()` + `computed()` is simpler and has no

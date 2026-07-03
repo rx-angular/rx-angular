@@ -1,10 +1,10 @@
 ---
 id: zone-configurations
-title: "zoneConfig"
+title: 'zoneConfig'
 diataxis_type: reference
 package: cdk
-legacy_guard: "Angular <21 / still running Zone.js"
-sidebar_label: "zoneConfig (legacy)"
+legacy_guard: 'Angular <21 / still running Zone.js'
+sidebar_label: 'zoneConfig (legacy)'
 tags: [cdk, api-reference, migration]
 concepts: [E2]
 ---
@@ -63,25 +63,25 @@ Each key below is a method that disables Zone.js patching of that global API
 (sets the matching `__Zone_disable_*` / `__zone_symbol__*` flag). Names mirror
 `RxZoneGlobalDisableConfigurationsKey`.
 
-| Method | Disables patching of |
-| --- | --- |
-| `EventTarget()` | `EventTarget.addEventListener` / `removeEventListener` |
-| `EventTargetLegacy()` | legacy event-target patching |
-| `timers()` | `setTimeout` / `setInterval` |
-| `requestAnimationFrame()` | `requestAnimationFrame` |
-| `XHR()` | `XMLHttpRequest` |
-| `blocking()` | `alert` / `confirm` / `prompt` |
-| `FileReader()` | `FileReader` |
-| `MutationObserver()` | `MutationObserver` |
-| `IntersectionObserver()` | `IntersectionObserver` |
-| `geolocation()` | `navigator.geolocation` |
-| `canvas()` | `HTMLCanvasElement.toBlob` |
-| `customElements()` | custom-elements callbacks |
-| `on_property()` | `on*` property handlers |
-| `defineProperty()` | `Object.defineProperty` patch |
-| `registerElement()` | `document.registerElement` |
-| `ZoneAwarePromise()` | `Promise` |
-| `EventEmitter()`, `fs()`, `node_timers()`, `nextTick()`, `crypto()` | Node-only APIs |
+| Method                                                              | Disables patching of                                   |
+| ------------------------------------------------------------------- | ------------------------------------------------------ |
+| `EventTarget()`                                                     | `EventTarget.addEventListener` / `removeEventListener` |
+| `EventTargetLegacy()`                                               | legacy event-target patching                           |
+| `timers()`                                                          | `setTimeout` / `setInterval`                           |
+| `requestAnimationFrame()`                                           | `requestAnimationFrame`                                |
+| `XHR()`                                                             | `XMLHttpRequest`                                       |
+| `blocking()`                                                        | `alert` / `confirm` / `prompt`                         |
+| `FileReader()`                                                      | `FileReader`                                           |
+| `MutationObserver()`                                                | `MutationObserver`                                     |
+| `IntersectionObserver()`                                            | `IntersectionObserver`                                 |
+| `geolocation()`                                                     | `navigator.geolocation`                                |
+| `canvas()`                                                          | `HTMLCanvasElement.toBlob`                             |
+| `customElements()`                                                  | custom-elements callbacks                              |
+| `on_property()`                                                     | `on*` property handlers                                |
+| `defineProperty()`                                                  | `Object.defineProperty` patch                          |
+| `registerElement()`                                                 | `document.registerElement`                             |
+| `ZoneAwarePromise()`                                                | `Promise`                                              |
+| `EventEmitter()`, `fs()`, `node_timers()`, `nextTick()`, `crypto()` | Node-only APIs                                         |
 
 ## `zoneConfig.events.disable`
 
@@ -89,10 +89,10 @@ Two methods, each taking an array of event names. This scope exposes **only**
 these two members; there is no `events.disableXHR()` or any other per-API
 helper here.
 
-| Method | Effect |
-| --- | --- |
+| Method                                   | Effect                                                                              |
+| ---------------------------------------- | ----------------------------------------------------------------------------------- |
 | `UNPATCHED_EVENTS(eventNames: string[])` | run the named events' listeners outside Zone.js (`__zone_symbol__UNPATCHED_EVENTS`) |
-| `PASSIVE_EVENTS(eventNames: string[])` | register the named events as passive listeners (`__zone_symbol__PASSIVE_EVENTS`) |
+| `PASSIVE_EVENTS(eventNames: string[])`   | register the named events as passive listeners (`__zone_symbol__PASSIVE_EVENTS`)    |
 
 Predefined event-name arrays are exported from the same subpath (`mouseEvents`,
 `keyboardEvents`, `wheelEvents`, `inputEvents`, `touchEvents`, `xhrEvents`,
@@ -100,8 +100,8 @@ Predefined event-name arrays are exported from the same subpath (`mouseEvents`,
 
 ## `zoneConfig.runtime.disable`
 
-| Method | Effect |
-| --- | --- |
+| Method                              | Effect                                                             |
+| ----------------------------------- | ------------------------------------------------------------------ |
 | `ignoreConsoleErrorUncaughtError()` | stop Zone.js from wrapping uncaught errors reported to the console |
 
 Runtime settings must be applied **after** Zone.js has loaded.
@@ -113,9 +113,9 @@ for `zone-testing`. Relevant only to a Zone.js-based test setup.
 
 ## Convenience methods
 
-| Method | Equivalent to |
-| --- | --- |
-| `zoneConfig.unpatchXHR()` | `global.disable.XHR()` **and** `events.disable.UNPATCHED_EVENTS([...xhrEvents])` |
+| Method                                         | Equivalent to                                                                                     |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `zoneConfig.unpatchXHR()`                      | `global.disable.XHR()` **and** `events.disable.UNPATCHED_EVENTS([...xhrEvents])`                  |
 | `zoneConfig.useUnpatchedPassiveScrollEvents()` | `events.disable.PASSIVE_EVENTS(['scroll'])` **and** `events.disable.UNPATCHED_EVENTS(['scroll'])` |
 
 ## Minimal example

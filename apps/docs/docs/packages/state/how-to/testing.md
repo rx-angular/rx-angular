@@ -1,10 +1,10 @@
 ---
 id: testing
-title: "How to test components and services that use RxState"
+title: 'How to test components and services that use RxState'
 diataxis_type: how-to
 package: state
 legacy_guard: false
-sidebar_label: "Test RxState"
+sidebar_label: 'Test RxState'
 sidebar_position: 7
 tags: [state, guides]
 concepts: [E3]
@@ -57,14 +57,7 @@ export class CounterComponent {
 
   private readonly state = rxState<{ count: number }>(({ connect, set }) => {
     set({ count: 0 });
-    connect(
-      'count',
-      merge(
-        this.increment.pipe(map(() => 1)),
-        this.decrement.pipe(map(() => -1)),
-      ),
-      ({ count }, slice) => count + slice,
-    );
+    connect('count', merge(this.increment.pipe(map(() => 1)), this.decrement.pipe(map(() => -1))), ({ count }, slice) => count + slice);
   });
 
   // signals-first template surface
@@ -95,18 +88,14 @@ describe('CounterComponent', () => {
     const incrementButton = fixture.debugElement.query(By.css('#increment'));
     incrementButton.triggerEventHandler('click', null);
     await fixture.whenStable();
-    expect(
-      fixture.debugElement.query(By.css('#counter')).nativeElement.textContent,
-    ).toBe('1');
+    expect(fixture.debugElement.query(By.css('#counter')).nativeElement.textContent).toBe('1');
   });
 
   it('should decrement', async () => {
     const decrementButton = fixture.debugElement.query(By.css('#decrement'));
     decrementButton.triggerEventHandler('click', null);
     await fixture.whenStable();
-    expect(
-      fixture.debugElement.query(By.css('#counter')).nativeElement.textContent,
-    ).toBe('-1');
+    expect(fixture.debugElement.query(By.css('#counter')).nativeElement.textContent).toBe('-1');
   });
 });
 ```
@@ -124,9 +113,7 @@ it('should expose the incremented count as a signal', () => {
   const fixture = TestBed.createComponent(CounterComponent);
   const component = fixture.componentInstance;
 
-  fixture.debugElement
-    .query(By.css('#increment'))
-    .triggerEventHandler('click', null);
+  fixture.debugElement.query(By.css('#increment')).triggerEventHandler('click', null);
 
   // read the signal directly — no whenStable(), no async pipe
   expect(component.count()).toBe(1);
@@ -153,14 +140,7 @@ export class CounterService {
 
   private readonly state = rxState<{ count: number }>(({ connect, set }) => {
     set({ count: 0 });
-    connect(
-      'count',
-      merge(
-        this.increment.pipe(map(() => 1)),
-        this.decrement.pipe(map(() => -1)),
-      ),
-      ({ count }, slice) => count + slice,
-    );
+    connect('count', merge(this.increment.pipe(map(() => 1)), this.decrement.pipe(map(() => -1))), ({ count }, slice) => count + slice);
   });
 
   readonly count$ = this.state.select('count');

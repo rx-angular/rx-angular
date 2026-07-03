@@ -45,7 +45,7 @@ import { isDefined, isKeyOf, isObjectGuard } from '../_internals/guards';
 export function setProp<T extends object, K extends keyof T>(
   object: T,
   key: K,
-  value: T[K]
+  value: T[K],
 ): T {
   const objectIsObject = isObjectGuard(object);
   const keyIsValid = isKeyOf<T>(key);
@@ -66,7 +66,7 @@ export function setProp<T extends object, K extends keyof T>(
   if (keyIsValid) {
     return {
       ...initialObject,
-      [key]: value
+      [key]: value,
     };
   }
 

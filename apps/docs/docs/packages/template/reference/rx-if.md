@@ -33,9 +33,9 @@ export class AnyComponent {}
 
 **Value**
 
-| Input  | Type                                                         | Description                                                                   |
-| ------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| `rxIf` | `boolean` or `ObservableInput<boolean>` or `Signal<boolean>` | The observable, signal, or value bound to the context of the template.        |
+| Input  | Type                                                         | Description                                                            |
+| ------ | ------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| `rxIf` | `boolean` or `ObservableInput<boolean>` or `Signal<boolean>` | The observable, signal, or value bound to the context of the template. |
 
 **Contextual state**
 
@@ -46,19 +46,19 @@ export class AnyComponent {}
 | `suspense`        | `TemplateRef<RxIfViewContext>`   | Template for the suspense state.                                       |
 | `nextTrigger`     | `Observable<unknown>`            | Trigger to show the `next` template.                                   |
 | `errorTrigger`    | `Observable<unknown>`            | Trigger to show the `error` template.                                  |
-| `completeTrigger` | `Observable<unknown>`            | Trigger to show the `complete` template.                              |
+| `completeTrigger` | `Observable<unknown>`            | Trigger to show the `complete` template.                               |
 | `suspenseTrigger` | `Observable<unknown>`            | Trigger to show the `suspense` template.                               |
 | `contextTrigger`  | `Observable<RxNotificationKind>` | Trigger to show any template, based on the given `RxNotificationKind`. |
 
 **Rendering**
 
-| Input                 | Type                                               | Description                                                                                                                                                                                                                        |
-| --------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Input                 | Type                                               | Description                                                                                                                                                                                                                       |
+| --------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `then`                | `TemplateRef<RxIfViewContext>`                     | Template for when the bound condition is true.                                                                                                                                                                                    |
 | `else`                | `TemplateRef<RxIfViewContext>`                     | Template for when the bound condition is false.                                                                                                                                                                                   |
-| `patchZone`           | `boolean`                                          | _default: `true`_ if `false`, `RxIf` operates outside `NgZone`. Zoneful-only concern; see [How to tune rendering with strategies](../how-to/tune-rendering-with-strategies.md).                                                 |
+| `patchZone`           | `boolean`                                          | _default: `true`_ if `false`, `RxIf` operates outside `NgZone`. Zoneful-only concern; see [How to tune rendering with strategies](../how-to/tune-rendering-with-strategies.md).                                                   |
 | `parent` (deprecated) | `boolean`                                          | _default: `false`_ if `true`, `RxIf` informs its host component about template changes so `@ViewChild` / `@ContentChild` queries update. Deprecated: not needed with [signal queries](https://angular.dev/guide/signals/queries). |
-| `strategy`            | `Observable<RxStrategyNames>` or `RxStrategyNames` | _default: `normal`_ the `RxStrategyRenderStrategy` used to detect changes. See [How to tune rendering with strategies](../how-to/tune-rendering-with-strategies.md).                                                             |
+| `strategy`            | `Observable<RxStrategyNames>` or `RxStrategyNames` | _default: `normal`_ the `RxStrategyRenderStrategy` used to detect changes. See [How to tune rendering with strategies](../how-to/tune-rendering-with-strategies.md).                                                              |
 | `renderCallback`      | `NextObserver<boolean>`                            | Emits the latest value causing the view to update, giving the exact timing when `RxIf` created or removed its template.                                                                                                           |
 
 ## Features
@@ -134,9 +134,7 @@ Available on both the `then` and `else` templates, based on the last valid value
 
 ```html
 <ng-container *rxIf="customer$; let customer; let s = suspense; let e = error; let c = complete">
-  @if (s) { <loader /> }
-  @if (e) { <error /> }
-  @if (c) { <complete /> }
+  @if (s) { <loader /> } @if (e) { <error /> } @if (c) { <complete /> }
   <app-customer [customer]="customer" />
 </ng-container>
 ```
@@ -145,15 +143,11 @@ With an `else` template:
 
 ```html
 <ng-container *rxIf="show$; else: nope; let s = suspense; let e = error; let c = complete">
-  @if (s) { <loader /> }
-  @if (e) { <error /> }
-  @if (c) { <complete /> }
+  @if (s) { <loader /> } @if (e) { <error /> } @if (c) { <complete /> }
   <app-item />
 </ng-container>
 <ng-template #nope let-s="suspense" let-e="error" let-c="complete">
-  @if (s) { <loader /> }
-  @if (e) { <error /> }
-  @if (c) { <complete /> }
+  @if (s) { <loader /> } @if (e) { <error /> } @if (c) { <complete /> }
   <nope />
 </ng-template>
 ```
@@ -212,13 +206,13 @@ Template anchors render the reactive context declaratively:
 
 Besides deriving the reactive context from the source, `RxIf` can switch context manually. Each trigger applies its context state and updates the context variables (or switches to the registered template).
 
-| Trigger           | Type                             | Effect                                                                                        |
-| ----------------- | -------------------------------- | --------------------------------------------------------------------------------------------- |
-| `nextTrigger`     | `Observable<unknown>`            | Switch back from any template to the actual value (`next`).                                    |
-| `errorTrigger`    | `Observable<unknown>`            | Switch to the `error` template.                                                               |
-| `completeTrigger` | `Observable<unknown>`            | Switch to the `complete` template.                                                            |
-| `suspenseTrigger` | `Observable<unknown>`            | Switch to the `suspense` template.                                                            |
-| `contextTrigger`  | `Observable<RxNotificationKind>` | Set any context; combines `suspenseTrigger`, `completeTrigger`, and `errorTrigger` in one.    |
+| Trigger           | Type                             | Effect                                                                                     |
+| ----------------- | -------------------------------- | ------------------------------------------------------------------------------------------ |
+| `nextTrigger`     | `Observable<unknown>`            | Switch back from any template to the actual value (`next`).                                |
+| `errorTrigger`    | `Observable<unknown>`            | Switch to the `error` template.                                                            |
+| `completeTrigger` | `Observable<unknown>`            | Switch to the `complete` template.                                                         |
+| `suspenseTrigger` | `Observable<unknown>`            | Switch to the `suspense` template.                                                         |
+| `contextTrigger`  | `Observable<RxNotificationKind>` | Set any context; combines `suspenseTrigger`, `completeTrigger`, and `errorTrigger` in one. |
 
 ```typescript
 @Component({

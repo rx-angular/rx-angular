@@ -1,10 +1,10 @@
 ---
 id: isr-introduction
-title: "Introduction"
+title: 'Introduction'
 diataxis_type: explanation
 package: isr
 legacy_guard: false
-sidebar_label: "Introduction"
+sidebar_label: 'Introduction'
 sidebar_position: 1
 tags: [isr, content]
 concepts: [E8]
@@ -39,4 +39,3 @@ decide what to cache. See the mechanism in
 - [`@rx-angular/isr` API](./reference/api.md): the full export surface.
 
 - [Set up ISR](./how-to/set-up-isr.md): wire ISR into an existing SSR app.
-

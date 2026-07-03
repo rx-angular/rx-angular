@@ -1,10 +1,10 @@
 ---
 id: install-and-configure
-title: "How to install and configure the ESLint plugin"
+title: 'How to install and configure the ESLint plugin'
 diataxis_type: how-to
 package: eslint-plugin
 legacy_guard: false
-sidebar_label: "Install & configure"
+sidebar_label: 'Install & configure'
 sidebar_position: 1
 tags: [eslint-plugin, guides, tooling]
 ---
@@ -80,10 +80,10 @@ Or configure the parser, plugin, and rules manually:
 
 ## The two shipped presets
 
-| Preset | Extends key | What it enables |
-| --- | --- | --- |
-| `recommended` | `plugin:@rx-angular/recommended` | The change-detection, RxState-discipline, layout, and lodash rules for most Angular apps. `no-zone-run-apis` is set to `warn`; the other `no-zone-*` rules are **not** included. |
-| `zoneless` | `plugin:@rx-angular/zoneless` | For apps aspiring to run without Zone.js: turns on **all six** `no-zone-*` rules at `error` plus the change-detection, layout, and lodash rules — but does **not** include the RxState-discipline rules (`no-rxstate-imperative-in-reactive`, `no-rxstate-subscriptions-outside-constructor`) that `recommended` enables. |
+| Preset        | Extends key                      | What it enables                                                                                                                                                                                                                                                                                                           |
+| ------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `recommended` | `plugin:@rx-angular/recommended` | The change-detection, RxState-discipline, layout, and lodash rules for most Angular apps. `no-zone-run-apis` is set to `warn`; the other `no-zone-*` rules are **not** included.                                                                                                                                          |
+| `zoneless`    | `plugin:@rx-angular/zoneless`    | For apps aspiring to run without Zone.js: turns on **all six** `no-zone-*` rules at `error` plus the change-detection, layout, and lodash rules — but does **not** include the RxState-discipline rules (`no-rxstate-imperative-in-reactive`, `no-rxstate-subscriptions-outside-constructor`) that `recommended` enables. |
 
 - **Plugin namespace:** `@rx-angular` (rule ids are written `@rx-angular/<rule>`).
 - **Parser:** `@typescript-eslint/parser` (required, since the rules inspect TypeScript syntax).

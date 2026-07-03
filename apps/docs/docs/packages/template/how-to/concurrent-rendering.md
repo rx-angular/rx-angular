@@ -1,10 +1,10 @@
 ---
 id: concurrent-rendering
-title: "How to render heavy UI work without blocking the frame"
+title: 'How to render heavy UI work without blocking the frame'
 diataxis_type: how-to
 package: template
 legacy_guard: false
-sidebar_label: "Concurrent rendering"
+sidebar_label: 'Concurrent rendering'
 tags: [template, cdk, guides]
 concepts: [E5]
 ---
@@ -15,7 +15,7 @@ concepts: [E5]
 thread stays responsive: chunk the work across frames against a real frame
 budget, and order competing pieces of work by priority. This is the one thing
 Angular's native change detection and control flow cannot do: they can tell you
-*what* to render, but not *how long* a re-render is allowed to run before it
+_what_ to render, but not _how long_ a re-render is allowed to run before it
 should pause and let the user interact ([angular#43168](https://github.com/angular/angular/issues/43168)).
 
 Reach for this when a large list, an expensive component tree, or a burst of
@@ -54,17 +54,23 @@ export class ItemImageComponent {
 
   showTooltip() {
     this.strategyProvider
-      .schedule(() => {
-        // create tooltip — urgent, appears on hover
-      }, { strategy: 'immediate' })
+      .schedule(
+        () => {
+          // create tooltip — urgent, appears on hover
+        },
+        { strategy: 'immediate' },
+      )
       .subscribe();
   }
 
   hideTooltip() {
     this.strategyProvider
-      .schedule(() => {
-        // destroy tooltip
-      }, { strategy: 'immediate' })
+      .schedule(
+        () => {
+          // destroy tooltip
+        },
+        { strategy: 'immediate' },
+      )
       .subscribe();
   }
 }
@@ -84,19 +90,16 @@ priority. This is the idiomatic way to push a stream's side effects to the
 background:
 
 ```ts
-@Component({ /* … */ })
+@Component({
+  /* … */
+})
 export class BackgroundSyncComponent {
   private readonly strategyProvider = inject(RxStrategyProvider);
   private readonly webSocket = inject(WebSocketService);
   private readonly state = inject(StateService);
 
   constructor() {
-    this.state.items$
-      .pipe(this.strategyProvider.scheduleWith(
-        (items) => this.webSocket.syncItems(items),
-        { strategy: 'idle' },
-      ))
-      .subscribe();
+    this.state.items$.pipe(this.strategyProvider.scheduleWith((items) => this.webSocket.syncItems(items), { strategy: 'idle' })).subscribe();
   }
 }
 ```

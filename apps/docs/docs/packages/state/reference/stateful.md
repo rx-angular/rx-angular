@@ -1,17 +1,17 @@
 ---
 id: stateful
-title: "stateful"
+title: 'stateful'
 diataxis_type: reference
 package: state
 legacy_guard: false
-sidebar_label: "stateful"
+sidebar_label: 'stateful'
 tags: [state, api-reference]
 concepts: [E3]
 ---
 
 # `stateful`
 
-RxJS operator that turns an arbitrary source `Observable` into a *stateful* one: it emits only **distinct** and **defined** values, and shares/replays the result for multiple subscribers. It behaves like the Observable `pipe` method (pass zero or more RxJS operators and they are composed in order) while adding the repetitive state-processing guarantees on top.
+RxJS operator that turns an arbitrary source `Observable` into a _stateful_ one: it emits only **distinct** and **defined** values, and shares/replays the result for multiple subscribers. It behaves like the Observable `pipe` method (pass zero or more RxJS operators and they are composed in order) while adding the repetitive state-processing guarantees on top.
 
 Every emission is guaranteed to be:
 
@@ -28,17 +28,15 @@ Every emission is guaranteed to be:
 function stateful<T>(): OperatorFunction<T, NonUndefined<T>>;
 
 // one or more derivation operators (rest parameter)
-function stateful<T, R>(
-  ...optionalDerive: OperatorFunction<T, R>[]
-): OperatorFunction<T, NonUndefined<T> | NonUndefined<R>>;
+function stateful<T, R>(...optionalDerive: OperatorFunction<T, R>[]): OperatorFunction<T, NonUndefined<T> | NonUndefined<R>>;
 ```
 
 The library also declares intermediate typed overloads for 1–5 chained operators (`stateful<T, A>`, `stateful<T, A, B>`, …) so the composed result type is inferred. All resolve to the rest-parameter implementation above.
 
 ## Parameters
 
-| Parameter | Type | Meaning |
-| --- | --- | --- |
+| Parameter           | Type                       | Meaning                                                                                                                    |
+| ------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `...optionalDerive` | `OperatorFunction<T, R>[]` | Zero or more RxJS operators, passed comma-separated (a **rest** parameter, not an array), composed like `Observable#pipe`. |
 
 ## Returns

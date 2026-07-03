@@ -1,10 +1,10 @@
 ---
 id: coerce-reactive-inputs
-title: "How to coerce reactive inputs"
+title: 'How to coerce reactive inputs'
 diataxis_type: how-to
 package: cdk
 legacy_guard: false
-sidebar_label: "Coerce reactive inputs"
+sidebar_label: 'Coerce reactive inputs'
 tags: [cdk, guides]
 ---
 
@@ -57,7 +57,9 @@ import { Component, input, effect } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
 
-@Component({ /* … */ })
+@Component({
+  /* … */
+})
 export class PriceComponent {
   private readonly priceInput$ = new Subject<Observable<number> | number>();
   readonly price$ = this.priceInput$.pipe(coerceDistinctWith());

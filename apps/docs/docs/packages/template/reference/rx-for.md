@@ -105,14 +105,14 @@ trackMovie(index: number, movie: Movie) {
 
 ## Inputs
 
-| Input                 | Type                                                                     | Default    | Description                                                                                                                                                             |
-| --------------------- | ------------------------------------------------------------------------ | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rxForOf`             | `ObservableInput<U> \| Signal<U> \| U` (`U extends NgIterable<T>`)        | —          | The iterable to render. Accepts an `Observable`/`Promise`, a `Signal`, or a static value.                                                                              |
-| `trackBy`             | `keyof T \| ((index: number, item: T) => unknown)`                        | —          | Item identity. Provide a `TrackByFunction`, or name a property as a string shorthand.                                                                                  |
-| `strategy`            | `Observable<RxStrategyNames<string>> \| RxStrategyNames<string>`          | `normal`   | The render strategy used to schedule change detection. See [tune rendering with strategies](../how-to/tune-rendering-with-strategies.md).                              |
-| `renderCallback`      | `Subject<U>`                                                             | —          | A `Subject` that emits the rendered item set whenever `rxFor` finishes creating, updating, or removing templates. Useful for post-render DOM work.                     |
-| `patchZone`           | `boolean`                                                                | `true`     | If `false`, `RxFor` operates outside `NgZone`. Inert under zoneless change detection. See [tune rendering with strategies](../how-to/tune-rendering-with-strategies.md). |
-| `parent` (deprecated) | `boolean`                                                                | `false`    | If `true`, `RxFor` informs its host component about template changes so `@ViewChild`/`@ContentChild` queries resolve. **Deprecated**: not needed with signal-based view/content queries. |
+| Input                 | Type                                                               | Default  | Description                                                                                                                                                                              |
+| --------------------- | ------------------------------------------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rxForOf`             | `ObservableInput<U> \| Signal<U> \| U` (`U extends NgIterable<T>`) | —        | The iterable to render. Accepts an `Observable`/`Promise`, a `Signal`, or a static value.                                                                                                |
+| `trackBy`             | `keyof T \| ((index: number, item: T) => unknown)`                 | —        | Item identity. Provide a `TrackByFunction`, or name a property as a string shorthand.                                                                                                    |
+| `strategy`            | `Observable<RxStrategyNames<string>> \| RxStrategyNames<string>`   | `normal` | The render strategy used to schedule change detection. See [tune rendering with strategies](../how-to/tune-rendering-with-strategies.md).                                                |
+| `renderCallback`      | `Subject<U>`                                                       | —        | A `Subject` that emits the rendered item set whenever `rxFor` finishes creating, updating, or removing templates. Useful for post-render DOM work.                                       |
+| `patchZone`           | `boolean`                                                          | `true`   | If `false`, `RxFor` operates outside `NgZone`. Inert under zoneless change detection. See [tune rendering with strategies](../how-to/tune-rendering-with-strategies.md).                 |
+| `parent` (deprecated) | `boolean`                                                          | `false`  | If `true`, `RxFor` informs its host component about template changes so `@ViewChild`/`@ContentChild` queries resolve. **Deprecated**: not needed with signal-based view/content queries. |
 
 > **`parent` default is `false`.** It is sourced from the render-strategies config
 > (`parent: false`). The flag is deprecated and will be removed; with signal-based
@@ -126,28 +126,28 @@ Available on every item template:
 
 **Static context variables** (mirrored from `NgFor`)
 
-| Variable    | Type      | Description                                          |
-| ----------- | --------- | --------------------------------------------------- |
-| `$implicit` | `T`       | The item value, accessed by `let val`.              |
-| `index`     | `number`  | Current index of the item.                          |
-| `count`     | `number`  | Number of items in the list.                        |
-| `first`     | `boolean` | `true` if the item is first.                        |
-| `last`      | `boolean` | `true` if the item is last.                         |
-| `even`      | `boolean` | `true` if `index % 2 === 0`.                        |
-| `odd`       | `boolean` | The opposite of `even`.                             |
+| Variable    | Type      | Description                            |
+| ----------- | --------- | -------------------------------------- |
+| `$implicit` | `T`       | The item value, accessed by `let val`. |
+| `index`     | `number`  | Current index of the item.             |
+| `count`     | `number`  | Number of items in the list.           |
+| `first`     | `boolean` | `true` if the item is first.           |
+| `last`      | `boolean` | `true` if the item is last.            |
+| `even`      | `boolean` | `true` if `index % 2 === 0`.           |
+| `odd`       | `boolean` | The opposite of `even`.                |
 
 **Reactive context variables**
 
-| Variable | Type                                                            | Description                                                                                                              |
-| -------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `item$`  | `Observable<T>`                                                 | The item value as an `Observable`.                                                                                     |
-| `index$` | `Observable<number>`                                            | `index` as an `Observable`.                                                                                            |
-| `count$` | `Observable<number>`                                            | `count` as an `Observable`.                                                                                            |
-| `first$` | `Observable<boolean>`                                           | `first` as an `Observable`.                                                                                            |
-| `last$`  | `Observable<boolean>`                                           | `last` as an `Observable`.                                                                                             |
-| `even$`  | `Observable<boolean>`                                           | `even` as an `Observable`.                                                                                             |
-| `odd$`   | `Observable<boolean>`                                           | `odd` as an `Observable`.                                                                                              |
-| `select` | `(keys: (keyof T)[]) => Observable<any>` | Returns a selection function for a subset of item properties as a distinct `Observable`, used for nested `rxFor`.    |
+| Variable | Type                                     | Description                                                                                                       |
+| -------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `item$`  | `Observable<T>`                          | The item value as an `Observable`.                                                                                |
+| `index$` | `Observable<number>`                     | `index` as an `Observable`.                                                                                       |
+| `count$` | `Observable<number>`                     | `count` as an `Observable`.                                                                                       |
+| `first$` | `Observable<boolean>`                    | `first` as an `Observable`.                                                                                       |
+| `last$`  | `Observable<boolean>`                    | `last` as an `Observable`.                                                                                        |
+| `even$`  | `Observable<boolean>`                    | `even` as an `Observable`.                                                                                        |
+| `odd$`   | `Observable<boolean>`                    | `odd` as an `Observable`.                                                                                         |
+| `select` | `(keys: (keyof T)[]) => Observable<any>` | Returns a selection function for a subset of item properties as a distinct `Observable`, used for nested `rxFor`. |
 
 ## Features
 

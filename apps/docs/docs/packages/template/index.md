@@ -1,10 +1,10 @@
 ---
 id: template-overview
-title: "@rx-angular/template"
+title: '@rx-angular/template'
 diataxis_type: reference
 package: template
 legacy_guard: false
-sidebar_label: "@rx-angular/template"
+sidebar_label: '@rx-angular/template'
 sidebar_position: 1
 tags: [template, api-reference]
 ---
@@ -21,8 +21,8 @@ control flow does not give you:
   expensive update is broken across frames instead of blocking the UI thread.
   Native `@if`/`@for`/`@switch` render synchronously; these directives can spread
   that work out.
-- **A built-in reactive context.** Each directive tracks the *suspense*, *error*,
-  and *complete* states of its bound source and exposes template slots for each:
+- **A built-in reactive context.** Each directive tracks the _suspense_, _error_,
+  and _complete_ states of its bound source and exposes template slots for each:
   loading and error UI without hand-written boilerplate.
 
 For the plain cases (naming a value, a simple toggle, a straightforward list),
@@ -30,7 +30,7 @@ Angular's native `@let`, `@if`, `@for`, and `@switch` already do the job, and yo
 should reach for them first. `@rx-angular/template` earns its place when you need
 the scheduling control or the reactive context on top of that.
 
-To understand *why* fine-grained, scheduled rendering matters, see
+To understand _why_ fine-grained, scheduled rendering matters, see
 [Understanding change detection in Angular](../../concepts/E1-change-detection.md).
 
 ## Installation
@@ -43,15 +43,15 @@ npm install @rx-angular/template
 
 Each feature is a standalone directive or pipe imported from its own entry point:
 
-| Entry point | Export | Purpose |
-| ----------- | ------ | ------- |
-| `@rx-angular/template/let` | `RxLet` | Bind an `Observable`/`Signal` with a reactive context. |
-| `@rx-angular/template/for` | `RxFor` | Concurrent, scheduled list rendering. |
-| `@rx-angular/template/if` | `RxIf` | Reactive suspense/error/complete conditional rendering. |
-| `@rx-angular/template/push` | `RxPush` | Reactive binding pipe with per-binding render scheduling. |
-| `@rx-angular/template/unpatch` | `RxUnpatch` | Opt DOM events out of Zone.js patching (legacy, Zone.js only). |
-| `@rx-angular/template/virtual-scrolling` | `RxVirtualFor`, viewport, strategies | High-performance virtual scrolling. |
-| `@rx-angular/template/virtual-view` | `RxVirtualView` | Viewport-based view virtualization (developer preview). |
+| Entry point                              | Export                               | Purpose                                                        |
+| ---------------------------------------- | ------------------------------------ | -------------------------------------------------------------- |
+| `@rx-angular/template/let`               | `RxLet`                              | Bind an `Observable`/`Signal` with a reactive context.         |
+| `@rx-angular/template/for`               | `RxFor`                              | Concurrent, scheduled list rendering.                          |
+| `@rx-angular/template/if`                | `RxIf`                               | Reactive suspense/error/complete conditional rendering.        |
+| `@rx-angular/template/push`              | `RxPush`                             | Reactive binding pipe with per-binding render scheduling.      |
+| `@rx-angular/template/unpatch`           | `RxUnpatch`                          | Opt DOM events out of Zone.js patching (legacy, Zone.js only). |
+| `@rx-angular/template/virtual-scrolling` | `RxVirtualFor`, viewport, strategies | High-performance virtual scrolling.                            |
+| `@rx-angular/template/virtual-view`      | `RxVirtualView`                      | Viewport-based view virtualization (developer preview).        |
 
 Import the directives you need directly into a standalone component:
 

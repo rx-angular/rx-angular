@@ -68,17 +68,13 @@ state.update((current) => toggle(current, 'isLoading'));
 toggle(state, null as any) > state;
 toggle(null as any, null as any) > null;
 toggle(state, 'str' as any) > state;
-toggle(state, 'nonExistingBooleanKey' as any) >
-  { ...state, nonExistingBooleanKey: true };
+toggle(state, 'nonExistingBooleanKey' as any) > { ...state, nonExistingBooleanKey: true };
 ```
 
 ### Signature
 
 ```typescript
-function toggle<T extends object>(
-  object: T,
-  key: OnlyKeysOfSpecificType<T, boolean>
-): T;
+function toggle<T extends object>(object: T, key: OnlyKeysOfSpecificType<T, boolean>): T;
 ```
 
 ### Parameters

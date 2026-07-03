@@ -61,10 +61,10 @@ should start observing visibility and swap visible content for placeholders as e
 scroll out of view. That is what `enableAfterHydration` controls (provider-level config
 only).
 
-| Value | Behavior |
-| --- | --- |
-| `true` (default) | After `enabled` turns `true`, the directive registers the `IntersectionObserver`. Elements that scroll out of view show placeholders; virtual behavior is fully active. |
-| `false` | After `enabled` turns `true`, the directive **does not** register the observer. Hydrated content stays as-is and is never replaced by placeholders. Use this to avoid destroying components that were just hydrated. |
+| Value            | Behavior                                                                                                                                                                                                             |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `true` (default) | After `enabled` turns `true`, the directive registers the `IntersectionObserver`. Elements that scroll out of view show placeholders; virtual behavior is fully active.                                              |
+| `false`          | After `enabled` turns `true`, the directive **does not** register the observer. Hydrated content stays as-is and is never replaced by placeholders. Use this to avoid destroying components that were just hydrated. |
 
 **Keep hydrated content, no virtualizing afterwards:**
 
@@ -106,11 +106,11 @@ Keep `enableAfterHydration: true` (default) when:
 
 ## Result
 
-| Config | Effect |
-| --- | --- |
+| Config                                                           | Effect                                                                                                                                            |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `enabled: false` or a signal that becomes `true` after hydration | Turns off virtual behavior on the server and during hydration; turns it on only when appropriate (e.g. after `HydrationTracker.isFullyHydrated`). |
-| `enableAfterHydration: true` | Once `enabled` becomes `true`, start observing and show placeholders when elements leave the viewport. |
-| `enableAfterHydration: false` | Once `enabled` becomes `true`, do **not** start observing; keep hydrated content and never replace it with placeholders. |
+| `enableAfterHydration: true`                                     | Once `enabled` becomes `true`, start observing and show placeholders when elements leave the viewport.                                            |
+| `enableAfterHydration: false`                                    | Once `enabled` becomes `true`, do **not** start observing; keep hydrated content and never replace it with placeholders.                          |
 
 On the server and during hydration the user sees full content; after hydration the page
 behaves according to `enableAfterHydration`.

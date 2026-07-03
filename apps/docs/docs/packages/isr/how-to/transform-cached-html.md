@@ -1,10 +1,10 @@
 ---
 id: transform-cached-html
-title: "Transform cached HTML"
+title: 'Transform cached HTML'
 diataxis_type: how-to
 package: isr
 legacy_guard: false
-sidebar_label: "Transform cached HTML"
+sidebar_label: 'Transform cached HTML'
 sidebar_position: 5
 tags: [isr, guides]
 ---
@@ -31,8 +31,7 @@ Sometimes you need to alter the HTML ISR handles, for example injecting a tracki
      browserDistFolder,
      bootstrap,
      commonEngine,
-     modifyGeneratedHtml: (req, html) =>
-       `${html}<!-- Modified before caching -->`,
+     modifyGeneratedHtml: (req, html) => `${html}<!-- Modified before caching -->`,
    });
    ```
 
@@ -41,8 +40,7 @@ Sometimes you need to alter the HTML ISR handles, for example injecting a tracki
    ```typescript title="server.ts"
    server.get('*', (req, res, next) =>
      isr.serveFromCache(req, res, next, {
-       modifyCachedHtml: (req, cachedHtml) =>
-         `${cachedHtml}<!-- Served from cache, modified per request -->`,
+       modifyCachedHtml: (req, cachedHtml) => `${cachedHtml}<!-- Served from cache, modified per request -->`,
      }),
    );
 

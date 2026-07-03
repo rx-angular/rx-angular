@@ -1,10 +1,10 @@
 ---
 id: serve-cache-variants
-title: "Serve cache variants"
+title: 'Serve cache variants'
 diataxis_type: how-to
 package: isr
 legacy_guard: false
-sidebar_label: "Serve cache variants"
+sidebar_label: 'Serve cache variants'
 sidebar_position: 3
 tags: [isr, guides]
 ---

@@ -1,10 +1,10 @@
 ---
 id: rx-strategy-provider
-title: "RxStrategyProvider"
+title: 'RxStrategyProvider'
 diataxis_type: reference
 package: cdk
 legacy_guard: false
-sidebar_label: "RxStrategyProvider"
+sidebar_label: 'RxStrategyProvider'
 tags: [cdk, api-reference]
 concepts: [E5]
 ---
@@ -47,15 +47,9 @@ export class RxStrategyProvider<T extends string = string> {
   readonly strategies$: Observable<RxStrategies<T>>;
   readonly strategyNames$: Observable<string[]>;
 
-  schedule<R>(
-    work: () => R,
-    options?: ScheduleOnStrategyOptions,
-  ): Observable<R>;
+  schedule<R>(work: () => R, options?: ScheduleOnStrategyOptions): Observable<R>;
 
-  scheduleWith<R>(
-    work: (v?: R) => void,
-    options?: ScheduleOnStrategyOptions,
-  ): MonoTypeOperatorFunction<R>;
+  scheduleWith<R>(work: (v?: R) => void, options?: ScheduleOnStrategyOptions): MonoTypeOperatorFunction<R>;
 
   scheduleCD(
     cdRef: ChangeDetectorRef,
@@ -86,8 +80,8 @@ const config = strategyProvider.config;
 to its `RxStrategyCredentials`. `strategyNames` returns just the array of names.
 
 ```ts
-const strategies = strategyProvider.strategies;      // credentials map
-const names = strategyProvider.strategyNames;         // string[]
+const strategies = strategyProvider.strategies; // credentials map
+const names = strategyProvider.strategyNames; // string[]
 ```
 
 ### `get primaryStrategy()` / `set primaryStrategy()`
@@ -107,8 +101,8 @@ names** (`string[]`). `primaryStrategy$` emits the current primary strategy's
 `RxStrategyCredentials`.
 
 ```ts
-const strategies$ = strategyProvider.strategies$;         // Observable<RxStrategies<T>>
-const strategyNames$ = strategyProvider.strategyNames$;   // Observable<string[]>
+const strategies$ = strategyProvider.strategies$; // Observable<RxStrategies<T>>
+const strategyNames$ = strategyProvider.strategyNames$; // Observable<string[]>
 ```
 
 ## Scheduling methods
@@ -127,15 +121,9 @@ and set a `scope`. Setting `scope` to `this` coalesces multiple scheduled
 change-detection calls into a single cycle.
 
 ```ts
-strategyProvider
-  .schedule(() => myWork(), { strategy: 'idle', patchZone: false, scope: this })
-  .subscribe();
+strategyProvider.schedule(() => myWork(), { strategy: 'idle', patchZone: false, scope: this }).subscribe();
 
-source$
-  .pipe(
-    strategyProvider.scheduleWith(() => myWork(), { strategy: 'idle', scope: this }),
-  )
-  .subscribe();
+source$.pipe(strategyProvider.scheduleWith(() => myWork(), { strategy: 'idle', scope: this })).subscribe();
 ```
 
 ### `scheduleCD` & zone patching

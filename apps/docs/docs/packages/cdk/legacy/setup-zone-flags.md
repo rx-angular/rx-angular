@@ -1,10 +1,10 @@
 ---
 id: setup-zone-flags
-title: "How to set up zone flags"
+title: 'How to set up zone flags'
 diataxis_type: how-to
 package: cdk
-legacy_guard: "still-zoneful"
-sidebar_label: "Set up zone flags (legacy)"
+legacy_guard: 'still-zoneful'
+sidebar_label: 'Set up zone flags (legacy)'
 tags: [cdk, guides, migration]
 concepts: [E2]
 ---

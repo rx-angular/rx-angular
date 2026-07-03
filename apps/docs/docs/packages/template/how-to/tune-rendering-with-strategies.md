@@ -1,17 +1,17 @@
 ---
 id: tune-rendering-with-strategies
-title: "How to tune rendering with strategies"
+title: 'How to tune rendering with strategies'
 diataxis_type: how-to
 package: template
 legacy_guard: false
-sidebar_label: "Tune rendering with strategies"
+sidebar_label: 'Tune rendering with strategies'
 tags: [template, guides]
 concepts: [E5]
 ---
 
 # How to tune rendering with strategies
 
-**Goal.** Control *how* the reactive `@rx-angular/template` directives (`*rxFor`,
+**Goal.** Control _how_ the reactive `@rx-angular/template` directives (`*rxFor`,
 `*rxIf`, `*rxLet`, and `*rxVirtualFor`) schedule their rendering work, so a large
 or expensive template updates without blocking the UI thread. Every one of these
 directives shares the same four rendering knobs: the `strategy` input, the
@@ -32,23 +32,19 @@ change detection. It accepts a `RxStrategyNames` string **or** an
 
 The available strategy names are:
 
-| Kind | Names | Behavior |
-| ---- | ----- | -------- |
-| **Native** | `native`, `local`, `noop` | `native` schedules via `markForCheck`; `local` renders the local view (via `requestAnimationFrame`); `noop` is an identity pass-through that does no scheduling. |
+| Kind           | Names                                                | Behavior                                                                                                                                                                                |
+| -------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Native**     | `native`, `local`, `noop`                            | `native` schedules via `markForCheck`; `local` renders the local view (via `requestAnimationFrame`); `noop` is an identity pass-through that does no scheduling.                        |
 | **Concurrent** | `immediate`, `userBlocking`, `normal`, `low`, `idle` | Frame-budgeted, cancelable scheduling ordered by priority: `immediate` is the most urgent, `idle` the least. See [concurrent strategies](../../cdk/reference/concurrent-strategies.md). |
 
 The default for every template directive is **`normal`** (a concurrent strategy).
 
 ```html
 <!-- a static strategy -->
-<ng-container *rxFor="let item of items$; strategy: 'userBlocking'">
-  {{ item }}
-</ng-container>
+<ng-container *rxFor="let item of items$; strategy: 'userBlocking'"> {{ item }} </ng-container>
 
 <!-- a reactive strategy, switched at runtime -->
-<ng-container *rxFor="let item of items$; strategy: strategy$">
-  {{ item }}
-</ng-container>
+<ng-container *rxFor="let item of items$; strategy: strategy$"> {{ item }} </ng-container>
 ```
 
 ```ts
@@ -68,9 +64,7 @@ The same `strategy` input works identically on `*rxIf`, `*rxLet`, and
   <app-hero />
 </ng-container>
 
-<ng-container *rxLet="item$; let item; strategy: strategy$">
-  {{ item }}
-</ng-container>
+<ng-container *rxLet="item$; let item; strategy: strategy$"> {{ item }} </ng-container>
 
 <rx-virtual-scroll-viewport [itemSize]="50">
   <div *rxVirtualFor="let item of items$; strategy: strategy$">{{ item }}</div>
@@ -103,9 +97,7 @@ the rendered set of items; for `*rxIf`/`*rxLet`, the value that caused the updat
 @Component({
   selector: 'app-root',
   template: `
-    <app-list-item
-      *rxFor="let item of items$; trackBy: trackItem; renderCallback: itemsRendered"
-    >
+    <app-list-item *rxFor="let item of items$; trackBy: trackItem; renderCallback: itemsRendered">
       <div>{{ item.name }}</div>
     </app-list-item>
   `,
@@ -176,7 +168,7 @@ bootstrapApplication(AppComponent, {
 
 The recommended modern path is to migrate to signal queries and leave `parent` at
 `false`. The legacy-decorator details live on the template package's
-*view-and-content-queries* legacy page.
+_view-and-content-queries_ legacy page.
 
 ## Run event listeners outside NgZone (`patchZone`)
 
@@ -203,13 +195,7 @@ detection:
 ```ts
 @Component({
   selector: 'app-root',
-  template: `
-    <div
-      *rxFor="let bgColor of bgColor$; patchZone: false"
-      (mousemove)="calcBgColor($event)"
-      [style.background]="bgColor"
-    ></div>
-  `,
+  template: ` <div *rxFor="let bgColor of bgColor$; patchZone: false" (mousemove)="calcBgColor($event)" [style.background]="bgColor"></div> `,
 })
 export class AppComponent {
   // because this template has `patchZone: false`, the listener runs outside the zone

@@ -1,10 +1,10 @@
 ---
 id: T4-loading-error-empty-states
-title: "Loading / error / empty states the reactive way"
+title: 'Loading / error / empty states the reactive way'
 diataxis_type: tutorial
 package: _site
 legacy_guard: false
-sidebar_label: "Loading / error / empty states"
+sidebar_label: 'Loading / error / empty states'
 sidebar_position: 4
 tags: [template, examples]
 concepts: [E4]
@@ -77,7 +77,7 @@ first-class error branch, and reconstructs the source's phases from side channel
 instead of reading them from the source. Change detection re-runs this whole chain on
 every signal read (see [Understanding change detection in Angular](../concepts/E1-change-detection.md)),
 yet native `@if` cannot express the one thing a UI most needs from an async source:
-*which phase is it in*. That missing model is the
+_which phase is it in_. That missing model is the
 [reactive context](../concepts/E4-reactive-context.md): the emitted value together
 with the `suspense` / `error` / `complete` phase the source is in.
 
@@ -96,9 +96,7 @@ import { RxLet } from '@rx-angular/template/let';
   selector: 'app-report',
   imports: [RxLet],
   template: `
-    <ng-container
-      *rxLet="rows$; let rows; suspense: loading; error: failed; complete: done"
-    >
+    <ng-container *rxLet="rows$; let rows; suspense: loading; error: failed; complete: done">
       @if (rows.length === 0) {
         <p>Nothing to show.</p>
       } @else {
@@ -138,9 +136,7 @@ import { delay, map } from 'rxjs';
 
 export class ReportComponent {
   // Emits one non-empty page after 1.5s, then completes.
-  readonly rows$: Observable<string[]> = timer(1500).pipe(
-    map(() => ['Alpha', 'Bravo', 'Charlie']),
-  );
+  readonly rows$: Observable<string[]> = timer(1500).pipe(map(() => ['Alpha', 'Bravo', 'Charlie']));
 
   // Swap rows$ for one of these to observe the other states:
   //   empty  → of<string[]>([]).pipe(delay(1500))
@@ -165,7 +161,7 @@ ng serve
   (`complete`) once the timer completes.
 - **Empty** — set `rows$` to `of<string[]>([]).pipe(delay(1500))` and reload: after
   the loading outlet you see **Nothing to show.**, the empty case, distinct from
-  loading because the value *did* arrive; it was empty.
+  loading because the value _did_ arrive; it was empty.
 - **Error** — set `rows$` to `timer(1500).pipe(map(() => { throw new Error('boom'); }))`
   and reload: after loading, the `error` outlet shows **Something went wrong.**
 

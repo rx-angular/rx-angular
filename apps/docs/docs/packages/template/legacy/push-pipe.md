@@ -1,10 +1,10 @@
 ---
 id: push-pipe
-title: "RxPush"
+title: 'RxPush'
 diataxis_type: reference
 package: template
-legacy_guard: "Zone.js / <21 / per-binding scheduling"
-sidebar_label: "RxPush (legacy)"
+legacy_guard: 'Zone.js / <21 / per-binding scheduling'
+sidebar_label: 'RxPush (legacy)'
 tags: [template, api-reference, migration]
 ---
 
@@ -87,25 +87,10 @@ Or pass an object config to also supply a `renderCallback` or `patchZone`:
 class RxPush implements PipeTransform, OnDestroy {
   constructor(cdRef: ChangeDetectorRef);
 
-  transform<U>(
-    potentialObservable: null,
-    config?: RxStrategyNames | Observable<RxStrategyNames>,
-    renderCallback?: NextObserver<U>,
-  ): null;
-  transform<U>(
-    potentialObservable: undefined,
-    config?: RxStrategyNames | Observable<RxStrategyNames>,
-    renderCallback?: NextObserver<U>,
-  ): undefined;
-  transform<U>(
-    potentialObservable: ObservableInput<U> | U,
-    config?: RxStrategyNames | Observable<RxStrategyNames>,
-    renderCallback?: NextObserver<U>,
-  ): U;
-  transform<U>(
-    potentialObservable: ObservableInput<U>,
-    config?: PushInput<U>,
-  ): U;
+  transform<U>(potentialObservable: null, config?: RxStrategyNames | Observable<RxStrategyNames>, renderCallback?: NextObserver<U>): null;
+  transform<U>(potentialObservable: undefined, config?: RxStrategyNames | Observable<RxStrategyNames>, renderCallback?: NextObserver<U>): undefined;
+  transform<U>(potentialObservable: ObservableInput<U> | U, config?: RxStrategyNames | Observable<RxStrategyNames>, renderCallback?: NextObserver<U>): U;
+  transform<U>(potentialObservable: ObservableInput<U>, config?: PushInput<U>): U;
 
   ngOnDestroy(): void;
 }
@@ -120,11 +105,11 @@ constructor parameter is `cdRef: ChangeDetectorRef`**.
 
 The object-config overload accepts:
 
-| Option | Type | Meaning |
-| ------ | ---- | ------- |
-| `strategy` | `RxStrategyNames \| Observable<RxStrategyNames>` | The render strategy for this binding. |
-| `renderCallback` | `NextObserver<T>` | Notified after each render pass completes. |
-| `patchZone` | `boolean` | Whether the render runs inside `NgZone`. Inert under zoneless. |
+| Option           | Type                                             | Meaning                                                        |
+| ---------------- | ------------------------------------------------ | -------------------------------------------------------------- |
+| `strategy`       | `RxStrategyNames \| Observable<RxStrategyNames>` | The render strategy for this binding.                          |
+| `renderCallback` | `NextObserver<T>`                                | Notified after each render pass completes.                     |
+| `patchZone`      | `boolean`                                        | Whether the render runs inside `NgZone`. Inert under zoneless. |
 
 ## See also
 

@@ -84,8 +84,7 @@ setProp(state, null as any, 42) > state;
 toggle(state, null as any) > state;
 toggle(null as any, null as any) > null;
 toggle(state, 'str' as any) > state;
-toggle(state, 'nonExistingBooleanKey' as any) >
-  { ...state, nonExistingBooleanKey: true };
+toggle(state, 'nonExistingBooleanKey' as any) > { ...state, nonExistingBooleanKey: true };
 ```
 
 ### patch

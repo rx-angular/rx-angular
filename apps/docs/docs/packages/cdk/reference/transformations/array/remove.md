@@ -40,11 +40,7 @@ const nonExistingCreatures = [
   { id: 3, type: 'kobold' },
 ];
 
-const realCreatures = remove(
-  creatures,
-  nonExistingCreatures,
-  (a, b) => a.id === b.id
-);
+const realCreatures = remove(creatures, nonExistingCreatures, (a, b) => a.id === b.id);
 
 // realCreatures will be: [{id: 1, type: 'cat'}];
 ```
@@ -80,12 +76,7 @@ export class ListComponent {
   readonly removeCreature$ = new Subject<Creature>();
 
   private readonly state = rxState<ComponentState>(({ connect }) => {
-    connect(
-      'creatures',
-      this.removeCreature$,
-      ({ creatures }, creatureToRemove) =>
-        remove(creatures, creatureToRemove, (a, b) => a.id === b.id),
-    );
+    connect('creatures', this.removeCreature$, ({ creatures }, creatureToRemove) => remove(creatures, creatureToRemove, (a, b) => a.id === b.id));
   });
 
   readonly creatures = this.state.signal('creatures');
@@ -93,11 +84,7 @@ export class ListComponent {
   // Imperative alternative
   removeCreature(creatureToRemove: Creature): void {
     this.state.set({
-      creatures: remove(
-        this.state.get('creatures'),
-        creatureToRemove,
-        (a, b) => a.id === b.id,
-      ),
+      creatures: remove(this.state.get('creatures'), creatureToRemove, (a, b) => a.id === b.id),
     });
   }
 }
@@ -111,9 +98,7 @@ import { remove } from '@rx-angular/cdk/transformations';
 
 const creatures = signal<Creature[]>([]);
 
-creatures.update((current) =>
-  remove(current, creatureToRemove, (a, b) => a.id === b.id),
-);
+creatures.update((current) => remove(current, creatureToRemove, (a, b) => a.id === b.id));
 ```
 
 ### Edge cases
@@ -129,11 +114,7 @@ remove(nonArray as any, items) > nonArray;
 ### Signature
 
 ```typescript
-function remove<T>(
-  source: T[],
-  scrap: Partial<T>[] | Partial<T>,
-  compare?: ComparableData<T>
-): T[];
+function remove<T>(source: T[], scrap: Partial<T>[] | Partial<T>, compare?: ComparableData<T>): T[];
 ```
 
 ### Parameters

@@ -1,10 +1,10 @@
 ---
 id: no-zone-critical-rxjs-operators
-title: "no-zone-critical-rxjs-operators"
+title: 'no-zone-critical-rxjs-operators'
 diataxis_type: reference
 package: eslint-plugin
-legacy_guard: "Zone.js only"
-sidebar_label: "no-zone-critical-rxjs-operators"
+legacy_guard: 'Zone.js only'
+sidebar_label: 'no-zone-critical-rxjs-operators'
 tags: [eslint-plugin, api-reference, migration]
 concepts: [E2]
 ---
@@ -36,8 +36,8 @@ This rule has no options (`schema: []`).
 // eslintrc
 {
   "rules": {
-    "@rx-angular/no-zone-critical-rxjs-operators": "error"
-  }
+    "@rx-angular/no-zone-critical-rxjs-operators": "error",
+  },
 }
 ```
 
@@ -65,9 +65,7 @@ import { mergeMap, delay, takeUntil } from 'rxjs/operators';
 const mousedown$ = fromEvent(document, 'mousedown');
 const mouseup$ = fromEvent(document, 'mouseup');
 
-mousedown$
-  .pipe(mergeMap((event) => of(event).pipe(delay(700), takeUntil(mouseup$))))
-  .subscribe((event) => console.log('Long Press!', event));
+mousedown$.pipe(mergeMap((event) => of(event).pipe(delay(700), takeUntil(mouseup$)))).subscribe((event) => console.log('Long Press!', event));
 ```
 
 ## Correct
@@ -81,9 +79,7 @@ import { mergeMap, delay, takeUntil } from 'rxjs/operators';
 const mousedown$ = fromEvent(document, 'mousedown');
 const mouseup$ = fromEvent(document, 'mouseup');
 
-mousedown$
-  .pipe(mergeMap((event) => of(event).pipe(delay(700), takeUntil(mouseup$))))
-  .subscribe((event) => console.log('Long Press!', event));
+mousedown$.pipe(mergeMap((event) => of(event).pipe(delay(700), takeUntil(mouseup$)))).subscribe((event) => console.log('Long Press!', event));
 ```
 
 :::note `./rxjs-zoneless-operators` is a user shim

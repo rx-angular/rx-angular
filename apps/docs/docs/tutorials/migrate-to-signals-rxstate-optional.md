@@ -1,10 +1,10 @@
 ---
 id: migrate-to-signals-rxstate-optional
-title: "Migrate to Signals (RxState optional)"
+title: 'Migrate to Signals (RxState optional)'
 diataxis_type: tutorial
 package: _site
 legacy_guard: false
-sidebar_label: "Migrate to Signals (RxState optional)"
+sidebar_label: 'Migrate to Signals (RxState optional)'
 sidebar_position: 5
 tags: [state, migration, examples]
 concepts: [E3]
@@ -95,7 +95,7 @@ import { TodoApiService } from './todo-api.service';
     <section class="checklist">
       <h1>{{ name$ | async }}</h1>
       <div>
-        <article class="task" *ngFor="let task of (tasks$ | async)">
+        <article class="task" *ngFor="let task of tasks$ | async">
           <h2>{{ task.name }}</h2>
           <button class="answer-button" (click)="answerTask(task.id)">Done</button>
         </article>

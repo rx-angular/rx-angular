@@ -37,7 +37,7 @@ import { isDefined, isKeyOf, isObjectGuard } from '../_internals/guards';
  */
 export function slice<T extends object, K extends keyof T>(
   object: T,
-  keys: K | K[]
+  keys: K | K[],
 ): Pick<T, K> {
   const objectIsObject = isDefined(object) && isObjectGuard(object);
 
@@ -47,7 +47,7 @@ export function slice<T extends object, K extends keyof T>(
   }
 
   const sanitizedKeys = (Array.isArray(keys) ? keys : [keys]).filter(
-    (k) => isKeyOf<T>(k) && k in object
+    (k) => isKeyOf<T>(k) && k in object,
   );
 
   if (!sanitizedKeys.length) {
@@ -57,6 +57,6 @@ export function slice<T extends object, K extends keyof T>(
 
   return sanitizedKeys.reduce(
     (acc, k) => ({ ...acc, [k]: object[k] }),
-    {} as Pick<T, K>
+    {} as Pick<T, K>,
   );
 }

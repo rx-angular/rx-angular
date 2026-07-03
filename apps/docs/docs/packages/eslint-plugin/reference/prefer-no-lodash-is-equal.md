@@ -1,6 +1,6 @@
 ---
 id: prefer-no-lodash-is-equal
-title: "prefer-no-lodash-is-equal"
+title: 'prefer-no-lodash-is-equal'
 diataxis_type: reference
 package: eslint-plugin
 legacy_guard: false
@@ -51,14 +51,7 @@ if (isEqual(prevObj, currObj)) {
 ## ✅ Correct
 
 ```ts
-if (
-  prevObj.prop === currObj.prop &&
-  prevObj.arr.length === currObj.arr.length &&
-  prevObj.arr.every(
-    (prevItem, i) =>
-      prevItem.x === currObj.arr[i].x && prevItem.y === currObj.arr[i].y
-  )
-) {
+if (prevObj.prop === currObj.prop && prevObj.arr.length === currObj.arr.length && prevObj.arr.every((prevItem, i) => prevItem.x === currObj.arr[i].x && prevItem.y === currObj.arr[i].y)) {
   // ...
 }
 ```

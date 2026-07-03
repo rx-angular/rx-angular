@@ -1,10 +1,10 @@
 ---
 id: derive-a-view-model
-title: "How to derive a view model from RxState"
+title: 'How to derive a view model from RxState'
 diataxis_type: how-to
 package: state
 legacy_guard: false
-sidebar_label: "Derive a view model"
+sidebar_label: 'Derive a view model'
 sidebar_position: 4
 tags: [state, guides]
 concepts: [E3]
@@ -43,15 +43,15 @@ You want to render this template. Read the derived `vm()` signal directly and it
 
 ```html
 @if (vm(); as vm) {
-  <h1>
-    {{ vm.title }}
-    <small>{{ vm.created | date }} — <b>total: {{ vm.total }}</b></small>
-  </h1>
-  <ul>
-    @for (item of vm.visibleItems; track item.id) {
-      <li>{{ item.name }}</li>
-    }
-  </ul>
+<h1>
+  {{ vm.title }}
+  <small>{{ vm.created | date }} — <b>total: {{ vm.total }}</b></small>
+</h1>
+<ul>
+  @for (item of vm.visibleItems; track item.id) {
+  <li>{{ item.name }}</li>
+  }
+</ul>
 }
 ```
 
@@ -67,9 +67,7 @@ import { rxState } from '@rx-angular/state';
   /* … */
 })
 export class ViewModelComponent {
-  private readonly state = rxState<ComponentState>(({ set }) =>
-    set({ title: '', created: '', items: [], visibleItemIds: [] }),
-  );
+  private readonly state = rxState<ComponentState>(({ set }) => set({ title: '', created: '', items: [], visibleItemIds: [] }));
 
   private readonly items = this.state.signal('items');
   private readonly visibleItemIds = this.state.signal('visibleItemIds');
@@ -81,9 +79,7 @@ export class ViewModelComponent {
       title: this.state.get('title'),
       created: this.state.get('created'),
       total: items.length,
-      visibleItems: items.filter((item) =>
-        visibleItemIds.some((id) => id === item.id),
-      ),
+      visibleItems: items.filter((item) => visibleItemIds.some((id) => id === item.id)),
     };
   });
 }
@@ -98,9 +94,7 @@ When you want more control over what renders when (for example, lazy or independ
   /* … */
 })
 export class ViewModelComponent {
-  private readonly state = rxState<ComponentState>(({ set }) =>
-    set({ title: '', created: '', items: [], visibleItemIds: [] }),
-  );
+  private readonly state = rxState<ComponentState>(({ set }) => set({ title: '', created: '', items: [], visibleItemIds: [] }));
 
   private readonly items = this.state.signal('items');
   private readonly visibleItemIds = this.state.signal('visibleItemIds');
@@ -115,9 +109,7 @@ export class ViewModelComponent {
     const visibleItemIds = this.visibleItemIds();
     return {
       total: items.length,
-      visibleItems: items.filter((item) =>
-        visibleItemIds.some((id) => id === item.id),
-      ),
+      visibleItems: items.filter((item) => visibleItemIds.some((id) => id === item.id)),
     };
   });
 }
@@ -125,18 +117,17 @@ export class ViewModelComponent {
 
 ```html
 @if (mainVm(); as vm) {
-  <h1>
-    {{ vm.title }}
-    <small>{{ vm.created | date }}</small>
-  </h1>
-}
-@if (listVm(); as vm) {
-  <div><b>total: {{ vm.total }}</b></div>
-  <ul>
-    @for (item of vm.visibleItems; track item.id) {
-      <li>{{ item.name }}</li>
-    }
-  </ul>
+<h1>
+  {{ vm.title }}
+  <small>{{ vm.created | date }}</small>
+</h1>
+} @if (listVm(); as vm) {
+<div><b>total: {{ vm.total }}</b></div>
+<ul>
+  @for (item of vm.visibleItems; track item.id) {
+  <li>{{ item.name }}</li>
+  }
+</ul>
 }
 ```
 

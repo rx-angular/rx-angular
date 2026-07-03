@@ -1,10 +1,10 @@
 ---
 id: partial-updates
-title: "Partial updates"
+title: 'Partial updates'
 diataxis_type: reference
 package: state
 legacy_guard: false
-sidebar_label: "Partial updates"
+sidebar_label: 'Partial updates'
 tags: [state, api-reference]
 concepts: [E3]
 ---
@@ -23,9 +23,7 @@ A partial update can be supplied two ways:
 Internally, updates are accumulated with a shallow merge over the previous state:
 
 ```ts
-newState$.pipe(
-  scan((oldState, newPartialState) => ({ ...oldState, ...newPartialState })),
-);
+newState$.pipe(scan((oldState, newPartialState) => ({ ...oldState, ...newPartialState })));
 ```
 
 Because the merge is **shallow**, a partial update replaces top-level keys wholesale; nested objects are not deep-merged. Keys absent from the partial are left untouched.
@@ -54,9 +52,7 @@ interface ComponentState {
   /* … */
 })
 export class AnyComponent {
-  private readonly state = rxState<ComponentState>(({ set }) =>
-    set({ title: '', items: [], loading: false }),
-  );
+  private readonly state = rxState<ComponentState>(({ set }) => set({ title: '', items: [], loading: false }));
 
   updateTitle() {
     // direct partial update

@@ -1,10 +1,10 @@
 ---
 id: write-a-custom-cache-handler
-title: "Write a custom cache handler"
+title: 'Write a custom cache handler'
 diataxis_type: how-to
 package: isr
 legacy_guard: false
-sidebar_label: "Write a custom cache handler"
+sidebar_label: 'Write a custom cache handler'
 sidebar_position: 2
 tags: [isr, guides]
 ---
@@ -43,11 +43,7 @@ Cache handling in ISR is pluggable: the default [`InMemoryCacheHandler`](../refe
        this.redis = new Redis(this.options.connectionString);
      }
 
-     async add(
-       cacheKey: string,
-       html: string,
-       config: CacheISRConfig = { revalidate: null },
-     ): Promise<void> {
+     async add(cacheKey: string, html: string, config: CacheISRConfig = { revalidate: null }): Promise<void> {
        const cacheData: CacheData = {
          html,
          options: config,

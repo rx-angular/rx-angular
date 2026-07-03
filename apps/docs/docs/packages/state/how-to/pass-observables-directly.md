@@ -1,11 +1,11 @@
 ---
 sidebar_position: 8
 id: pass-observables-directly
-title: "Pass observables directly into child state"
+title: 'Pass observables directly into child state'
 diataxis_type: how-to
 package: state
-legacy_guard: "zoneful OnPush perf"
-sidebar_label: "Pass observables directly"
+legacy_guard: 'zoneful OnPush perf'
+sidebar_label: 'Pass observables directly'
 tags: [state, guides]
 concepts: [E2, E3]
 ---

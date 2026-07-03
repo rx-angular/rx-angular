@@ -1,10 +1,10 @@
 ---
 id: getting-started
-title: "Get started with rxState"
+title: 'Get started with rxState'
 diataxis_type: how-to
 package: state
 legacy_guard: false
-sidebar_label: "Getting started"
+sidebar_label: 'Getting started'
 sidebar_position: 1
 tags: [state, guides]
 concepts: [E3]
@@ -178,9 +178,7 @@ export class MovieListComponent {
     connect('movies', this.store.select('movies'));
 
     // derive the new list from the previous state + the search input
-    connect('movies', this.search.valueChanges, (oldState, searchInput) =>
-      oldState.movies.filter((movie) => movie.title.includes(searchInput)),
-    );
+    connect('movies', this.search.valueChanges, (oldState, searchInput) => oldState.movies.filter((movie) => movie.title.includes(searchInput)));
   });
 
   readonly movies = this.state.signal('movies');

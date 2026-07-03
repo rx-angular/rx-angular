@@ -49,9 +49,7 @@ export class ListComponent {
   readonly convertToDictionary$ = new Subject<void>();
 
   private readonly state = rxState<ComponentState>(({ connect }) => {
-    connect('creaturesDictionary', this.convertToDictionary$, ({ creatures }) =>
-      toDictionary(creatures, 'id'),
-    );
+    connect('creaturesDictionary', this.convertToDictionary$, ({ creatures }) => toDictionary(creatures, 'id'));
   });
 
   readonly creaturesDictionary = this.state.signal('creaturesDictionary');
@@ -91,13 +89,7 @@ toDictionary(undefined as any, '') > undefined;
 ### Signature
 
 ```typescript
-function toDictionary<T extends object>(
-  source: T[],
-  key:
-    | OnlyKeysOfSpecificType<T, number>
-    | OnlyKeysOfSpecificType<T, string>
-    | OnlyKeysOfSpecificType<T, symbol>
-): { [key: string]: T };
+function toDictionary<T extends object>(source: T[], key: OnlyKeysOfSpecificType<T, number> | OnlyKeysOfSpecificType<T, string> | OnlyKeysOfSpecificType<T, symbol>): { [key: string]: T };
 ```
 
 ### Parameters

@@ -1,10 +1,10 @@
 ---
 id: best-practices
-title: "How to structure a component around RxState"
+title: 'How to structure a component around RxState'
 diataxis_type: how-to
 package: state
 legacy_guard: false
-sidebar_label: "Best practices"
+sidebar_label: 'Best practices'
 sidebar_position: 6
 tags: [state, guides]
 concepts: [E3]
@@ -18,7 +18,7 @@ import SignalsFirst from '@site/src/components/SignalsFirst';
 
 ## Goal
 
-Apply a consistent architecture when a component's state is complex or async-heavy enough to warrant `rxState()`. Treat these as conventions rather than hard rules. For the *why* behind local-vs-global state, see the [Reactive state: global vs local](../../../concepts/E3-reactive-state-global-vs-local.md) concept.
+Apply a consistent architecture when a component's state is complex or async-heavy enough to warrant `rxState()`. Treat these as conventions rather than hard rules. For the _why_ behind local-vs-global state, see the [Reactive state: global vs local](../../../concepts/E3-reactive-state-global-vs-local.md) concept.
 
 ## The shell
 

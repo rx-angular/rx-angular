@@ -52,7 +52,7 @@ import {
 
 export function toggle<T extends object>(
   object: T,
-  key: OnlyKeysOfSpecificType<T, boolean>
+  key: OnlyKeysOfSpecificType<T, boolean>,
 ): T {
   const objectIsObject = isObjectGuard(object);
   const keyIsValid = isKeyOf<T>(key);

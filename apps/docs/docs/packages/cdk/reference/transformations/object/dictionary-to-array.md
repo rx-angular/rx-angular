@@ -43,20 +43,14 @@ export class ListComponent {
   private readonly api = inject(ApiService);
 
   private readonly state = rxState<ComponentState>(({ connect }) => {
-    connect('creatures', this.api.creaturesDictionary$, (_, creatures) =>
-      dictionaryToArray(creatures),
-    );
+    connect('creatures', this.api.creaturesDictionary$, (_, creatures) => dictionaryToArray(creatures));
   });
 
   readonly creatures = this.state.signal('creatures');
 
   // Imperative alternative
   convertToArray(): void {
-    this.api.creaturesDictionary$
-      .pipe(/* subscription-handling logic */)
-      .subscribe((dictionary) =>
-        this.state.set({ creatures: dictionaryToArray(dictionary) }),
-      );
+    this.api.creaturesDictionary$.pipe(/* subscription-handling logic */).subscribe((dictionary) => this.state.set({ creatures: dictionaryToArray(dictionary) }));
   }
 }
 ```

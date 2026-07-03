@@ -1,10 +1,10 @@
 ---
 id: distinct-until-some-changed
-title: "distinctUntilSomeChanged"
+title: 'distinctUntilSomeChanged'
 diataxis_type: reference
 package: state
 legacy_guard: false
-sidebar_label: "distinctUntilSomeChanged"
+sidebar_label: 'distinctUntilSomeChanged'
 tags: [state, api-reference]
 concepts: [E3]
 ---
@@ -20,17 +20,14 @@ Pass a `KeyCompareMap` to fine-grain the distinct check for specific keys.
 ## Signature
 
 ```ts
-function distinctUntilSomeChanged<T extends object, K extends keyof T>(
-  keys: K[],
-  keyCompareMap?: KeyCompareMap<T>,
-): MonoTypeOperatorFunction<T>;
+function distinctUntilSomeChanged<T extends object, K extends keyof T>(keys: K[], keyCompareMap?: KeyCompareMap<T>): MonoTypeOperatorFunction<T>;
 ```
 
 ## Parameters
 
-| Parameter | Type | Meaning |
-| --- | --- | --- |
-| `keys` | `K[]` | String keys for object-property lookup on each item. |
+| Parameter       | Type               | Meaning                                                                                                           |
+| --------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| `keys`          | `K[]`              | String keys for object-property lookup on each item.                                                              |
 | `keyCompareMap` | `KeyCompareMap<T>` | Optional. Custom compare functions for specific keys; keys without an entry fall back to strict equality (`===`). |
 
 ## Returns
@@ -58,12 +55,7 @@ const customComparison: KeyCompareMap<Person> = {
   name: (oldName, newName) => oldName.substring(0, 2) === newName.substring(0, 2),
 };
 
-of(
-  { age: 4, name: 'Hans' },
-  { age: 7, name: 'Sophie' },
-  { age: 5, name: 'Han Solo' },
-  { age: 5, name: 'HanSophie' },
-)
+of({ age: 4, name: 'Hans' }, { age: 7, name: 'Sophie' }, { age: 5, name: 'Han Solo' }, { age: 5, name: 'HanSophie' })
   .pipe(distinctUntilSomeChanged(['age', 'name'], customComparison))
   .subscribe((x) => console.log(x));
 

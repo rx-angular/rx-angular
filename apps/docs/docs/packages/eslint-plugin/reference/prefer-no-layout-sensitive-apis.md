@@ -1,6 +1,6 @@
 ---
 id: prefer-no-layout-sensitive-apis
-title: "prefer-no-layout-sensitive-apis"
+title: 'prefer-no-layout-sensitive-apis'
 diataxis_type: reference
 package: eslint-plugin
 legacy_guard: false

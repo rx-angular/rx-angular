@@ -1,10 +1,10 @@
 ---
 id: rx-state-config
-title: "RxState configuration"
+title: 'RxState configuration'
 diataxis_type: reference
 package: state
 legacy_guard: false
-sidebar_label: "RxState configuration"
+sidebar_label: 'RxState configuration'
 sidebar_position: 5
 tags: [state, api-reference]
 concepts: [E3]
@@ -19,12 +19,7 @@ Every signature below is source-derived (package `21.1.1`).
 **Import**
 
 ```ts
-import {
-  provideRxStateConfig,
-  withScheduler,
-  withSyncScheduler,
-  withAccumulatorFn,
-} from '@rx-angular/state';
+import { provideRxStateConfig, withScheduler, withSyncScheduler, withAccumulatorFn } from '@rx-angular/state';
 ```
 
 ## `provideRxStateConfig`
@@ -38,18 +33,17 @@ import { AppComponent } from './app.component';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideRxStateConfig(
-      /* configuration features here */
-    ),
+    provideRxStateConfig(),
+    /* configuration features here */
   ],
 });
 ```
 
-| Configuration feature | Signature | Purpose |
-| --------------------- | --------- | ------- |
-| `withScheduler` | `withScheduler(scheduler: SchedulerLike \| 'sync')` | Compute new states on the supplied RxJS `SchedulerLike`. |
-| `withSyncScheduler` | `withSyncScheduler()` | Compute new states fully synchronously. |
-| `withAccumulatorFn` | `withAccumulatorFn(accumulatorFn: AccumulationFn)` | Replace the default state-merge function. |
+| Configuration feature | Signature                                           | Purpose                                                  |
+| --------------------- | --------------------------------------------------- | -------------------------------------------------------- |
+| `withScheduler`       | `withScheduler(scheduler: SchedulerLike \| 'sync')` | Compute new states on the supplied RxJS `SchedulerLike`. |
+| `withSyncScheduler`   | `withSyncScheduler()`                               | Compute new states fully synchronously.                  |
+| `withAccumulatorFn`   | `withAccumulatorFn(accumulatorFn: AccumulationFn)`  | Replace the default state-merge function.                |
 
 ## Scheduler
 

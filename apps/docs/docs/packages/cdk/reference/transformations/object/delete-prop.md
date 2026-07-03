@@ -75,10 +75,7 @@ deleteProp(nonObject, 'prop') > nonObject;
 ### Signature
 
 ```typescript
-function deleteProp<T extends object, K extends keyof T>(
-  object: T,
-  key: K
-): Omit<T, K>;
+function deleteProp<T extends object, K extends keyof T>(object: T, key: K): Omit<T, K>;
 ```
 
 ### Parameters

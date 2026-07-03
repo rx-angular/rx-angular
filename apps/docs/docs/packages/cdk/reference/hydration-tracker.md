@@ -1,10 +1,10 @@
 ---
 id: hydration-tracker
-title: "HydrationTracker"
+title: 'HydrationTracker'
 diataxis_type: reference
 package: cdk
 legacy_guard: false
-sidebar_label: "HydrationTracker"
+sidebar_label: 'HydrationTracker'
 tags: [cdk, api-reference]
 ---
 
@@ -20,13 +20,7 @@ interactive: app-level analytics, deferred non-critical bootstrapping, or a glob
 Everything is exported from the `@rx-angular/cdk/ssr` entry point.
 
 ```ts
-import {
-  HydrationTracker,
-  provideHydrationTracker,
-  HydrationTrackerConfig,
-  HYDRATION_TRACKER_CONFIG_TOKEN,
-  PLATFORM,
-} from '@rx-angular/cdk/ssr';
+import { HydrationTracker, provideHydrationTracker, HydrationTrackerConfig, HYDRATION_TRACKER_CONFIG_TOKEN, PLATFORM } from '@rx-angular/cdk/ssr';
 ```
 
 :::info Prefer native per-block hydration where it fits
@@ -90,10 +84,10 @@ interface HydrationTrackerConfig {
 }
 ```
 
-| Property  | Type      | Default | Description                                                                                         |
-| --------- | --------- | ------- | --------------------------------------------------------------------------------------------------- |
+| Property  | Type      | Default | Description                                                                                                                        |
+| --------- | --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `timeout` | `number`  | `10000` | Milliseconds after which hydration is considered complete even if some `ngh` nodes remain; a safety net so the signal never hangs. |
-| `logging` | `boolean` | `false` | When `true`, logs hydration completion and timeout to the console.                                  |
+| `logging` | `boolean` | `false` | When `true`, logs hydration completion and timeout to the console.                                                                 |
 
 ## `HYDRATION_TRACKER_CONFIG_TOKEN`
 

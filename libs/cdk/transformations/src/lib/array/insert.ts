@@ -71,6 +71,6 @@ export function insert<T>(source: T[], updates: T | T[]): T[] {
   }
 
   return (sourceIsNotArray ? [] : source).concat(
-    updatesDefined ? (Array.isArray(updates) ? updates : [updates]) : []
+    updatesDefined ? (Array.isArray(updates) ? updates : [updates]) : [],
   );
 }

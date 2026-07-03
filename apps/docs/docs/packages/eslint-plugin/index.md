@@ -1,10 +1,10 @@
 ---
 id: eslint-plugin-overview
-title: "@rx-angular/eslint-plugin"
+title: '@rx-angular/eslint-plugin'
 diataxis_type: reference
 package: eslint-plugin
 legacy_guard: false
-sidebar_label: "Overview"
+sidebar_label: 'Overview'
 sidebar_position: 0
 tags: [eslint-plugin, tooling, api-reference]
 ---

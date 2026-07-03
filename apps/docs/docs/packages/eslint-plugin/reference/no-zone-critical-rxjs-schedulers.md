@@ -1,10 +1,10 @@
 ---
 id: no-zone-critical-rxjs-schedulers
-title: "no-zone-critical-rxjs-schedulers"
+title: 'no-zone-critical-rxjs-schedulers'
 diataxis_type: reference
 package: eslint-plugin
-legacy_guard: "Zone.js only"
-sidebar_label: "no-zone-critical-rxjs-schedulers"
+legacy_guard: 'Zone.js only'
+sidebar_label: 'no-zone-critical-rxjs-schedulers'
 tags: [eslint-plugin, api-reference, migration]
 concepts: [E2]
 ---
@@ -37,8 +37,8 @@ This rule has no options (`schema: []`).
 // eslintrc
 {
   "rules": {
-    "@rx-angular/no-zone-critical-rxjs-schedulers": "error"
-  }
+    "@rx-angular/no-zone-critical-rxjs-schedulers": "error",
+  },
 }
 ```
 

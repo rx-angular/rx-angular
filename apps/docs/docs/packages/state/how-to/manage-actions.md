@@ -1,10 +1,10 @@
 ---
 id: manage-actions
-title: "How to manage actions"
+title: 'How to manage actions'
 diataxis_type: how-to
 package: state
 legacy_guard: false
-sidebar_label: "Manage actions"
+sidebar_label: 'Manage actions'
 sidebar_position: 2
 tags: [state, guides]
 ---
@@ -53,9 +53,7 @@ export class LoginComponent {
   }>();
 
   constructor() {
-    this.actions.login$
-      .pipe(exhaustMap((credentials) => this.service.login(credentials)))
-      .subscribe();
+    this.actions.login$.pipe(exhaustMap((credentials) => this.service.login(credentials))).subscribe();
   }
 }
 ```
@@ -162,9 +160,7 @@ import { rxActions, eventValue } from '@rx-angular/state/actions';
   template: `<input name="search" (change)="actions.search($event)" />`,
 })
 export class ListComponent {
-  protected readonly actions = rxActions<{ search: string }>(({ transforms }) =>
-    transforms({ search: eventValue }),
-  );
+  protected readonly actions = rxActions<{ search: string }>(({ transforms }) => transforms({ search: eventValue }));
 
   // actions.search$ still emits a `string`
 }
@@ -185,9 +181,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   `,
 })
 export class GreetComponent {
-  protected readonly ui = rxActions<{ greet: string }>(({ transforms }) =>
-    transforms({ greet: (v: string) => `Hello ${v}` }),
-  );
+  protected readonly ui = rxActions<{ greet: string }>(({ transforms }) => transforms({ greet: (v: string) => `Hello ${v}` }));
 
   protected readonly greeting = toSignal(this.ui.greet$, { initialValue: '' });
 }

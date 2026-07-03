@@ -73,12 +73,7 @@ export class ListComponent {
   readonly updateCreature$ = new Subject<Creature>();
 
   private readonly state = rxState<ComponentState>(({ connect }) => {
-    connect(
-      'creatures',
-      this.updateCreature$,
-      ({ creatures }, creatureToUpdate) =>
-        update(creatures, creatureToUpdate, (a, b) => a.id === b.id),
-    );
+    connect('creatures', this.updateCreature$, ({ creatures }, creatureToUpdate) => update(creatures, creatureToUpdate, (a, b) => a.id === b.id));
   });
 
   readonly creatures = this.state.signal('creatures');
@@ -86,11 +81,7 @@ export class ListComponent {
   // Imperative alternative
   updateCreature(creatureToUpdate: Creature): void {
     this.state.set({
-      creatures: update(
-        this.state.get('creatures'),
-        creatureToUpdate,
-        (a, b) => a.id === b.id,
-      ),
+      creatures: update(this.state.get('creatures'), creatureToUpdate, (a, b) => a.id === b.id),
     });
   }
 }
@@ -104,9 +95,7 @@ import { update } from '@rx-angular/cdk/transformations';
 
 const creatures = signal<Creature[]>([]);
 
-creatures.update((current) =>
-  update(current, creatureToUpdate, (a, b) => a.id === b.id),
-);
+creatures.update((current) => update(current, creatureToUpdate, (a, b) => a.id === b.id));
 ```
 
 > `update` only touches items that already exist. To update existing items **and**
@@ -127,11 +116,7 @@ update(nonArray as any, items) > nonArray;
 ### Signature
 
 ```typescript
-function update<T extends object>(
-  source: T[],
-  updates: Partial<T>[] | Partial<T>,
-  compare?: ComparableData<T>
-): T[];
+function update<T extends object>(source: T[], updates: Partial<T>[] | Partial<T>, compare?: ComparableData<T>): T[];
 ```
 
 ### Parameters

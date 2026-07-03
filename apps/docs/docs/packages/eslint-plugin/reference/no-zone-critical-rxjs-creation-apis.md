@@ -1,10 +1,10 @@
 ---
 id: no-zone-critical-rxjs-creation-apis
-title: "no-zone-critical-rxjs-creation-apis"
+title: 'no-zone-critical-rxjs-creation-apis'
 diataxis_type: reference
 package: eslint-plugin
-legacy_guard: "Zone.js only"
-sidebar_label: "no-zone-critical-rxjs-creation-apis"
+legacy_guard: 'Zone.js only'
+sidebar_label: 'no-zone-critical-rxjs-creation-apis'
 tags: [eslint-plugin, api-reference, migration]
 concepts: [E2]
 ---
@@ -36,8 +36,8 @@ This rule has no options (`schema: []`).
 // eslintrc
 {
   "rules": {
-    "@rx-angular/no-zone-critical-rxjs-creation-apis": "error"
-  }
+    "@rx-angular/no-zone-critical-rxjs-creation-apis": "error",
+  },
 }
 ```
 

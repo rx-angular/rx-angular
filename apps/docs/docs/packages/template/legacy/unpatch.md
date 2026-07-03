@@ -1,10 +1,10 @@
 ---
 id: unpatch
-title: "RxUnpatch"
+title: 'RxUnpatch'
 diataxis_type: reference
 package: template
-legacy_guard: "Zone.js only"
-sidebar_label: "RxUnpatch (legacy)"
+legacy_guard: 'Zone.js only'
+sidebar_label: 'RxUnpatch (legacy)'
 tags: [template, api-reference, migration]
 ---
 
@@ -51,13 +51,7 @@ import { RxUnpatch } from '@rx-angular/template/unpatch';
   imports: [RxUnpatch],
   template: `
     <button [unpatch] (click)="triggerSomeMethod($event)">click me</button>
-    <button
-      [unpatch]="['mousemove']"
-      (mousemove)="doStuff2($event)"
-      (click)="doStuff($event)"
-    >
-      click or hover me
-    </button>
+    <button [unpatch]="['mousemove']" (mousemove)="doStuff2($event)" (click)="doStuff($event)">click or hover me</button>
   `,
 })
 export class ButtonsComponent {
@@ -70,8 +64,8 @@ With no value, `[unpatch]` un-patches all zone-patched events on the host. Pass 
 
 ## Inputs
 
-| Input | Alias | Type | Default | Description |
-| ----- | ----- | ---- | ------- | ----------- |
+| Input    | Alias       | Type                    | Default                 | Description                                                                                       |
+| -------- | ----------- | ----------------------- | ----------------------- | ------------------------------------------------------------------------------------------------- |
 | `events` | `[unpatch]` | `string[] \| undefined` | all zone-patched events | The events to un-patch on the host. When empty/undefined, every zone-patched event is un-patched. |
 
 ## Default un-patched events
@@ -85,22 +79,57 @@ When no explicit list is given, the directive un-patches its built-in
 // focusEvents + mouseEvents + wheelEvents + inputEvents + keyboardEvents + touchEvents
 [
   // focus
-  'blur', 'focus', 'focusin', 'focusout',
+  'blur',
+  'focus',
+  'focusin',
+  'focusout',
   // mouse
-  'mousedown', 'dblclick', 'mouseenter', 'mouseleave', 'mousemove',
-  'mouseout', 'mouseover', 'mouseup', 'click',
+  'mousedown',
+  'dblclick',
+  'mouseenter',
+  'mouseleave',
+  'mousemove',
+  'mouseout',
+  'mouseover',
+  'mouseup',
+  'click',
   // wheel
-  'wheel', 'mousewheel',
+  'wheel',
+  'mousewheel',
   // input
-  'input', 'invalid', 'change', 'reset', 'select', 'submit',
+  'input',
+  'invalid',
+  'change',
+  'reset',
+  'select',
+  'submit',
   // keyboard
-  'keydown', 'keypress', 'keyup',
+  'keydown',
+  'keypress',
+  'keyup',
   // touch / pointer / drag
-  'pointerover', 'pointerenter', 'pointerdown', 'pointermove', 'pointerup',
-  'pointercancel', 'pointerout', 'pointerleave', 'gotpointercapture',
-  'lostpointercapture', 'touchstart', 'touchend', 'touchmove', 'touchcancel',
-  'drag', 'dragend', 'dragexit', 'dragenter', 'dragleave', 'dragover',
-  'dragstart', 'drop',
+  'pointerover',
+  'pointerenter',
+  'pointerdown',
+  'pointermove',
+  'pointerup',
+  'pointercancel',
+  'pointerout',
+  'pointerleave',
+  'gotpointercapture',
+  'lostpointercapture',
+  'touchstart',
+  'touchend',
+  'touchmove',
+  'touchcancel',
+  'drag',
+  'dragend',
+  'dragexit',
+  'dragenter',
+  'dragleave',
+  'dragover',
+  'dragstart',
+  'drop',
 ];
 ```
 
@@ -114,8 +143,8 @@ It only has an effect in Zone.js applications.
 :::warning Do not use `[unpatch]` on
 
 1. Elements that trigger navigation (a `routerLink`, or a method bound to
-   `(click)` or another event). You would otherwise see a *"Navigation triggered
-   outside Angular zone…"* warning.
+   `(click)` or another event). You would otherwise see a _"Navigation triggered
+   outside Angular zone…"_ warning.
 2. Elements bound to a `FormControl`. Un-patching `blur`/`change` there stops
    `valueChanges` from emitting and validators from running until the next
    change detection.

@@ -1,10 +1,10 @@
 ---
 id: ngzone-optimizations
-title: "How to run rx-template listeners outside NgZone (patchZone)"
+title: 'How to run rx-template listeners outside NgZone (patchZone)'
 diataxis_type: how-to
 package: template
-legacy_guard: "Zone.js only"
-sidebar_label: "NgZone optimizations (legacy)"
+legacy_guard: 'Zone.js only'
+sidebar_label: 'NgZone optimizations (legacy)'
 tags: [template, guides, migration]
 ---
 

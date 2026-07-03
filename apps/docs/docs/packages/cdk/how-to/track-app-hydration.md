@@ -1,10 +1,10 @@
 ---
 id: track-app-hydration
-title: "How to run work once the app is fully hydrated"
+title: 'How to run work once the app is fully hydrated'
 diataxis_type: how-to
 package: cdk
 legacy_guard: false
-sidebar_label: "Track app hydration"
+sidebar_label: 'Track app hydration'
 tags: [cdk, guides]
 ---
 
@@ -75,16 +75,16 @@ import { Component, inject } from '@angular/core';
 import { HydrationTracker } from '@rx-angular/cdk/ssr';
 import { filter, take } from 'rxjs';
 
-@Component({ /* … */ })
+@Component({
+  /* … */
+})
 export class AnalyticsComponent {
   private readonly tracker = inject(HydrationTracker);
 
   ngOnInit() {
-    this.tracker.isFullyHydrated$
-      .pipe(filter(Boolean), take(1))
-      .subscribe(() => {
-        // run analytics or other post-hydration logic once
-      });
+    this.tracker.isFullyHydrated$.pipe(filter(Boolean), take(1)).subscribe(() => {
+      // run analytics or other post-hydration logic once
+    });
   }
 }
 ```

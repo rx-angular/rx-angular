@@ -1,10 +1,10 @@
 ---
 id: debug-zone-flags
-title: "How to debug zone flags"
+title: 'How to debug zone flags'
 diataxis_type: how-to
 package: cdk
-legacy_guard: "still-zoneful"
-sidebar_label: "Debug zone flags (legacy)"
+legacy_guard: 'still-zoneful'
+sidebar_label: 'Debug zone flags (legacy)'
 tags: [cdk, guides, migration]
 concepts: [E2]
 ---
@@ -68,7 +68,7 @@ Two checks:
    patch that API; the flag worked:
 
    ```typescript
-   console.log(window.__zone_symbol__setTimeout);   // undefined ⇒ not patched
+   console.log(window.__zone_symbol__setTimeout); // undefined ⇒ not patched
    console.log(window.__zone_symbol__clearTimeout);
    ```
 

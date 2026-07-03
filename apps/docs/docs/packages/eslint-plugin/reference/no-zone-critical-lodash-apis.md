@@ -1,10 +1,10 @@
 ---
 id: no-zone-critical-lodash-apis
-title: "no-zone-critical-lodash-apis"
+title: 'no-zone-critical-lodash-apis'
 diataxis_type: reference
 package: eslint-plugin
-legacy_guard: "Zone.js only"
-sidebar_label: "no-zone-critical-lodash-apis"
+legacy_guard: 'Zone.js only'
+sidebar_label: 'no-zone-critical-lodash-apis'
 tags: [eslint-plugin, api-reference, migration]
 concepts: [E2]
 ---
@@ -37,8 +37,8 @@ This rule has no options (`schema: []`).
 // eslintrc
 {
   "rules": {
-    "@rx-angular/no-zone-critical-lodash-apis": "error"
-  }
+    "@rx-angular/no-zone-critical-lodash-apis": "error",
+  },
 }
 ```
 

@@ -1,10 +1,10 @@
 ---
 id: set-up-isr
-title: "How to set up ISR in an SSR app"
+title: 'How to set up ISR in an SSR app'
 diataxis_type: how-to
 package: isr
 legacy_guard: false
-sidebar_label: "Set up ISR"
+sidebar_label: 'Set up ISR'
 sidebar_position: 1
 tags: [isr, guides]
 concepts: [E8]
@@ -14,7 +14,7 @@ concepts: [E8]
 
 ## Goal
 
-Wire `@rx-angular/isr` into an existing Angular SSR application so that routes marked with `revalidate` are cached and served from cache. This recipe assumes you already understand *how ISR works* (route-data capture → cache decision at render-finish); if you don't, read the [How ISR works](../../../concepts/E8-how-isr-works.md) concept first. This page is the task only; every symbol used here is documented in the [ISR API reference](../reference/api.md) and [`ISRHandlerConfig`](../reference/isr-handler-config.md).
+Wire `@rx-angular/isr` into an existing Angular SSR application so that routes marked with `revalidate` are cached and served from cache. This recipe assumes you already understand _how ISR works_ (route-data capture → cache decision at render-finish); if you don't, read the [How ISR works](../../../concepts/E8-how-isr-works.md) concept first. This page is the task only; every symbol used here is documented in the [ISR API reference](../reference/api.md) and [`ISRHandlerConfig`](../reference/isr-handler-config.md).
 
 ## Steps
 
@@ -96,10 +96,7 @@ Wire `@rx-angular/isr` into an existing Angular SSR application so that routes m
      server.set('view engine', 'html');
      server.set('views', browserDistFolder);
 
-     server.get(
-       '*.*',
-       express.static(browserDistFolder, { maxAge: '1y' }),
-     );
+     server.get('*.*', express.static(browserDistFolder, { maxAge: '1y' }));
 
      // highlight-start
      server.get(
@@ -133,6 +130,7 @@ Wire `@rx-angular/isr` into an existing Angular SSR application so that routes m
      angularAppEngine,
    });
    ```
+
    :::
 
 5. **Mark the routes you want cached** with a `revalidate` value in the route `data`. Routes without `revalidate` are passed through un-cached.

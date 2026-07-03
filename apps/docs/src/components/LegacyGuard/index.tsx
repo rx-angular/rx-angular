@@ -31,7 +31,8 @@ const DEFAULT_NATIVE =
   'since Angular v21, change detection is zoneless by default and Zone.js is dropped from the default bundle';
 
 const DEFAULT_CONCEPT_SLUG = 'E2-zoneless-and-zonejs-change-detection';
-const DEFAULT_CONCEPT_LABEL = 'Zoneless & how Zone.js affected change detection';
+const DEFAULT_CONCEPT_LABEL =
+  'Zoneless & how Zone.js affected change detection';
 
 export default function LegacyGuard({
   audience,

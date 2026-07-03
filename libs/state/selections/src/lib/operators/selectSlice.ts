@@ -78,7 +78,7 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  */
 export function selectSlice<T extends object, K extends keyof T>(
   keys: K[],
-  keyCompareMap?: KeyCompareMap<{ [P in K]: T[P] }>
+  keyCompareMap?: KeyCompareMap<{ [P in K]: T[P] }>,
 ): OperatorFunction<T, PickSlice<T, K>> {
   return (o$: Observable<T>): Observable<PickSlice<T, K>> =>
     o$.pipe(
@@ -108,12 +108,15 @@ export function selectSlice<T extends object, K extends keyof T>(
         }
 
         // create the selected slice
-        return definedKeys.reduce((vm, key) => {
-          vm[key] = state[key];
-          return vm;
-        }, {} as PickSlice<T, K>);
+        return definedKeys.reduce(
+          (vm, key) => {
+            vm[key] = state[key];
+            return vm;
+          },
+          {} as PickSlice<T, K>,
+        );
       }),
       filter((v) => v !== undefined),
-      distinctUntilSomeChanged(keys, keyCompareMap)
+      distinctUntilSomeChanged(keys, keyCompareMap),
     );
 }

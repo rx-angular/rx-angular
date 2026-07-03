@@ -1,10 +1,10 @@
 ---
 id: isr-render-config
-title: "ISR Handler Config fields"
+title: 'ISR Handler Config fields'
 diataxis_type: reference
 package: isr
 legacy_guard: false
-sidebar_label: "Render Config"
+sidebar_label: 'Render Config'
 sidebar_position: 3
 tags: [isr, api-reference]
 ---

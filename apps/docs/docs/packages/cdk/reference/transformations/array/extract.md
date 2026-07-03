@@ -43,9 +43,7 @@ export class AnimalsListComponent {
   private readonly api = inject(ApiService);
 
   private readonly state = rxState<ComponentState>(({ connect }) => {
-    connect('animals', this.api.getAnimals(), (_, animals) =>
-      extract(animals, ['id', 'name']),
-    );
+    connect('animals', this.api.getAnimals(), (_, animals) => extract(animals, ['id', 'name']));
   });
 
   readonly animals = this.state.signal('animals');
@@ -72,16 +70,13 @@ extract(
     { id: 1, type: 'cat', name: 'Emma' },
     { id: 2, type: 'dog' },
   ],
-  ['name', 'id', 'type']
+  ['name', 'id', 'type'],
 ) >
   [
     { id: 1, type: 'cat', name: 'Emma' },
     { id: 2, type: 'dog', name: undefined },
   ]; // dog has no name
-extract(
-  [{ id: 1, type: 'cat', name: 'Emma' }, 1, 'string'] as any,
-  ['id', 'name'] as any
-) >
+extract([{ id: 1, type: 'cat', name: 'Emma' }, 1, 'string'] as any, ['id', 'name'] as any) >
   [
     { id: 1, name: 'Emma' },
     { id: undefined, name: undefined },
@@ -97,10 +92,7 @@ extract(items, undefined as any) > undefined;
 ### Signature
 
 ```typescript
-function extract<T extends object, K extends keyof T>(
-  array: T[],
-  keys: K | K[]
-): Pick<T, K>[];
+function extract<T extends object, K extends keyof T>(array: T[], keys: K | K[]): Pick<T, K>[];
 ```
 
 ### Parameters

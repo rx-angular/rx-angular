@@ -14,7 +14,7 @@ concepts: [E4, E5]
 `RxLet` (`*rxLet`) binds an `Observable`, `Signal`, or plain value to the template and
 exposes a built-in **suspense / error / complete reactive context** alongside
 **per-directive render scheduling**. It does more than the native `@let`, which only
-names a value: `rxLet` tracks the *state* of an asynchronous source (still loading, failed,
+names a value: `rxLet` tracks the _state_ of an asynchronous source (still loading, failed,
 completed) and renders it through a cancelable, frame-budgeted scheduler.
 
 > **Why this matters:** see [The reactive context](../../../concepts/E4-reactive-context.md)
@@ -77,8 +77,8 @@ strategy (non-blocking, frame-budgeted) and creates templates lazily. See
 
 **Value**
 
-| Input   | Type                                                         | Description                                                     |
-| ------- | ------------------------------------------------------------ | -------------------------------------------------------------- |
+| Input   | Type                                                                           | Description                                                       |
+| ------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
 | `rxLet` | `ObservableInput<U> \| Subscribable<U> \| Signal<U> \| U \| null \| undefined` | The Observable, Signal, or value to bind to the template context. |
 
 **Contextual state**
@@ -96,12 +96,12 @@ strategy (non-blocking, frame-budgeted) and creates templates lazily. See
 
 **Rendering**
 
-| Input                 | Type                                                          | Description                                                                                                                                                             |
-| --------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patchZone`           | `boolean`                                                     | _default: `true`_ if set to `false`, `RxLet` operates outside `NgZone` (zoneful apps only). See [tuning rendering with strategies](../how-to/tune-rendering-with-strategies.md). |
-| `parent` (deprecated) | `boolean`                                                     | _default: `false`_ if `true`, `RxLet` informs its host component about template changes so legacy `@ViewChild`/`@ContentChild` decorator queries update. Deprecated: not needed with [signal-based view queries](https://angular.dev/guide/signals/queries). |
-| `strategy`            | `Observable<RxStrategyNames \| string> \| RxStrategyNames \| string` | _default: `normal`_ the render strategy used to detect changes. See [tuning rendering with strategies](../how-to/tune-rendering-with-strategies.md). |
-| `renderCallback`      | `NextObserver<U>`                                             | Notifies when `RxLet` created, updated, or removed its template; useful when you need to know rendering is done.                                                       |
+| Input                 | Type                                                                 | Description                                                                                                                                                                                                                                                  |
+| --------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `patchZone`           | `boolean`                                                            | _default: `true`_ if set to `false`, `RxLet` operates outside `NgZone` (zoneful apps only). See [tuning rendering with strategies](../how-to/tune-rendering-with-strategies.md).                                                                             |
+| `parent` (deprecated) | `boolean`                                                            | _default: `false`_ if `true`, `RxLet` informs its host component about template changes so legacy `@ViewChild`/`@ContentChild` decorator queries update. Deprecated: not needed with [signal-based view queries](https://angular.dev/guide/signals/queries). |
+| `strategy`            | `Observable<RxStrategyNames \| string> \| RxStrategyNames \| string` | _default: `normal`_ the render strategy used to detect changes. See [tuning rendering with strategies](../how-to/tune-rendering-with-strategies.md).                                                                                                         |
+| `renderCallback`      | `NextObserver<U>`                                                    | Notifies when `RxLet` created, updated, or removed its template; useful when you need to know rendering is done.                                                                                                                                             |
 
 ## Context
 
@@ -124,8 +124,7 @@ Each template exposes these context variables:
 <ng-container *rxLet="number$; let n; let s = suspense; let e = error; let c = complete">
   {{ s && 'No value arrived so far' }}
   <app-number [number]="n" />
-  There is an error: {{ e ? e.message : 'No Error' }}
-  Observable is completed: {{ c ? 'Yes' : 'No' }}
+  There is an error: {{ e ? e.message : 'No Error' }} Observable is completed: {{ c ? 'Yes' : 'No' }}
 </ng-container>
 ```
 

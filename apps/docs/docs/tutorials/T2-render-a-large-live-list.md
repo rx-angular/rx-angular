@@ -1,10 +1,10 @@
 ---
 id: T2-render-a-large-live-list
-title: "Render a large live list without jank"
+title: 'Render a large live list without jank'
 diataxis_type: tutorial
 package: _site
 legacy_guard: false
-sidebar_label: "Render a large live list"
+sidebar_label: 'Render a large live list'
 sidebar_position: 2
 tags: [template, cdk, examples]
 concepts: [E1, E5]
@@ -84,7 +84,7 @@ ng serve
 
 You will see the page freeze on each click: native `@for` renders all 10,000 rows in
 one synchronous, blocking pass, so scrolling and clicking stall while it runs. That
-blocking pass is the jank this lesson removes. To understand *why* the whole list
+blocking pass is the jank this lesson removes. To understand _why_ the whole list
 re-renders in one uninterruptible go, read
 [Understanding change detection in Angular](../concepts/E1-change-detection.md).
 
@@ -110,9 +110,7 @@ interface Row {
   template: `
     <button (click)="churn()">Churn</button>
     <ul>
-      <li *rxFor="let row of rows; trackBy: 'id'">
-        {{ row.label }} — {{ row.value }}
-      </li>
+      <li *rxFor="let row of rows; trackBy: 'id'">{{ row.label }} — {{ row.value }}</li>
     </ul>
   `,
 })
@@ -144,9 +142,7 @@ across frames against a frame budget, pausing to let the browser handle scroll a
 click between chunks instead of blocking until the whole list is done:
 
 ```html title="src/app/list.component.ts (template)"
-<li *rxFor="let row of rows; trackBy: 'id'; strategy: 'normal'">
-  {{ row.label }} — {{ row.value }}
-</li>
+<li *rxFor="let row of rows; trackBy: 'id'; strategy: 'normal'">{{ row.label }} — {{ row.value }}</li>
 ```
 
 `normal` is the right priority for a user-facing list: it has a generous render
@@ -163,11 +159,7 @@ virtual-scrolling directive:
 
 ```typescript title="src/app/list.component.ts"
 import { Component, signal } from '@angular/core';
-import {
-  FixedSizeVirtualScrollStrategy,
-  RxVirtualScrollViewportComponent,
-  RxVirtualFor,
-} from '@rx-angular/template/virtual-scrolling';
+import { FixedSizeVirtualScrollStrategy, RxVirtualScrollViewportComponent, RxVirtualFor } from '@rx-angular/template/virtual-scrolling';
 
 interface Row {
   id: number;
@@ -177,20 +169,11 @@ interface Row {
 
 @Component({
   selector: 'app-list',
-  imports: [
-    RxVirtualFor,
-    RxVirtualScrollViewportComponent,
-    FixedSizeVirtualScrollStrategy,
-  ],
+  imports: [RxVirtualFor, RxVirtualScrollViewportComponent, FixedSizeVirtualScrollStrategy],
   template: `
     <button (click)="churn()">Churn</button>
     <rx-virtual-scroll-viewport [itemSize]="32" style="height: 400px">
-      <div
-        *rxVirtualFor="let row of rows; trackBy: 'id'; strategy: 'normal'"
-        style="height: 32px"
-      >
-        {{ row.label }} — {{ row.value }}
-      </div>
+      <div *rxVirtualFor="let row of rows; trackBy: 'id'; strategy: 'normal'" style="height: 32px">{{ row.label }} — {{ row.value }}</div>
     </rx-virtual-scroll-viewport>
   `,
 })

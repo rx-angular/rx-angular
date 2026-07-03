@@ -38,20 +38,7 @@ Immutability is explained in the [immutability & serializable state](../../../..
 ## Import path
 
 ```typescript
-import {
-  insert,
-  update,
-  remove,
-  upsert,
-  extract,
-  toDictionary,
-  patch,
-  setProp,
-  deleteProp,
-  slice,
-  toggle,
-  dictionaryToArray,
-} from '@rx-angular/cdk/transformations';
+import { insert, update, remove, upsert, extract, toDictionary, patch, setProp, deleteProp, slice, toggle, dictionaryToArray } from '@rx-angular/cdk/transformations';
 ```
 
 ## Install

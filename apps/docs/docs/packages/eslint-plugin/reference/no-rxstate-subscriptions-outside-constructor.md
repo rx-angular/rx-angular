@@ -1,6 +1,6 @@
 ---
 id: no-rxstate-subscriptions-outside-constructor
-title: "no-rxstate-subscriptions-outside-constructor"
+title: 'no-rxstate-subscriptions-outside-constructor'
 diataxis_type: reference
 package: eslint-plugin
 legacy_guard: false
@@ -27,10 +27,7 @@ export default [
   {
     plugins: { '@rx-angular': rxAngular },
     rules: {
-      '@rx-angular/no-rxstate-subscriptions-outside-constructor': [
-        'error',
-        { allowedMethods: ['ngOnInit'] },
-      ],
+      '@rx-angular/no-rxstate-subscriptions-outside-constructor': ['error', { allowedMethods: ['ngOnInit'] }],
     },
   },
 ];
@@ -53,7 +50,10 @@ export default [
   template: '<button (click)="handleClick()">...</button> ...',
 })
 class NotOkComponent {
-  constructor(private service: SomeService, private state: RxState<MyState>) {}
+  constructor(
+    private service: SomeService,
+    private state: RxState<MyState>,
+  ) {}
 
   handleClick() {
     this.state.connect('something', this.service.doSomething());
@@ -66,7 +66,10 @@ class NotOkComponent {
   template: '<button (click)="handleClick()">...</button> ...',
 })
 class NotOkComponent {
-  constructor(private service: SomeService, private state: RxState<MyState>) {}
+  constructor(
+    private service: SomeService,
+    private state: RxState<MyState>,
+  ) {}
 
   handleClick() {
     this.state.hold(this.service.doSomething());
@@ -101,7 +104,10 @@ Custom configuration, correct when `{ "allowedMethods": ["ngOnInit"] }` allows `
 class OkComponent {
   noDataFetching = input(false);
 
-  constructor(private state: RxState<MyState>, private service: SomeService) {}
+  constructor(
+    private state: RxState<MyState>,
+    private service: SomeService,
+  ) {}
 
   ngOnInit() {
     if (!this.noDataFetching()) {

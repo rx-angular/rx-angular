@@ -49,14 +49,14 @@ export function stateful<T>(): OperatorFunction<T, NonUndefined<T>>;
  * @internal
  */
 export function stateful<T, A>(
-  op: OperatorFunction<T, A>
+  op: OperatorFunction<T, A>,
 ): OperatorFunction<T, NonUndefined<A>>;
 /**
  * @internal
  */
 export function stateful<T, A, B>(
   op1: OperatorFunction<T, A>,
-  op2: OperatorFunction<A, B>
+  op2: OperatorFunction<A, B>,
 ): OperatorFunction<T, NonUndefined<B>>;
 /**
  * @internal
@@ -64,7 +64,7 @@ export function stateful<T, A, B>(
 export function stateful<T, A, B, C>(
   op1: OperatorFunction<T, A>,
   op2: OperatorFunction<A, B>,
-  op3: OperatorFunction<B, C>
+  op3: OperatorFunction<B, C>,
 ): OperatorFunction<T, NonUndefined<C>>;
 /**
  * @internal
@@ -73,7 +73,7 @@ export function stateful<T, A, B, C, D>(
   op1: OperatorFunction<T, A>,
   op2: OperatorFunction<A, B>,
   op3: OperatorFunction<B, C>,
-  op4: OperatorFunction<C, D>
+  op4: OperatorFunction<C, D>,
 ): OperatorFunction<T, NonUndefined<D>>;
 /**
  * @internal
@@ -83,7 +83,7 @@ export function stateful<T, A, B, C, D, E>(
   op2: OperatorFunction<A, B>,
   op3: OperatorFunction<B, C>,
   op4: OperatorFunction<C, D>,
-  op5: OperatorFunction<D, E>
+  op5: OperatorFunction<D, E>,
 ): OperatorFunction<T, NonUndefined<E>>;
 /**
  * @description
@@ -128,7 +128,7 @@ export function stateful<T, R>(
       // distinct same derivation value
       distinctUntilChanged(),
       // reuse custom operations result for multiple subscribers and reemit the last calculated value.
-      shareReplay({ bufferSize: 1, refCount: true })
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
   };
 }

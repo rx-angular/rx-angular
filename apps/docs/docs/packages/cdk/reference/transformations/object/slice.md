@@ -40,9 +40,7 @@ export class AnimalsListComponent {
   private readonly api = inject(ApiService);
 
   private readonly state = rxState<ComponentState>(({ connect }) => {
-    connect('animals', this.api.getAnimals(), (_, animals) =>
-      animals.map((animal) => slice(animal, ['id', 'name'])),
-    );
+    connect('animals', this.api.getAnimals(), (_, animals) => animals.map((animal) => slice(animal, ['id', 'name'])));
   });
 
   readonly animals = this.state.signal('animals');
@@ -70,17 +68,13 @@ slice(null as any, null as any) > undefined;
 slice([state], 'concat') > undefined;
 slice(state, 'nonExisting' as any) > undefined;
 slice(state, null as any) > undefined;
-slice(state, ['stateProp1', 'nonExistingProp']) >
-  { stateProp1: stateProp1Value };
+slice(state, ['stateProp1', 'nonExistingProp']) > { stateProp1: stateProp1Value };
 ```
 
 ### Signature
 
 ```typescript
-function slice<T extends object, K extends keyof T>(
-  object: T,
-  keys: K | K[]
-): Pick<T, K>;
+function slice<T extends object, K extends keyof T>(object: T, keys: K | K[]): Pick<T, K>;
 ```
 
 ### Parameters

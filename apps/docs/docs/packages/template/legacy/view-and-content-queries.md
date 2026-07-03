@@ -1,10 +1,10 @@
 ---
 id: view-and-content-queries
-title: "Handling view and content queries (parent)"
+title: 'Handling view and content queries (parent)'
 diataxis_type: how-to
 package: template
-legacy_guard: "Zone.js / apps still using the deprecated parent flag"
-sidebar_label: "View & content queries (legacy)"
+legacy_guard: 'Zone.js / apps still using the deprecated parent flag'
+sidebar_label: 'View & content queries (legacy)'
 tags: [template, guides, migration]
 ---
 

@@ -1,10 +1,10 @@
 ---
 id: virtual-scroll-recipes
-title: "How to build virtual scroll lists with rxVirtualFor"
+title: 'How to build virtual scroll lists with rxVirtualFor'
 diataxis_type: how-to
 package: template
 legacy_guard: false
-sidebar_label: "Virtual scroll recipes"
+sidebar_label: 'Virtual scroll recipes'
 tags: [template, guides]
 concepts: [E5]
 ---
@@ -60,7 +60,9 @@ Size the items in CSS to match the strategy's `itemSize`.
 ```
 
 ```ts
-@Component({ /* … */ })
+@Component({
+  /* … */
+})
 export class AnyComponent {
   heroes$: Observable<Hero[]> = getHeroes();
   // a Signal or a plain array works too:
@@ -127,19 +129,14 @@ especially useful for mobile.
 
 ## Reverse infinite scroll (`keepScrolledIndexOnPrepend`)
 
-A reversed infinite scroller starts at the bottom and *prepends* data when the user
+A reversed infinite scroller starts at the bottom and _prepends_ data when the user
 hits the top (as in a chat window). Set `keepScrolledIndexOnPrepend` so the strategy
 keeps the scrolled index stable as new data arrives.
 
 ```ts title="reverse-infinite-list.component.ts"
 import { Component, inject } from '@angular/core';
 import { Subject } from 'rxjs';
-import {
-  AutoSizeVirtualScrollStrategy,
-  ListRange,
-  RxVirtualFor,
-  RxVirtualScrollViewportComponent,
-} from '@rx-angular/template/virtual-scrolling';
+import { AutoSizeVirtualScrollStrategy, ListRange, RxVirtualFor, RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   imports: [RxVirtualScrollViewportComponent, RxVirtualFor, AutoSizeVirtualScrollStrategy],
@@ -164,13 +161,7 @@ export class ReverseInfiniteListComponent {
 ```
 
 ```html title="reverse-infinite-list.component.html"
-<rx-virtual-scroll-viewport
-  autosize
-  keepScrolledIndexOnPrepend
-  [initialScrollIndex]="initialScrollIndex"
-  (viewRange)="listRange = $event"
-  (scrolledIndexChange)="scrolled$.next($event)"
->
+<rx-virtual-scroll-viewport autosize keepScrolledIndexOnPrepend [initialScrollIndex]="initialScrollIndex" (viewRange)="listRange = $event" (scrolledIndexChange)="scrolled$.next($event)">
   <div
     *rxVirtualFor="
       let item of messages$;

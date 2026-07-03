@@ -1,10 +1,10 @@
 ---
 id: select
-title: "select"
+title: 'select'
 diataxis_type: reference
 package: state
 legacy_guard: false
-sidebar_label: "select"
+sidebar_label: 'select'
 tags: [state, api-reference]
 concepts: [E3]
 ---
@@ -51,27 +51,9 @@ const profilePicture$ = state.pipe(
 
 ```ts
 function select<T, K1 extends keyof T>(k1: K1): OperatorFunction<T, T[K1]>;
-function select<T, K1 extends keyof T, K2 extends keyof T[K1]>(
-  k1: K1,
-  k2: K2,
-): OperatorFunction<T, T[K1][K2]>;
+function select<T, K1 extends keyof T, K2 extends keyof T[K1]>(k1: K1, k2: K2): OperatorFunction<T, T[K1][K2]>;
 // … k3, k4, k5, k6 overloads follow the same pattern
-function select<
-  T,
-  K1 extends keyof T,
-  K2 extends keyof T[K1],
-  K3 extends keyof T[K1][K2],
-  K4 extends keyof T[K1][K2][K3],
-  K5 extends keyof T[K1][K2][K3][K4],
-  K6 extends keyof T[K1][K2][K3][K4][K5],
->(
-  k1: K1,
-  k2: K2,
-  k3: K3,
-  k4: K4,
-  k5: K5,
-  k6: K6,
-): OperatorFunction<T, T[K1][K2][K3][K4][K5][K6]>;
+function select<T, K1 extends keyof T, K2 extends keyof T[K1], K3 extends keyof T[K1][K2], K4 extends keyof T[K1][K2][K3], K5 extends keyof T[K1][K2][K3][K4], K6 extends keyof T[K1][K2][K3][K4][K5]>(k1: K1, k2: K2, k3: K3, k4: K4, k5: K5, k6: K6): OperatorFunction<T, T[K1][K2][K3][K4][K5][K6]>;
 ```
 
 ```ts
@@ -85,10 +67,7 @@ const foo$ = state$.pipe(select('bar', 'foo'));
 ### Transform a single key
 
 ```ts
-function select<T, K extends keyof T, R>(
-  k: K,
-  fn: (val: T[K]) => R,
-): OperatorFunction<T, R>;
+function select<T, K extends keyof T, R>(k: K, fn: (val: T[K]) => R): OperatorFunction<T, R>;
 ```
 
 Returns the result of applying `fn` to the property, cached and distinct.
@@ -100,22 +79,13 @@ const foo$ = state$.pipe(select('bar', (bar) => `bar equals ${bar}`));
 ### Transform a slice
 
 ```ts
-function select<T extends object, K extends keyof T, R>(
-  keys: K[],
-  fn?: (slice: PickSlice<T, K>) => R,
-  keyCompareMap?: KeyCompareMap<Pick<T, K>>,
-): OperatorFunction<T, R>;
+function select<T extends object, K extends keyof T, R>(keys: K[], fn?: (slice: PickSlice<T, K>) => R, keyCompareMap?: KeyCompareMap<Pick<T, K>>): OperatorFunction<T, R>;
 ```
 
 Returns the result of applying `fn` to the selected slice, cached and distinct.
 
 ```ts
-const text$ = state$.pipe(
-  select(
-    ['query', 'results'],
-    ({ query, results }) => `${results.length} results found for "${query}"`,
-  ),
-);
+const text$ = state$.pipe(select(['query', 'results'], ({ query, results }) => `${results.length} results found for "${query}"`));
 ```
 
 ## Import

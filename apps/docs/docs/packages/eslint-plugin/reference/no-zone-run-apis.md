@@ -1,10 +1,10 @@
 ---
 id: no-zone-run-apis
-title: "no-zone-run-apis"
+title: 'no-zone-run-apis'
 diataxis_type: reference
 package: eslint-plugin
-legacy_guard: "Zone.js only"
-sidebar_label: "no-zone-run-apis"
+legacy_guard: 'Zone.js only'
+sidebar_label: 'no-zone-run-apis'
 tags: [eslint-plugin, api-reference, migration]
 concepts: [E2]
 ---
@@ -37,8 +37,8 @@ This rule has no options (`schema: []`).
 // eslintrc
 {
   "rules": {
-    "@rx-angular/no-zone-run-apis": "error"
-  }
+    "@rx-angular/no-zone-run-apis": "error",
+  },
 }
 ```
 
@@ -68,7 +68,10 @@ import { selectFoo } from '../../store/foo/foo.selectors';
   templateUrl: './foo.component.html',
 })
 export class FooComponent {
-  constructor(private zone: NgZone, private store: Store) {
+  constructor(
+    private zone: NgZone,
+    private store: Store,
+  ) {
     setTimeout(() => {
       this.zone.runOutsideAngular(() => {
         // ...

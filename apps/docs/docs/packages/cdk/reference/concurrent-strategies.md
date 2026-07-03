@@ -1,10 +1,10 @@
 ---
 id: concurrent-strategies
-title: "Concurrent strategies"
+title: 'Concurrent strategies'
 diataxis_type: reference
 package: cdk
 legacy_guard: false
-sidebar_label: "Concurrent strategies"
+sidebar_label: 'Concurrent strategies'
 tags: [cdk, api-reference]
 concepts: [E5]
 ---
@@ -15,7 +15,7 @@ The concurrent strategies are a set of five named render strategies that schedul
 change detection against a **frame budget** and a per-priority **render deadline**,
 so heavy rendering yields to the main thread instead of blocking it. They are the
 one capability in RxAngular with no native Angular equivalent: Angular schedules
-*what* to re-render but has no notion of *how long* a re-render may run before it
+_what_ to re-render but has no notion of _how long_ a re-render may run before it
 should pause for user input ([angular#43168](https://github.com/angular/angular/issues/43168)).
 
 For the mental model (frame budget, chunking, priority, and render deadlines),
@@ -32,13 +32,13 @@ browsers), or `setTimeout` as a final fallback. The **render deadline** is the p
 the strategy stops chunking and flushes all remaining work synchronously, trading
 a possible frame drop for guaranteed completion. `idle` has no deadline.
 
-| Name             | Priority | Render method   | Scheduling       | Render deadline |
-| ---------------- | -------- | --------------- | ---------------- | --------------- |
+| Name             | Priority | Render method   | Scheduling       | Render deadline        |
+| ---------------- | -------- | --------------- | ---------------- | ---------------------- |
 | `"immediate"`    | 1        | `detectChanges` | `MessageChannel` | -1 ms (always expired) |
-| `"userBlocking"` | 2        | `detectChanges` | `MessageChannel` | 250 ms          |
-| `"normal"`       | 3        | `detectChanges` | `MessageChannel` | 5000 ms         |
-| `"low"`          | 4        | `detectChanges` | `MessageChannel` | 10000 ms        |
-| `"idle"`         | 5        | `detectChanges` | `MessageChannel` | — (none)        |
+| `"userBlocking"` | 2        | `detectChanges` | `MessageChannel` | 250 ms                 |
+| `"normal"`       | 3        | `detectChanges` | `MessageChannel` | 5000 ms                |
+| `"low"`          | 4        | `detectChanges` | `MessageChannel` | 10000 ms               |
+| `"idle"`         | 5        | `detectChanges` | `MessageChannel` | — (none)               |
 
 Priority `1` is the most urgent, `5` the least. The default strategy across the
 render-strategy system is `normal`.
@@ -125,9 +125,12 @@ export class DropdownComponent {
 
   show() {
     this.strategyProvider
-      .schedule(() => {
-        // create dropdown — lightweight, must land this frame
-      }, { strategy: 'userBlocking' })
+      .schedule(
+        () => {
+          // create dropdown — lightweight, must land this frame
+        },
+        { strategy: 'userBlocking' },
+      )
       .subscribe();
   }
 }

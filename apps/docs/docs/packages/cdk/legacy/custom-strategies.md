@@ -1,10 +1,10 @@
 ---
 id: custom-strategies
-title: "Custom render strategies"
+title: 'Custom render strategies'
 diataxis_type: reference
 package: cdk
-legacy_guard: "Angular <21 / zoneful"
-sidebar_label: "Custom strategies"
+legacy_guard: 'Angular <21 / zoneful'
+sidebar_label: 'Custom strategies'
 tags: [cdk, migration]
 concepts: [E1, E2]
 ---
@@ -41,17 +41,9 @@ import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 ## The types you implement
 
 ```ts
-export type RxRenderWork = <T = unknown>(
-  cdRef: ChangeDetectorRef,
-  scope?: coalescingObj,
-  notification?: RxNotification<T>,
-) => void;
+export type RxRenderWork = <T = unknown>(cdRef: ChangeDetectorRef, scope?: coalescingObj, notification?: RxNotification<T>) => void;
 
-export type RxRenderBehavior = <T = unknown>(params: {
-  work: () => any;
-  scope?: coalescingObj;
-  ngZone?: NgZone;
-}) => (o: Observable<T>) => Observable<T>;
+export type RxRenderBehavior = <T = unknown>(params: { work: () => any; scope?: coalescingObj; ngZone?: NgZone }) => (o: Observable<T>) => Observable<T>;
 
 export interface RxStrategyCredentials<S = string> {
   name: S;
@@ -59,28 +51,14 @@ export interface RxStrategyCredentials<S = string> {
   behavior: RxRenderBehavior;
 }
 
-export type RxCustomStrategyCredentials<T extends string> = Record<
-  T,
-  RxStrategyCredentials
->;
+export type RxCustomStrategyCredentials<T extends string> = Record<T, RxStrategyCredentials>;
 
 export type RxNativeStrategyNames = 'native' | 'local' | 'noop';
-export type RxConcurrentStrategyNames =
-  | 'immediate'
-  | 'userBlocking'
-  | 'normal'
-  | 'low'
-  | 'idle';
-export type RxDefaultStrategyNames =
-  | RxNativeStrategyNames
-  | RxConcurrentStrategyNames;
+export type RxConcurrentStrategyNames = 'immediate' | 'userBlocking' | 'normal' | 'low' | 'idle';
+export type RxDefaultStrategyNames = RxNativeStrategyNames | RxConcurrentStrategyNames;
 
-export type RxStrategyNames<T extends string = string> =
-  | RxDefaultStrategyNames
-  | T;
-export type RxStrategies<T extends string> = RxCustomStrategyCredentials<
-  RxStrategyNames<T>
->;
+export type RxStrategyNames<T extends string = string> = RxDefaultStrategyNames | T;
+export type RxStrategies<T extends string> = RxCustomStrategyCredentials<RxStrategyNames<T>>;
 ```
 
 Two shapes are easy to get wrong:
@@ -125,7 +103,10 @@ export const appConfig: ApplicationConfig = {
           behavior:
             ({ work }) =>
             (o$) =>
-              o$.pipe(delay(0, asapScheduler), tap(() => work())),
+              o$.pipe(
+                delay(0, asapScheduler),
+                tap(() => work()),
+              ),
         },
       },
     }),

@@ -1,10 +1,10 @@
 ---
 id: rx-state-class
-title: "RxState"
+title: 'RxState'
 diataxis_type: reference
 package: state
-legacy_guard: "class-based RxState / DI-style consumers"
-sidebar_label: "RxState (class)"
+legacy_guard: 'class-based RxState / DI-style consumers'
+sidebar_label: 'RxState (class)'
 sidebar_position: 2
 tags: [state, api-reference, migration]
 concepts: [E3]
@@ -79,7 +79,7 @@ class RxState<State extends object> implements Subscribable<State> {
 
 ### `$` (state observable)
 
-*typeof:* `Observable<State>`
+_typeof:_ `Observable<State>`
 
 The unmodified state exposed as `Observable<State>`. It is **not** shared, distinct, or replayed. Use `$` to read the state without having `stateful` applied to it.
 
@@ -138,7 +138,7 @@ const bar = state.get('bar');
 
 ### `signal`
 
-*typeof:* `signal<Key extends keyof State>(key: Key): Signal<State[Key]>`
+_typeof:_ `signal<Key extends keyof State>(key: Key): Signal<State[Key]>`
 
 Returns a `Signal` of the given key. Its initial value is the current key value; it updates whenever the key changes. This is the signals-first read surface.
 
@@ -167,7 +167,7 @@ readonly bigFoo = this.state.computedFrom(
 
 ### `asReadOnly`
 
-*typeof:* `Pick<RxState<State>, 'get' | 'select' | 'computed' | 'signal'>`
+_typeof:_ `Pick<RxState<State>, 'get' | 'select' | 'computed' | 'signal'>`
 
 Return `RxState` in read-only mode, exposing only `get()`, `select()`, `computed()`, and `signal()`. Useful when you do not want consumers to write into your state. Calling a non-exposed method (e.g. `set`) throws.
 

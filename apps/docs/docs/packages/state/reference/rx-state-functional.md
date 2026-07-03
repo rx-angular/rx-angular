@@ -1,10 +1,10 @@
 ---
 id: rx-state-functional
-title: "rxState"
+title: 'rxState'
 diataxis_type: reference
 package: state
 legacy_guard: false
-sidebar_label: "rxState (functional)"
+sidebar_label: 'rxState (functional)'
 sidebar_position: 1
 tags: [state, api-reference]
 concepts: [E3]
@@ -30,23 +30,16 @@ import { rxState } from '@rx-angular/state';
 
 ```ts
 export function rxState<State extends object>(): RxState<State>;
-export function rxState<State extends object>(
-  setupFn: RxStateSetupFn<State>,
-): RxState<State>;
-export function rxState<State extends object>(
-  options: RxStateOptions,
-): RxState<State>;
-export function rxState<State extends object>(
-  setupFn: RxStateSetupFn<State>,
-  options: RxStateOptions,
-): RxState<State>;
+export function rxState<State extends object>(setupFn: RxStateSetupFn<State>): RxState<State>;
+export function rxState<State extends object>(options: RxStateOptions): RxState<State>;
+export function rxState<State extends object>(setupFn: RxStateSetupFn<State>, options: RxStateOptions): RxState<State>;
 ```
 
-| Param | Type | Meaning |
-| ----- | ---- | ------- |
+| Param     | Type                    | Meaning                                                                                                                                                                                  |
+| --------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `setupFn` | `RxStateSetupFn<State>` | Optional. Runs once on creation with a subset of the state handle (`connect`, `set`, `get`, `select`, `setAccumulator`) so you can seed initial state and wire connections in one place. |
-| `options` | `RxStateOptions` | Optional. Provide an explicit `injector` so `rxState()` can be called outside an injection context. |
-| *returns* | `RxState<State>` | The functional state handle (see below). |
+| `options` | `RxStateOptions`        | Optional. Provide an explicit `injector` so `rxState()` can be called outside an injection context.                                                                                      |
+| _returns_ | `RxState<State>`        | The functional state handle (see below).                                                                                                                                                 |
 
 Must be called within an injection context, unless an `injector` is supplied via `RxStateOptions`.
 
@@ -56,35 +49,23 @@ The functional handle is a `Pick` of the class `RxState` service exposing **10 m
 
 ```ts
 // Illustrative shape only — see the note below.
-type RxState<T extends object> = Pick<
-  LegacyState<T>,
-  | 'get'
-  | 'select'
-  | 'connect'
-  | 'set'
-  | '$'
-  | 'setAccumulator'
-  | 'signal'
-  | 'computed'
-  | 'computedFrom'
-  | 'asReadOnly'
->;
+type RxState<T extends object> = Pick<LegacyState<T>, 'get' | 'select' | 'connect' | 'set' | '$' | 'setAccumulator' | 'signal' | 'computed' | 'computedFrom' | 'asReadOnly'>;
 ```
 
 > This `Pick` type shows the shape of the handle; it is **not** directly importable. `import { RxState } from '@rx-angular/state'` resolves to the class-based `RxState` service, not this type. If you need a named type for the handle, capture it via `ReturnType<typeof rxState>`.
 
-| Member | Kind | Meaning |
-| ------ | ---- | ------- |
-| `$` | `Observable<State>` | The raw, unmodified state observable; not shared, distinct, or replayed. |
-| `get` | method | Read state imperatively. See [`RxState#get`](./rx-state-class.md#get). |
-| `set` | method | Write a `Partial<State>`, a projection function, or a single-key value. See [`RxState#set`](./rx-state-class.md#set). |
-| `connect` | method | Merge an `Observable`/`Signal` source into state (8 overloads). See [`RxState#connect`](./rx-state-class.md#connect). |
-| `select` | method | Read state reactively as a cached, distinct `Observable`. See [`RxState#select`](./rx-state-class.md#select). |
-| `signal` | method | Read a single key as a `Signal<State[Key]>`, the signals-first template surface. See [`RxState#signal`](./rx-state-class.md#signal). |
-| `computed` | method | Derive a `Signal` from multiple keys. See [`RxState#computed`](./rx-state-class.md#computed). |
-| `computedFrom` | method | Derive a `Signal` from state via RxJS operators. See [`RxState#computedFrom`](./rx-state-class.md#computedfrom). |
-| `asReadOnly` | method | Return a read-only view exposing only `get`/`select`/`computed`/`signal`. |
-| `setAccumulator` | method | **`@deprecated`**: customize the accumulation function. Prefer `provideRxStateConfig(withAccumulatorFn(...))`. |
+| Member           | Kind                | Meaning                                                                                                                              |
+| ---------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `$`              | `Observable<State>` | The raw, unmodified state observable; not shared, distinct, or replayed.                                                             |
+| `get`            | method              | Read state imperatively. See [`RxState#get`](./rx-state-class.md#get).                                                               |
+| `set`            | method              | Write a `Partial<State>`, a projection function, or a single-key value. See [`RxState#set`](./rx-state-class.md#set).                |
+| `connect`        | method              | Merge an `Observable`/`Signal` source into state (8 overloads). See [`RxState#connect`](./rx-state-class.md#connect).                |
+| `select`         | method              | Read state reactively as a cached, distinct `Observable`. See [`RxState#select`](./rx-state-class.md#select).                        |
+| `signal`         | method              | Read a single key as a `Signal<State[Key]>`, the signals-first template surface. See [`RxState#signal`](./rx-state-class.md#signal). |
+| `computed`       | method              | Derive a `Signal` from multiple keys. See [`RxState#computed`](./rx-state-class.md#computed).                                        |
+| `computedFrom`   | method              | Derive a `Signal` from state via RxJS operators. See [`RxState#computedFrom`](./rx-state-class.md#computedfrom).                     |
+| `asReadOnly`     | method              | Return a read-only view exposing only `get`/`select`/`computed`/`signal`.                                                            |
+| `setAccumulator` | method              | **`@deprecated`**: customize the accumulation function. Prefer `provideRxStateConfig(withAccumulatorFn(...))`.                       |
 
 > The functional handle does **not** expose `hold()`. For side effects, use `rxEffects().register(...)` instead (the `rxEffects` Reference is authored later in this Phase-C run).
 
@@ -93,12 +74,7 @@ type RxState<T extends object> = Pick<
 The setup function receives a **5-member** subset of the handle:
 
 ```ts
-export type RxStateSetupFn<State extends object> = (
-  rxState: Pick<
-    RxState<State>,
-    'connect' | 'set' | 'get' | 'select' | 'setAccumulator'
-  >,
-) => void;
+export type RxStateSetupFn<State extends object> = (rxState: Pick<RxState<State>, 'connect' | 'set' | 'get' | 'select' | 'setAccumulator'>) => void;
 ```
 
 ### `RxStateOptions`
@@ -111,8 +87,8 @@ type RxStateOptions = {
 
 > `RxStateOptions` is an internal type: it is **not** re-exported from `@rx-angular/state`, so it cannot be imported by name. The signatures above use it only to describe the options object's shape — pass a matching object literal (`{ injector }`) directly.
 
-| Field | Type | Meaning |
-| ----- | ---- | ------- |
+| Field      | Type       | Meaning                                                                                                                            |
+| ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `injector` | `Injector` | Optional. Explicit injector used to bind the instance's lifecycle, allowing `rxState()` to be called outside an injection context. |
 
 ## Minimal example

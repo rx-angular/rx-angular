@@ -34,9 +34,9 @@ import { isDefined, isKeyOf } from '../_internals/guards';
  * @docsPage extract
  * @docsCategory transformation-helpers
  */
- export function extract<T extends object, K extends keyof T>(
+export function extract<T extends object, K extends keyof T>(
   array: T[],
-  keys: K | K[]
+  keys: K | K[],
 ): Pick<T, K>[] {
   const arrayIsArray = isDefined(array) && Array.isArray(array);
 
@@ -46,7 +46,7 @@ import { isDefined, isKeyOf } from '../_internals/guards';
   }
 
   const sanitizedKeys = (Array.isArray(keys) ? keys : [keys]).filter(
-    k => isKeyOf<T>(k) && array.some(i => k in i)
+    (k) => isKeyOf<T>(k) && array.some((i) => k in i),
   );
   const length = sanitizedKeys.length;
 
@@ -55,15 +55,14 @@ import { isDefined, isKeyOf } from '../_internals/guards';
     return undefined as any;
   }
 
-  return array.map(item => {
+  return array.map((item) => {
     let i = 0;
     const result = {} as Pick<T, K>;
 
-    for(i; i < length; i++) {
+    for (i; i < length; i++) {
       result[sanitizedKeys[i]] = item[sanitizedKeys[i]];
     }
 
     return result;
-  }
-  );
+  });
 }

@@ -1,6 +1,6 @@
 ---
 id: no-explicit-change-detection-apis
-title: "no-explicit-change-detection-apis"
+title: 'no-explicit-change-detection-apis'
 diataxis_type: reference
 package: eslint-plugin
 legacy_guard: false
@@ -63,7 +63,10 @@ class NotOkDetectChangesComponent {
 class NotOkMarkForCheckComponent {
   data: TData;
 
-  constructor(private service: SomeService, private cdRef: ChangeDetectorRef) {
+  constructor(
+    private service: SomeService,
+    private cdRef: ChangeDetectorRef,
+  ) {
     this.service.getData().subscribe((data) => {
       this.data = data;
       this.cdRef.markForCheck();

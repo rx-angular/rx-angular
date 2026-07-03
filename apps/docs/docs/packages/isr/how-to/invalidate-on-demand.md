@@ -1,10 +1,10 @@
 ---
 id: invalidate-on-demand
-title: "Invalidate the cache on demand"
+title: 'Invalidate the cache on demand'
 diataxis_type: how-to
 package: isr
 legacy_guard: false
-sidebar_label: "Invalidate on demand"
+sidebar_label: 'Invalidate on demand'
 sidebar_position: 6
 tags: [isr, guides]
 ---

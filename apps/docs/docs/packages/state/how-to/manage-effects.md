@@ -1,11 +1,11 @@
 ---
 sidebar_position: 3
 id: manage-effects
-title: "Manage side effects with rxEffects"
+title: 'Manage side effects with rxEffects'
 diataxis_type: how-to
 package: state
 legacy_guard: false
-sidebar_label: "Manage side effects"
+sidebar_label: 'Manage side effects'
 tags: [state, guides]
 concepts: [E6]
 ---
@@ -59,10 +59,7 @@ private readonly effects = rxEffects(({ register, onDestroy }) => {
 export class ChartComponent {
   private readonly effects = rxEffects();
 
-  private readonly stopPolling = this.effects.register(
-    interval(2000),
-    () => this.refresh(),
-  );
+  private readonly stopPolling = this.effects.register(interval(2000), () => this.refresh());
 
   pausePolling() {
     this.stopPolling(); // this effect is now unsubscribed

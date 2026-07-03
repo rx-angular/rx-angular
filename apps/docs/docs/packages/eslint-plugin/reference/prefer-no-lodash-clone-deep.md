@@ -1,6 +1,6 @@
 ---
 id: prefer-no-lodash-clone-deep
-title: "prefer-no-lodash-clone-deep"
+title: 'prefer-no-lodash-clone-deep'
 diataxis_type: reference
 package: eslint-plugin
 legacy_guard: false

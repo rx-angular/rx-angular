@@ -1,10 +1,10 @@
 ---
 id: notifications
-title: "@rx-angular/cdk/notifications"
+title: '@rx-angular/cdk/notifications'
 diataxis_type: reference
 package: cdk
 legacy_guard: false
-sidebar_label: "Notifications"
+sidebar_label: 'Notifications'
 tags: [cdk, api-reference]
 concepts: [E4]
 ---
@@ -28,14 +28,7 @@ contributes to it.
 ## Import
 
 ```ts
-import {
-  RxNotification,
-  RxNotificationKind,
-  toRxErrorNotification,
-  toRxSuspenseNotification,
-  toRxCompleteNotification,
-  rxMaterialize,
-} from '@rx-angular/cdk/notifications';
+import { RxNotification, RxNotificationKind, toRxErrorNotification, toRxSuspenseNotification, toRxCompleteNotification, rxMaterialize } from '@rx-angular/cdk/notifications';
 ```
 
 ---
@@ -63,22 +56,18 @@ The string values map directly to the default template names (`suspense`, `next`
 A discriminated union over `kind`:
 
 ```ts
-type RxNotification<T> =
-  | RxNextNotification<T>
-  | RxSuspenseNotification<T>
-  | RxErrorNotification<T>
-  | RxCompleteNotification<T>;
+type RxNotification<T> = RxNextNotification<T> | RxSuspenseNotification<T> | RxErrorNotification<T> | RxCompleteNotification<T>;
 ```
 
 Every member carries:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `value` | `T` | The current value (may be the last-known value on non-`next` phases). |
-| `kind` | `RxNotificationKind` | The phase discriminant. |
-| `error` | per member (see below) | The error on the `error` phase; `false` otherwise. `RxNextNotification`: `boolean`; `RxSuspenseNotification`: `false`; `RxErrorNotification`: `any`; `RxCompleteNotification`: `false`. |
-| `complete` | `boolean` | `true` on the `complete` phase. |
-| `hasValue` | `boolean` | **@deprecated**; check `kind === RxNotificationKind.Next` instead. |
+| Field      | Type                   | Description                                                                                                                                                                             |
+| ---------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value`    | `T`                    | The current value (may be the last-known value on non-`next` phases).                                                                                                                   |
+| `kind`     | `RxNotificationKind`   | The phase discriminant.                                                                                                                                                                 |
+| `error`    | per member (see below) | The error on the `error` phase; `false` otherwise. `RxNextNotification`: `boolean`; `RxSuspenseNotification`: `false`; `RxErrorNotification`: `any`; `RxCompleteNotification`: `false`. |
+| `complete` | `boolean`              | `true` on the `complete` phase.                                                                                                                                                         |
+| `hasValue` | `boolean`              | **@deprecated**; check `kind === RxNotificationKind.Next` instead.                                                                                                                      |
 
 The individual interfaces are `RxNextNotification<T>`, `RxSuspenseNotification<T>`,
 `RxErrorNotification<T>`, and `RxCompleteNotification<T>`.
@@ -120,10 +109,18 @@ import { rxMaterialize } from '@rx-angular/cdk/notifications';
   template: `
     @if (state(); as n) {
       @switch (n.kind) {
-        @case ('suspense') { <p>Loading…</p> }
-        @case ('next') { <p>Value: {{ n.value }}</p> }
-        @case ('error') { <p>Error!</p> }
-        @case ('complete') { <p>Complete!</p> }
+        @case ('suspense') {
+          <p>Loading…</p>
+        }
+        @case ('next') {
+          <p>Value: {{ n.value }}</p>
+        }
+        @case ('error') {
+          <p>Error!</p>
+        }
+        @case ('complete') {
+          <p>Complete!</p>
+        }
       }
     }
   `,

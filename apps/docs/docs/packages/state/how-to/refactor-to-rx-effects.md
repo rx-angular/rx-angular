@@ -1,10 +1,10 @@
 ---
 id: refactor-to-rx-effects
-title: "How to refactor manual subscriptions to rxEffects"
+title: 'How to refactor manual subscriptions to rxEffects'
 diataxis_type: how-to
 package: state
 legacy_guard: false
-sidebar_label: "Case study: refactor to rxEffects"
+sidebar_label: 'Case study: refactor to rxEffects'
 sidebar_position: 5
 tags: [state, guides]
 concepts: [E3]

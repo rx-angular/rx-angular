@@ -103,12 +103,7 @@ export class ListComponent {
         { id: 2, type: 'dog', name: 'Sparky' },
       ],
     });
-    connect(
-      'creatures',
-      this.addOrUpdateCreature$,
-      ({ creatures }, creatureToUpsert) =>
-        upsert(creatures, creatureToUpsert, 'id'),
-    );
+    connect('creatures', this.addOrUpdateCreature$, ({ creatures }, creatureToUpsert) => upsert(creatures, creatureToUpsert, 'id'));
   });
 
   readonly creatures = this.state.signal('creatures');
@@ -149,11 +144,7 @@ upsert(nonArray as any, items) > items;
 ### Signature
 
 ```typescript
-function upsert<T>(
-  source: T[],
-  update: Partial<T>[] | Partial<T>,
-  compare?: ComparableData<T>
-): T[];
+function upsert<T>(source: T[], update: Partial<T>[] | Partial<T>, compare?: ComparableData<T>): T[];
 ```
 
 ### Parameters

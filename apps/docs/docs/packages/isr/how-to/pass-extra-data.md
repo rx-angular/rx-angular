@@ -1,10 +1,10 @@
 ---
 id: pass-extra-data
-title: "Pass extra data into the cache"
+title: 'Pass extra data into the cache'
 diataxis_type: how-to
 package: isr
 legacy_guard: false
-sidebar_label: "Pass extra data"
+sidebar_label: 'Pass extra data'
 sidebar_position: 7
 tags: [isr, guides]
 ---
@@ -41,14 +41,11 @@ ISR can store arbitrary extra data alongside a cached page, for example how long
            timing: (performance.now() - start).toFixed(2) + 'ms',
          };
 
-         const currentTimings =
-           (isrService.getExtra()['requestsTimings'] as typeof timing[]) ?? [];
+         const currentTimings = (isrService.getExtra()['requestsTimings'] as (typeof timing)[]) ?? [];
 
          const exists = currentTimings.some((t) => t.url === req.url);
          isrService.addExtra({
-           requestsTimings: exists
-             ? currentTimings.map((t) => (t.url === req.url ? timing : t))
-             : [...currentTimings, timing],
+           requestsTimings: exists ? currentTimings.map((t) => (t.url === req.url ? timing : t)) : [...currentTimings, timing],
          });
        }),
      );
@@ -63,9 +60,7 @@ ISR can store arbitrary extra data alongside a cached page, for example how long
    import { urlTimingsInterceptor } from './url-timings.interceptor';
 
    export const appConfig: ApplicationConfig = {
-     providers: [
-       provideHttpClient(withInterceptors([urlTimingsInterceptor])),
-     ],
+     providers: [provideHttpClient(withInterceptors([urlTimingsInterceptor]))],
    };
    ```
 

@@ -84,13 +84,13 @@ function defaultCompare<T>(oldVal: T, newVal: T): boolean {
  */
 export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
   keys: K[],
-  keyCompareMap?: KeyCompareMap<T>
+  keyCompareMap?: KeyCompareMap<T>,
 ): MonoTypeOperatorFunction<T> {
   // default compare function applying === to every key
   let distinctCompare: CompareFn<T> = (oldState, newState) =>
     keys.some(
       (key) =>
-        !defaultCompare(safePluck(oldState, [key]), safePluck(newState, [key]))
+        !defaultCompare(safePluck(oldState, [key]), safePluck(newState, [key])),
     );
 
   // generate compare function respecting every case of provided keyCompareMap
@@ -104,7 +104,7 @@ export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
     distinctCompare = (oldState, newState) => {
       return keys.some(
         (key) =>
-          !compare(key)(safePluck(oldState, [key]), safePluck(newState, [key]))
+          !compare(key)(safePluck(oldState, [key]), safePluck(newState, [key])),
       );
     };
   }

@@ -1,10 +1,10 @@
 ---
 id: handle-render-errors
-title: "Handle render errors"
+title: 'Handle render errors'
 diataxis_type: how-to
 package: isr
 legacy_guard: false
-sidebar_label: "Handle render errors"
+sidebar_label: 'Handle render errors'
 sidebar_position: 4
 tags: [isr, guides]
 ---

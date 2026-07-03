@@ -1,10 +1,10 @@
 ---
 id: coercing
-title: "@rx-angular/cdk/coercing"
+title: '@rx-angular/cdk/coercing'
 diataxis_type: reference
 package: cdk
 legacy_guard: false
-sidebar_label: "Coercing"
+sidebar_label: 'Coercing'
 tags: [cdk, api-reference]
 ---
 
@@ -22,24 +22,18 @@ instead. See [How to coerce reactive inputs](../how-to/coerce-reactive-inputs.md
 ## Import
 
 ```ts
-import {
-  coerceObservable,
-  coerceObservableWith,
-  coerceDistinctObservable,
-  coerceDistinctWith,
-  coerceAllFactory,
-} from '@rx-angular/cdk/coercing';
+import { coerceObservable, coerceObservableWith, coerceDistinctObservable, coerceDistinctWith, coerceAllFactory } from '@rx-angular/cdk/coercing';
 ```
 
 ## Exports
 
-| Export | Kind | Purpose |
-| --- | --- | --- |
-| `coerceObservable` | factory | Turn a static value or `Observable` into an `Observable`. |
-| `coerceObservableWith` | operator | Operator form of `coerceObservable`. |
-| `coerceDistinctObservable` | factory | `coerceObservable` + inner/outer `distinctUntilChanged` and a flatten strategy. |
-| `coerceDistinctWith` | operator | Operator form of `coerceDistinctObservable`. |
-| `coerceAllFactory` | factory | A `{ next, values$ }` handle that merges higher-order values into one optimized stream. |
+| Export                     | Kind     | Purpose                                                                                 |
+| -------------------------- | -------- | --------------------------------------------------------------------------------------- |
+| `coerceObservable`         | factory  | Turn a static value or `Observable` into an `Observable`.                               |
+| `coerceObservableWith`     | operator | Operator form of `coerceObservable`.                                                    |
+| `coerceDistinctObservable` | factory  | `coerceObservable` + inner/outer `distinctUntilChanged` and a flatten strategy.         |
+| `coerceDistinctWith`       | operator | Operator form of `coerceDistinctObservable`.                                            |
+| `coerceAllFactory`         | factory  | A `{ next, values$ }` handle that merges higher-order values into one optimized stream. |
 
 ---
 
@@ -52,9 +46,9 @@ function coerceObservable<T>(o: Observable<T> | T): Observable<T>;
 Returns the input unchanged if it is already an `Observable`, otherwise wraps it with
 `of()`.
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `o` | `Observable<T> \| T` | The value to coerce. |
+| Parameter | Type                 | Description          |
+| --------- | -------------------- | -------------------- |
+| `o`       | `Observable<T> \| T` | The value to coerce. |
 
 **Returns:** `Observable<T>`
 
@@ -68,10 +62,7 @@ readonly value$ = coerceObservable(this.value());
 ## `coerceObservableWith`
 
 ```ts
-function coerceObservableWith<T>(): OperatorFunction<
-  Observable<T | null | undefined> | T | null | undefined,
-  Observable<T | null | undefined>
->;
+function coerceObservableWith<T>(): OperatorFunction<Observable<T | null | undefined> | T | null | undefined, Observable<T | null | undefined>>;
 ```
 
 The operator form of `coerceObservable`, applied inside a `pipe()`. It maps each
@@ -89,19 +80,16 @@ readonly coerced$ = this.value$.pipe(coerceObservableWith());
 ## `coerceDistinctObservable`
 
 ```ts
-function coerceDistinctObservable<T>(
-  o$: Observable<Observable<T> | T>,
-  flattenOperator?: OperatorFunction<Observable<T>, T>
-): Observable<T>;
+function coerceDistinctObservable<T>(o$: Observable<Observable<T> | T>, flattenOperator?: OperatorFunction<Observable<T>, T>): Observable<T>;
 ```
 
 Coerces to an `Observable` and forwards only **distinct** values: a
 `distinctUntilChanged()` is applied both across incoming Observables and across the
 flattened result.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `o$` | `Observable<Observable<T> \| T>` | — | The source of values or Observables. |
+| Parameter         | Type                                 | Default       | Description                                                                        |
+| ----------------- | ------------------------------------ | ------------- | ---------------------------------------------------------------------------------- |
+| `o$`              | `Observable<Observable<T> \| T>`     | —             | The source of values or Observables.                                               |
 | `flattenOperator` | `OperatorFunction<Observable<T>, T>` | `switchAll()` | The flattening strategy (e.g. `mergeAll`, `concatAll`, `exhaustAll`, `switchAll`). |
 
 **Returns:** `Observable<T>`
@@ -111,15 +99,13 @@ flattened result.
 ## `coerceDistinctWith`
 
 ```ts
-function coerceDistinctWith<T>(
-  flattenOperator?: OperatorFunction<Observable<T>, T>
-): (o$: Observable<Observable<T> | T>) => Observable<T>;
+function coerceDistinctWith<T>(flattenOperator?: OperatorFunction<Observable<T>, T>): (o$: Observable<Observable<T> | T>) => Observable<T>;
 ```
 
 The operator form of `coerceDistinctObservable`.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
+| Parameter         | Type                                 | Default       | Description              |
+| ----------------- | ------------------------------------ | ------------- | ------------------------ |
 | `flattenOperator` | `OperatorFunction<Observable<T>, T>` | `switchAll()` | The flattening strategy. |
 
 **Returns:** an operator from `Observable<Observable<T> \| T>` to `Observable<T>`.
@@ -136,7 +122,7 @@ readonly coerced$ = this.value$.pipe(coerceDistinctWith());
 ```ts
 function coerceAllFactory<U, R = U>(
   subjectFactory?: () => Subject<Observable<U> | U>,
-  flattenOperator?: OperatorFunction<Observable<U>, R>
+  flattenOperator?: OperatorFunction<Observable<U>, R>,
 ): {
   values$: Observable<R>;
   next(observable: Observable<U> | U): void;
@@ -148,10 +134,10 @@ Returns a small handle for the higher-order case: `next()` any static value or
 exposed on the input side, so the underlying subject cannot be completed or errored by
 consumers.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `subjectFactory` | `() => Subject<Observable<U> \| U>` | `new Subject()` | Factory for the backing subject. |
-| `flattenOperator` | `OperatorFunction<Observable<U>, R>` | `switchAll()` | Higher-order flattening strategy. |
+| Parameter         | Type                                 | Default         | Description                       |
+| ----------------- | ------------------------------------ | --------------- | --------------------------------- |
+| `subjectFactory`  | `() => Subject<Observable<U> \| U>`  | `new Subject()` | Factory for the backing subject.  |
+| `flattenOperator` | `OperatorFunction<Observable<U>, R>` | `switchAll()`   | Higher-order flattening strategy. |
 
 **Returns:** `{ values$: Observable<R>; next(observable: Observable<U> | U): void }`
 

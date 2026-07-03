@@ -1,36 +1,33 @@
 ---
 id: select-slice
-title: "selectSlice"
+title: 'selectSlice'
 diataxis_type: reference
 package: state
 legacy_guard: false
-sidebar_label: "selectSlice"
+sidebar_label: 'selectSlice'
 tags: [state, api-reference]
 concepts: [E3]
 ---
 
 # `selectSlice`
 
-RxJS operator that emits only the provided `keys` from the source `Observable`. Each key is filtered to emit only **defined** values and checked for **distinct** emissions; comparison is done for each key in the `keys` array. A selection is only emitted when it is *valid* (every selected key must exist and be defined in the source), so the operator always yields a complete slice with all values present.
+RxJS operator that emits only the provided `keys` from the source `Observable`. Each key is filtered to emit only **defined** values and checked for **distinct** emissions; comparison is done for each key in the `keys` array. A selection is only emitted when it is _valid_ (every selected key must exist and be defined in the source), so the operator always yields a complete slice with all values present.
 
 You can fine-grain the distinct checks by passing a `KeyCompareMap` for the keys you want to compare explicitly.
 
 ## Signature
 
 ```ts
-function selectSlice<T extends object, K extends keyof T>(
-  keys: K[],
-  keyCompareMap?: KeyCompareMap<{ [P in K]: T[P] }>,
-): OperatorFunction<T, PickSlice<T, K>>;
+function selectSlice<T extends object, K extends keyof T>(keys: K[], keyCompareMap?: KeyCompareMap<{ [P in K]: T[P] }>): OperatorFunction<T, PickSlice<T, K>>;
 ```
 
 The result type is `PickSlice<T, K>`; there is **no** `| null` in the emitted type. Invalid selections are not emitted at all (they are filtered out upstream) rather than surfaced as `null`.
 
 ## Parameters
 
-| Parameter | Type | Meaning |
-| --- | --- | --- |
-| `keys` | `K[]` | The keys to select from the state object. |
+| Parameter       | Type                                | Meaning                                               |
+| --------------- | ----------------------------------- | ----------------------------------------------------- |
+| `keys`          | `K[]`                               | The keys to select from the state object.             |
 | `keyCompareMap` | `KeyCompareMap<{ [P in K]: T[P] }>` | Optional. Custom compare functions for specific keys. |
 
 ## Returns
@@ -61,16 +58,9 @@ const customComparison: KeyCompareMap<MyState> = {
   items: (oldItems, newItems) => compareItems(oldItems, newItems),
 };
 
-const state$: Observable<MyState> = of(
-  { title: 'myTitle', items: ['foo', 'bar'], panelOpen: true },
-  { title: 'myTitle', items: ['foo', 'bar'], panelOpen: false },
-  { title: 'nextTitle', items: ['foo', 'baR'], panelOpen: true },
-  { title: 'nextTitle', items: ['fooRz', 'boo'], panelOpen: false },
-);
+const state$: Observable<MyState> = of({ title: 'myTitle', items: ['foo', 'bar'], panelOpen: true }, { title: 'myTitle', items: ['foo', 'bar'], panelOpen: false }, { title: 'nextTitle', items: ['foo', 'baR'], panelOpen: true }, { title: 'nextTitle', items: ['fooRz', 'boo'], panelOpen: false });
 
-state$
-  .pipe(selectSlice(['title', 'items'], customComparison), tap(console.log))
-  .subscribe();
+state$.pipe(selectSlice(['title', 'items'], customComparison), tap(console.log)).subscribe();
 
 // displays:
 // { title: 'myTitle', items: ['foo', 'bar'] }

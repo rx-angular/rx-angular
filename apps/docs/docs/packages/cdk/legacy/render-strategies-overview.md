@@ -1,10 +1,10 @@
 ---
 id: render-strategies-overview
-title: "Render strategies (overview)"
+title: 'Render strategies (overview)'
 diataxis_type: reference
 package: cdk
-legacy_guard: "Angular <21 / still-zoneful / perf-retrofit"
-sidebar_label: "Render strategies overview"
+legacy_guard: 'Angular <21 / still-zoneful / perf-retrofit'
+sidebar_label: 'Render strategies overview'
 tags: [cdk, migration]
 concepts: [E1, E2, E5]
 ---
@@ -27,7 +27,7 @@ named above; for new applications, prefer the native zoneless path and see
 
 Render strategies expose two things to the caller: the **render method** (the
 work a strategy performs on a view, for example `markForCheck` or `detectChanges`)
-and the **scheduling mechanism** that decides *when* that work runs. Both are
+and the **scheduling mechanism** that decides _when_ that work runs. Both are
 carried on a strategy's `RxStrategyCredentials` and consumed by the directives
 (`rxLet`, `rxFor`, `rxIf`) and by [`RxStrategyProvider`](../reference/rx-strategy-provider.md).
 
@@ -60,11 +60,11 @@ for the frame-budget model behind the concurrent set, see
 
 ## Native strategies
 
-| Name       | Render method   | Scheduling              | Notes                                   |
-| ---------- | --------------- | ----------------------- | --------------------------------------- |
-| `"noop"`   | none            | none                    | Identity pass-through; no rendering.    |
-| `"native"` | `markForCheck`  | none (synchronous `tap`) | Marks the view dirty; Angular renders it on its next cycle. |
-| `"local"`  | `detectChanges` | `requestAnimationFrame` | Coalesces per `requestAnimationFrame`, then renders the target view directly. |
+| Name       | Render method   | Scheduling               | Notes                                                                         |
+| ---------- | --------------- | ------------------------ | ----------------------------------------------------------------------------- |
+| `"noop"`   | none            | none                     | Identity pass-through; no rendering.                                          |
+| `"native"` | `markForCheck`  | none (synchronous `tap`) | Marks the view dirty; Angular renders it on its next cycle.                   |
+| `"local"`  | `detectChanges` | `requestAnimationFrame`  | Coalesces per `requestAnimationFrame`, then renders the target view directly. |
 
 Only the `local` strategy schedules through `requestAnimationFrame`; `native`
 runs its `markForCheck` synchronously and `noop` does nothing. This mirrors the
@@ -77,7 +77,7 @@ tree.
 The concurrent strategies schedule change detection against a frame budget and a
 per-priority render deadline, chunking each render through a `MessageChannel`
 (falling back to `setTimeout` where `MessageChannel` is unavailable). They
-solve a problem Angular still has no native answer for: *how long* a re-render may
+solve a problem Angular still has no native answer for: _how long_ a re-render may
 run before it should yield to user input. They are **not** legacy. See
 [Concurrent strategies](../reference/concurrent-strategies.md) for names,
 priorities, and render deadlines, and

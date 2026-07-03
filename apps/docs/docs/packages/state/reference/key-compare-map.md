@@ -1,10 +1,10 @@
 ---
 id: key-compare-map
-title: "KeyCompareMap"
+title: 'KeyCompareMap'
 diataxis_type: reference
 package: state
 legacy_guard: false
-sidebar_label: "KeyCompareMap"
+sidebar_label: 'KeyCompareMap'
 sidebar_position: 4
 tags: [state, api-reference]
 ---

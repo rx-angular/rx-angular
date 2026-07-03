@@ -1,6 +1,6 @@
 ---
 id: no-rxstate-imperative-in-reactive
-title: "no-rxstate-imperative-in-reactive"
+title: 'no-rxstate-imperative-in-reactive'
 diataxis_type: reference
 package: eslint-plugin
 legacy_guard: false
@@ -47,7 +47,7 @@ export default [
 class NotOkComponent implements OnInit {
   constructor(
     private service: SomeService,
-    private state: RxState<{ something: any; somethingElse: any }>
+    private state: RxState<{ something: any; somethingElse: any }>,
   ) {}
 
   ngOnInit(): void {
@@ -57,8 +57,8 @@ class NotOkComponent implements OnInit {
         map((something) => ({
           ...something,
           ...this.state.get('somethingElse'),
-        }))
-      )
+        })),
+      ),
     );
   }
 }

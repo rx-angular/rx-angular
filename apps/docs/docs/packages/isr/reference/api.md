@@ -1,10 +1,10 @@
 ---
 id: isr-api
-title: "@rx-angular/isr API"
+title: '@rx-angular/isr API'
 diataxis_type: reference
 package: isr
 legacy_guard: false
-sidebar_label: "API"
+sidebar_label: 'API'
 sidebar_position: 1
 tags: [isr, api-reference]
 ---
@@ -27,25 +27,11 @@ The server-side entry point. Instantiated once in your server bundle and wired i
 class ISRHandler {
   constructor(isrConfig: ISRHandlerConfig);
 
-  serveFromCache(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-    config?: ServeFromCacheConfig,
-  ): Promise<Response | void>;
+  serveFromCache(req: Request, res: Response, next: NextFunction, config?: ServeFromCacheConfig): Promise<Response | void>;
 
-  render(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-    config?: RenderConfig,
-  ): Promise<Response | void>;
+  render(req: Request, res: Response, next: NextFunction, config?: RenderConfig): Promise<Response | void>;
 
-  invalidate(
-    req: Request,
-    res: Response,
-    config?: InvalidateConfig,
-  ): Promise<Response>;
+  invalidate(req: Request, res: Response, config?: InvalidateConfig): Promise<Response>;
 
   getVariantUrlsToInvalidate(urlsToInvalidate: string[]): VariantRebuildItem[];
 }
@@ -53,13 +39,13 @@ class ISRHandler {
 
 `Request`, `Response`, `NextFunction` are from `express`.
 
-| Member | Signature | Returns | Meaning |
-| ------ | --------- | ------- | ------- |
-| `constructor` | `(isrConfig: ISRHandlerConfig)` | `ISRHandler` | Throws `Error('Provide ISRHandlerConfig!')` if `isrConfig` is falsy. Applies defaults (`skipCachingOnHttpError` → `true`, `buildId` → `null`, `invalidateSecretToken` → `null`) and selects the cache handler (`config.cache` if it is a `CacheHandler` instance, otherwise a new `InMemoryCacheHandler`). |
-| `serveFromCache` | `(req, res, next, config?: ServeFromCacheConfig)` | `Promise<Response \| void>` | Looks up the cache key for the request; sends cached HTML if present (regenerating first when `revalidate` has expired, unless `backgroundRevalidation` is set). Calls `next()` on a cache miss or build-id mismatch. |
-| `render` | `(req, res, next, config?: RenderConfig)` | `Promise<Response \| void>` | Renders the page, stores it in cache per the route's `revalidate`, and sends it. Calls `next()` on error. |
-| `invalidate` | `(req, res, config?: InvalidateConfig)` | `Promise<Response>` | On-demand cache invalidation. Reads `{ token, urlsToInvalidate }` from the request body; rejects if `token !== invalidateSecretToken`. Regenerates each URL (including its variants) and returns a JSON summary `{ status, notInCache, urlWithErrors, invalidatedUrls }`. |
-| `getVariantUrlsToInvalidate` | `(urlsToInvalidate: string[])` | `VariantRebuildItem[]` | Expands a list of URLs into the full set of cache keys (base + every configured variant) to be regenerated. |
+| Member                       | Signature                                         | Returns                     | Meaning                                                                                                                                                                                                                                                                                                    |
+| ---------------------------- | ------------------------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `constructor`                | `(isrConfig: ISRHandlerConfig)`                   | `ISRHandler`                | Throws `Error('Provide ISRHandlerConfig!')` if `isrConfig` is falsy. Applies defaults (`skipCachingOnHttpError` → `true`, `buildId` → `null`, `invalidateSecretToken` → `null`) and selects the cache handler (`config.cache` if it is a `CacheHandler` instance, otherwise a new `InMemoryCacheHandler`). |
+| `serveFromCache`             | `(req, res, next, config?: ServeFromCacheConfig)` | `Promise<Response \| void>` | Looks up the cache key for the request; sends cached HTML if present (regenerating first when `revalidate` has expired, unless `backgroundRevalidation` is set). Calls `next()` on a cache miss or build-id mismatch.                                                                                      |
+| `render`                     | `(req, res, next, config?: RenderConfig)`         | `Promise<Response \| void>` | Renders the page, stores it in cache per the route's `revalidate`, and sends it. Calls `next()` on error.                                                                                                                                                                                                  |
+| `invalidate`                 | `(req, res, config?: InvalidateConfig)`           | `Promise<Response>`         | On-demand cache invalidation. Reads `{ token, urlsToInvalidate }` from the request body; rejects if `token !== invalidateSecretToken`. Regenerates each URL (including its variants) and returns a JSON summary `{ status, notInCache, urlWithErrors, invalidatedUrls }`.                                  |
+| `getVariantUrlsToInvalidate` | `(urlsToInvalidate: string[])`                    | `VariantRebuildItem[]`      | Expands a list of URLs into the full set of cache keys (base + every configured variant) to be regenerated.                                                                                                                                                                                                |
 
 **Import**
 
@@ -93,8 +79,8 @@ Registers the environment providers ISR needs on the server (the `IsrServerServi
 const provideISR: () => EnvironmentProviders;
 ```
 
-| Returns | Meaning |
-| ------- | ------- |
+| Returns                | Meaning                                                                                                                                                                           |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `EnvironmentProviders` | Provider bundle for `IsrServerService` (bound to `IsrService`), the HTTP error provider, and a `BEFORE_APP_SERIALIZED` factory that embeds ISR route data into the rendered HTML. |
 
 **Import**
@@ -182,9 +168,9 @@ class FileSystemCacheHandler extends CacheHandler {
 }
 ```
 
-| Constructor param | Type | Meaning |
-| ----------------- | ---- | ------- |
-| `options` | `FileSystemCacheOptions` | Filesystem cache configuration. Throws `Error('Cache folder path is required!')` if `cacheFolderPath` is empty, and throws if `addPrerenderedPagesToCache` is set without `prerenderedPagesPath`. |
+| Constructor param | Type                     | Meaning                                                                                                                                                                                           |
+| ----------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `options`         | `FileSystemCacheOptions` | Filesystem cache configuration. Throws `Error('Cache folder path is required!')` if `cacheFolderPath` is empty, and throws if `addPrerenderedPagesToCache` is set without `prerenderedPagesPath`. |
 
 **Import**
 
@@ -216,11 +202,11 @@ interface FileSystemCacheOptions {
 }
 ```
 
-| Field | Type | Default | Meaning |
-| ----- | ---- | ------- | ------- |
-| `cacheFolderPath` | `string` | — (required) | Directory where cached HTML files are written. |
-| `prerenderedPagesPath` | `string` | `undefined` | Directory to read prerendered pages from on startup. Required when `addPrerenderedPagesToCache` is `true`. |
-| `addPrerenderedPagesToCache` | `boolean` | `undefined` | When `true`, seeds the cache from `prerenderedPagesPath` on startup. |
+| Field                        | Type      | Default      | Meaning                                                                                                    |
+| ---------------------------- | --------- | ------------ | ---------------------------------------------------------------------------------------------------------- |
+| `cacheFolderPath`            | `string`  | — (required) | Directory where cached HTML files are written.                                                             |
+| `prerenderedPagesPath`       | `string`  | `undefined`  | Directory to read prerendered pages from on startup. Required when `addPrerenderedPagesToCache` is `true`. |
+| `addPrerenderedPagesToCache` | `boolean` | `undefined`  | When `true`, seeds the cache from `prerenderedPagesPath` on startup.                                       |
 
 **Import**
 
@@ -285,14 +271,14 @@ abstract class CacheHandler {
 }
 ```
 
-| Method | Signature | Returns | Meaning |
-| ------ | --------- | ------- | ------- |
-| `add` | `(cacheKey: string, html: string, config?: CacheISRConfig)` | `Promise<void>` | Store rendered HTML under `cacheKey`. |
-| `get` | `(cacheKey: string)` | `Promise<CacheData>` | Retrieve cached data for `cacheKey`. Rejects if the key is absent. |
-| `has` | `(cacheKey: string)` | `Promise<boolean>` | Whether `cacheKey` exists. |
-| `delete` | `(cacheKey: string)` | `Promise<boolean>` | Remove `cacheKey`. |
-| `getAll` | `()` | `Promise<string[]>` | All cache keys currently stored. |
-| `clearCache?` | `()` | `Promise<boolean>` | Optional. Clear the whole cache. |
+| Method        | Signature                                                   | Returns              | Meaning                                                            |
+| ------------- | ----------------------------------------------------------- | -------------------- | ------------------------------------------------------------------ |
+| `add`         | `(cacheKey: string, html: string, config?: CacheISRConfig)` | `Promise<void>`      | Store rendered HTML under `cacheKey`.                              |
+| `get`         | `(cacheKey: string)`                                        | `Promise<CacheData>` | Retrieve cached data for `cacheKey`. Rejects if the key is absent. |
+| `has`         | `(cacheKey: string)`                                        | `Promise<boolean>`   | Whether `cacheKey` exists.                                         |
+| `delete`      | `(cacheKey: string)`                                        | `Promise<boolean>`   | Remove `cacheKey`.                                                 |
+| `getAll`      | `()`                                                        | `Promise<string[]>`  | All cache keys currently stored.                                   |
+| `clearCache?` | `()`                                                        | `Promise<boolean>`   | Optional. Clear the whole cache.                                   |
 
 ### `CacheData`
 
@@ -306,11 +292,11 @@ interface CacheData {
 }
 ```
 
-| Field | Type | Meaning |
-| ----- | ---- | ------- |
-| `html` | `string` | The rendered HTML. |
-| `options` | `CacheISRConfig` | Revalidation/build metadata stored with the entry. |
-| `createdAt` | `number` | Timestamp (ms) when the entry was created; used to compute `revalidate` expiry. |
+| Field       | Type             | Meaning                                                                         |
+| ----------- | ---------------- | ------------------------------------------------------------------------------- |
+| `html`      | `string`         | The rendered HTML.                                                              |
+| `options`   | `CacheISRConfig` | Revalidation/build metadata stored with the entry.                              |
+| `createdAt` | `number`         | Timestamp (ms) when the entry was created; used to compute `revalidate` expiry. |
 
 ### `CacheISRConfig` (aliased `ISROptions`)
 
@@ -324,11 +310,11 @@ interface CacheISRConfig {
 }
 ```
 
-| Field | Type | Meaning |
-| ----- | ---- | ------- |
+| Field        | Type             | Meaning                                                                                                                  |
+| ------------ | ---------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `revalidate` | `number \| null` | Revalidation window for this entry (see [`RouteISRConfig`](./isr-handler-config.md#routeisrconfig) for value semantics). |
-| `buildId` | `string \| null` | Build ID the entry was generated under; a mismatch causes the entry to be bypassed. |
-| `errors` | `string[]` | Errors captured during generation. |
+| `buildId`    | `string \| null` | Build ID the entry was generated under; a mismatch causes the entry to be bypassed.                                      |
+| `errors`     | `string[]`       | Errors captured during generation.                                                                                       |
 
 **Import**
 
@@ -348,10 +334,10 @@ interface RenderVariant {
 }
 ```
 
-| Field | Type | Meaning |
-| ----- | ---- | ------- |
-| `identifier` | `string` | Unique variant name; part of the cache key. |
-| `detectVariant` | `(req: Request) => boolean` | Returns `true` when this request belongs to the variant. First match wins. |
+| Field             | Type                        | Meaning                                                                                         |
+| ----------------- | --------------------------- | ----------------------------------------------------------------------------------------------- |
+| `identifier`      | `string`                    | Unique variant name; part of the cache key.                                                     |
+| `detectVariant`   | `(req: Request) => boolean` | Returns `true` when this request belongs to the variant. First match wins.                      |
 | `simulateVariant` | `(req: Request) => Request` | Optional. Rewrites the request so the variant can be regenerated during on-demand invalidation. |
 
 ### `VariantRebuildItem`
@@ -366,10 +352,10 @@ interface VariantRebuildItem {
 }
 ```
 
-| Field | Type | Meaning |
-| ----- | ---- | ------- |
-| `url` | `string` | The URL to rebuild. |
-| `cacheKey` | `string` | The cache key for this URL + variant. |
+| Field          | Type                        | Meaning                                                                       |
+| -------------- | --------------------------- | ----------------------------------------------------------------------------- |
+| `url`          | `string`                    | The URL to rebuild.                                                           |
+| `cacheKey`     | `string`                    | The cache key for this URL + variant.                                         |
 | `reqSimulator` | `(req: Request) => Request` | Request rewriter (the variant's `simulateVariant`, or identity for the base). |
 
 ### `IsrState`
@@ -384,11 +370,11 @@ interface IsrState {
 }
 ```
 
-| Field | Type | Meaning |
-| ----- | ---- | ------- |
-| `revalidate` | `number \| null` | The revalidate value captured from the current route's `data`. |
-| `errors` | `Error[]` | Errors collected during the render (drive `skipCachingOnHttpError`). |
-| `extra` | `Record<string, unknown>` | Arbitrary per-render data embedded into the page. |
+| Field        | Type                      | Meaning                                                              |
+| ------------ | ------------------------- | -------------------------------------------------------------------- |
+| `revalidate` | `number \| null`          | The revalidate value captured from the current route's `data`.       |
+| `errors`     | `Error[]`                 | Errors collected during the render (drive `skipCachingOnHttpError`). |
+| `extra`      | `Record<string, unknown>` | Arbitrary per-render data embedded into the page.                    |
 
 ### `IsrServiceInterface`
 
@@ -405,14 +391,14 @@ interface IsrServiceInterface {
 }
 ```
 
-| Method | Signature | Returns | Meaning |
-| ------ | --------- | ------- | ------- |
-| `getState` | `()` | `IsrState` | Current ISR state. |
-| `patchState` | `(partialState: Partial<IsrState>)` | `void` | Merge a partial into ISR state. |
-| `getExtra` | `()` | `Record<string, unknown>` | The `extra` bag. |
-| `activate` | `()` | `void` | Begin listening to router events (server only). |
-| `addError` | `(error: Error)` | `void` | Record a render error. |
-| `addExtra` | `(extra?: Record<string, unknown>)` | `void` | Merge into the `extra` bag. |
+| Method       | Signature                           | Returns                   | Meaning                                         |
+| ------------ | ----------------------------------- | ------------------------- | ----------------------------------------------- |
+| `getState`   | `()`                                | `IsrState`                | Current ISR state.                              |
+| `patchState` | `(partialState: Partial<IsrState>)` | `void`                    | Merge a partial into ISR state.                 |
+| `getExtra`   | `()`                                | `Record<string, unknown>` | The `extra` bag.                                |
+| `activate`   | `()`                                | `void`                    | Begin listening to router events (server only). |
+| `addError`   | `(error: Error)`                    | `void`                    | Record a render error.                          |
+| `addExtra`   | `(extra?: Record<string, unknown>)` | `void`                    | Merge into the `extra` bag.                     |
 
 ### Config types
 

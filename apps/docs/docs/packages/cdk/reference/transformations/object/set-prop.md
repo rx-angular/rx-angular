@@ -76,11 +76,7 @@ setProp(state, null as any, 42) > state;
 ### Signature
 
 ```typescript
-function setProp<T extends object, K extends keyof T>(
-  object: T,
-  key: K,
-  value: T[K]
-): T;
+function setProp<T extends object, K extends keyof T>(object: T, key: K, value: T[K]): T;
 ```
 
 ### Parameters

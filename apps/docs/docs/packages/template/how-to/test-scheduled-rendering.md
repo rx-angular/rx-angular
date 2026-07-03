@@ -1,10 +1,10 @@
 ---
 id: test-scheduled-rendering
-title: "How to test components that use scheduled rendering"
+title: 'How to test components that use scheduled rendering'
 diataxis_type: how-to
 package: template
 legacy_guard: false
-sidebar_label: "Test scheduled rendering"
+sidebar_label: 'Test scheduled rendering'
 tags: [template, guides]
 ---
 
@@ -91,10 +91,7 @@ wins. Redefine that named strategy so it behaves like `native` for the duration 
 the test:
 
 ```ts
-import {
-  provideRxRenderStrategies,
-  RX_NATIVE_STRATEGIES,
-} from '@rx-angular/cdk/render-strategies';
+import { provideRxRenderStrategies, RX_NATIVE_STRATEGIES } from '@rx-angular/cdk/render-strategies';
 
 provideRxRenderStrategies({
   primaryStrategy: 'native',

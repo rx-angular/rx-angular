@@ -1,10 +1,10 @@
 ---
 id: coalescing
-title: "coalesceWith"
+title: 'coalesceWith'
 diataxis_type: reference
 package: cdk
-legacy_guard: "zoneful / RxJS users"
-sidebar_label: "coalesceWith (legacy)"
+legacy_guard: 'zoneful / RxJS users'
+sidebar_label: 'coalesceWith (legacy)'
 tags: [cdk, api-reference, migration]
 concepts: [E2]
 ---
@@ -41,16 +41,13 @@ import { coalesceWith } from '@rx-angular/cdk/coalescing';
 ## Signature
 
 ```typescript
-function coalesceWith<T>(
-  durationSelector: Observable<unknown>,
-  scope?: Record<string, unknown>
-): MonoTypeOperatorFunction<T>;
+function coalesceWith<T>(durationSelector: Observable<unknown>, scope?: Record<string, unknown>): MonoTypeOperatorFunction<T>;
 ```
 
-| Parameter | Type | Required | Meaning |
-| --- | --- | --- | --- |
-| `durationSelector` | `Observable<unknown>` | **yes** | Defines the coalescing window. Its **first emission** closes the current window and lets the trailing source value through. There is **no default**; you must pass one. |
-| `scope` | `Record<string, unknown>` | no | An object the operator uses as the coalescing key, so multiple subscriptions can share one window. Defaults to a fresh per-subscription object (`{}`). |
+| Parameter          | Type                      | Required | Meaning                                                                                                                                                                 |
+| ------------------ | ------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `durationSelector` | `Observable<unknown>`     | **yes**  | Defines the coalescing window. Its **first emission** closes the current window and lets the trailing source value through. There is **no default**; you must pass one. |
+| `scope`            | `Record<string, unknown>` | no       | An object the operator uses as the coalescing key, so multiple subscriptions can share one window. Defaults to a fresh per-subscription object (`{}`).                  |
 
 Returns a `MonoTypeOperatorFunction<T>`.
 
@@ -83,7 +80,9 @@ function doStuff(value: number) {
 from([1, 2, 3]).subscribe(doStuff);
 
 // with coalescing over one macrotask window: logs 3 (trailing value only)
-from([1, 2, 3]).pipe(coalesceWith(interval(0))).subscribe(doStuff);
+from([1, 2, 3])
+  .pipe(coalesceWith(interval(0)))
+  .subscribe(doStuff);
 ```
 
 ## Scoping
@@ -95,8 +94,12 @@ last value across all of them wins, and earlier values are dropped:
 ```typescript
 const scope = {};
 
-from([1, 2, 3]).pipe(coalesceWith(interval(0), scope)).subscribe(render); // no emission
-from([1, 2, 3]).pipe(coalesceWith(interval(0), scope)).subscribe(render); // renders 3 once
+from([1, 2, 3])
+  .pipe(coalesceWith(interval(0), scope))
+  .subscribe(render); // no emission
+from([1, 2, 3])
+  .pipe(coalesceWith(interval(0), scope))
+  .subscribe(render); // renders 3 once
 ```
 
 `scope` is a plain object used as a key (tracked via a `WeakMap`, so it does not
