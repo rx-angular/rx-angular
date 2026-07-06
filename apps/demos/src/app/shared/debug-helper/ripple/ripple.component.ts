@@ -28,7 +28,7 @@ import { isObservable, Observable, of } from 'rxjs';
     </div>
   `,
   providers: [RxState],
-  standalone: false,
+  imports: [MatRipple],
 })
 export class RippleComponent extends Hooks {
   @ViewChild(MatRipple) ripple: MatRipple;

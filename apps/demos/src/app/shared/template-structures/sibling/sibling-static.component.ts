@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { toBooleanArray } from './utils';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'rxa-sibling-static',
@@ -20,7 +22,7 @@ import { toBooleanArray } from './utils';
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent, NgClass],
 })
 export class SiblingStaticComponent {
   siblings = [];

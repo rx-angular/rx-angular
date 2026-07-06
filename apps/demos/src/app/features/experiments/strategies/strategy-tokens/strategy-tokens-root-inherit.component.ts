@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { ValueProviderComponent } from '../../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 
 @Component({
   selector: 'rxa-strategy-tokens-root-inherit',
@@ -24,6 +26,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     style: 'display: block;',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent, ValueProviderComponent],
 })
 export class StrategyTokensRootInheritComponent {}

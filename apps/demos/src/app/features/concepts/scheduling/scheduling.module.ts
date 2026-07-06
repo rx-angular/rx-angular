@@ -12,7 +12,6 @@ import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 const DECLARATIONS = [SchedulingComponent];
 
 @NgModule({
-  declarations: [DECLARATIONS],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -21,6 +20,7 @@ const DECLARATIONS = [SchedulingComponent];
     RxUnpatch,
     MatButtonModule,
     VisualizerModule,
+    DECLARATIONS,
   ],
   exports: [DECLARATIONS],
 })

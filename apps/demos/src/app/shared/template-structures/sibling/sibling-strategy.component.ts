@@ -9,6 +9,8 @@ import { Observable, Subject } from 'rxjs';
 import { toBooleanArray } from './utils';
 import { RxState } from '@rx-angular/state';
 import { delay, map } from 'rxjs/operators';
+import { RxFor } from '../../../rx-angular-pocs/template/directives/for/rx-for.directive';
+import { NgStyle } from '@angular/common';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
@@ -36,7 +38,7 @@ const chunk = (arr, n) =>
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [RxFor, NgStyle],
 })
 export class SiblingStrategyComponent extends RxState<{
   siblings: { filled: boolean; id: number; color: string }[];

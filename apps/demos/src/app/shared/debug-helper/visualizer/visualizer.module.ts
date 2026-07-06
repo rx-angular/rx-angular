@@ -7,8 +7,14 @@ import { RxPush } from '@rx-angular/template/push';
 import { WorkVisualizerComponent } from './visualizer/work-visualizer.component';
 
 @NgModule({
-  declarations: [VisualizerComponent, WorkVisualizerComponent],
-  imports: [CommonModule, DirtyChecksModule, RenderingsModule, RxPush],
+  imports: [
+    CommonModule,
+    DirtyChecksModule,
+    RenderingsModule,
+    RxPush,
+    VisualizerComponent,
+    WorkVisualizerComponent,
+  ],
   exports: [VisualizerComponent, WorkVisualizerComponent],
 })
 export class VisualizerModule {}

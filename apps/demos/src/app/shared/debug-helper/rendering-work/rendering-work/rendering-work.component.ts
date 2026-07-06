@@ -7,7 +7,6 @@ import { Component, Input } from '@angular/core';
       <div>{{ item }}</div>
     }
   `,
-  standalone: false,
 })
 export class RenderingWorkComponent {
   @Input() set factor(factor: number) {

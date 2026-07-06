@@ -7,13 +7,7 @@ import { MatRippleModule } from '@angular/material/core';
 const DEPRECATIONS = [DirtyChecksComponent, DirtyChecksWorkComponent];
 
 @NgModule({
-  declarations: [...DEPRECATIONS],
-  imports: [
-    CommonModule,
-    MatRippleModule
-  ],
-  exports: [...DEPRECATIONS]
+  imports: [CommonModule, MatRippleModule, ...DEPRECATIONS],
+  exports: [...DEPRECATIONS],
 })
-export class DirtyChecksModule {
-
-}
+export class DirtyChecksModule {}

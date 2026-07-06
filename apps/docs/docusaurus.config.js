@@ -32,6 +32,28 @@ module.exports = {
   organizationName,
   projectName,
   plugins: [
+    // Redirect shim for the Angular demos app served from /demos/. GitHub Pages
+    // only serves the site-root 404.html (this Docusaurus site) for unknown
+    // paths — never a per-folder /demos/404.html. So a deep link into the SPA
+    // (e.g. /demos/features/foo) lands here; we stash the intended path and
+    // bounce to the SPA shell (/demos/), which restores the URL before Angular
+    // boots. No legitimate Docusaurus page lives under /demos/, so this is a
+    // no-op for docs/blog routes.
+    function demosSpaRedirectPlugin() {
+      return {
+        name: 'demos-spa-redirect',
+        injectHtmlTags() {
+          return {
+            headTags: [
+              {
+                tagName: 'script',
+                innerHTML: `(function(){var p=location.pathname;if(p.indexOf('/demos/')===0){try{sessionStorage.setItem('rxaSpaRedirect',p+location.search+location.hash);}catch(e){}location.replace('/demos/');}})();`,
+              },
+            ],
+          };
+        },
+      };
+    },
     [
       require.resolve('@docusaurus/plugin-client-redirects'),
       {
@@ -947,6 +969,15 @@ module.exports = {
           {
             to: 'blog',
             label: 'Blog',
+            position: 'left',
+          },
+          {
+            // `pathname://` links to the Angular demos app (served from the
+            // same Pages deployment at /demos/) without Docusaurus treating it
+            // as an internal route — avoids the onBrokenLinks check and forces
+            // a full-page navigation into the SPA.
+            href: 'pathname:///demos/',
+            label: 'Demos',
             position: 'left',
           },
           {

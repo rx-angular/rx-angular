@@ -4,6 +4,9 @@ import { map } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
 import { toBoolean } from '../utils';
 import { TestItem } from '../model';
+import { RxLet } from '../../../../../../../../libs/template/let/src/lib/let.directive';
+import { MatIcon } from '@angular/material/icon';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'rxa-value',
@@ -32,7 +35,7 @@ import { TestItem } from '../model';
     `,
   ],
   providers: [RxState],
-  standalone: false,
+  imports: [RxLet, MatIcon, NgClass],
 })
 export class ValueComponent {
   value$ = this.state.select(map((s) => toBoolean(s.item.value, 0.5)));

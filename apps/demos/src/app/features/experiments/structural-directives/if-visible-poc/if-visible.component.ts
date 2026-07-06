@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-rx-let-poc',
@@ -20,7 +21,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     style: 'display: block;',
   },
   providers: [],
-  standalone: false,
+  imports: [VisualizerComponent],
 })
 export class IfVisibleComponent {
   log(n) {

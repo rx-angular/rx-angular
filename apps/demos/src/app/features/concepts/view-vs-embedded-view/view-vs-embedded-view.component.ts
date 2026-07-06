@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Subject } from 'rxjs';
 import { scan } from 'rxjs/operators';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { MatButton } from '@angular/material/button';
+import { RxUnpatch } from '../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import { OriginalLetDirective } from './original-let.directive';
+import { Poc1LetDirective } from './poc1-let.directive';
 
 @Component({
   selector: 'rxa-cd-embedded-view-parent01',
@@ -41,7 +46,13 @@ import { scan } from 'rxjs/operators';
     </div>
   `,
   changeDetection: environment.changeDetection,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    MatButton,
+    RxUnpatch,
+    OriginalLetDirective,
+    Poc1LetDirective,
+  ],
 })
 export class ViewVsEmbeddedViewComponent {
   btn1Click$ = new Subject<Event>();

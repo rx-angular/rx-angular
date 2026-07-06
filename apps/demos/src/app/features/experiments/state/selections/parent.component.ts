@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { of, Subject } from 'rxjs';
+import { RxStateChildSelectionsComponent } from './child.component';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'rxa-state-parent-selections',
@@ -16,7 +18,7 @@ import { of, Subject } from 'rxjs';
     </div>
   `,
   changeDetection: environment.changeDetection,
-  standalone: false,
+  imports: [RxStateChildSelectionsComponent, AsyncPipe, JsonPipe],
 })
 export class RxStateParentSelectionsComponent {
   values$ = new Subject();

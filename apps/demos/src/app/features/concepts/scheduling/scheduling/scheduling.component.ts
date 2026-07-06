@@ -9,6 +9,9 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
 import { priorityTickMap, SchedulingPriority } from './utils';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { MatButton } from '@angular/material/button';
+import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
 
 @Component({
   selector: 'rxa-scheduling',
@@ -89,7 +92,7 @@ import { priorityTickMap, SchedulingPriority } from './utils';
       }
     `,
   ],
-  standalone: false,
+  imports: [VisualizerComponent, MatButton, RxUnpatch],
 })
 export class SchedulingComponent implements OnInit {
   prios = SchedulingPriority;

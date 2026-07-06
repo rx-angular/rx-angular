@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  inject,
   NgZone,
   QueryList,
   signal,
@@ -11,7 +12,11 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
+import { RxFor } from '@rx-angular/template/for';
+import { RxLet } from '@rx-angular/template/let';
 import { RxState } from '@rx-angular/state';
 import {
   animationFrameScheduler,
@@ -38,6 +43,15 @@ import {
   TestItem,
 } from '../../../../shared/debug-helper/value-provider';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
+
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
+import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
+import { DocsLinkComponent } from '../../../../shared/docs-link';
+import {
+  LegacyReconciliationProvider,
+  NewReconciliationProvider,
+} from '../reconciliation-provider-directives';
+import { ListActionItemComponent } from './list-action-item.component';
 
 let itemIdx = 0;
 
@@ -156,20 +170,56 @@ const moveChangeSet1 = [items5k];
 
 @Component({
   selector: 'rxa-rx-for-list-actions',
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    MatButtonToggleModule,
+    RxLet,
+    RxFor,
+    VisualizerModule,
+    ArrayProviderComponent,
+    StrategySelectModule,
+    ListActionItemComponent,
+    NewReconciliationProvider,
+    LegacyReconciliationProvider,
+    DocsLinkComponent,
+  ],
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <div class="row">
-          <div class="col-sm-12">
+        <header class="rxa-la-header">
+          <div class="rxa-la-title">
             <h2>Reactive Iterable Differ</h2>
+            <p class="rxa-la-subtitle">
+              Stress-test <code>*rxFor</code> reconciliation with live change
+              sets, strategies and filtering.
+            </p>
+          </div>
+          <rxa-docs-link
+            docs="packages/template/reference/rx-for"
+            source="apps/demos/src/app/features/template/rx-for"
+          />
+        </header>
+
+        <div class="rxa-la-toolbar">
+          <section class="rxa-la-group rxa-la-group--wide">
+            <span class="rxa-la-label">Data</span>
             <rxa-array-provider
               [unpatched]=""
               [buttons]="true"
               #arrayP="rxaArrayProvider"
             ></rxa-array-provider>
+          </section>
+
+          <section class="rxa-la-group">
+            <span class="rxa-la-label">Strategy</span>
             <rxa-strategy-select
               (strategyChange)="strategy$.next($event)"
             ></rxa-strategy-select>
+          </section>
+
+          <section class="rxa-la-group">
+            <span class="rxa-la-label">View</span>
             <mat-button-toggle-group
               name="visibleExamples"
               *rxLet="view; let viewMode"
@@ -184,6 +234,10 @@ const moveChangeSet1 = [items5k];
                 >List
               </mat-button-toggle>
             </mat-button-toggle-group>
+          </section>
+
+          <section class="rxa-la-group">
+            <span class="rxa-la-label">Reconciler</span>
             <mat-button-toggle-group
               [value]="reconciler()"
               #group="matButtonToggleGroup"
@@ -199,37 +253,58 @@ const moveChangeSet1 = [items5k];
                 >legacy
               </mat-button-toggle>
             </mat-button-toggle-group>
-            <button mat-raised-button (click)="triggerChangeSet.next()">
-              ChangeSet
-            </button>
-            <button mat-raised-button (click)="triggerMoveSet.next()">
-              MoveSet
-            </button>
-            <button mat-raised-button (click)="triggerMoveSetSwapped.next()">
-              MoveSet Swapped
-            </button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <div>
-              <input
-                type="text"
-                placeholder="filter"
-                #searchInput
-                (input)="filter$.next(searchInput.value)"
-              />
+          </section>
+
+          <section class="rxa-la-group">
+            <span class="rxa-la-label">Change sets</span>
+            <div class="rxa-la-btn-row">
+              <button
+                class="btn btn-outline-primary btn-sm"
+                (click)="triggerChangeSet.next()"
+              >
+                ChangeSet
+              </button>
+              <button
+                class="btn btn-outline-primary btn-sm"
+                (click)="triggerMoveSet.next()"
+              >
+                MoveSet
+              </button>
+              <button
+                class="btn btn-outline-primary btn-sm"
+                (click)="triggerMoveSetSwapped.next()"
+              >
+                MoveSet Swapped
+              </button>
             </div>
-            <p *rxLet="rendered$; let rendered">
-              <strong>Rendered</strong> {{ rendered }}
-            </p>
-            <!--<p *rxLet="viewBroken$; let viewBroken">
-              <ng-container>
-                <span [ngStyle]="{ color: viewBroken ? 'red' : 'green' }"
-                  >VIEW BROKEN {{ viewBroken }}</span
-                >
-              </ng-container>
-            </p>-->
+          </section>
+        </div>
+
+        <div class="rxa-la-subbar">
+          <div class="rxa-la-filter">
+            <svg
+              class="rxa-la-filter-icon"
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              aria-hidden="true"
+            >
+              <path
+                fill="currentColor"
+                d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+              />
+            </svg>
+            <input
+              class="rxa-la-filter-input"
+              type="text"
+              placeholder="Filter by value…"
+              #searchInput
+              (input)="filter$.next(searchInput.value)"
+            />
+          </div>
+          <div class="rxa-la-rendered" *rxLet="rendered$; let rendered">
+            <span class="rxa-la-rendered-label">Rendered</span>
+            <span class="rxa-la-rendered-value">{{ rendered }}</span>
           </div>
         </div>
       </ng-container>
@@ -260,10 +335,7 @@ const moveChangeSet1 = [items5k];
                 [class.even]="even"
               >
                 <list-action-item>
-                  <div
-                    class="child-bg"
-                    [ngStyle]="{ background: color(a) }"
-                  ></div>
+                  <div class="child-bg" [style.background]="color(a)"></div>
                   <!--<div class="child-bg" [class.even]="even"></div>-->
                   <div class="child-context flex-column flex-wrap">
                     <button (click)="clickMe()">click me</button>
@@ -301,10 +373,7 @@ const moveChangeSet1 = [items5k];
                 [class.even]="even"
               >
                 <list-action-item>
-                  <div
-                    class="child-bg"
-                    [ngStyle]="{ background: color(a) }"
-                  ></div>
+                  <div class="child-bg" [style.background]="color(a)"></div>
                   <!--<div class="child-bg" [class.even]="even"></div>-->
                   <div class="child-context flex-column flex-wrap">
                     <button (click)="clickMe()">click me</button>
@@ -331,15 +400,190 @@ const moveChangeSet1 = [items5k];
   providers: [ArrayProviderService],
   styles: [
     `
+      /* ---- Header ---------------------------------------------------- */
+      .rxa-la-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+
+      .rxa-la-title h2 {
+        margin: 0 0 0.25rem;
+        font-size: 1.35rem;
+      }
+
+      .rxa-la-subtitle {
+        margin: 0;
+        max-width: 60ch;
+        color: var(--rxa-text-muted);
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      /* ---- Toolbar --------------------------------------------------- */
+      .rxa-la-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding: 1rem;
+        border: 1px solid var(--rxa-border);
+        border-radius: var(--rxa-radius);
+        background: var(--rxa-surface-2);
+      }
+
+      .rxa-la-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 0.6rem 0.75rem;
+        border: 1px solid var(--rxa-border);
+        border-radius: var(--rxa-radius-sm);
+        background: var(--rxa-surface);
+      }
+
+      .rxa-la-group--wide {
+        flex: 1 1 100%;
+      }
+
+      .rxa-la-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--rxa-text-muted);
+      }
+
+      .rxa-la-btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
+      /* Tighten Material controls that live inside the toolbar groups */
+      .rxa-la-group rxa-array-provider p {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--rxa-text-muted);
+        margin: 0.25rem 0;
+      }
+
+      /* ---- Sub bar: filter + rendered counter ------------------------ */
+      .rxa-la-subbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .rxa-la-filter {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex: 1 1 260px;
+        max-width: 420px;
+      }
+
+      .rxa-la-filter-icon {
+        position: absolute;
+        left: 0.7rem;
+        color: var(--rxa-text-muted);
+        pointer-events: none;
+      }
+
+      .rxa-la-filter-input {
+        width: 100%;
+        font-family: inherit;
+        font-size: 0.9rem;
+        color: var(--rxa-text);
+        background: var(--rxa-surface);
+        border: 1px solid var(--rxa-border-strong);
+        border-radius: var(--rxa-radius-sm);
+        padding: 0.5rem 0.7rem 0.5rem 2.2rem;
+        transition:
+          border-color 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+
+      .rxa-la-filter-input:focus {
+        outline: none;
+        border-color: var(--rxa-brand);
+        box-shadow: var(--rxa-ring);
+      }
+
+      .rxa-la-rendered {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.5rem 0.35rem 0.75rem;
+        border: 1px solid var(--rxa-border);
+        border-radius: var(--rxa-radius-pill);
+        background: var(--rxa-surface);
+        box-shadow: var(--rxa-shadow-sm);
+      }
+
+      .rxa-la-rendered-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--rxa-text-muted);
+      }
+
+      .rxa-la-rendered-value {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.75rem;
+        height: 1.75rem;
+        padding: 0 0.5rem;
+        border-radius: var(--rxa-radius-pill);
+        background: var(--rxa-brand);
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ---- Work area ------------------------------------------------- */
+      .work-container {
+        gap: 2px;
+      }
+
       .work-container.list-view {
         flex-direction: column;
+        gap: 0;
       }
 
       .work-container.list-view .work-child {
         width: 100%;
         height: 65px;
-        margin: 0.5rem 0;
-        background-color: transparent !important;
+        margin: 0.4rem 0;
+        padding: 0.5rem;
+        border: 1px solid var(--rxa-border);
+        border-radius: var(--rxa-radius-sm);
+        background: var(--rxa-surface) !important;
+        box-shadow: var(--rxa-shadow-sm);
+        outline: none;
+        transition:
+          border-color 0.12s ease,
+          box-shadow 0.12s ease;
+      }
+
+      .work-container.list-view .work-child:hover {
+        border-color: var(--rxa-border-strong);
+        box-shadow: var(--rxa-shadow);
+      }
+
+      .work-container.list-view .work-child.even {
+        outline: none;
+        border-left: 3px solid var(--rxa-brand);
       }
 
       .child-context {
@@ -348,45 +592,84 @@ const moveChangeSet1 = [items5k];
 
       .work-container.list-view .work-child .child-context {
         display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        gap: 0.15rem 1.1rem;
+        width: 100%;
+        font-size: 0.72rem;
+        color: var(--rxa-text-muted);
+      }
+
+      .work-container.list-view .work-child .child-context small {
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .work-container.list-view .work-child .child-context button {
+        flex: 0 0 100%;
+        align-self: flex-start;
+        font-family: inherit;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--rxa-brand);
+        background: rgba(var(--rxa-brand-rgb), 0.08);
+        border: 1px solid rgba(var(--rxa-brand-rgb), 0.25);
+        border-radius: var(--rxa-radius-sm);
+        padding: 0.2rem 0.55rem;
+        margin-bottom: 0.25rem;
+        cursor: pointer;
+        transition: background-color 0.12s ease;
+      }
+
+      .work-container.list-view .work-child .child-context button:hover {
+        background: rgba(var(--rxa-brand-rgb), 0.16);
       }
 
       .work-container.list-view .work-child .child-bg {
-        margin-right: 0.5rem;
+        margin-right: 0.75rem;
         width: 50px;
         position: relative;
+        border-radius: var(--rxa-radius-sm);
+        flex: 0 0 auto;
       }
 
+      /* Tile view — compact heat-map of rendered items */
       .work-child {
         position: relative;
-        width: 10px;
-        height: 10px;
-        margin: 0 2px 2px 0;
+        width: 12px;
+        height: 12px;
+        margin: 0;
         padding: 0px;
-        outline: 1px solid white;
+        border-radius: 3px;
+        outline: 1px solid var(--rxa-border);
         background-color: transparent;
       }
 
       .work-child.even {
-        outline: 1px solid black;
+        outline: 1px solid var(--rxa-border-strong);
       }
 
       .work-child .child-bg {
         position: absolute;
         width: 100%;
         height: 100%;
+        border-radius: 3px;
       }
 
       .work-child .child-bg.even {
-        background-color: red;
+        background-color: var(--rxa-brand);
       }
       .work-child.broken {
-        outline: 3px solid red;
+        outline: 2px solid var(--rxa-danger);
       }
     `,
   ],
-  standalone: false,
 })
 export class ListActionsComponent extends Hooks implements AfterViewInit {
+  state = inject<RxState<any>>(RxState);
+  cdRef = inject(ChangeDetectorRef);
+
   @ViewChild('arrayP', { read: ArrayProviderComponent, static: true })
   arrayP: ArrayProviderComponent;
 
@@ -455,10 +738,7 @@ export class ListActionsComponent extends Hooks implements AfterViewInit {
     return item.id;
   };
 
-  constructor(
-    public state: RxState<any>,
-    public cdRef: ChangeDetectorRef,
-  ) {
+  constructor() {
     super();
   }
 

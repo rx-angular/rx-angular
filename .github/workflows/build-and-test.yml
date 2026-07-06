@@ -23,6 +23,8 @@ env:
   NODE_OPTIONS: --max-old-space-size=6144
   docs-name: docs
   docs-path: dist/apps/docs
+  demos-name: demos
+  demos-path: dist/apps/demos
   NX_BRANCH: ${{ github.event.number || github.ref_name }}
 
 permissions:
@@ -98,8 +100,34 @@ jobs:
           name: ${{ env.docs-name }}
           path: ${{ env.docs-path }}
 
+  # The demos app (Angular) is built and served from a subpath of the same
+  # GitHub Pages site (rx-angular.io/demos/). It is built with base-href
+  # `/demos/` (see apps/demos/project.json production config) and uses
+  # hash-location routing so deep links resolve without server-side rewrites.
+  build-demos:
+    name: Build demos
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout all commits
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up dependencies
+        uses: ./.github/actions/setup
+
+      - name: Build demos
+        run: yarn nx build demos --configuration=production
+
+      - name: '[Merge] Upload demos'
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.demos-name }}
+          path: ${{ env.demos-path }}
+
   deploy-docs:
-    name: '[Merge] Deploy docs'
+    name: '[Merge] Deploy site'
     runs-on: ubuntu-latest
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
@@ -113,7 +141,7 @@ jobs:
       url: www.rx-angular.io
       #url: ${{ steps.deployment.outputs.page_url }}
 
-    needs: [build-docs]
+    needs: [build-docs, build-demos]
 
     steps:
       - name: Download docs
@@ -122,14 +150,22 @@ jobs:
           name: ${{ env.docs-name }}
           path: ${{ env.docs-path }}
 
+      # Nest the demos build under the docs output so both are published as a
+      # single Pages artifact: docs at the site root, demos at /demos/.
+      - name: Download demos
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.demos-name }}
+          path: ${{ env.docs-path }}/demos
+
       - name: Set up GitHub Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload docs to GitHub Pages
+      - name: Upload site to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.docs-path }}
 
-      - name: Deploy docs to GitHub Pages
+      - name: Deploy site to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

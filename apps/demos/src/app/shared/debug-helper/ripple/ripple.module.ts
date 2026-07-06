@@ -6,13 +6,7 @@ import { MatRippleModule } from '@angular/material/core';
 const DEPRECATIONS = [RippleComponent];
 
 @NgModule({
-  declarations: [...DEPRECATIONS],
-  imports: [
-    CommonModule,
-    MatRippleModule
-  ],
-  exports: [...DEPRECATIONS]
+  imports: [CommonModule, MatRippleModule, ...DEPRECATIONS],
+  exports: [...DEPRECATIONS],
 })
-export class RippleModule {
-
-}
+export class RippleModule {}

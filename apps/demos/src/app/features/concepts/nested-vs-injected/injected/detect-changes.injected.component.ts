@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CdHelper } from '../../../../shared/utils/cd-helper';
+import { CdDefaultComponent } from '../../../../shared/debug-helper/cd-default/cd-default/cd-default.component';
+import { CdOnPushComponent } from '../../../../shared/debug-helper/cd-on-push/cd-on-push/cd-on-push.component';
 
 @Component({
   selector: 'rxa-cd-injected',
@@ -21,6 +23,6 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
   `,
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [CdHelper],
-  standalone: false,
+  imports: [CdDefaultComponent, CdOnPushComponent],
 })
 export class DetectChangesInjectedComponent {}

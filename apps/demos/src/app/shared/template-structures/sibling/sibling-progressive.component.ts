@@ -4,6 +4,10 @@ import { concatMap, mapTo, scan, switchMap } from 'rxjs/operators';
 import { insert } from '@rx-angular/cdk/transformations';
 import { toBooleanArray } from './utils';
 import { measure$ } from '../../utils/measure';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { NgClass } from '@angular/common';
+import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
+import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
@@ -27,7 +31,7 @@ const chunk = (arr, n) =>
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent, NgClass, RxPush, PushPipe],
 })
 export class SiblingProgressiveComponent {
   siblings = [];

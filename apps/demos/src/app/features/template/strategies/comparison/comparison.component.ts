@@ -1,17 +1,52 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { RxForModule } from '../../../../rx-angular-pocs';
+import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
+import { DocsLinkComponent } from '../../../../shared/docs-link';
 
 @Component({
   selector: 'rxa-concurrent-strategies',
+  standalone: true,
+  imports: [
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    RxLet,
+    RxForModule,
+    RxUnpatch,
+    VisualizerModule,
+    SiblingModule,
+    DocsLinkComponent,
+  ],
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h1 class="mat-headline">Strategy Comparison</h1>
-        <div class="row">
-          <div class="col-12 d-flex">
-            <mat-form-field class="mr-2" *rxLet="count$; let count">
+        <header class="rxa-demo-header">
+          <div>
+            <h2>Strategy Comparison</h2>
+            <p class="rxa-demo-subtitle">
+              Render many siblings at once and compare the selected RxAngular
+              render strategies side by side.
+            </p>
+          </div>
+          <rxa-docs-link
+            docs="packages/cdk/legacy/render-strategies-overview"
+            source="apps/demos/src/app/features/template/strategies"
+          />
+        </header>
+
+        <div class="rxa-demo-toolbar">
+          <section class="rxa-demo-group">
+            <span class="rxa-demo-label">Num Siblings</span>
+            <mat-form-field *rxLet="count$; let count">
               <mat-label>Num Siblings</mat-label>
               <input
                 matInput
@@ -22,16 +57,24 @@ import { map, tap } from 'rxjs/operators';
                 (input)="count$.next(i.value)"
               />
             </mat-form-field>
-            <button
-              mat-button
-              unpatch
-              (click)="filled$.next(!filled$.getValue())"
-            >
-              do change
-            </button>
-          </div>
-          <div class="col-12">
-            <div class="w-100 strategy-multiselect">
+          </section>
+
+          <section class="rxa-demo-group">
+            <span class="rxa-demo-label">Actions</span>
+            <div class="rxa-demo-controls">
+              <button
+                class="btn btn-outline-primary btn-sm"
+                unpatch
+                (click)="filled$.next(!filled$.getValue())"
+              >
+                do change
+              </button>
+            </div>
+          </section>
+
+          <section class="rxa-demo-group rxa-demo-group--wide">
+            <span class="rxa-demo-label">Strategies</span>
+            <div class="strategy-multiselect">
               <mat-checkbox
                 #c
                 *rxFor="
@@ -44,10 +87,10 @@ import { map, tap } from 'rxjs/operators';
                 {{ strategy.name }}
               </mat-checkbox>
             </div>
-          </div>
+          </section>
         </div>
       </ng-container>
-      <div class="row w-100">
+      <div class="rxa-demo-columns w-100">
         <ng-container
           *rxFor="
             let strategy of strategies$;
@@ -56,8 +99,8 @@ import { map, tap } from 'rxjs/operators';
           "
         >
           @if (strategy.checked) {
-            <div class="col d-flex flex-column">
-              <h2 class="mat-subheader">{{ strategy.name }}</h2>
+            <div class="d-flex flex-column">
+              <h3 class="rxa-demo-section-title">{{ strategy.name }}</h3>
               <rxa-sibling-strategy
                 [strategy]="strategy.name"
                 [count]="count$"
@@ -83,9 +126,10 @@ import { map, tap } from 'rxjs/operators';
       }
     `,
   ],
-  standalone: false,
 })
 export class ComparisonComponent {
+  readonly strategyProvider = inject(RxStrategyProvider);
+
   selectedStrategies$ = new BehaviorSubject<{ [strategy: string]: boolean }>(
     /*this.strategyProvider.strategyNames.reduce((selectedStrategies, strategy) => {
       selectedStrategies[strategy] = true;
@@ -103,8 +147,6 @@ export class ComparisonComponent {
   );
   count$ = new BehaviorSubject<string | number>('500');
   filled$ = new BehaviorSubject<boolean>(false);
-
-  constructor(public strategyProvider: RxStrategyProvider) {}
 
   setStrategy(strategy, state) {
     const old = this.selectedStrategies$.getValue();

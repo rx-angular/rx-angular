@@ -4,6 +4,8 @@ import { map, scan, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { selectSlice } from '@rx-angular/state/selections';
 import { RxState } from '@rx-angular/state';
 import { Hooks } from '../hooks';
+import { RxLet } from '../../../../../../../libs/template/let/src/lib/let.directive';
+import { NgClass } from '@angular/common';
 
 type workType = 'scripting' | 'layouting';
 
@@ -18,7 +20,7 @@ type workType = 'scripting' | 'layouting';
   `,
   styleUrls: ['./work.component.scss'],
   providers: [RxState],
-  standalone: false,
+  imports: [RxLet, NgClass],
 })
 export class WorkComponent extends Hooks {
   dirtyCheckSubject = new Subject<number>();

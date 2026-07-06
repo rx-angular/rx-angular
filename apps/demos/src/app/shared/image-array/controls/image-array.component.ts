@@ -10,6 +10,11 @@ import { RxEffects } from '@rx-angular/state/effects';
 import { Hooks } from '../../debug-helper/hooks';
 import { RxState } from '@rx-angular/state';
 import { fileReaderFromBlob, imageFromFileReader } from '../pixel-image';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
+import { MatButton } from '@angular/material/button';
 
 interface ComponentState {
   loading: boolean;
@@ -72,7 +77,7 @@ interface ComponentState {
     </div>
   `,
   providers: [RxEffects, RxState],
-  standalone: false,
+  imports: [MatExpansionPanel, MatExpansionPanelHeader, MatButton],
 })
 export class ImageArrayComponent extends Hooks implements AfterViewInit {
   big = [

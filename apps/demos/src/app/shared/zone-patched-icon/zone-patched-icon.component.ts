@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { RxState } from '@rx-angular/state';
+import { RxLet } from '@rx-angular/template/let';
 
 @Component({
   selector: 'rxa-zone-patched-icon',
@@ -8,8 +10,13 @@ import { RxState } from '@rx-angular/state';
     *rxLet="zoneState$; let zoneState"
     >{{ zoneState }}</mat-icon
   >`,
+  styles: `
+    :host {
+      display: contents;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatIcon, RxLet],
 })
 export class ZonePatchedIconComponent extends RxState<{ zoneState: string }> {
   zoneStates = {

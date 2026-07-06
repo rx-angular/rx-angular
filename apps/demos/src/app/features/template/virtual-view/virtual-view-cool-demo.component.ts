@@ -13,8 +13,17 @@ import {
 @Component({
   selector: 'virtual-view-cool-demo',
   template: `
+    <header class="rxa-demo-header">
+      <div>
+        <h2>Virtual View — Movies</h2>
+        <p class="rxa-demo-subtitle">
+          A large movie grid rendered with <code>rxVirtualView</code>, swapping
+          each card for a lightweight placeholder as it scrolls out of view.
+        </p>
+      </div>
+    </header>
+
     <div class="container" rxVirtualViewObserver>
-      <h2>Movies</h2>
       <div class="item-wrapper">
         @for (movie of movies; track movie.id) {
           <div rxVirtualView class="item">

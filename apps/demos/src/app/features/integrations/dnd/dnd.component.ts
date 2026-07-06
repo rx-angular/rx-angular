@@ -2,13 +2,16 @@ import {
   CdkDragDrop,
   DragDropModule,
   moveItemInArray,
+  CdkDropList,
+  CdkDrag,
 } from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { delay, map, shareReplay, tap } from 'rxjs/operators';
 import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx-for.module';
+import { RxFor } from '../../../rx-angular-pocs/template/directives/for/rx-for.directive';
 
 @Component({
   selector: 'rxa-dnd',
@@ -117,7 +120,7 @@ import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx
     </style>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [CdkDropList, CdkDrag, RxFor, AsyncPipe],
 })
 export class DndComponent {
   items$ = new BehaviorSubject<any>(createItems(50));
@@ -195,8 +198,8 @@ export class DndComponent {
     DragDropModule,
     CommonModule,
     RxForModule,
+    DndComponent,
   ],
-  declarations: [DndComponent],
 })
 export class DndComponentModule {}
 

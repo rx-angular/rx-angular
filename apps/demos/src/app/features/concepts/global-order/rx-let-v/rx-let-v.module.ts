@@ -10,25 +10,15 @@ import { V3DComponent } from './v3-d.component';
 import { V3EComponent } from './v3-e.component';
 import { V3FComponent } from './v3-f.component';
 import { V3HComponent } from './v3-h.component';
-import { SharedModule } from '../shared/shared.module';
+
 import { MatButtonModule } from '@angular/material/button';
 import { PushModule } from '../../../../rx-angular-pocs';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 
 @NgModule({
-  declarations: [
-    V3AComponent,
-    V3BComponent,
-    V3CComponent,
-    V3DComponent,
-    V3EComponent,
-    V3FComponent,
-    V3HComponent,
-  ],
   imports: [
     CommonModule,
     VisualizerModule,
-    SharedModule,
     RxLetModule,
     MatButtonModule,
     UnpatchEventsModule,
@@ -36,6 +26,13 @@ import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks'
     RxLetModule,
     PushModule,
     DirtyChecksModule,
+    V3AComponent,
+    V3BComponent,
+    V3CComponent,
+    V3DComponent,
+    V3EComponent,
+    V3FComponent,
+    V3HComponent,
   ],
   exports: [V3AComponent],
 })

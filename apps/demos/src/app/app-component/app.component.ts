@@ -1,8 +1,18 @@
+import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, Component } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { AppShellModule } from '../app-shell/index';
+import { ThemeService } from '../shared/theme.service';
 import { AppPresenter } from './app-presenter.service';
 import { MENU_ITEMS } from './app.menu';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import { filter, take, tap } from 'rxjs/operators';
 
 @Component({
@@ -10,13 +20,22 @@ import { filter, take, tap } from 'rxjs/operators';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppPresenter],
-  imports: [AppShellModule, RouterOutlet],
+  imports: [
+    AppShellModule,
+    RouterOutlet,
+    RouterLink,
+    MatIconButton,
+    MatIcon,
+    MatTooltip,
+    AsyncPipe,
+  ],
 })
 export class AppComponent implements AfterViewInit {
   menuItems = MENU_ITEMS;
 
   constructor(
     public vm: AppPresenter,
+    public theme: ThemeService,
     router: Router,
   ) {
     performance.mark('startRouting');
