@@ -12,3 +12,5 @@ CHANGELOG.md
 .yarn
 /.nx/cache
 /.nx/workspace-data
+
+.nx/self-healing
