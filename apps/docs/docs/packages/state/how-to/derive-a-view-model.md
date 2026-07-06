@@ -69,6 +69,8 @@ import { rxState } from '@rx-angular/state';
 export class ViewModelComponent {
   private readonly state = rxState<ComponentState>(({ set }) => set({ title: '', created: '', items: [], visibleItemIds: [] }));
 
+  private readonly title = this.state.signal('title');
+  private readonly created = this.state.signal('created');
   private readonly items = this.state.signal('items');
   private readonly visibleItemIds = this.state.signal('visibleItemIds');
 
@@ -76,8 +78,8 @@ export class ViewModelComponent {
     const items = this.items();
     const visibleItemIds = this.visibleItemIds();
     return {
-      title: this.state.get('title'),
-      created: this.state.get('created'),
+      title: this.title(),
+      created: this.created(),
       total: items.length,
       visibleItems: items.filter((item) => visibleItemIds.some((id) => id === item.id)),
     };
@@ -96,12 +98,14 @@ When you want more control over what renders when (for example, lazy or independ
 export class ViewModelComponent {
   private readonly state = rxState<ComponentState>(({ set }) => set({ title: '', created: '', items: [], visibleItemIds: [] }));
 
+  private readonly title = this.state.signal('title');
+  private readonly created = this.state.signal('created');
   private readonly items = this.state.signal('items');
   private readonly visibleItemIds = this.state.signal('visibleItemIds');
 
   readonly mainVm = computed(() => ({
-    title: this.state.get('title'),
-    created: this.state.get('created'),
+    title: this.title(),
+    created: this.created(),
   }));
 
   readonly listVm = computed(() => {

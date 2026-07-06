@@ -213,7 +213,7 @@ export class MovieService {
 }
 ```
 
-To hand out only read access, expose `state.asReadOnly()`; consumers get `get` / `select` / `signal` / `computed`, while write access stays private to the owner.
+To hand out only read access, expose `state.asReadOnly()`; consumers get the reactive reads `select` / `signal` / `computed` plus the imperative snapshot `get`, while write access stays private to the owner.
 
 ## Result
 

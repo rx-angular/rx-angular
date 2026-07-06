@@ -122,7 +122,7 @@ See [`CompareFn`](./compare-fn.md) and [`KeyCompareMap`](./key-compare-map.md) f
 
 ### `get`
 
-Read state imperatively.
+Read state imperatively. `get()` is a one-shot, **non-reactive** snapshot: it creates no reactive dependency and never re-runs when state changes. Use it only in imperative code (event handlers, `set()`/`connect()` updater callbacks, tests). For template bindings or derived values, read reactively with [`signal`](#signal), [`select`](#select), or [`computed`](#computed) instead.
 
 ```ts
 get(): State;

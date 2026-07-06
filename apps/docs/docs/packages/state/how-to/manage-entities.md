@@ -136,6 +136,10 @@ addItem(item: Item): void {
 }
 ```
 
+:::note `get()` is a snapshot, not a reactive read
+`get()` returns a one-shot, non-reactive snapshot: it creates no dependency and never re-runs when state changes, so reach for it only in imperative code like event handlers and `set()`/`connect()` updater callbacks. For anything rendered or derived, read reactively with `signal('key')`, `select(...)`, or `computed(...)`.
+:::
+
 ## Fast lookups: normalize to a dictionary
 
 When you read records by id far more often than you iterate them, hold the collection as
