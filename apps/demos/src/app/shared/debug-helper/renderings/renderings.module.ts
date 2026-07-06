@@ -7,8 +7,7 @@ import { RxPush } from '@rx-angular/template/push';
 const DECLARATIONS = [RenderingsComponent];
 
 @NgModule({
-  declarations: [...DECLARATIONS],
-  imports: [CommonModule, MatRippleModule, RxPush],
+  imports: [CommonModule, MatRippleModule, RxPush, ...DECLARATIONS],
   exports: [...DECLARATIONS],
 })
 export class RenderingsModule {}

@@ -21,7 +21,6 @@ import { RxState } from '@rx-angular/state';
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
-  standalone: false,
 })
 export class CanvasViewComponent extends Hooks {
   canvas: HTMLCanvasElement;

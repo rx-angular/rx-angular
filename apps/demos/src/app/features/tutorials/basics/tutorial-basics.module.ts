@@ -11,6 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
+import { RxLet } from '@rx-angular/template/let';
 import { SetupContainerComponent } from './1-setup/setup-container.component';
 import { SetupSolution } from './1-setup/setup.solution.component';
 import { SetupStart } from './1-setup/setup.start.component';
@@ -36,6 +37,7 @@ export const ROUTES = [
   {
     path: '',
     redirectTo: 'setup',
+    pathMatch: 'full' as const,
   },
   {
     path: 'setup',
@@ -102,8 +104,13 @@ export const materialModules = [
 ];
 
 @NgModule({
-  declarations: [DECLARATIONS],
-  imports: [CommonModule, materialModules, RouterModule.forChild(ROUTES)],
+  imports: [
+    CommonModule,
+    materialModules,
+    RouterModule.forChild(ROUTES),
+    RxLet,
+    DECLARATIONS,
+  ],
   exports: [DECLARATIONS],
 })
 export class TutorialBasicsModule {}

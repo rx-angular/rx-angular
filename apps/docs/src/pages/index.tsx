@@ -7,21 +7,38 @@ import React from 'react';
 import styles from './index.module.css';
 
 function HomepageHeader(): JSX.Element {
-  const { siteConfig } = useDocusaurusContext();
   return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
-      <div className="container">
-        <img src="img/logo.svg" width="150" height="150" />
-        <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/state"
-          >
-            Get Started
+    <header className={styles.hero}>
+      <div className={clsx('container', styles.heroInner)}>
+        <img
+          className={styles.heroLogo}
+          src="img/logo.svg"
+          width="88"
+          height="88"
+          alt="RxAngular"
+        />
+        <p className={styles.eyebrow}>Smooth rendering, simpler state</p>
+        <h1 className={styles.heroTitle}>
+          Reactive Angular.{' '}
+          <span className={styles.grad}>Without the zone.</span>
+        </h1>
+        <p className={styles.heroSubtitle}>
+          A reactive toolset for Angular that starts where signals stop: state
+          that turns global, complex, or async, and rendering that stays fast in
+          a zoneless app.
+        </p>
+        <div className={styles.heroCtas}>
+          <Link className={styles.btnPrimary} to="/docs/start-here/">
+            Start here
+          </Link>
+          <Link className={styles.btnGhost} to="/docs/concepts">
+            Read the concepts
           </Link>
         </div>
+        <p className={styles.heroPackages}>
+          state <b>·</b> template <b>·</b> cdk <b>·</b> isr <b>·</b>{' '}
+          eslint-plugin
+        </p>
       </div>
     </header>
   );
@@ -32,52 +49,40 @@ export default function Home(): JSX.Element {
   return (
     <Layout title={siteConfig.title} description={siteConfig.tagline}>
       <HomepageHeader />
-      <main>
-        <div className="text--center padding-horiz--md">
-          <p>
-            RxAngular offers a comprehensive toolset for handling fully reactive
-            Angular applications with the main focus on runtime performance and
-            template rendering.
+      <main className={styles.main}>
+        <section id="packages" className={styles.packages}>
+          <h2 className={styles.sectionTitle}>Five packages, one job each.</h2>
+          <p className={styles.sectionLede}>
+            Each package stands alone. Reach for signals and native control flow
+            first, then add the one that fits your problem.
           </p>
-        </div>
+          <HomepageFeatures />
+        </section>
 
-        <div className="text--center padding-horiz--md">
-          <p>RxAngular is divided into different packages:</p>
-        </div>
-        <HomepageFeatures />
-        <div className="text--center padding-horiz--md">
-          <p>
-            Used together, you get a powerful tool for developing
-            high-performance angular applications with or without NgZone.
-          </p>
-        </div>
-
-        <div className="text--center padding-horiz--md">
-          <p>
-            This repository holds a set of helpers to create{' '}
-            <strong>fully reactive</strong> as well as{' '}
-            <strong>fully zone-less</strong> applications.
-          </p>
-        </div>
-
-        <div className="text--center padding-horiz--md">
-          <h3>Benefits</h3>
-          <ul>
-            <li>
-              🔥 It's fast &amp; performance focused: exceptional runtime speed
-              &amp; small bundle size
+        <section className={styles.benefits}>
+          <h2 className={styles.sectionTitle}>Why RxAngular</h2>
+          <ul className={styles.benefitGrid}>
+            <li className={styles.benefitCard}>
+              <strong>Signals-first,</strong> it builds on signals and native
+              control flow.
             </li>
-            <li>
-              ✔ Easy upgrade paths: migration scripts included since beta!{' '}
-              <code>
-                ng update @rx-angular/&#123;cdk | template | state&#125;
-              </code>
+            <li className={styles.benefitCard}>
+              <strong>Frame-budgeted rendering,</strong> it yields to the
+              browser so the UI stays responsive.
             </li>
-            <li>✔ Lean and simple: No boilerplate guaranteed</li>
-            <li>✔ Well typed and tested</li>
-            <li>✔ Backwards compatible: support for Angular &gt; v11</li>
+            <li className={styles.benefitCard}>
+              <strong>Strongly typed,</strong> with source-derived signatures
+              that hold up as your codebase grows.
+            </li>
+            <li className={styles.benefitCard}>
+              <strong>Tree-shakable,</strong> so you ship only the code you use.
+            </li>
+            <li className={styles.benefitCard}>
+              <strong>Zoneless-ready,</strong> the way Angular 21 runs by
+              default.
+            </li>
           </ul>
-        </div>
+        </section>
       </main>
     </Layout>
   );

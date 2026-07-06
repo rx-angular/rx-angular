@@ -6,7 +6,16 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { FormGhostComponent } from '../../../../shared/ghost-elements';
-import { UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { MatButton } from '@angular/material/button';
+import { UnpatchEventsDirective } from '../../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.directive';
 
 @Component({
   selector: 'rxa-v4-b',
@@ -44,7 +53,13 @@ import { UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    MatButton,
+    UnpatchEventsDirective,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
 })
 export class V4BComponent {
   form = this.fb.group({ value: ['t', Validators.minLength(2)] });

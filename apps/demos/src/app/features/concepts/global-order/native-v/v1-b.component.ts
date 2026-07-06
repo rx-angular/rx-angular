@@ -5,6 +5,9 @@ import {
   Input,
   Output,
 } from '@angular/core';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { MatButton } from '@angular/material/button';
+import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'rxa-v1-b',
   template: `
@@ -24,7 +27,7 @@ import {
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent, MatButton, AsyncPipe],
 })
 export class V1BComponent {
   @Input()

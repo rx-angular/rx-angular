@@ -19,10 +19,10 @@ import { coalescingManager } from './coalescingManager';
  * In addition to that is provides emitted values for the trailing end only, as well as maintaining a context to scope
  *   coalescing.
  *
- * @param {function(value: T): Observable} durationSelector - A function
+ * @param {function(value: T): Observable} durationSelector - A required function
  * that receives a value from the source Observable, for computing the silencing
  * duration for each source value, returned as an Observable or a Promise.
- * It defaults to `requestAnimationFrame` as durationSelector.
+ * A `requestAnimationFrame`-based selector is the recommended choice.
  * @param scope
  * Defaults to `{ leading: false, trailing: true }`. The default scoping is per subscriber.
  * @return {Observable<T>} An Observable that performs the coalesce operation to
@@ -42,7 +42,7 @@ import { coalescingManager } from './coalescingManager';
  */
 export function coalesceWith<T>(
   durationSelector: Observable<unknown>,
-  scope?: Record<string, unknown>
+  scope?: Record<string, unknown>,
 ): MonoTypeOperatorFunction<T> {
   const _scope = scope || {};
 
@@ -50,14 +50,14 @@ export function coalesceWith<T>(
     return new Observable<T>((observer) => {
       const rootSubscription = new Subscription();
       rootSubscription.add(
-        source.subscribe(createInnerObserver(observer, rootSubscription))
+        source.subscribe(createInnerObserver(observer, rootSubscription)),
       );
       return rootSubscription;
     });
 
     function createInnerObserver(
       outerObserver: Subscriber<T>,
-      rootSubscription: Subscription
+      rootSubscription: Subscription,
     ): Observer<T> {
       let actionSubscription: Unsubscribable;
       let latestValue: T | undefined;
@@ -98,7 +98,7 @@ export function coalesceWith<T>(
                 tryEmitLatestValue();
                 actionSubscription?.unsubscribe();
                 actionSubscription = undefined;
-              })
+              }),
             );
           }
         },

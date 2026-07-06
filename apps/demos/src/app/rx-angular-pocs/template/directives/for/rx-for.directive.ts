@@ -279,10 +279,7 @@ import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
  * @docsPage RxFor
  * @publicApi
  */
-@Directive({
-  selector: '[rxFor]',
-  standalone: false,
-})
+@Directive({ selector: '[rxFor]' })
 export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy
 {

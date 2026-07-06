@@ -2,6 +2,11 @@ import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
+import { RxLet } from '../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
 
 @Component({
   selector: 'rxa-color-prio',
@@ -49,7 +54,7 @@ import { RxState } from '@rx-angular/state';
       }
     `,
   ],
-  standalone: false,
+  imports: [RxLet, MatExpansionPanel, MatExpansionPanelHeader],
 })
 export class ColorPrioComponent extends RxState<{
   colors: [string, string][];

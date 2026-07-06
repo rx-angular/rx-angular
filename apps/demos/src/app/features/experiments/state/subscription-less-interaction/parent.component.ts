@@ -3,6 +3,7 @@ import { environment } from '../../../../../environments/environment';
 import { Subject, Subscription } from 'rxjs';
 import { map, scan } from 'rxjs/operators';
 import { SourceService } from './source.service';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 
 interface ComponentState {
   title: string;
@@ -19,7 +20,7 @@ interface ComponentState {
     </div>
   `,
   changeDetection: environment.changeDetection,
-  standalone: false,
+  imports: [AsyncPipe, JsonPipe],
 })
 export class RxStateParentSubscriptionLessComponent implements OnDestroy {
   subscription = new Subscription();

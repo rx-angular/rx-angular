@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { Hooks } from '../../hooks';
+import { DirtyChecksComponent } from '../../dirty-checks/dirty-checks.component';
+import { RenderingsComponent } from '../../renderings/renderings.component';
 
 @Component({
   selector: 'rxa-visualizer',
@@ -29,7 +31,7 @@ import { Hooks } from '../../hooks';
     '[style.width.px]': 'size',
     '[class]': 'classNames',
   },
-  standalone: false,
+  imports: [DirtyChecksComponent, RenderingsComponent],
 })
 export class VisualizerComponent extends Hooks {
   @Input()

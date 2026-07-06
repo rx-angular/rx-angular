@@ -32,6 +32,7 @@
       },
       "configurations": {
         "production": {
+          "baseHref": "/demos/",
           "fileReplacements": [
             {
               "replace": "apps/demos/src/environments/environment.ts",

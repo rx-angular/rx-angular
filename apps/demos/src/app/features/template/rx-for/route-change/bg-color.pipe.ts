@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'bgColor',
-  standalone: false,
+  standalone: true,
 })
 export class BgColorPipe implements PipeTransform {
   transform(value: number): string {

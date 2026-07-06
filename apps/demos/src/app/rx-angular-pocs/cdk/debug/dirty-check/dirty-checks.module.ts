@@ -5,8 +5,7 @@ import { CommonModule } from '@angular/common';
 const DEPRECATIONS = [DirtyChecksComponent];
 
 @NgModule({
-  declarations: [...DEPRECATIONS],
-  imports: [CommonModule],
+  imports: [CommonModule, ...DEPRECATIONS],
   exports: [...DEPRECATIONS],
 })
 export class DirtyChecksModule {}

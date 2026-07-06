@@ -13,7 +13,6 @@ import { SubscriptionHandlingService } from './subscription.service';
   `,
   changeDetection: environment.changeDetection,
   providers: [SubscriptionHandlingService],
-  standalone: false,
 })
 export class RxStateParentSubscriptionComponent implements OnDestroy {
   subscription = new Subscription();

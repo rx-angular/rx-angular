@@ -1,13 +1,21 @@
 import { EMPTY, Observable, Subject, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Component } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 import { selectSlice } from '@rx-angular/state/selections';
 import { RxState } from '@rx-angular/state';
 import { CounterState, INITIAL_STATE } from '../shared/model';
 import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
 import { updateCount } from '../shared/utils';
+import { CounterDisplayComponent } from '../shared/counter-display.component';
+import { MatButton } from '@angular/material/button';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'rxa-dynamic-counter-and-forms',
@@ -69,7 +77,14 @@ import { updateCount } from '../shared/utils';
     </form>
   `,
   providers: [RxState],
-  standalone: false,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CounterDisplayComponent,
+    MatButton,
+    MatFormField,
+    MatInput,
+  ],
 })
 export class RxStateAndReactiveFormsCounterComponent {
   readonly initialCounterState = INITIAL_STATE;

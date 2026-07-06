@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DataService } from '../shared/data.service';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { V1EComponent } from './v1-e.component';
+import { V1FComponent } from './v1-f.component';
 
 @Component({
   selector: 'rxa-v1-c',
@@ -23,7 +26,7 @@ import { DataService } from '../shared/data.service';
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent, V1EComponent, V1FComponent],
 })
 export class V1CComponent {
   constructor(public data: DataService) {}

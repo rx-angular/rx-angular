@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DataService } from '../shared/data.service';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { RxLet } from '../../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { ValueDisplayComponent } from '../shared/value-display.component';
+import { V2EComponent } from './v2-e.component';
+import { V2FComponent } from './v2-f.component';
 
 @Component({
   selector: 'rxa-v2-c',
@@ -29,7 +34,13 @@ import { DataService } from '../shared/data.service';
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    RxLet,
+    ValueDisplayComponent,
+    V2EComponent,
+    V2FComponent,
+  ],
 })
 export class V2CComponent {
   constructor(public data: DataService) {}

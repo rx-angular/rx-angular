@@ -2,6 +2,12 @@ import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { Platform } from '@angular/cdk/platform';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
+import { MatButton } from '@angular/material/button';
+import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
+import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
 
 @Component({
   selector: 'rxa-demo-basics',
@@ -41,7 +47,14 @@ import { Platform } from '@angular/cdk/platform';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    StrategySelectComponent,
+    MatButton,
+    RxUnpatch,
+    RxPush,
+    PushPipe,
+  ],
 })
 export class CoalescingComponent {
   click$ = new Subject<any>();

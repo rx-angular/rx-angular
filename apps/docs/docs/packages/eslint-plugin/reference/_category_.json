@@ -1,0 +1,9 @@
+{
+  "label": "Rules reference",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "title": "ESLint plugin rules reference",
+    "slug": "/packages/eslint-plugin/reference"
+  }
+}

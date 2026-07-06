@@ -23,7 +23,6 @@ import { RxTemplateObserver } from '../../../cdk/utils/rxjs/Notification';
 @Pipe({
   name: 'push',
   pure: false,
-  standalone: false,
 })
 export class PushPipe<U> implements PipeTransform, OnDestroy, OnInit {
   private renderedValue: U | null | undefined;

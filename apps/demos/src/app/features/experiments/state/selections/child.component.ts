@@ -2,7 +2,15 @@ import { Component, Input, Output } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { AsyncPipe, KeyValuePipe } from '@angular/common';
 
 @Component({
   selector: 'rxa-state-child-selections',
@@ -21,7 +29,14 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
     </div>
   `,
   changeDetection: environment.changeDetection,
-  standalone: false,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    AsyncPipe,
+    KeyValuePipe,
+  ],
 })
 export class RxStateChildSelectionsComponent {
   state$ = new ReplaySubject(1);

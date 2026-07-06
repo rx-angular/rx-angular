@@ -68,7 +68,7 @@ export class RxStrategyProvider<T extends string = string> {
 
   /**
    * @description
-   * Returns current `RxAngularConfig` used in the service.
+   * Returns current `RxRenderStrategiesConfig` used in the service.
    * Config includes:
    * - strategy that currently in use - `primaryStrategy`
    * - array of custom user defined strategies - `customStrategies`
@@ -227,7 +227,7 @@ export class RxStrategyProvider<T extends string = string> {
    * - abortCtrl is an AbortController that you can use to cancel the scheduled cycle.
    *
    * @example
-   * this.strategyProvider.scheduleCd(this.changeDetectorRef, {afterCD: myWork()});
+   * this.strategyProvider.scheduleCD(this.changeDetectorRef, {afterCD: myWork()});
    *
    * @return AbortController
    */

@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject, from, interval, Subject, throwError } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RxLet } from '@rx-angular/template/let';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { BehaviorSubject, interval, Subject, throwError } from 'rxjs';
 import {
   map,
   share,
@@ -10,6 +17,16 @@ import {
 
 @Component({
   selector: 'rxa-let-template-binding-http-example',
+  standalone: true,
+  imports: [
+    RxLet,
+    RxPush,
+    RxUnpatch,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+  ],
   template: `
     <mat-card class="card">
       <mat-card-header>
@@ -98,7 +115,6 @@ import {
       }
     `,
   ],
-  standalone: false,
 })
 export class LetTemplateBindingHttpExampleComponent {
   visibleStrategy = 'local';

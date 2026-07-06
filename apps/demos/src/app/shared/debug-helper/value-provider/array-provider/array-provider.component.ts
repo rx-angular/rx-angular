@@ -6,6 +6,11 @@ import {
   OnInit,
 } from '@angular/core';
 import { ArrayProviderService } from '../array-provider.service';
+import { MatButton } from '@angular/material/button';
+import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'rxa-array-provider',
@@ -118,7 +123,14 @@ import { ArrayProviderService } from '../array-provider.service';
     }
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatButton,
+    RxUnpatch,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+  ],
 })
 export class ArrayProviderComponent
   extends ArrayProviderService

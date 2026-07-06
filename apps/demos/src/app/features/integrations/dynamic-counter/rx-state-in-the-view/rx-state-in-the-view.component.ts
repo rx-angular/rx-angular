@@ -7,6 +7,12 @@ import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
 import { toInt } from '../../../../shared/utils/to-int';
 import { map, switchMap } from 'rxjs/operators';
 import { updateCount } from '../shared/utils';
+import { CounterDisplayComponent } from '../shared/counter-display.component';
+import { MatButton } from '@angular/material/button';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
+import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
 
 @Component({
   selector: 'rxa-counter-rx-state-in-the-view',
@@ -81,7 +87,14 @@ import { updateCount } from '../shared/utils';
       </mat-form-field>
     </div>
   `,
-  standalone: false,
+  imports: [
+    CounterDisplayComponent,
+    MatButton,
+    MatFormField,
+    MatInput,
+    RxPush,
+    PushPipe,
+  ],
 })
 export class RxStateInTheViewComponent extends RxState<CounterState> {
   initialCounterState = INITIAL_STATE;

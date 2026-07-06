@@ -9,6 +9,9 @@ import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { ProvidedValues } from '../model';
 import { PrimitivesProviderService } from '../primitives-provider.service';
+import { MatButton } from '@angular/material/button';
+import { ZonePatchedIconComponent } from '../../../zone-patched-icon/zone-patched-icon.component';
+import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
 
 @Component({
   selector: 'rxa-value-provider',
@@ -45,7 +48,7 @@ import { PrimitivesProviderService } from '../primitives-provider.service';
     }
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatButton, ZonePatchedIconComponent, RxUnpatch],
 })
 export class ValueProviderComponent extends PrimitivesProviderService {
   @Input()

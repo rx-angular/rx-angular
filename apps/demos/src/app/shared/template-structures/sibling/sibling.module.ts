@@ -8,7 +8,7 @@ import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
 import { RenderingsModule } from '../../debug-helper/renderings';
 import { StrategySelectModule } from '../../debug-helper/strategy-select';
-import { ValueProvidersModule } from '../../debug-helper/value-provider';
+
 import { VisualizerModule } from '../../debug-helper/visualizer';
 import { WorkModule } from '../../debug-helper/work/work.module';
 import { SiblingAsyncComponent } from './sibling-async.component';
@@ -20,11 +20,7 @@ import { SiblingStaticComponent } from './sibling-static.component';
 import { SiblingStrategyComponent } from './sibling-strategy.component';
 import { ImageArrayModule } from '../../image-array/image-array.module';
 import { SiblingPixelImgComponent } from './sibling-pixel-img.component';
-import {
-  RxContextModule,
-  RxForModule,
-  RxLetModule,
-} from '../../../rx-angular-pocs';
+import { RxForModule, RxLetModule } from '../../../rx-angular-pocs';
 
 const DECLARATIONS = [
   SiblingStaticComponent,
@@ -37,7 +33,6 @@ const DECLARATIONS = [
 ];
 
 @NgModule({
-  declarations: DECLARATIONS,
   imports: [
     CommonModule,
     MatButtonModule,
@@ -45,15 +40,14 @@ const DECLARATIONS = [
     RxUnpatch,
     RxPush,
     VisualizerModule,
-    ValueProvidersModule,
     RenderingsModule,
     RxLetModule,
     WorkModule,
     StrategySelectModule,
     ImageArrayModule,
     RxForModule,
-    RxContextModule,
     MatProgressSpinnerModule,
+    ...DECLARATIONS,
   ],
   exports: DECLARATIONS,
 })

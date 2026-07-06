@@ -1,9 +1,32 @@
+import { JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RxLet } from '@rx-angular/template/let';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
+import { ToStringPipe } from '../to-string.pipe';
 
 @Component({
   selector: 'rxa-let-template-binding-subject-example',
+  standalone: true,
+  imports: [
+    JsonPipe,
+    RxLet,
+    RxPush,
+    RxUnpatch,
+    ToStringPipe,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatBadgeModule,
+  ],
   template: `
     <mat-card class="card">
       <mat-card-header>
@@ -108,7 +131,6 @@ import { scan, startWith } from 'rxjs/operators';
       }
     `,
   ],
-  standalone: false,
 })
 export class LetTemplateBindingSubjectExampleComponent {
   errorStub = new Error('Template observable error!');

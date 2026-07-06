@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../environments/environment';
+import { MatButton } from '@angular/material/button';
+import { ListToggleTestComponent } from './list-toggle-test-component/list-toggle-test.component';
 
 @Component({
   selector: 'rxa-rx-let-vs-push',
@@ -67,7 +69,7 @@ import { environment } from '../../../../environments/environment';
     </div>
   `,
   changeDetection: environment.changeDetection,
-  standalone: false,
+  imports: [MatButton, ListToggleTestComponent],
 })
 export class RxLetVsPushComponent {
   showLetAutoTest = false;

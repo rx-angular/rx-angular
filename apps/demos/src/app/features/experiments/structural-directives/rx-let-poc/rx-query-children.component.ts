@@ -7,6 +7,14 @@ import {
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, tap } from 'rxjs/operators';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
+import { MatButton } from '@angular/material/button';
+import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import {
+  RxQueryContentComponent,
+  RxQueryContentTestDirective,
+} from './rx-query-content.component';
 
 @Component({
   selector: 'rxa-rx-query-children',
@@ -47,7 +55,14 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    StrategySelectComponent,
+    MatButton,
+    RxUnpatch,
+    RxQueryContentComponent,
+    RxQueryContentTestDirective,
+  ],
 })
 export class RxQueryChildrenComponent {
   @ViewChild('viewChild') viewChild: ElementRef<HTMLElement>;

@@ -43,6 +43,9 @@
         </mat-icon>
       }
       <strong>{{ navItem.label }}</strong>
+      <mat-icon iconPositionEnd class="app-shell-expand-icon">
+        {{ treeControl.isExpanded(navItem) ? 'expand_more' : 'chevron_right' }}
+      </mat-icon>
     </a>
     <div [hidden]="!treeControl.isExpanded(navItem)">
       <ng-container cdkTreeNodeOutlet></ng-container>

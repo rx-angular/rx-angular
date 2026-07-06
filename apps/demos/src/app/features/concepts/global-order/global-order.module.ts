@@ -11,10 +11,6 @@ import { PushVModule } from './push-v/push-v.module';
 import { RxFormVModule } from './rx-form-v/rx-form-v.module';
 
 @NgModule({
-  declarations: [
-    GlobalOrderComponent
-
-  ],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -23,9 +19,9 @@ import { RxFormVModule } from './rx-form-v/rx-form-v.module';
     NativeVModule,
     RxLetVModule,
     PushVModule,
-    RxFormVModule
+    RxFormVModule,
+    GlobalOrderComponent,
   ],
-  exports: []
+  exports: [],
 })
-export class GlobalOrderModule {
-}
+export class GlobalOrderModule {}

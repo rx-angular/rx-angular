@@ -20,6 +20,5 @@ import { environment } from '../../../../environments/environment';
       }
     `,
   ],
-  standalone: false,
 })
 export class RxStateOverviewComponent {}

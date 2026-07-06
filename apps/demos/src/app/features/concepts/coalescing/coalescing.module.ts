@@ -13,7 +13,6 @@ import { StrategySelectModule } from '../../../shared/debug-helper/strategy-sele
 const DECLARATIONS = [CoalescingComponent];
 
 @NgModule({
-  declarations: [DECLARATIONS],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -22,6 +21,7 @@ const DECLARATIONS = [CoalescingComponent];
     RxUnpatch,
     MatButtonModule,
     RxPush,
+    DECLARATIONS,
   ],
   providers: [],
   exports: [DECLARATIONS],

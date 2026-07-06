@@ -1,26 +1,100 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-scrolling';
+import { FormsModule } from '@angular/forms';
+import {
+  AutoSizeVirtualScrollStrategy,
+  RxVirtualFor,
+  RxVirtualScrollViewportComponent,
+} from '@rx-angular/template/virtual-scrolling';
 import { BehaviorSubject } from 'rxjs';
+import { DocsLinkComponent } from '../../../../shared/docs-link';
 
 @Component({
   selector: 'rxa-virtual-for-monkey-test',
+  standalone: true,
+  imports: [
+    FormsModule,
+    RxVirtualFor,
+    RxVirtualScrollViewportComponent,
+    AutoSizeVirtualScrollStrategy,
+    DocsLinkComponent,
+  ],
   template: `
     <div class="container">
-      <h1 class="mat-headline mt-2">A bug</h1>
-      <div>
-        <textarea [(ngModel)]="monkeyJsonTxt"></textarea>
+      <header class="rxa-demo-header">
+        <div>
+          <h2>Virtual Scroll Monkey Test</h2>
+          <p class="rxa-demo-subtitle">
+            Stress-tests <code>*rxVirtualFor</code> autosize by replaying
+            randomized scroll, reset and generate operations to reproduce
+            edge-case bugs.
+          </p>
+        </div>
+        <rxa-docs-link
+          docs="packages/template/reference/rx-virtual-for"
+          source="apps/demos/src/app/features/template/rx-virtual-for"
+        />
+      </header>
+      <div class="rxa-demo-toolbar">
+        <section class="rxa-demo-group rxa-demo-group--wide">
+          <span class="rxa-demo-label">Monkey script (JSON)</span>
+          <textarea
+            class="rxa-demo-input monkey-json"
+            [(ngModel)]="monkeyJsonTxt"
+          ></textarea>
+        </section>
+        <section class="rxa-demo-group">
+          <span class="rxa-demo-label">Items</span>
+          <div class="rxa-demo-controls">
+            <button
+              class="btn btn-outline-secondary btn-sm"
+              (click)="resetItems()"
+            >
+              Reset items
+            </button>
+            <button
+              class="btn btn-outline-primary btn-sm"
+              (click)="generateItems(generateNItems)"
+            >
+              Generate {{ generateNItems }} items
+            </button>
+            <label class="field">
+              <span class="rxa-demo-label">Count</span>
+              <input
+                class="rxa-demo-input field-input"
+                type="number"
+                [(ngModel)]="generateNItems"
+              />
+            </label>
+          </div>
+        </section>
+        <section class="rxa-demo-group">
+          <span class="rxa-demo-label">Actions</span>
+          <div class="rxa-demo-controls">
+            <button
+              class="btn btn-outline-secondary btn-sm"
+              (click)="scrollTo(100)"
+            >
+              Scroll to 100
+            </button>
+            <button class="btn btn-outline-primary btn-sm" (click)="monkey()">
+              Monkey test
+            </button>
+            <button
+              class="btn btn-outline-primary btn-sm"
+              (click)="monkeyFromJson()"
+            >
+              Monkey test from JSON
+            </button>
+          </div>
+        </section>
       </div>
-      <button (click)="resetItems()">reset items</button>
-      <button (click)="generateItems(generateNItems)">
-        generate {{ generateNItems }} items
-      </button>
-      <button (click)="scrollTo(100)">scroll to 100</button>
-      <button (click)="monkey()">monkey test</button>
-      <button (click)="monkeyFromJson()">monkey test from json</button>
-      <input type="number" [(ngModel)]="generateNItems" />
       <!-- <rx-virtual-scroll-viewport [dynamic]="fn"> -->
-      <rx-virtual-scroll-viewport autosize [tombstoneSize]="40">
-        <div *rxVirtualFor="let item of items$">
+      <rx-virtual-scroll-viewport
+        class="viewport-card"
+        autosize
+        [tombstoneSize]="40"
+      >
+        <div class="item" *rxVirtualFor="let item of items$">
           {{ item.name }}
         </div>
       </rx-virtual-scroll-viewport>
@@ -34,8 +108,42 @@ import { BehaviorSubject } from 'rxjs';
       rx-virtual-scroll-viewport {
         flex-grow: 1;
       }
-      button {
-        margin: 0.5rem;
+      .viewport-card {
+        box-sizing: border-box;
+        border: 1px solid var(--rxa-border);
+        border-radius: var(--rxa-radius-sm);
+        box-shadow: var(--rxa-shadow-sm);
+        background: var(--rxa-surface);
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      .field-input {
+        width: 90px;
+      }
+      .monkey-json {
+        width: 100%;
+        min-width: 260px;
+        min-height: 72px;
+        resize: vertical;
+        font-family: var(--rxa-mono);
+        font-size: 0.75rem;
+      }
+      .item {
+        box-sizing: border-box;
+        overflow: hidden;
+        will-change: transform;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--rxa-border);
+        border-left: 3px solid rgba(var(--rxa-brand-rgb), 0.45);
+        background: var(--rxa-surface);
+        color: var(--rxa-text);
+        font-size: 0.85rem;
+      }
+      .item:hover {
+        background: var(--rxa-surface-3);
       }
       .container {
         height: calc(100vh - 64px);
@@ -44,7 +152,6 @@ import { BehaviorSubject } from 'rxjs';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
 })
 export class VirtualForMonkeyTestComponent {
   items$ = new BehaviorSubject([

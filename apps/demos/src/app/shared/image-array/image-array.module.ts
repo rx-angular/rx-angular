@@ -12,7 +12,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
-  declarations: [ImageArrayComponent, ColorPrioComponent],
   exports: [ImageArrayComponent, ColorPrioComponent],
   imports: [
     CommonModule,
@@ -24,6 +23,8 @@ import { MatCardModule } from '@angular/material/card';
     MatButtonModule,
     MatCardModule,
     MatRippleModule,
+    ImageArrayComponent,
+    ColorPrioComponent,
   ],
 })
 export class ImageArrayModule {}

@@ -38,11 +38,11 @@ import { isDefined, isObjectGuard } from '../_internals/guards';
  *    }
  *
  *    // Imperative implementation
- *    removeName(): void {
+ *    convertToArray(): void {
  *      this.api.creaturesDictionary$.pipe(
  *        // subscription handling logic
  *      ).subscribe(
- *        dictionary => this.set({creatures: dictionaryToArray(dictionary)})
+ *        dictionary => this.state.set({creatures: dictionaryToArray(dictionary)})
  *      );
  *    }
  * }

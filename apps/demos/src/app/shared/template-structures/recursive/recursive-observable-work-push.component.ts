@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
+import { WorkVisualizerComponent } from '../../debug-helper/visualizer/visualizer/work-visualizer.component';
+import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
+import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
 
 @Component({
   selector: 'rxa-recursive-observable-work-push',
@@ -25,7 +28,12 @@ import { Observable } from 'rxjs';
     class: 'd-flex w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    WorkVisualizerComponent,
+    RecursiveObservableWorkPushComponent,
+    RxPush,
+    PushPipe,
+  ],
 })
 export class RecursiveObservableWorkPushComponent {
   @Input()

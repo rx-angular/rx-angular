@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
+import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
+import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
 
 @Component({
   selector: 'rxa-recursive-push',
@@ -24,7 +28,13 @@ import { ReplaySubject } from 'rxjs';
     class: 'd-flex w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    RenderingsComponent,
+    RecursivePushComponent,
+    RxPush,
+    PushPipe,
+  ],
 })
 export class RecursivePushComponent {
   @Input()

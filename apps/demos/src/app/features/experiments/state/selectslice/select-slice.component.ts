@@ -3,6 +3,7 @@ import { selectSlice } from '@rx-angular/state/selections';
 import { RxState } from '@rx-angular/state';
 import { Observable, of } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 
 interface MyState {
   title: string;
@@ -15,7 +16,7 @@ interface MyState {
   templateUrl: './select-slice.component.html',
   styleUrls: ['./select-slice.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [AsyncPipe, JsonPipe],
 })
 export class RxStateSelectSliceComponent extends RxState<MyState> {
   readonly viewState$ = this.select(

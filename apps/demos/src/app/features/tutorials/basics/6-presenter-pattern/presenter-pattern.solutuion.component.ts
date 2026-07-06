@@ -4,6 +4,16 @@ import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Adapter } from './adapter';
 import { Presenter } from './presenter';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription,
+} from '@angular/material/expansion';
+import { MatButton } from '@angular/material/button';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatCard } from '@angular/material/card';
+import { AsyncPipe } from '@angular/common';
 
 export interface DemoBasicsItem {
   id: string;
@@ -58,7 +68,17 @@ export interface DemoBasicsItem {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [Presenter, Adapter],
-  standalone: false,
+  imports: [
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatButton,
+    MatList,
+    MatListItem,
+    MatCard,
+    AsyncPipe,
+  ],
 })
 export class PresenterPatternSolution extends RxState<any> {
   @Input()
