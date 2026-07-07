@@ -53,6 +53,7 @@
     "serve": {
       "continuous": true,
       "executor": "@nx/angular:dev-server",
+      "dependsOn": ["^build"],
       "options": {
         "port": 4201
       },
