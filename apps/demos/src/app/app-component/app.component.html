@@ -6,6 +6,27 @@
     >
   </ng-container>
   <ng-container rxaAppShellHeaderContent>
+    <span class="app-shell-header-spacer"></span>
+    <button
+      type="button"
+      mat-icon-button
+      class="theme-toggle"
+      [attr.aria-label]="
+        (theme.mode$ | async) === 'dark'
+          ? 'Switch to light mode'
+          : 'Switch to dark mode'
+      "
+      [matTooltip]="
+        (theme.mode$ | async) === 'dark'
+          ? 'Switch to light mode'
+          : 'Switch to dark mode'
+      "
+      (click)="theme.toggle()"
+    >
+      <mat-icon>{{
+        (theme.mode$ | async) === 'dark' ? 'light_mode' : 'dark_mode'
+      }}</mat-icon>
+    </button>
     <!--<rxa-dirty-check [color]="'#3700ff1f'" radius="40"></rxa-dirty-check> -->
     <!-- <rxa-config-panel></rxa-config-panel> -->
   </ng-container>

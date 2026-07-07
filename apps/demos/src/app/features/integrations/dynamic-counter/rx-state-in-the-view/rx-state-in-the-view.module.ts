@@ -8,12 +8,11 @@ import { CommonModule } from '@angular/common';
 const DECLARATIONS = [RxStateInTheViewComponent];
 
 @NgModule({
-  declarations: DECLARATIONS,
   imports: [
     SharedModule,
     RouterModule.forChild(ROUTES),
-    CommonModule
-  ]
+    CommonModule,
+    ...DECLARATIONS,
+  ],
 })
-export class RxStateInTheViewModule {
-}
+export class RxStateInTheViewModule {}

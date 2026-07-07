@@ -2,6 +2,17 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { DemoBasicsViewModelService } from './demo-basics.view-model.service';
 import { RxState } from '@rx-angular/state';
 import { DemoBasicsAdapterService } from './demo-basics.adapter.service';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription,
+} from '@angular/material/expansion';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatCard } from '@angular/material/card';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'rxa-demo-basics',
@@ -24,7 +35,18 @@ import { DemoBasicsAdapterService } from './demo-basics.adapter.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DemoBasicsViewModelService, DemoBasicsAdapterService],
-  standalone: false,
+  imports: [
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatProgressBar,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatButton,
+    MatList,
+    MatListItem,
+    MatCard,
+    AsyncPipe,
+  ],
 })
 export class DemoBasicsComponent extends RxState<any> {
   @Input()

@@ -5,14 +5,15 @@ import { StrategyTokensProvideComponent } from './strategy-tokens/strategy-token
 export const ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'inherit'
+    redirectTo: 'inherit',
+    pathMatch: 'full',
   },
   {
     path: 'inherit',
-    component: StrategyTokensRootInheritComponent
+    component: StrategyTokensRootInheritComponent,
   },
   {
     path: 'provide',
-    component: StrategyTokensProvideComponent
-  }
+    component: StrategyTokensProvideComponent,
+  },
 ];

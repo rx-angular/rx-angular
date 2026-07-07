@@ -24,10 +24,7 @@ import {
 } from 'rxjs/operators';
 import { RxSwitch } from './rx-switch.directive';
 
-@Directive({
-  selector: '[rxSwitchCase]',
-  standalone: false,
-})
+@Directive({ selector: '[rxSwitchCase]' })
 export class RxSwitchCase implements OnInit, OnDestroy {
   @Input()
   set rxSwitchCaseValue(v) {

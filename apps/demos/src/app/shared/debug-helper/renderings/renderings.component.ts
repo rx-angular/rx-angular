@@ -23,6 +23,9 @@ import { Hooks } from '../hooks';
 import { RxEffects } from '@rx-angular/state/effects';
 import { select } from '@rx-angular/state/selections';
 import { AppConfigService } from '../../../app-config.service';
+import { NgStyle, JsonPipe } from '@angular/common';
+import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
+import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
 
 @Component({
   selector: 'rxa-renders',
@@ -46,7 +49,7 @@ import { AppConfigService } from '../../../app-config.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxEffects],
-  standalone: false,
+  imports: [MatRipple, NgStyle, JsonPipe, RxPush, PushPipe],
 })
 export class RenderingsComponent extends Hooks {
   sub: Subscription;

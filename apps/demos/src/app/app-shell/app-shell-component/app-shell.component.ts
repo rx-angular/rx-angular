@@ -10,6 +10,16 @@ import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { filter, tap, withLatestFrom } from 'rxjs/operators';
 import { ViewportService } from '../../shared/viewport.service';
+import {
+  MatSidenavContainer,
+  MatSidenav,
+  MatSidenavContent,
+} from '@angular/material/sidenav';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable as CdkScrollable_1 } from '@angular/cdk/scrolling';
+import { AsyncPipe } from '@angular/common';
 
 interface AppShellState {
   isHandset: boolean;
@@ -23,7 +33,16 @@ interface AppShellState {
   styleUrls: ['./app-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
-  standalone: false,
+  imports: [
+    MatSidenavContainer,
+    MatSidenav,
+    MatToolbar,
+    MatSidenavContent,
+    MatIconButton,
+    MatIcon,
+    CdkScrollable_1,
+    AsyncPipe,
+  ],
 })
 export class AppShellComponent implements AfterViewInit {
   readonly viewState$ = this.state.select();

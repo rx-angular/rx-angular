@@ -12,6 +12,10 @@ import { map } from 'rxjs/operators';
 import { toInt } from '../../debug-helper/value-provider';
 import { ImgInfo } from '../../image-array';
 import { computeColorPrio } from '../../image-array/pixel-image';
+import { RxLet } from '../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { NgStyle } from '@angular/common';
+import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
+import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
@@ -65,7 +69,7 @@ const chunk = (arr, n) =>
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [RxLet, NgStyle, RxPush, PushPipe],
 })
 export class SiblingPixelImgComponent extends RxState<
   {

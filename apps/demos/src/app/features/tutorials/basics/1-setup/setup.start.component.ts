@@ -22,6 +22,17 @@ import { ListServerItem, ListService } from '../data-access/list-resource';
 import { RxState } from '@rx-angular/state';
 import { RxActionFactory } from '@rx-angular/state/actions';
 import { RxEffects } from '@rx-angular/state/effects';
+import { RxLet } from '../../../../../../../../libs/template/let/src/lib/let.directive';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+  MatExpansionPanelDescription,
+} from '@angular/material/expansion';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatButton } from '@angular/material/button';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatCard } from '@angular/material/card';
 
 //👇 2- define a component state
 interface ComponentState {
@@ -109,7 +120,18 @@ const initComponentState = {
   ],
   providers: [RxActionFactory, RxState, RxEffects],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    RxLet,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatProgressBar,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatButton,
+    MatList,
+    MatListItem,
+    MatCard,
+  ],
 })
 export class SetupStart {
   ui = this.rxActions.create();

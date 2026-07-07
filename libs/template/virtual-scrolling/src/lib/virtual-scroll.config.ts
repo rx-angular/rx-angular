@@ -3,9 +3,9 @@ import { InjectionToken } from '@angular/core';
 export interface RxVirtualScrollDefaultOptions {
   /* determines how many templates can be cached and re-used on rendering, defaults to 20 */
   templateCacheSize?: number;
-  /* determines how many views will be rendered in scroll direction, defaults to 15 */
+  /* determines how many views will be rendered in scroll direction, defaults to 10 */
   runwayItems?: number;
-  /* determines how many views will be rendered in the opposite scroll direction, defaults to 5 */
+  /* determines how many views will be rendered in the opposite scroll direction, defaults to 2 */
   runwayItemsOpposite?: number;
   /* default item size to be used for scroll strategies. Used as tombstone size for the autosized strategy */
   itemSize?: number;

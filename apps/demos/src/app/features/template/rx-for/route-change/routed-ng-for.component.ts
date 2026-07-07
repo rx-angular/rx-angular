@@ -1,6 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/model';
+import { BgColorPipe } from './bg-color.pipe';
 import { SortingPresenter } from './sorting.presenter';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 
@@ -19,6 +23,8 @@ function getItems(num: number) {
 
 @Component({
   selector: 'rxa-routed-ng-for',
+  standalone: true,
+  imports: [MatButtonModule, MatCheckboxModule, MatIconModule, BgColorPipe],
   template: `
     <div
       class="d-flex py-3 w-100 align-items-center justify-content-around header"
@@ -49,12 +55,7 @@ function getItems(num: number) {
       <div>Index</div>
       <div>Action</div>
     </div>
-    @for (
-      item of items;
-      track trackById(i, item);
-      let i = $index;
-      let c = $count
-    ) {
+    @for (item of items; track item.id; let i = $index; let c = $count) {
       <div
         [style.height.px]="item.value * 300 + 40"
         class="d-flex py-3 w-100 align-items-center justify-content-around item"
@@ -87,11 +88,12 @@ function getItems(num: number) {
       }
 
       .item {
-        border: 1px solid magenta;
+        border-bottom: 1px solid var(--rxa-border);
+        transition: background-color 0.12s ease;
       }
 
       .item:hover {
-        background: rgba(0, 0, 0, 0.35);
+        background: var(--rxa-surface-3);
       }
 
       .item .value {
@@ -100,38 +102,39 @@ function getItems(num: number) {
       }
 
       .item .box {
+        display: inline-block;
         width: 20px;
         height: 20px;
         margin: 5px;
-        box-shadow: 1px 1px #ffffff;
+        border-radius: var(--rxa-radius-sm);
+        box-shadow: var(--rxa-shadow-sm);
       }
 
       .header {
-        font-weight: bold;
+        font-weight: 700;
         position: sticky;
         top: 0;
-        background-color: #424242;
+        color: var(--rxa-text);
+        background-color: var(--rxa-surface-2);
+        border-bottom: 1px solid var(--rxa-border);
         z-index: 2;
       }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SortingPresenter],
-  standalone: false,
 })
 export class RoutedNgForComponent {
+  private activeRoute = inject(ActivatedRoute);
+  readonly sorting = inject<SortingPresenter<TestItem>>(SortingPresenter);
+
   items = [] as TestItem[];
 
-  constructor(
-    private activeRoute: ActivatedRoute,
-    public sorting: SortingPresenter<TestItem>,
-  ) {
+  constructor() {
     this.sorting.property = 'id';
     this.activeRoute.params.subscribe(({ count }: { count: number }) => {
       const items = getItems(coerceNumberProperty(count, 1000));
       this.items = this.sorting.getSortedItems(items);
     });
   }
-
-  trackById = (i, v) => v.id;
 }

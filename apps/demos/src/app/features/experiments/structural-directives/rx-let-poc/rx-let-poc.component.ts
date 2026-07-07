@@ -1,5 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
+import { TriggerProviderComponent } from '../../../../shared/debug-helper/trigger-provider/trigger-provider.component';
+import { ValueProviderComponent } from '../../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
+import { ListItemGhostComponent } from '../../../../shared/ghost-elements/list-item-ghost/list-item-ghost.component';
+import { RxLet } from '../../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { RxLet as RxLet_1 } from '../../../../../../../../libs/template/let/src/lib/let.directive';
+import { NgIf } from '@angular/common';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
 
 @Component({
   selector: 'rxa-rx-let-poc',
@@ -76,13 +86,24 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
       </div>
     </rxa-visualizer>
   `,
-  standalone: false,
   changeDetection: ChangeDetectionStrategy.Default,
   host: {
     class: 'm-1 p-1',
     style: 'display: block;',
   },
   providers: [],
+  imports: [
+    VisualizerComponent,
+    StrategySelectComponent,
+    TriggerProviderComponent,
+    ValueProviderComponent,
+    ListItemGhostComponent,
+    RxLet,
+    RxLet_1,
+    NgIf,
+    MatProgressBar,
+    DirtyChecksComponent,
+  ],
 })
 export class RxLetPocComponent {
   constructor(public strategyProvider: RxStrategyProvider) {}

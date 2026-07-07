@@ -31,7 +31,6 @@ import { RxEffects } from '@rx-angular/state/effects';
 @Directive({
   selector: '[ifVisible]',
   providers: [RxEffects],
-  standalone: false,
 })
 export class IfVisibleDirective<U> extends Hooks implements OnInit {
   displayed = false;

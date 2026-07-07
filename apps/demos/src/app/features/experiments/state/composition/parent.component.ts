@@ -3,6 +3,8 @@ import { environment } from '../../../../../environments/environment';
 import { Subscription } from 'rxjs';
 import { scan, shareReplay } from 'rxjs/operators';
 import { SourceService } from './source.service';
+import { FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'rxa-state-parent-composition',
@@ -17,7 +19,7 @@ import { SourceService } from './source.service';
     }
   `,
   changeDetection: environment.changeDetection,
-  standalone: false,
+  imports: [FormsModule, AsyncPipe],
 })
 export class RxStateParentCompositionComponent implements OnDestroy {
   subscription = new Subscription();

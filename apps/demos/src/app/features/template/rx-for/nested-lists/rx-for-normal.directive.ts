@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Directive,
   EmbeddedViewRef,
+  inject,
   Input,
   IterableChangeRecord,
   IterableChanges,
@@ -40,11 +41,18 @@ import {
 
 @Directive({
   selector: '[rxForNormal]',
-  standalone: false,
+  standalone: true,
 })
 export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
   implements OnInit, OnDestroy
 {
+  private strategyProvider = inject(RxStrategyProvider);
+  private cdRef = inject(ChangeDetectorRef);
+  private readonly templateRef =
+    inject<TemplateRef<RxDefaultListViewContext<T, U>>>(TemplateRef);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+  private iterableDiffers = inject(IterableDiffers);
+
   @Input()
   set rxForNormal(potentialObservable: ObservableInput<U> | null | undefined) {
     this._rxFor = potentialObservable;
@@ -73,14 +81,6 @@ export class RxForNormal<T, U extends NgIterable<T> = NgIterable<T>>
   set rxForNormalTrackBy(fn: TrackByFunction<T>) {
     this._trackByFn = fn;
   }
-
-  constructor(
-    private strategyProvider: RxStrategyProvider,
-    private cdRef: ChangeDetectorRef,
-    private readonly templateRef: TemplateRef<RxDefaultListViewContext<T, U>>,
-    private readonly viewContainerRef: ViewContainerRef,
-    private iterableDiffers: IterableDiffers,
-  ) {}
 
   private differ: IterableDiffer<T> | null = null;
   private observables$ = new ReplaySubject<ObservableInput<U>>(1);

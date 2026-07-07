@@ -10,7 +10,7 @@ import { RecursiveObservableWorkAsyncComponent } from './recursive-observable-wo
 import { RecursiveObservableWorkPushComponent } from './recursive-observable-work-push.component';
 import { RecursiveObservableComponent } from './recursive-observable.component';
 import { RecursiveStaticComponent } from './recursive-static.component';
-import { ValueProvidersModule } from '../../debug-helper/value-provider';
+
 import { RenderingsModule } from '../../debug-helper/renderings';
 import { RecursiveAsyncComponent } from './recursive-async.component';
 import { RecursivePushComponent } from './recursive-push.component';
@@ -29,7 +29,6 @@ const DECLARATIONS = [
 ];
 
 @NgModule({
-  declarations: DECLARATIONS,
   imports: [
     CommonModule,
     MatButtonModule,
@@ -37,9 +36,9 @@ const DECLARATIONS = [
     RxUnpatch,
     RxPush,
     VisualizerModule,
-    ValueProvidersModule,
     RenderingsModule,
     RxLet,
+    ...DECLARATIONS,
   ],
   exports: DECLARATIONS,
 })

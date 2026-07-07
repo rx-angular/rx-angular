@@ -26,14 +26,6 @@ import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serializ
  * ```
  * import { provideISR } from '@rx-angular/isr/server';
  *
- * @NgModule({
- *  providers: [ provideISR() ]
- * })
- * export class AppServerModule {}
- * ```
- *
- * To configure ISR in a standalone application:
- * ```
  * const serverConfig: ApplicationConfig = {
  *   providers: [
  *     provideServerRendering()
@@ -41,6 +33,16 @@ import { addIsrDataBeforeSerialized } from './utils/add-isr-data-before-serializ
  *   ],
  * };
  * export const config = mergeApplicationConfig(appConfig, serverConfig);
+ * ```
+ *
+ * Legacy NgModule path:
+ * ```
+ * import { provideISR } from '@rx-angular/isr/server';
+ *
+ * @NgModule({
+ *  providers: [ provideISR() ]
+ * })
+ * export class AppServerModule {}
  * ```
  */
 export const provideISR = (): EnvironmentProviders => {

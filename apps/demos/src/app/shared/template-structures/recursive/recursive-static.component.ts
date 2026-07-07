@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
 
 @Component({
   selector: 'rxa-recursive-static',
@@ -23,7 +25,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
     class: 'd-flex w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent, RenderingsComponent, RecursiveStaticComponent],
 })
 export class RecursiveStaticComponent {
   @Input()

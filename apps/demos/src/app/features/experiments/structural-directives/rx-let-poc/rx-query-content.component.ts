@@ -10,10 +10,7 @@ import { Observable } from 'rxjs';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { RxEffects } from '@rx-angular/state/effects';
 
-@Directive({
-  selector: '[rxaContentTest]',
-  standalone: false,
-})
+@Directive({ selector: '[rxaContentTest]' })
 export class RxQueryContentTestDirective {}
 
 @Component({
@@ -22,7 +19,6 @@ export class RxQueryContentTestDirective {}
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxEffects],
-  standalone: false,
 })
 export class RxQueryContentComponent implements OnInit {
   @ContentChild(RxQueryContentTestDirective)

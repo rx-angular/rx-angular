@@ -1,28 +1,42 @@
 <rxa-visualizer>
   <div visualizerHeader>
-    <h2>rxLet Template Triggers</h2>
-    <div class="d-flex">
-      <rxa-strategy-select
-        (strategyChange)="strategy$.next($event)"
-      ></rxa-strategy-select>
-      <div class="ml-2">
-        <div class="mb-2">
-          <strong>Stream</strong>
-        </div>
+    <header class="rxa-demo-header">
+      <div>
+        <h2>*rxLet — Template Triggers</h2>
+        <p class="rxa-demo-subtitle">
+          Drive the <code>*rxLet</code> next, suspense, error and complete
+          states with external triggers.
+        </p>
+      </div>
+      <rxa-docs-link
+        docs="template/rx-let-directive"
+        source="apps/demos/src/app/features/template/rx-let"
+      />
+    </header>
+
+    <div class="rxa-demo-toolbar">
+      <section class="rxa-demo-group">
+        <span class="rxa-demo-label">Strategy</span>
+        <rxa-strategy-select
+          (strategyChange)="strategy$.next($event)"
+        ></rxa-strategy-select>
+      </section>
+      <section class="rxa-demo-group">
+        <span class="rxa-demo-label">Stream</span>
         <rxa-value-provider
           #valueProvider
           [buttons]="true"
         ></rxa-value-provider>
-      </div>
-      <div class="ml-2">
-        <div class="mb-2"><strong>Trigger</strong></div>
+      </section>
+      <section class="rxa-demo-group">
+        <span class="rxa-demo-label">Trigger</span>
         <rxa-trigger-provider #triggerProvider></rxa-trigger-provider>
-      </div>
+      </section>
     </div>
   </div>
   <div class="row w-100">
     <div class="col-6">
-      <h2>Context Variables</h2>
+      <h3 class="rxa-demo-section-title">Context Variables</h3>
       <ng-container
         *rxLet="
           valueProvider.incremental$;
@@ -46,7 +60,7 @@
           <ng-template
             [ngTemplateOutlet]="suspense"
             [ngTemplateOutletContext]="{
-              $implicit: state
+              $implicit: state,
             }"
           ></ng-template>
         }
@@ -55,7 +69,7 @@
             [ngTemplateOutlet]="error"
             [ngTemplateOutletContext]="{
               $implicit: state,
-              $error: e
+              $error: e,
             }"
           ></ng-template>
         }
@@ -64,7 +78,7 @@
       </ng-container>
     </div>
     <div class="col-6">
-      <h2>Template Bindings</h2>
+      <h3 class="rxa-demo-section-title">Template Bindings</h3>
       <ng-container
         *rxLet="
           valueProvider.incremental$;

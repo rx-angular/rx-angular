@@ -2,12 +2,16 @@ import { Component, Input, AfterViewInit } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { finalize, take, tap } from 'rxjs/operators';
+import { RenderingWorkComponent } from '../../../../shared/debug-helper/rendering-work/rendering-work/rendering-work.component';
+import { RxLet } from '../../../../../../../../libs/template/let/src/lib/let.directive';
+import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
+import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
 
 @Component({
   selector: 'rxa-list-toggle-test',
   templateUrl: './list-toggle-test.component.html',
   changeDetection: environment.changeDetection,
-  standalone: false,
+  imports: [RenderingWorkComponent, RxLet, RxPush, PushPipe],
 })
 export class ListToggleTestComponent implements AfterViewInit {
   private letEmitted = false;

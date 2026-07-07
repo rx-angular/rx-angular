@@ -1,4 +1,5 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'rxa-form-ghost',
@@ -48,7 +49,7 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
       }
     `,
   ],
-  standalone: false,
+  imports: [NgxSkeletonLoaderComponent],
 })
 export class FormGhostComponent {
   numItems = [0];

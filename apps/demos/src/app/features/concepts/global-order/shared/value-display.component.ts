@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'rxa-value-display',
@@ -17,7 +19,7 @@ import { Component, Input } from '@angular/core';
       }
     `,
   ],
-  standalone: false,
+  imports: [MatIcon, NgClass],
 })
 export class ValueDisplayComponent {
   isTrue = false;

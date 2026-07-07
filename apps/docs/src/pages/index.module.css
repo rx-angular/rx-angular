@@ -3,36 +3,186 @@
  * and scoped locally.
  */
 
-.heroBanner {
-  --ifm-hero-background-color: var(--ifm-background-color);
-
-  padding: 4rem 0;
-  text-align: center;
+.hero {
   position: relative;
   overflow: hidden;
-  color: var(--ifm-font-color-base);
+  padding: clamp(3.5rem, 8vw, 6rem) 0 clamp(2rem, 4vw, 3rem);
+  background: radial-gradient(
+    58% 70% at 82% -12%,
+    var(--rxa-hero-glow),
+    transparent 60%
+  );
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
-}
-
-.buttons {
+.heroInner {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
+}
+
+.heroLogo {
+  filter: none;
+  margin-bottom: 1.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rxa-accent);
+}
+
+.heroTitle {
+  margin: 0 0 1.25rem;
+  max-width: 16ch;
+  font-size: clamp(2.4rem, 6.5vw, 4.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+.grad {
+  background: linear-gradient(96deg, var(--rxa-grad-from), var(--rxa-grad-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.heroSubtitle {
+  margin: 0 0 2rem;
+  max-width: 36rem;
+  font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+  line-height: 1.6;
+  color: var(--rxa-hero-subtitle);
+}
+
+.heroCtas {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
-.features {
-  display: flex;
-  align-items: center;
-  padding: 2rem 0;
-  width: 100%;
+.btnPrimary,
+.btnGhost {
+  padding: 0.8rem 1.4rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.02rem;
+  text-decoration: none;
+  transition:
+    filter 0.15s ease,
+    border-color 0.15s ease;
 }
 
-.featureImage {
-  height: 200px;
-  width: 200px;
+.btnPrimary {
+  color: #fff;
+  background: linear-gradient(96deg, var(--rxa-cta-from), var(--rxa-cta-to));
+}
+
+.btnPrimary:hover {
+  color: #fff;
+  text-decoration: none;
+  filter: brightness(1.06);
+}
+
+.btnGhost {
+  color: var(--ifm-font-color-base);
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.btnGhost:hover {
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+  border-color: var(--ifm-color-emphasis-500);
+}
+
+.btnPrimary:focus-visible,
+.btnGhost:focus-visible {
+  outline: 3px solid var(--ifm-color-primary-light);
+  outline-offset: 3px;
+}
+
+.heroPackages {
+  margin: 2.4rem 0 0;
+  font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.heroPackages b {
+  margin: 0 0.15rem;
+  font-weight: 700;
+  color: var(--rxa-accent);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(5.5rem, 11vw, 9rem);
+  padding: clamp(4.5rem, 9vw, 7rem) 1.5rem clamp(5rem, 9vw, 7rem);
+}
+
+.packages,
+.benefits {
+  width: 100%;
+  max-width: 62rem;
+  margin: 0 auto;
+}
+
+/* Clear the sticky navbar when the hero CTA jumps to #packages. */
+.packages {
+  scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);
+}
+
+.sectionTitle {
+  margin: 0 0 0.6rem;
+  text-align: center;
+  font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+.sectionLede {
+  max-width: 40rem;
+  margin: 0 auto 1.75rem;
+  text-align: center;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.benefitGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.benefitCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 16rem;
+  max-width: 19rem;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  color: var(--ifm-color-emphasis-800);
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btnPrimary,
+  .btnGhost {
+    transition: none;
+  }
 }

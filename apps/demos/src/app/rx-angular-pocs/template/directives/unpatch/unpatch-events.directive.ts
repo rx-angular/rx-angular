@@ -27,6 +27,11 @@ import {
  * @returns void
  */
 export function unpatchEventListener(elem: HTMLElement, event: string): void {
+  // `eventListeners` is a Chrome DevTools-only helper and is undefined in a
+  // normal browser runtime — bail out instead of throwing.
+  if (typeof (elem as any).eventListeners !== 'function') {
+    return;
+  }
   const eventListeners = (elem as any).eventListeners(event);
   // Return if no event listeners are present
   if (!eventListeners) {
@@ -86,10 +91,7 @@ const eventsToUnpatch: string[] = [
  *
  * @publicApi
  */
-@Directive({
-  selector: '[unpatch]',
-  standalone: false,
-})
+@Directive({ selector: '[unpatch]' })
 export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   /**
    * @description

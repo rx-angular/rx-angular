@@ -1,0 +1,88 @@
+// ============================================================================
+//  Angular Material polish for the demos
+//  The demos use Material buttons, form-fields and toggle groups as ad-hoc
+//  control rows. These rules give them consistent spacing, alignment and the
+//  same rounded, tokenised look as the design-system components.
+// ============================================================================
+
+// ---------------------------------------------------------------------------
+//  Buttons
+// ---------------------------------------------------------------------------
+.mat-mdc-button-base {
+  // Align buttons with adjacent inputs / form-fields on the same row.
+  vertical-align: middle;
+  letter-spacing: 0 !important;
+}
+
+// Design-system radius on all button variants.
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-outlined-button,
+.mat-mdc-button {
+  border-radius: var(--rxa-radius-sm) !important;
+}
+
+// Consistent rhythm when buttons / fields sit as bare siblings in a row
+// (common throughout the debug helpers, e.g. the array provider).
+.mat-mdc-button-base + .mat-mdc-button-base,
+.mat-mdc-form-field + .mat-mdc-button-base,
+.mat-mdc-button-base + .mat-mdc-form-field {
+  margin-left: 0.4rem;
+}
+
+// ---------------------------------------------------------------------------
+//  Form fields
+// ---------------------------------------------------------------------------
+.mat-mdc-form-field {
+  vertical-align: middle;
+}
+
+// Round the outlined field to match inputs/buttons in the design system.
+.mat-mdc-form-field.mat-mdc-form-field-type-mat-input {
+  .mdc-notched-outline__leading {
+    border-top-left-radius: var(--rxa-radius-sm);
+    border-bottom-left-radius: var(--rxa-radius-sm);
+  }
+  .mdc-notched-outline__trailing {
+    border-top-right-radius: var(--rxa-radius-sm);
+    border-bottom-right-radius: var(--rxa-radius-sm);
+  }
+}
+
+// ---------------------------------------------------------------------------
+//  Button toggle groups — match the tokenised, rounded look
+// ---------------------------------------------------------------------------
+.mat-button-toggle-group {
+  border-radius: var(--rxa-radius-sm) !important;
+  border-color: var(--rxa-border-strong) !important;
+  overflow: hidden;
+  box-shadow: var(--rxa-shadow-sm);
+}
+
+.mat-button-toggle-group .mat-button-toggle-checked {
+  background: rgba(var(--rxa-brand-rgb), 0.1);
+  color: var(--rxa-brand);
+}
+
+.mat-button-toggle-group
+  .mat-button-toggle-checked
+  .mat-button-toggle-label-content {
+  font-weight: 600;
+}
+
+// ---------------------------------------------------------------------------
+//  Helper: opt-in control row for grouping Material controls with a gap
+// ---------------------------------------------------------------------------
+.rxa-control-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+
+  // Neutralise the sibling margins above so gap is the single source of truth.
+  > .mat-mdc-button-base + .mat-mdc-button-base,
+  > .mat-mdc-form-field + .mat-mdc-button-base,
+  > .mat-mdc-button-base + .mat-mdc-form-field {
+    margin-left: 0;
+  }
+}

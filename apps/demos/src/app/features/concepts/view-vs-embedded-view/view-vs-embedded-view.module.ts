@@ -8,12 +8,15 @@ import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [
+  exports: [Poc1LetDirective],
+  imports: [
+    CommonModule,
+    VisualizerModule,
+    RxUnpatch,
+    MatButtonModule,
     OriginalLetDirective,
     Poc1LetDirective,
     ViewVsEmbeddedViewComponent,
   ],
-  exports: [Poc1LetDirective],
-  imports: [CommonModule, VisualizerModule, RxUnpatch, MatButtonModule],
 })
 export class ViewVsEmbeddedViewModule {}

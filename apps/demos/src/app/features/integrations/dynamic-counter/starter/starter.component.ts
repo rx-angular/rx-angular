@@ -4,6 +4,12 @@ import { FormBuilder } from '@angular/forms';
 
 import { RxState } from '@rx-angular/state';
 import { CounterState, INITIAL_STATE } from '../shared/model';
+import { MatButton } from '@angular/material/button';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
+import { ToArrayPipe } from '../../../../shared/utils/to-array.pipe';
+import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
 
 @Component({
   selector: 'rxa-counter-starter',
@@ -51,7 +57,7 @@ import { CounterState, INITIAL_STATE } from '../shared/model';
       </mat-form-field>
     </div>
   `,
-  standalone: false,
+  imports: [MatButton, MatFormField, MatInput, RxPush, ToArrayPipe, PushPipe],
 })
 export class StarterComponent {
   readonly initialCounterState: CounterState = INITIAL_STATE;

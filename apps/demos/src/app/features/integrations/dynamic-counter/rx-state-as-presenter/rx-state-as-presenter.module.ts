@@ -7,11 +7,6 @@ import { SharedModule } from '../shared/shared.module';
 const DECLARATIONS = [RxStateAsPresenterComponent];
 
 @NgModule({
-  declarations: DECLARATIONS,
-  imports: [
-    SharedModule,
-    RouterModule.forChild(ROUTES)
-  ]
+  imports: [SharedModule, RouterModule.forChild(ROUTES), ...DECLARATIONS],
 })
-export class RxStateAsPresenterModule {
-}
+export class RxStateAsPresenterModule {}

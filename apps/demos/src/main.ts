@@ -9,12 +9,20 @@ import { AppComponent } from './app/app-component/index';
 import { ENVIRONMENT_SETTINGS } from './app/shared/environment.token';
 import { environment } from './environments/environment';
 import { promiseMarkerFactory } from './app/shared/utils/measure';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 const mP = promiseMarkerFactory('Bootstrap');
 mP.wrap(
   bootstrapApplication(AppComponent, {
     providers: [
       provideHttpClient(),
+      {
+        provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+        useValue: {
+          appearance: 'outline',
+          subscriptSizing: 'dynamic',
+        },
+      },
       provideAnimations(),
       {
         provide: ENVIRONMENT_SETTINGS,

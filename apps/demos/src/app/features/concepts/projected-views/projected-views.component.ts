@@ -11,6 +11,10 @@ import { combineLatest, Subject } from 'rxjs';
 import { ContentChildComponent } from './content-child.component';
 import { ViewChildComponent } from './view-child.component';
 import { RxActionFactory, rxActions } from '@rx-angular/state/actions';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { MatButton } from '@angular/material/button';
+import { RxUnpatch } from '../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import { RxLet } from '../../../rx-angular-pocs/template/directives/let/rx-let.directive';
 
 @Component({
   selector: 'rxa-projected-views',
@@ -57,7 +61,14 @@ import { RxActionFactory, rxActions } from '@rx-angular/state/actions';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    MatButton,
+    RxUnpatch,
+    ViewChildComponent,
+    RxLet,
+    ContentChildComponent,
+  ],
 })
 export class ProjectedViewsComponent {
   @ViewChildren('test') set testDif(t) {

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { CdHelper } from '../../../utils/cd-helper';
+import { VisualizerComponent } from '../../visualizer/visualizer/visualizer.component';
+import { CdTriggerComponent } from '../../cd-trigger/cd-trigger/cd-trigger.component';
 
 @Component({
   selector: 'rxa-cd-env',
@@ -12,12 +14,12 @@ import { CdHelper } from '../../../utils/cd-helper';
     </ng-container>
     <ng-content></ng-content>
   </rxa-visualizer>`,
-  standalone: false,
   host: {
     class: 'd-block w-100',
   },
   changeDetection: environment.changeDetection,
   providers: [CdHelper],
+  imports: [VisualizerComponent, CdTriggerComponent],
 })
 export class CdEnvComponent {
   changeDetection = environment.changeDetection;
