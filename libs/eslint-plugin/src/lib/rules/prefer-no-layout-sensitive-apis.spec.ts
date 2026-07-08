@@ -1,10 +1,13 @@
+import * as tsParser from '@typescript-eslint/parser';
 import { TSESLint } from '@typescript-eslint/utils';
 import * as path from 'path';
 import rule, { MessageIds } from './prefer-no-layout-sensitive-apis';
 
 const ruleTester = new TSESLint.RuleTester({
-  parser: require.resolve('@typescript-eslint/parser'),
-});
+  languageOptions: {
+    parser: tsParser,
+  },
+} as unknown as TSESLint.RuleTesterConfig);
 
 const valid: TSESLint.RunTests<MessageIds, never[]>['valid'] = [
   `
