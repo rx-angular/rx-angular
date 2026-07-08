@@ -25,7 +25,7 @@ import { CdOnPush3Component } from './push-3.component';
   host: {
     class: 'd-block w-100',
   },
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CdHelper],
   imports: [
     VisualizerComponent,

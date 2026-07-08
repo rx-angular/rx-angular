@@ -1,8 +1,7 @@
-import { AsyncAction } from '../async/AsyncAction';
-import { AsapScheduler } from './AsapScheduler';
-import { SchedulerAction } from '../types';
-
 import { Promise } from '../../../browser';
+import { AsyncAction } from '../async/AsyncAction';
+import { SchedulerAction } from '../types';
+import { AsapScheduler } from './AsapScheduler';
 
 let nextHandle = 1;
 // The promise needs to be created lazily otherwise it won't be patched by Zones
@@ -36,16 +35,12 @@ const Immediate = {
 export class AsapAction<T> extends AsyncAction<T> {
   constructor(
     protected scheduler: AsapScheduler,
-    protected work: (this: SchedulerAction<T>, state?: T) => void
+    protected work: (this: SchedulerAction<T>, state?: T) => void,
   ) {
     super(scheduler, work);
   }
 
-  protected requestAsyncId(
-    scheduler: AsapScheduler,
-    id?: any,
-    delay: number = 0
-  ): any {
+  protected requestAsyncId(scheduler: AsapScheduler, id?: any, delay = 0): any {
     // If delay is greater than 0, request as an async action.
     if (delay !== null && delay > 0) {
       return super.requestAsyncId(scheduler, id, delay);
@@ -58,15 +53,11 @@ export class AsapAction<T> extends AsyncAction<T> {
     return (
       scheduler.scheduled ||
       (scheduler.scheduled = Immediate.setImmediate(
-        scheduler.flush.bind(scheduler, undefined)
+        scheduler.flush.bind(scheduler, undefined),
       ))
     );
   }
-  protected recycleAsyncId(
-    scheduler: AsapScheduler,
-    id?: any,
-    delay: number = 0
-  ): any {
+  protected recycleAsyncId(scheduler: AsapScheduler, id?: any, delay = 0): any {
     // If delay exists and is greater than 0, or if the delay is null (the
     // action wasn't rescheduled) but was originally scheduled as an async
     // action, then recycle as an async action.
@@ -97,4 +88,3 @@ function findAndClearHandle(handle: number): boolean {
   }
   return false;
 }
-

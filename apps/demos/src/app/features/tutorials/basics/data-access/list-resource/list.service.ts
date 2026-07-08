@@ -1,8 +1,14 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import {
+  catchError,
+  delay,
+  distinctUntilChanged,
+  filter,
+  map,
+} from 'rxjs/operators';
 import { ListServerItem } from './list.server.model';
-import { catchError, delay, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 interface ListServiceState {
   list: any[];
@@ -22,16 +28,16 @@ export class ListService {
 
   list$ = this.state$.pipe(
     map((s) => s.list),
-    distinctUntilChanged()
+    distinctUntilChanged(),
   );
 
   errorSignal$ = this.state$.pipe(
     map((s) => s.error),
-    filter((b) => !!b)
+    filter((b) => !!b),
   );
   successSignal$ = this.state$.pipe(
     map(({ loading, error }) => ({ loading, error })),
-    filter((o) => o.loading === false && o.error !== '')
+    filter((o) => o.loading === false && o.error !== ''),
   );
 
   loadingSignal$ = this.state$.pipe(map(({ loading }) => loading));
@@ -57,7 +63,7 @@ export class ListService {
   httpGetListItem = (arg?: any): Observable<{ list: any[] }> =>
     of(getData(arg)).pipe(
       delay(~~(Math.random() * 5000)),
-      map((list) => ({ list }))
+      map((list) => ({ list })),
     );
 }
 

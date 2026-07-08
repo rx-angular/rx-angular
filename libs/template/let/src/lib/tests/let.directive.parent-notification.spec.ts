@@ -1,5 +1,6 @@
 import { JsonPipe } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   QueryList,
@@ -33,6 +34,7 @@ import { RxLet } from '../let.directive';
       {{ (value | json) || 'undefined' }}
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, JsonPipe],
 })
 class LetDirectiveTestStrategyComponent {

@@ -9,5 +9,8 @@
     "downlevelIteration": true,
     "moduleResolution": "bundler"
   },
-  "include": ["./perf/**/*.ts"]
+  "include": ["./perf/**/*.ts"],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  }
 }

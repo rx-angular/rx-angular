@@ -14,7 +14,8 @@
     "annotateForClosureCompiler": true,
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
-    "enableResourceInlining": true
+    "enableResourceInlining": true,
+    "strictTemplates": false
   },
   "include": ["**/*.ts"],
   "exclude": [

@@ -14,7 +14,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-
+import { RxEffects } from '@rx-angular/state/effects';
 import {
   BehaviorSubject,
   defer,
@@ -35,9 +35,7 @@ import {
   startWith,
   switchAll,
   take,
-  tap,
 } from 'rxjs/operators';
-import { RxEffects } from '@rx-angular/state/effects';
 
 type RxForTemplateNames = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
 

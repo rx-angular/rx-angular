@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import type { Plugin } from 'esbuild';
 import { type MergeStrategyConfig, mergeStrategyFactory } from '../core';
 import { esbuildOutputLoaderPlugin } from './rolldown/esbuild-output-loader.plugin';

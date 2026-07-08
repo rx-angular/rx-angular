@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,

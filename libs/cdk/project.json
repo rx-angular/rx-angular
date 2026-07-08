@@ -9,6 +9,7 @@
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": ["build-lib"],
+      "outputs": ["{workspaceRoot}/dist/libs/cdk/schematics"],
       "options": {
         "commands": [
           "yarn tsc -p libs/cdk/tsconfig.schematics.json",
@@ -18,25 +19,24 @@
           "yarn cpx libs/cdk/schematics/src/**/schema.json dist/libs/cdk/schematics/src"
         ],
         "parallel": false
-      },
-      "outputs": ["{workspaceRoot}/dist/libs/cdk/schematics"]
+      }
     },
     "build-lib": {
       "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/libs/cdk"],
       "options": {
         "tsConfig": "libs/cdk/tsconfig.lib.json",
         "project": "libs/cdk/ng-package.json"
-      },
-      "outputs": ["{workspaceRoot}/dist/libs/cdk"]
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/cdk"],
       "options": {
         "jestConfig": "libs/cdk/jest.config.ts",
         "codeCoverage": true,
         "tsConfig": "libs/cdk/tsconfig.spec.json"
-      },
-      "outputs": ["{workspaceRoot}/coverage/cdk"]
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint",

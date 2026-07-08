@@ -4,6 +4,8 @@
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
+    "strict": false,
+    "ignoreDeprecations": "6.0",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

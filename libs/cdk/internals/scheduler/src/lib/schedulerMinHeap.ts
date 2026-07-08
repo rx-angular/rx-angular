@@ -44,7 +44,7 @@ export function pop(heap: Heap): ReactSchedulerTask | null {
 
 function siftUp(heap, node, i) {
   let index = i;
-  // eslint-disable-next-line no-constant-condition
+
   while (true) {
     const parentIndex = (index - 1) >>> 1;
     const parent = heap[parentIndex];
