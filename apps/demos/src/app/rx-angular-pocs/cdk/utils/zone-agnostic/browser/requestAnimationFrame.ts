@@ -5,5 +5,5 @@ export function requestAnimationFrame(cb: () => void): number {
 }
 
 export function cancelAnimationFrame(id: number): void {
-   getZoneUnPatchedApi('cancelAnimationFrame')(id);
+  getZoneUnPatchedApi('cancelAnimationFrame')(id);
 }

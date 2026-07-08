@@ -2,20 +2,19 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { RxEffects } from '@rx-angular/state/effects';
 import { RxLet } from '@rx-angular/template/let';
 import { RxPush } from '@rx-angular/template/push';
-import { RxEffects } from '@rx-angular/state/effects';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnpatchEventsModule } from '../../../../rx-angular-pocs/template/directives/unpatch';
-
-import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
-import { createImageConverter } from '../../../../shared/image-array';
-import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
-import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
+import { CanvasViewComponent } from '../../../../shared/canvas-view/canvas-view.component';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
-import { CanvasViewComponent } from '../../../../shared/canvas-view/canvas-view.component';
+import { createImageConverter } from '../../../../shared/image-array';
+import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
+import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
+import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
 
 @Component({
   selector: 'rxa-concurrent-strategies',

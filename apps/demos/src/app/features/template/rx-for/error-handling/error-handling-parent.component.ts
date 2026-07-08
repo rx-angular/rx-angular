@@ -1,10 +1,9 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RxFor } from '@rx-angular/template/for';
-
+import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
 import { ErrorHandlingChildComponent } from './error-handling-child.component';
-import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 
 @Component({
   selector: 'rxa-error-handling-parent',

@@ -1,25 +1,25 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
+import { CdkScrollable as CdkScrollable_1 } from '@angular/cdk/scrolling';
+import { AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ViewChild,
 } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatSidenav,
+  MatSidenavContainer,
+  MatSidenavContent,
+} from '@angular/material/sidenav';
+import { MatToolbar } from '@angular/material/toolbar';
 import { NavigationEnd, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
 import { filter, tap, withLatestFrom } from 'rxjs/operators';
 import { ViewportService } from '../../shared/viewport.service';
-import {
-  MatSidenavContainer,
-  MatSidenav,
-  MatSidenavContent,
-} from '@angular/material/sidenav';
-import { MatToolbar } from '@angular/material/toolbar';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { CdkScrollable as CdkScrollable_1 } from '@angular/cdk/scrolling';
-import { AsyncPipe } from '@angular/common';
 
 interface AppShellState {
   isHandset: boolean;

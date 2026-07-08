@@ -30,16 +30,15 @@ export class Presenter extends RxState<ComponentState> {
     this.refreshClicks,
     this.select(
       map((s) => s.refreshInterval),
-      switchMap((ms) => timer(0, ms))
-    )
-  )
+      switchMap((ms) => timer(0, ms)),
+    ),
+  );
 
   constructor() {
     super();
     this.set(initComponentState);
     this.connect(
-      this.listExpandedChanges.pipe(map((b) => ({ listExpanded: b })))
+      this.listExpandedChanges.pipe(map((b) => ({ listExpanded: b }))),
     );
   }
-
 }

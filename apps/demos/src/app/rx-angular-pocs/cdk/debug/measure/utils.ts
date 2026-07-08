@@ -58,7 +58,7 @@ export function end(label: string = ++i + ''): void {
 export function measure(
   startLabel: string,
   endLabel: string,
-  measureName?: string
+  measureName?: string,
 ): void {
   measureName = measureName
     ? measureName
@@ -66,7 +66,7 @@ export function measure(
   performance.measure(
     measureName,
     `${PREFIX}-${startLabel}`,
-    `${PREFIX}-${endLabel}`
+    `${PREFIX}-${endLabel}`,
   );
   const { name, duration } = performance.getEntriesByName(measureName)[0];
   console.log(`${name}: ${duration}`);
@@ -150,7 +150,7 @@ export function measure$(label: string = ++i + '') {
         () => {
           marker.complete();
           subscriber.complete();
-        }
+        },
       );
 
       return () => {

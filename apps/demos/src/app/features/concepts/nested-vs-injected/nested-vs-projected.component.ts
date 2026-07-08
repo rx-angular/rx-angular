@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CdHelper } from '../../../shared/utils/cd-helper';
-import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
-import {
-  MatButtonToggleGroup,
-  MatButtonToggle,
-} from '@angular/material/button-toggle';
 import { MatButton } from '@angular/material/button';
-import { DetectChangesNestedComponent } from './nested/detect-changes.nested.component';
+import {
+  MatButtonToggle,
+  MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { CdHelper } from '../../../shared/utils/cd-helper';
 import { DetectChangesInjectedComponent } from './injected/detect-changes.injected.component';
+import { DetectChangesNestedComponent } from './nested/detect-changes.nested.component';
 
 @Component({
   selector: 'rxa-cd',

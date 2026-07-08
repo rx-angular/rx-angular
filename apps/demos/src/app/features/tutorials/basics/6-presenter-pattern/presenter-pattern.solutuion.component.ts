@@ -1,19 +1,19 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatList, MatListItem } from '@angular/material/list';
 import { RxState } from '@rx-angular/state';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Adapter } from './adapter';
 import { Presenter } from './presenter';
-import {
-  MatExpansionPanel,
-  MatExpansionPanelHeader,
-  MatExpansionPanelTitle,
-  MatExpansionPanelDescription,
-} from '@angular/material/expansion';
-import { MatButton } from '@angular/material/button';
-import { MatList, MatListItem } from '@angular/material/list';
-import { MatCard } from '@angular/material/card';
-import { AsyncPipe } from '@angular/common';
 
 export interface DemoBasicsItem {
   id: string;

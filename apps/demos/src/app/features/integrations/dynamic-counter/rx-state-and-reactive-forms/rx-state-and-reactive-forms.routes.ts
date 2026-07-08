@@ -4,6 +4,6 @@ import { RxStateAndReactiveFormsCounterComponent } from './rx-state-and-reactive
 export const ROUTES: Routes = [
   {
     path: '',
-    component: RxStateAndReactiveFormsCounterComponent
-  }
+    component: RxStateAndReactiveFormsCounterComponent,
+  },
 ];

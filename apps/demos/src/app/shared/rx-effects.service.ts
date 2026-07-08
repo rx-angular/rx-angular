@@ -35,11 +35,11 @@ export class RxEffects implements OnDestroy {
    */
   hold<S>(
     obsOrObsWithSideEffect: Observable<S>,
-    sideEffectFn?: (arg: S) => void
+    sideEffectFn?: (arg: S) => void,
   ): void {
     if (typeof sideEffectFn === 'function') {
       this.effectObservable.nextEffectObservable(
-        obsOrObsWithSideEffect.pipe(tap(sideEffectFn))
+        obsOrObsWithSideEffect.pipe(tap(sideEffectFn)),
       );
       return;
     }

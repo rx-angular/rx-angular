@@ -7,11 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, share } from 'rxjs/operators';
-
-import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
-import { RecursiveModule } from '../../../shared/template-structures/recursive/recursive.module';
-import { DocsLinkComponent } from '../../../shared/docs-link';
 import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
+import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
+import { DocsLinkComponent } from '../../../shared/docs-link';
+import { RecursiveModule } from '../../../shared/template-structures/recursive/recursive.module';
 
 @Component({
   selector: 'rxa-push-basic-example',

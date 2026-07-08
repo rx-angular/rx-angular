@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { MatButton } from '@angular/material/button';
+import { environment } from '../../../../environments/environment';
 import { ListToggleTestComponent } from './list-toggle-test-component/list-toggle-test.component';
 
 @Component({

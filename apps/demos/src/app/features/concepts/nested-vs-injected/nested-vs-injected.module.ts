@@ -1,25 +1,24 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ROUTES } from './nested-vs-injected.routes';
+import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { RouterModule } from '@angular/router';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
-import { DetectChangesInjectedComponent } from './injected/detect-changes.injected.component';
 import { CdDefaultModule } from '../../../shared/debug-helper/cd-default/cd-default.module';
-import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { CdOnPushModule } from '../../../shared/debug-helper/cd-on-push/cd-on-push.module';
-
-import { DetectChangesNestedComponent } from './nested/detect-changes.nested.component';
+import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
+import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
+import { DetectChangesInjectedComponent } from './injected/detect-changes.injected.component';
 import { CdDefault1Component } from './nested/default-1.component';
 import { CdDefault2Component } from './nested/default-2.component';
 import { CdDefault3Component } from './nested/default-3.component';
+import { CdDefault4Component } from './nested/default-4.component';
+import { DetectChangesNestedComponent } from './nested/detect-changes.nested.component';
 import { CdOnPush1Component } from './nested/push-1.component';
 import { CdOnPush2Component } from './nested/push-2.component';
 import { CdOnPush3Component } from './nested/push-3.component';
+import { ROUTES } from './nested-vs-injected.routes';
 import { NestedVsProjectedComponent } from './nested-vs-projected.component';
-import { CdDefault4Component } from './nested/default-4.component';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   imports: [

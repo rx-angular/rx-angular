@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { rxEffects } from '@rx-angular/state/effects';
 import { EMPTY, interval, Subject, switchMap } from 'rxjs';
-import { DocsLinkComponent } from '../../../shared/docs-link';
 import { CodeHighlightComponent } from '../../../shared/code-highlight';
+import { DocsLinkComponent } from '../../../shared/docs-link';
 
 // Shown verbatim on the page via <rxa-code>. Flush-left so it renders cleanly.
 const RX_EFFECTS_CODE = `export class RxEffectsComponent {

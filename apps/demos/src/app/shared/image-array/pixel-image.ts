@@ -1,7 +1,7 @@
 import { fromEvent, Observable, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { CMYK, ImgInfo, RGBA } from './model';
 import { getMemoizedFn } from '../../rx-angular-pocs';
+import { CMYK, ImgInfo, RGBA } from './model';
 
 // http://pixelartmaker.com/art/556d215ebf25e7f
 

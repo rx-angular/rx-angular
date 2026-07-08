@@ -1,16 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  Input,
-} from '@angular/core';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { Observable, Subject } from 'rxjs';
-import { toBooleanArray } from './utils';
-import { RxState } from '@rx-angular/state';
-import { delay, map } from 'rxjs/operators';
-import { RxFor } from '../../../rx-angular-pocs/template/directives/for/rx-for.directive';
 import { NgStyle } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxState } from '@rx-angular/state';
+import { Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { RxFor } from '../../../rx-angular-pocs/template/directives/for/rx-for.directive';
+import { toBooleanArray } from './utils';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];

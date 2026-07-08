@@ -15,7 +15,8 @@ export interface SortingModel<T> {
 @Injectable()
 export class SortingPresenter<T>
   extends RxState<SortingModel<T>>
-  implements OnInit {
+  implements OnInit
+{
   // Handle the active sort direction
 
   get direction(): SortDirection {
@@ -23,7 +24,7 @@ export class SortingPresenter<T>
   }
 
   set property(property: SortProps<T>) {
-    this.set({property});
+    this.set({ property });
   }
   get property(): SortProps<T> {
     return this.get().property;
@@ -40,7 +41,7 @@ export class SortingPresenter<T>
     if (this.get().property === property) {
       this.set('direction', this.toggleDirectionValue);
     }
-    this.set({property});
+    this.set({ property });
   }
 
   // Handle the UI state
@@ -67,11 +68,13 @@ export class SortingPresenter<T>
     return this.sortItemsValue(items, this.get());
   }
 
-  sortItems = <V>() => (items$: Observable<V[]>): Observable<V[]> =>
-    items$.pipe(
-      withLatestFrom(this.$),
-      map((args) => this.sortItemsValue(...args))
-    );
+  sortItems =
+    <V>() =>
+    (items$: Observable<V[]>): Observable<V[]> =>
+      items$.pipe(
+        withLatestFrom(this.$),
+        map((args) => this.sortItemsValue(...args)),
+      );
 
   // internal logic ============================================================
 
@@ -81,7 +84,7 @@ export class SortingPresenter<T>
 
   private sortItemsValue<V>(items: V[], s: SortingModel<T>): V[] {
     return [...items].sort(
-      (a: any, b: any) => (a[s.property] - b[s.property]) * s.direction
+      (a: any, b: any) => (a[s.property] - b[s.property]) * s.direction,
     );
   }
 

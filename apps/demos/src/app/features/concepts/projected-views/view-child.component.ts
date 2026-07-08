@@ -4,8 +4,8 @@ import {
   Component,
   ContentChild,
 } from '@angular/core';
-import { ContentChildComponent } from './content-child.component';
 import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { ContentChildComponent } from './content-child.component';
 
 @Component({
   selector: 'rxa-view-child',

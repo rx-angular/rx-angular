@@ -1,20 +1,20 @@
-import { ScrollingModule as AutosizedScrollingModule } from '@angular/cdk-experimental/scrolling';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import {
   CdkVirtualScrollViewport,
   ScrollingModule,
 } from '@angular/cdk/scrolling';
+import { ScrollingModule as AutosizedScrollingModule } from '@angular/cdk-experimental/scrolling';
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  DOCUMENT,
   inject,
   OnInit,
   TemplateRef,
   ViewChild,
-  DOCUMENT,
 } from '@angular/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
@@ -32,9 +32,9 @@ import {
 } from '@rx-angular/template/virtual-scrolling';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
-import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
 
 @Component({

@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,9 +6,8 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { MatButton } from '@angular/material/button';
-import { AsyncPipe } from '@angular/common';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 @Component({
   selector: 'rxa-v1-b',
   template: `

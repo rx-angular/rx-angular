@@ -39,28 +39,28 @@ interface Accumulator<T> extends Subscribable<T> {
 export function createAccumulationObservable<T extends object>(
   stateObservables = new Subject<Observable<Partial<T>>>(),
   stateSlices = new Subject<Partial<T>>(),
-  accumulatorObservable = new BehaviorSubject(defaultAccumulator)
+  accumulatorObservable = new BehaviorSubject(defaultAccumulator),
 ): Accumulator<T> {
   const signal$ = merge(
     stateObservables.pipe(
       distinctUntilChanged(),
       mergeAll(),
-      observeOn(queueScheduler)
+      observeOn(queueScheduler),
     ),
-    stateSlices.pipe(observeOn(queueScheduler))
+    stateSlices.pipe(observeOn(queueScheduler)),
   ).pipe(
     withLatestFrom(accumulatorObservable.pipe(observeOn(queueScheduler))),
     scan(
       (state, [slice, stateAccumulator]) => stateAccumulator(state, slice),
-      {} as T
+      {} as T,
     ),
     tap(
       (newState) => (compositionObservable.state = newState),
-      (error) => console.error(error)
+      (error) => console.error(error),
     ),
     // @Notice We catch the error here as it get lost in between `publish` and `publishReplay`. We return empty to
     catchError((e) => EMPTY),
-    publish()
+    publish(),
   );
   const state$: Observable<T> = signal$.pipe(publishReplay(1));
   const compositionObservable: Accumulator<T> = {
@@ -92,9 +92,11 @@ export function createAccumulationObservable<T extends object>(
   }
 
   function subscribe(): Subscription {
-    const sub = (compositionObservable.signal$ as ConnectableObservable<T>).connect();
+    const sub = (
+      compositionObservable.signal$ as ConnectableObservable<T>
+    ).connect();
     sub.add(
-      (compositionObservable.state$ as ConnectableObservable<T>).connect()
+      (compositionObservable.state$ as ConnectableObservable<T>).connect(),
     );
     sub.add(() => {
       accumulatorObservable.complete();

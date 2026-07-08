@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { rxActions } from '@rx-angular/state/actions';
 import { scan } from 'rxjs';
-import { DocsLinkComponent } from '../../../shared/docs-link';
 import { CodeHighlightComponent } from '../../../shared/code-highlight';
+import { DocsLinkComponent } from '../../../shared/docs-link';
 
 // Shown verbatim on the page via <rxa-code>. Flush-left so it renders cleanly.
 const RX_ACTIONS_CODE = `interface CounterActions {
