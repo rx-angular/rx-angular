@@ -1,7 +1,7 @@
-import { AsyncAction } from '../async/AsyncAction';
 import { Subscription } from 'rxjs';
-import { QueueScheduler } from './QueueScheduler';
+import { AsyncAction } from '../async/AsyncAction';
 import { SchedulerAction } from '../types';
+import { QueueScheduler } from './QueueScheduler';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.
@@ -11,12 +11,12 @@ import { SchedulerAction } from '../types';
 export class QueueAction<T> extends AsyncAction<T> {
   constructor(
     protected scheduler: QueueScheduler,
-    protected work: (this: SchedulerAction<T>, state?: T) => void
+    protected work: (this: SchedulerAction<T>, state?: T) => void,
   ) {
     super(scheduler, work);
   }
 
-  public schedule(state?: T, delay: number = 0): Subscription {
+  public schedule(state?: T, delay = 0): Subscription {
     if (delay > 0) {
       return super.schedule(state, delay);
     }
@@ -36,7 +36,7 @@ export class QueueAction<T> extends AsyncAction<T> {
   protected requestAsyncId(
     scheduler: QueueScheduler,
     id?: any,
-    delay: number = 0
+    delay = 0,
   ): any {
     // If delay exists and is greater than 0, or if the delay is null (the
     // action wasn't rescheduled) but was originally scheduled as an async

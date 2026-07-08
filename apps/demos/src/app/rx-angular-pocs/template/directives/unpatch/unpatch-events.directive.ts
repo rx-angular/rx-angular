@@ -5,14 +5,14 @@ import {
   Input,
   OnDestroy,
 } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { unpatchAddEventListener } from '@rx-angular/cdk/zone-less/browser';
 import {
   focusEvents,
   inputEvents,
   mouseEvents,
 } from '@rx-angular/cdk/zone-configurations';
+import { unpatchAddEventListener } from '@rx-angular/cdk/zone-less/browser';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 /**
  *

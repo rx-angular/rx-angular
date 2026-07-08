@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Template Migration drop-modules should replace LetDirective with RxLet 1`] = `
 "import { RxLet } from "@rx-angular/template/let";

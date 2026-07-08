@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   effect,
   inject,
@@ -38,6 +39,7 @@ interface User {
       </span>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
 })
 export class Item implements OnDestroy {
@@ -158,6 +160,7 @@ function doWork() {
 
     <router-outlet />
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: `
     .container {
       max-width: 1200px;

@@ -16,7 +16,7 @@ import { CdTriggerComponent } from '../../../../shared/debug-helper/cd-trigger/c
   host: {
     class: 'd-block w-100',
   },
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CdHelper],
   imports: [VisualizerComponent, CdTriggerComponent],
 })

@@ -1,7 +1,7 @@
 import { EMPTY, from, Observable, of, timer } from 'rxjs';
+import { fromFetch } from 'rxjs/fetch';
 import { mergeWith, share, switchMap, take, takeUntil } from 'rxjs/operators';
 import { SchedulerConfig, TestItem } from './model';
-import { fromFetch } from 'rxjs/fetch';
 
 export function compareIdFn(a, b) {
   return a.id === b.id;
@@ -51,10 +51,7 @@ export function toRandom(): number {
   return Math.random();
 }
 
-export function toBoolean(
-  float: number,
-  truthy: number = 0.5,
-): boolean | undefined {
+export function toBoolean(float: number, truthy = 0.5): boolean | undefined {
   return float !== undefined ? float < truthy : undefined;
 }
 

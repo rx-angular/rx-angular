@@ -5,9 +5,9 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import { Hooks } from '../debug-helper/hooks';
-import { Observable } from 'rxjs';
 import { RxState } from '@rx-angular/state';
+import { Observable } from 'rxjs';
+import { Hooks } from '../debug-helper/hooks';
 
 @Component({
   selector: 'rxa-canvas-view',

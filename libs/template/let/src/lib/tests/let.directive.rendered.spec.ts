@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewContainerRef,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
@@ -12,6 +17,7 @@ import { MockChangeDetectorRef } from './fixtures';
       value === undefined ? 'undefined' : value === null ? 'null' : value
     }}</ng-container>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet],
 })
 class LetDirectiveTestComponent {

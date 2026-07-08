@@ -1,5 +1,6 @@
 import { JsonPipe } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -22,6 +23,7 @@ function wrapWithSpace(str: string): string {
 }
 @Component({
   selector: 'rx-child',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `{{ value }}`,
 })
 class ChildComponent {
@@ -30,6 +32,7 @@ class ChildComponent {
 
 @Component({
   template: ` {{ (value$ | push: strategy | json) || 'undefined' }} `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxPush, JsonPipe, ChildComponent],
 })
 class PushPipeTestComponent {

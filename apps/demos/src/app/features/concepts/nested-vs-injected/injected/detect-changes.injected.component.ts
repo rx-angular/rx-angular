@@ -21,7 +21,7 @@ import { CdOnPushComponent } from '../../../../shared/debug-helper/cd-on-push/cd
       </div>
     </rxa-cd-default>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CdHelper],
   imports: [CdDefaultComponent, CdOnPushComponent],
 })

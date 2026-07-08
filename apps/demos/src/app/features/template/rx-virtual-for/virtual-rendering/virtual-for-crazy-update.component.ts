@@ -1,8 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   AutoSizeVirtualScrollStrategy,
-  RxVirtualScrollViewportComponent,
   RxVirtualFor,
+  RxVirtualScrollViewportComponent,
 } from '@rx-angular/template/virtual-scrolling';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
@@ -15,6 +15,7 @@ import { DocsLinkComponent } from '../../../../shared/docs-link';
     AutoSizeVirtualScrollStrategy,
     DocsLinkComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <header class="rxa-demo-header">
       <div>

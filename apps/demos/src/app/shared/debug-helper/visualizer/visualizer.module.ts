@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { VisualizerComponent } from './visualizer/visualizer.component';
+import { NgModule } from '@angular/core';
+import { RxPush } from '@rx-angular/template/push';
 import { DirtyChecksModule } from '../dirty-checks';
 import { RenderingsModule } from '../renderings';
-import { RxPush } from '@rx-angular/template/push';
+import { VisualizerComponent } from './visualizer/visualizer.component';
 import { WorkVisualizerComponent } from './visualizer/work-visualizer.component';
 
 @NgModule({

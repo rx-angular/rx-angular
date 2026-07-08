@@ -1,6 +1,7 @@
 import { NgIf } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ErrorHandler,
@@ -26,6 +27,7 @@ import {
 
 @Component({
   selector: 'rx-angular-error-test',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `{{ value }}`,
 })
 export class ErrorTestComponent {
@@ -49,9 +51,9 @@ const TestTemplateNames = {
 
 @Component({
   template: ``,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ErrorTestComponent, NgIf],
 })
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class TemplateManagerSpecComponent implements AfterViewInit, OnDestroy {
   @ViewChild('host', { read: ViewContainerRef })
   host: ViewContainerRef;

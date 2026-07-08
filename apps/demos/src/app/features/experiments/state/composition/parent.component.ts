@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
 import { Subscription } from 'rxjs';
 import { scan, shareReplay } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
 import { SourceService } from './source.service';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';

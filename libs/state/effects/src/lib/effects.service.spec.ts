@@ -1,4 +1,8 @@
-import { Component, ErrorHandler } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ErrorHandler,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BehaviorSubject, EMPTY, map, Observable, tap, throwError } from 'rxjs';
 import { RxEffects } from './effects.service';
@@ -37,6 +41,7 @@ class Service {
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [RxEffects],
 })
 class TestComponent {
@@ -55,6 +60,7 @@ class TestComponent {
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [RxEffects],
 })
 class TestUntilEffectComponent {
@@ -76,6 +82,7 @@ class TestUntilEffectComponent {
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [RxEffects],
 })
 class TestOnDestroyComponent {
@@ -91,6 +98,7 @@ class TestOnDestroyComponent {
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [RxEffects],
 })
 class TestUnregisterComponent {

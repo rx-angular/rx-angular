@@ -12,8 +12,8 @@ import {
 import {
   onStrategy,
   RxRenderWork,
-  RxStrategyProvider,
   RxStrategyNames,
+  RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import { Subscription, Unsubscribable } from 'rxjs';
 import {
@@ -43,7 +43,7 @@ export class RxSwitchCase implements OnInit, OnDestroy {
 
   constructor(
     private viewContainer: ViewContainerRef,
-    public templateRef: TemplateRef<Object>,
+    public templateRef: TemplateRef<object>,
     private cdRef: ChangeDetectorRef,
     private strategyProvider: RxStrategyProvider<RxStrategyNames>,
     @Host() private rxSwitch: RxSwitch<any>,

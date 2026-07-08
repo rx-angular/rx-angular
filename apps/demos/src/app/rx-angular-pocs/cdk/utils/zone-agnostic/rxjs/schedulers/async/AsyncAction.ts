@@ -1,8 +1,8 @@
 import { Subscription } from 'rxjs';
+import { clearInterval, setInterval } from '../../../browser';
 import { Action } from '../Action';
 import { SchedulerAction } from '../types';
 import { AsyncScheduler } from './AsyncScheduler';
-import { setInterval, clearInterval } from '../../../browser';
 
 /**
  * We need this JSDoc comment for affecting ESDoc.
@@ -18,12 +18,12 @@ export class AsyncAction<T> extends Action<T> {
 
   constructor(
     protected scheduler: AsyncScheduler,
-    protected work: (this: SchedulerAction<T>, state?: T) => void
+    protected work: (this: SchedulerAction<T>, state?: T) => void,
   ) {
     super(scheduler, work);
   }
 
-  public schedule(state?: T, delay: number = 0): Subscription {
+  public schedule(state?: T, delay = 0): Subscription {
     if (this.closed) {
       return this;
     }
@@ -73,7 +73,7 @@ export class AsyncAction<T> extends Action<T> {
   protected requestAsyncId(
     scheduler: AsyncScheduler,
     id?: any,
-    delay: number = 0
+    delay = 0,
   ): any {
     return setInterval(scheduler.flush.bind(scheduler, this), delay);
   }
@@ -81,7 +81,7 @@ export class AsyncAction<T> extends Action<T> {
   protected recycleAsyncId(
     scheduler: AsyncScheduler,
     id: any,
-    delay: number | null = 0
+    delay: number | null = 0,
   ): any {
     // If this action is rescheduled with the same delay time, don't clear the interval id.
     if (delay !== null && this.delay === delay && this.pending === false) {

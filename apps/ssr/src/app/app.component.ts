@@ -1,5 +1,12 @@
 import { isPlatformServer } from '@angular/common';
-import { Component, Inject, NgZone, OnInit, PLATFORM_ID } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  NgZone,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { rxState } from '@rx-angular/state';
 import { RxFor } from '@rx-angular/template/for';
 import { RxLet } from '@rx-angular/template/let';
@@ -15,6 +22,7 @@ import { of } from 'rxjs';
     <div id="unpatch" [unpatch]="['click']" (click)="onClick()"></div>
     <div class="for" *rxFor="let color of colors$">{{ color }}</div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxPush, RxLet, RxUnpatch, RxFor],
 })
 export class AppComponent implements OnInit {
