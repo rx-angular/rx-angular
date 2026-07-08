@@ -1,14 +1,16 @@
 import {
   isDefined,
   isKeyOf,
-  isObjectGuard
+  isObjectGuard,
 } from '../../src/lib/_internals/guards';
 
 describe('isKeyOf', () => {
   it('should return true if key exists', () => {
     expect(isKeyOf<{ num: number }>('num')).toBeTruthy();
     expect(isKeyOf<{ 1: number }>(1)).toBeTruthy();
-    expect(isKeyOf<{ [Symbol.iterator]: number }>(Symbol.iterator)).toBeTruthy();
+    expect(
+      isKeyOf<{ [Symbol.iterator]: number }>(Symbol.iterator),
+    ).toBeTruthy();
   });
 
   it('should return false for no Promise', () => {

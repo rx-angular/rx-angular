@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
-  EmbeddedViewRef,
   ErrorHandler,
   Input,
   NgZone,
@@ -13,20 +12,19 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import {
-  RxTemplateManager,
-  createTemplateManager,
-} from '@rx-angular/cdk/template';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 import {
+  createTemplateNotifier,
   RxNotificationKind,
   toRxCompleteNotification,
   toRxErrorNotification,
   toRxSuspenseNotification,
-  createTemplateNotifier,
 } from '@rx-angular/cdk/notifications';
-
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import {
+  createTemplateManager,
+  RxTemplateManager,
+} from '@rx-angular/cdk/template';
 import {
   defer,
   NextObserver,

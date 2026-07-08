@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`state migration update-1.4.7 should keep rx-angular/state 1`] = `
 "import { RxState } from "@rx-angular/state";

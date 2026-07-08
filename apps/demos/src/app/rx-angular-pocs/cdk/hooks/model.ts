@@ -1,14 +1,14 @@
-import { Observable, Subject } from 'rxjs';
 import { SimpleChanges } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 export interface HookProps {
-  changes?: SimpleChanges,
-  init?: boolean,
-  afterContentInit?: boolean,
-  afterContentChecked?: boolean,
-  afterViewInit?: boolean,
-  afterViewChecked?: boolean,
-  destroy?: boolean
+  changes?: SimpleChanges;
+  init?: boolean;
+  afterContentInit?: boolean;
+  afterContentChecked?: boolean;
+  afterViewInit?: boolean;
+  afterViewChecked?: boolean;
+  destroy?: boolean;
 }
 
 export interface HooksChannel$ {
@@ -16,23 +16,23 @@ export interface HooksChannel$ {
 }
 
 export interface OnChanges$ extends HooksChannel$ {
-  onChanges$: Observable<SimpleChanges>
+  onChanges$: Observable<SimpleChanges>;
 }
 export interface OnInit$ extends HooksChannel$ {
-  onInit$: Observable<boolean>
+  onInit$: Observable<boolean>;
 }
 export interface AfterContentInit$ extends HooksChannel$ {
-  onAfterContentInit$: Observable<boolean>
+  onAfterContentInit$: Observable<boolean>;
 }
 export interface AfterContentChecked$ extends HooksChannel$ {
-  onAfterContentChecked$: Observable<boolean>
+  onAfterContentChecked$: Observable<boolean>;
 }
 export interface AfterViewInit$ extends HooksChannel$ {
-  onAfterViewInit$: Observable<boolean>
+  onAfterViewInit$: Observable<boolean>;
 }
 export interface AfterViewChecked$ extends HooksChannel$ {
-  onAfterViewChecked$: Observable<boolean>
+  onAfterViewChecked$: Observable<boolean>;
 }
 export interface OnDestroy$ extends HooksChannel$ {
-  onDestroy$: Observable<boolean>
+  onDestroy$: Observable<boolean>;
 }

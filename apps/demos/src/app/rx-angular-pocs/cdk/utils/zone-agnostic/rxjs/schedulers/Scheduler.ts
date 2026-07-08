@@ -31,7 +31,7 @@ export class Scheduler implements SchedulerLike {
 
   constructor(
     private SchedulerAction: typeof Action,
-    now: () => number = Scheduler.now
+    now: () => number = Scheduler.now,
   ) {
     this.now = now;
   }
@@ -65,8 +65,8 @@ export class Scheduler implements SchedulerLike {
    */
   public schedule<T>(
     work: (this: SchedulerAction<T>, state?: T) => void,
-    delay: number = 0,
-    state?: T
+    delay = 0,
+    state?: T,
   ): Subscription {
     return new this.SchedulerAction<T>(this, work).schedule(state, delay);
   }

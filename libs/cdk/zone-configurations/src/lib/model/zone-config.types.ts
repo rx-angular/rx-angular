@@ -21,7 +21,7 @@ export type RxTestDisableConfigurationMethods = {
 
 export type RxZoneGlobalEventsConfigurationsMethods = {
   [disabledFlag in RxZoneGlobalEventsConfigurationsKey]: (
-    eventNames: string[]
+    eventNames: string[],
   ) => void;
 };
 

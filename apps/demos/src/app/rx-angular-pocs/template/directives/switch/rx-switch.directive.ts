@@ -1,9 +1,8 @@
 import { Directive, Input } from '@angular/core';
-
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, mergeAll, switchAll } from 'rxjs/operators';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { coerceAllFactory } from '@rx-angular/cdk/coercing';
 
 @Directive({ selector: '[rxSwitch]' })
 export class RxSwitch<U> {

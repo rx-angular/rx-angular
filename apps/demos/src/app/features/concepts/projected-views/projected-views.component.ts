@@ -3,18 +3,17 @@ import {
   Component,
   effect,
   viewChild,
-  ViewChild,
-  viewChildren,
   ViewChildren,
+  viewChildren,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { rxActions } from '@rx-angular/state/actions';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { combineLatest, Subject } from 'rxjs';
+import { RxLet } from '../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { ContentChildComponent } from './content-child.component';
 import { ViewChildComponent } from './view-child.component';
-import { RxActionFactory, rxActions } from '@rx-angular/state/actions';
-import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
-import { MatButton } from '@angular/material/button';
-import { RxUnpatch } from '../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
-import { RxLet } from '../../../rx-angular-pocs/template/directives/let/rx-let.directive';
 
 @Component({
   selector: 'rxa-projected-views',

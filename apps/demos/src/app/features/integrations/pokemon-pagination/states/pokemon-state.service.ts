@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { selectSlice } from '@rx-angular/state/selections';
 import { RxState } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
 import { combineLatest } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Pokemon } from '../models/pokemon.model';
@@ -30,7 +30,7 @@ export class PokemonStateService extends RxState<PokemonState> {
       'total',
       'limit',
       'offset',
-    ])
+    ]),
   );
 
   constructor(private readonly pokemonService: PokemonService) {
@@ -65,14 +65,14 @@ export class PokemonStateService extends RxState<PokemonState> {
         withLatestFrom(this.select('total'), this.select('originalResult')), // grab the latest values of total$ and originalResult$
         switchMap(
           (
-            [[limit, offset], total, original] // switch to getPokemon to fetch the pokemon with the new limit and offset
+            [[limit, offset], total, original], // switch to getPokemon to fetch the pokemon with the new limit and offset
           ) =>
             this.pokemonService.getPokemon(limit, offset, {
               count: total,
               next: '',
               previous: '',
               results: original,
-            }) // total and original helps to construct the prev data
+            }), // total and original helps to construct the prev data
         ),
         map(({ status, data }) => ({
           // transform data returned by service to the shape of our State
@@ -80,7 +80,7 @@ export class PokemonStateService extends RxState<PokemonState> {
           total: data.count,
           filteredResult: data.results,
           originalResult: data.results,
-        }))
+        })),
       );
   }
 
@@ -88,13 +88,13 @@ export class PokemonStateService extends RxState<PokemonState> {
     return this.select('query') // watch for query changed
       .pipe(
         withLatestFrom(this.select('originalResult')), // grab latest value from originalResult$
-        map(([query, data]) => (!query ? data : this.filter(data, query))) // check condition and call filter if needed
+        map(([query, data]) => (!query ? data : this.filter(data, query))), // check condition and call filter if needed
       );
   }
 
   private filter(data: Pokemon[], query: string): Pokemon[] {
     return data.filter((res) =>
-      res.name.toLowerCase().includes(query.toLowerCase())
+      res.name.toLowerCase().includes(query.toLowerCase()),
     );
   }
 }

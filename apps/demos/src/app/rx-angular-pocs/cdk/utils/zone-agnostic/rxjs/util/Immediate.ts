@@ -1,4 +1,4 @@
-import {Promise} from '../../browser/Promise';
+import { Promise } from '../../browser/Promise';
 
 let nextHandle = 1;
 // The promise needs to be created lazily otherwise it won't be patched by Zones
@@ -43,5 +43,5 @@ export const Immediate = {
 export const TestTools = {
   pending() {
     return Object.keys(activeHandles).length;
-  }
+  },
 };

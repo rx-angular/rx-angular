@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CdHelper } from '../../../utils/cd-helper';
-import { VisualizerComponent } from '../../visualizer/visualizer/visualizer.component';
 import { CdTriggerComponent } from '../../cd-trigger/cd-trigger/cd-trigger.component';
+import { VisualizerComponent } from '../../visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-cd-on-push',

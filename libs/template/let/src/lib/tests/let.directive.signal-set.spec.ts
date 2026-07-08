@@ -1,5 +1,6 @@
 import { JsonPipe } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Signal,
@@ -16,6 +17,7 @@ import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ng-container *rxLet="value; let v">{{
       v === undefined ? 'undefined' : v === null ? 'null' : (v | json)

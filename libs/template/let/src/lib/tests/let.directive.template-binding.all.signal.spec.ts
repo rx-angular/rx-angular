@@ -1,5 +1,11 @@
 import { JsonPipe } from '@angular/common';
-import { Component, Injector, Signal, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  Signal,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   ComponentFixture,
@@ -42,6 +48,7 @@ import { RxLet } from '../let.directive';
     <ng-template #error>error</ng-template>
     <ng-template #suspense>suspense</ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, JsonPipe],
 })
 class LetDirectiveAllTemplatesTestComponent {

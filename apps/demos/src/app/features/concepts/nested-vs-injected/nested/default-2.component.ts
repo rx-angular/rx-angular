@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CdHelper } from '../../../../shared/utils/cd-helper';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { CdTriggerComponent } from '../../../../shared/debug-helper/cd-trigger/cd-trigger/cd-trigger.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { CdHelper } from '../../../../shared/utils/cd-helper';
 import { CdOnPush1Component } from './push-1.component';
 
 @Component({
@@ -17,7 +17,7 @@ import { CdOnPush1Component } from './push-1.component';
   host: {
     class: 'd-block w-100',
   },
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CdHelper],
   imports: [VisualizerComponent, CdTriggerComponent, CdOnPush1Component],
 })

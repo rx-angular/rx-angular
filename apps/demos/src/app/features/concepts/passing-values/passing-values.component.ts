@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import {
-  MatButtonToggleGroup,
-  MatButtonToggle,
-} from '@angular/material/button-toggle';
 import { MatButton, MatMiniFabButton } from '@angular/material/button';
-import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
+import {
+  MatButtonToggle,
+  MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
-import { RecursiveStaticComponent } from '../../../shared/template-structures/recursive/recursive-static.component';
-import { RxUnpatch } from '../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import { MatInput } from '@angular/material/input';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { BehaviorSubject } from 'rxjs';
+import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { RecursiveObservableComponent } from '../../../shared/template-structures/recursive/recursive-observable.component';
+import { RecursiveStaticComponent } from '../../../shared/template-structures/recursive/recursive-static.component';
 
 @Component({
   selector: 'rxa-passing-values',

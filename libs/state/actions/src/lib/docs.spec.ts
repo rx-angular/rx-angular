@@ -1,5 +1,12 @@
 import { AsyncPipe, DOCUMENT } from '@angular/common';
-import { Component, Inject, inject, Injectable, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  inject,
+  Injectable,
+  signal,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { exhaustMap, Observable, of, Subject } from 'rxjs';
@@ -31,13 +38,14 @@ type Movie = Record<string, any>;
       (click)="
         actions.login({
           username: username.value,
-          password: password.value
+          password: password.value,
         })
       "
     >
       Login
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 class LoginComponent {
@@ -68,7 +76,7 @@ describe('usage in component to handle UI interaction', () => {
     // arrange
     const username = fixture.debugElement.query(By.css('input:first-child'));
     const password = fixture.debugElement.query(
-      By.css('input[type="password"]')
+      By.css('input[type="password"]'),
     );
     const btn = fixture.debugElement.query(By.css('button'));
     const loginSpy = jest.spyOn(service, 'login');
@@ -113,7 +121,7 @@ export class MovieService {
     (refresh$) =>
       refresh$.pipe(exhaustMap(() => this.movieResource.getMovies())),
     // set the value to the state
-    (movies) => this.movies.set(movies)
+    (movies) => this.movies.set(movies),
   );
 
   refresh() {
@@ -161,13 +169,14 @@ describe('usage in a service to handle data fetching', () => {
       (click)="
         actions.login({
           username: username.value,
-          password: password.value
+          password: password.value,
         })
       "
     >
       Login
     </button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 class Login2Component {
@@ -176,13 +185,13 @@ class Login2Component {
   private loginEffect = this.actions.onLogin(
     (credentials$) =>
       credentials$.pipe(
-        exhaustMap((credentials) => this.service.login(credentials))
+        exhaustMap((credentials) => this.service.login(credentials)),
       ),
-    () => this.doc.defaultView.alert('successfully logged in')
+    () => this.doc.defaultView.alert('successfully logged in'),
   );
   constructor(
     private service: AuthService,
-    @Inject(DOCUMENT) private doc: Document
+    @Inject(DOCUMENT) private doc: Document,
   ) {}
 }
 
@@ -218,7 +227,7 @@ describe('handling side effects on event emission', () => {
     // arrange
     const username = fixture.debugElement.query(By.css('input:first-child'));
     const password = fixture.debugElement.query(
-      By.css('input[type="password"]')
+      By.css('input[type="password"]'),
     );
     const btn = fixture.debugElement.query(By.css('button'));
     const alertSpy = jest.spyOn(documentMock.defaultView, 'alert');
@@ -272,6 +281,7 @@ describe('unsubscribing from events programmatically', () => {
   `,
   selector: 'rx-app-greet',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AsyncPipe],
 })
 class GreetComponent {
@@ -279,7 +289,7 @@ class GreetComponent {
     transforms({
       // highlight-next-line
       greet: (v) => `Hello ${v}`,
-    })
+    }),
   );
 }
 
@@ -300,7 +310,7 @@ describe('transform functions', () => {
     input.nativeElement.value = 'me';
     // act
     (input.nativeElement as HTMLInputElement).dispatchEvent(
-      new InputEvent('input')
+      new InputEvent('input'),
     );
     fixture.detectChanges();
     // assert

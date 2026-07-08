@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
-
 import {
   DocsPage,
   MemberInfo,
@@ -10,7 +9,7 @@ import {
   MutatorInfo,
   ParsedDeclaration,
   PropertyInfo,
-  ValidDeclaration
+  ValidDeclaration,
 } from './typescript-docgen-types';
 
 /**
@@ -35,7 +34,7 @@ export class TypescriptDocsParser {
         filePath,
         this.replaceEscapedAtTokens(fs.readFileSync(filePath).toString()),
         ts.ScriptTarget.ES2015,
-        true
+        true,
       );
     });
 
@@ -46,7 +45,7 @@ export class TypescriptDocsParser {
         const info = this.parseDeclaration(
           statement.statement,
           statement.sourceFile,
-          statement.sourceLine
+          statement.sourceLine,
         );
         return info;
       })
@@ -79,24 +78,29 @@ export class TypescriptDocsParser {
    * Maps an array of parsed SourceFiles into statements, including a reference to the original file each statement
    * came from.
    */
-  private getStatementsWithSourceLocation(
-    sourceFiles: ts.SourceFile[]
-  ): Array<{
+  private getStatementsWithSourceLocation(sourceFiles: ts.SourceFile[]): Array<{
     statement: ts.Statement;
     sourceFile: string;
     sourceLine: number;
   }> {
-    return sourceFiles.reduce((st, sf) => {
-      const statementsWithSources = sf.statements.map((statement) => {
-        const sourceFile = path
-          .relative(path.join(__dirname, '..'), sf.fileName)
-          .replace(/\\/g, '/');
-        const sourceLine =
-          sf.getLineAndCharacterOfPosition(statement.getStart()).line + 1;
-        return { statement, sourceFile, sourceLine };
-      });
-      return [...st, ...statementsWithSources];
-    }, [] as Array<{ statement: ts.Statement; sourceFile: string; sourceLine: number }>);
+    return sourceFiles.reduce(
+      (st, sf) => {
+        const statementsWithSources = sf.statements.map((statement) => {
+          const sourceFile = path
+            .relative(path.join(__dirname, '..'), sf.fileName)
+            .replace(/\\/g, '/');
+          const sourceLine =
+            sf.getLineAndCharacterOfPosition(statement.getStart()).line + 1;
+          return { statement, sourceFile, sourceLine };
+        });
+        return [...st, ...statementsWithSources];
+      },
+      [] as Array<{
+        statement: ts.Statement;
+        sourceFile: string;
+        sourceLine: number;
+      }>,
+    );
   }
 
   /**
@@ -105,7 +109,7 @@ export class TypescriptDocsParser {
   private parseDeclaration(
     statement: ts.Statement,
     sourceFile: string,
-    sourceLine: number
+    sourceLine: number,
   ): ParsedDeclaration | undefined {
     if (!this.isValidDeclaration(statement)) {
       return;
@@ -144,7 +148,7 @@ export class TypescriptDocsParser {
         kind: 'interface',
         extends: this.getHeritageClauseText(
           statement,
-          ts.SyntaxKind.ExtendsKeyword
+          ts.SyntaxKind.ExtendsKeyword,
         ),
         members: this.parseMembers(statement.members),
       };
@@ -164,17 +168,17 @@ export class TypescriptDocsParser {
         members: this.parseMembers(statement.members),
         extends: this.getHeritageClauseText(
           statement,
-          ts.SyntaxKind.ExtendsKeyword
+          ts.SyntaxKind.ExtendsKeyword,
         ),
         implements: this.getHeritageClauseText(
           statement,
-          ts.SyntaxKind.ImplementsKeyword
+          ts.SyntaxKind.ImplementsKeyword,
         ),
       };
     } else if (ts.isEnumDeclaration(statement)) {
       return {
         ...info,
-        kind: 'enum' as 'enum',
+        kind: 'enum' as const,
         members: this.parseMembers(statement.members) as PropertyInfo[],
       };
     } else if (ts.isFunctionDeclaration(statement)) {
@@ -203,7 +207,7 @@ export class TypescriptDocsParser {
    */
   private getHeritageClauseText(
     statement: ts.ClassDeclaration | ts.InterfaceDeclaration,
-    kind: ts.SyntaxKind.ExtendsKeyword | ts.SyntaxKind.ImplementsKeyword
+    kind: ts.SyntaxKind.ExtendsKeyword | ts.SyntaxKind.ImplementsKeyword,
   ): string | undefined {
     const { heritageClauses } = statement;
     if (!heritageClauses) {
@@ -253,7 +257,7 @@ export class TypescriptDocsParser {
    * Parses an array of inteface members into a simple object which can be rendered into markdown.
    */
   private parseMembers(
-    members: ts.NodeArray<ts.TypeElement | ts.ClassElement | ts.EnumMember>
+    members: ts.NodeArray<ts.TypeElement | ts.ClassElement | ts.EnumMember>,
   ): Array<PropertyInfo | MethodInfo | MutatorInfo> {
     const result: Array<PropertyInfo | MethodInfo | MutatorInfo> = [];
 
@@ -277,8 +281,8 @@ export class TypescriptDocsParser {
         const name = member.name
           ? member.name.getText()
           : ts.isIndexSignatureDeclaration(member)
-          ? '[index]'
-          : 'constructor';
+            ? '[index]'
+            : 'constructor';
         let description = '';
         let type = '';
         let defaultValue = '';
@@ -294,8 +298,10 @@ export class TypescriptDocsParser {
             member.type ? member.type.getText() : 'void'
           }`;
         } else if (ts.isSetAccessorDeclaration(member)) {
-          const decoratorsText = member.decorators?.map(d => d.getText()).join(' ');
-          fullText = `${!!decoratorsText ? decoratorsText + ' ' : ''}${member.name.getText()}: ${
+          const decoratorsText = member.decorators
+            ?.map((d) => d.getText())
+            .join(' ');
+          fullText = `${decoratorsText ? decoratorsText + ' ' : ''}${member.name.getText()}: ${
             member.parameters?.[0]?.type.getText() || 'void'
           }`;
         } else {
@@ -343,12 +349,14 @@ export class TypescriptDocsParser {
             name: originParameter.name.getText(),
             type: originParameter.type.getText(),
             optional: !!originParameter.questionToken,
-            initializer: originParameter.initializer && originParameter.initializer.getText(),
+            initializer:
+              originParameter.initializer &&
+              originParameter.initializer.getText(),
           };
           result.push({
             ...memberInfo,
             kind: 'mutator',
-            parameter
+            parameter,
           });
         } else {
           result.push({
@@ -409,7 +417,7 @@ export class TypescriptDocsParser {
    * Type guard for the types of statement which can ge processed by the doc generator.
    */
   private isValidDeclaration(
-    statement: ts.Statement
+    statement: ts.Statement,
   ): statement is ValidDeclaration {
     return (
       ts.isInterfaceDeclaration(statement) ||
@@ -426,7 +434,7 @@ export class TypescriptDocsParser {
    */
   private parseTags<T extends ts.Node>(
     node: T,
-    tagMatcher: { [tagName: string]: (tag: ts.JSDocTag) => void }
+    tagMatcher: { [tagName: string]: (tag: ts.JSDocTag) => void },
   ): void {
     const jsDocTags = ts.getJSDocTags(node);
     for (const tag of jsDocTags) {
@@ -441,14 +449,14 @@ export class TypescriptDocsParser {
    * Cleans up a JSDoc "@example" block by removing leading whitespace and asterisk (TypeScript has an open issue
    * wherein the asterisks are not stripped as they should be, see https://github.com/Microsoft/TypeScript/issues/23517)
    */
-  private formatExampleCode(example: string = ''): string {
+  private formatExampleCode(example = ''): string {
     return (
       '\n\n*Example*\n\n' +
       this.wrapInTypescript(example.replace(/\n\s+\*\s/g, '\n'))
     );
   }
 
-  private wrapInTypescript(val: string = '') {
+  private wrapInTypescript(val = '') {
     let output = `\`\`\`TypeScript\n`;
     output += `${val}\n`;
     output += `\`\`\`\n`;

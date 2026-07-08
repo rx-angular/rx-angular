@@ -1,2 +1,2 @@
-export * from './core';
-export { default } from './esbuild-plugin';
+export * from './core/index.ts';
+export { default } from './esbuild-plugin/index.ts';

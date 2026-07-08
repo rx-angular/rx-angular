@@ -135,7 +135,7 @@ describe('coalesce operator additional logic', () => {
         of(1, 2, 3),
         timer(10).pipe(mergeMapTo(of(4, 5, 6))),
         timer(10).pipe(mergeMapTo(of(7, 8, 9))),
-        timer(50).pipe(mergeMapTo(of(10, 11, 12)))
+        timer(50).pipe(mergeMapTo(of(10, 11, 12))),
       );
       const expected = [3, 6, 9, 12];
       e1.pipe(coalesceWith(durationSelector)).subscribe(
@@ -147,7 +147,7 @@ describe('coalesce operator additional logic', () => {
         },
         () => {
           expect(expected.length).toEqual(0);
-        }
+        },
       );
     });
   });
@@ -250,8 +250,8 @@ describe('coalesce operator additional logic', () => {
         share(),
         coalesceWith(
           defer(() => from(Promise.resolve())),
-          scope
-        )
+          scope,
+        ),
       );
 
       num$.subscribe(
@@ -264,7 +264,7 @@ describe('coalesce operator additional logic', () => {
         },
         () => {
           throw new Error('should not be called');
-        }
+        },
       );
     });
 
@@ -295,11 +295,11 @@ describe('coalesce operator additional logic', () => {
         const arrAlph = ['a', 'b', 'c', 'd'];
         const num$ = concat(from(arrNum), NEVER).pipe(
           share(),
-          coalesceWith(scheduled([1], asapScheduler), scope)
+          coalesceWith(scheduled([1], asapScheduler), scope),
         );
         const alph$ = concat(from(arrAlph), NEVER).pipe(
           share(),
-          coalesceWith(scheduled([1], asapScheduler), scope)
+          coalesceWith(scheduled([1], asapScheduler), scope),
         );
         let numValue;
         num$.subscribe({

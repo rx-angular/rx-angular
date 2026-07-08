@@ -20,7 +20,7 @@ function createInputStream(
   inputHandler: {
     values$: Observable<string | string[]>;
     next(observable: Observable<string | string[]> | string): void;
-  }
+  },
 ) {
   cold(marble, values)
     .pipe(take(Object.keys(values).length))
@@ -28,7 +28,7 @@ function createInputStream(
 }
 
 function createNoCompletionValueStreams(
-  cold: typeof TestScheduler.prototype.createColdObservable
+  cold: typeof TestScheduler.prototype.createColdObservable,
 ): Record<
   string,
   ReturnType<typeof TestScheduler.prototype.createColdObservable>
@@ -42,7 +42,7 @@ function createNoCompletionValueStreams(
 }
 
 function createWithCompletionValueStreams(
-  cold: typeof TestScheduler.prototype.createColdObservable
+  cold: typeof TestScheduler.prototype.createColdObservable,
 ): Record<
   string,
   ReturnType<typeof TestScheduler.prototype.createColdObservable>
@@ -138,7 +138,7 @@ describe('coerceAllFactory', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
           () => new Subject<string>(),
-          concatAll()
+          concatAll(),
         );
       });
 
@@ -206,7 +206,7 @@ describe('coerceAllFactory', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
           () => new Subject<string>(),
-          mergeAll()
+          mergeAll(),
         );
       });
 
@@ -281,7 +281,7 @@ describe('coerceAllFactory', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
           () => new Subject<string>(),
-          exhaustAll()
+          exhaustAll(),
         );
       });
 
@@ -349,7 +349,7 @@ describe('coerceAllFactory', () => {
     describe('default flattening (switchAll)', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
-          () => new ReplaySubject<string>(1)
+          () => new ReplaySubject<string>(1),
         );
       });
 
@@ -418,7 +418,7 @@ describe('coerceAllFactory', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
           () => new ReplaySubject<string>(1),
-          concatAll()
+          concatAll(),
         );
       });
 
@@ -486,7 +486,7 @@ describe('coerceAllFactory', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
           () => new ReplaySubject<string>(1),
-          mergeAll()
+          mergeAll(),
         );
       });
 
@@ -561,7 +561,7 @@ describe('coerceAllFactory', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
           () => new ReplaySubject<string>(1),
-          exhaustAll()
+          exhaustAll(),
         );
       });
 
@@ -631,7 +631,7 @@ describe('coerceAllFactory', () => {
     describe('default flattening (switchAll)', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
-          () => new BehaviorSubject<Observable<string>>(of(initialValue))
+          () => new BehaviorSubject<Observable<string>>(of(initialValue)),
         );
       });
 
@@ -702,7 +702,7 @@ describe('coerceAllFactory', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
           () => new BehaviorSubject<Observable<string>>(of(initialValue)),
-          concatAll()
+          concatAll(),
         );
       });
 
@@ -772,7 +772,7 @@ describe('coerceAllFactory', () => {
       beforeEach(() => {
         inputHandler = coerceAllFactory<string>(
           () => new BehaviorSubject<Observable<string>>(of(initialValue)),
-          mergeAll()
+          mergeAll(),
         );
       });
 
@@ -850,9 +850,9 @@ describe('coerceAllFactory', () => {
         inputHandler = coerceAllFactory<string>(
           () =>
             new BehaviorSubject<Observable<string>>(
-              new BehaviorSubject(initialValue)
+              new BehaviorSubject(initialValue),
             ),
-          exhaustAll()
+          exhaustAll(),
         );
       });
 

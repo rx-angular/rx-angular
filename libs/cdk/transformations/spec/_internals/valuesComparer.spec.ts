@@ -15,9 +15,7 @@ beforeEach(() => {
   otherItem = { id: 2, type: 'cat' };
 });
 
-
 describe('valuesComparer', () => {
-
   describe('general', () => {
     it('should be defined', () => {
       const fn = valuesComparer;
@@ -26,9 +24,7 @@ describe('valuesComparer', () => {
   });
 
   describe('functionality', () => {
-
     describe('primitives', () => {
-
       it('should return true if matching', () => {
         expect(valuesComparer(1, 1)).toBeTruthy();
       });
@@ -44,11 +40,9 @@ describe('valuesComparer', () => {
       it('should return false if matching by compareFn', () => {
         expect(valuesComparer(1, 2, (a, b) => a.toString() === b.toString()));
       });
-
     });
 
     describe('non-primitives', () => {
-
       it('should return true if values has same reference', () => {
         expect(valuesComparer(item, item)).toBeTruthy();
       });
@@ -58,11 +52,15 @@ describe('valuesComparer', () => {
       });
 
       it('should return true if items match by CompareFn', () => {
-        expect(valuesComparer(item, clone, (a, b) => a.id === b.id)).toBeTruthy();
+        expect(
+          valuesComparer(item, clone, (a, b) => a.id === b.id),
+        ).toBeTruthy();
       });
 
       it('should return false if items do nott match by CompareFn', () => {
-        expect(valuesComparer(item, otherItem, (a, b) => a.id === b.id)).toBeFalsy();
+        expect(
+          valuesComparer(item, otherItem, (a, b) => a.id === b.id),
+        ).toBeFalsy();
       });
 
       it('should return true if items match by key', () => {
@@ -83,7 +81,6 @@ describe('valuesComparer', () => {
     });
 
     describe('edge cases', () => {
-
       it('should return true if provided key is not found', () => {
         expect(valuesComparer(item, clone, 'name' as any)).toBeTruthy();
       });
@@ -93,11 +90,15 @@ describe('valuesComparer', () => {
       });
 
       it('should return true if one of provided keys is not a primitive', () => {
-        expect(valuesComparer(item, clone, ['id', { a: 1 } as any])).toBeTruthy();
+        expect(
+          valuesComparer(item, clone, ['id', { a: 1 } as any]),
+        ).toBeTruthy();
       });
 
       it('should compare with defaultCompare if array of provided keys not including strings/numbers/symbols', () => {
-        expect(valuesComparer(item, clone, [[] as any, { a: 1 } as any])).toBeFalsy();
+        expect(
+          valuesComparer(item, clone, [[] as any, { a: 1 } as any]),
+        ).toBeFalsy();
       });
 
       it('should compare with defaultCompare if array of provided keys is empty', () => {

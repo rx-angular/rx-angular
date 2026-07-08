@@ -11,7 +11,7 @@ function timeout(delay = 0) {
   return new Observable<number>((subscriber: Subscriber<number>) => {
     const asyncID = getZoneUnPatchedApi('setTimeout')(
       () => subscriber.next(0),
-      delay
+      delay,
     );
     return () => {
       getZoneUnPatchedApi('clearTimeout')(asyncID);

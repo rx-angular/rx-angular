@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Subject } from 'rxjs';
 import { MatButton } from '@angular/material/button';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { Subject } from 'rxjs';
 import { ZonePatchedIconComponent } from '../../zone-patched-icon/zone-patched-icon.component';
-import { RxUnpatch } from '../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
 
 @Component({
   selector: 'rxa-trigger-provider',

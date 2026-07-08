@@ -1,5 +1,5 @@
-export { createCommonMergeGroups } from './common-strategy';
-export { DEFAULT_MERGE_STRATEGY_CONFIG } from './config';
+export { createCommonMergeGroups } from './common-strategy.ts';
+export { DEFAULT_MERGE_STRATEGY_CONFIG } from './config.ts';
 export {
   type BundleGraph,
   type BundleGraphImport,
@@ -8,7 +8,7 @@ export {
   type MergeStrategy,
   type OutputImport,
   type OutputPath,
-} from './contracts';
+} from './contracts.ts';
 export {
   createBundleGraph,
   findOutputForEntryPoint,
@@ -17,13 +17,13 @@ export {
   getStaticDependencies,
   getTransitiveStaticDependencies,
   isJavaScriptOutput,
-} from './graph';
-export { getStaticClosure } from './graph-queries';
-export { assignMergeGroup } from './merge-groups';
-export { mergeStrategyFactory } from './merge-strategy-factory';
-export { createReachabilityMergeGroups } from './reachability-strategy';
-export { createStaticClosureMergeGroups } from './static-closure-strategy';
-export { applyStrategies } from './strategy-applicator';
+} from './graph.ts';
+export { getStaticClosure } from './graph-queries.ts';
+export { assignMergeGroup } from './merge-groups.ts';
+export { mergeStrategyFactory } from './merge-strategy-factory.ts';
+export { createReachabilityMergeGroups } from './reachability-strategy.ts';
+export { createStaticClosureMergeGroups } from './static-closure-strategy.ts';
+export { applyStrategies } from './strategy-applicator.ts';
 export {
   type CommonStrategyDefinition,
   type MergeStrategyConfig,
@@ -34,4 +34,4 @@ export {
   STRATEGY_TYPE,
   type StrategyDefinition,
   type StrategyType,
-} from './types';
+} from './types.ts';

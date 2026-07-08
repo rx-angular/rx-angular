@@ -1,8 +1,8 @@
-import { EMPTY } from 'rxjs';
 import { Component, Input } from '@angular/core';
-import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
-import { ToArrayPipe } from '../../../../shared/utils/to-array.pipe';
+import { RxPush } from '@rx-angular/template/push';
+import { EMPTY } from 'rxjs';
 import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { ToArrayPipe } from '../../../../shared/utils/to-array.pipe';
 
 @Component({
   selector: 'rxa-counter-display',

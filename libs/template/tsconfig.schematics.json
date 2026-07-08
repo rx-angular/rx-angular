@@ -3,6 +3,7 @@
     "baseUrl": ".",
     "lib": ["es2019"],
     "declaration": true,
+    "ignoreDeprecations": "6.0",
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
@@ -16,6 +17,7 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": false,
+    "strict": false,
     "strictNullChecks": true,
     "target": "es6",
     "types": ["node"]

@@ -7,7 +7,7 @@ describe('pipeFromArray', () => {
     expect(typeof pipeFromArray([]) === 'function').toBeTruthy();
     expect(typeof pipeFromArray([map(() => {})]) === 'function').toBeTruthy();
     expect(
-      typeof pipeFromArray([map(() => {}), () => {}]) === 'function'
+      typeof pipeFromArray([map(() => {}), () => {}]) === 'function',
     ).toBeTruthy();
   });
 });

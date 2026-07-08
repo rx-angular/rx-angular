@@ -83,7 +83,7 @@ import { ComparableData } from '../interfaces/comparable-data-type';
 export function remove<T>(
   source: T[],
   scrap: Partial<T>[] | Partial<T>,
-  compare?: ComparableData<T>
+  compare?: ComparableData<T>,
 ): T[] {
   const scrapAsArray = isDefined(scrap)
     ? Array.isArray(scrap)
@@ -99,7 +99,7 @@ export function remove<T>(
 
   return source.filter((existingItem) => {
     return !scrapAsArray.some((item) =>
-      valuesComparer(item as T, existingItem, compare)
+      valuesComparer(item as T, existingItem, compare),
     );
   });
 }

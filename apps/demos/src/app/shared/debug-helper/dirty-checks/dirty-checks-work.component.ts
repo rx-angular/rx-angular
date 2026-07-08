@@ -1,3 +1,4 @@
+import { NgStyle } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -6,11 +7,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
-import { Hooks } from '../hooks';
-import { select } from '@rx-angular/state/selections';
 import { RxEffects } from '@rx-angular/state/effects';
+import { select } from '@rx-angular/state/selections';
 import { AppConfigService } from '../../../app-config.service';
-import { NgStyle } from '@angular/common';
+import { Hooks } from '../hooks';
 
 @Component({
   selector: 'rxa-dirty-check-work',

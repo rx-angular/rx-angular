@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
 import { mockConsole } from '@test-helpers/rx-angular';
@@ -22,6 +22,7 @@ import { RxLet } from '../let.directive';
     <ng-template #complete>complete</ng-template>
     <ng-template #error>error</ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, JsonPipe],
 })
 class LetDirectiveNoSuspenseTemplateTestComponent {

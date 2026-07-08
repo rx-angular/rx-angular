@@ -4,14 +4,13 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
-import { priorityTickMap, SchedulingPriority } from './utils';
 import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
-import { MatButton } from '@angular/material/button';
-import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import { priorityTickMap, SchedulingPriority } from './utils';
 
 @Component({
   selector: 'rxa-scheduling',

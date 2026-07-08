@@ -24,7 +24,9 @@ describe('safePluck', () => {
 
   describe('edge cases', () => {
     it('should return undefined when object is not valid', () => {
-      expect(safePluck([undefined] as any, ['prop1'] as any)).toEqual(undefined);
+      expect(safePluck([undefined] as any, ['prop1'] as any)).toEqual(
+        undefined,
+      );
       expect(safePluck(undefined as any, ['prop1'] as any)).toEqual(undefined);
       expect(safePluck('' as any, ['prop1'] as any)).toEqual(undefined);
       expect(safePluck(0 as any, ['prop1'] as any)).toEqual(undefined);

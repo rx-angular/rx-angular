@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatCard, MatCardTitle } from '@angular/material/card';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { RouterLink } from '@angular/router';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { RickAndMortyService } from './rick-and-morty.service';
+import { RxLet as RxLet_1 } from '@rx-angular/template/let';
 import { query } from 'rx-query';
 import { Observable, Subject } from 'rxjs';
 import { delay, filter, map, mapTo, share } from 'rxjs/operators';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
-import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
 import { RxLet } from '../../../../rx-angular-pocs/template/directives/let/rx-let.directive';
-import { RxLet as RxLet_1 } from '../../../../../../../../libs/template/let/src/lib/let.directive';
-import { MatProgressBar } from '@angular/material/progress-bar';
-import { MatCard, MatCardTitle } from '@angular/material/card';
-import { RouterLink } from '@angular/router';
+import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { ListItemGhostComponent } from '../../../../shared/ghost-elements/list-item-ghost/list-item-ghost.component';
+import { RickAndMortyService } from './rick-and-morty.service';
 
 @Component({
   selector: 'rxa-rx-query',

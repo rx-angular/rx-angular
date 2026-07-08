@@ -4,9 +4,6 @@ import { ROUTES } from './dynamic-counter.routes';
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(ROUTES)
-  ]
+  imports: [RouterModule.forChild(ROUTES)],
 })
-export class DynamicCounterModule {
-}
+export class DynamicCounterModule {}

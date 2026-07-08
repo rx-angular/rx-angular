@@ -1,7 +1,7 @@
 import type { BuildOptions, Metafile, OutputFile } from 'esbuild';
 import { createHash } from 'node:crypto';
 import { posix, sep } from 'node:path';
-import type { OutputPath } from '../../core';
+import type { OutputPath } from '../../core/index.ts';
 
 export function getAppEntryPoint(
   { absWorkingDir, entryPoints }: BuildOptions,

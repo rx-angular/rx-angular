@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, NgZone } from '@angular/core';
+import { ChangeDetectionStrategy, Component, NgZone } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
@@ -20,6 +20,7 @@ import SpyInstance = jest.SpyInstance;
       >{{ (value | json) || 'undefined' }}</ng-container
     >
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, JsonPipe],
 })
 class LetDirectiveTestStrategyComponent {

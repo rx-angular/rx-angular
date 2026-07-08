@@ -84,10 +84,10 @@ describe('patch', () => {
 
     it('should work if at least one of objects is array', () => {
       expect(patch(primitiveState, [primitiveState] as any)).toEqual(
-        primitiveState
+        primitiveState,
       );
       expect(patch([primitiveState] as any, primitiveState)).toEqual(
-        primitiveState
+        primitiveState,
       );
       expect(patch([primitiveState] as any, [primitiveState] as any)).toEqual([
         primitiveState,

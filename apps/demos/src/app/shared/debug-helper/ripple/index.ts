@@ -1,2 +1,2 @@
-export {RippleModule} from './ripple.module';
-export {RippleComponent} from './ripple.component';
+export { RippleComponent } from './ripple.component';
+export { RippleModule } from './ripple.module';

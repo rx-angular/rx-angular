@@ -1,5 +1,5 @@
-import { getTransitiveStaticDependencies } from './graph';
-import type { MergeStrategyContext, OutputPath } from './types';
+import { getTransitiveStaticDependencies } from './graph.ts';
+import type { MergeStrategyContext, OutputPath } from './types.ts';
 
 export function getStaticClosure(
   context: Pick<MergeStrategyContext, 'graph'>,

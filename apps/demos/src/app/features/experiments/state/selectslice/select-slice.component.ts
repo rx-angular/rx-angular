@@ -1,9 +1,9 @@
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { selectSlice } from '@rx-angular/state/selections';
 import { RxState } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
 import { Observable, of } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { AsyncPipe, JsonPipe } from '@angular/common';
 
 interface MyState {
   title: string;

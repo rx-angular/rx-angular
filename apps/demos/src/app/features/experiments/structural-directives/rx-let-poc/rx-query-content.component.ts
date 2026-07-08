@@ -6,9 +6,9 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { Observable } from 'rxjs';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { RxEffects } from '@rx-angular/state/effects';
+import { Observable } from 'rxjs';
 
 @Directive({ selector: '[rxaContentTest]' })
 export class RxQueryContentTestDirective {}

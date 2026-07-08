@@ -1,4 +1,4 @@
-import type { MergeStrategyContext, OutputPath } from './types';
+import type { MergeStrategyContext, OutputPath } from './types.ts';
 
 export function assignMergeGroup(
   owner: OutputPath,

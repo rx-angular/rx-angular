@@ -1,18 +1,18 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { DemoBasicsViewModelService } from './demo-basics.view-model.service';
-import { RxState } from '@rx-angular/state';
-import { DemoBasicsAdapterService } from './demo-basics.adapter.service';
+import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
 import {
   MatExpansionPanel,
+  MatExpansionPanelDescription,
   MatExpansionPanelHeader,
   MatExpansionPanelTitle,
-  MatExpansionPanelDescription,
 } from '@angular/material/expansion';
-import { MatProgressBar } from '@angular/material/progress-bar';
-import { MatButton } from '@angular/material/button';
 import { MatList, MatListItem } from '@angular/material/list';
-import { MatCard } from '@angular/material/card';
-import { AsyncPipe } from '@angular/common';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { RxState } from '@rx-angular/state';
+import { DemoBasicsAdapterService } from './demo-basics.adapter.service';
+import { DemoBasicsViewModelService } from './demo-basics.view-model.service';
 
 @Component({
   selector: 'rxa-demo-basics',

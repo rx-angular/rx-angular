@@ -2,38 +2,48 @@ import { isDefined, isKeyOf, isObjectGuard } from './guards';
 
 export function safePluck<T extends object, K1 extends keyof T>(
   stateObject: T,
-  keys: K1 | [K1]
+  keys: K1 | [K1],
 ): T[K1];
 
-export function safePluck<T extends object,
-  K1 extends keyof T,
-  K2 extends keyof T[K1]>(stateObject: T, keys: [K1, K2]): T[K1][K2];
-
-export function safePluck<T extends object,
+export function safePluck<
+  T extends object,
   K1 extends keyof T,
   K2 extends keyof T[K1],
-  K3 extends keyof T[K1][K2]>(stateObject: T, keys: [K1, K2, K3]): T[K1][K2][K3];
+>(stateObject: T, keys: [K1, K2]): T[K1][K2];
 
-export function safePluck<T extends object,
+export function safePluck<
+  T extends object,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
-  K4 extends keyof T[K1][K2][K3]>(stateObject: T, keys: [K1, K2, K3, K4]): T[K1][K2][K3][K4];
+>(stateObject: T, keys: [K1, K2, K3]): T[K1][K2][K3];
 
-export function safePluck<T extends object,
+export function safePluck<
+  T extends object,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
-  K5 extends keyof T[K1][K2][K3][K4]>(stateObject: T, keys: [K1, K2, K3, K4, K5]): T[K1][K2][K3][K4][K5];
+>(stateObject: T, keys: [K1, K2, K3, K4]): T[K1][K2][K3][K4];
 
-export function safePluck<T extends object,
+export function safePluck<
+  T extends object,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
   K5 extends keyof T[K1][K2][K3][K4],
-  K6 extends keyof T[K1][K2][K3][K4][K5]>(
+>(stateObject: T, keys: [K1, K2, K3, K4, K5]): T[K1][K2][K3][K4][K5];
+
+export function safePluck<
+  T extends object,
+  K1 extends keyof T,
+  K2 extends keyof T[K1],
+  K3 extends keyof T[K1][K2],
+  K4 extends keyof T[K1][K2][K3],
+  K5 extends keyof T[K1][K2][K3][K4],
+  K6 extends keyof T[K1][K2][K3][K4][K5],
+>(
   stateObject: T,
   keys:
     | [K1]
@@ -41,16 +51,18 @@ export function safePluck<T extends object,
     | [K1, K2, K3]
     | [K1, K2, K3, K4]
     | [K1, K2, K3, K4, K5]
-    | [K1, K2, K3, K4, K5, K6]
+    | [K1, K2, K3, K4, K5, K6],
 ): T[K1][K2][K3][K4][K5][K6];
 
-export function safePluck<T extends object,
+export function safePluck<
+  T extends object,
   K1 extends keyof T,
   K2 extends keyof T[K1],
   K3 extends keyof T[K1][K2],
   K4 extends keyof T[K1][K2][K3],
   K5 extends keyof T[K1][K2][K3][K4],
-  K6 extends keyof T[K1][K2][K3][K4][K5]>(
+  K6 extends keyof T[K1][K2][K3][K4][K5],
+>(
   stateObject: T,
   keys:
     | [K1]
@@ -58,7 +70,7 @@ export function safePluck<T extends object,
     | [K1, K2, K3]
     | [K1, K2, K3, K4]
     | [K1, K2, K3, K4, K5]
-    | [K1, K2, K3, K4, K5, K6]
+    | [K1, K2, K3, K4, K5, K6],
 ):
   | T[K1]
   | T[K1][K2]
@@ -82,8 +94,8 @@ export function safePluck<T extends object,
     return undefined;
   }
   // sanitize keys -> keep only valid keys (string, number, symbol)
-  const keysArr = (Array.isArray(keys) ? keys : [keys]).filter(k =>
-    isKeyOf<T>(k)
+  const keysArr = (Array.isArray(keys) ? keys : [keys]).filter((k) =>
+    isKeyOf<T>(k),
   );
   if (
     keysArr.length === 0 ||
@@ -94,7 +106,7 @@ export function safePluck<T extends object,
   }
   let prop = stateObject[keysArr.shift() as K1];
 
-  keysArr.forEach(key => {
+  keysArr.forEach((key) => {
     if (isObjectGuard(prop) && isKeyOf(key)) {
       prop = prop[key];
     }

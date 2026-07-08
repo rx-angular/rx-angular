@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { insert, remove, update } from '@rx-angular/cdk/transformations';
 import { rxState } from '@rx-angular/state';
-import { DocsLinkComponent } from '../../../shared/docs-link';
 import { CodeHighlightComponent } from '../../../shared/code-highlight';
+import { DocsLinkComponent } from '../../../shared/docs-link';
 
 type Todo = {
   id: number;

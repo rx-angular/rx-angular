@@ -1,8 +1,8 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
-import { AsyncPipe } from '@angular/common';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-recursive-async',

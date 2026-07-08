@@ -1,9 +1,9 @@
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
 import { Subject, Subscription } from 'rxjs';
 import { map, scan } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
 import { SourceService } from './source.service';
-import { AsyncPipe, JsonPipe } from '@angular/common';
 
 interface ComponentState {
   title: string;

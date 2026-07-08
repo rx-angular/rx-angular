@@ -1,6 +1,6 @@
 import { getZoneUnPatchedApi } from '../zone-checks';
 
-export function setInterval(cb: () => void, ms: number = 0): void {
+export function setInterval(cb: () => void, ms = 0): void {
   return getZoneUnPatchedApi('setInterval')(cb, ms);
 }
 

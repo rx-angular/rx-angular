@@ -1,11 +1,11 @@
-import { DEFAULT_MERGE_STRATEGY_CONFIG } from './config';
-import { createBundleGraph, isJavaScriptOutput } from './graph';
-import { applyStrategies } from './strategy-applicator';
+import { DEFAULT_MERGE_STRATEGY_CONFIG } from './config.ts';
+import { createBundleGraph, isJavaScriptOutput } from './graph.ts';
+import { applyStrategies } from './strategy-applicator.ts';
 import type {
   MergeStrategyContext,
   MergeStrategyFactory,
   OutputPath,
-} from './types';
+} from './types.ts';
 
 export const mergeStrategyFactory: MergeStrategyFactory = (
   entryPointChunk,

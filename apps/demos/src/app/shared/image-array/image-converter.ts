@@ -1,20 +1,27 @@
-import { animationFrameScheduler, asyncScheduler, BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { ImgInfo } from './model';
+import {
+  animationFrameScheduler,
+  asyncScheduler,
+  BehaviorSubject,
+  Observable,
+  Subject,
+  Subscription,
+} from 'rxjs';
 import { map, observeOn, shareReplay, tap } from 'rxjs/operators';
+import { ImgInfo } from './model';
 import { imageDataToImgInfo } from './pixel-image';
 
 export interface ImgConverter {
-  tearDown: () => void,
-  renderImage: (img: CanvasImageSource) => void,
-  rotate: (angle: number, x: number, y: number) => void,
-  scale: (image: HTMLImageElement, scalex: number, scaley: number) => void,
-  imageDataChange$: Observable<ImageData>,
-  loading$: Observable<boolean>,
-  imgInfoChange$: Observable<ImgInfo>
+  tearDown: () => void;
+  renderImage: (img: CanvasImageSource) => void;
+  rotate: (angle: number, x: number, y: number) => void;
+  scale: (image: HTMLImageElement, scalex: number, scaley: number) => void;
+  imageDataChange$: Observable<ImageData>;
+  loading$: Observable<boolean>;
+  imgInfoChange$: Observable<ImgInfo>;
 }
 
 export function createImageConverter(canvas?: HTMLCanvasElement): ImgConverter {
-  canvas = canvas || document.createElement('CANVAS') as HTMLCanvasElement;
+  canvas = canvas || (document.createElement('CANVAS') as HTMLCanvasElement);
   // FileReader support
   if (!FileReader) {
     throw new Error('No FileReader supported.');
@@ -28,10 +35,14 @@ export function createImageConverter(canvas?: HTMLCanvasElement): ImgConverter {
 
   const renderImage$ = new Subject<HTMLImageElement>();
 
-  sub.add(renderImage$.pipe(
-    observeOn(animationFrameScheduler),
-    tap(img => renderImage(img))
-  ).subscribe());
+  sub.add(
+    renderImage$
+      .pipe(
+        observeOn(animationFrameScheduler),
+        tap((img) => renderImage(img)),
+      )
+      .subscribe(),
+  );
 
   return {
     tearDown: () => sub.unsubscribe(),
@@ -45,8 +56,8 @@ export function createImageConverter(canvas?: HTMLCanvasElement): ImgConverter {
       map(imageDataToImgInfo),
       observeOn(asyncScheduler),
       tap(() => loading$.next(false)),
-      shareReplay(1)
-    )
+      shareReplay(1),
+    ),
   };
 
   // ---
@@ -69,7 +80,7 @@ export function createImageConverter(canvas?: HTMLCanvasElement): ImgConverter {
 
     // draw it up and to the left by half the width
     // and height of the image
-    ctx.drawImage(image as any, -(x), -(y));
+    ctx.drawImage(image as any, -x, -y);
 
     // and restore the co-ords to how they were when we began
     ctx.restore();
@@ -99,5 +110,4 @@ export function createImageConverter(canvas?: HTMLCanvasElement): ImgConverter {
   function _signalImageDataUpdate() {
     imageDataChange$.next(ctx.getImageData(0, 0, canvas.width, canvas.height));
   }
-
 }

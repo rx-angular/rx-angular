@@ -38,22 +38,23 @@ export abstract class Hooks
     AfterContentChecked,
     AfterContentChecked$,
     OnDestroy,
-    OnDestroy$ {
+    OnDestroy$
+{
   readonly _hooks$ = new Subject<Partial<HookProps>>();
 
   onChanges$: Observable<SimpleChanges> = this._hooks$.pipe(toHook('changes'));
   onInit$: Observable<boolean> = this._hooks$.pipe(toHook('init'));
   onAfterViewInit$: Observable<boolean> = this._hooks$.pipe(
-    toHook('afterViewInit')
+    toHook('afterViewInit'),
   );
   onAfterViewChecked$: Observable<boolean> = this._hooks$.pipe(
-    toHook('afterViewChecked')
+    toHook('afterViewChecked'),
   );
   onAfterContentInit$: Observable<boolean> = this._hooks$.pipe(
-    toHook('afterContentInit')
+    toHook('afterContentInit'),
   );
   onAfterContentChecked$: Observable<boolean> = this._hooks$.pipe(
-    toHook('afterContentChecked')
+    toHook('afterContentChecked'),
   );
   onDestroy$: Observable<boolean> = this._hooks$.pipe(toHook('destroy'));
 

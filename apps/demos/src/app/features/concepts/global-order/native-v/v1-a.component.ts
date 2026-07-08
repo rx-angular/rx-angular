@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DataService } from '../shared/data.service';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
-import { V1BComponent } from './v1-b.component';
 import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { DataService } from '../shared/data.service';
+import { V1BComponent } from './v1-b.component';
 
 @Component({
   selector: 'rxa-v1-a',

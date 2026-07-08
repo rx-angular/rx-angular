@@ -1,13 +1,13 @@
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { insert } from '@rx-angular/cdk/transformations';
+import { RxPush } from '@rx-angular/template/push';
 import { concat, ReplaySubject, timer } from 'rxjs';
 import { concatMap, mapTo, scan, switchMap } from 'rxjs/operators';
-import { insert } from '@rx-angular/cdk/transformations';
-import { toBooleanArray } from './utils';
-import { measure$ } from '../../utils/measure';
-import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
-import { NgClass } from '@angular/common';
-import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
 import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { measure$ } from '../../utils/measure';
+import { toBooleanArray } from './utils';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];

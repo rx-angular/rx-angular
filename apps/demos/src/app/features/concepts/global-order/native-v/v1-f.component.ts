@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DataService } from '../shared/data.service';
 import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { DataService } from '../shared/data.service';
 import { V1HComponent } from './v1-h.component';
 
 @Component({

@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
-import { toBooleanArray } from './utils';
-import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 import { NgClass } from '@angular/common';
-import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RxPush } from '@rx-angular/template/push';
+import { ReplaySubject } from 'rxjs';
 import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { toBooleanArray } from './utils';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];

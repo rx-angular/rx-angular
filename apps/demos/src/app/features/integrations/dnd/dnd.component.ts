@@ -1,17 +1,17 @@
 import {
+  CdkDrag,
   CdkDragDrop,
+  CdkDropList,
   DragDropModule,
   moveItemInArray,
-  CdkDropList,
-  CdkDrag,
 } from '@angular/cdk/drag-drop';
-import { CommonModule, AsyncPipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { delay, map, shareReplay, tap } from 'rxjs/operators';
-import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx-for.module';
 import { RxFor } from '../../../rx-angular-pocs/template/directives/for/rx-for.directive';
+import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx-for.module';
 
 @Component({
   selector: 'rxa-dnd',

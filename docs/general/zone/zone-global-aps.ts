@@ -6,12 +6,12 @@ export const globalAPIs = [
   'EventTarget',
   'XHR',
   'mediaQuery',
-  'timers'
+  'timers',
 ];
 
 // Disable patching of window/global APIs
 export function disableGlobalAPIs(apis: string[]) {
-  apis.forEach(api => {
-    (window as any)['__Zone_disable_'+api] = true;
+  apis.forEach((api) => {
+    (window as any)['__Zone_disable_' + api] = true;
   });
 }

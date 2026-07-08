@@ -8,16 +8,17 @@
   "targets": {
     "build-lib": {
       "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/libs/state"],
+      "dependsOn": ["^build"],
       "options": {
         "tsConfig": "libs/state/tsconfig.lib.json",
         "project": "libs/state/ng-package.json"
-      },
-      "outputs": ["{workspaceRoot}/dist/libs/state"],
-      "dependsOn": ["^build"]
+      }
     },
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": ["build-lib"],
+      "outputs": ["{workspaceRoot}/dist/libs/state/schematics"],
       "options": {
         "commands": [
           "yarn tsc -p libs/state/tsconfig.schematics.json",
@@ -27,28 +28,27 @@
           "yarn cpx libs/state/schematics/src/**/schema.json dist/libs/state/schematics/src"
         ],
         "parallel": false
-      },
-      "outputs": ["{workspaceRoot}/dist/libs/state/schematics"]
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/state"],
       "options": {
         "jestConfig": "libs/state/jest.config.ts",
         "codeCoverage": true,
         "tsConfig": "libs/state/tsconfig.spec.json"
-      },
-      "outputs": ["{workspaceRoot}/coverage/state"]
+      }
     },
     "perfBuild": {
       "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "main": "libs/state/perf/index.ts",
         "outputPath": "dist/libs/state-perf/dist",
         "tsConfig": "libs/state/tsconfig.perf.json",
         "compiler": "tsc",
         "target": "node"
-      },
-      "outputs": ["{options.outputPath}"]
+      }
     },
     "perf": {
       "executor": "@nx/js:node",

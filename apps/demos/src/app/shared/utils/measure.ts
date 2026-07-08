@@ -13,11 +13,10 @@ let i = 0;
 
 const rxaDebug = {
   getEntries,
-  measure
+  measure,
 };
 
 (window as any).rxaDebug = rxaDebug;
-
 
 /**
  * Used performance.mark to generate a TimingMark
@@ -34,14 +33,14 @@ export function mark(label: string = ++i + ''): void {
  */
 export function start(label: string = ++i + ''): () => () => void {
   const startLabel = `${label}-${POSTFIX_START}`;
-  const endLabel = `${label}-${POSTFIX_END}`
+  const endLabel = `${label}-${POSTFIX_END}`;
   mark(startLabel);
   return () => {
     end(label);
-    return () =>  {
-      measure(startLabel, endLabel)
-    }
-  }
+    return () => {
+      measure(startLabel, endLabel);
+    };
+  };
 }
 
 /**
@@ -56,15 +55,25 @@ export function end(label: string = ++i + ''): void {
 /**
  * Used performance.measure to generate a measurement for 2 TimingMarks
  */
-export function measure(startLabel: string, endLabel: string, measureName?: string): void {
-  measureName = measureName ? measureName : `${PREFIX}-${startLabel}--${endLabel}`;
-  performance.measure(measureName, `${PREFIX}-${startLabel}`, `${PREFIX}-${endLabel}`);
+export function measure(
+  startLabel: string,
+  endLabel: string,
+  measureName?: string,
+): void {
+  measureName = measureName
+    ? measureName
+    : `${PREFIX}-${startLabel}--${endLabel}`;
+  performance.measure(
+    measureName,
+    `${PREFIX}-${startLabel}`,
+    `${PREFIX}-${endLabel}`,
+  );
   const { name, duration } = performance.getEntriesByName(measureName)[0];
   console.log(`${name}: ${duration}`);
 }
 
-export function getEntries(): { }[] {
-  return performance.getEntries().filter(e => e.name.indexOf(PREFIX) === 0);
+export function getEntries(): {}[] {
+  return performance.getEntries().filter((e) => e.name.indexOf(PREFIX) === 0);
 }
 
 /**
@@ -77,18 +86,22 @@ export function getEntries(): { }[] {
 const observableMarkerFactory = (label: string) => {
   const observableMarks = {
     subscribe: () => label + '$subscribe',
-    next:  (n) => label + '$next_'+n+'',
-    error:  (e) => label + '$error_'+e+'',
-    complete:  () => label + '$complete',
-    unsubscribe:  () => label + '$unsubscribe',
-    teardown:  () => label + '$teardown'
+    next: (n) => label + '$next_' + n + '',
+    error: (e) => label + '$error_' + e + '',
+    complete: () => label + '$complete',
+    unsubscribe: () => label + '$unsubscribe',
+    teardown: () => label + '$teardown',
   };
 
   const observableMeasures = {
-    total: [label+'total', observableMarks.subscribe(), observableMarks.teardown()]
+    total: [
+      label + 'total',
+      observableMarks.subscribe(),
+      observableMarks.teardown(),
+    ],
   };
 
-  return ({
+  return {
     subscribe: () => {
       mark(observableMarks.subscribe());
     },
@@ -111,11 +124,13 @@ const observableMarkerFactory = (label: string) => {
       console.log('eval');
       // @ts-ignore
       measure(...observableMeasures.total);
-      const { name, duration } = performance.getEntriesByName(observableMeasures.total[0])[0];
+      const { name, duration } = performance.getEntriesByName(
+        observableMeasures.total[0],
+      )[0];
       console.log(`${name}: ${duration}`);
-    }
-  });
-}
+    },
+  };
+};
 
 /**
  * Marks the observable lifecycle with TimingMarks
@@ -124,7 +139,8 @@ const observableMarkerFactory = (label: string) => {
  */
 export function measure$(label: string = ++i + '') {
   const marker = observableMarkerFactory(label);
-  return o$ => new Observable((subscriber) => {
+  return (o$) =>
+    new Observable((subscriber) => {
       marker.subscribe();
 
       const sub = o$.subscribe(
@@ -139,30 +155,27 @@ export function measure$(label: string = ++i + '') {
         () => {
           marker.complete();
           subscriber.complete();
-        }
+        },
       );
 
       return () => {
         marker.teardown();
         sub.unsubscribe();
         marker.eval();
-      }
-
-    }
-  );
+      };
+    });
 }
 
 export function promiseMarkerFactory(label: string) {
   const promiseMarks = {
-    start: () => label+'-Pstart',
-    then: (r) =>  label+'-Pthen',
-    catch: (e) =>  label+'-Pcatch',
-    finally: () => label+'-Pfinally'
+    start: () => label + '-Pstart',
+    then: (r) => label + '-Pthen',
+    catch: (e) => label + '-Pcatch',
+    finally: () => label + '-Pfinally',
   };
   const promiseMeasures = {
-    total: [promiseMarks.start(), promiseMarks.finally(), label+'total']
+    total: [promiseMarks.start(), promiseMarks.finally(), label + 'total'],
   };
-
 
   function _then(r) {
     mark(promiseMarks.then(r));
@@ -189,11 +202,11 @@ export function promiseMarkerFactory(label: string) {
     wrap: (p: Promise<any>): Promise<any> => {
       _start();
       return p
-        .then(r => {
+        .then((r) => {
           _then(r);
           return Promise.resolve(r);
         })
-        .catch(e => {
+        .catch((e) => {
           _catch(e);
           return Promise.reject(e);
         })
@@ -201,6 +214,6 @@ export function promiseMarkerFactory(label: string) {
           _finally();
           _eval();
         });
-    }
+    },
   };
 }
