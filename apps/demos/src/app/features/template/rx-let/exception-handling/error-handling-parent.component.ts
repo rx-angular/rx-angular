@@ -1,10 +1,9 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RxLet } from '@rx-angular/template/let';
-
+import { ValueProviderComponent } from '../../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
 import { ErrorHandlingChildComponent } from './error-handling-child.component';
-import { ValueProviderComponent } from '../../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 
 @Component({
   selector: 'rxa-error-handling-parent',

@@ -49,8 +49,10 @@ import { asyncScheduler } from '../schedulers';
  * @name interval
  * @owner Observable
  */
-export function interval(period = 0,
-                         scheduler: SchedulerLike = asyncScheduler): Observable<number> {
+export function interval(
+  period = 0,
+  scheduler: SchedulerLike = asyncScheduler,
+): Observable<number> {
   if (!isNumeric(period) || period < 0) {
     period = 0;
   }
@@ -59,9 +61,9 @@ export function interval(period = 0,
     scheduler = asyncScheduler;
   }
 
-  return new Observable<number>(subscriber => {
+  return new Observable<number>((subscriber) => {
     subscriber.add(
-      scheduler.schedule(dispatch, period, { subscriber, counter: 0, period })
+      scheduler.schedule(dispatch, period, { subscriber, counter: 0, period }),
     );
     return subscriber;
   });
@@ -84,7 +86,9 @@ function isNumeric(val: any): val is number | string {
   // ...but misinterprets leading-number strings, particularly hex literals ("0x...")
   // subtraction forces infinities to NaN
   // adding 1 corrects loss of precision from parseFloat (#15100)
-  return !isArray(val) && (val - parseFloat(val) + 1) >= 0;
+  return !isArray(val) && val - parseFloat(val) + 1 >= 0;
 }
 
-export const isArray = (() => Array.isArray || (<T>(x: any): x is T[] => x && typeof x.length === 'number'))();
+export const isArray = (() =>
+  Array.isArray ||
+  (<T>(x: any): x is T[] => x && typeof x.length === 'number'))();

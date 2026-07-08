@@ -1,3 +1,4 @@
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -6,7 +7,6 @@ import { ActivatedRoute } from '@angular/router';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/model';
 import { BgColorPipe } from './bg-color.pipe';
 import { SortingPresenter } from './sorting.presenter';
-import { coerceNumberProperty } from '@angular/cdk/coercion';
 
 let itemIdx = 0;
 

@@ -1,6 +1,6 @@
+import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'rxa-value-display',

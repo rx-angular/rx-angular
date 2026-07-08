@@ -1,18 +1,18 @@
 export const MENU_ITEMS = [
   {
     label: 'List Actions',
-    link: 'list-actions'
+    link: 'list-actions',
   },
   {
     label: 'Nested Lists',
-    link: 'nested-lists'
+    link: 'nested-lists',
   },
   {
     label: 'Error handling',
-    link: 'error-handling'
+    link: 'error-handling',
   },
   {
     label: 'Route Change',
-    link: 'route-change'
-  }
+    link: 'route-change',
+  },
 ];

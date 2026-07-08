@@ -15,9 +15,9 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
+import { RxState } from '@rx-angular/state';
 import { RxFor } from '@rx-angular/template/for';
 import { RxLet } from '@rx-angular/template/let';
-import { RxState } from '@rx-angular/state';
 import {
   BehaviorSubject,
   combineLatest,
@@ -29,6 +29,7 @@ import {
 import { map, shareReplay, switchMap, switchMapTo } from 'rxjs/operators';
 import { asyncScheduler } from 'rxjs-zone-less';
 import { Hooks } from '../../../../shared/debug-helper/hooks';
+import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 import {
   ArrayProviderService,
   removeItemsImmutable,
@@ -36,9 +37,7 @@ import {
   TestItem,
 } from '../../../../shared/debug-helper/value-provider';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
-
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
-import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
 import {
   LegacyReconciliationProvider,

@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
-import { RxLet } from '../../../rx-angular-pocs/template/directives/let/rx-let.directive';
 import {
   MatExpansionPanel,
   MatExpansionPanelHeader,
 } from '@angular/material/expansion';
+import { RxState } from '@rx-angular/state';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { RxLet } from '../../../rx-angular-pocs/template/directives/let/rx-let.directive';
 
 @Component({
   selector: 'rxa-color-prio',

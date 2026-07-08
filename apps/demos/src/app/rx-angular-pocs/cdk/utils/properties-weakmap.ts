@@ -30,14 +30,14 @@ type KeyOf<O> = keyof O & string & symbol & number;
  * // {isCoalescing: "true"}
  * */
 export function createPropertiesWeakMap<O extends object, P extends object>(
-  getDefaults: (o: O) => P
+  getDefaults: (o: O) => P,
 ) {
   type K = KeyOf<P>;
   const propertyMap = new WeakMap<O, P>();
 
   return {
     getProps: getProperties,
-    setProps: setProperties
+    setProps: setProperties,
   };
 
   function getProperties(ctx: O): P {
@@ -53,7 +53,7 @@ export function createPropertiesWeakMap<O extends object, P extends object>(
       (Object.entries(defaults) as [K, P[K]][]).forEach(
         ([prop, value]): void => {
           properties[prop] = hasKey(ctx, prop) ? ctx[prop] : value;
-        }
+        },
       );
 
       propertyMap.set(ctx, properties);

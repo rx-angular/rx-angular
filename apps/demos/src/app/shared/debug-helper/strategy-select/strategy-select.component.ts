@@ -4,15 +4,15 @@ import {
   inject,
   output,
 } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import {
   MatFormField,
+  MatLabel,
+  MatOption,
   MatSelect,
   MatSelectTrigger,
-  MatOption,
-  MatLabel,
 } from '@angular/material/select';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { MatIcon } from '@angular/material/icon';
 import { RxFor } from '@rx-angular/template/for';
 
 const strategiesUiConfig: { [key: string]: { name: string; icon: string } } = {

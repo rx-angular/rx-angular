@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-
 import { V1AComponent } from './v1-a.component';
 import { V1BComponent } from './v1-b.component';
 import { V1CComponent } from './v1-c.component';

@@ -1,9 +1,8 @@
 import { PUSH_PIPE_MENU } from './push/push.menu';
-import { MENU_ITEMS as RX_LET_MENU_ITEMS } from './rx-let/rx-let.menu';
 import { MENU_ITEMS as RX_FOR_MENU_ITEMS } from './rx-for/rx-for.menu';
+import { MENU_ITEMS as RX_LET_MENU_ITEMS } from './rx-let/rx-let.menu';
 import { RX_VIRTUAL_FOR_MENU_ITEMS } from './rx-virtual-for/rx-virtual-for.menu';
 import { MENU_ITEMS as STRATEGY_MENU_ITEMS } from './strategies/concurrent-strategies.menu';
-import { VIRTUAL_VIEW_MENU_ITEMS } from './virtual-view/virtual-view.menu';
 
 export const TEMPLATE_MENU = [
   {

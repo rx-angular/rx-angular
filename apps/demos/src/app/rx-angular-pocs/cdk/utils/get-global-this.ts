@@ -12,10 +12,10 @@
  */
 export function getGlobalThis(): any {
   return 'undefined' != typeof globalThis
-      ? globalThis
-      : 'undefined' != typeof window
+    ? globalThis
+    : 'undefined' != typeof window
       ? window
       : 'undefined' != typeof self
-      ? self
-      : {};
+        ? self
+        : {};
 }

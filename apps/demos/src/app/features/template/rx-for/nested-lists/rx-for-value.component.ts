@@ -5,8 +5,8 @@ import {
   Input,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { RxLet } from '@rx-angular/template/let';
 import { RxState } from '@rx-angular/state';
+import { RxLet } from '@rx-angular/template/let';
 import { isObservable, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';

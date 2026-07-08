@@ -1,2 +1,2 @@
-export * from './push';
 export * from './memo';
+export * from './push';
