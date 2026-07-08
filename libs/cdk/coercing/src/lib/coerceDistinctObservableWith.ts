@@ -13,7 +13,7 @@ import { coerceObservableWith } from './coerceObservableWith';
  *
  */
 export function coerceDistinctWith<T>(
-  flattenOperator?: OperatorFunction<Observable<T>, T>
+  flattenOperator?: OperatorFunction<Observable<T>, T>,
 ) {
   flattenOperator = flattenOperator || switchAll();
   return (o$: Observable<Observable<T> | T>) =>
@@ -21,6 +21,6 @@ export function coerceDistinctWith<T>(
       coerceObservableWith(),
       distinctUntilChanged(),
       flattenOperator,
-      distinctUntilChanged()
+      distinctUntilChanged(),
     );
 }

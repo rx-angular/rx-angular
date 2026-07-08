@@ -117,5 +117,5 @@ const renames: Record<string, string | [string, string]> = {
 
 export default renamingRule(
   ['@rx-angular/cdk', '@rx-angular/cdk/zone-less'],
-  renames
+  renames,
 );

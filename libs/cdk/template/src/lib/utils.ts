@@ -33,7 +33,7 @@ export function createEmbeddedView<C>(
   viewContainerRef: ViewContainerRef,
   templateRef: TemplateRef<C>,
   context: C,
-  index = 0
+  index = 0,
 ): EmbeddedViewRef<C> {
   const view = viewContainerRef.createEmbeddedView(templateRef, context, index);
   view.detectChanges();
@@ -48,7 +48,7 @@ export function createEmbeddedView<C>(
  *
  */
 export function templateHandling<N, C>(
-  viewContainerRef: ViewContainerRef
+  viewContainerRef: ViewContainerRef,
 ): {
   add(name: N, templateRef: TemplateRef<C>): void;
   get(name: N): TemplateRef<C>;
@@ -76,7 +76,7 @@ export function templateHandling<N, C>(
       if (!templateCache.has(name)) {
         templateCache.set(
           name,
-          new BehaviorSubject<TemplateRef<C>>(templateRef)
+          new BehaviorSubject<TemplateRef<C>>(templateRef),
         );
       } else {
         templateCache.get(name).next(templateRef);
@@ -91,14 +91,14 @@ export function templateHandling<N, C>(
   //
   function assertTemplate<T>(
     property: any,
-    templateRef: TemplateRef<T> | null
+    templateRef: TemplateRef<T> | null,
   ): templateRef is TemplateRef<T> {
     const isTemplateRefOrNull = !!(
       !templateRef || templateRef.createEmbeddedView
     );
     if (!isTemplateRefOrNull) {
       throw new Error(
-        `${property} must be a TemplateRef, but received ${typeof templateRef}`
+        `${property} must be a TemplateRef, but received ${typeof templateRef}`,
       );
     }
     return isTemplateRefOrNull;
@@ -120,7 +120,7 @@ export function notifyAllParentsIfNeeded<T>(
   injectingViewCdRef: ChangeDetectorRef,
   strategy: RxStrategyCredentials,
   notifyNeeded: () => boolean,
-  ngZone?: NgZone
+  ngZone?: NgZone,
 ): MonoTypeOperatorFunction<T> {
   return (o$) =>
     o$.pipe(
@@ -144,9 +144,9 @@ export function notifyAllParentsIfNeeded<T>(
             {
               scope: (injectingViewCdRef as any).context || injectingViewCdRef,
               ngZone,
-            }
-          ).pipe(ignoreElements())
+            },
+          ).pipe(ignoreElements()),
         );
-      })
+      }),
     );
 }

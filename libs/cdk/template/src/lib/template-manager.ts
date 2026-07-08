@@ -34,7 +34,7 @@ import { notifyAllParentsIfNeeded, templateHandling } from './utils';
 export interface RxTemplateManager<
   T,
   C extends RxViewContext<T>,
-  N = rxBaseTemplateNames | string
+  N = rxBaseTemplateNames | string,
 > extends RxRenderAware<T> {
   addTemplateRef: (name: N, templateRef: TemplateRef<C>) => void;
 }
@@ -47,7 +47,7 @@ export interface RxTemplateManager<
  * @param customNextContext - projection function to provide custom properties as well as override existing
  */
 export function notificationKindToViewContext<T>(
-  customNextContext: (value: T) => object
+  customNextContext: (value: T) => object,
 ): RxViewContextMap<T> {
   // @TODO rethink overrides
   return {
@@ -106,7 +106,7 @@ export type RxNotificationTemplateNameMap<T, C, N> = Record<
 export function createTemplateManager<
   T,
   C extends RxViewContext<T>,
-  N extends string = string
+  N extends string = string,
 >(config: {
   renderSettings: RxRenderSettings;
   templateSettings: RxTemplateSettings<T, C>;
@@ -134,7 +134,7 @@ export function createTemplateManager<
 
   const triggerHandling = config.templateTrigger$ || EMPTY;
   const getContext = notificationKindToViewContext(
-    templateSettings.customContext || (() => ({}))
+    templateSettings.customContext || (() => ({})),
   );
 
   return {
@@ -155,8 +155,8 @@ export function createTemplateManager<
       return merge(
         values$.pipe(tap((n) => (notification = n))),
         triggerHandling.pipe(
-          tap<RxNotificationKind>((trigger) => (trg = trigger))
-        )
+          tap<RxNotificationKind>((trigger) => (trg = trigger)),
+        ),
       ).pipe(
         switchMap(() => {
           const contextKind: RxNotificationKind = trg || notification.kind;
@@ -164,7 +164,7 @@ export function createTemplateManager<
           const value: T = notification.value as T;
           const templateName = notificationToTemplateName[contextKind](
             value,
-            templates
+            templates,
           );
           return templates.get$(templateName).pipe(
             map((template) => ({
@@ -172,7 +172,7 @@ export function createTemplateManager<
               templateName,
               notification,
               contextKind,
-            }))
+            })),
           );
         }),
         withLatestFrom(strategyHandling$.strategy$),
@@ -214,7 +214,7 @@ export function createTemplateManager<
                 }
                 activeTemplate = template;
               },
-              { ngZone }
+              { ngZone },
               // we don't need to specify any scope here. The template manager is the only one
               // who will call `viewRef#detectChanges` on any of the templates it manages.
               // whenever a new value comes in, any pre-scheduled work of this taskManager will
@@ -225,15 +225,15 @@ export function createTemplateManager<
                 injectingViewCdRef,
                 strategy,
                 () => notifyParent,
-                ngZone
+                ngZone,
               ),
               catchError((e) => {
                 errorHandler.handleError(e);
                 return of(e);
-              })
+              }),
             );
-          }
-        )
+          },
+        ),
       );
     },
   };

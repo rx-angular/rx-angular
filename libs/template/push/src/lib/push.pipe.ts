@@ -105,12 +105,12 @@ export class RxPush implements PipeTransform, OnDestroy {
   private readonly templateObserver = createTemplateNotifier<any>();
   private readonly templateValues$ = this.templateObserver.values$.pipe(
     onlyValues(),
-    shareReplay({ bufferSize: 1, refCount: true })
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
   /** @internal */
   private readonly strategyHandler = strategyHandling(
     this.strategyProvider.primaryStrategy,
-    this.strategyProvider.strategies
+    this.strategyProvider.strategies,
   );
   /** @internal */
   private patchZone: false | NgZone;
@@ -122,21 +122,21 @@ export class RxPush implements PipeTransform, OnDestroy {
   transform<U>(
     potentialObservable: null,
     config?: RxStrategyNames | Observable<RxStrategyNames>,
-    renderCallback?: NextObserver<U>
+    renderCallback?: NextObserver<U>,
   ): null;
   transform<U>(
     potentialObservable: undefined,
     config?: RxStrategyNames | Observable<RxStrategyNames>,
-    renderCallback?: NextObserver<U>
+    renderCallback?: NextObserver<U>,
   ): undefined;
   transform<U>(
     potentialObservable: ObservableInput<U> | U,
     config?: RxStrategyNames | Observable<RxStrategyNames>,
-    renderCallback?: NextObserver<U>
+    renderCallback?: NextObserver<U>,
   ): U;
   transform<U>(
     potentialObservable: ObservableInput<U>,
-    config?: PushInput<U>
+    config?: PushInput<U>,
   ): U;
   transform<U>(
     potentialObservable: ObservableInput<U> | U | null | undefined,
@@ -145,7 +145,7 @@ export class RxPush implements PipeTransform, OnDestroy {
       | RxStrategyNames
       | Observable<RxStrategyNames>
       | undefined,
-    renderCallback?: NextObserver<U>
+    renderCallback?: NextObserver<U>,
   ): U | null | undefined {
     this._renderCallback = renderCallback;
     if (config) {
@@ -192,7 +192,7 @@ export class RxPush implements PipeTransform, OnDestroy {
     const setRenderedValue = untracked(() =>
       this.templateValues$.subscribe(({ value }) => {
         this.renderedValue = value;
-      })
+      }),
     );
     const render = untracked(() =>
       this.hasInitialValue(this.templateValues$)
@@ -207,11 +207,11 @@ export class RxPush implements PipeTransform, OnDestroy {
               this.render(scope),
               tap((v) => {
                 this._renderCallback?.next(v);
-              })
-            )
-          )
+              }),
+            ),
+          ),
         )
-        .subscribe()
+        .subscribe(),
     );
     sub.add(setRenderedValue);
     sub.add(render);
@@ -233,9 +233,9 @@ export class RxPush implements PipeTransform, OnDestroy {
               scope,
               strategy: strategy.name,
               patchZone: this.patchZone,
-            }
-          )
-        )
+            },
+          ),
+        ),
       );
   }
 
@@ -268,8 +268,8 @@ function onlyValues<T>(): MonoTypeOperatorFunction<RxNotification<T>> {
       filter(
         (n) =>
           n.kind === RxNotificationKind.Suspense ||
-          n.kind === RxNotificationKind.Next
-      )
+          n.kind === RxNotificationKind.Next,
+      ),
     );
 }
 

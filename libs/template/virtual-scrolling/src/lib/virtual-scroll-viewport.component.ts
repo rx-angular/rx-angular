@@ -77,11 +77,7 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
   imports: [],
 })
 export class RxVirtualScrollViewportComponent
-  implements
-    RxVirtualScrollViewport,
-    AfterViewInit,
-    AfterContentInit,
-    OnDestroy
+  implements RxVirtualScrollViewport, AfterViewInit, AfterContentInit, OnDestroy
 {
   private elementRef = inject(ElementRef<HTMLElement>);
   private scrollStrategy = inject(RxVirtualScrollStrategy<unknown>, {

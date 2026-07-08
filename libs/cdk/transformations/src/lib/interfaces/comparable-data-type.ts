@@ -1,4 +1,3 @@
-
 /**
  * @description
  * The function which is used by `KeyCompareMap` to determine if changes are distinct or not.

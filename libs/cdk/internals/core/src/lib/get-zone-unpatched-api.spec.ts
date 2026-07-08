@@ -9,7 +9,7 @@ xdescribe('getZoneUnPatchedApi', () => {
   it('should get the unpatched "addEventListener"', () => {
     // Arrange & act & assert
     expect(getZoneUnPatchedApi('addEventListener')).toBe(
-      window[Zone.__symbol__('addEventListener')]
+      window[Zone.__symbol__('addEventListener')],
     );
   });
 
@@ -21,14 +21,14 @@ xdescribe('getZoneUnPatchedApi', () => {
   it('should get the original API from the element', () => {
     // Arrange & act & assert
     expect(getZoneUnPatchedApi(document.head, 'appendChild')).toEqual(
-      document.head.appendChild
+      document.head.appendChild,
     );
   });
 
   it('should get unpatched API from the element', () => {
     // Arrange & act & assert
     expect(getZoneUnPatchedApi(document.head, 'addEventListener')).toEqual(
-      document.head[Zone.__symbol__('addEventListener')]
+      document.head[Zone.__symbol__('addEventListener')],
     );
   });
 

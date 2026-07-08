@@ -18,9 +18,9 @@ export function onStrategy<T>(
   workFactory: (
     value: T,
     work: RxRenderWork,
-    options: RxCoalescingOptions
+    options: RxCoalescingOptions,
   ) => void,
-  options: RxCoalescingOptions & { ngZone?: NgZone } = {}
+  options: RxCoalescingOptions & { ngZone?: NgZone } = {},
 ): Observable<T> {
   return new Observable<T>((subscriber) => {
     subscriber.next(value);
@@ -32,6 +32,6 @@ export function onStrategy<T>(
     }),
     catchError((error) => throwError(() => [error, value])),
     map(() => value),
-    take(1)
+    take(1),
   );
 }
