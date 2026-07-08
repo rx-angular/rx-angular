@@ -6,9 +6,9 @@ import {
 } from '@angular/core';
 import {
   RxVirtualView,
+  RxVirtualViewContent,
   RxVirtualViewObserver,
   RxVirtualViewPlaceholder,
-  RxVirtualViewContent,
 } from '@rx-angular/template/virtual-view';
 import { VirtualContent } from './virtual-content.component';
 import { VirtualItem } from './virtual-item.component';

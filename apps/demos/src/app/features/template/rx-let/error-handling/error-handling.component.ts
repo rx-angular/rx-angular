@@ -1,7 +1,11 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core';
+import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { map, scan, share } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
 
 @Component({
   selector: 'rxa-let-error-handling',
@@ -103,6 +107,7 @@ import { RxState } from '@rx-angular/state';
     `,
   ],
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ErrorHandlingComponent {

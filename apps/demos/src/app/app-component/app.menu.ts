@@ -1,9 +1,8 @@
 import { FUNDAMENTALS_MENU } from '../features/concepts/fundamentals.menu';
+import { INTEGRATIONS_MENU_ITEMS } from '../features/integrations/integrations-shell.menu';
 import { STATE_MENU } from '../features/state/state-shell.menu';
 import { TEMPLATE_MENU } from '../features/template/template-shell.menu';
 import { TUTORIALS_MENU } from '../features/tutorials/tutorials-shell.menu';
-import { INTEGRATIONS_MENU_ITEMS } from '../features/integrations/integrations-shell.menu';
-import { EXPERIMENTS_MENU as EXPERIMENTS_MENU_ITEMS } from '../features/experiments/experiments-shell.menu';
 // import { MENU_ITEMS as PERFORMANCE_MENU_ITEMS } from '../features/performance/performance-shell.menu';
 
 export const MENU_ITEMS = [

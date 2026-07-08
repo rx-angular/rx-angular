@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { insert } from '@rx-angular/cdk/transformations';
 import { concat, ReplaySubject, timer } from 'rxjs';
 import { concatMap, mapTo, scan, switchMap } from 'rxjs/operators';
-import { insert } from '@rx-angular/cdk/transformations';
-import { toBooleanArray } from './utils';
 import { measure$ } from '../../utils/measure';
+import { toBooleanArray } from './utils';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];

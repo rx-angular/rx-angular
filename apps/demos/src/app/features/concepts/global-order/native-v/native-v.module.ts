@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { SharedModule } from '../shared/shared.module';
 import { V1AComponent } from './v1-a.component';
 import { V1BComponent } from './v1-b.component';
-import { V1DComponent } from './v1-d.component';
 import { V1CComponent } from './v1-c.component';
+import { V1DComponent } from './v1-d.component';
 import { V1EComponent } from './v1-e.component';
 import { V1FComponent } from './v1-f.component';
 import { V1HComponent } from './v1-h.component';
-import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [

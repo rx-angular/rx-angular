@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RxState } from '@rx-angular/state';
 import { isObservable, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
-import { toBoolean } from '../utils';
 import { TestItem } from '../model';
+import { toBoolean } from '../utils';
 
 @Component({
   selector: 'rxa-value',
@@ -32,6 +32,7 @@ import { TestItem } from '../model';
     `,
   ],
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ValueComponent {

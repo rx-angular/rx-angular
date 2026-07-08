@@ -1,32 +1,30 @@
-import { Subscription, takeUntil } from 'rxjs';
-import { filter, mergeAll } from 'rxjs/operators';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
-  EmbeddedViewRef,
   Input,
   NgZone,
   OnInit,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Hooks, intersectionObserver } from '../../../cdk';
-
+import { coerceAllFactory } from '@rx-angular/cdk/coercing';
+import { RxNotificationKind } from '@rx-angular/cdk/notifications';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   createTemplateManager,
   RxTemplateManager,
 } from '@rx-angular/cdk/template';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { coerceAllFactory } from '@rx-angular/cdk/coercing';
-import { RxNotificationKind } from '@rx-angular/cdk/notifications';
+import { RxEffects } from '@rx-angular/state/effects';
+import { Subscription, takeUntil } from 'rxjs';
+import { filter, mergeAll } from 'rxjs/operators';
+import { Hooks, intersectionObserver } from '../../../cdk';
 import {
   RxIfVisibleTemplateNames,
   rxIfVisibleTemplateNames,
   RxIfVisibleViewContext,
 } from './model';
-import { RxEffects } from '@rx-angular/state/effects';
 
 @Directive({
   selector: '[ifVisible]',

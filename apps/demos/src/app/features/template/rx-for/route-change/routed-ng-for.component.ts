@@ -1,8 +1,8 @@
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/model';
 import { SortingPresenter } from './sorting.presenter';
-import { coerceNumberProperty } from '@angular/cdk/coercion';
 
 let itemIdx = 0;
 

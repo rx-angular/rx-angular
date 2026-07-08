@@ -14,7 +14,7 @@ import { CdHelper } from '../../../utils/cd-helper';
   host: {
     class: 'd-block w-100',
   },
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CdHelper],
   standalone: false,
 })

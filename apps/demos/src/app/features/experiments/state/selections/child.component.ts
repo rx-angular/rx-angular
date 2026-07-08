@@ -1,8 +1,8 @@
 import { Component, Input, Output } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'rxa-state-child-selections',

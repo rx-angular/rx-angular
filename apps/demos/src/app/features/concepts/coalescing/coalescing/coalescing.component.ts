@@ -1,7 +1,7 @@
+import { Platform } from '@angular/cdk/platform';
 import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { Platform } from '@angular/cdk/platform';
 
 @Component({
   selector: 'rxa-demo-basics',

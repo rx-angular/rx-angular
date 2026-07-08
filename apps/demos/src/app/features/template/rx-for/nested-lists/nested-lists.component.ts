@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxState } from '@rx-angular/state';
 import {
   BehaviorSubject,
   combineLatest,
@@ -17,7 +18,6 @@ import {
   Subject,
 } from 'rxjs';
 import { scan, share, switchMap, tap } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
 import { environment } from '../../../../../environments/environment';
 import { immutableArr } from './utils';
 

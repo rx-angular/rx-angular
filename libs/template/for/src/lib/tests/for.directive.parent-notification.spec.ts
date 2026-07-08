@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   ErrorHandler,
@@ -38,6 +39,7 @@ const testTemplate = `<div>
 @Component({
   selector: 'rx-test-cmp',
   template: testTemplate,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxFor],
 })
 class ParentNotifyTestComponent extends TestComponent {
@@ -50,6 +52,7 @@ class ParentNotifyTestComponent extends TestComponent {
 @Component({
   selector: 'rx-test-cmp',
   template: testTemplate,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxFor],
 })
 class ParentNotifySignalTestComponent extends TestComponent {

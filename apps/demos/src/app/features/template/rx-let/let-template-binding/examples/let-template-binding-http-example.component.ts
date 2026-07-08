@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { BehaviorSubject, from, interval, Subject, throwError } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BehaviorSubject, interval, Subject, throwError } from 'rxjs';
 import {
   map,
   share,
@@ -98,6 +98,7 @@ import {
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LetTemplateBindingHttpExampleComponent {

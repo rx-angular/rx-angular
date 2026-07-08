@@ -15,7 +15,6 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-
 import { coerceDistinctWith } from '@rx-angular/cdk/coercing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
@@ -25,8 +24,7 @@ import {
   RxListViewComputedContext,
   RxListViewContext,
 } from '@rx-angular/cdk/template';
-
-import { ReplaySubject, Subject, Observable, Subscription } from 'rxjs';
+import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 
 /**
  * @Directive RxFor

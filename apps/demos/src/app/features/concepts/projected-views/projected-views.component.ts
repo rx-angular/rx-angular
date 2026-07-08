@@ -3,14 +3,13 @@ import {
   Component,
   effect,
   viewChild,
-  ViewChild,
-  viewChildren,
   ViewChildren,
+  viewChildren,
 } from '@angular/core';
+import { rxActions } from '@rx-angular/state/actions';
 import { combineLatest, Subject } from 'rxjs';
 import { ContentChildComponent } from './content-child.component';
 import { ViewChildComponent } from './view-child.component';
-import { RxActionFactory, rxActions } from '@rx-angular/state/actions';
 
 @Component({
   selector: 'rxa-projected-views',

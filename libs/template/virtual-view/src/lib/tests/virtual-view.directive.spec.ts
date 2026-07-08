@@ -1,4 +1,9 @@
-import { Component, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  signal,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
@@ -29,6 +34,7 @@ import { RxVirtualViewPlaceholder } from '../virtual-view-placeholder.directive'
     </div>
   `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     RxVirtualViewObserver,
     RxVirtualView,
@@ -51,6 +57,7 @@ class VirtualViewTestComponent {
     </div>
   `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxVirtualView, RxVirtualViewPlaceholder, RxVirtualViewContent],
 })
 class VirtualViewWithoutObserverComponent {}

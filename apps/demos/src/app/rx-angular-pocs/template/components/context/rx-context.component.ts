@@ -5,11 +5,10 @@ import {
   OnInit,
 } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-
-import { isObservable, Observable, of } from 'rxjs';
-import { Hooks, RxNotificationKind } from '../../../cdk';
-import { mapTo } from 'rxjs/operators';
 import { RxState } from '@rx-angular/state';
+import { isObservable, Observable, of } from 'rxjs';
+import { mapTo } from 'rxjs/operators';
+import { Hooks, RxNotificationKind } from '../../../cdk';
 import { observableToRxTemplateName } from '../../../cdk/utils/rxjs/operators/observable-to-rx-template-name';
 
 @Component({
@@ -37,7 +36,7 @@ import { observableToRxTemplateName } from '../../../cdk/utils/rxjs/operators/ob
   standalone: false,
 })
 export class RxContextContainer<U> extends Hooks implements OnInit {
-  @Input('rxContextContainer')
+  @Input()
   set rxContextContainer(
     potentialObservable: Observable<U> | null | undefined,
   ) {

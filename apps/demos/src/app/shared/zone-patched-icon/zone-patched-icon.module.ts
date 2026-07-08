@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ZonePatchedIconComponent } from './zone-patched-icon.component';
+import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RxLet } from '@rx-angular/template/let';
+import { ZonePatchedIconComponent } from './zone-patched-icon.component';
 
 @NgModule({
   declarations: [ZonePatchedIconComponent],

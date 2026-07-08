@@ -1,12 +1,12 @@
+import { MENU_ITEMS as PIPES_MENU_ITEMS } from './pipes/pipes.menu';
 import { PUSH_PIPE_MENU } from './push/push.menu';
-import { MENU_ITEMS as RX_LET_MENU_ITEMS } from './rx-let/rx-let.menu';
-import { MENU_ITEMS as RX_IF_MENU_ITEMS } from './rx-if/rx-if.menu';
 import { MENU_ITEMS as RX_CONTEXT_MENU_ITEMS } from './rx-context/rx-context.menu';
 import { MENU_ITEMS as RX_FOR_MENU_ITEMS } from './rx-for/rx-for.menu';
+import { MENU_ITEMS as RX_IF_MENU_ITEMS } from './rx-if/rx-if.menu';
+import { MENU_ITEMS as RX_LET_MENU_ITEMS } from './rx-let/rx-let.menu';
 import { RX_VIRTUAL_FOR_MENU_ITEMS } from './rx-virtual-for/rx-virtual-for.menu';
-import { MENU_ITEMS as VIEWPORT_PRIO_MENU_ITEMS } from './viewport-prio/viewport-prio.menu';
 import { MENU_ITEMS as STRATEGY_MENU_ITEMS } from './strategies/concurrent-strategies.menu';
-import { MENU_ITEMS as PIPES_MENU_ITEMS } from './pipes/pipes.menu';
+import { MENU_ITEMS as VIEWPORT_PRIO_MENU_ITEMS } from './viewport-prio/viewport-prio.menu';
 import { VIRTUAL_VIEW_MENU_ITEMS } from './virtual-view/virtual-view.menu';
 
 export const TEMPLATE_MENU = [

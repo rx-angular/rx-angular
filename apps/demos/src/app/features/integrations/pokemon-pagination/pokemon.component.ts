@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { debounceTime } from 'rxjs/operators';
@@ -94,6 +94,7 @@ import { PokemonStateService } from './states/pokemon-state.service';
     `,
   ],
   providers: [PokemonStateService],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PokemonComponent {

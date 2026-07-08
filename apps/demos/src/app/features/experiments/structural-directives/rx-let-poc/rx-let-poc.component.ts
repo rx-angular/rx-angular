@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 
 @Component({
@@ -77,7 +77,7 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
     </rxa-visualizer>
   `,
   standalone: false,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'm-1 p-1',
     style: 'display: block;',

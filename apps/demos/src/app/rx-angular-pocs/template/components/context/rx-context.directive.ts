@@ -7,9 +7,10 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { RxTemplateManager } from '@rx-angular/cdk/template';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
-
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxTemplateManager } from '@rx-angular/cdk/template';
+import { RxState } from '@rx-angular/state';
 import {
   isObservable,
   Observable,
@@ -18,23 +19,13 @@ import {
   Subscription,
   Unsubscribable,
 } from 'rxjs';
+import { distinctUntilChanged, mapTo, startWith } from 'rxjs/operators';
 import { Hooks } from '../../../cdk/hooks/hooks';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import {
   RxContextTemplateNames,
   rxContextTemplateNames,
   RxContextViewContext,
 } from './model';
-import {
-  distinctUntilChanged,
-  filter,
-  map,
-  mapTo,
-  startWith,
-  switchMap,
-  withLatestFrom,
-} from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
 
 @Directive({
   selector: '[rxContext]',

@@ -5,6 +5,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
+import { RxEffects } from '@rx-angular/state/effects';
+import { select } from '@rx-angular/state/selections';
 import {
   isObservable,
   Observable,
@@ -19,10 +21,8 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { Hooks } from '../hooks';
-import { RxEffects } from '@rx-angular/state/effects';
-import { select } from '@rx-angular/state/selections';
 import { AppConfigService } from '../../../app-config.service';
+import { Hooks } from '../hooks';
 
 @Component({
   selector: 'rxa-renders',

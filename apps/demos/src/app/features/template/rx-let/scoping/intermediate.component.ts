@@ -3,12 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChild,
-  ContentChildren,
   Directive,
-  OnInit,
-  QueryList,
 } from '@angular/core';
-import { startWith } from 'rxjs';
 
 @Directive({
   selector: '[rxaContentChild]',

@@ -4,7 +4,6 @@ import {
   debounceTime,
   distinctUntilChanged,
   map,
-  share,
   switchMapTo,
   tap,
 } from 'rxjs/operators';

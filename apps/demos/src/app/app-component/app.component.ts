@@ -1,15 +1,20 @@
-import { AfterViewInit, Component } from '@angular/core';
-import { AppShellModule } from '../app-shell/index';
-import { AppPresenter } from './app-presenter.service';
-import { MENU_ITEMS } from './app.menu';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+} from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, take, tap } from 'rxjs/operators';
+import { AppShellModule } from '../app-shell/index';
+import { MENU_ITEMS } from './app.menu';
+import { AppPresenter } from './app-presenter.service';
 
 @Component({
   selector: 'rxa-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppPresenter],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AppShellModule, RouterOutlet],
 })
 export class AppComponent implements AfterViewInit {

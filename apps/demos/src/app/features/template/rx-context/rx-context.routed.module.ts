@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ROUTES } from './rx-context.routes';
 import { RxContextDemoModule } from './rx-context.module';
+import { ROUTES } from './rx-context.routes';
 
 @NgModule({
   imports: [RxContextDemoModule, RouterModule.forChild(ROUTES)],

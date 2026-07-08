@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ValueProviderComponent } from './value-provider/value-provider.component';
-import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { ArrayProviderComponent } from './array-provider/array-provider.component';
-import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { ZonePatchedIconModule } from '../../zone-patched-icon/zone-patched-icon.module';
+import { ArrayProviderComponent } from './array-provider/array-provider.component';
+import { ValueProviderComponent } from './value-provider/value-provider.component';
 
 @NgModule({
   declarations: [ValueProviderComponent, ArrayProviderComponent],

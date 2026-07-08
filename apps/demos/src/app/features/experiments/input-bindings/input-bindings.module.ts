@@ -1,18 +1,21 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ROUTES } from './input-bindings.routes';
+import { PushModule, RxLetModule } from '../../../rx-angular-pocs';
+import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
 import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
-import { InputBindingsProxyComponent } from './input-bindings-container/input-bindings-proxy/input-bindings-proxy.component';
-import { InputBindingsDecoratorComponent } from './input-bindings-container/input-bindings-decorator/input-bindings-docorator.component';
+import { ROUTES } from './input-bindings.routes';
 import { InputBindingsContainerComponent } from './input-bindings-container/input-bindings-container.component';
-import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
-import { PushModule, RxLetModule } from '../../../rx-angular-pocs';
-
+import { InputBindingsDecoratorComponent } from './input-bindings-container/input-bindings-decorator/input-bindings-docorator.component';
+import { InputBindingsProxyComponent } from './input-bindings-container/input-bindings-proxy/input-bindings-proxy.component';
 
 @NgModule({
-  declarations: [InputBindingsContainerComponent, InputBindingsProxyComponent, InputBindingsDecoratorComponent],
+  declarations: [
+    InputBindingsContainerComponent,
+    InputBindingsProxyComponent,
+    InputBindingsDecoratorComponent,
+  ],
   exports: [],
   imports: [
     CommonModule,
@@ -21,8 +24,7 @@ import { PushModule, RxLetModule } from '../../../rx-angular-pocs';
     StrategySelectModule,
     VisualizerModule,
     RxLetModule,
-    PushModule
-  ]
+    PushModule,
+  ],
 })
-export class InputBindingsModule {
-}
+export class InputBindingsModule {}

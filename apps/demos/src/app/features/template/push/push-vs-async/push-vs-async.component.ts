@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, map, share, shareReplay } from 'rxjs/operators';
+import { ReplaySubject, Subject } from 'rxjs';
+import { distinctUntilChanged, map, share } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-push-basic-example',

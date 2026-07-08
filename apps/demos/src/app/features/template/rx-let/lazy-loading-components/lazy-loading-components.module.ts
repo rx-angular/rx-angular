@@ -1,17 +1,17 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RouterModule } from '@angular/router';
-import { ROUTES } from './lazy-loading-components.routes';
-import { LazyLoadingComponentsComponent } from './lazy-loading-components.component';
 import { RxLet } from '@rx-angular/template/let';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
-import { GhostElementsModule } from '../../../../shared/ghost-elements';
-import { MatButtonModule } from '@angular/material/button';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { GhostElementsModule } from '../../../../shared/ghost-elements';
+import { LazyLoadingComponentsComponent } from './lazy-loading-components.component';
+import { ROUTES } from './lazy-loading-components.routes';
+import { LazyLoadingComponentsAsyncAwaitComponent } from './lazy-loading-components-async-await.component';
 import { LazyLoadingComponentsObservableComponent } from './lazy-loading-components-observable.component';
 import { LazyLoadingComponentsPromiseComponent } from './lazy-loading-components-promise.component';
-import { LazyLoadingComponentsAsyncAwaitComponent } from './lazy-loading-components-async-await.component';
 
 const DECLARATIONS = [
   LazyLoadingComponentsObservableComponent,

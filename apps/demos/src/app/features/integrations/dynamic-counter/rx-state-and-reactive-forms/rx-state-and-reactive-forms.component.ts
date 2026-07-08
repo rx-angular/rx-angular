@@ -1,12 +1,11 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
+import { RxState } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
 import { EMPTY, Observable, Subject, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { Component } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-
-import { selectSlice } from '@rx-angular/state/selections';
-import { RxState } from '@rx-angular/state';
-import { CounterState, INITIAL_STATE } from '../shared/model';
 import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
+import { CounterState, INITIAL_STATE } from '../shared/model';
 import { updateCount } from '../shared/utils';
 
 @Component({
@@ -69,6 +68,7 @@ import { updateCount } from '../shared/utils';
     </form>
   `,
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class RxStateAndReactiveFormsCounterComponent {

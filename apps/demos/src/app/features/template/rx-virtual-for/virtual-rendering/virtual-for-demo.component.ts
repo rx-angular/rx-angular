@@ -10,11 +10,11 @@ import {
 } from '@angular/core';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { RxState } from '@rx-angular/state';
+import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-scrolling';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
-import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   selector: 'rxa-virtual-for-feature-showcase',
@@ -98,7 +98,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-s
                   state.set({
                     runwayItemsOpposite: toNumber(
                       runwayItemsOppositeInput.value
-                    )
+                    ),
                   })
                 "
                 type="number"
@@ -192,7 +192,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-s
                 [initialScrollIndex]="initialScrollTo"
                 withSyncScrollbar
                 [resizeObserverConfig]="{
-                  extractSize: extractSize
+                  extractSize: extractSize,
                 }"
                 [runwayItemsOpposite]="state.runwayItemsOpposite"
                 [runwayItems]="state.runwayItems"

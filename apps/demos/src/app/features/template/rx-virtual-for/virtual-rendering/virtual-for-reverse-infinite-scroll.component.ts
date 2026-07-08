@@ -10,6 +10,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { rxState } from '@rx-angular/state';
+import { RxLet } from '@rx-angular/template/let';
 import {
   AutoSizeVirtualScrollStrategy,
   DynamicSizeVirtualScrollStrategy,
@@ -18,8 +19,6 @@ import {
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
 } from '@rx-angular/template/virtual-scrolling';
-import { RxIf } from '@rx-angular/template/if';
-import { RxLet } from '@rx-angular/template/let';
 import { EMPTY, exhaustMap, Subject } from 'rxjs';
 import { map, scan, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
@@ -89,7 +88,7 @@ import { Message, MessageService } from './messages/messages.service';
                   state.set({
                     runwayItemsOpposite: toNumber(
                       runwayItemsOppositeInput.value
-                    )
+                    ),
                   })
                 "
                 type="number"

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RxEffects } from '@rx-angular/state/effects';
 
 @Component({
   selector: 'rxa-ngif-hack-container',

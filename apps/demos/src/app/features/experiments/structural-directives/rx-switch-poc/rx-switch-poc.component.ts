@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { toInt } from '../../../../shared/debug-helper/value-provider';
-import { stateful } from '@rx-angular/state/selections';
 
 @Component({
   selector: 'rxa-switch-poc',

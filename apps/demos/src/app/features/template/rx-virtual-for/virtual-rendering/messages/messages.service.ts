@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { asapScheduler, Observable, of, timer } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { messages } from './message-data';
 
@@ -37,7 +37,7 @@ export class MessageService {
     const sortedMessages = messages.sort(
       (a: Message, b: Message) => a.sendAt - b.sendAt,
     );
-    const index = !!lastSeenMessage
+    const index = lastSeenMessage
       ? sortedMessages.findIndex((item) => item.id === lastSeenMessage.id)
       : messages.length;
 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CdHelper } from '../../../utils/cd-helper';
 
 @Component({
@@ -39,6 +39,7 @@ import { CdHelper } from '../../../utils/cd-helper';
     class: 'd-flex flex-wrap',
   },
   providers: [CdHelper],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class CdTriggerComponent {

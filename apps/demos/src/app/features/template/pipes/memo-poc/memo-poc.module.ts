@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RouterModule } from '@angular/router';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { MemoModule, PushModule } from '../../../../rx-angular-pocs';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
+import { FibonacciPipe } from './fibonacci.pipe';
+import { FibonacciMemoPipe } from './fibonacciMemo.pipe';
 import { MemoPocComponent } from './memo-poc.component';
 import { ROUTES } from './memo-poc.routes';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { FibonacciPipe } from './fibonacci.pipe';
-import { MemoModule, PushModule } from '../../../../rx-angular-pocs';
-import { FibonacciMemoPipe } from './fibonacciMemo.pipe';
 
 const DECLARATIONS = [MemoPocComponent, FibonacciPipe, FibonacciMemoPipe];
 

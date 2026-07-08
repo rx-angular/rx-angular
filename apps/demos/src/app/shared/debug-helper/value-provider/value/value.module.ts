@@ -1,12 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatRippleModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { RxLet } from '@rx-angular/template/let';
+import { RxPush } from '@rx-angular/template/push';
+import { UtilsModule } from '../../../utils/utils.module';
 import { DirtyChecksModule } from '../../dirty-checks';
 import { ValueComponent } from './value.component';
-import { CommonModule } from '@angular/common';
-import { MatRippleModule } from '@angular/material/core';
-import { RxPush } from '@rx-angular/template/push';
-import { RxLet } from '@rx-angular/template/let';
-import { UtilsModule } from '../../../utils/utils.module';
-import { MatIconModule } from '@angular/material/icon';
 
 const DEPRECATIONS = [ValueComponent];
 

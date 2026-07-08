@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CONSTANT_001 } from './constants/constant-001';
 import { CONSTANT_002 } from './constants/constant-002';
@@ -2516,6 +2516,7 @@ import { CONSTANT_500 } from './constants/constant-500';
       </div>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .root-chunker {

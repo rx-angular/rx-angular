@@ -1,14 +1,15 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Output,
   ViewChild,
 } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { RxEffects } from '@rx-angular/state/effects';
-import { Hooks } from '../../debug-helper/hooks';
 import { RxState } from '@rx-angular/state';
+import { RxEffects } from '@rx-angular/state/effects';
+import { Observable, Subject } from 'rxjs';
+import { Hooks } from '../../debug-helper/hooks';
 import { fileReaderFromBlob, imageFromFileReader } from '../pixel-image';
 
 interface ComponentState {
@@ -72,6 +73,7 @@ interface ComponentState {
     </div>
   `,
   providers: [RxEffects, RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ImageArrayComponent extends Hooks implements AfterViewInit {

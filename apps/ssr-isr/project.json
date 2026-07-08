@@ -8,6 +8,7 @@
   "targets": {
     "build": {
       "executor": "@nx/angular:application",
+      "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/ssr-isr",
         "index": "apps/ssr-isr/src/index.html",
@@ -46,11 +47,12 @@
           "extractLicenses": false,
           "sourceMap": true
         }
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
+      "defaultConfiguration": "development",
+      "continuous": true,
       "configurations": {
         "production": {
           "buildTarget": "ssr-isr:build:production"
@@ -58,9 +60,7 @@
         "development": {
           "buildTarget": "ssr-isr:build:development"
         }
-      },
-      "defaultConfiguration": "development",
-      "continuous": true
+      }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",

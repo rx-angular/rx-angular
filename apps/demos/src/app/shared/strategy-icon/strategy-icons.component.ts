@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 
 @Component({
@@ -6,6 +6,7 @@ import { RxState } from '@rx-angular/state';
   template: ` <mat-icon *rxLet="strategy$; let strategy">{{
     strategy
   }}</mat-icon>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class StrategyIconComponent extends RxState<{ strategy: string }> {

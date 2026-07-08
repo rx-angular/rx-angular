@@ -1,10 +1,15 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxNotificationKind } from '@rx-angular/cdk/notifications';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { RxIf } from '../if.directive';
 
-@Component({ selector: 'rx-test-cmp', template: '', imports: [RxIf] })
+@Component({
+  selector: 'rx-test-cmp',
+  template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [RxIf],
+})
 export class TestComponent {
   booleanCondition = true;
   booleanCondition$ = new BehaviorSubject(true);

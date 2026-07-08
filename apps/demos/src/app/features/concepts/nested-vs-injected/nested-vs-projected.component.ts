@@ -44,7 +44,7 @@ import { CdHelper } from '../../../shared/utils/cd-helper';
     </rxa-visualizer>
   `,
   providers: [CdHelper],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class NestedVsProjectedComponent {

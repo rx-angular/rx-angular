@@ -1,8 +1,5 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-
-import { RxState } from '@rx-angular/state';
 import { CounterState, INITIAL_STATE } from '../shared/model';
 
 @Component({
@@ -51,6 +48,7 @@ import { CounterState, INITIAL_STATE } from '../shared/model';
       </mat-form-field>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class StarterComponent {

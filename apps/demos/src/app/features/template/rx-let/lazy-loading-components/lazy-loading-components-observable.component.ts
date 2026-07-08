@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CdHelper } from '../../../../shared/utils/cd-helper';
 import { Subject } from 'rxjs';
 import { delay, scan, shareReplay, switchMap } from 'rxjs/operators';
+import { CdHelper } from '../../../../shared/utils/cd-helper';
 
 @Component({
   selector: 'rxa-lazy-loading-components-observable',

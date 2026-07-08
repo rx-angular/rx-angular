@@ -1,8 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   AutoSizeVirtualScrollStrategy,
-  RxVirtualScrollViewportComponent,
   RxVirtualFor,
+  RxVirtualScrollViewportComponent,
 } from '@rx-angular/template/virtual-scrolling';
 import { BehaviorSubject, Subject } from 'rxjs';
 
@@ -13,6 +13,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
     RxVirtualScrollViewportComponent,
     AutoSizeVirtualScrollStrategy,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <rx-virtual-scroll-viewport autosize [tombstoneSize]="63">
       <div

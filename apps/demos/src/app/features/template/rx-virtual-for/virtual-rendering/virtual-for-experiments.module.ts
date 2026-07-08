@@ -1,5 +1,5 @@
-import { ScrollingModule as AutosizedScrollingModule } from '@angular/cdk-experimental/scrolling';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ScrollingModule as AutosizedScrollingModule } from '@angular/cdk-experimental/scrolling';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -7,18 +7,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
+import { RxFor } from '@rx-angular/template/for';
+import { RxIf } from '@rx-angular/template/if';
+import { RxLet } from '@rx-angular/template/let';
 import {
   AutoSizeVirtualScrollStrategy,
   DynamicSizeVirtualScrollStrategy,
   FixedSizeVirtualScrollStrategy,
-  RxVirtualScrollViewportComponent,
   RxVirtualFor,
-  RxVirtualScrollWindowDirective,
   RxVirtualScrollElementDirective,
+  RxVirtualScrollViewportComponent,
+  RxVirtualScrollWindowDirective,
 } from '@rx-angular/template/virtual-scrolling';
-import { RxFor } from '@rx-angular/template/for';
-import { RxIf } from '@rx-angular/template/if';
-import { RxLet } from '@rx-angular/template/let';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
 import { VirtualForCrazyUpdateComponent } from './virtual-for-crazy-update.component';

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { schedulingHelper } from '../../../../shared/debug-helper/value-provider/scheduling-helper';
-import { placeholderImg } from '../../../../shared/debug-helper/value-provider';
 import { DomSanitizer } from '@angular/platform-browser';
+import { placeholderImg } from '../../../../shared/debug-helper/value-provider';
+import { schedulingHelper } from '../../../../shared/debug-helper/value-provider/scheduling-helper';
 
 @Component({
   selector: 'rxa-ngif-hack',

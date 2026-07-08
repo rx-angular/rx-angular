@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -6,10 +7,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
-import { Hooks } from '../hooks';
-import { select } from '@rx-angular/state/selections';
 import { RxEffects } from '@rx-angular/state/effects';
+import { select } from '@rx-angular/state/selections';
 import { AppConfigService } from '../../../app-config.service';
+import { Hooks } from '../hooks';
 
 @Component({
   selector: 'rxa-dirty-check',
@@ -32,6 +33,7 @@ import { AppConfigService } from '../../../app-config.service';
     `,
   ],
   providers: [RxEffects],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DirtyChecksComponent extends Hooks {

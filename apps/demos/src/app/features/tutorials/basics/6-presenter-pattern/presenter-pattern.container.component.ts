@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -18,6 +18,7 @@ import { map } from 'rxjs/operators';
     <rxa-presenter-pattern-start [refreshInterval]="refreshInterval$ | async">
     </rxa-presenter-pattern-start>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PresenterPatternContainerComponent {

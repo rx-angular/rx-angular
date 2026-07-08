@@ -1,5 +1,5 @@
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { EMPTY } from 'rxjs';
-import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'rxa-counter-display',
@@ -13,6 +13,7 @@ import { Component, Input } from '@angular/core';
   host: {
     class: 'count',
   },
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class CounterDisplayComponent {

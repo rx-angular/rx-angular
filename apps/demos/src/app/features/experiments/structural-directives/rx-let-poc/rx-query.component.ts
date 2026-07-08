@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { RickAndMortyService } from './rick-and-morty.service';
 import { query } from 'rx-query';
 import { Observable, Subject } from 'rxjs';
 import { delay, filter, map, mapTo, share } from 'rxjs/operators';
+import { RickAndMortyService } from './rick-and-morty.service';
 
 @Component({
   selector: 'rxa-rx-query',
@@ -102,7 +102,7 @@ import { delay, filter, map, mapTo, share } from 'rxjs/operators';
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'm-1 p-1',
     style: 'display: block;',

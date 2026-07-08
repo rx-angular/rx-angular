@@ -1,16 +1,16 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { ROUTES } from './basic-example.routes';
-import { BasicExampleComponent } from './basic-example.component';
-import { RxPush } from '@rx-angular/template/push';
 import { RxLet } from '@rx-angular/template/let';
+import { RxPush } from '@rx-angular/template/push';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { MatButtonModule } from '@angular/material/button';
-import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
-import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { RenderingsModule } from '../../../../shared/debug-helper/renderings';
+import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
+import { BasicExampleComponent } from './basic-example.component';
+import { ROUTES } from './basic-example.routes';
 
 const DECLARATIONS = [BasicExampleComponent];
 

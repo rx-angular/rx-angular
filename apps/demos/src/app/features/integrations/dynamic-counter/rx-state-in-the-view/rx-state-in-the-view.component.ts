@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { CounterState, INITIAL_STATE } from '../shared/model';
-import { selectSlice } from '@rx-angular/state/selections';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RxState } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
 import { EMPTY, Subject, timer } from 'rxjs';
-import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
-import { toInt } from '../../../../shared/utils/to-int';
 import { map, switchMap } from 'rxjs/operators';
+import { toInt } from '../../../../shared/utils/to-int';
+import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
+import { CounterState, INITIAL_STATE } from '../shared/model';
 import { updateCount } from '../shared/utils';
 
 @Component({
@@ -81,6 +81,7 @@ import { updateCount } from '../shared/utils';
       </mat-form-field>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class RxStateInTheViewComponent extends RxState<CounterState> {

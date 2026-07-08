@@ -1,20 +1,19 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { ROUTES } from './app/app-component/app.routes';
 import { AppComponent } from './app/app-component/index';
-
 import { ENVIRONMENT_SETTINGS } from './app/shared/environment.token';
-import { environment } from './environments/environment';
 import { promiseMarkerFactory } from './app/shared/utils/measure';
+import { environment } from './environments/environment';
 
 const mP = promiseMarkerFactory('Bootstrap');
 mP.wrap(
   bootstrapApplication(AppComponent, {
     providers: [
-      provideHttpClient(),
+      provideHttpClient(withXhr()),
       provideAnimations(),
       {
         provide: ENVIRONMENT_SETTINGS,

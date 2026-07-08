@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'rxa-rendering-work',
@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
       <div>{{ item }}</div>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class RenderingWorkComponent {

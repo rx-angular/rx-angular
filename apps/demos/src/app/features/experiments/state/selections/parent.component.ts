@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
 import { of, Subject } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'rxa-state-parent-selections',

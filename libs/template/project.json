@@ -8,16 +8,17 @@
   "targets": {
     "build-lib": {
       "executor": "@angular-devkit/build-angular:ng-packagr",
+      "dependsOn": ["^build"],
+      "outputs": ["{workspaceRoot}/dist/libs/template"],
       "options": {
         "tsConfig": "libs/template/tsconfig.prod.json",
         "project": "libs/template/ng-package.json"
-      },
-      "dependsOn": ["^build"],
-      "outputs": ["{workspaceRoot}/dist/libs/template"]
+      }
     },
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": ["build-lib"],
+      "outputs": ["{workspaceRoot}/dist/libs/template/schematics"],
       "options": {
         "commands": [
           "yarn tsc -p libs/template/tsconfig.schematics.json",
@@ -27,17 +28,16 @@
           "yarn cpx libs/template/schematics/src/**/schema.json dist/libs/template/schematics/src"
         ],
         "parallel": false
-      },
-      "outputs": ["{workspaceRoot}/dist/libs/template/schematics"]
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/template"],
       "options": {
         "jestConfig": "libs/template/jest.config.ts",
         "codeCoverage": true,
         "tsConfig": "libs/template/tsconfig.spec.json"
-      },
-      "outputs": ["{workspaceRoot}/coverage/template"]
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint",

@@ -1,16 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  Injectable,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { insert, remove, update } from '@rx-angular/cdk/transformations';
-import { rxState, RxState } from '@rx-angular/state';
-import { RxActionFactory } from '@rx-angular/state/actions';
-import { Observable } from 'rxjs';
+import { rxState } from '@rx-angular/state';
 
 type Todo = {
   id: number;
@@ -42,7 +32,7 @@ interface TodoState {
           addTodo({
             id: todos().length + 1,
             title: 'added',
-            done: false
+            done: false,
           })
         "
       >

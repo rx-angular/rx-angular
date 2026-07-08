@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { DemoBasicsViewModelService } from './demo-basics.view-model.service';
 import { RxState } from '@rx-angular/state';
 import { DemoBasicsAdapterService } from './demo-basics.adapter.service';
+import { DemoBasicsViewModelService } from './demo-basics.view-model.service';
 
 @Component({
   selector: 'rxa-demo-basics',

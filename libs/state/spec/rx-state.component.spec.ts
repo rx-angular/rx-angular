@@ -1,5 +1,12 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, Input, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { select } from '@rx-angular/state/selections';
 import { PrimitiveState } from '@test-helpers/rx-angular';
@@ -19,6 +26,7 @@ const stateChecker = createStateChecker((actual, expected) => {
 
 @Component({
   selector: 'rx-angular-state-inheritance-test',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ` <span>{{ value$ }}</span> `,
 })
 export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
@@ -35,6 +43,7 @@ export class RxStateInheritanceComponent extends RxState<PrimitiveState> {
     <span>{{ (num$ | async) == null ? 'undefined' : (num$ | async) }}</span>
   `,
   imports: [AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [RxState],
 })
 export class RxStateInjectionComponent {
@@ -50,6 +59,7 @@ export class RxStateInjectionComponent {
       (str$ | async) == null ? 'undefined' : (str$ | async)
     }}</span>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AsyncPipe],
 })
 export class RxStateGlueComponent extends RxState<{ str: string }> {
@@ -86,6 +96,7 @@ export class RxStateGlueComponent extends RxState<{ str: string }> {
     >
     </rx-angular-state-glue-test>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AsyncPipe],
 })
 export class RxStateGlueContainerComponent extends RxState<PrimitiveState> {

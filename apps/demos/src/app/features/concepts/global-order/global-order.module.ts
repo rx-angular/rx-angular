@@ -1,20 +1,17 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RouterModule } from '@angular/router';
-import { ROUTES } from './global-order.routes';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { GlobalOrderComponent } from './global-order.component';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { ROUTES } from './global-order.routes';
 import { NativeVModule } from './native-v/native-v.module';
-import { RxLetVModule } from './rx-let-v/rx-let-v.module';
 import { PushVModule } from './push-v/push-v.module';
 import { RxFormVModule } from './rx-form-v/rx-form-v.module';
+import { RxLetVModule } from './rx-let-v/rx-let-v.module';
 
 @NgModule({
-  declarations: [
-    GlobalOrderComponent
-
-  ],
+  declarations: [GlobalOrderComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -23,9 +20,8 @@ import { RxFormVModule } from './rx-form-v/rx-form-v.module';
     NativeVModule,
     RxLetVModule,
     PushVModule,
-    RxFormVModule
+    RxFormVModule,
   ],
-  exports: []
+  exports: [],
 })
-export class GlobalOrderModule {
-}
+export class GlobalOrderModule {}

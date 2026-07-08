@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { scan, startWith } from 'rxjs/operators';
 
@@ -108,6 +108,7 @@ import { scan, startWith } from 'rxjs/operators';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LetTemplateBindingSubjectExampleComponent {

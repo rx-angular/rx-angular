@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
 import { Subject, Subscription } from 'rxjs';
 import { scan } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
 import { SourceService } from './source.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { SourceService } from './source.service';
 
     <div class="case-content">numberOfEmissions{{ selection1$ }}</div>
   `,
-  changeDetection: environment.changeDetection
+  changeDetection: environment.changeDetection,
   //providers: [SubscriptionHandlingService]
 })
 export class RxStateParentCompositionSolutionComponent implements OnDestroy {
@@ -19,11 +19,10 @@ export class RxStateParentCompositionSolutionComponent implements OnDestroy {
   onDestroy$ = new Subject<void>();
 
   selection1$ = this.source.$.pipe(
-    scan((numOfEmissions) => ++numOfEmissions, 0)
+    scan((numOfEmissions) => ++numOfEmissions, 0),
   );
 
-  constructor(private source: SourceService) {
-  }
+  constructor(private source: SourceService) {}
 
   ngOnDestroy(): void {
     this.onDestroy$.next();

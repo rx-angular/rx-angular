@@ -1,16 +1,16 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
-import { ROUTES } from './preloading-images.routes';
-import { PreloadingImagesComponent } from './preloading-images.component';
 import { RxLet } from '@rx-angular/template/let';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { MatIconModule } from '@angular/material/icon';
+import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
-import { MatButtonModule } from '@angular/material/button';
+import { PreloadingImagesComponent } from './preloading-images.component';
+import { ROUTES } from './preloading-images.routes';
 
 const DECLARATIONS = [PreloadingImagesComponent];
 

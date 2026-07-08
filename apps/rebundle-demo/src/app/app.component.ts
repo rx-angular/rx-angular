@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -28,6 +28,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
     <router-outlet />
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       h1 {

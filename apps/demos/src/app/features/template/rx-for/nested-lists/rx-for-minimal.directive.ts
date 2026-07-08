@@ -13,7 +13,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-
+import { RxEffects } from '@rx-angular/state/effects';
 import {
   BehaviorSubject,
   defer,
@@ -34,9 +34,7 @@ import {
   startWith,
   switchAll,
   take,
-  tap,
 } from 'rxjs/operators';
-import { RxEffects } from '@rx-angular/state/effects';
 
 type RxForTemplateNames = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
 
@@ -105,9 +103,9 @@ export interface RecordViewTuple<T extends object, U extends NgIterable<T>> {
   standalone: false,
 })
 export class RxMinimalForOf<
-    T extends object,
-    U extends NgIterable<T> = NgIterable<T>,
-  >
+  T extends object,
+  U extends NgIterable<T> = NgIterable<T>,
+>
   implements OnInit, OnDestroy
 {
   private evMap: Map<string, EmbeddedViewRef<RxForViewContext<T, U>>> =

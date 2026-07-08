@@ -1,4 +1,8 @@
-export {RxContextViewContext, rxContextTemplateNames, RxContextTemplateNames} from './model';
-export {RxContext} from './rx-context.directive';
-export {RxContextContainer} from './rx-context.component';
-export {RxContextModule} from './context.module';
+export { RxContextModule } from './context.module';
+export {
+  RxContextTemplateNames,
+  rxContextTemplateNames,
+  RxContextViewContext,
+} from './model';
+export { RxContextContainer } from './rx-context.component';
+export { RxContext } from './rx-context.directive';

@@ -10,29 +10,41 @@ import {
   ZoneTestDisableConfigurationsKey,
   zoneTestDisableConfigurationsKeys,
   ZoneTestSettingsConfigurationsKey,
-  zoneTestSettingsConfigurationsKeys
+  zoneTestSettingsConfigurationsKeys,
 } from './model/configurations.types';
 import { ZoneGlobalConfigurations } from './model/zone.configurations.api';
 
 type GlobalDisableConfigurationMethods = {
-  [disabledFlag in ZoneGlobalDisableConfigurationsKey]: (isDisabled?: boolean) => void;
+  [disabledFlag in ZoneGlobalDisableConfigurationsKey]: (
+    isDisabled?: boolean,
+  ) => void;
 } & {
-  [symbolFlag in ZoneGlobalSettingsConfigurationsKey]: (isDisabled?: boolean) => void;
+  [symbolFlag in ZoneGlobalSettingsConfigurationsKey]: (
+    isDisabled?: boolean,
+  ) => void;
 };
 
 type TestDisableConfigurationMethods = {
-  [disabledFlag in ZoneTestDisableConfigurationsKey]: (isDisabled?: boolean) => void
+  [disabledFlag in ZoneTestDisableConfigurationsKey]: (
+    isDisabled?: boolean,
+  ) => void;
 } & {
-  [symbolFlag in ZoneTestSettingsConfigurationsKey]: (isDisabled?: boolean) => void
+  [symbolFlag in ZoneTestSettingsConfigurationsKey]: (
+    isDisabled?: boolean,
+  ) => void;
 };
 
 type ZoneGlobalEventsConfigurationsMethods = {
-  [disabledFlag in ZoneGlobalEventsConfigurationsKey]: (eventNames: string[]) => void;
-}
+  [disabledFlag in ZoneGlobalEventsConfigurationsKey]: (
+    eventNames: string[],
+  ) => void;
+};
 
 type RuntimeConfigurationMethods = {
-  [disabledFlag in ZoneRuntimeConfigurationsKey]: (isDisabled?: boolean) => void;
-}
+  [disabledFlag in ZoneRuntimeConfigurationsKey]: (
+    isDisabled?: boolean,
+  ) => void;
+};
 
 const zoneDisable = '__Zone_disable_';
 const zoneSymbol = '__zone_symbol__';
@@ -43,61 +55,94 @@ function createZoneFlagsConfigurator(): ZoneConfig {
   return {
     global: {
       disable: zoneGlobalDisableConfigurationsKeys
-        .map(prop => ({ [prop]: (isDisabled: boolean = true) => cfg[zoneDisable + prop] = isDisabled }))
+        .map((prop) => ({
+          [prop]: (isDisabled = true) => (cfg[zoneDisable + prop] = isDisabled),
+        }))
         .concat(
-          zoneGlobalSettingsConfigurationsKeys
-            .map(prop => ({ [prop]: (isDisabled: boolean = true) => cfg[zoneSymbol + prop] = isDisabled }))
+          zoneGlobalSettingsConfigurationsKeys.map((prop) => ({
+            [prop]: (isDisabled = true) =>
+              (cfg[zoneSymbol + prop] = isDisabled),
+          })),
         )
-        .reduce((map, item) => ({ ...map, ...item }), {} as GlobalDisableConfigurationMethods)
+        .reduce(
+          (map, item) => ({ ...map, ...item }),
+          {} as GlobalDisableConfigurationMethods,
+        ),
     },
     test: {
       disable: zoneTestDisableConfigurationsKeys
-        .map(prop => ({ [prop]: (isDisabled: boolean = true) => cfg[zoneDisable + prop] = isDisabled }))
+        .map((prop) => ({
+          [prop]: (isDisabled = true) => (cfg[zoneDisable + prop] = isDisabled),
+        }))
         .concat(
-          zoneTestSettingsConfigurationsKeys
-            .map(prop => ({ [prop]: (isDisabled: boolean = true) => cfg[zoneSymbol + prop] = isDisabled }))
+          zoneTestSettingsConfigurationsKeys.map((prop) => ({
+            [prop]: (isDisabled = true) =>
+              (cfg[zoneSymbol + prop] = isDisabled),
+          })),
         )
-        .reduce((map, item) => ({ ...map, ...item }), {} as TestDisableConfigurationMethods)
+        .reduce(
+          (map, item) => ({ ...map, ...item }),
+          {} as TestDisableConfigurationMethods,
+        ),
     },
     events: {
       disable: zoneGlobalEventsConfigurationsKeys
-        .map(prop => ({ [prop]: (eventNames: string[]) => cfg[zoneSymbol + prop] = [...(Array.isArray(cfg[zoneSymbol + prop]) ? cfg[zoneSymbol + prop] : []), ...eventNames] }))
-        .reduce((map, item) => ({ ...map, ...item }), {} as ZoneGlobalEventsConfigurationsMethods)
+        .map((prop) => ({
+          [prop]: (eventNames: string[]) =>
+            (cfg[zoneSymbol + prop] = [
+              ...(Array.isArray(cfg[zoneSymbol + prop])
+                ? cfg[zoneSymbol + prop]
+                : []),
+              ...eventNames,
+            ]),
+        }))
+        .reduce(
+          (map, item) => ({ ...map, ...item }),
+          {} as ZoneGlobalEventsConfigurationsMethods,
+        ),
     },
     runtime: {
-      disable: zoneRuntimeConfigurationsKeys
-        .reduce((map, prop) => ({
+      disable: zoneRuntimeConfigurationsKeys.reduce(
+        (map, prop) => ({
           ...map,
-          [prop]: (isDisabled: boolean = true) => cfg[zoneSymbol + prop] = isDisabled
-        }), {} as RuntimeConfigurationMethods)
+          [prop]: (isDisabled = true) => (cfg[zoneSymbol + prop] = isDisabled),
+        }),
+        {} as RuntimeConfigurationMethods,
+      ),
     },
-    getCompilerOptions(noop = true, coalescing = true): {ngZone?: 'noop', ngZoneEventCoalescing?: true} {
+    getCompilerOptions(
+      noop = true,
+      coalescing = true,
+    ): { ngZone?: 'noop'; ngZoneEventCoalescing?: true } {
       const zoneRelevantCompilerOption: any = {};
-      if(noop){
+      if (noop) {
         zoneRelevantCompilerOption.ngZone = 'noop';
       }
-      if(coalescing){
+      if (coalescing) {
         zoneRelevantCompilerOption.ngZoneEventCoalescing = true;
       }
       return zoneRelevantCompilerOption;
-    }
+    },
   };
 }
 
 export interface ZoneConfig {
   global: {
-    disable: GlobalDisableConfigurationMethods
-  },
+    disable: GlobalDisableConfigurationMethods;
+  };
   test: {
-    disable: TestDisableConfigurationMethods
-  },
+    disable: TestDisableConfigurationMethods;
+  };
   events: {
-    disable: ZoneGlobalEventsConfigurationsMethods
-  }
+    disable: ZoneGlobalEventsConfigurationsMethods;
+  };
   runtime: {
-    disable: RuntimeConfigurationMethods
-  },
-  getCompilerOptions(noop?: boolean, coalescing?: boolean): {ngZone?: 'noop', ngZoneEventCoalescing?: true}
+    disable: RuntimeConfigurationMethods;
+  };
+  getCompilerOptions(
+    noop?: boolean,
+    coalescing?: boolean,
+  ): { ngZone?: 'noop'; ngZoneEventCoalescing?: true };
 }
 
 export const zoneConfig = createZoneFlagsConfigurator();

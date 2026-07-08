@@ -1,7 +1,7 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { finalize, take, tap } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'rxa-list-toggle-test',

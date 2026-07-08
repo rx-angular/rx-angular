@@ -2,26 +2,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnDestroy,
-  OnInit,
   Output,
 } from '@angular/core';
-import {
-  filter,
-  interval,
-  merge,
-  Observable,
-  Subject,
-  Subscription,
-  switchMap,
-  takeUntil,
-} from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
-import { ListServerItem, ListService } from '../data-access/list-resource';
 //👇 1- import RxState
 import { RxState } from '@rx-angular/state';
 import { RxActionFactory } from '@rx-angular/state/actions';
 import { RxEffects } from '@rx-angular/state/effects';
+import { filter, interval, merge, Observable, switchMap } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ListServerItem, ListService } from '../data-access/list-resource';
 
 //👇 2- define a component state
 interface ComponentState {

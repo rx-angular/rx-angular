@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { Hooks } from '../../hooks';
@@ -55,6 +55,7 @@ import { Hooks } from '../../hooks';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class WorkVisualizerComponent extends Hooks {
@@ -105,9 +106,7 @@ export class WorkVisualizerComponent extends Hooks {
       switchMap(() =>
         this.changeO$.pipe(
           distinctUntilChanged(),
-          switchMap((o$) =>
-            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$,
-          ),
+          switchMap((o$) => (this.key ? o$.pipe(map((s) => s[this.key])) : o$)),
           distinctUntilChanged(),
           tap((v) => console.log('value', v)),
         ),

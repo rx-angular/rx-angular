@@ -95,7 +95,7 @@ import { BehaviorSubject } from 'rxjs';
       }
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class PassingValuesComponent {

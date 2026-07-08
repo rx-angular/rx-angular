@@ -1,6 +1,5 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { stateful } from '@rx-angular/state/selections';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -57,7 +56,7 @@ describe('stateful', () => {
       const source = cold('a|', values);
       expectObservable(source.pipe(stateful(map((v) => v * 2)))).toBe(
         'b|',
-        values
+        values,
       );
     });
   });
@@ -73,9 +72,9 @@ describe('stateful', () => {
             map((v) => v / 2),
             map((v) => v * 2),
             map((v) => v / 2),
-            map((v) => v * 2)
-          )
-        )
+            map((v) => v * 2),
+          ),
+        ),
       ).toBe('b|', values);
     });
   });

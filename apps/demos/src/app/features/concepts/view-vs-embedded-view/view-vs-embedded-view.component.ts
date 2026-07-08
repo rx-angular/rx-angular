@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { Subject } from 'rxjs';
 import { scan } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'rxa-cd-embedded-view-parent01',

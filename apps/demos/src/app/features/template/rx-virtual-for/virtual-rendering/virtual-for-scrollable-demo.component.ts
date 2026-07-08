@@ -1,39 +1,20 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   OnInit,
-  QueryList,
   TemplateRef,
   ViewChild,
-  ViewChildren,
 } from '@angular/core';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
-import { patch, toDictionary, update } from '@rx-angular/cdk/transformations';
 import { RxState } from '@rx-angular/state';
-import {
-  BehaviorSubject,
-  combineLatest,
-  defer,
-  pairwise,
-  ReplaySubject,
-  Subject,
-  switchMap,
-} from 'rxjs';
-import {
-  distinctUntilChanged,
-  map,
-  shareReplay,
-  startWith,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-scrolling';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
-import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-scrolling';
 
 @Component({
   selector: 'rxa-virtual-for-scrollable',
@@ -117,7 +98,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-s
                   state.set({
                     runwayItemsOpposite: toNumber(
                       runwayItemsOppositeInput.value
-                    )
+                    ),
                   })
                 "
                 type="number"
@@ -200,7 +181,7 @@ import { RxVirtualScrollViewportComponent } from '@rx-angular/template/virtual-s
                     autosize
                     withSyncScrollbar
                     [resizeObserverConfig]="{
-                      extractSize: extractSize
+                      extractSize: extractSize,
                     }"
                     [runwayItemsOpposite]="state.runwayItemsOpposite"
                     [runwayItems]="state.runwayItems"

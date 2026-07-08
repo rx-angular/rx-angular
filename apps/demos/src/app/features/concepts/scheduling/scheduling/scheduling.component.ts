@@ -5,7 +5,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-
 import { Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
 import { priorityTickMap, SchedulingPriority } from './utils';

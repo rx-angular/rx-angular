@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'rxa-let-template-binding',
@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
     <rxa-let-template-binding-subject-example />
     <rxa-let-template-binding-http-example />
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LetTemplateBindingComponent {}

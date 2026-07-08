@@ -1,14 +1,12 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  computed,
-  effect,
   inject,
   Injector,
   signal,
-  untracked,
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'rxa-let-template-binding-signal-example',
@@ -103,6 +101,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LetTemplateBindingSignalExampleComponent {

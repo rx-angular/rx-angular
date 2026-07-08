@@ -19,7 +19,7 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
       </div>
     </rxa-cd-default>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CdHelper],
   standalone: false,
 })

@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { INITIAL_STATE } from '../shared/model';
 import { CounterPresenterService } from './counter.presenter';
 
@@ -65,6 +64,7 @@ import { CounterPresenterService } from './counter.presenter';
     </div>
   `,
   providers: [CounterPresenterService],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class RxStateAsPresenterComponent {

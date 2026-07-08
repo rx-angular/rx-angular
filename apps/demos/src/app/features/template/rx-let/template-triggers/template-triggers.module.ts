@@ -8,7 +8,6 @@ import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-s
 import { TriggerProviderModule } from '../../../../shared/debug-helper/trigger-provider/trigger-provider.module';
 import { ValueProvidersModule } from '../../../../shared/debug-helper/value-provider/index';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/index';
-
 import { TemplateTriggersComponent } from './template-triggers.component';
 import { ROUTES } from './template-triggers.routes';
 

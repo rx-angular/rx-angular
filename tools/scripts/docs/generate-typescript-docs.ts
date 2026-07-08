@@ -2,7 +2,6 @@ import * as fs from 'fs-extra';
 import * as klawSync from 'klaw-sync';
 import { extname } from 'path';
 import * as path from 'path';
-
 import { deleteGeneratedDocs } from './docgen-utils';
 import { TypeMap } from './typescript-docgen-types';
 import { TypescriptDocsParser } from './typescript-docs-parser';
@@ -24,7 +23,7 @@ const sections: DocsSectionConfig[] = [
     sourceDirs: [
       'libs/state/src/',
       'libs/template/src/',
-      'apps/demos/src/app/rx-angular-pocs/template/directives/for'
+      'apps/demos/src/app/rx-angular-pocs/template/directives/for',
     ],
     exclude: [],
     outputPath: 'generated',
@@ -34,7 +33,7 @@ const sections: DocsSectionConfig[] = [
 generateTypescriptDocs(sections);
 
 const watchMode = !!process.argv.find(
-  (arg) => arg === '--watch' || arg === '-w'
+  (arg) => arg === '--watch' || arg === '-w',
 );
 if (watchMode) {
   console.log(`Watching for changes to source files...`);
@@ -56,7 +55,7 @@ if (watchMode) {
  */
 function generateTypescriptDocs(
   config: DocsSectionConfig[],
-  isWatchMode: boolean = false
+  isWatchMode = false,
 ) {
   const timeStart = +new Date();
 
@@ -87,14 +86,14 @@ function generateTypescriptDocs(
       docsPages,
       docsUrl,
       absOutputPath(outputPath),
-      globalTypeMap
+      globalTypeMap,
     );
 
     if (generatedCount) {
       console.log(
         `Generated ${generatedCount} typescript api docs for "${outputPath}" in ${
           +new Date() - timeStart
-        }ms`
+        }ms`,
       );
     }
   }
@@ -110,7 +109,7 @@ function absOutputPath(outputPath: string): string {
 
 function getSourceFilePaths(
   sourceDirs: string[],
-  excludePatterns: RegExp[] = []
+  excludePatterns: RegExp[] = [],
 ): string[] {
   return sourceDirs
     .map((scanPath) =>
@@ -128,7 +127,7 @@ function getSourceFilePaths(
           return false;
         },
         traverseAll: true,
-      })
+      }),
     )
     .reduce((allFiles, files) => [...allFiles, ...files], [])
     .map((item) => item.path);

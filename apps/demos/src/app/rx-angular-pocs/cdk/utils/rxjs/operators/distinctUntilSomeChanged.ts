@@ -1,8 +1,7 @@
 import { MonoTypeOperatorFunction } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { CompareFn, KeyCompareMap } from '../interfaces';
 import { safePluck } from '../../safe-pluck';
-
+import { CompareFn, KeyCompareMap } from '../interfaces';
 
 /**
  * @internal
@@ -85,27 +84,27 @@ function defaultCompare<T>(oldVal: T, newVal: T): boolean {
  */
 export function distinctUntilSomeChanged<T extends object, K extends keyof T>(
   keys: K[],
-  keyCompareMap?: KeyCompareMap<T>
+  keyCompareMap?: KeyCompareMap<T>,
 ): MonoTypeOperatorFunction<T> {
   // default compare function applying === to every key
   let distinctCompare: CompareFn<T> = (oldState, newState) =>
     keys.some(
       (key) =>
-        !defaultCompare(safePluck(oldState, [key]), safePluck(newState, [key]))
+        !defaultCompare(safePluck(oldState, [key]), safePluck(newState, [key])),
     );
 
   // generate compare function respecting every case of provided keyCompareMap
   if (keyCompareMap !== undefined) {
     const compare = (key: K) => {
       return keyCompareMap.hasOwnProperty(key) &&
-      keyCompareMap[key] !== undefined
+        keyCompareMap[key] !== undefined
         ? (keyCompareMap[key] as CompareFn<T[K]>)
         : defaultCompare;
     };
     distinctCompare = (oldState, newState) => {
       return keys.some(
         (key) =>
-          !compare(key)(safePluck(oldState, [key]), safePluck(newState, [key]))
+          !compare(key)(safePluck(oldState, [key]), safePluck(newState, [key])),
       );
     };
   }

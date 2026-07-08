@@ -4,9 +4,9 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, tap } from 'rxjs/operators';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 
 @Component({
   selector: 'rxa-rx-query-children',

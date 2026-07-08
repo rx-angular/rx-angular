@@ -1,8 +1,12 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core';
+import { RxState } from '@rx-angular/state';
 import { Observable, Subject, throwError } from 'rxjs';
 import { concatMap, share } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
-import { RxState } from '@rx-angular/state';
 
 @Component({
   selector: 'rxa-http-errors',
@@ -51,6 +55,7 @@ import { RxState } from '@rx-angular/state';
     `,
   ],
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HttpErrorsComponent {

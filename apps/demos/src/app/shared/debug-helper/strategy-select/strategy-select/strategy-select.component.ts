@@ -1,17 +1,16 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Output,
   ViewChild,
 } from '@angular/core';
-import { MatSelect } from '@angular/material/select';
-import { RxState } from '@rx-angular/state';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { map, skip } from 'rxjs/operators';
 import { EventEmitter } from '@angular/core';
+import { MatSelect } from '@angular/material/select';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
+import { map, skip } from 'rxjs/operators';
 
 const strategiesUiConfig = {
   local: { name: 'local', icon: 'call_split' },

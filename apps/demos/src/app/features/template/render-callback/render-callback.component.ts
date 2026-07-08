@@ -7,16 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { concat, defer, Subject } from 'rxjs';
-import {
-  map,
-  scan,
-  shareReplay,
-  startWith,
-  switchMap,
-  switchMapTo,
-  take,
-  tap,
-} from 'rxjs/operators';
+import { map, scan, shareReplay, startWith, take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'rxa-render-callback',

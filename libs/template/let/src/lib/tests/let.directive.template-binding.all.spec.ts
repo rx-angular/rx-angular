@@ -1,5 +1,10 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectorRef, Component, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewContainerRef,
+} from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -51,6 +56,7 @@ import { MockChangeDetectorRef } from './fixtures';
     <ng-template #error>error</ng-template>
     <ng-template #suspense>suspense</ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, JsonPipe],
 })
 class LetDirectiveAllTemplatesTestComponent {

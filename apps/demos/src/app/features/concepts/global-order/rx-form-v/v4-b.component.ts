@@ -1,12 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Output } from '@angular/core';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { FormGhostComponent } from '../../../../shared/ghost-elements';
-import { UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'rxa-v4-b',
