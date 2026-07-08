@@ -54,7 +54,7 @@ describe('remove', () => {
 
       it('should remove values with compareFn', () => {
         expect(
-          remove([1, 2], [1, 2], (a, b) => a.toString() === b.toString())
+          remove([1, 2], [1, 2], (a, b) => a.toString() === b.toString()),
         ).toEqual([]);
       });
     });
@@ -66,25 +66,25 @@ describe('remove', () => {
 
       it('should remove value if matching by compareFn', () => {
         expect(
-          remove(creatures, creaturesForRemove, (a, b) => a.id === b.id)
+          remove(creatures, creaturesForRemove, (a, b) => a.id === b.id),
         ).toEqual(creaturesAfterMultipleItemsRemove);
       });
 
       it('should remove value if matching by key', () => {
         expect(remove(creatures, creaturesForRemove, 'id')).toEqual(
-          creaturesAfterMultipleItemsRemove
+          creaturesAfterMultipleItemsRemove,
         );
       });
 
       it('should remove value if matching by array of keys', () => {
         expect(remove(creatures, creaturesForRemove, ['id', 'type'])).toEqual(
-          creaturesAfterMultipleItemsRemove
+          creaturesAfterMultipleItemsRemove,
         );
       });
 
       it('should remove partials', () => {
         expect(remove(creatures, { id: 1 }, (o, n) => o.id === n.id)).toEqual(
-          creaturesAfterSingleItemRemove
+          creaturesAfterSingleItemRemove,
         );
       });
     });
@@ -95,13 +95,13 @@ describe('remove', () => {
       it('should return empty array if original array was empty', () => {
         const emptyCreatures: Creature[] = [];
         expect(
-          remove(emptyCreatures, creatures, (a, b) => a.id === b.id)
+          remove(emptyCreatures, creatures, (a, b) => a.id === b.id),
         ).toEqual([]);
       });
 
       it('should return original array if items are empty', () => {
         expect(remove(creatures, [], (a, b) => a.id === b.id)).toEqual(
-          creatures
+          creatures,
         );
       });
 

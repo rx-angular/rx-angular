@@ -157,7 +157,7 @@ export function clearTimeout(id: number): void {
 export function unpatchAddEventListener<T extends EventTarget>(target: T): T {
   target.addEventListener = getZoneUnPatchedApi(
     target,
-    'addEventListener'
+    'addEventListener',
   ).bind(target);
 
   return target;

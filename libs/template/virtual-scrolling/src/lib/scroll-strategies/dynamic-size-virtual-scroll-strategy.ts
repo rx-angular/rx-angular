@@ -80,9 +80,9 @@ const defaultItemSize = () => DEFAULT_ITEM_SIZE;
   standalone: true,
 })
 export class DynamicSizeVirtualScrollStrategy<
-    T,
-    U extends NgIterable<T> = NgIterable<T>,
-  >
+  T,
+  U extends NgIterable<T> = NgIterable<T>,
+>
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
 {

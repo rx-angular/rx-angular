@@ -15,7 +15,7 @@ import { coerceDistinctWith } from './coerceDistinctObservableWith';
  */
 export function coerceAllFactory<U, R = U>(
   subjectFactory?: () => Subject<Observable<U> | U>,
-  flattenOperator?: OperatorFunction<Observable<U>, R>
+  flattenOperator?: OperatorFunction<Observable<U>, R>,
 ): {
   values$: Observable<R>;
   next(observable: Observable<U> | U): void;
@@ -23,7 +23,7 @@ export function coerceAllFactory<U, R = U>(
   const observablesSubject = subjectFactory ? subjectFactory() : new Subject();
   flattenOperator = flattenOperator || (switchAll() as any);
   const values$ = observablesSubject.pipe(
-    coerceDistinctWith(flattenOperator as any)
+    coerceDistinctWith(flattenOperator as any),
   ) as Observable<R>;
 
   return {

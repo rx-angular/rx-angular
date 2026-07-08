@@ -206,5 +206,5 @@ export const allEvents = Array.from(
     ...websocketEvents,
     ...xhrEvents,
     ...windowEvents,
-  ])
+  ]),
 );

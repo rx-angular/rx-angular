@@ -14,7 +14,7 @@ export type MessageIds = typeof MESSAGE_ID;
 export type Options = [
   {
     allowedMethods?: string[];
-  }
+  },
 ];
 
 export default ESLintUtils.RuleCreator(docsUrl)({
@@ -52,9 +52,9 @@ export default ESLintUtils.RuleCreator(docsUrl)({
     ];
     return {
       [`MethodDefinition[key.name!=${namesToRegex(
-        methodNames
+        methodNames,
       )}] ${rxstateMethodCallExpression(['connect', 'hold'])}`]: (
-        node: TSESTree.CallExpression
+        node: TSESTree.CallExpression,
       ) => {
         if (
           node.callee.type === AST_NODE_TYPES.MemberExpression &&

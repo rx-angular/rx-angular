@@ -16,7 +16,7 @@ import { createEmbeddedView } from './utils';
  * @param templateSettings
  */
 export function getTemplateHandler<C extends RxListViewContext<T>, T>(
-  templateSettings: Omit<RxListTemplateSettings<T, C>, 'patchZone'>
+  templateSettings: Omit<RxListTemplateSettings<T, C>, 'patchZone'>,
 ): ListTemplateManager<T> {
   const {
     viewContainerRef,
@@ -49,7 +49,7 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
     oldIndex: number,
     item: T,
     index: number,
-    count: number
+    count: number,
   ): void {
     const oldView = viewContainerRef.get(oldIndex);
     const view = <EmbeddedViewRef<C>>viewContainerRef.move(oldView, index);
@@ -81,7 +81,7 @@ export function getTemplateHandler<C extends RxListViewContext<T>, T>(
         count,
         index,
       }),
-      index
+      index,
     );
   }
 }
@@ -104,7 +104,7 @@ export interface ListTemplateManager<T> {
 
   getListChanges(
     changes: IterableChanges<T>,
-    items: T[]
+    items: T[],
   ): RxListTemplateChanges;
 }
 
@@ -116,7 +116,7 @@ export interface ListTemplateManager<T> {
  */
 function getListChanges<T>(
   changes: IterableChanges<T>,
-  items: T[]
+  items: T[],
 ): RxListTemplateChanges {
   const changedIdxs = new Set<T>();
   const changesArr: RxListTemplateChange[] = [];
@@ -126,7 +126,7 @@ function getListChanges<T>(
     if (record.previousIndex == null) {
       // insert
       changesArr.push(
-        getInsertChange(item, currentIndex === null ? undefined : currentIndex)
+        getInsertChange(item, currentIndex === null ? undefined : currentIndex),
       );
       changedIdxs.add(item);
       notifyParent = true;
@@ -135,8 +135,8 @@ function getListChanges<T>(
       changesArr.push(
         getRemoveChange(
           item,
-          adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex
-        )
+          adjustedPreviousIndex === null ? undefined : adjustedPreviousIndex,
+        ),
       );
       notifyParent = true;
     } else if (adjustedPreviousIndex !== null) {
@@ -165,7 +165,7 @@ function getListChanges<T>(
   function getMoveChange(
     item: T,
     currentIndex: number,
-    adjustedPreviousIndex: number
+    adjustedPreviousIndex: number,
   ): RxListTemplateChange {
     return [
       RxListTemplateChangeType.move,
@@ -175,7 +175,7 @@ function getListChanges<T>(
 
   function getUpdateChange(
     item: T,
-    currentIndex: number
+    currentIndex: number,
   ): RxListTemplateChange {
     return [RxListTemplateChangeType.update, [item, currentIndex]];
   }
@@ -186,7 +186,7 @@ function getListChanges<T>(
 
   function getInsertChange(
     item: T,
-    currentIndex: number
+    currentIndex: number,
   ): RxListTemplateChange {
     return [
       RxListTemplateChangeType.insert,
@@ -196,7 +196,7 @@ function getListChanges<T>(
 
   function getRemoveChange(
     item: T,
-    adjustedPreviousIndex: number
+    adjustedPreviousIndex: number,
   ): RxListTemplateChange {
     return [
       RxListTemplateChangeType.remove,

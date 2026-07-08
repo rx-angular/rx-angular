@@ -16,7 +16,7 @@ export function templateTriggerHandling<T>(): {
 } {
   const hotFlattened = coerceAllFactory(
     () => new Subject<Observable<RxNotification<T> | RxNotification<T>>>(),
-    mergeAll()
+    mergeAll(),
   );
   return {
     next(templateName: Observable<RxNotification<T> | RxNotification<T>>) {

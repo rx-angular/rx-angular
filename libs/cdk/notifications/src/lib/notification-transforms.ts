@@ -7,7 +7,7 @@ import {
 
 export function toRxErrorNotification<T>(
   error?: any,
-  value?: T
+  value?: T,
 ): RxErrorNotification<T> {
   return {
     value,
@@ -19,7 +19,7 @@ export function toRxErrorNotification<T>(
 }
 
 export function toRxSuspenseNotification<T>(
-  value?: T
+  value?: T,
 ): RxSuspenseNotification<T> {
   return {
     value,
@@ -31,7 +31,7 @@ export function toRxSuspenseNotification<T>(
 }
 
 export function toRxCompleteNotification<T>(
-  value?: T
+  value?: T,
 ): RxCompleteNotification<T> {
   return {
     value,

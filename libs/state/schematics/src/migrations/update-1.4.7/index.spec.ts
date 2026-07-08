@@ -105,7 +105,7 @@ describe('state migration update-1.4.7', () => {
   function setupTestFile(fileInput: string, filePath = './app.module.ts') {
     const runner = new SchematicTestRunner(
       '@rx-angular/state',
-      path.join(__dirname, '../../../migration.json')
+      path.join(__dirname, '../../../migration.json'),
     );
     const tree = new UnitTestTree(Tree.empty());
 

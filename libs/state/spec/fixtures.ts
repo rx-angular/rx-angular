@@ -18,7 +18,7 @@ export interface StateChecker<T extends object> {
 }
 
 export function createStateChecker<T extends object>(
-  assert: (a: any, e: any) => void
+  assert: (a: any, e: any) => void,
 ): StateChecker<T> {
   return {
     checkState,
@@ -28,7 +28,7 @@ export function createStateChecker<T extends object>(
   function checkState(
     service: RxState<T>,
     stateOrProject: object,
-    project?: ProjectStateFn<T>
+    project?: ProjectStateFn<T>,
   ): void {
     if (typeof stateOrProject === 'object' && project === undefined) {
       assert(service.get(), stateOrProject);
@@ -47,7 +47,7 @@ export function createStateChecker<T extends object>(
     }
 
     throw Error(
-      'Wrong param. Should be object and optional projection function'
+      'Wrong param. Should be object and optional projection function',
     );
   }
 
