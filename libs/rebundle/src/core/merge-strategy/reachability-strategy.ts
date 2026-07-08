@@ -1,7 +1,7 @@
-import type { BundleGraph, BundleGraphImport } from './contracts';
-import { getReachableGraphOutputPaths } from './graph';
-import { getStaticClosure } from './graph-queries';
-import type { MergeStrategy, OutputPath } from './types';
+import type { BundleGraph, BundleGraphImport } from './contracts.ts';
+import { getReachableGraphOutputPaths } from './graph.ts';
+import { getStaticClosure } from './graph-queries.ts';
+import type { MergeStrategy, OutputPath } from './types.ts';
 
 export function createReachabilityMergeGroups(
   entryPointChunk: OutputPath,

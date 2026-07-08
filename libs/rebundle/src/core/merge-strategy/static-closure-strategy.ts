@@ -1,10 +1,10 @@
-import { findOutputForEntryPoint } from './graph';
-import { getStaticClosure } from './graph-queries';
+import { findOutputForEntryPoint } from './graph.ts';
+import { getStaticClosure } from './graph-queries.ts';
 import type {
   MergeStrategy,
   MergeStrategyContext,
   StaticClosureStrategyDefinition,
-} from './types';
+} from './types.ts';
 
 export function createStaticClosureMergeGroups(
   strategy: StaticClosureStrategyDefinition,

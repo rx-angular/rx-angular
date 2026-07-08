@@ -1,14 +1,14 @@
-import { createCommonMergeGroups } from './common-strategy';
-import { assignMergeGroup } from './merge-groups';
-import { createReachabilityMergeGroups } from './reachability-strategy';
-import { createStaticClosureMergeGroups } from './static-closure-strategy';
+import { createCommonMergeGroups } from './common-strategy.ts';
+import { assignMergeGroup } from './merge-groups.ts';
+import { createReachabilityMergeGroups } from './reachability-strategy.ts';
+import { createStaticClosureMergeGroups } from './static-closure-strategy.ts';
 import {
   type MergeStrategy,
   type MergeStrategyConfig,
   type MergeStrategyContext,
   STRATEGY_TYPE,
   type StrategyDefinition,
-} from './types';
+} from './types.ts';
 
 export function applyStrategies(
   config: MergeStrategyConfig,

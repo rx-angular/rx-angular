@@ -1,6 +1,6 @@
 import type { BuildOptions, OutputFile } from 'esbuild';
 import type { Plugin } from 'rolldown';
-import { pathToFileName } from '../utils/esbuild';
+import { pathToFileName } from '../utils/esbuild.ts';
 
 export function esbuildOutputLoaderPlugin(
   outputFiles: OutputFile[],

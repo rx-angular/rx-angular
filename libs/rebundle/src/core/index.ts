@@ -1,1 +1,1 @@
-export * from './merge-strategy';
+export * from './merge-strategy/index.ts';

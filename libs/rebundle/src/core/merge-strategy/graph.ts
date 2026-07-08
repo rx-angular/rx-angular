@@ -6,7 +6,7 @@ import type {
   ImportKind,
   OutputImport,
   OutputPath,
-} from './contracts';
+} from './contracts.ts';
 
 export function createBundleGraph(
   entryPointChunk: OutputPath,

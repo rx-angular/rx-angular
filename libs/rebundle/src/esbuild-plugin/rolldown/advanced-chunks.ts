@@ -1,5 +1,5 @@
 import type { OutputOptions } from 'rolldown';
-import type { MergeStrategy } from '../../core';
+import type { MergeStrategy } from '../../core/index.ts';
 
 export function rolldownCodeSplitting(
   strategy: MergeStrategy,

@@ -1,10 +1,13 @@
 import type { Plugin } from 'esbuild';
-import { type MergeStrategyConfig, mergeStrategyFactory } from '../core';
-import { esbuildOutputLoaderPlugin } from './rolldown/esbuild-output-loader.plugin';
-import { rolldownRebundle } from './rolldown/rebundle';
-import { rolldownOutputsToEsbuildOutputs } from './rolldown/to-esbuild-outputs';
-import { getAppEntryPoint, isJavaScriptOutputFile } from './utils/esbuild';
-import { initialChunks } from './utils/initial-chunks';
+import {
+  type MergeStrategyConfig,
+  mergeStrategyFactory,
+} from '../core/index.ts';
+import { esbuildOutputLoaderPlugin } from './rolldown/esbuild-output-loader.plugin.ts';
+import { rolldownRebundle } from './rolldown/rebundle.ts';
+import { rolldownOutputsToEsbuildOutputs } from './rolldown/to-esbuild-outputs.ts';
+import { getAppEntryPoint, isJavaScriptOutputFile } from './utils/esbuild.ts';
+import { initialChunks } from './utils/initial-chunks.ts';
 
 export interface RebundlePluginOptions {
   mergeStrategy?: MergeStrategyConfig;

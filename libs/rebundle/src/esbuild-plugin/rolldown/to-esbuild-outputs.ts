@@ -1,7 +1,7 @@
 import type { Metafile, OutputFile } from 'esbuild';
 import { basename } from 'node:path';
 import type { OutputChunk, RolldownOutput } from 'rolldown';
-import { toEsbuildOutputFile } from '../utils/output-file';
+import { toEsbuildOutputFile } from '../utils/output-file.ts';
 
 export function rolldownOutputsToEsbuildOutputs(
   rolldownOutput: RolldownOutput['output'],

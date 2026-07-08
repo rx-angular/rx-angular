@@ -5,8 +5,8 @@ import {
   rolldown,
   type RolldownOutput,
 } from 'rolldown';
-import type { MergeStrategy } from '../../core';
-import { rolldownCodeSplitting } from './advanced-chunks';
+import type { MergeStrategy } from '../../core/index.ts';
+import { rolldownCodeSplitting } from './advanced-chunks.ts';
 
 export async function rolldownRebundle(
   entry: string,

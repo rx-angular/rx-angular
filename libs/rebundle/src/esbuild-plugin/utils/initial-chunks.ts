@@ -1,7 +1,7 @@
 import type { Metafile } from 'esbuild';
-import type { OutputPath } from '../../core';
-import { hashFromOutputPaths, importsInEntryPoint } from './esbuild';
-import { toEsbuildOutputFile } from './output-file';
+import type { OutputPath } from '../../core/index.ts';
+import { hashFromOutputPaths, importsInEntryPoint } from './esbuild.ts';
+import { toEsbuildOutputFile } from './output-file.ts';
 
 export function initialChunks(
   entryChunk: OutputPath,
