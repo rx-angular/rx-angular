@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RxPush } from '@rx-angular/template/push';
 import { ReplaySubject } from 'rxjs';
-import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
-import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
-import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
 import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-recursive-push',

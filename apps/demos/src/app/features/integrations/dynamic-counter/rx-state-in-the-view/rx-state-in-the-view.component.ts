@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
-import { CounterState, INITIAL_STATE } from '../shared/model';
-import { selectSlice } from '@rx-angular/state/selections';
-import { RxState } from '@rx-angular/state';
-import { EMPTY, Subject, timer } from 'rxjs';
-import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
-import { toInt } from '../../../../shared/utils/to-int';
-import { map, switchMap } from 'rxjs/operators';
-import { updateCount } from '../shared/utils';
-import { CounterDisplayComponent } from '../shared/counter-display.component';
 import { MatButton } from '@angular/material/button';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
+import { RxState } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
+import { RxPush } from '@rx-angular/template/push';
+import { EMPTY, Subject, timer } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { toInt } from '../../../../shared/utils/to-int';
+import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
+import { CounterDisplayComponent } from '../shared/counter-display.component';
+import { CounterState, INITIAL_STATE } from '../shared/model';
+import { updateCount } from '../shared/utils';
 
 @Component({
   selector: 'rxa-counter-rx-state-in-the-view',

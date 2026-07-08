@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { CdHelper } from '../../../utils/cd-helper';
 import { MatButton } from '@angular/material/button';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { CdHelper } from '../../../utils/cd-helper';
 import { ZonePatchedIconComponent } from '../../../zone-patched-icon/zone-patched-icon.component';
-import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
 
 @Component({
   selector: 'rxa-cd-trigger',

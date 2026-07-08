@@ -1,12 +1,12 @@
+import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { RxState } from '@rx-angular/state';
+import { RxLet } from '@rx-angular/template/let';
 import { isObservable, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
-import { toBoolean } from '../utils';
 import { TestItem } from '../model';
-import { RxLet } from '../../../../../../../../libs/template/let/src/lib/let.directive';
-import { MatIcon } from '@angular/material/icon';
-import { NgClass } from '@angular/common';
+import { toBoolean } from '../utils';
 
 @Component({
   selector: 'rxa-value',

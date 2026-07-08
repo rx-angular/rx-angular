@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RxLet } from '@rx-angular/template/let';
 import { ReplaySubject } from 'rxjs';
-import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
-import { RxLet } from '../../../../../../../libs/template/let/src/lib/let.directive';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-recursive-component-let',
