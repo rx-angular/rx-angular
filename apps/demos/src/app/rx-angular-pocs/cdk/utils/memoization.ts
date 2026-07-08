@@ -6,7 +6,14 @@ export function memo(limit): (fn: (...args: any[]) => any) => any {
 
   // returns memoize factory
   return (fn: (...args: any[]) => any) => {
-    const memoize = function() {
+    const memoize: {
+      (...args: any[]): any;
+      numArgs?: number;
+      wasMemoized?: boolean;
+      limit?: number;
+      cache?: Map<any, any>;
+      lru?: any[];
+    } = function () {
       const argsLengthMinusOne = arguments.length - 1,
         lruPath = Array(argsLengthMinusOne + 1);
       let currentCache = cache,
@@ -15,16 +22,20 @@ export function memo(limit): (fn: (...args: any[]) => any) => any {
         fnResult,
         i;
 
-      // @ts-ignore
-      if ((memoize.numArgs || memoize.numArgs === 0) && memoize.numArgs !== argsLengthMinusOne + 1) {
-        throw new Error('Memoize functions should always be called with the same number of arguments');
+      if (
+        (memoize.numArgs || memoize.numArgs === 0) &&
+        memoize.numArgs !== argsLengthMinusOne + 1
+      ) {
+        throw new Error(
+          'Memoize functions should always be called with the same number of arguments',
+        );
       }
 
       // loop through each argument to traverse the map tree
       for (i = 0; i < argsLengthMinusOne; i++) {
         lruPath[i] = {
           cacheItem: currentCache,
-          arg: arguments[i]
+          arg: arguments[i],
         };
 
         // climb through the hierarchical map tree until the second-last argument has been found, or an argument is missing.
@@ -61,7 +72,7 @@ export function memo(limit): (fn: (...args: any[]) => any) => any {
       if (limit > 0) {
         lruPath[argsLengthMinusOne] = {
           cacheItem: currentCache,
-          arg: arguments[argsLengthMinusOne]
+          arg: arguments[argsLengthMinusOne],
         };
 
         if (isMemoized) {
@@ -76,7 +87,6 @@ export function memo(limit): (fn: (...args: any[]) => any) => any {
       }
 
       memoize.wasMemoized = isMemoized;
-      // @ts-ignore
       memoize.numArgs = argsLengthMinusOne + 1;
 
       return fnResult;
@@ -89,14 +99,13 @@ export function memo(limit): (fn: (...args: any[]) => any) => any {
 
     return memoize;
   };
-};
+}
 
 // move current args to most recent position
 function moveToMostRecentLru(lru, lruPath) {
   const lruLen = lru.length,
     lruPathLen = lruPath.length;
-  let isMatch,
-    i, ii;
+  let isMatch, i, ii;
 
   for (i = 0; i < lruLen; i++) {
     isMatch = true;
@@ -117,7 +126,8 @@ function moveToMostRecentLru(lru, lruPath) {
 // remove least recently used cache item and all dead branches
 function removeCachedResult(removedLru) {
   const removedLruLen = removedLru.length;
-  let tmp, currentLru = removedLru[removedLruLen - 1],
+  let tmp,
+    currentLru = removedLru[removedLruLen - 1],
     i;
 
   currentLru.cacheItem.delete(currentLru.arg);
