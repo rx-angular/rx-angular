@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { schedulingHelper } from '../../../shared/debug-helper/value-provider/scheduling-helper';
-import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
-import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 import { MatButton } from '@angular/material/button';
-import { RxUnpatch } from '../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
-import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { schedulingHelper } from '../../../shared/debug-helper/value-provider/scheduling-helper';
+import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 export enum SchedulingPriority {
   sync,

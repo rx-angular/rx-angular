@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { RxState } from '@rx-angular/state';
-import { RxLet } from '../../../../../../libs/template/let/src/lib/let.directive';
 import { MatIcon } from '@angular/material/icon';
+import { RxState } from '@rx-angular/state';
+import { RxLet } from '@rx-angular/template/let';
 
 @Component({
   selector: 'rxa-strategy-icon',

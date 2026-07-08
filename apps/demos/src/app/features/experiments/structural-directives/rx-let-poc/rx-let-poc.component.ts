@@ -1,15 +1,15 @@
+import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { RxLet as RxLet_1 } from '@rx-angular/template/let';
+import { RxLet } from '../../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
 import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
 import { TriggerProviderComponent } from '../../../../shared/debug-helper/trigger-provider/trigger-provider.component';
 import { ValueProviderComponent } from '../../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { ListItemGhostComponent } from '../../../../shared/ghost-elements/list-item-ghost/list-item-ghost.component';
-import { RxLet } from '../../../../rx-angular-pocs/template/directives/let/rx-let.directive';
-import { RxLet as RxLet_1 } from '../../../../../../../../libs/template/let/src/lib/let.directive';
-import { NgIf } from '@angular/common';
-import { MatProgressBar } from '@angular/material/progress-bar';
-import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
 
 @Component({
   selector: 'rxa-rx-let-poc',

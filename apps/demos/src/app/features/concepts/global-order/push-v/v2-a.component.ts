@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DataService } from '../shared/data.service';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
-import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
-import { V2BComponent } from './v2-b.component';
+import { RxPush } from '@rx-angular/template/push';
 import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
-import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
+import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { DataService } from '../shared/data.service';
+import { V2BComponent } from './v2-b.component';
 
 @Component({
   selector: 'rxa-v2-a',

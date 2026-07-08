@@ -1,28 +1,28 @@
 import { Component } from '@angular/core';
 import {
-  UntypedFormControl,
   FormsModule,
   ReactiveFormsModule,
+  UntypedFormControl,
 } from '@angular/forms';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
-import { debounceTime } from 'rxjs/operators';
-import { PokemonStateService } from './states/pokemon-state.service';
-import { RxLet } from '../../../../../../../libs/template/let/src/lib/let.directive';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import {
-  MatTable,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderCell,
-  MatCellDef,
-  MatCell,
-  MatHeaderRowDef,
-  MatHeaderRow,
-  MatRowDef,
-  MatRow,
-} from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
+  MatTable,
+} from '@angular/material/table';
+import { RxLet } from '@rx-angular/template/let';
+import { debounceTime } from 'rxjs/operators';
+import { PokemonStateService } from './states/pokemon-state.service';
 
 @Component({
   selector: 'rxa-pokemon',
