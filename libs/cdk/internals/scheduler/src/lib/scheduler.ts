@@ -20,7 +20,7 @@ let getCurrentTime: () => number;
 const hasPerformanceNow =
   typeof ɵglobal.performance === 'object' &&
   typeof ɵglobal.performance.now === 'function';
-
+let isInputPending = () => false;
 if (hasPerformanceNow) {
   const localPerformance = ɵglobal.performance;
   getCurrentTime = () => localPerformance.now();
@@ -162,12 +162,14 @@ function workLoop(
           currentTime = getCurrentTime();
           if (typeof continuationCallback === 'function') {
             currentTask.callback = continuationCallback;
+            advanceTimers(currentTime);
+            return true;
           } else {
             if (currentTask === peek(taskQueue)) {
               pop(taskQueue);
             }
+            advanceTimers(currentTime);
           }
-          advanceTimers(currentTime);
         } else {
           pop(taskQueue);
         }
@@ -308,23 +310,25 @@ let needsPaint = false;
 let queueStartTime = -1;
 
 function shouldYieldToHost() {
-  if (needsPaint) {
+  if (needsPaint || isInputPending()) {
     // There's a pending paint (signaled by `requestPaint`). Yield now.
     return true;
   }
   const timeElapsed = getCurrentTime() - queueStartTime;
-  if (timeElapsed < yieldInterval) {
-    // The main thread has only been blocked for a really short amount of time;
-    // smaller than a single frame. Don't yield yet.
-    return false;
-  }
-
-  // `isInputPending` isn't available. Yield now.
-  return true;
+  return timeElapsed >= yieldInterval;
 }
 
 function requestPaint() {
   needsPaint = true;
+}
+
+export function setInputPending(enable: boolean, includeContinuous = false) {
+  if (enable && ɵglobal.navigator?.scheduling?.isInputPending) {
+    isInputPending = () =>
+      ɵglobal.navigator.scheduling.isInputPending({ includeContinuous });
+  } else {
+    isInputPending = () => false;
+  }
 }
 
 export function forceFrameRate(fps) {
