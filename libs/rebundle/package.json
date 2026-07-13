@@ -47,7 +47,8 @@
       "types": "./src/index.d.ts",
       "require": "./src/index.js",
       "import": "./src/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "generators": "./generators.json",
   "executors": "./executors.json"

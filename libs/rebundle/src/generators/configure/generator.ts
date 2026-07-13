@@ -12,6 +12,11 @@ import initGenerator from '../init/generator';
 import { ConfigureGeneratorSchema } from './schema';
 
 const pluginPath = '@rx-angular/rebundle';
+const nxApplicationExecutor = '@nx/angular:application';
+const nxBrowserEsbuildExecutor = '@nx/angular:browser-esbuild';
+const angularApplicationExecutor = '@angular/build:application';
+const nxDevServerExecutor = '@nx/angular:dev-server';
+const angularDevServerExecutor = '@angular/build:dev-server';
 
 type EsbuildPluginSpec = string | { path: string; options?: unknown };
 
@@ -27,6 +32,8 @@ export async function configureGenerator(
 
   const project = readProjectConfiguration(tree, options.project);
   const buildTarget = getBuildTarget(project, options.project);
+
+  migrateAngularBuildTargets(project);
 
   buildTarget.options ??= {};
   const plugins = normalizePlugins(buildTarget.options['plugins']);
@@ -45,6 +52,18 @@ export async function configureGenerator(
   return runTasksInSerial(initTask);
 }
 
+function migrateAngularBuildTargets(project: ProjectConfiguration): void {
+  const buildTarget = project.targets?.['build'];
+  if (buildTarget?.executor === angularApplicationExecutor) {
+    buildTarget.executor = nxApplicationExecutor;
+  }
+
+  const serveTarget = project.targets?.['serve'];
+  if (serveTarget?.executor === angularDevServerExecutor) {
+    serveTarget.executor = nxDevServerExecutor;
+  }
+}
+
 export default configureGenerator;
 
 function getBuildTarget(
@@ -58,11 +77,12 @@ function getBuildTarget(
   }
 
   if (
-    buildTarget.executor !== '@nx/angular:application' &&
-    buildTarget.executor !== '@nx/angular:browser-esbuild'
+    buildTarget.executor !== nxApplicationExecutor &&
+    buildTarget.executor !== nxBrowserEsbuildExecutor &&
+    buildTarget.executor !== angularApplicationExecutor
   ) {
     throw new Error(
-      `Project "${projectName}" build target must use "@nx/angular:application" or "@nx/angular:browser-esbuild".`,
+      `Project "${projectName}" build target must use "@nx/angular:application", "@nx/angular:browser-esbuild", or "@angular/build:application".`,
     );
   }
 

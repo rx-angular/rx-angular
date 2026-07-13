@@ -6,6 +6,7 @@ import { rolldownRebundle } from './rolldown/rebundle';
 import { rolldownOutputsToEsbuildOutputs } from './rolldown/to-esbuild-outputs';
 import { getAppEntryPoint, isJavaScriptOutputFile } from './utils/esbuild';
 import { initialChunks } from './utils/initial-chunks';
+import { createRebundleStats, formatRebundleStats } from './utils/stats';
 
 export interface RebundlePluginOptions {
   mergeStrategy?: MergeStrategyConfig;
@@ -37,7 +38,10 @@ export default function rebundlePlugin(
           throw new Error('Unable to extract outputFiles from esbuild result.');
         }
 
+        const startTime = performance.now();
         const entryChunk = getAppEntryPoint(initialOptions, result.metafile);
+        const originalMetafileOutputs = { ...result.metafile.outputs };
+        const originalOutputFiles = [...result.outputFiles];
         const mergeStrategy = mergeStrategyFactory(
           entryChunk,
           result.metafile,
@@ -78,6 +82,19 @@ export default function rebundlePlugin(
 
         result.outputFiles.push(initialChunksFile);
         result.metafile.outputs[initialChunksFile.path] = initialChunksFileMeta;
+
+        console.info(
+          formatRebundleStats(
+            createRebundleStats(
+              entryChunk,
+              originalMetafileOutputs,
+              originalOutputFiles,
+              result.metafile.outputs,
+              result.outputFiles,
+              performance.now() - startTime,
+            ),
+          ),
+        );
       });
     },
   };
