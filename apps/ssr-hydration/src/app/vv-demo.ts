@@ -1,18 +1,14 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
-  effect,
   inject,
   Input,
   input,
   OnDestroy,
   PLATFORM_ID,
   signal,
-  untracked,
   ViewEncapsulation,
 } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HydrationTracker } from '@rx-angular/cdk/ssr';
 import {
   RxVirtualView,
   RxVirtualViewContent,
@@ -76,7 +72,6 @@ function doWork() {
 @Component({
   selector: 'app-vv-hydration-demo',
   imports: [
-    RouterOutlet,
     Item,
     RxVirtualViewObserver,
     RxVirtualView,
@@ -86,218 +81,43 @@ function doWork() {
   encapsulation: ViewEncapsulation.None,
   template: `
     @let a = '1';
-    @if (true) {
-      <div class="container">
-        <div class="comparison-container">
-          <div class="rx-for-section" rxVirtualViewObserver [root]="null">
-            <h2>VirtualView Directive (with hydration)</h2>
-            <div class="users-grid">
-              @for (user of users(); track user.id) {
-                <div
-                  rxVirtualView
-                  #vv="rxVirtualView"
-                  [useContainment]="false"
-                  [class]="a"
-                >
-                  <app-item
-                    *rxVirtualViewContent
-                    [user]="user"
-                    [after]="false"
-                    [visible]="vv.visibility.content"
-                  />
-                  <div
-                    *rxVirtualViewPlaceholder
-                    style="min-height: var(--rx-vw-h, 107px); background: red"
-                  ></div>
-                </div>
-              }
-            </div>
-          </div>
-
-          @if (loadAfterHydration()) {
-            <div class="rx-for-section">
-              <div class="rx-for-section" rxVirtualViewObserver [root]="null">
-                <h2>VirtualView Directive (after hydration)</h2>
-                <div class="users-grid">
-                  @for (user of users(); track user.id) {
-                    <div
-                      rxVirtualView
-                      #vv="rxVirtualView"
-                      [useContainment]="false"
-                    >
-                      <app-item
-                        *rxVirtualViewContent
-                        [user]="user"
-                        [after]="true"
-                        [visible]="vv.visibility.content"
-                      />
-                      <div
-                        *rxVirtualViewPlaceholder
-                        style="min-height: var(--rx-vw-h, 107px); background: red"
-                      ></div>
-                    </div>
-                  }
-                </div>
-              </div>
+    @if (show()) {
+      <div class="rx-for-section" rxVirtualViewObserver [root]="null">
+        <h2>
+          {{
+            after()
+              ? 'VirtualView Directive (after hydration)'
+              : 'VirtualView Directive (with hydration: ' + show() + ')'
+          }}
+        </h2>
+        <div class="users-grid">
+          @for (user of users(); track user.id) {
+            <div
+              rxVirtualView
+              #vv="rxVirtualView"
+              [useContainment]="false"
+              [class]="a"
+            >
+              <app-item
+                *rxVirtualViewContent
+                [user]="user"
+                [after]="after()"
+                [visible]="vv.visibility.content"
+              />
+              <div
+                *rxVirtualViewPlaceholder
+                style="min-height: var(--rx-vw-h, 107px); background: red"
+              ></div>
             </div>
           }
         </div>
       </div>
     }
-
-    @defer (when true; hydrate never) {
-      <app-item
-        [user]="{
-          id: 1,
-          name: 'John Doe',
-          email: 'john@example.com',
-          role: 'Admin',
-        }"
-      />
-    }
-
-    <router-outlet />
-  `,
-  styles: `
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      font-family:
-        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    h1 {
-      color: #333;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    h2 {
-      color: #555;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #e0e0e0;
-      padding-bottom: 10px;
-    }
-
-    .comparison-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 40px;
-
-      @media (max-width: 768px) {
-        grid-template-columns: 1fr;
-        gap: 30px;
-      }
-    }
-
-    .users-section,
-    .rx-for-section {
-      margin-bottom: 0;
-    }
-
-    .users-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 15px;
-      margin-top: 20px;
-      max-height: 600px;
-      padding-right: 10px;
-
-      &::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 3px;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 3px;
-      }
-
-      &::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
-      }
-    }
-
-    .user-card {
-      background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 15px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      }
-
-      h3 {
-        margin: 0;
-        color: #333;
-        font-size: 1.1em;
-      }
-
-      .email {
-        color: #666;
-        margin: 0;
-        font-size: 0.85em;
-      }
-
-      .role {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.8em;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-
-        &.role-admin {
-          background-color: #ff6b6b;
-          color: white;
-        }
-
-        &.role-manager {
-          background-color: #4ecdc4;
-          color: white;
-        }
-
-        &.role-user {
-          background-color: #45b7d1;
-          color: white;
-        }
-      }
-    }
   `,
 })
 export class VVHydrationDemo {
-  loadAfterHydration = signal(false);
-
-  constructor() {
-    const s = inject(HydrationTracker);
-    effect(() => {
-      const isHydrated = s.isFullyHydrated();
-
-      untracked(() => {
-        if (isHydrated) {
-          // this.loadAfterHydration.set(true);
-        } else {
-          this.loadAfterHydration.set(false);
-        }
-      });
-    });
-  }
+  show = input(false);
+  after = input(false);
 
   protected readonly users = signal<User[]>([
     { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },

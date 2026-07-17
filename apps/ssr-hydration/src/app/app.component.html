@@ -1,2 +1,16 @@
-<app-vv-hydration-demo />
-<app-hydration-demo />
+<nav class="demo-nav">
+  <a
+    routerLink="/"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    >Home</a
+  >
+  <a routerLink="/if-else" routerLinkActive="active"
+    >&#64;if / &#64;else swap</a
+  >
+  <a routerLink="/switch" routerLinkActive="active">&#64;switch swap</a>
+  <a routerLink="/deferred" routerLinkActive="active">Deferred content</a>
+  <a routerLink="/disabled" routerLinkActive="active">Disabled (SSR)</a>
+</nav>
+
+<router-outlet />
