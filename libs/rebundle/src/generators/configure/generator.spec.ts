@@ -110,6 +110,43 @@ describe('configure generator', () => {
     );
   });
 
+  it('migrates Angular application build targets to Nx executors', async () => {
+    const project = readProjectConfiguration(tree, 'demo');
+    const buildTarget = project.targets?.['build'];
+    if (!buildTarget) {
+      throw new Error(
+        'Expected demo project to have a configured build target.',
+      );
+    }
+
+    buildTarget.executor = '@angular/build:application';
+    project.targets ??= {};
+    project.targets['serve'] = {
+      executor: '@angular/build:dev-server',
+      options: {
+        buildTarget: 'demo:build',
+      },
+    };
+    updateProjectConfiguration(tree, 'demo', project);
+
+    await configureGenerator(tree, {
+      project: 'demo',
+      skipFormat: true,
+    });
+
+    const updatedProject = readProjectConfiguration(tree, 'demo');
+
+    expect(updatedProject.targets?.['build'].executor).toBe(
+      '@nx/angular:application',
+    );
+    expect(updatedProject.targets?.['build'].options?.['plugins']).toEqual([
+      '@rx-angular/rebundle',
+    ]);
+    expect(updatedProject.targets?.['serve'].executor).toBe(
+      '@nx/angular:dev-server',
+    );
+  });
+
   it('throws when the project does not have a build target', async () => {
     addProjectConfiguration(
       tree,
