@@ -1,3 +1,7 @@
+## 3.0.1 (2026-07-21)
+
+This was a version bump only for eslint-plugin to align it with other projects, there were no code changes.
+
 # 3.0.0 (2026-03-05)
 
 ### 🚀 Features

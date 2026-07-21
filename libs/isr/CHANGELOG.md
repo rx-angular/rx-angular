@@ -1,3 +1,17 @@
+## 21.0.2 (2026-07-21)
+
+### Documentation Changes
+
+- restructure into Diátaxis and redesign the homepage ([#1913](https://github.com/rx-angular/rx-angular/pull/1913), [#1918](https://github.com/rx-angular/rx-angular/issues/1918))
+
+### ❤️ Thank You
+
+- Enea Jahollari @eneajaho
+- Hanna Skryl @hanna-skryl
+- Julian Jandl @hoebbelsB
+- Kirill
+- Michael Hladky @rx-angular
+
 ## 21.0.1 (2026-03-05)
 
 This was a version bump only for isr to align it with other projects, there were no code changes.
