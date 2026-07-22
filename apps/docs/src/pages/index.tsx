@@ -37,7 +37,7 @@ function HomepageHeader(): JSX.Element {
         </div>
         <p className={styles.heroPackages}>
           state <b>·</b> template <b>·</b> cdk <b>·</b> isr <b>·</b>{' '}
-          eslint-plugin
+          eslint-plugin <b>·</b> rebundle
         </p>
       </div>
     </header>
@@ -51,7 +51,7 @@ export default function Home(): JSX.Element {
       <HomepageHeader />
       <main className={styles.main}>
         <section id="packages" className={styles.packages}>
-          <h2 className={styles.sectionTitle}>Five packages, one job each.</h2>
+          <h2 className={styles.sectionTitle}>Six packages, one job each.</h2>
           <p className={styles.sectionLede}>
             Each package stands alone. Reach for signals and native control flow
             first, then add the one that fits your problem.

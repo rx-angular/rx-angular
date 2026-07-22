@@ -11,21 +11,21 @@ The root cause is the [esbuild code splitting algorithm](https://github.com/evan
 
 To address some of these issues, the Angular team has added the [experimental chunk optimizer](https://github.com/angular/angular-cli/pull/27953), which rebundles the application to reduce the number of chunks. However, this solution is limited and cannot be extended with custom configurations.
 
-For a deeper understanding of this issue, consult the [architecture and problem statement docs](./docs/architecture.md).
+For a deeper understanding of this issue, consult the [architecture and problem statement docs](https://rx-angular.io/docs/packages/rebundle/explanation/rebundle-architecture).
 
 ### Solution
 
-`@rx-angular/rebundle` is a set of tools that allows users to optimize the bundle output of Angular applications beyond the Angular experimental chunk optimizer. By default, it provides additional size-based and reachability-based optimizations which most apps can benefit from, while remaining fully configurable for complex scenarios.
+`@rx-angular/rebundle` is a set of tools that allows users to optimize the bundle output of Angular applications beyond the Angular experimental chunk optimizer. By default, it provides reachability-based optimization which most apps can benefit from, while remaining fully configurable for complex scenarios.
 
 ### Impact
 
-By employing advanced chunking strategies, `@rx-angular/rebundle` consolidates initial and dynamic chunks based on dependency graphs and size constraints. This leads to significantly fewer HTTP requests, mitigating network thrashing and restoring fast Largest Contentful Paint (LCP) in HTTP/2 environments.
+By employing advanced chunking strategies, `@rx-angular/rebundle` consolidates initial and dynamic chunks based on the dependency graph. This leads to significantly fewer HTTP requests, mitigating network thrashing and restoring fast Largest Contentful Paint (LCP) in HTTP/2 environments.
 
 For real-world impact data, see this [demo discussion](https://github.com/angular/angular-cli/issues/27715#issuecomment-3398232305).
 
 ## Getting Started
 
-Please see the [Setup Guide](./docs/setup.md) for full installation and usage instructions for both Angular CLI and Nx workspaces.
+Please see the [Setup Guide](https://rx-angular.io/docs/packages/rebundle/how-to/set-up-rebundle) for full installation and usage instructions for both Angular CLI and Nx workspaces.
 
 ### Installation
 
@@ -58,7 +58,7 @@ Add the plugin to your build target in your `project.json`:
 
 #### Configuration
 
-You can specify additional configuration options to fine-tune the chunking behavior. For instance, to explicitly set a maximum number of output chunks:
+You can fine-tune the chunking behavior by passing a merge strategy. For instance, to configure the default reachability strategy explicitly:
 
 ```json
 {
@@ -69,8 +69,10 @@ You can specify additional configuration options to fine-tune the chunking behav
         {
           "path": "@rx-angular/rebundle",
           "options": {
-            "maxChunks": 6,
-            "enableSizeBasedMerging": true
+            "mergeStrategy": {
+              "name": "main",
+              "strategies": [{ "label": "default reachability", "type": "reachability" }]
+            }
           }
         }
       ]
@@ -81,12 +83,11 @@ You can specify additional configuration options to fine-tune the chunking behav
 
 ## Merge Strategies & Configuration
 
-The esbuild chunking algorithm treats every dynamic import as an independent entry point, missing opportunities to merge chunks that are only ever loaded together in the context of an Angular SPA. `@rx-angular/rebundle` fixes this by analyzing the module graph and performing reachability and size-based merging.
+The esbuild chunking algorithm treats every dynamic import as an independent entry point, missing opportunities to merge chunks that are only ever loaded together in the context of an Angular SPA. `@rx-angular/rebundle` fixes this by analyzing the module graph and performing reachability-based merging.
 
-- **[Merge Strategies Overview](./docs/merge-strategies/merge-strategies.md)**
-  - [Configuration API](./docs/merge-strategies/configuration.md)
-  - [Reachability](./docs/merge-strategies/reachability.md)
-  - [Static Closure](./docs/merge-strategies/static-closure.md)
-  - [Common](./docs/merge-strategies/common.md)
-- **[Size-Based Merging](./docs/size-based-merging.md)**
-- **[Architecture & Problem Statement](./docs/architecture.md)**
+- **[Merge Strategies Overview](https://rx-angular.io/docs/packages/rebundle/reference/merge-strategies)**
+  - [Configuration API](https://rx-angular.io/docs/packages/rebundle/how-to/configure-merge-strategies)
+  - [Reachability](https://rx-angular.io/docs/packages/rebundle/reference/reachability)
+  - [Static Closure](https://rx-angular.io/docs/packages/rebundle/reference/static-closure)
+  - [Common](https://rx-angular.io/docs/packages/rebundle/reference/common)
+- **[Architecture & Problem Statement](https://rx-angular.io/docs/packages/rebundle/explanation/rebundle-architecture)**
