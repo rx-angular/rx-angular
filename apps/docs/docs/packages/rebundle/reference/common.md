@@ -65,7 +65,6 @@ It is not an emitted chunk filename.
 ## Behavior
 
 - Every configured entry point must resolve to an emitted esbuild entry chunk.
-- Duplicate resolved entry chunks are rejected.
 - Entry point chunks already assigned by earlier strategies are rejected.
 - Dependencies already assigned by earlier strategies are excluded from the
   common group.

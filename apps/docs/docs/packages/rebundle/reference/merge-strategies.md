@@ -53,25 +53,33 @@ interface MergeStrategyConfig {
 }
 ```
 
-Each strategy receives the same merge context:
+Each strategy definition is turned into merge groups against a shared context
+that the applicator maintains across the whole run:
 
 ```ts
 interface MergeStrategyContext {
-  assigned: Set<string>;
-  mergedStrategy: Map<string, string[]>;
-  graph: ModuleGraph;
-  entryPointChunk: string;
+  assigned: Set<OutputPath>;
+  mergeStrategy: MergeStrategy;
+  graph: BundleGraph;
+  entryPointChunk: OutputPath;
   metafile: Metafile;
 }
 ```
 
-The contract is strict:
+A strategy does not mutate that context directly. Instead it reads the context
+(`graph`, `metafile`, `entryPointChunk`, and the current `assigned` set) and
+returns its own `MergeStrategy` map of proposed groups. The applicator then
+folds each group into the shared context, and that is where the contract is
+enforced:
 
-- A strategy may add one or more entries to `mergedStrategy`.
-- A strategy must mark every chunk it claims in `assigned`.
-- A chunk can only be assigned once.
+- Every group's owner chunk is the key; the chunks merged into it are the value.
+- A group whose owner is already assigned throws — a chunk can only be assigned
+  once.
+- Already-assigned chunks are dropped from a group before it is recorded, so
+  later strategies cannot re-claim them.
+- Groups that end up with a single chunk are skipped, because no merge is needed.
+- Recorded groups mark all their chunks in `assigned`.
 - Strategy definitions run in the order they appear in `strategies`.
-- Later strategies must respect chunks claimed by earlier strategies.
 - JavaScript chunks that remain unassigned after every strategy runs are mapped
   to themselves.
 

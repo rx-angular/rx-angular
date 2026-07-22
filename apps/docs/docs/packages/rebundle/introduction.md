@@ -52,9 +52,9 @@ remaining fully configurable for complex scenarios.
 ### Impact
 
 By employing advanced chunking strategies, `@rx-angular/rebundle` consolidates
-initial and dynamic chunks based on dependency graphs and size constraints. This
-leads to significantly fewer HTTP requests, mitigating network thrashing and
-restoring fast Largest Contentful Paint (LCP) in HTTP/2 environments.
+initial and dynamic chunks based on the dependency graph. This leads to
+significantly fewer HTTP requests, mitigating network thrashing and restoring
+fast Largest Contentful Paint (LCP) in HTTP/2 environments.
 
 For real-world impact data, see this
 [demo discussion](https://github.com/angular/angular-cli/issues/27715#issuecomment-3398232305).
