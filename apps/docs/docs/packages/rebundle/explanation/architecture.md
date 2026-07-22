@@ -114,45 +114,26 @@ chunks back into logical groupings. See the
 strategies apply a sequence of decisions to solve this issue (such as the default
 [reachability strategy](../reference/reachability.md)).
 
-### Bundling using import attributes
+### How the strategies are applied
 
-We can use import attributes to give the bundler hints about how to chunk certain
-dynamic imports.
+The chunking policy lives entirely in the
+[merge strategy configuration](../reference/merge-strategies.md), not in your
+application source. `@rx-angular/rebundle` does not rely on source-level import
+hints; it works on the build output instead:
 
-#### `chunkName` attribute
+1. esbuild emits its chunks and a metafile.
+2. The plugin reads the metafile to reconstruct the output module graph.
+3. It runs the configured merge strategies against that graph to produce a merge
+   map (an output chunk mapped to the chunks that should be merged into it).
+4. It hands that merge map to rolldown as code-splitting groups, which regroup
+   the chunks in memory before they are written to disk.
 
-Dynamic imports marked with the `chunkName` attribute will generate a new named
-chunk. All imports of the marked file will end up in this chunk (e.g.
-`<chunkName>-XYZ.js`).
-
-#### `include: 'withSharedDeps'` (default)
-
-If `withSharedDeps` is used for `include`, the generated chunk will include shared
-dependencies of dynamic imports marked with the same `chunkName`.
-
-```typescript
-// main.ts
-import('./dynamic1', { with: { chunkName: 'common' } });
-import('./dynamic2', { with: { chunkName: 'common' } });
-```
-
-This merges `static1` and `static2` into `common.js`, while `static3` stays
-isolated or goes into `dynamic2.js`.
-
-#### `include: 'withAllDeps'`
-
-If `withAllDeps` is used, the generated chunk will include all dependencies of
-dynamic imports marked with the same `chunkName`, even if they aren't strictly
-shared.
-
-```typescript
-// main.ts
-import('./dynamic1', { with: { chunkName: 'common' } });
-import('./dynamic2', { with: { chunkName: 'common', include: 'withAllDeps' } });
-```
-
-This merges all static dependencies (`static1`, `static2`, `static3`) into
-`common.js`.
+The default [reachability strategy](../reference/reachability.md) groups each
+dynamic entry point with the chunks only reachable through it. For targeted
+grouping you can layer the [static closure](../reference/static-closure.md) and
+[common](../reference/common.md) strategies. See the
+[merge strategies reference](../reference/merge-strategies.md) for the full
+contract.
 
 ### Rolldown considerations
 
