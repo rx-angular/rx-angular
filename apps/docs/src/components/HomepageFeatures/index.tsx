@@ -35,6 +35,11 @@ const PACKAGES: Package[] = [
     blurb: 'Lint rules that keep an app reactive and zoneless.',
     to: '/docs/packages/eslint-plugin/',
   },
+  {
+    name: '@rx-angular/rebundle',
+    blurb: 'Fewer, smarter chunks from Angular esbuild builds.',
+    to: '/docs/packages/rebundle/',
+  },
 ];
 
 export default function HomepageFeatures(): JSX.Element {

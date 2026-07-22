@@ -954,6 +954,11 @@ module.exports = {
                 docId: 'packages/eslint-plugin/eslint-plugin-overview',
                 label: 'ESLint plugin',
               },
+              {
+                type: 'doc',
+                docId: 'packages/rebundle/rebundle-landing',
+                label: 'Rebundle',
+              },
             ],
           },
           {
@@ -1013,6 +1018,10 @@ module.exports = {
               {
                 label: '@rx-angular/eslint-plugin',
                 to: 'docs/packages/eslint-plugin/',
+              },
+              {
+                label: '@rx-angular/rebundle',
+                to: 'docs/packages/rebundle/',
               },
             ],
           },
