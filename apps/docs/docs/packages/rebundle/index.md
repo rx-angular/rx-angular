@@ -28,8 +28,6 @@ mechanism.
 - **Reachability-based default.** Out of the box it groups chunks by the entry
   point that dominates them in the reachable graph — the safest default for
   large Angular apps with many lazy routes.
-- **Size-based merging.** Optionally consolidates small chunks under a
-  configurable threshold to reduce request overhead.
 - **Fully configurable.** Compose built-in strategies (reachability, static
   closure, common) or build your own merge map for domain-specific loading
   rules.
@@ -61,13 +59,11 @@ for full Angular CLI and Nx instructions.
 
 - **Understand:** [Architecture & problem statement](./explanation/architecture.md):
   why esbuild fragments chunks and how rebundle fixes it.
-- **Do:** [Set up rebundle](./how-to/set-up-rebundle.md),
-  [configure merge strategies](./how-to/configure-merge-strategies.md), and
-  [enable size-based merging](./how-to/enable-size-based-merging.md).
+- **Do:** [Set up rebundle](./how-to/set-up-rebundle.md) and
+  [configure merge strategies](./how-to/configure-merge-strategies.md).
 - **Look up:** [Merge strategies](./reference/merge-strategies.md),
   [reachability](./reference/reachability.md),
-  [static closure](./reference/static-closure.md),
-  [common](./reference/common.md), and the
-  [size-based merging options](./reference/size-based-merging-options.md).
+  [static closure](./reference/static-closure.md), and
+  [common](./reference/common.md).
 
 New to rebundle? Start with the [introduction](./introduction.md).

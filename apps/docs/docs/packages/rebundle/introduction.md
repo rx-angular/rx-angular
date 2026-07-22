@@ -46,8 +46,8 @@ For a deeper understanding of this issue, read the
 
 `@rx-angular/rebundle` allows users to optimize the bundle output of Angular
 applications beyond the Angular experimental chunk optimizer. By default it
-provides additional size-based and reachability-based optimizations that most
-apps can benefit from, while remaining fully configurable for complex scenarios.
+provides reachability-based optimization that most apps can benefit from, while
+remaining fully configurable for complex scenarios.
 
 ### Impact
 

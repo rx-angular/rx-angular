@@ -15,7 +15,7 @@ For a deeper understanding of this issue, consult the [architecture and problem 
 
 ### Solution
 
-`@rx-angular/rebundle` is a set of tools that allows users to optimize the bundle output of Angular applications beyond the Angular experimental chunk optimizer. By default, it provides additional size-based and reachability-based optimizations which most apps can benefit from, while remaining fully configurable for complex scenarios.
+`@rx-angular/rebundle` is a set of tools that allows users to optimize the bundle output of Angular applications beyond the Angular experimental chunk optimizer. By default, it provides reachability-based optimization which most apps can benefit from, while remaining fully configurable for complex scenarios.
 
 ### Impact
 
@@ -58,7 +58,7 @@ Add the plugin to your build target in your `project.json`:
 
 #### Configuration
 
-You can specify additional configuration options to fine-tune the chunking behavior. For instance, to explicitly set a maximum number of output chunks:
+You can fine-tune the chunking behavior by passing a merge strategy. For instance, to configure the default reachability strategy explicitly:
 
 ```json
 {
@@ -69,8 +69,10 @@ You can specify additional configuration options to fine-tune the chunking behav
         {
           "path": "@rx-angular/rebundle",
           "options": {
-            "maxChunks": 6,
-            "enableSizeBasedMerging": true
+            "mergeStrategy": {
+              "name": "main",
+              "strategies": [{ "label": "default reachability", "type": "reachability" }]
+            }
           }
         }
       ]
@@ -81,12 +83,11 @@ You can specify additional configuration options to fine-tune the chunking behav
 
 ## Merge Strategies & Configuration
 
-The esbuild chunking algorithm treats every dynamic import as an independent entry point, missing opportunities to merge chunks that are only ever loaded together in the context of an Angular SPA. `@rx-angular/rebundle` fixes this by analyzing the module graph and performing reachability and size-based merging.
+The esbuild chunking algorithm treats every dynamic import as an independent entry point, missing opportunities to merge chunks that are only ever loaded together in the context of an Angular SPA. `@rx-angular/rebundle` fixes this by analyzing the module graph and performing reachability-based merging.
 
 - **[Merge Strategies Overview](https://rx-angular.io/docs/packages/rebundle/reference/merge-strategies)**
   - [Configuration API](https://rx-angular.io/docs/packages/rebundle/how-to/configure-merge-strategies)
   - [Reachability](https://rx-angular.io/docs/packages/rebundle/reference/reachability)
   - [Static Closure](https://rx-angular.io/docs/packages/rebundle/reference/static-closure)
   - [Common](https://rx-angular.io/docs/packages/rebundle/reference/common)
-- **[Size-Based Merging](https://rx-angular.io/docs/packages/rebundle/how-to/enable-size-based-merging)**
 - **[Architecture & Problem Statement](https://rx-angular.io/docs/packages/rebundle/explanation/rebundle-architecture)**
