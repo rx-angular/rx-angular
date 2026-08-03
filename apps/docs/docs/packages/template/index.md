@@ -28,7 +28,11 @@ control flow does not give you:
 For the plain cases (naming a value, a simple toggle, a straightforward list),
 Angular's native `@let`, `@if`, `@for`, and `@switch` already do the job, and you
 should reach for them first. `@rx-angular/template` earns its place when you need
-the scheduling control or the reactive context on top of that.
+the scheduling control or the reactive context on top of that. It is **not** a
+find-and-replace for native control flow — see
+[Choose & combine directives](./how-to/choosing-and-combining-directives.md) for
+when to prefer which, and for the gotcha of nesting an rx directive on a value
+another rx directive already unwrapped.
 
 To understand _why_ fine-grained, scheduled rendering matters, see
 [Understanding change detection in Angular](../../concepts/E1-change-detection.md).
@@ -76,4 +80,5 @@ same compatibility ranges as the Angular framework itself; see the
 
 ## See also
 
+- How-to: [Choose & combine directives](./how-to/choosing-and-combining-directives.md)
 - Concept: [Understanding change detection in Angular](../../concepts/E1-change-detection.md)
