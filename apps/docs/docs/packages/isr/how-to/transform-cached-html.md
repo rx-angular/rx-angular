@@ -38,14 +38,14 @@ Sometimes you need to alter the HTML ISR handles, for example injecting a tracki
 2. **Transform cached HTML** by passing `modifyCachedHtml` on the [`serveFromCache`](../reference/api.md#isrhandler) config. It runs on every cache hit, so keep the logic lightweight.
 
    ```typescript title="server.ts"
-   server.get('*', (req, res, next) =>
+   server.get('/{*splat}', (req, res, next) =>
      isr.serveFromCache(req, res, next, {
        modifyCachedHtml: (req, cachedHtml) => `${cachedHtml}<!-- Served from cache, modified per request -->`,
      }),
    );
 
    // Fresh render + cache write for cache misses:
-   server.get('*', (req, res, next) => isr.render(req, res, next));
+   server.get('/{*splat}', (req, res, next) => isr.render(req, res, next));
    ```
 
 :::caution
