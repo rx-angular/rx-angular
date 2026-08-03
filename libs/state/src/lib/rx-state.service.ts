@@ -410,6 +410,31 @@ export class RxState<State extends object> implements Subscribable<State> {
 
   /**
    * @description
+   * Connect an object of `Observable` and/or `Signal` sources to the state `State`.
+   * Every source gets connected to the property matching its key.
+   * Sources are connected independently of each other, a source that never emits does not
+   * block the other ones.
+   * Subscription handling is done automatically.
+   *
+   * @example
+   * const currentTime = signal(Date.now());
+   * state.connect({
+   *   timer: interval(250),
+   *   currentTime
+   * });
+   * // the property timer gets updated every 250ms, currentTime on every change of the signal
+   *
+   *  @param {Partial<{ [Key in keyof State]: Observable<State[Key]> | Signal<State[Key]> }>} slices
+   *  @return void
+   */
+  connect(
+    slices: Partial<{
+      [Key in keyof State]: Observable<State[Key]> | Signal<State[Key]>;
+    }>,
+  ): void;
+
+  /**
+   * @description
    * Connect an `Observable<Value>` to the state `State`.
    * Any change emitted by the source will get forwarded to project function and merged into the state.
    * Subscription handling is done automatically.
@@ -543,7 +568,10 @@ export class RxState<State extends object> implements Subscribable<State> {
     keyOrInputOrSlice$:
       | Key
       | Observable<Partial<State> | Value>
-      | Signal<Partial<State> | Value>,
+      | Signal<Partial<State> | Value>
+      | Partial<{
+          [K in keyof State]: Observable<State[K]> | Signal<State[K]>;
+        }>,
     projectOrSlices$?:
       | ProjectStateReducer<State, Value>
       | Observable<State[Key] | Value>
@@ -553,6 +581,39 @@ export class RxState<State extends object> implements Subscribable<State> {
     /**
      * From top to bottom the overloads are handled.
      */
+    if (
+      !projectOrSlices$ &&
+      !projectValueFn &&
+      keyOrInputOrSlice$ &&
+      typeof keyOrInputOrSlice$ === 'object' &&
+      !isObservable(keyOrInputOrSlice$) &&
+      !isSignal(keyOrInputOrSlice$)
+    ) {
+      const slices = keyOrInputOrSlice$ as Partial<{
+        [K in keyof State]: Observable<State[K]> | Signal<State[K]>;
+      }>;
+      /**
+       * Every source is connected on its own. Combining them would hold back all of
+       * them until every single source emitted at least once.
+       */
+      (Object.keys(slices) as Key[]).forEach((key) => {
+        const slice = slices[key];
+        if (slice === undefined) {
+          return;
+        }
+        if (isObservable(slice)) {
+          this.connect(key, slice as Observable<State[Key]>);
+          return;
+        }
+        if (isSignal(slice)) {
+          this.connect(key, slice as Signal<State[Key]>);
+          return;
+        }
+        throw new Error('wrong params passed to connect');
+      });
+      return;
+    }
+
     if (
       isObservable(keyOrInputOrSlice$) &&
       !projectOrSlices$ &&

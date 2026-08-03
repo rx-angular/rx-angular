@@ -1,4 +1,4 @@
-import { Injector, runInInjectionContext } from '@angular/core';
+import { Injector, runInInjectionContext, signal } from '@angular/core';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { select } from '@rx-angular/state/selections';
 import {
@@ -7,7 +7,7 @@ import {
   jestMatcher,
   PrimitiveState,
 } from '@test-helpers/rx-angular';
-import { of, scheduled, Subject } from 'rxjs';
+import { NEVER, of, scheduled, Subject } from 'rxjs';
 import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
@@ -534,6 +534,78 @@ describe('RxStateService', () => {
           (sta, newVal) => newVal,
         );
       });
+    });
+
+    it('should work with an object of observables', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      state.connect({ num: of(1337), str: of('connected') });
+
+      expect(state.get('num')).toBe(1337);
+      expect(state.get('str')).toBe('connected');
+    });
+
+    it('should work with an object of signals', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      state.connect({ num: signal(1337), str: signal('connected') });
+      TestBed.flushEffects();
+
+      expect(state.get('num')).toBe(1337);
+      expect(state.get('str')).toBe('connected');
+    });
+
+    it('should work with an object of observables and signals', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      state.connect({ num: of(1337), str: signal('connected') });
+      TestBed.flushEffects();
+
+      expect(state.get('num')).toBe(1337);
+      expect(state.get('str')).toBe('connected');
+    });
+
+    it('should connect the sources of an object independently of each other', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      state.connect({ num: of(1337), str: NEVER });
+
+      expect(state.get('num')).toBe(1337);
+    });
+
+    it('should not gate the sources of an object on the slowest one', () => {
+      testScheduler.run(({ expectObservable, cold }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+
+        expectObservable(
+          state.$.pipe(map(({ num, str }) => `${num}|${str}`)),
+        ).toBe('-a-b', {
+          a: '1337|str',
+          b: '1337|connected',
+        });
+
+        state.connect({
+          num: cold('-a', { a: 1337 }),
+          str: cold('---a', { a: 'connected' }),
+        });
+      });
+    });
+
+    it('should ignore undefined entries of an object', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() =>
+        state.connect({ num: of(1337), str: undefined }),
+      ).not.toThrow();
+      expect(state.get('num')).toBe(1337);
+    });
+
+    it('should throw with an object holding wrong params', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() => state.connect({ num: 5 } as any)).toThrow(
+        'wrong params passed to connect',
+      );
     });
 
     it('should throw with wrong params', () => {
