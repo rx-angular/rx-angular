@@ -27,7 +27,7 @@ const immediateStrategy: RxStrategyCredentials = {
           ngZone,
           priority: PriorityLevel.ImmediatePriority,
           scope,
-        })
+        }),
       );
   },
 };
@@ -42,7 +42,7 @@ const userBlockingStrategy: RxStrategyCredentials = {
           ngZone,
           priority: PriorityLevel.UserBlockingPriority,
           scope,
-        })
+        }),
       );
   },
 };
@@ -57,7 +57,7 @@ const normalStrategy: RxStrategyCredentials = {
           ngZone,
           priority: PriorityLevel.NormalPriority,
           scope,
-        })
+        }),
       );
   },
 };
@@ -72,7 +72,7 @@ const lowStrategy: RxStrategyCredentials = {
           ngZone,
           priority: PriorityLevel.LowPriority,
           scope,
-        })
+        }),
       );
   },
 };
@@ -87,7 +87,7 @@ const idleStrategy: RxStrategyCredentials = {
           ngZone,
           priority: PriorityLevel.IdlePriority,
           scope,
-        })
+        }),
       );
   },
 };
@@ -99,7 +99,7 @@ function scheduleOnQueue<T>(
     scope: coalescingObj;
     delay?: number;
     ngZone: NgZone;
-  }
+  },
 ): MonoTypeOperatorFunction<T> {
   const scope = (options.scope as Record<string, unknown>) || {};
   return (o$: Observable<T>): Observable<T> =>
@@ -115,14 +115,14 @@ function scheduleOnQueue<T>(
               coalescingManager.remove(scope);
               subscriber.next(v);
             },
-            { delay: options.delay, ngZone: options.ngZone }
+            { delay: options.delay, ngZone: options.ngZone },
           );
           return () => {
             coalescingManager.remove(scope);
             cancelCallback(task);
           };
-        }).pipe(mapTo(v))
-      )
+        }).pipe(mapTo(v)),
+      ),
     );
 }
 
