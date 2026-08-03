@@ -29,6 +29,16 @@ instead of in production.
 - **Zoneless readiness:** the six `no-zone-*` rules flag Zone-patched browser, RxJS, and `NgZone.run*` APIs. They are legacy-guarded: a no-op once the app runs zoneless (Angular v21+). See [Zoneless & how Zone.js affected change detection](../../concepts/E2-zoneless-and-zonejs-change-detection.md).
 - **Value-semantics hygiene:** flags Lodash `cloneDeep`/`isEqual` in favour of native equivalents.
 
+## Version compatibility
+
+`@rx-angular/eslint-plugin` has no direct peer dependency on Angular — it lints
+your project's TypeScript output through `@typescript-eslint`, so it works with
+any Angular version supported by the `@typescript-eslint/parser` version you
+have installed. See the [package README](https://github.com/rx-angular/rx-angular/blob/main/libs/eslint-plugin/README.md#version-compatibility)
+for the peer dependency table, and the
+[official Angular versioning guide](https://angular.dev/reference/versions) for
+Angular's own support windows.
+
 ## Explore
 
 - **Do:** [Install and configure](./how-to/install-and-configure.md).
