@@ -371,8 +371,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    *
    * @param renderParent
    *
-   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content
-   *   queries
+   * @deprecated this flag will be dropped soon, as it is no longer required when using signal based view & content queries
    */
   @Input('rxVirtualForParent') renderParent = false;
 
@@ -667,7 +666,6 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       ),
       this.strategyHandler.strategy$.pipe(distinctUntilChanged()),
     ]).pipe(
-      tap(([items, range]) => console.log('rendering triggered', items, range)),
       switchMap(([items, range, strategy]) =>
         // wait for scrollStrategy to be stable until computing new state
         this.scrollStrategy.isStable.pipe(
@@ -694,33 +692,52 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
               }
               changes = differ.diff(iterable);
             }
-            console.log('rendering triggered stable', changes);
             const rangeChanged =
               lastRange.end !== range.end || lastRange.start !== range.start;
-            lastRange = { ...range };
-            if (!changes && !rangeChanged) {
-              return NEVER;
-            }
-            if (!changes && rangeChanged) {
-              console.log('rangeChanged only');
-              this.renderingStart$.next(new Set());
-              const viewsRendered = new Array(this.viewContainer.length);
-              for (let i = 0; i < this.viewContainer.length; i++) {
-                const v = <EmbeddedViewRef<RxVirtualForViewContext<T, U>>>(
+            lastRange = { start: range.start, end: range.end };
+            if (!changes) {
+              if (!rangeChanged) {
+                return NEVER;
+              }
+              /*
+               * The rendered slice is unchanged although the range moved. This
+               * happens when items are prepended and the range shifts by exactly
+               * the amount of inserted items - the differ reports no changes, but
+               * every view now maps to a new index and has to be re-positioned.
+               *
+               * Every view emits `viewRendered$` below, so the batch passed to
+               * the strategy has to name every view index. An empty set makes
+               * the strategies' position pass fast-forward its running cursor
+               * past views that still emit afterwards, stacking them at the end
+               * of the content (visible as gaps/blank viewport).
+               */
+              const allViewIndices = new Set<number>();
+              for (let i = 0, ilen = this.viewContainer.length; i < ilen; i++) {
+                allViewIndices.add(i);
+              }
+              this.renderingStart$.next(allViewIndices);
+              const viewsRendered: EmbeddedViewRef<
+                RxVirtualForViewContext<T, U>
+              >[] = [];
+              for (let i = 0, ilen = this.viewContainer.length; i < ilen; i++) {
+                const view = <EmbeddedViewRef<RxVirtualForViewContext<T, U>>>(
                   this.viewContainer.get(i)
                 );
-                this.updateViewContext(v.context.$implicit, v, {
+                this.updateViewContext(view.context.$implicit, view, {
                   index: range.start + i,
-                  count: iterable.length,
+                  count: items.length,
                 });
-                v.detectChanges();
+                view.detectChanges();
                 this.viewRendered$.next({
-                  view: v,
-                  item: v.context.$implicit,
-                  index: v.context.index,
+                  view,
+                  item: view.context.$implicit,
+                  // the strategies expect the view container index here, not
+                  // the context index - they diverge whenever range.start > 0
+                  index: i,
                 });
-                viewsRendered.push(v);
+                viewsRendered.push(view);
               }
+              this.templateManager.setItemCount(items.length);
               this.viewsRendered$.next(viewsRendered as any);
               return of(iterable);
             }
