@@ -101,9 +101,9 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
   standalone: true,
 })
 export class AutoSizeVirtualScrollStrategy<
-    T,
-    U extends NgIterable<T> = NgIterable<T>,
-  >
+  T,
+  U extends NgIterable<T> = NgIterable<T>,
+>
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
 {
@@ -180,6 +180,12 @@ export class AutoSizeVirtualScrollStrategy<
    * If this flag is true, the virtual scroll strategy maintains the scrolled item when new data
    * is prepended to the list. This is very useful when implementing a reversed infinite scroller, that prepends
    * data instead of appending it
+   *
+   * Note: prepended views have not been measured at the time the scroll position
+   * is compensated, so the autosized strategy shifts by `tombstoneSize` per
+   * inserted item and corrects the remainder as the views get measured. The
+   * closer `tombstoneSize` is to the real item height, the smaller that initial
+   * correction is.
    */
   @Input({ transform: toBoolean }) keepScrolledIndexOnPrepend = false;
 
@@ -297,6 +303,34 @@ export class AutoSizeVirtualScrollStrategy<
   /** @internal */
   private readonly recalculateRange$ = new Subject<void>();
 
+  /**
+   * trackBy id -> { item, index } for the *latest* dataset. This is the
+   * authority for where an item currently lives in `_virtualItems`.
+   * @internal
+   */
+  private readonly itemCache = new Map<any, { item: T; index: number }>();
+
+  /**
+   * Resolves the index a view's item currently has in the dataset.
+   *
+   * `view.context.index` goes stale whenever a new value emission rebuilds
+   * `_virtualItems` while a render or ResizeObserver pass for the previous
+   * dataset is still in flight - e.g. a transient loading row that gets
+   * replaced one tick later. Writing sizes or positions through the stale
+   * index books them onto the neighboring item, and since measurements are
+   * cached, the corruption is permanent. Resolving via trackBy keeps every
+   * write on the item it was measured from.
+   * @internal
+   */
+  private resolveItemIndex(
+    view: EmbeddedViewRef<RxVirtualForViewContext<T, U>>,
+  ): number {
+    const trackBy =
+      this.viewRepeater!._trackBy ?? ((_: number, item: T) => item);
+    const id = trackBy(view.context.index, view.context.$implicit);
+    return this.itemCache.get(id)?.index ?? view.context.index;
+  }
+
   /** @internal */
   private until$<A>(): MonoTypeOperatorFunction<A> {
     return (o$) => o$.pipe(takeUntil(this.detached$));
@@ -351,6 +385,7 @@ export class AutoSizeVirtualScrollStrategy<
     this.viewport = null;
     this.viewRepeater = null;
     this._virtualItems = [];
+    this.itemCache.clear();
     this.resizeObserver.destroy();
     this.detached$.next();
   }
@@ -368,8 +403,20 @@ export class AutoSizeVirtualScrollStrategy<
   }
 
   private scrollTo(scrollTo: number, behavior?: ScrollBehavior): void {
+    /*
+     * `waitForScroll` blocks rendering until the scroll event arrives. That
+     * event only fires if the position can actually change - a target beyond
+     * the scrollable bounds gets clamped by the browser. Deciding on the raw
+     * target would latch `isStable` to false forever when the clamped position
+     * equals the current one (e.g. compensating a removed transient row while
+     * already scrolled to the very top).
+     */
+    const clampedTarget = Math.min(
+      Math.max(scrollTo, 0),
+      Math.max(0, this.contentSize - this.containerSize),
+    );
     this.waitForScroll =
-      scrollTo !== this.scrollTop && this.contentSize > this.containerSize;
+      clampedTarget !== this.scrollTop && this.contentSize > this.containerSize;
     if (this.waitForScroll) {
       this.isStable$.next(false);
     }
@@ -407,7 +454,7 @@ export class AutoSizeVirtualScrollStrategy<
     // synchronises the values with the virtual viewport we've built up
     // it might get costy when having > 100k elements, it's still faster than
     // the IterableDiffer approach, especially on move operations
-    const itemCache = new Map<any, { item: T; index: number }>();
+    let previousIds: unknown[] = [];
     const trackBy = this.viewRepeater!._trackBy ?? ((i, item) => item);
     this.renderedRange$
       .pipe(pairwise(), this.until$())
@@ -433,27 +480,25 @@ export class AutoSizeVirtualScrollStrategy<
         let size = 0;
         const dataLength = dataArr.length;
         const virtualItems = new Array<VirtualViewItem>(dataLength);
-        let anchorItemIndex = this.anchorItem.index;
+        const ids = new Array<unknown>(dataLength);
         const keepScrolledIndexOnPrepend =
           this.keepScrolledIndexOnPrepend &&
           dataArr.length > 0 &&
-          itemCache.size > 0;
+          this.itemCache.size > 0;
         for (let i = 0; i < dataLength; i++) {
           const item = dataArr[i];
           const id = trackBy(i, item);
-          const cachedItem = itemCache.get(id);
+          ids[i] = id;
+          const cachedItem = this.itemCache.get(id);
           if (cachedItem === undefined) {
             // add
             virtualItems[i] = { size: 0 };
-            itemCache.set(id, { item: dataArr[i], index: i });
-            if (i <= anchorItemIndex) {
-              anchorItemIndex++;
-            }
+            this.itemCache.set(id, { item: dataArr[i], index: i });
           } else if (cachedItem.index !== i) {
             // move
             virtualItems[i] = this._virtualItems[cachedItem.index];
             virtualItems[i].position = undefined;
-            itemCache.set(id, { item: dataArr[i], index: i });
+            this.itemCache.set(id, { item: dataArr[i], index: i });
           } else {
             // update
             // todo: properly determine update (Object.is?)
@@ -466,28 +511,93 @@ export class AutoSizeVirtualScrollStrategy<
             ) {
               virtualItems[i].cached = false;
             }
-            itemCache.set(id, { item: dataArr[i], index: i });
+            this.itemCache.set(id, { item: dataArr[i], index: i });
           }
           existingIds.add(id);
           size += virtualItems[i].size || this.tombstoneSize;
         }
+        // keep the pre-rebuild ledger around: sizes of rows that got removed
+        // in this emission are only known there
+        const oldVirtualItems = this._virtualItems;
         this._virtualItems = virtualItems;
         // sync delete operations
-        if (itemCache.size > dataLength) {
-          itemCache.forEach((v, k) => {
+        if (this.itemCache.size > dataLength) {
+          this.itemCache.forEach((v, k) => {
             if (!existingIds.has(k)) {
-              itemCache.delete(k);
+              this.itemCache.delete(k);
             }
           });
         }
         existingIds.clear();
         this.contentLength = dataLength;
-        if (
+        /*
+         * Locate the anchored item again rather than counting insertions - that
+         * nets out inserts, removals and moves ahead of the anchor in one go. A
+         * transient row (e.g. a "loading older messages" item replaced by the
+         * batch) is both an insert and a remove and would otherwise leave the
+         * list shifted by its height.
+         */
+        const oldIds = previousIds;
+        previousIds = ids;
+        let anchorLookupIndex = this.anchorItem.index;
+        let anchorId = oldIds[anchorLookupIndex];
+        let oldAnchorTop = this.anchorScrollTop - this.anchorItem.offset;
+        let newAnchorIndex =
+          oldIds.length > 0 && anchorId !== undefined
+            ? ids.indexOf(anchorId)
+            : -1;
+        /*
+         * The anchored item itself got removed - e.g. a transient loading row
+         * the anchor was sitting on. The nearest following survivor visually
+         * takes its place and becomes the anchor. Without this fallback the
+         * compensation silently bails, which pins the viewport to the top and,
+         * in a reverse infinite scroller, retriggers loading forever.
+         */
+        while (
           keepScrolledIndexOnPrepend &&
-          this.anchorItem.index !== anchorItemIndex
+          newAnchorIndex === -1 &&
+          anchorLookupIndex + 1 < oldIds.length
         ) {
-          this.scrollToIndex(anchorItemIndex);
-        } else if (dataLength === 0) {
+          oldAnchorTop +=
+            oldVirtualItems[anchorLookupIndex]?.size || this.tombstoneSize;
+          anchorLookupIndex++;
+          anchorId = oldIds[anchorLookupIndex];
+          newAnchorIndex = anchorId !== undefined ? ids.indexOf(anchorId) : -1;
+        }
+        if (keepScrolledIndexOnPrepend && newAnchorIndex > -1) {
+          let newAnchorTop = 0;
+          for (let i = 0; i < newAnchorIndex; i++) {
+            newAnchorTop += this.getItemSize(i);
+          }
+          /*
+           * Shift by the height the change introduced instead of scrolling to
+           * the top of the new anchor index - the latter drops the anchor's
+           * sub-item offset, which is the jump reported in #1857.
+           *
+           * The anchor is deliberately not written here: `calcRenderedRange` is
+           * its single writer and advances it by `scrollTop - anchorScrollTop`,
+           * which lands back on the same item. Sizes of the inserted views are
+           * still unknown, so this uses the tombstone estimate - the existing
+           * ResizeObserver pass corrects the remainder as they get measured.
+           */
+          const delta = newAnchorTop - oldAnchorTop;
+          if (delta !== 0) {
+            this.contentSize = size; // grow the runway before scrolling into it
+            this.scrollTo(
+              this.viewport!.getScrollTop() - this.viewportOffset + delta,
+            );
+          }
+        }
+        /*
+         * The range shrink below is handled *in addition* to the relocation
+         * above - a transient row that was both the anchor and the last piece
+         * of the rendered range (e.g. the loading row of an initial batch)
+         * needs both: the relocation keeps the content in place, the shrink
+         * keeps `renderedRange` consistent with the smaller dataset. Skipping
+         * it leaves `renderedRange.end` beyond the data, which wedges a
+         * pending `scrollToIndex` forever.
+         */
+        if (dataLength === 0) {
           this.anchorItem = {
             index: 0,
             offset: 0,
@@ -523,7 +633,7 @@ export class AutoSizeVirtualScrollStrategy<
         }
         this.contentSize = size;
       }),
-      finalize(() => itemCache.clear()),
+      finalize(() => this.itemCache.clear()),
     ).subscribe();
   }
 
@@ -658,7 +768,7 @@ export class AutoSizeVirtualScrollStrategy<
         let scrollToAnchorPosition: number | null = null;
         return this.viewRepeater!.viewRendered$.pipe(
           tap(({ view, index: viewIndex, item }) => {
-            const itemIndex = view.context.index;
+            const itemIndex = this.resolveItemIndex(view);
             // this most of the time causes a forced reflow per rendered view.
             // it doesn't sound good, but it's still way more stable than
             // having one large reflow in a microtask after the actual
@@ -671,6 +781,11 @@ export class AutoSizeVirtualScrollStrategy<
             // already explodes the budget
             const [, sizeDiff] = this.updateElementSize(view, itemIndex);
             const virtualItem = this._virtualItems[itemIndex];
+            // superseded pass racing a data change that removed the item -
+            // the follow-up render repositions everything anyway
+            if (!virtualItem) {
+              return;
+            }
 
             // before positioning the first view of this batch, calculate the
             // anchorScrollTop & initial position of the view
@@ -780,8 +895,9 @@ export class AutoSizeVirtualScrollStrategy<
               while (viewIdx > 0) {
                 viewIdx--;
                 position -=
-                  this._virtualItems[this.getViewRef(viewIdx).context.index]
-                    .size;
+                  this._virtualItems[
+                    this.resolveItemIndex(this.getViewRef(viewIdx))
+                  ].size;
               }
             } else {
               // we only need to reposition everything from the next viewIndex on
@@ -791,8 +907,13 @@ export class AutoSizeVirtualScrollStrategy<
             // position all views from the specified viewIndex
             while (viewIdx < this.viewRepeater!.viewContainer.length) {
               const view = this.getViewRef(viewIdx);
-              const itemIndex = view.context.index;
+              const itemIndex = this.resolveItemIndex(view);
               const virtualItem = this._virtualItems[itemIndex];
+              // superseded pass racing a data change that removed the item
+              if (!virtualItem) {
+                viewIdx++;
+                continue;
+              }
               const element = this.getElement(view);
               this.updateElementSize(view, itemIndex);
               virtualItem.position = position;
@@ -849,10 +970,10 @@ export class AutoSizeVirtualScrollStrategy<
         takeWhile(
           (event) =>
             event.target.isConnected &&
-            !!this._virtualItems[viewRef.context.index],
+            !!this._virtualItems[this.resolveItemIndex(viewRef)],
         ),
         map((event) => {
-          const index = viewRef.context.index;
+          const index = this.resolveItemIndex(viewRef);
           const size = Math.round(this.extractSize(event));
           const diff = size - this._virtualItems[index].size;
           if (diff !== 0) {
@@ -877,7 +998,7 @@ export class AutoSizeVirtualScrollStrategy<
             tap(() => {
               // we need to clean up the position property for views
               // that fall out of the renderedRange.
-              const index = viewRef.context.index;
+              const index = this.resolveItemIndex(viewRef);
               if (
                 this._virtualItems[index] &&
                 (index < this.renderedRange.start ||
@@ -941,6 +1062,10 @@ export class AutoSizeVirtualScrollStrategy<
     let lastPositionedIndex = itemIndex;
     while (!batchedUpdates.has(_viewIndex) && index < this.renderedRange.end) {
       const virtualItem = this._virtualItems[index];
+      // superseded pass racing a data change that shrank the dataset
+      if (!virtualItem) {
+        break;
+      }
       if (position !== virtualItem.position) {
         const view = this.getViewRef(_viewIndex);
         const element = this.getElement(view);
@@ -1010,18 +1135,26 @@ export class AutoSizeVirtualScrollStrategy<
     index: number,
   ): [number, number] {
     const oldSize = this.getItemSize(index);
-    const isCached = this._virtualItems[index].cached;
-    const size = isCached
+    const entry = this._virtualItems[index];
+    // superseded pass racing a data change that removed the item
+    if (!entry) {
+      return [oldSize, 0];
+    }
+    const size = entry.cached
       ? oldSize
       : this.getElementSize(this.getElement(view)) || this.tombstoneSize;
-    this._virtualItems[index].size = size;
-    this._virtualItems[index].cached = true;
+    entry.size = size;
+    entry.cached = true;
     return [size, size - oldSize];
   }
 
-  /** @internal */
+  /**
+   * @internal
+   * defensive against indices of superseded passes - a render or measure pass
+   * may still be in flight while a data change already shrank the ledger
+   */
   private getItemSize(index: number): number {
-    return this._virtualItems[index].size || this.tombstoneSize;
+    return this._virtualItems[index]?.size || this.tombstoneSize;
   }
   /** @internal */
   private getElementSize(element: HTMLElement): number {

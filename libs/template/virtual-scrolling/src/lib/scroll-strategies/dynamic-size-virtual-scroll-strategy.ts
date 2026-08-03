@@ -80,9 +80,9 @@ const defaultItemSize = () => DEFAULT_ITEM_SIZE;
   standalone: true,
 })
 export class DynamicSizeVirtualScrollStrategy<
-    T,
-    U extends NgIterable<T> = NgIterable<T>,
-  >
+  T,
+  U extends NgIterable<T> = NgIterable<T>,
+>
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
 {
@@ -283,8 +283,20 @@ export class DynamicSizeVirtualScrollStrategy<
   }
 
   private scrollTo(scrollTo: number, behavior?: ScrollBehavior): void {
+    /*
+     * `waitForScroll` blocks rendering until the scroll event arrives. That
+     * event only fires if the position can actually change - a target beyond
+     * the scrollable bounds gets clamped by the browser. Deciding on the raw
+     * target would latch `isStable` to false forever when the clamped position
+     * equals the current one (e.g. compensating a removed transient row while
+     * already scrolled to the very top).
+     */
+    const clampedTarget = Math.min(
+      Math.max(scrollTo, 0),
+      Math.max(0, this.contentSize - this.containerSize),
+    );
     this.waitForScroll =
-      scrollTo !== this.scrollTop && this.contentSize > this.containerSize;
+      clampedTarget !== this.scrollTop && this.contentSize > this.containerSize;
     if (this.waitForScroll) {
       this.isStable$.next(false);
     }
@@ -364,10 +376,11 @@ export class DynamicSizeVirtualScrollStrategy<
       }
     });
 
-    let valueCache: Record<any, T> = {};
+    let previousIds: unknown[] = [];
+    let previousSizes: number[] = [];
     /*
-     * when keepScrolledIndexOnPrepend is active, we need to listen to data changes and figure out what was appended
-     * before the last scrolledToItem
+     * when keepScrolledIndexOnPrepend is active, we need to listen to data changes
+     * and figure out where the anchored item ended up
      */
     valueArray$
       .pipe(
@@ -377,25 +390,67 @@ export class DynamicSizeVirtualScrollStrategy<
       )
       .subscribe((valueArray) => {
         const trackBy = this.viewRepeater!._trackBy;
-        let scrollTo = this.scrolledIndex;
-        const dataLength = valueArray.length;
-        const oldDataLength = Object.keys(valueCache).length;
-
-        if (oldDataLength > 0) {
-          let i = 0;
-          // check for each item from the last known scrolledIndex if it's an insert
-          for (i; i <= scrollTo && i < dataLength; i++) {
-            // item is not in the valueCache, so it was added
-            if (!valueCache[trackBy(i, valueArray[i])]) {
-              scrollTo++;
-            }
-          }
+        const anchorIndex = this.anchorItem.index;
+        const oldIds = previousIds;
+        const oldSizes = previousSizes;
+        const hadData = oldIds.length > 0;
+        const ids = valueArray.map((v, i) => trackBy(i, v));
+        previousIds = ids;
+        previousSizes = valueArray.map((v) => this.itemSize(v));
+        let anchorLookupIndex = anchorIndex;
+        let anchorId = oldIds[anchorLookupIndex];
+        if (!hadData || anchorId === undefined) {
+          return;
         }
-        valueCache = {};
-        valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
-        if (scrollTo !== this.scrolledIndex) {
-          this.scrollToIndex(scrollTo);
+        /*
+         * Instead of counting insertions, locate the anchored item again. That
+         * nets out inserts, removals and moves ahead of the anchor in one go - a
+         * transient row (e.g. a "loading older messages" item that gets replaced
+         * by the batch) is both an insert and a remove and would otherwise leave
+         * the list shifted by its height.
+         */
+        let newAnchorIndex = ids.indexOf(anchorId);
+        let oldAnchorTop = this.anchorScrollTop - this.anchorItem.offset;
+        /*
+         * The anchored item itself got removed - e.g. a transient loading row
+         * the anchor was sitting on. The nearest following survivor visually
+         * takes its place and becomes the anchor. Without this fallback the
+         * compensation silently bails, which pins the viewport to the top and,
+         * in a reverse infinite scroller, retriggers loading forever.
+         */
+        while (newAnchorIndex === -1 && anchorLookupIndex + 1 < oldIds.length) {
+          oldAnchorTop += oldSizes[anchorLookupIndex] ?? 0;
+          anchorLookupIndex++;
+          anchorId = oldIds[anchorLookupIndex];
+          newAnchorIndex = anchorId !== undefined ? ids.indexOf(anchorId) : -1;
         }
+        // nothing below the anchor survived, there is nothing to keep in place
+        if (newAnchorIndex === -1) {
+          return;
+        }
+        // _virtualItems has already been rebuilt with the new sizes above
+        let newAnchorTop = 0;
+        for (let i = 0; i < newAnchorIndex; i++) {
+          newAnchorTop += this._virtualItems[i].size;
+        }
+        const delta = newAnchorTop - oldAnchorTop;
+        if (delta === 0) {
+          return;
+        }
+        /*
+         * Shift by the height the change introduced instead of scrolling to the
+         * top of the new anchor index - the latter drops the anchor's sub-item
+         * offset, which is the jump reported in #1857.
+         *
+         * The anchor itself is deliberately left alone: `calcRenderedRange` is
+         * its single writer and advances it by `scrollTop - anchorScrollTop`,
+         * which lands back on the same item. Writing the anchor here as well
+         * would race the positioning pass, which lays views out relative to it,
+         * and desyncs the layout.
+         */
+        this.scrollTo(
+          this.viewport!.getScrollTop() - this.viewportOffset + delta,
+        );
       });
   }
 

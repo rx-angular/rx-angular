@@ -44,6 +44,7 @@ const testComponentImports = [
     [runwayItems]="runwayItems()"
     [runwayItemsOpposite]="runwayItemsOpposite()"
     [tombstoneSize]="tombstoneSize()"
+    [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
     autosize
   >
     <div
@@ -73,6 +74,7 @@ class AutoSizeTestComponent {
   trackBy = input<keyof Item | ((idx: number, i: Item) => unknown)>();
   dynamicSize = input.required<any>();
   tombstoneSize = input.required<number>();
+  keepScrolledIndexOnPrepend = input(false);
   strategy = input.required<
     RxStrategyNames<string> | Observable<RxStrategyNames<string>>
   >();
@@ -99,6 +101,7 @@ class AutoSizeTestComponent {
       [runwayItems]="runwayItems()"
       [runwayItemsOpposite]="runwayItemsOpposite()"
       [tombstoneSize]="tombstoneSize()"
+      [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
       autosize
     >
       <div
@@ -135,6 +138,7 @@ class AutoSizeCustomScrollElementTestComponent extends AutoSizeTestComponent {}
       [runwayItems]="runwayItems()"
       [runwayItemsOpposite]="runwayItemsOpposite()"
       [tombstoneSize]="tombstoneSize()"
+      [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
       autosize
     >
       <div
@@ -178,6 +182,7 @@ function mountAutoSize(
     tombstoneSize,
     showItemDescription,
     dynamicSize,
+    keepScrolledIndexOnPrepend,
   } = {
     dynamicSize: defaultDynamicSize,
     tombstoneSize: DEFAULT_ITEM_SIZE,
@@ -196,6 +201,7 @@ function mountAutoSize(
       trackBy,
       dynamicSize,
       tombstoneSize,
+      keepScrolledIndexOnPrepend,
       strategy,
       items,
       showItemDescription,
@@ -882,5 +888,358 @@ describe('window scrolling', () => {
         cy.get('@viewRange').should('have.been.calledWith', range);
       },
     );
+  });
+});
+
+describe('keepScrolledIndexOnPrepend', () => {
+  it('keeps the scroll position stable when prepending', () => {
+    // tombstoneSize matches the real item height, so the estimate the strategy
+    // uses for the not-yet-measured items is exact
+    const size = 50;
+    mountAutoSize({
+      dynamicSize: () => size,
+      tombstoneSize: size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 9 * size + 21;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 9)
+        .then(() => {
+          const prepended = generateItems(5, 10000);
+          fixture.componentRef.setInput('items', [
+            ...prepended,
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            expect(viewport.getScrollTop()).to.eq(scrollTop + 5 * size);
+          });
+        });
+    });
+  });
+
+  it('does not move the scroll position when disabled', () => {
+    const size = 50;
+    mountAutoSize({
+      dynamicSize: () => size,
+      tombstoneSize: size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: false,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 9 * size + 21;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 9)
+        .then(() => {
+          fixture.componentRef.setInput('items', [
+            ...generateItems(5, 10000),
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            expect(viewport.getScrollTop()).to.eq(scrollTop);
+          });
+        });
+    });
+  });
+  it('keeps the content stable when the anchor sits on the transient row', () => {
+    // the user parks the viewport at the very top while the loading row is
+    // visible - the anchor is the loading row itself. When the batch replaces
+    // it, the nearest surviving row below has to stay in place, otherwise the
+    // viewport pins to the top and (in an infinite scroller) loads forever.
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const items = generateItems(30);
+    mountAutoSize({
+      dynamicSize: () => size,
+      tombstoneSize: size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      items: [loader, ...items],
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 0)
+        .then(() => {
+          const batch = generateItems(4, 10000);
+          fixture.componentRef.setInput('items', [...batch, ...items]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            // the first surviving row moved from y=size to y=4*size, so the
+            // scroll position has to move down by 3*size to keep it in place
+            expect(viewport.getScrollTop()).to.eq(3 * size);
+          });
+        });
+    });
+  });
+  it('resolves the transient row when the batch lands while anchored on it at the top', () => {
+    /*
+     * Two-step emission like a real chat client: [loader, ...items] ->
+     * [loader, ...batch, ...items] -> [...batch, ...items], with the user
+     * parked at the very top (the anchor IS the loader). The compensation for
+     * the vanished loader is negative and gets clamped by the browser - no
+     * scroll event fires. `waitForScroll` must not latch rendering in that
+     * case, otherwise the stale loading row stays on screen forever.
+     */
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const items = generateItems(30);
+    mountAutoSize({
+      dynamicSize: () => size,
+      tombstoneSize: size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      items: [loader, ...items],
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 0)
+        .then(() => {
+          const batch = generateItems(4, 10000);
+          fixture.componentRef.setInput('items', [loader, ...batch, ...items]);
+          fixture.detectChanges();
+          setTimeout(() => {
+            fixture.componentRef.setInput('items', [...batch, ...items]);
+            fixture.detectChanges();
+          });
+          cy.wrap(null).should(() => {
+            const texts = fixture.debugElement
+              .queryAll(By.css('[data-cy=item]'))
+              .map((de) => (de.nativeElement as HTMLElement).innerText);
+            // the loading row resolved - it must not be rendered anymore
+            expect(
+              texts.some((text) => text.includes('99999')),
+              'loader still rendered',
+            ).to.eq(false);
+            // and the batch is actually on screen
+            expect(
+              texts.some((text) => text.includes('10000')),
+              'batch rendered',
+            ).to.eq(true);
+          });
+        });
+    });
+  });
+  it('compensates a transient row that is replaced by the batch', () => {
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    mountAutoSize({
+      dynamicSize: () => size,
+      tombstoneSize: size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 9 * size + 21;
+      const original = fixture.componentInstance.items() as Item[];
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 9)
+        .then(() => {
+          fixture.componentRef.setInput('items', [loader, ...original]);
+          fixture.detectChanges();
+          cy.wrap(null)
+            .should(() => {
+              expect(viewport.getScrollTop()).to.eq(scrollTop + size);
+            })
+            .then(() => {
+              const batch = generateItems(4, 10000);
+              fixture.componentRef.setInput('items', [...batch, ...original]);
+              fixture.detectChanges();
+              cy.wrap(null).should(() => {
+                expect(viewport.getScrollTop()).to.eq(scrollTop + 4 * size);
+              });
+            });
+        });
+    });
+  });
+});
+
+describe('without ResizeObserver frames', () => {
+  // Hidden or fully occluded tabs don't produce rendering frames, so a
+  // ResizeObserver never delivers its first entry. The viewport measures the
+  // container synchronously on init, the initial range renders regardless.
+  class NoopResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  let originalResizeObserver: typeof ResizeObserver;
+  beforeEach(() => {
+    originalResizeObserver = window.ResizeObserver;
+    window.ResizeObserver =
+      NoopResizeObserver as unknown as typeof ResizeObserver;
+  });
+  afterEach(() => {
+    window.ResizeObserver = originalResizeObserver;
+  });
+  it('renders the initial range although the observer never fires', () => {
+    mountAutoSize().then(({ component }) => {
+      const items = component.items() as Item[];
+      const range = expectedRange(
+        {
+          containerHeight: component.containerHeight(),
+          runwayItems: component.runwayItems(),
+          runwayItemsOpposite: component.runwayItemsOpposite(),
+          dynamicSize: component.dynamicSize(),
+        },
+        items,
+        0,
+      );
+      cy.get('[data-cy=item]').should('have.length', range.end - range.start);
+      cy.get('@scrolledIndex').should('have.been.calledWith', 0);
+    });
+  });
+});
+
+describe('layout integrity on range shift', () => {
+  /**
+   * A prepend shifts the renderedRange by exactly the inserted amount while
+   * the rendered slice stays identical. The differ reports no changes, but
+   * every view maps to a new index and gets re-rendered - the position pass
+   * has to keep the views contiguous. If the directive announces the pass
+   * with a wrong batch (e.g. an empty set), the strategy's position cursor
+   * runs ahead and stacks the views at the end of the content, which shows
+   * up as a blank viewport with gaps between the views.
+   */
+  it('keeps rendered views contiguous over repeated transient-row batches', () => {
+    // the reverse-infinite-scroll flow: every history request inserts a
+    // loading row, the resolving batch replaces it. Variable item sizes make
+    // the tombstone estimate wrong on every prepend, exercising the
+    // compensation + re-measure + re-position interplay repeatedly.
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const variableSize = (item: Item) => 40 + (Number(item.id) % 5) * 30;
+    mountAutoSize({
+      dynamicSize: variableSize,
+      tombstoneSize: 50,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const assertContiguous = (label: string) => {
+        cy.wrap(null).should(() => {
+          const views = fixture.debugElement
+            .queryAll(By.css('[data-cy=item]'))
+            .map((de) => de.nativeElement as HTMLElement)
+            .map((e) => ({
+              y: extractTranslateYValue(e.style.transform),
+              h: e.offsetHeight,
+            }))
+            .sort((a, b) => a.y - b.y);
+          expect(views.length, label).to.be.greaterThan(0);
+          for (let i = 1; i < views.length; i++) {
+            expect(views[i].y, `${label}: view ${i} is contiguous`).to.eq(
+              views[i - 1].y + views[i - 1].h,
+            );
+          }
+        });
+      };
+      const rounds = 3;
+      const doRound = (round: number, current: Item[]) => {
+        fixture.componentRef.setInput('items', [loader, ...current]);
+        fixture.detectChanges();
+        assertContiguous(`round ${round} loader`);
+        cy.wrap(null).then(() => {
+          const batch = generateItems(4, 10000 + round * 100);
+          const next = [...batch, ...current];
+          /*
+           * the exact emission pattern of a client combining `messages$` with a
+           * `loading` flag: the batch lands while the flag is still on - one
+           * emission with loader AND batch - and the flag resets a tick later.
+           * The second emission rebuilds the strategy's bookkeeping while the
+           * first one is still rendering.
+           */
+          fixture.componentRef.setInput('items', [loader, ...next]);
+          fixture.detectChanges();
+          setTimeout(() => {
+            fixture.componentRef.setInput('items', next);
+            fixture.detectChanges();
+          });
+          assertContiguous(`round ${round} batch`);
+          if (round + 1 < rounds) {
+            doRound(round + 1, next);
+          }
+        });
+      };
+      viewport.scrollTo(500);
+      cy.get('@scrolledIndex')
+        .should('have.been.called')
+        .then(() => {
+          doRound(0, fixture.componentInstance.items() as Item[]);
+        });
+    });
+  });
+
+  it('keeps rendered views contiguous when a transient row shrinks the range while an initial scroll is pending', () => {
+    /*
+     * Mirrors a chat client's initial load: the batch arrives together with a
+     * still-visible "loading older messages" row, `initialScrollIndex` kicks
+     * in - but the content (tombstone estimate) is smaller than the container,
+     * so the requested scroll cannot happen and `_scrollToIndex` stays
+     * pending, suppressing range emissions. The loading row then resolves
+     * (data shrinks below the rendered end, staged silently) and once the
+     * views are measured the strategy scrolls to the bottom. That scroll
+     * event finally emits a range that differs from the directive's last one
+     * while the rendered slice is identical - the re-position pass has to
+     * keep the views contiguous.
+     */
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const batch = generateItems(4);
+    const items$ = new Subject<Item[]>();
+    mountAutoSize({
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      // measured size exceeds the container (4 * 100 > 300) while the
+      // tombstone estimate does not (5 * 50 < 300)
+      dynamicSize: () => 100,
+      tombstoneSize: 50,
+      items: items$,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      // batch + transient row arrive, initialScrollIndex fires while the
+      // runway is still not scrollable
+      items$.next([loader, ...batch]);
+      viewport.scrollToIndex(3);
+      // the transient row resolves while the views are still being rendered -
+      // a task boundary apart, like a real backend response racing the render
+      setTimeout(() => items$.next([...batch]));
+      cy.get('[data-cy=item]')
+        .should('have.length', 4)
+        .then(() => {
+          cy.wrap(null).should(() => {
+            const views = fixture.debugElement
+              .queryAll(By.css('[data-cy=item]'))
+              .map((de) => de.nativeElement as HTMLElement)
+              .map((e) => ({
+                y: extractTranslateYValue(e.style.transform),
+                h: e.offsetHeight,
+              }))
+              .sort((a, b) => a.y - b.y);
+            expect(views.length).to.eq(4);
+            expect(views[0].y, 'first view starts at 0').to.eq(0);
+            for (let i = 1; i < views.length; i++) {
+              expect(views[i].y, `view ${i} is contiguous`).to.eq(
+                views[i - 1].y + views[i - 1].h,
+              );
+            }
+            // the pending initial scroll must complete: 4 * 100 measured
+            // content in a 300px container scrolls to the bottom at 100.
+            // A wedged `_scrollToIndex` leaves it at 0.
+            expect(viewport.getScrollTop(), 'initial scroll completed').to.eq(
+              100,
+            );
+          });
+        });
+    });
   });
 });
