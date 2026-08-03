@@ -39,6 +39,19 @@ Alternatively, if you prefer a more manual approach, add the plugin to your ESLi
 }
 ```
 
+## Version Compatibility
+
+`@rx-angular/eslint-plugin` has no direct peer dependency on Angular itself — it
+lints the TypeScript output of your project through `@typescript-eslint`, so it
+works with any Angular version supported by the `@typescript-eslint/parser`
+version you have installed:
+
+| RxAngular eslint-plugin | `@typescript-eslint/parser` | `eslint`  | `typescript` |
+| ----------------------- | --------------------------- | --------- | ------------ |
+| `^3.0.0`                | `^6.13.2 \|\| ^7.0.0`       | `>=8.0.0` | `>=4.3.5`    |
+| `^2.0.0`                | `^6.10.0`                   | `>=8.0.0` | `>=4.3.5`    |
+| `^1.0.0`                | -                           | `>=8.0.0` | `>=4.3.5`    |
+
 ## Configurations
 
 This plugin has two pre-defined configurations for different scenarios:
