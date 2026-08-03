@@ -18,6 +18,22 @@ el.addEventListener('click', () => {
   console.log('element clicked');
 });
 `,
+  `
+interface ConnectionPositionPair {
+  overlayY: string;
+  overlayX: string;
+  originY: string;
+  originX: string;
+  offsetX: number;
+  offsetY: number;
+}
+const positions: ConnectionPositionPair[] = [{ overlayY: 'top', overlayX: 'end', originY: 'bottom', originX: 'end', offsetX: 4, offsetY: 4 }];
+`,
+  `const cfg = { scrollTop: 0, offsetX: 1 };`,
+  `fn({ focus: true });`,
+  `interface Pos { offsetX: number; }`,
+  `type Pos = { offsetY: number };`,
+  `class C { offsetX = 4; }`,
 ];
 
 const invalid: TSESLint.RunTests<MessageIds, never[]>['invalid'] = [
@@ -113,6 +129,30 @@ if (!isElementInViewport(el)) {
         data: { name: 'scrollIntoView' },
       },
       { messageId: 'no-layout-sensitive-apis', data: { name: 'focus' } },
+    ],
+  },
+  {
+    code: 'const { offsetTop = 0 } = el;',
+    errors: [
+      { messageId: 'no-layout-sensitive-apis', data: { name: 'offsetTop' } },
+    ],
+  },
+  {
+    code: 'let a; ({ offsetX: a } = el);',
+    errors: [
+      { messageId: 'no-layout-sensitive-apis', data: { name: 'offsetX' } },
+    ],
+  },
+  {
+    code: 'function f({ clientWidth }) { return clientWidth; }',
+    errors: [
+      { messageId: 'no-layout-sensitive-apis', data: { name: 'clientWidth' } },
+    ],
+  },
+  {
+    code: 'el.offsetX = 4;',
+    errors: [
+      { messageId: 'no-layout-sensitive-apis', data: { name: 'offsetX' } },
     ],
   },
 ];
