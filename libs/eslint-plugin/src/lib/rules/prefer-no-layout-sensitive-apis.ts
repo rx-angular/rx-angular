@@ -80,7 +80,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   },
   defaultOptions: [],
   create: (context) => ({
-    [`MemberExpression[property.name=${apisRegex}], Property[key.name=${apisRegex}]`]:
+    [`MemberExpression[property.name=${apisRegex}], ObjectPattern > Property[key.name=${apisRegex}]`]:
       (node: TSESTree.MemberExpression | TSESTree.Property) => {
         if (
           node.type === AST_NODE_TYPES.MemberExpression &&
