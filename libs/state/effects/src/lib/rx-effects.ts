@@ -9,12 +9,12 @@ import {
 import { from, Subscription } from 'rxjs';
 import { SideEffectFnOrObserver, SideEffectObservable } from './types';
 
-interface RxEffects {
+export interface RxEffects {
   register<T>(
     observable: SideEffectObservable<T>,
     sideEffectOrObserver?: SideEffectFnOrObserver<T>,
-  ): Fn;
-  onDestroy: (fn: Fn) => Fn;
+  ): () => void;
+  onDestroy: (fn: () => void) => () => void;
 }
 
 type Fn = () => void;

@@ -46,11 +46,13 @@ export function rxEffects(setupFn: RxEffectsSetupFn, options: RxEffectsOptions):
 ## Returned handle: `RxEffects`
 
 ```ts
-interface RxEffects {
+export interface RxEffects {
   register<T>(observable: SideEffectObservable<T>, sideEffectOrObserver?: SideEffectFnOrObserver<T>): () => void;
   onDestroy: (fn: () => void) => () => void;
 }
 ```
+
+The interface is exported from the module that declares it, so TypeScript can name the handle when it emits declarations for a value produced by `rxEffects()` — for example a `providedIn: 'root'` `InjectionToken`. Note that `RxEffects` at the package root refers to the deprecated class below, not to this handle.
 
 | Member      | Kind   | Meaning                                                                                                                                    |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
