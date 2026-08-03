@@ -72,6 +72,7 @@ export interface VirtualScrollMountConfig<T> {
   itemSize?: number;
   strategy?: RxStrategyNames<string> | Observable<RxStrategyNames<string>>;
   containerHeight?: number;
+  keepScrolledIndexOnPrepend?: boolean;
 }
 
 export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
@@ -81,6 +82,7 @@ export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
   viewCache: DEFAULT_TEMPLATE_CACHE_SIZE,
   containerHeight: 300,
   showItemDescription: true,
+  keepScrolledIndexOnPrepend: false,
 } as const;
 export const defaultItemLength = 500;
 export function getDefaultMountConfig(): VirtualScrollMountConfig<Item> {

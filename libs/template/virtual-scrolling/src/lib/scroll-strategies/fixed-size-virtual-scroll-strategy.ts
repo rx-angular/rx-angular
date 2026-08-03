@@ -12,8 +12,6 @@ import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   combineLatest,
   MonoTypeOperatorFunction,
-  Observable,
-  of,
   ReplaySubject,
   Subject,
 } from 'rxjs';
@@ -145,8 +143,6 @@ export class FixedSizeVirtualScrollStrategy<
     return this._scrolledIndex;
   }
 
-  private _scrollTopTarget: number | null = null;
-
   private readonly _contentSize$ = new ReplaySubject<number>(1);
   readonly contentSize$ = this._contentSize$.asObservable();
   private _contentSize = 0;
@@ -243,7 +239,7 @@ export class FixedSizeVirtualScrollStrategy<
      * when keepScrolledIndexOnPrepend is active, we need to listen to data changes and figure out what was appended
      * before the last scrolledToItem
      */
-    let valueCache: Record<any, T> = {};
+    let previousIds: unknown[] = [];
     valueArray$
       .pipe(
         // TODO: this might cause issues when turning on/off
@@ -251,35 +247,60 @@ export class FixedSizeVirtualScrollStrategy<
         coalesceWith(unpatchedMicroTask()),
         map((valueArray) => {
           const trackBy = this.viewRepeater!._trackBy;
-          let scrollTo = this.scrolledIndex;
-          const dataLength = valueArray.length;
-          const oldDataLength = Object.keys(valueCache).length;
-
-          if (oldDataLength > 0) {
-            // const oldItem = valueCache[scrollTo];
-            let i = 0;
-            // check for each item from the last known scrolledIndex if it's an insert
-            for (i; i <= scrollTo && i < dataLength; i++) {
-              // item is not in the valueCache, so it was added
-              if (!valueCache[trackBy(i, valueArray[i])]) {
-                scrollTo++;
-              }
-            }
+          const anchorIndex = this.scrolledIndex;
+          const oldIds = previousIds;
+          const hadData = oldIds.length > 0;
+          const ids = valueArray.map((v, i) => trackBy(i, v));
+          previousIds = ids;
+          let anchorLookupIndex = anchorIndex;
+          let anchorId = oldIds[anchorLookupIndex];
+          if (!hadData || anchorId === undefined) {
+            return 0;
           }
-          valueCache = {};
-          valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
-
-          return scrollTo;
+          /*
+           * Instead of counting insertions, locate the anchored item again. That
+           * nets out inserts, removals and moves ahead of the anchor in one go -
+           * a transient row (e.g. a "loading older messages" item that gets
+           * replaced by the batch) is both an insert and a remove and would
+           * otherwise leave the list shifted by its height.
+           */
+          let newAnchorIndex = ids.indexOf(anchorId);
+          /*
+           * The anchored item itself got removed - e.g. a transient loading row
+           * the anchor was sitting on. The nearest following survivor visually
+           * takes its place and becomes the anchor. Without this fallback the
+           * compensation silently bails, which pins the viewport to the top
+           * and, in a reverse infinite scroller, retriggers loading forever.
+           */
+          while (
+            newAnchorIndex === -1 &&
+            anchorLookupIndex + 1 < oldIds.length
+          ) {
+            anchorLookupIndex++;
+            anchorId = oldIds[anchorLookupIndex];
+            newAnchorIndex =
+              anchorId !== undefined ? ids.indexOf(anchorId) : -1;
+          }
+          // nothing below the anchor survived, there is nothing to keep in place
+          return newAnchorIndex === -1 ? 0 : newAnchorIndex - anchorLookupIndex;
         }),
         this.untilDetached$(),
       )
-      .subscribe((scrollTo) => {
-        if (scrollTo !== this.scrolledIndex) {
-          this.scrollToIndex(
-            scrollTo,
-            undefined,
-            this.scrollTop - this.scrolledIndex * this.itemSize,
-          );
+      .subscribe((anchorShift) => {
+        if (anchorShift !== 0) {
+          /*
+           * Adjust by the *delta* the data change introduced instead of scrolling
+           * to the top of the new anchor index. This keeps the sub-item offset of
+           * the anchor intact and, because it is relative to the live scroll
+           * position, it also survives the user scrolling while the batch lands.
+           */
+          const delta = anchorShift * this.itemSize;
+          this.viewport!.scrollTo(this.viewport!.getScrollTop() + delta);
+          /*
+           * the range is recalculated in the same microtask batch, so refresh the
+           * cached scroll position now instead of waiting for the scroll event.
+           */
+          this.updateScrollTop(false);
         }
       });
     const dataLengthChanged$ = valueArray$.pipe(
@@ -290,30 +311,7 @@ export class FixedSizeVirtualScrollStrategy<
     const onScroll$ = this.viewport!.elementScrolled$.pipe(
       coalesceWith(unpatchedAnimationFrameTick()),
       startWith(void 0),
-      tap(() => {
-        this.viewportOffset = this.viewport!.measureOffset();
-        const { scrollTop, scrollTopWithOutOffset, scrollTopAfterOffset } =
-          parseScrollTopBoundaries(
-            this.viewport!.getScrollTop(),
-            this.viewportOffset,
-            this._contentSize,
-            this.containerSize,
-          );
-        this.direction =
-          scrollTopWithOutOffset > this.scrollTopWithOutOffset ? 'down' : 'up';
-        this.scrollTopWithOutOffset = scrollTopWithOutOffset;
-        this.scrollTopAfterOffset = scrollTopAfterOffset;
-        this.scrollTop = scrollTop;
-      }),
-      filter(() => {
-        const target = this._scrollTopTarget;
-        this._scrollTopTarget = null;
-        if (target !== null && this.scrollTop !== target) {
-          this.scrollTo(this._scrollTopTarget);
-          return false;
-        }
-        return true;
-      }),
+      tap(() => this.updateScrollTop()),
     );
     combineLatest([
       dataLengthChanged$,
@@ -380,23 +378,35 @@ export class FixedSizeVirtualScrollStrategy<
         ),
         this.untilDetached$(),
       )
-      .subscribe((range) => {
-        this.renderedRange = range;
-      });
+      .subscribe((range) => (this.renderedRange = range));
   }
 
-  scrollToIndex(
-    index: number,
-    behavior?: ScrollBehavior,
-    offset: number = 0,
-  ): void {
-    const scrollTop = this.itemSize * index + offset;
-    this._scrollTopTarget = scrollTop;
-    this.scrollTo(scrollTop, behavior);
-  }
-
-  private scrollTo(scrollTop: number, behavior?: ScrollBehavior): void {
+  scrollToIndex(index: number, behavior?: ScrollBehavior): void {
+    const scrollTop = this.itemSize * index;
     this.viewport!.scrollTo(this.viewportOffset + scrollTop, behavior);
+  }
+
+  /**
+   * @internal
+   * reads the live scroll position from the DOM into the cached values the
+   * range calculation operates on.
+   */
+  private updateScrollTop(updateDirection = true): void {
+    this.viewportOffset = this.viewport!.measureOffset();
+    const { scrollTop, scrollTopWithOutOffset, scrollTopAfterOffset } =
+      parseScrollTopBoundaries(
+        this.viewport!.getScrollTop(),
+        this.viewportOffset,
+        this._contentSize,
+        this.containerSize,
+      );
+    if (updateDirection) {
+      this.direction =
+        scrollTopWithOutOffset > this.scrollTopWithOutOffset ? 'down' : 'up';
+    }
+    this.scrollTopWithOutOffset = scrollTopWithOutOffset;
+    this.scrollTopAfterOffset = scrollTopAfterOffset;
+    this.scrollTop = scrollTop;
   }
 
   private untilDetached$<A>(): MonoTypeOperatorFunction<A> {
