@@ -17,8 +17,6 @@ export interface RxEffects {
   onDestroy: (fn: () => void) => () => void;
 }
 
-type Fn = () => void;
-
 export type RxEffectsSetupFn = (
   cfg: Pick<RxEffects, 'register' | 'onDestroy'>,
 ) => void;
@@ -156,11 +154,11 @@ export function rxEffects(
      *   }
      * }
      *
-     * @param {Fn} callback onDestroy callback
+     * @param {Function} callback onDestroy callback
      *
-     * @return {Fn} unregisterFn
+     * @return {Function} unregisterFn
      */
-    function onDestroy(callback: Fn): Fn {
+    function onDestroy(callback: () => void): () => void {
       return destroyRef.onDestroy(callback);
     }
 

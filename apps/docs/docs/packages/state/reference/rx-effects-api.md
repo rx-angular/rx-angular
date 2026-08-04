@@ -52,7 +52,28 @@ export interface RxEffects {
 }
 ```
 
-The interface is exported from the module that declares it, so TypeScript can name the handle when it emits declarations for a value produced by `rxEffects()` — for example a `providedIn: 'root'` `InjectionToken`. Note that `RxEffects` at the package root refers to the deprecated class below, not to this handle.
+The name `RxEffects` at the package root is taken by the [deprecated class](#deprecated-the-rxeffects-class) below, so the handle type is exported under the alias **`RxEffectsHandle`**:
+
+```ts
+import { RxEffectsHandle, rxEffects } from '@rx-angular/state/effects';
+```
+
+You need this alias whenever the handle appears in a type position TypeScript has to write into a `.d.ts` — most commonly an exported `InjectionToken`. Naming it explicitly is optional; the inferred type resolves to the same exported alias:
+
+```ts
+// both compile; the inferred form previously failed with
+// "TS4023: Exported variable 'GLOBAL_EFFECTS' has or is using name 'RxEffects' ...
+//  but cannot be named" — see issue #1737
+export const GLOBAL_EFFECTS = new InjectionToken('GLOBAL_EFFECTS', {
+  providedIn: 'root',
+  factory: () => rxEffects(),
+});
+
+export const TYPED_EFFECTS = new InjectionToken<RxEffectsHandle>('TYPED_EFFECTS', {
+  providedIn: 'root',
+  factory: () => rxEffects(),
+});
+```
 
 | Member      | Kind   | Meaning                                                                                                                                    |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -115,6 +136,8 @@ export type RxEffectsOptions = {
 | Field      | Type       | Meaning                                                                                                                              |
 | ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `injector` | `Injector` | Optional. Explicit injector used to bind the instance's lifecycle, allowing `rxEffects()` to be called outside an injection context. |
+
+> `RxEffectsSetupFn` and `RxEffectsOptions` are shown here as declared in the source; unlike `RxEffectsHandle` they are **not** re-exported from `@rx-angular/state/effects`, so they cannot be imported by name yet. Pass the setup function and options inline, and let inference do the rest.
 
 ## Minimal example
 
