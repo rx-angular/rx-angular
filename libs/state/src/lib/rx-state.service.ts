@@ -416,6 +416,11 @@ export class RxState<State extends object> implements Subscribable<State> {
    * block the other ones.
    * Subscription handling is done automatically.
    *
+   * Entries whose value is `undefined` are skipped, so `Partial<>` holes are tolerated.
+   * The record is validated before any source gets connected: an entry which is neither an
+   * `Observable` nor a `Signal`, as well as an object carrying no source at all, throws
+   * without connecting anything.
+   *
    * @example
    * const currentTime = signal(Date.now());
    * state.connect({
@@ -586,31 +591,52 @@ export class RxState<State extends object> implements Subscribable<State> {
       !projectValueFn &&
       keyOrInputOrSlice$ &&
       typeof keyOrInputOrSlice$ === 'object' &&
-      !isObservable(keyOrInputOrSlice$) &&
-      !isSignal(keyOrInputOrSlice$)
+      !Array.isArray(keyOrInputOrSlice$) &&
+      !isObservable(keyOrInputOrSlice$)
     ) {
       const slices = keyOrInputOrSlice$ as Partial<{
         [K in keyof State]: Observable<State[K]> | Signal<State[K]>;
       }>;
       /**
+       * The whole record is validated before anything gets connected. Otherwise an
+       * invalid entry would leave the state half connected, and an object carrying no
+       * source at all (`{}`, `new Date()`, `new Map([['num', of(1)]])`, an instance
+       * holding its sources on the prototype) would silently do nothing instead of
+       * throwing as every other malformed argument of `connect` always did.
+       * `Reflect.ownKeys` is used on purpose, `Object.keys` would drop the symbol keys
+       * `Partial<{ [Key in keyof State]: ... }>` explicitly allows.
+       */
+      const connectSlices: (() => void)[] = [];
+      for (const key of Reflect.ownKeys(slices) as Key[]) {
+        const slice = slices[key];
+        /**
+         * `Partial<>` holes are tolerated, they simply do not contribute a source.
+         */
+        if (slice === undefined) {
+          continue;
+        }
+        if (isObservable(slice)) {
+          connectSlices.push(() =>
+            this.connect(key, slice as Observable<State[Key]>),
+          );
+          continue;
+        }
+        if (isSignal(slice)) {
+          connectSlices.push(() =>
+            this.connect(key, slice as Signal<State[Key]>),
+          );
+          continue;
+        }
+        throw new Error('wrong params passed to connect');
+      }
+      if (!connectSlices.length) {
+        throw new Error('wrong params passed to connect');
+      }
+      /**
        * Every source is connected on its own. Combining them would hold back all of
        * them until every single source emitted at least once.
        */
-      (Object.keys(slices) as Key[]).forEach((key) => {
-        const slice = slices[key];
-        if (slice === undefined) {
-          return;
-        }
-        if (isObservable(slice)) {
-          this.connect(key, slice as Observable<State[Key]>);
-          return;
-        }
-        if (isSignal(slice)) {
-          this.connect(key, slice as Signal<State[Key]>);
-          return;
-        }
-        throw new Error('wrong params passed to connect');
-      });
+      connectSlices.forEach((connectSlice) => connectSlice());
       return;
     }
 
