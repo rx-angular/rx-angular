@@ -4,6 +4,7 @@ import {
   inject,
   output,
 } from '@angular/core';
+import { NgFor } from '@angular/common';
 import {
   MatFormField,
   MatSelect,
@@ -13,7 +14,6 @@ import {
 } from '@angular/material/select';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { MatIcon } from '@angular/material/icon';
-import { RxFor } from '@rx-angular/template/for';
 
 const strategiesUiConfig: { [key: string]: { name: string; icon: string } } = {
   local: { name: 'local', icon: 'call_split' },
@@ -37,7 +37,7 @@ const strategiesUiConfig: { [key: string]: { name: string; icon: string } } = {
         <mat-select-trigger>
           {{ strategyProvider.primaryStrategy }}
         </mat-select-trigger>
-        <mat-option [value]="s" *rxFor="let s of stratNames$">
+        <mat-option [value]="s" *ngFor="let s of strategyProvider.strategyNames">
           <mat-icon class="mr-2">{{ strategiesUiConfig[s]?.icon }}</mat-icon>
           {{ s }}
         </mat-option>
@@ -56,15 +56,13 @@ const strategiesUiConfig: { [key: string]: { name: string; icon: string } } = {
     MatSelectTrigger,
     MatOption,
     MatLabel,
-    RxFor,
+    NgFor,
   ],
 })
 export class StrategySelectComponent {
   protected strategyProvider = inject(RxStrategyProvider);
 
   readonly strategiesUiConfig = strategiesUiConfig;
-
-  readonly stratNames$ = this.strategyProvider.strategyNames$;
 
   readonly strategyChange = output<string>();
 
