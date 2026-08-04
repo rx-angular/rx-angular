@@ -34,6 +34,7 @@ import {
 import {
   calculateVisibleContainerSize,
   parseScrollTopBoundaries,
+  rangesEqual,
   toBoolean,
   unpatchedMicroTask,
 } from '../util';
@@ -183,6 +184,16 @@ export class DynamicSizeVirtualScrollStrategy<
   /** @internal */
   private get renderedRange(): ListRange {
     return this._renderedRange;
+  }
+  /** @internal */
+  private readonly _visibleRange$ = new ReplaySubject<ListRange>(1);
+  /** @internal */
+  override get visibleRange$(): Observable<ListRange> {
+    return this._visibleRange$.pipe(distinctUntilChanged(rangesEqual));
+  }
+  /** @internal */
+  private set visibleRange(range: ListRange) {
+    this._visibleRange$.next(range);
   }
   /** @internal */
   private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
@@ -458,6 +469,18 @@ export class DynamicSizeVirtualScrollStrategy<
               this.scrollTopAfterOffset,
             ),
           );
+          this.visibleRange = {
+            start: this.anchorItem.index,
+            // `lastScreenItem.offset` is the distance between the top of the
+            // item and the bottom edge of the viewport. it is `> 0` when the
+            // item intersects the viewport and exactly `0` when the item starts
+            // at the bottom edge, in which case it is not visible at all.
+            end: Math.min(
+              length,
+              this.lastScreenItem.index +
+                (this.lastScreenItem.offset > 0 ? 1 : 0),
+            ),
+          };
           if (this.direction === 'up') {
             range.start = Math.max(0, this.anchorItem.index - this.runwayItems);
             range.end = Math.min(
