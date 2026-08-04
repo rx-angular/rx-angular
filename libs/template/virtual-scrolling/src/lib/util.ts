@@ -10,6 +10,28 @@ export function toBoolean(input: null | boolean | string | undefined): boolean {
   return input != null && `${input}` !== 'false';
 }
 
+/**
+ * @description
+ *
+ * Whether the given element currently has a CSS layout box.
+ *
+ * It is `false` while the element or any of its ancestors is `display: none` -
+ * which is how Ionic's page stack and cached router outlets keep pages alive.
+ * A `ResizeObserver` reports a fully collapsed box in that situation, and such
+ * a zero must not be mistaken for a real measurement.
+ *
+ * Note that this is explicitly *not* a "is it bigger than 0" check: an element
+ * that is rendered but happens to measure `0x0` still has a layout box. Items
+ * rendered by `*rxVirtualFor` are `position: absolute` and therefore
+ * shrink-to-fit, so an item template without content measures `0x0` even though
+ * it is perfectly rendered.
+ *
+ * @internal
+ */
+export function hasLayoutBox(element: Element | null | undefined): boolean {
+  return !!element && element.getClientRects().length > 0;
+}
+
 export function unpatchedAnimationFrameTick(): Observable<void> {
   return new Observable<void>((observer) => {
     const tick = requestAnimationFrame(() => {

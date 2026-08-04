@@ -148,7 +148,9 @@ class AutoSizeCustomScrollElementTestComponent extends AutoSizeTestComponent {}
         "
         [attr.data-cy]="'item'"
       >
-        <div>{{ item.id }}</div>
+        @if (showItemId()) {
+          <div>{{ item.id }}</div>
+        }
         @if (showItemDescription() && item.description) {
           <div>{{ item.description }}</div>
         }
@@ -160,6 +162,12 @@ class AutoSizeCustomScrollElementTestComponent extends AutoSizeTestComponent {}
 class AutoSizeHideableTestComponent extends AutoSizeTestComponent {
   isHidden = input(false);
   withResizeObserver = input(true);
+  /**
+   * allows mounting items that render nothing at all. Because items are
+   * `position: absolute` they then measure `0x0`, which must not be confused
+   * with a hidden item.
+   */
+  showItemId = input(true);
 }
 
 @Component({
@@ -204,6 +212,8 @@ const defaultDynamicSize = (item: Item) =>
 function mountAutoSize(
   config?: AutoSizeVirtualScrollMountConfig,
   type: Type<AutoSizeTestComponent> = AutoSizeTestComponent,
+  /** inputs only defined on a specialized test component */
+  extraProperties: Record<string, unknown> = {},
 ) {
   const {
     runwayItems,
@@ -240,6 +250,7 @@ function mountAutoSize(
       renderCallback: renderCallback$,
       viewRange: createOutputSpy<ListRange>('viewRange'),
       scrolledIndex: createOutputSpy<number>('scrolledIndex'),
+      ...extraProperties,
     },
   });
 }
@@ -999,8 +1010,8 @@ describe('hidden viewport (display: none)', () => {
   });
 
   it('still reacts to a genuine zero-height item', () => {
-    // a zero-height item still occupies the inline axis, it must not be
-    // mistaken for a hidden one
+    // an item that collapses to 0px while the viewport is rendered is a real
+    // measurement and has to be booked
     mountAutoSize(
       { showItemDescription: false, dynamicSize: () => 60 },
       AutoSizeHideableTestComponent,
@@ -1018,6 +1029,62 @@ describe('hidden viewport (display: none)', () => {
             .eq(1)
             .should('have.attr', 'style')
             .and('contain', 'translateY(0px)');
+        });
+    });
+  });
+
+  it('still reacts to an item that collapses on both axes', () => {
+    // `.rx-virtual-scroll__runway > *` is `position: absolute`
+    // (virtual-scroll-viewport.component.scss), so items shrink-to-fit instead
+    // of filling the container. An item that renders no content therefore
+    // measures 0x0 while being perfectly rendered, which looks exactly like the
+    // collapsed box of a view that is not rendered at all. A "both axes are 0"
+    // heuristic would drop this very real measurement - only the absence of a
+    // layout box tells the two apart.
+    //
+    // The items here are sized by their content alone (no explicit height), so
+    // hiding the content collapses them on both axes.
+    mountAutoSize(
+      {
+        items: generateItems(5),
+        showItemDescription: false,
+        dynamicSize: () => null as unknown as number,
+        tombstoneSize: 1,
+      },
+      AutoSizeHideableTestComponent,
+    ).then(({ fixture }) => {
+      cy.get('[data-cy=item]').should('have.length', 5);
+      cy.get('[data-cy=item]')
+        .eq(1)
+        .then((element) => {
+          const positionWithContent = extractTranslateYValue(
+            element.attr('style'),
+          );
+          // the first item is sized by its content only
+          expect(positionWithContent).to.be.greaterThan(0);
+          fixture.componentRef.setInput('showItemId', false);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]')
+            .first()
+            .should(($item) => {
+              // premise of this test: rendered, but collapsed on both axes
+              expect($item[0].offsetWidth, 'item width').to.eq(0);
+              expect($item[0].offsetHeight, 'item height').to.eq(0);
+              expect(
+                $item[0].getClientRects().length,
+                'item has a layout box',
+              ).to.eq(1);
+            });
+          cy.wait(200);
+          cy.get('[data-cy=item]')
+            .eq(1)
+            .then((collapsed) => {
+              // the collapse has to be booked, the following items must not keep
+              // sitting behind a phantom row
+              expect(
+                extractTranslateYValue(collapsed.attr('style')),
+              ).to.be.lessThan(positionWithContent);
+            });
         });
     });
   });
