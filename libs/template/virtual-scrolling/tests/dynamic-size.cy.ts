@@ -239,17 +239,24 @@ function expectedRange(
   return { start, end };
 }
 
+/**
+ * derived from the layout instead of from `expectedRange`: walk the items from
+ * `scrolledIndex` and accumulate their sizes. every item which *starts* before
+ * the bottom edge of the viewport is (at least partially) visible, an item
+ * starting exactly at the bottom edge is not.
+ */
 function expectedVisibleRange(
   config: DynamicVirtualScrollMountConfig,
   items: Item[],
   scrolledIndex = 0,
 ): ListRange {
-  // a runway of 1 item results in the exclusive end of the visible range
-  const { end } = expectedRange(
-    { ...config, runwayItems: 1, runwayItemsOpposite: 1 },
-    items,
-    scrolledIndex,
-  );
+  const { containerHeight, dynamicSize } = config;
+  let itemTop = 0;
+  let end = scrolledIndex;
+  while (itemTop < containerHeight && end < items.length) {
+    itemTop += dynamicSize(items[end]);
+    end++;
+  }
   return { start: scrolledIndex, end };
 }
 
@@ -565,6 +572,63 @@ describe('visibleRange', () => {
             expectedVisibleRange(rangeConfigOf(component), items),
           );
         });
+    });
+  });
+
+  /**
+   * hand computed expectations for a deterministic layout, so they don't share
+   * any code path with the implementation.
+   * 6 items of 50px exactly fill the 300px viewport: item 6 starts at y=300,
+   * which is below the fold, so it must not be part of the visible range.
+   */
+  it('excludes an item starting exactly at the bottom edge', () => {
+    mountDynamicSize({ containerHeight: 300, dynamicSize: () => 50 }).then(
+      () => {
+        cy.get('@visibleRange').should('have.been.calledWith', {
+          start: 0,
+          end: 6,
+        });
+      },
+    );
+  });
+
+  it('includes an item intersecting the bottom edge', () => {
+    // 6 items of 50px + 25px of item 6 fill the 325px viewport
+    mountDynamicSize({ containerHeight: 325, dynamicSize: () => 50 }).then(
+      () => {
+        cy.get('@visibleRange').should('have.been.calledWith', {
+          start: 0,
+          end: 7,
+        });
+      },
+    );
+  });
+
+  it('excludes an item starting exactly at the bottom edge while scrolled', () => {
+    // items 100 - 105 exactly fill the 300px viewport, item 106 starts at y=6000
+    mountDynamicSize({ containerHeight: 300, dynamicSize: () => 50 }).then(
+      ({ fixture }) => {
+        fixture.detectChanges();
+        getViewportComponent(fixture).scrollTo(100 * 50);
+        cy.get('@visibleRange').should('have.been.calledWith', {
+          start: 100,
+          end: 106,
+        });
+      },
+    );
+  });
+
+  it('accounts for the clamped container size of a custom scroll element', () => {
+    // the 300px scroll element holds 50px of static content before the
+    // viewport, leaving 250px = 5 items of 50px visible
+    mountDynamicSize(
+      { dynamicSize: () => 50 },
+      DynamicSizeCustomScrollElementTestComponent,
+    ).then(() => {
+      cy.get('@visibleRange').should('have.been.calledWith', {
+        start: 0,
+        end: 5,
+      });
     });
   });
 });
