@@ -101,7 +101,9 @@ state.connect('timer', interval(250), (s, tick) => s.timer + tick);
 state.connect({ timer: interval(250), currentTime: currentTimeSignal });
 ```
 
-The object form is shorthand for one `connect(key, source)` call per entry. Every source is connected on its own, so a source that never emits does not hold back the others. Entries whose value is `undefined` are skipped.
+The object form is shorthand for one `connect(key, source)` call per entry. Every source is connected on its own, so a source that never emits does not hold back the others. Entries whose value is `undefined` are skipped, so `Partial<State>` holes are fine.
+
+The record is validated before anything is connected: if an entry is neither an `Observable` nor a `Signal`, or the object carries no own source at all (`{}`, a `Map`, a class instance holding its sources on the prototype), `connect` throws `wrong params passed to connect` and no source is connected. Own **symbol** keys are supported, just like every other `keyof State`.
 
 ### `set`
 

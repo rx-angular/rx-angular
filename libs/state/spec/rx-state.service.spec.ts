@@ -17,6 +17,13 @@ import { createStateChecker } from './fixtures';
 
 type ReadOnlyPrimitiveState = Pick<RxState<PrimitiveState>, ReadOnly>;
 
+const symbolKey = Symbol('symbolKey');
+
+interface SymbolState {
+  num: number;
+  [symbolKey]: number;
+}
+
 function setupState<T extends object>(cfg: { initialState?: T } = {}) {
   const { initialState } = { ...cfg };
   const state = TestBed.inject(RxState);
@@ -600,12 +607,77 @@ describe('RxStateService', () => {
       expect(state.get('num')).toBe(1337);
     });
 
+    it('should connect the symbol keyed sources of an object', () => {
+      // `keyof State` includes symbols, so the overload accepts symbol keys
+      const state = TestBed.inject<RxState<SymbolState>>(RxState);
+      state.set({ num: 42, [symbolKey]: 0 });
+
+      state.connect({ [symbolKey]: of(1337), num: of(43) });
+
+      expect(state.get(symbolKey)).toBe(1337);
+      expect(state.get('num')).toBe(43);
+    });
+
     it('should throw with an object holding wrong params', () => {
       const state = setupState({ initialState: initialPrimitiveState });
 
       expect(() => state.connect({ num: 5 } as any)).toThrow(
         'wrong params passed to connect',
       );
+    });
+
+    it('should not connect any source of an object holding wrong params', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+      const num$ = new Subject<number>();
+
+      expect(() => state.connect({ num: num$, str: 5 } as any)).toThrow(
+        'wrong params passed to connect',
+      );
+
+      // connecting is all or nothing, the valid entry must not have been applied
+      expect(state.get('num')).toBe(42);
+      expect(state.get('str')).toBe('str');
+      // ... and no subscription must have been left behind either
+      num$.next(1337);
+      expect(state.get('num')).toBe(42);
+    });
+
+    it('should throw with an object holding no source at all', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() => state.connect({})).toThrow('wrong params passed to connect');
+      expect(() => state.connect(new Date() as any)).toThrow(
+        'wrong params passed to connect',
+      );
+      // sources reachable by neither Object.keys nor Reflect.ownKeys
+      expect(() => state.connect(new Map([['num', of(1337)]]) as any)).toThrow(
+        'wrong params passed to connect',
+      );
+      expect(state.get()).toEqual(initialPrimitiveState);
+    });
+
+    it('should throw with an object holding its sources on the prototype', () => {
+      class NumSource {
+        get num() {
+          return of(1337);
+        }
+      }
+
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() => state.connect(new NumSource() as any)).toThrow(
+        'wrong params passed to connect',
+      );
+      expect(state.get('num')).toBe(42);
+    });
+
+    it('should throw with an array of sources', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() => state.connect([of(1337)] as any)).toThrow(
+        'wrong params passed to connect',
+      );
+      expect(state.get()).toEqual(initialPrimitiveState);
     });
 
     it('should throw with wrong params', () => {
