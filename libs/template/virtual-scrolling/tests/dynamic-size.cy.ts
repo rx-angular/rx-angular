@@ -2,7 +2,7 @@ import { Component, input, NgIterable, output, Type } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { createOutputSpy, mount } from 'cypress/angular';
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import {
   DynamicSizeVirtualScrollStrategy,
   ListRange,
@@ -12,6 +12,7 @@ import {
   RxVirtualScrollWindowDirective,
 } from '../src/index';
 import {
+  defaultItemLength,
   defaultMountConfig,
   generateItems,
   getDefaultMountConfig,
@@ -461,6 +462,135 @@ describe('rendering, scrolling & positioning', () => {
       cy.get('@scrolledIndex').should('have.been.calledWith', 340);
       cy.get('@viewRange').should('have.been.calledWith', range);
     });
+  });
+});
+
+describe('dynamic size function changes', () => {
+  /*
+   * the data is provided as an observable on purpose. a static array is
+   * re-emitted on every change detection cycle, which would recalculate the
+   * sizes as a side effect
+   */
+  function mountWithSize(dynamicSize: (item: Item) => number, items: Item[]) {
+    return mountDynamicSize({ items: of(items), dynamicSize });
+  }
+
+  it('recomputes item sizes when the size function changes', () => {
+    const items = generateItems(defaultItemLength);
+    mountWithSize(() => 50, items).then(({ fixture, component }) => {
+      fixture.detectChanges();
+      const sentinel = fixture.debugElement.query(
+        By.css('.rx-virtual-scroll__sentinel'),
+      );
+      expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
+        `translate(0px, ${items.length * 50 - 1}px)`,
+      );
+      const dynamicSize = () => 100;
+      fixture.componentRef.setInput('dynamicSize', dynamicSize);
+      fixture.detectChanges();
+      expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
+        `translate(0px, ${items.length * 100 - 1}px)`,
+      );
+      const range = expectedRange(
+        {
+          containerHeight: component.containerHeight(),
+          runwayItems: component.runwayItems(),
+          runwayItemsOpposite: component.runwayItemsOpposite(),
+          dynamicSize,
+        },
+        items,
+        0,
+      );
+      cy.get('[data-cy=item]').should('have.length', range.end - range.start);
+      let position = 0;
+      cy.get('[data-cy=item]').each((element) => {
+        expect(element.attr('style')).to.contain(`translateY(${position}px)`);
+        position += 100;
+      });
+    });
+  });
+
+  it('repositions rendered views after the size function changes', () => {
+    const items = generateItems(defaultItemLength);
+    mountWithSize(() => 50, items).then(({ fixture, component }) => {
+      fixture.detectChanges();
+      getViewportComponent(fixture).scrollToIndex(200);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 200)
+        .then(() => {
+          const dynamicSize = () => 25;
+          fixture.componentRef.setInput('dynamicSize', dynamicSize);
+          fixture.detectChanges();
+          // the scroll position is kept, so the item shown on top changes
+          const scrolledIndex = (200 * 50) / 25;
+          const range = expectedRange(
+            {
+              containerHeight: component.containerHeight(),
+              runwayItems: component.runwayItems(),
+              runwayItemsOpposite: component.runwayItemsOpposite(),
+              dynamicSize,
+            },
+            items,
+            scrolledIndex,
+            'down',
+          );
+          cy.get('@scrolledIndex').should(
+            'have.been.calledWith',
+            scrolledIndex,
+          );
+          cy.get('[data-cy=item]').should(
+            'have.length',
+            range.end - range.start,
+          );
+          let position = range.start * 25;
+          cy.get('[data-cy=item]').each((element) => {
+            expect(element.attr('style')).to.contain(
+              `translateY(${position}px)`,
+            );
+            position += 25;
+          });
+        });
+    });
+  });
+
+  it('emits a new viewRange when the size function changes', () => {
+    mountWithSize(() => 50, generateItems(defaultItemLength)).then(
+      ({ fixture }) => {
+        fixture.detectChanges();
+        // wait for the initial rendering to settle
+        cy.get('@viewRange').should('have.been.called');
+        cy.wait(50);
+        cy.get('@viewRange')
+          .its('callCount')
+          .then((callCount) => {
+            fixture.componentRef.setInput('dynamicSize', () => 100);
+            fixture.detectChanges();
+            cy.get('@viewRange')
+              .its('callCount')
+              .should('be.greaterThan', callCount);
+          });
+      },
+    );
+  });
+
+  it('does nothing when the same function reference is re-assigned', () => {
+    const dynamicSize = () => 50;
+    mountWithSize(dynamicSize, generateItems(defaultItemLength)).then(
+      ({ fixture }) => {
+        fixture.detectChanges();
+        // wait for the initial rendering to settle
+        cy.get('@viewRange').should('have.been.called');
+        cy.wait(50);
+        cy.get('@viewRange')
+          .its('callCount')
+          .then((callCount) => {
+            fixture.componentRef.setInput('dynamicSize', dynamicSize);
+            fixture.detectChanges();
+            cy.wait(50);
+            cy.get('@viewRange').should('have.callCount', callCount);
+          });
+      },
+    );
   });
 });
 
