@@ -5,9 +5,19 @@ import {
   requestAnimationFrame,
 } from '@rx-angular/cdk/zone-less/browser';
 import { from, Observable } from 'rxjs';
+import { ListRange } from './model';
 
 export function toBoolean(input: null | boolean | string | undefined): boolean {
   return input != null && `${input}` !== 'false';
+}
+
+/**
+ * @description
+ *
+ * compares two `ListRange`s, useful as comparator for `distinctUntilChanged`
+ */
+export function rangesEqual(a: ListRange, b: ListRange): boolean {
+  return a.start === b.start && a.end === b.end;
 }
 
 export function unpatchedAnimationFrameTick(): Observable<void> {

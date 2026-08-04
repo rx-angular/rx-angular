@@ -12,6 +12,7 @@ import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   combineLatest,
   MonoTypeOperatorFunction,
+  Observable,
   ReplaySubject,
   Subject,
 } from 'rxjs';
@@ -35,6 +36,7 @@ import {
 import {
   calculateVisibleContainerSize,
   parseScrollTopBoundaries,
+  rangesEqual,
   toBoolean,
   unpatchedAnimationFrameTick,
 } from '../util';
@@ -159,6 +161,14 @@ export class FixedSizeVirtualScrollStrategy<
   }
   private get renderedRange(): ListRange {
     return this._renderedRange;
+  }
+
+  private readonly _visibleRange$ = new ReplaySubject<ListRange>(1);
+  override get visibleRange$(): Observable<ListRange> {
+    return this._visibleRange$.pipe(distinctUntilChanged(rangesEqual));
+  }
+  private set visibleRange(range: ListRange) {
+    this._visibleRange$.next(range);
   }
 
   private scrollTop = 0;
@@ -343,17 +353,21 @@ export class FixedSizeVirtualScrollStrategy<
               ),
             );
           }
+          this.scrolledIndex = Math.floor(this.scrollTop / this.itemSize);
+          this.visibleRange = {
+            start: this.scrolledIndex,
+            end: Math.min(
+              length,
+              Math.ceil((this.scrollTop + containerSize) / this.itemSize),
+            ),
+          };
           if (this.appendOnly) {
             range.start = Math.min(this._renderedRange.start, range.start);
             range.end = Math.max(this._renderedRange.end, range.end);
           }
-          this.scrolledIndex = Math.floor(this.scrollTop / this.itemSize);
           return range;
         }),
-        distinctUntilChanged(
-          ({ start: prevStart, end: prevEnd }, { start, end }) =>
-            prevStart === start && prevEnd === end,
-        ),
+        distinctUntilChanged(rangesEqual),
         this.untilDetached$(),
       )
       .subscribe((range) => (this.renderedRange = range));

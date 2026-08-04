@@ -13,6 +13,7 @@ import {
 } from '../src/index';
 import {
   defaultMountConfig,
+  expectVisibleRangeStartToEqualScrolledIndex,
   generateItems,
   getDefaultMountConfig,
   getViewportComponent,
@@ -36,10 +37,12 @@ const testComponentImports = [
   template: `<rx-virtual-scroll-viewport
     (scrolledIndexChange)="scrolledIndex.emit($event)"
     (viewRange)="viewRange.emit($event)"
+    (visibleRange)="visibleRange.emit($event)"
     data-cy="viewport"
     [style.height.px]="containerHeight()"
     [runwayItems]="runwayItems()"
     [runwayItemsOpposite]="runwayItemsOpposite()"
+    [appendOnly]="appendOnly()"
     [dynamic]="dynamicSize()"
   >
     <div
@@ -76,7 +79,9 @@ class DynamicSizeTestComponent {
   >();
   renderCallback = input.required<Subject<any>>();
   showItemDescription = input.required<boolean>();
+  appendOnly = input(false);
   viewRange = output<ListRange>();
+  visibleRange = output<ListRange>();
   scrolledIndex = output<number>();
 }
 
@@ -89,9 +94,11 @@ class DynamicSizeTestComponent {
     <rx-virtual-scroll-viewport
       (scrolledIndexChange)="scrolledIndex.emit($event)"
       (viewRange)="viewRange.emit($event)"
+      (visibleRange)="visibleRange.emit($event)"
       data-cy="viewport"
       [runwayItems]="runwayItems()"
       [runwayItemsOpposite]="runwayItemsOpposite()"
+      [appendOnly]="appendOnly()"
       [dynamic]="dynamicSize()"
     >
       <div
@@ -121,9 +128,11 @@ class DynamicSizeCustomScrollElementTestComponent extends DynamicSizeTestCompone
       scrollWindow
       (scrolledIndexChange)="scrolledIndex.emit($event)"
       (viewRange)="viewRange.emit($event)"
+      (visibleRange)="visibleRange.emit($event)"
       data-cy="viewport"
       [runwayItems]="runwayItems()"
       [runwayItemsOpposite]="runwayItemsOpposite()"
+      [appendOnly]="appendOnly()"
       [dynamic]="dynamicSize()"
     >
       <div
@@ -162,6 +171,7 @@ function mountDynamicSize(
     containerHeight,
     showItemDescription,
     dynamicSize,
+    appendOnly,
   } = {
     dynamicSize: defaultDynamicSize,
     ...getDefaultMountConfig(),
@@ -182,7 +192,9 @@ function mountDynamicSize(
       strategy,
       items,
       renderCallback: renderCallback$,
+      appendOnly,
       viewRange: createOutputSpy<ListRange>('viewRange'),
+      visibleRange: createOutputSpy<ListRange>('visibleRange'),
       scrolledIndex: createOutputSpy<number>('scrolledIndex'),
     },
     imports: [
@@ -225,6 +237,31 @@ function expectedRange(
     i + (scrollDirection === 'up' ? runwayItemsOpposite : runwayItems),
   );
   return { start, end };
+}
+
+function expectedVisibleRange(
+  config: DynamicVirtualScrollMountConfig,
+  items: Item[],
+  scrolledIndex = 0,
+): ListRange {
+  // a runway of 1 item results in the exclusive end of the visible range
+  const { end } = expectedRange(
+    { ...config, runwayItems: 1, runwayItemsOpposite: 1 },
+    items,
+    scrolledIndex,
+  );
+  return { start: scrolledIndex, end };
+}
+
+function rangeConfigOf(
+  component: DynamicSizeTestComponent,
+): DynamicVirtualScrollMountConfig {
+  return {
+    containerHeight: component.containerHeight(),
+    runwayItems: component.runwayItems(),
+    runwayItemsOpposite: component.runwayItemsOpposite(),
+    dynamicSize: component.dynamicSize(),
+  };
 }
 
 describe('viewport', () => {
@@ -460,6 +497,74 @@ describe('rendering, scrolling & positioning', () => {
       const range = expectedRange(rangeConfig, items, 340, 'down');
       cy.get('@scrolledIndex').should('have.been.calledWith', 340);
       cy.get('@viewRange').should('have.been.calledWith', range);
+    });
+  });
+});
+
+describe('visibleRange', () => {
+  it('emits the visible range, excluding runway items', () => {
+    mountDynamicSize().then(({ component }) => {
+      const items = component.items() as Item[];
+      const config = rangeConfigOf(component);
+      cy.get('@visibleRange').should(
+        'have.been.calledWith',
+        expectedVisibleRange(config, items),
+      );
+      // the rendered range is wider, it includes the runway
+      cy.get('@viewRange').should(
+        'have.been.calledWith',
+        expectedRange(config, items),
+      );
+    });
+  });
+
+  it('advances visibleRange.start while scrolling with appendOnly=true', () => {
+    mountDynamicSize({ appendOnly: true }).then(({ fixture, component }) => {
+      fixture.detectChanges();
+      const viewportComponent = getViewportComponent(fixture);
+      viewportComponent.scrollToIndex(100);
+      const items = component.items() as Item[];
+      const config = rangeConfigOf(component);
+      // appendOnly keeps the rendered range anchored at the very first item
+      cy.get('@viewRange').should('have.been.calledWith', {
+        start: 0,
+        end: expectedRange(config, items, 100, 'down').end,
+      });
+      // ... while the visible range follows the viewport
+      cy.get('@visibleRange').should(
+        'have.been.calledWith',
+        expectedVisibleRange(config, items, 100),
+      );
+    });
+  });
+
+  it('visibleRange.start tracks scrolledIndexChange', () => {
+    mountDynamicSize().then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewportComponent = getViewportComponent(fixture);
+      [42, 180, 340].forEach((index) => {
+        cy.then(() => viewportComponent.scrollToIndex(index));
+        expectVisibleRangeStartToEqualScrolledIndex();
+      });
+    });
+  });
+
+  it('reacts to containerHeight changes', () => {
+    mountDynamicSize().then(({ fixture, component }) => {
+      const items = component.items() as Item[];
+      cy.get('@visibleRange')
+        .should(
+          'have.been.calledWith',
+          expectedVisibleRange(rangeConfigOf(component), items),
+        )
+        .then(() => {
+          fixture.componentRef.setInput('containerHeight', 100);
+          fixture.detectChanges();
+          cy.get('@visibleRange').should(
+            'have.been.calledWith',
+            expectedVisibleRange(rangeConfigOf(component), items),
+          );
+        });
     });
   });
 });

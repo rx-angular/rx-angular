@@ -30,12 +30,12 @@ import { FixedSizeVirtualScrollStrategy, DynamicSizeVirtualScrollStrategy, AutoS
 
 Every pre-packaged strategy exposes these inputs.
 
-| Input                        | Type      | Default | Description                                                                                                         |
-| ---------------------------- | --------- | ------- | ------------------------------------------------------------------------------------------------------------------- |
-| `runwayItems`                | `number`  | `10`    | Number of items rendered upfront in scroll direction.                                                               |
-| `runwayItemsOpposite`        | `number`  | `2`     | Number of items rendered upfront in the opposite scroll direction.                                                  |
-| `appendOnly`                 | `boolean` | `false` | Keep already-rendered views in the DOM after they scroll out of view. Reacts to changes; can be toggled at runtime. |
-| `keepScrolledIndexOnPrepend` | `boolean` | `false` | Maintain the currently scrolled index when new data is prepended. Used for reverse infinite scrollers.              |
+| Input                        | Type      | Default | Description                                                                                                                                                                                                     |
+| ---------------------------- | --------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `runwayItems`                | `number`  | `10`    | Number of items rendered upfront in scroll direction.                                                                                                                                                           |
+| `runwayItemsOpposite`        | `number`  | `2`     | Number of items rendered upfront in the opposite scroll direction.                                                                                                                                              |
+| `appendOnly`                 | `boolean` | `false` | Keep already-rendered views in the DOM after they scroll out of view. Reacts to changes; can be toggled at runtime. This widens the `viewRange` output, use `visibleRange` to observe what is actually visible. |
+| `keepScrolledIndexOnPrepend` | `boolean` | `false` | Maintain the currently scrolled index when new data is prepended. Used for reverse infinite scrollers.                                                                                                          |
 
 ## `FixedSizeVirtualScrollStrategy`
 

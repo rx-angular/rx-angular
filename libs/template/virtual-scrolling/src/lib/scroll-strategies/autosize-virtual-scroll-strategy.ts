@@ -44,6 +44,7 @@ import {
 import {
   calculateVisibleContainerSize,
   parseScrollTopBoundaries,
+  rangesEqual,
   toBoolean,
   unpatchedMicroTask,
 } from '../util';
@@ -219,6 +220,16 @@ export class AutoSizeVirtualScrollStrategy<
   /** @internal */
   private get renderedRange(): ListRange {
     return this._renderedRange;
+  }
+  /** @internal */
+  private readonly _visibleRange$ = new ReplaySubject<ListRange>(1);
+  /** @internal */
+  override get visibleRange$(): Observable<ListRange> {
+    return this._visibleRange$.pipe(distinctUntilChanged(rangesEqual));
+  }
+  /** @internal */
+  private set visibleRange(range: ListRange) {
+    this._visibleRange$.next(range);
   }
   /** @internal */
   private positionedRange: ListRange = { start: 0, end: 0 };
@@ -607,6 +618,10 @@ export class AutoSizeVirtualScrollStrategy<
               this.scrollTopAfterOffset,
             ),
           );
+          this.visibleRange = {
+            start: this.anchorItem.index,
+            end: Math.min(this.contentLength, this.lastScreenItem.index + 1),
+          };
           if (this.direction === 'up') {
             range.start = Math.max(0, this.anchorItem.index - this.runwayItems);
             range.end = Math.min(
