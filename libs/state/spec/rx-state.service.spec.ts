@@ -656,6 +656,30 @@ describe('RxStateService', () => {
       expect(state.get()).toEqual(initialPrimitiveState);
     });
 
+    it('should tolerate an object whose entries are all undefined', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      // every entry is a `Partial<>` hole, so there is nothing to connect - but the
+      // record itself is well formed and must not throw
+      expect(() =>
+        state.connect({ num: undefined, str: undefined }),
+      ).not.toThrow();
+      expect(state.get()).toEqual(initialPrimitiveState);
+    });
+
+    it('should ignore non-enumerable properties of an object of sources', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+      const slices: Record<string, unknown> = { num: of(1337) };
+      // a brand or metadata property carried along with the record is not a source
+      Object.defineProperty(slices, 'meta', {
+        value: 'not a source',
+        enumerable: false,
+      });
+
+      expect(() => state.connect(slices as any)).not.toThrow();
+      expect(state.get('num')).toBe(1337);
+    });
+
     it('should throw with an object holding its sources on the prototype', () => {
       class NumSource {
         get num() {

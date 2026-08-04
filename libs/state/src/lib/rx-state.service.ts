@@ -418,8 +418,8 @@ export class RxState<State extends object> implements Subscribable<State> {
    *
    * Entries whose value is `undefined` are skipped, so `Partial<>` holes are tolerated.
    * The record is validated before any source gets connected: an entry which is neither an
-   * `Observable` nor a `Signal`, as well as an object carrying no source at all, throws
-   * without connecting anything.
+   * `Observable` nor a `Signal` throws without connecting anything, and so does an object
+   * that carries no own enumerable entry at all - which is not a record of sources.
    *
    * @example
    * const currentTime = signal(Date.now());
@@ -598,16 +598,31 @@ export class RxState<State extends object> implements Subscribable<State> {
         [K in keyof State]: Observable<State[K]> | Signal<State[K]>;
       }>;
       /**
-       * The whole record is validated before anything gets connected. Otherwise an
-       * invalid entry would leave the state half connected, and an object carrying no
-       * source at all (`{}`, `new Date()`, `new Map([['num', of(1)]])`, an instance
-       * holding its sources on the prototype) would silently do nothing instead of
-       * throwing as every other malformed argument of `connect` always did.
-       * `Reflect.ownKeys` is used on purpose, `Object.keys` would drop the symbol keys
-       * `Partial<{ [Key in keyof State]: ... }>` explicitly allows.
+       * Only own enumerable properties make up the record. Symbol keys are included,
+       * `Object.keys` would drop the ones `Partial<{ [Key in keyof State]: ... }>`
+       * explicitly allows, but a non-enumerable property is not part of the data and
+       * must not be mistaken for a malformed source.
+       */
+      const keys = Reflect.ownKeys(slices).filter((key) =>
+        Object.prototype.propertyIsEnumerable.call(slices, key),
+      ) as Key[];
+      /**
+       * An object carrying no own enumerable property at all is not a record of
+       * sources (`{}`, `new Date()`, `new Map([['num', of(1)]])`, an instance holding
+       * its sources on the prototype). That throws, as every other malformed argument
+       * of `connect` always did. A record whose entries are all `undefined` is a
+       * different case: those are `Partial<>` holes and contribute no source, so it
+       * connects nothing and does not throw.
+       */
+      if (!keys.length) {
+        throw new Error('wrong params passed to connect');
+      }
+      /**
+       * The whole record is validated before anything gets connected, otherwise an
+       * invalid entry would leave the state half connected.
        */
       const connectSlices: (() => void)[] = [];
-      for (const key of Reflect.ownKeys(slices) as Key[]) {
+      for (const key of keys) {
         const slice = slices[key];
         /**
          * `Partial<>` holes are tolerated, they simply do not contribute a source.
@@ -627,9 +642,6 @@ export class RxState<State extends object> implements Subscribable<State> {
           );
           continue;
         }
-        throw new Error('wrong params passed to connect');
-      }
-      if (!connectSlices.length) {
         throw new Error('wrong params passed to connect');
       }
       /**
