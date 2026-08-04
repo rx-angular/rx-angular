@@ -101,6 +101,43 @@ export class MyComponent {
 }
 ```
 
+### Forcing a recalculation
+
+The strategy runs the `dynamic` function for every item whenever the data changes.
+If the size of your items also depends on state outside of the data - a toggled
+detail section, the width of the viewport, the current locale - bind a **new function
+reference** to `[dynamic]`. The strategy detects the changed reference, re-runs the
+function for the whole dataset and re-positions the list.
+
+```ts
+@Component({
+  imports: [RxVirtualFor, DynamicSizeVirtualScrollStrategy, RxVirtualScrollViewportComponent],
+  template: `
+    <button (click)="showTimestamps.set(!showTimestamps())">toggle timestamps</button>
+    <rx-virtual-scroll-viewport [dynamic]="dynamicSize()">
+      <div class="item" *rxVirtualFor="let item of items$">
+        @if (showTimestamps()) {
+          <div>{{ item.timestamp }}</div>
+        }
+        {{ item.content }}
+      </div>
+    </rx-virtual-scroll-viewport>
+  `,
+})
+export class MyComponent {
+  readonly showTimestamps = signal(false);
+  // a new function reference is created whenever `showTimestamps` changes
+  readonly dynamicSize = computed(() => {
+    const withTimestamps = this.showTimestamps();
+    return (item: Item) => (withTimestamps ? 70 : 50);
+  });
+  items$ = inject(DataService).getItems();
+}
+```
+
+Recalculating is an `O(n)` operation over the whole dataset, so only swap the
+function reference when the outcome of the calculation actually changed.
+
 ## `AutoSizeVirtualScrollStrategy`
 
 Renders and positions items based on their individual measured size, using a
