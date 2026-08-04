@@ -93,6 +93,14 @@ describe(rxState, () => {
     expect(component.state.get()).toEqual({ count: 10, count2: 20 });
   });
 
+  it('should connect an object of sources with connect', () => {
+    const { component } = setupComponent<{
+      count: number;
+      count2: number;
+    }>(({ connect }) => connect({ count: of(10), count2: of(20) }));
+    expect(component.state.get()).toEqual({ count: 10, count2: 20 });
+  });
+
   it('should select state inside setup', () => {
     const { component } = setupComponent<{
       isAuth: boolean;
