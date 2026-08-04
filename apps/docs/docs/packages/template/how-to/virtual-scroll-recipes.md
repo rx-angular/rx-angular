@@ -179,18 +179,14 @@ export class ReverseInfiniteListComponent {
 
 Because every part of the package is based on injection tokens, you can provide your own
 `RxVirtualScrollStrategy`. Create a directive that provides itself as the strategy token
-and extends the abstract base.
+and extends the abstract base, implementing `scrolledIndex$`, `renderedRange$`,
+`contentSize$`, `attach()`, `detach()`, and `scrollToIndex()`. `attach()` is called when
+the strategy connects to a viewport (wire up your scroll listeners there) and `detach()`
+when it disconnects (tear them down there).
 
-```ts
-import { Directive } from '@angular/core';
-import { RxVirtualScrollStrategy } from '@rx-angular/template/virtual-scrolling';
-
-@Directive({
-  selector: 'rx-virtual-scroll-viewport[custom]',
-  providers: [{ provide: RxVirtualScrollStrategy, useExisting: CustomScrollStrategy }],
-})
-export class CustomScrollStrategy extends RxVirtualScrollStrategy {}
-```
+See [Extending with a custom strategy](../reference/rx-virtual-scroll-strategies.md#extending-with-a-custom-strategy)
+for a worked example and a pointer to the simplest shipped implementation,
+`FixedSizeVirtualScrollStrategy`, to read as a full reference.
 
 ## Result
 
