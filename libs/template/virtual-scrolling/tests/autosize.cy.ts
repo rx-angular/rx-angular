@@ -125,6 +125,52 @@ class AutoSizeTestComponent {
 class AutoSizeCustomScrollElementTestComponent extends AutoSizeTestComponent {}
 
 @Component({
+  template: `<div [style.display]="isHidden() ? 'none' : 'block'">
+    <rx-virtual-scroll-viewport
+      (scrolledIndexChange)="scrolledIndex.emit($event)"
+      (viewRange)="viewRange.emit($event)"
+      data-cy="viewport"
+      [style.height.px]="containerHeight()"
+      [runwayItems]="runwayItems()"
+      [runwayItemsOpposite]="runwayItemsOpposite()"
+      [tombstoneSize]="tombstoneSize()"
+      [withResizeObserver]="withResizeObserver()"
+      autosize
+    >
+      <div
+        [style.height.px]="dynamicSize()(item)"
+        *rxVirtualFor="
+          let item of items();
+          renderCallback: renderCallback();
+          templateCacheSize: viewCache();
+          strategy: strategy();
+          trackBy: trackBy()
+        "
+        [attr.data-cy]="'item'"
+      >
+        @if (showItemId()) {
+          <div>{{ item.id }}</div>
+        }
+        @if (showItemDescription() && item.description) {
+          <div>{{ item.description }}</div>
+        }
+      </div>
+    </rx-virtual-scroll-viewport>
+  </div>`,
+  imports: testComponentImports,
+})
+class AutoSizeHideableTestComponent extends AutoSizeTestComponent {
+  isHidden = input(false);
+  withResizeObserver = input(true);
+  /**
+   * allows mounting items that render nothing at all. Because items are
+   * `position: absolute` they then measure `0x0`, which must not be confused
+   * with a hidden item.
+   */
+  showItemId = input(true);
+}
+
+@Component({
   template: `
     <div style="height: 50px;">Content Before</div>
     <rx-virtual-scroll-viewport
@@ -166,6 +212,8 @@ const defaultDynamicSize = (item: Item) =>
 function mountAutoSize(
   config?: AutoSizeVirtualScrollMountConfig,
   type: Type<AutoSizeTestComponent> = AutoSizeTestComponent,
+  /** inputs only defined on a specialized test component */
+  extraProperties: Record<string, unknown> = {},
 ) {
   const {
     runwayItems,
@@ -202,6 +250,7 @@ function mountAutoSize(
       renderCallback: renderCallback$,
       viewRange: createOutputSpy<ListRange>('viewRange'),
       scrolledIndex: createOutputSpy<number>('scrolledIndex'),
+      ...extraProperties,
     },
   });
 }
@@ -882,5 +931,161 @@ describe('window scrolling', () => {
         cy.get('@viewRange').should('have.been.calledWith', range);
       },
     );
+  });
+});
+
+describe('hidden viewport (display: none)', () => {
+  it('keeps the scroll position across a hide/show cycle', () => {
+    mountAutoSize({}, AutoSizeHideableTestComponent).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewportComponent = getViewportComponent(fixture);
+      viewportComponent.scrollTo(5000);
+      cy.wait(200);
+      cy.then(() => {
+        const scrollTopBeforeHide = viewportComponent.getScrollTop();
+        fixture.componentRef.setInput('isHidden', true);
+        fixture.detectChanges();
+        cy.wait(100);
+        cy.then(() => {
+          fixture.componentRef.setInput('isHidden', false);
+          fixture.detectChanges();
+          cy.wait(200);
+          cy.then(() => {
+            expect(viewportComponent.getScrollTop()).to.be.closeTo(
+              scrollTopBeforeHide,
+              2,
+            );
+          });
+        });
+      });
+    });
+  });
+
+  it('does not zero the cached item sizes while hidden', () => {
+    mountAutoSize({}, AutoSizeHideableTestComponent).then(({ fixture }) => {
+      fixture.detectChanges();
+      const sentinel = fixture.debugElement.query(
+        By.css('.rx-virtual-scroll__sentinel'),
+      );
+      cy.get('@renderCallback')
+        .should('have.been.called')
+        .then(() => {
+          const runwayHeightBeforeHide = (sentinel.nativeElement as HTMLElement)
+            .style.transform;
+          fixture.componentRef.setInput('isHidden', true);
+          fixture.detectChanges();
+          cy.wait(100);
+          cy.then(() => {
+            expect(
+              (sentinel.nativeElement as HTMLElement).style.transform,
+            ).to.eq(runwayHeightBeforeHide);
+          });
+        });
+    });
+  });
+
+  [true, false].forEach((withResizeObserver) => {
+    it(`keeps the rendered range while hidden (withResizeObserver: ${withResizeObserver})`, () => {
+      mountAutoSize({}, AutoSizeHideableTestComponent).then(({ fixture }) => {
+        fixture.componentRef.setInput('withResizeObserver', withResizeObserver);
+        fixture.detectChanges();
+        let renderedItems = 0;
+        cy.get('[data-cy=item]')
+          .should('have.length.greaterThan', 0)
+          .then((elements) => {
+            renderedItems = elements.length;
+            fixture.componentRef.setInput('isHidden', true);
+            fixture.detectChanges();
+            cy.wait(100);
+            cy.get('[data-cy=item]').should('have.length', renderedItems);
+            cy.then(() => {
+              fixture.componentRef.setInput('isHidden', false);
+              fixture.detectChanges();
+              cy.wait(200);
+              cy.get('[data-cy=item]').should('have.length', renderedItems);
+            });
+          });
+      });
+    });
+  });
+
+  it('still reacts to a genuine zero-height item', () => {
+    // an item that collapses to 0px while the viewport is rendered is a real
+    // measurement and has to be booked
+    mountAutoSize(
+      { showItemDescription: false, dynamicSize: () => 60 },
+      AutoSizeHideableTestComponent,
+    ).then(() => {
+      cy.get('[data-cy=item]')
+        .eq(1)
+        .should('have.attr', 'style')
+        .and('contain', 'translateY(60px)');
+      cy.get('[data-cy=item]')
+        .first()
+        .then((element) => {
+          element.css('height', '0px');
+          cy.wait(100);
+          cy.get('[data-cy=item]')
+            .eq(1)
+            .should('have.attr', 'style')
+            .and('contain', 'translateY(0px)');
+        });
+    });
+  });
+
+  it('still reacts to an item that collapses on both axes', () => {
+    // `.rx-virtual-scroll__runway > *` is `position: absolute`
+    // (virtual-scroll-viewport.component.scss), so items shrink-to-fit instead
+    // of filling the container. An item that renders no content therefore
+    // measures 0x0 while being perfectly rendered, which looks exactly like the
+    // collapsed box of a view that is not rendered at all. A "both axes are 0"
+    // heuristic would drop this very real measurement - only the absence of a
+    // layout box tells the two apart.
+    //
+    // The items here are sized by their content alone (no explicit height), so
+    // hiding the content collapses them on both axes.
+    mountAutoSize(
+      {
+        items: generateItems(5),
+        showItemDescription: false,
+        dynamicSize: () => null as unknown as number,
+        tombstoneSize: 1,
+      },
+      AutoSizeHideableTestComponent,
+    ).then(({ fixture }) => {
+      cy.get('[data-cy=item]').should('have.length', 5);
+      cy.get('[data-cy=item]')
+        .eq(1)
+        .then((element) => {
+          const positionWithContent = extractTranslateYValue(
+            element.attr('style'),
+          );
+          // the first item is sized by its content only
+          expect(positionWithContent).to.be.greaterThan(0);
+          fixture.componentRef.setInput('showItemId', false);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]')
+            .first()
+            .should(($item) => {
+              // premise of this test: rendered, but collapsed on both axes
+              expect($item[0].offsetWidth, 'item width').to.eq(0);
+              expect($item[0].offsetHeight, 'item height').to.eq(0);
+              expect(
+                $item[0].getClientRects().length,
+                'item has a layout box',
+              ).to.eq(1);
+            });
+          cy.wait(200);
+          cy.get('[data-cy=item]')
+            .eq(1)
+            .then((collapsed) => {
+              // the collapse has to be booked, the following items must not keep
+              // sitting behind a phantom row
+              expect(
+                extractTranslateYValue(collapsed.attr('style')),
+              ).to.be.lessThan(positionWithContent);
+            });
+        });
+    });
   });
 });
