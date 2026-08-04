@@ -620,7 +620,15 @@ export class AutoSizeVirtualScrollStrategy<
           );
           this.visibleRange = {
             start: this.anchorItem.index,
-            end: Math.min(this.contentLength, this.lastScreenItem.index + 1),
+            // `lastScreenItem.offset` is the distance between the top of the
+            // item and the bottom edge of the viewport. it is `> 0` when the
+            // item intersects the viewport and exactly `0` when the item starts
+            // at the bottom edge, in which case it is not visible at all.
+            end: Math.min(
+              this.contentLength,
+              this.lastScreenItem.index +
+                (this.lastScreenItem.offset > 0 ? 1 : 0),
+            ),
           };
           if (this.direction === 'up') {
             range.start = Math.max(0, this.anchorItem.index - this.runwayItems);
