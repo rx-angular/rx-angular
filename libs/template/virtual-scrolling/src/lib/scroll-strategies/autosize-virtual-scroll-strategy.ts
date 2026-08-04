@@ -43,6 +43,7 @@ import {
 } from '../model';
 import {
   calculateVisibleContainerSize,
+  hasLayoutBox,
   parseScrollTopBoundaries,
   toBoolean,
   unpatchedMicroTask,
@@ -65,18 +66,6 @@ type AnchorItem = {
 
 const defaultSizeExtract = (entry: ResizeObserverEntry) =>
   entry.borderBoxSize[0].blockSize;
-
-/**
- * A view that is hidden (e.g. because an ancestor is `display: none`) reports a
- * fully collapsed border box. A genuinely empty view still occupies the inline
- * axis of its container, so both axes being `0` means "not rendered" instead of
- * "0px tall".
- * @internal
- */
-const isHiddenEntry = (entry: ResizeObserverEntry) => {
-  const borderBox = entry.borderBoxSize?.[0];
-  return !!borderBox && borderBox.blockSize === 0 && borderBox.inlineSize === 0;
-};
 
 /**
  * @Directive AutosizeVirtualScrollStrategy
@@ -863,9 +852,14 @@ export class AutoSizeVirtualScrollStrategy<
             event.target.isConnected &&
             !!this._virtualItems[viewRef.context.index],
         ),
-        // ignore measurements of hidden views, they would otherwise wipe out
-        // the cached sizes. The real size arrives when the view is shown again
-        filter((event) => !isHiddenEntry(event)),
+        // a view without a layout box is not rendered at all (e.g. an ancestor
+        // is `display: none`). Its collapsed border box is not a measurement,
+        // booking it would wipe out the cached size. The real size arrives as
+        // soon as the view is rendered again.
+        // note this deliberately still accepts a rendered view that measures
+        // `0x0` - items are `position: absolute` and therefore shrink-to-fit,
+        // so an empty item template legitimately reports zero on both axes
+        filter((event) => hasLayoutBox(event.target)),
         map((event) => {
           const index = viewRef.context.index;
           const size = Math.round(this.extractSize(event));
