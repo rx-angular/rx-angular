@@ -165,7 +165,7 @@ const ITEM_SIZE = 50;
   selector: 'rx-virtual-scroll-viewport[custom]',
   providers: [{ provide: RxVirtualScrollStrategy, useExisting: CustomScrollStrategy }],
 })
-export class CustomScrollStrategy extends RxVirtualScrollStrategy {
+export class CustomScrollStrategy extends RxVirtualScrollStrategy<any> {
   private viewport: RxVirtualScrollViewport | null = null;
   private readonly detached$ = new ReplaySubject<void>(1);
 
