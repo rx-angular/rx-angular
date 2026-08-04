@@ -163,6 +163,10 @@ export class RxVirtualScrollViewportComponent
       },
     )
       .pipe(
+        // a fully collapsed rect means the viewport is hidden (e.g. an ancestor
+        // is `display: none`). Forwarding it would collapse the rendered range,
+        // the actual size arrives when the viewport is shown again
+        filter(({ width, height }) => width > 0 || height > 0),
         distinctUntilChanged(
           ({ height: prevHeight, width: prevWidth }, { height, width }) =>
             prevHeight === height && prevWidth === width,

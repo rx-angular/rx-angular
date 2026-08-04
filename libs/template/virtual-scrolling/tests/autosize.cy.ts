@@ -125,6 +125,44 @@ class AutoSizeTestComponent {
 class AutoSizeCustomScrollElementTestComponent extends AutoSizeTestComponent {}
 
 @Component({
+  template: `<div [style.display]="isHidden() ? 'none' : 'block'">
+    <rx-virtual-scroll-viewport
+      (scrolledIndexChange)="scrolledIndex.emit($event)"
+      (viewRange)="viewRange.emit($event)"
+      data-cy="viewport"
+      [style.height.px]="containerHeight()"
+      [runwayItems]="runwayItems()"
+      [runwayItemsOpposite]="runwayItemsOpposite()"
+      [tombstoneSize]="tombstoneSize()"
+      [withResizeObserver]="withResizeObserver()"
+      autosize
+    >
+      <div
+        [style.height.px]="dynamicSize()(item)"
+        *rxVirtualFor="
+          let item of items();
+          renderCallback: renderCallback();
+          templateCacheSize: viewCache();
+          strategy: strategy();
+          trackBy: trackBy()
+        "
+        [attr.data-cy]="'item'"
+      >
+        <div>{{ item.id }}</div>
+        @if (showItemDescription() && item.description) {
+          <div>{{ item.description }}</div>
+        }
+      </div>
+    </rx-virtual-scroll-viewport>
+  </div>`,
+  imports: testComponentImports,
+})
+class AutoSizeHideableTestComponent extends AutoSizeTestComponent {
+  isHidden = input(false);
+  withResizeObserver = input(true);
+}
+
+@Component({
   template: `
     <div style="height: 50px;">Content Before</div>
     <rx-virtual-scroll-viewport
@@ -882,5 +920,105 @@ describe('window scrolling', () => {
         cy.get('@viewRange').should('have.been.calledWith', range);
       },
     );
+  });
+});
+
+describe('hidden viewport (display: none)', () => {
+  it('keeps the scroll position across a hide/show cycle', () => {
+    mountAutoSize({}, AutoSizeHideableTestComponent).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewportComponent = getViewportComponent(fixture);
+      viewportComponent.scrollTo(5000);
+      cy.wait(200);
+      cy.then(() => {
+        const scrollTopBeforeHide = viewportComponent.getScrollTop();
+        fixture.componentRef.setInput('isHidden', true);
+        fixture.detectChanges();
+        cy.wait(100);
+        cy.then(() => {
+          fixture.componentRef.setInput('isHidden', false);
+          fixture.detectChanges();
+          cy.wait(200);
+          cy.then(() => {
+            expect(viewportComponent.getScrollTop()).to.be.closeTo(
+              scrollTopBeforeHide,
+              2,
+            );
+          });
+        });
+      });
+    });
+  });
+
+  it('does not zero the cached item sizes while hidden', () => {
+    mountAutoSize({}, AutoSizeHideableTestComponent).then(({ fixture }) => {
+      fixture.detectChanges();
+      const sentinel = fixture.debugElement.query(
+        By.css('.rx-virtual-scroll__sentinel'),
+      );
+      cy.get('@renderCallback')
+        .should('have.been.called')
+        .then(() => {
+          const runwayHeightBeforeHide = (sentinel.nativeElement as HTMLElement)
+            .style.transform;
+          fixture.componentRef.setInput('isHidden', true);
+          fixture.detectChanges();
+          cy.wait(100);
+          cy.then(() => {
+            expect(
+              (sentinel.nativeElement as HTMLElement).style.transform,
+            ).to.eq(runwayHeightBeforeHide);
+          });
+        });
+    });
+  });
+
+  [true, false].forEach((withResizeObserver) => {
+    it(`keeps the rendered range while hidden (withResizeObserver: ${withResizeObserver})`, () => {
+      mountAutoSize({}, AutoSizeHideableTestComponent).then(({ fixture }) => {
+        fixture.componentRef.setInput('withResizeObserver', withResizeObserver);
+        fixture.detectChanges();
+        let renderedItems = 0;
+        cy.get('[data-cy=item]')
+          .should('have.length.greaterThan', 0)
+          .then((elements) => {
+            renderedItems = elements.length;
+            fixture.componentRef.setInput('isHidden', true);
+            fixture.detectChanges();
+            cy.wait(100);
+            cy.get('[data-cy=item]').should('have.length', renderedItems);
+            cy.then(() => {
+              fixture.componentRef.setInput('isHidden', false);
+              fixture.detectChanges();
+              cy.wait(200);
+              cy.get('[data-cy=item]').should('have.length', renderedItems);
+            });
+          });
+      });
+    });
+  });
+
+  it('still reacts to a genuine zero-height item', () => {
+    // a zero-height item still occupies the inline axis, it must not be
+    // mistaken for a hidden one
+    mountAutoSize(
+      { showItemDescription: false, dynamicSize: () => 60 },
+      AutoSizeHideableTestComponent,
+    ).then(() => {
+      cy.get('[data-cy=item]')
+        .eq(1)
+        .should('have.attr', 'style')
+        .and('contain', 'translateY(60px)');
+      cy.get('[data-cy=item]')
+        .first()
+        .then((element) => {
+          element.css('height', '0px');
+          cy.wait(100);
+          cy.get('[data-cy=item]')
+            .eq(1)
+            .should('have.attr', 'style')
+            .and('contain', 'translateY(0px)');
+        });
+    });
   });
 });

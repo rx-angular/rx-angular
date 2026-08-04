@@ -67,6 +67,18 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
   entry.borderBoxSize[0].blockSize;
 
 /**
+ * A view that is hidden (e.g. because an ancestor is `display: none`) reports a
+ * fully collapsed border box. A genuinely empty view still occupies the inline
+ * axis of its container, so both axes being `0` means "not rendered" instead of
+ * "0px tall".
+ * @internal
+ */
+const isHiddenEntry = (entry: ResizeObserverEntry) => {
+  const borderBox = entry.borderBoxSize?.[0];
+  return !!borderBox && borderBox.blockSize === 0 && borderBox.inlineSize === 0;
+};
+
+/**
  * @Directive AutosizeVirtualScrollStrategy
  *
  * @description
@@ -851,6 +863,9 @@ export class AutoSizeVirtualScrollStrategy<
             event.target.isConnected &&
             !!this._virtualItems[viewRef.context.index],
         ),
+        // ignore measurements of hidden views, they would otherwise wipe out
+        // the cached sizes. The real size arrives when the view is shown again
+        filter((event) => !isHiddenEntry(event)),
         map((event) => {
           const index = viewRef.context.index;
           const size = Math.round(this.extractSize(event));
