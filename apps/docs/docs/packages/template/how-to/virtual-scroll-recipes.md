@@ -175,6 +175,14 @@ export class ReverseInfiniteListComponent {
 </rx-virtual-scroll-viewport>
 ```
 
+## Hide the viewport with `display: none`
+
+Some routers and page stacks keep a page in the DOM and hide it with `display: none`
+instead of destroying it — Ionic's navigation stack and cached router outlets do this.
+The viewport tolerates that: measurements taken while the subtree is hidden report a
+fully collapsed box and are ignored, so the cached item sizes, the rendered range and
+the scroll position all survive the hide/show cycle. Nothing needs to be configured.
+
 ## Extend the package with a custom strategy
 
 Because every part of the package is based on injection tokens, you can provide your own
