@@ -138,6 +138,19 @@ export function emitResize(
 }
 
 /**
+ * True when any live `ResizeObserver` mock is watching `target`.
+ *
+ * Size measurement is scoped to content being mounted rather than to visibility,
+ * so whether an element is currently observed is a behavior worth asserting
+ * directly instead of inferring from the published `--rx-vw-*` values.
+ */
+export function isObservingSize(target: Element): boolean {
+  return ResizeObserverMock.instances.some((instance) =>
+    instance.observed.has(target),
+  );
+}
+
+/**
  * Swap `window.IntersectionObserver` and `window.ResizeObserver` with the mocks
  * (also clearing the instance registries) and return a restore function that
  * reinstates the originals.
