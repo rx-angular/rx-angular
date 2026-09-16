@@ -10,11 +10,16 @@ import { ISRLogger } from './isr-logger';
 import { defaultModifyGeneratedHtml } from './modify-generated-html';
 import { defaultCacheKeyGenerator, getVariant } from './utils/cache-utils';
 import { getRouteISRDataFromHTML } from './utils/get-isr-options';
-import { renderUrl, RenderUrlConfig } from './utils/render-url';
+import {
+  renderUrl,
+  RenderUrlConfig,
+  RenderUrlRedirect,
+} from './utils/render-url';
 
 export interface IGeneratedResult {
   html?: string;
   errors?: string[];
+  redirect?: RenderUrlRedirect;
 }
 
 export class CacheGeneration {
@@ -92,7 +97,22 @@ export class CacheGeneration {
     };
 
     try {
-      const html = await renderUrl(renderUrlConfig);
+      const result = await renderUrl(renderUrlConfig);
+
+      // a redirect has no html to cache. If the url was cached before, drop
+      // that page, so the next request renders again and gets the redirect
+      if (result.redirect) {
+        if (mode === 'regenerate') {
+          this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
+        }
+        await this.removeFromCache(cacheKey);
+        this.logger.log(
+          `Url: ${cacheKey} redirects to ${result.redirect.location}, it was not cached.`,
+        );
+        return { redirect: result.redirect };
+      }
+
+      const { html } = result;
       const { revalidate, errors } = getRouteISRDataFromHTML(html);
 
       // Apply the modify generation callback
@@ -119,6 +139,10 @@ export class CacheGeneration {
       // if revalidate is x, we will clear cache every x seconds (after the last request) for that url
       if (revalidate === null || revalidate === undefined) {
         // don't do !revalidate because it will also catch "0"
+        if (mode === 'regenerate') {
+          // otherwise the url stays on hold and is never regenerated again
+          this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
+        }
         return { html: finalHtml };
       }
 
@@ -157,6 +181,16 @@ export class CacheGeneration {
         this.urlsOnHold = this.urlsOnHold.filter((x) => x !== cacheKey);
       }
       throw error;
+    }
+  }
+
+  private async removeFromCache(cacheKey: string): Promise<void> {
+    try {
+      if (await this.cache.has(cacheKey)) {
+        await this.cache.delete(cacheKey);
+      }
+    } catch (error) {
+      console.error('Error removing from cache:', error);
     }
   }
 }
