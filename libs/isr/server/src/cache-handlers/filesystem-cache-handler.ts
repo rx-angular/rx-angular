@@ -4,6 +4,7 @@ import {
   CacheISRConfig,
 } from '@rx-angular/isr/models';
 import * as fs from 'node:fs';
+import * as nodePath from 'node:path';
 import { join } from 'node:path';
 import { getRouteISRDataFromHTML } from '../utils/get-isr-options';
 
@@ -51,11 +52,21 @@ export class FileSystemCacheHandler extends CacheHandler {
 
       // convert route to file name (replace / with __)
       // ex. /details/user/1 => /details__user__1.html
-      const fileName = convertCacheKeyToFileName(cacheKey) + '.html';
-      const filePath = getFileFullPath(fileName, this.cacheFolderPath);
+      let filePath: string;
+      try {
+        filePath = getCacheFilePath(this.cacheFolderPath, cacheKey);
+      } catch (err) {
+        reject(
+          `Error: 💥 The request was not cached! ${(err as Error).message}`,
+        );
+        return;
+      }
 
       fs.writeFile(filePath, html, 'utf-8', (err) => {
-        if (err) reject('Error: 💥 The request was not cached!');
+        if (err) {
+          reject('Error: 💥 The request was not cached!');
+          return;
+        }
 
         this.cache.set(cacheKey, {
           htmlFilePath: filePath,
@@ -222,6 +233,7 @@ export class FileSystemCacheHandler extends CacheHandler {
       console.error('ERROR! 💥 ! Cannot read folder: ' + folderPath);
     }
 
+    let transferredPages = 0;
     for (const { path } of pathsToCache) {
       // from: '/Users/enea/Documents/GitHub/ngx-isr/dist/ngx-isr-demo/browser/details/1/index.html
       // to: '/details/1/index.html'
@@ -239,9 +251,15 @@ export class FileSystemCacheHandler extends CacheHandler {
           .replace('/index.html', '');
       }
 
-      const newFileName = convertCacheKeyToFileName(cacheKey);
-      const newFilePath =
-        getFileFullPath(newFileName, this.cacheFolderPath) + '.html';
+      let newFilePath: string;
+      try {
+        newFilePath = getCacheFilePath(this.cacheFolderPath, cacheKey);
+      } catch (err) {
+        console.error(
+          `ERROR! 💥 ! Cannot cache prerendered page ${path}: ${(err as Error).message}`,
+        );
+        continue;
+      }
 
       // console.log({ path, pathWithoutPrerenderedPagesPath, route, newFileName, newFilePath });
       // this will log:
@@ -258,10 +276,11 @@ export class FileSystemCacheHandler extends CacheHandler {
 
       // remove file from the browser folder so that it can be handled by ISR
       fs.rmSync(path);
+      transferredPages++;
     }
 
     console.log(
-      `${pathsToCache.length} Prerendered pages were moved to cache folder.`,
+      `${transferredPages} Prerendered pages were moved to cache folder.`,
     );
   }
 
@@ -318,27 +337,66 @@ function findIndexHtmlFilesRecursively(
 }
 
 /**
- * This function takes a string parameter 'fileName' representing a file name and returns the full path to the file.
- * The full path is obtained by joining the 'cacheFolderPath' string and 'fileName' string using the path separator '/'.
+ * Maps a cache key to the full path of its cache file inside `cacheFolderPath`.
+ * Throws if the resulting path would point outside of `cacheFolderPath`, so a
+ * crafted cache key can never read or write files elsewhere on disk.
  *
- * @param {string} fileName - The string representing the file name to get the full path for.
+ * On Windows, `:` is additionally encoded as `%3A`, because it is not a valid
+ * file name character there (NTFS would interpret it as an alternate data stream).
+ *
+ * @internal
  * @param cacheFolderPath - The string representing the path to the cache folder.
- * @returns {string} The string representing the full path to the file.
+ * @param cacheKey - The cache key, e.g. `/details/user/1`.
+ * @param pathImpl - The path implementation, `path.win32` or `path.posix`. Defaults to the one of the current platform.
+ * @returns {string} The full path to the cache file, e.g. `/cache/__details__user__1.html`.
  */
-function getFileFullPath(fileName: string, cacheFolderPath: string): string {
-  // If fileName starts with '/', remove it to prevent double slashes in the file path
-  if (fileName.charAt(0) === '/') {
-    fileName = fileName.slice(1);
+export function getCacheFilePath(
+  cacheFolderPath: string,
+  cacheKey: string,
+  pathImpl: nodePath.PlatformPath = nodePath,
+): string {
+  let fileName = convertCacheKeyToFileName(cacheKey) + '.html';
+
+  if (pathImpl.sep === '\\') {
+    fileName = fileName.replace(new RegExp(':', 'g'), '%3A');
   }
 
-  // Join the cache folder path and the file name using the path separator '/'
-  // Ex. if cacheFolderPath = '/cache' and fileName = 'index.html',
-  // then the full path to the file is '/cache/index.html'
-  return join(cacheFolderPath, '/', fileName);
+  const filePath = pathImpl.join(cacheFolderPath, fileName);
+
+  if (!isFileInsideFolder(cacheFolderPath, filePath, pathImpl)) {
+    throw new Error(
+      'Invalid cache key: the cache file would be outside of the cache folder.',
+    );
+  }
+
+  return filePath;
+}
+
+/**
+ * Checks whether `filePath` points to a file inside of `folderPath` (or one of its subfolders).
+ * `path.relative` resolves both paths (case-insensitive on Windows), so unlike a plain
+ * `startsWith` check this also handles sibling folders sharing the same prefix, e.g. `cache-other`.
+ *
+ * @internal
+ */
+export function isFileInsideFolder(
+  folderPath: string,
+  filePath: string,
+  pathImpl: nodePath.PlatformPath = nodePath,
+): boolean {
+  const relativePath = pathImpl.relative(folderPath, filePath);
+  return !(
+    relativePath === '' ||
+    relativePath === '..' ||
+    relativePath.startsWith('..' + pathImpl.sep) ||
+    pathImpl.isAbsolute(relativePath)
+  );
 }
 
 /**
  * This function takes a string parameter 'route' and replaces all '/' characters in it with '__' and returns the modified string.
+ * '?' is replaced with '++' and '\' with '%5C', so that a cache key can never contain a path separator.
+ * The '\' mapping is not reverted by `convertFileNameToCacheKey`, as browsers never send a raw '\' in a URL.
  *
  * @internal
  * @param {string} cacheKey - The string representing the route to be converted into a file name.
@@ -348,7 +406,8 @@ export function convertCacheKeyToFileName(cacheKey: string): string {
   // replace all occurrences of '/' character in the 'route' string with '__' using regular expression
   return cacheKey
     .replace(new RegExp('/', 'g'), '__')
-    .replace(new RegExp('\\?', 'g'), '++');
+    .replace(new RegExp('\\?', 'g'), '++')
+    .replace(new RegExp('\\\\', 'g'), '%5C');
 }
 
 /**
