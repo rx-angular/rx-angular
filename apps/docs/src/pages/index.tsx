@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import React from 'react';
 import styles from './index.module.css';
 
-function HomepageHeader(): JSX.Element {
+function HomepageHeader(): React.JSX.Element {
   return (
     <header className={styles.hero}>
       <div className={clsx('container', styles.heroInner)}>
@@ -44,7 +44,7 @@ function HomepageHeader(): JSX.Element {
   );
 }
 
-export default function Home(): JSX.Element {
+export default function Home(): React.JSX.Element {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout title={siteConfig.title} description={siteConfig.tagline}>

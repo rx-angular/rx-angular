@@ -1,8 +1,10 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const { themes } = require('prism-react-renderer');
+
+const lightCodeTheme = themes.github;
+const darkCodeTheme = themes.dracula;
 
 const organizationName = 'rx-angular';
 const projectName = 'rx-angular';
@@ -28,7 +30,11 @@ module.exports = {
     locales: ['en'],
   },
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'throw',
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'throw',
+    },
+  },
   organizationName,
   projectName,
   plugins: [
@@ -864,6 +870,8 @@ module.exports = {
           blogDescription:
             'Announcements, releases and guides from the RxAngular team',
           postsPerPage: 'ALL',
+          // Keep the v2 behavior of rendering full posts on the blog list.
+          onUntruncatedBlogPosts: 'ignore',
           showReadingTime: true,
           editUrl: `https://github.com/${organizationName}/${projectName}/edit/main/apps/docs`,
         },
@@ -1065,6 +1073,8 @@ module.exports = {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
         defaultLanguage: 'typescript',
+        // prism-react-renderer v2 no longer bundles these by default.
+        additionalLanguages: ['bash', 'scss'],
       },
     }),
   title,
