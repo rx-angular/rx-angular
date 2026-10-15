@@ -500,6 +500,122 @@ describe('data mutations', () => {
       );
     });
   });
+  describe('when the data shrinks', () => {
+    it('keeps range and positions within the new bounds', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          const shrunkItems = items.slice(0, 200);
+          const runwayHeight = totalItemHeight(shrunkItems);
+          fixture.detectChanges();
+          // scroll close to the end, so the anchor lives past the new length
+          getViewportComponent(fixture).scrollToIndex(480);
+          cy.get('@scrolledIndex')
+            .should('have.been.calledWith', 480)
+            .then(() => {
+              fixture.componentRef.setInput('items', [...shrunkItems]);
+              fixture.detectChanges();
+            });
+          cy.get('@viewRange').should((viewRange: any) => {
+            const range: ListRange = viewRange.lastCall.args[0];
+            expect(range.end).to.be.at.most(shrunkItems.length);
+          });
+          cy.get('[data-cy=item]').should((elements) => {
+            elements.each((_, element) => {
+              const position = Number(
+                /translateY\((-?[\d.]+)px\)/.exec(
+                  element.getAttribute('style')!,
+                )![1],
+              );
+              expect(position).to.be.at.least(0);
+              expect(position).to.be.lessThan(runwayHeight);
+            });
+          });
+        },
+      );
+    });
+    it('truncates the virtual items to the new data length', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          const shrunkItems = items.slice(0, 200);
+          fixture.detectChanges();
+          getViewportComponent(fixture).scrollToIndex(480);
+          cy.get('@scrolledIndex')
+            .should('have.been.calledWith', 480)
+            .then(() => {
+              fixture.componentRef.setInput('items', [...shrunkItems]);
+              fixture.detectChanges();
+              // `_virtualItems` is private, but its length is what `contentLength`
+              // reports and therefore exactly the state this regression is about
+              const { _virtualItems } = (getViewportComponent(fixture) as any)
+                .scrollStrategy as { _virtualItems: unknown[] };
+              expect(_virtualItems.length).to.eq(shrunkItems.length);
+            });
+        },
+      );
+    });
+    it('renders the full range again when the data grows back', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          const rangeConfig = {
+            containerHeight: component.containerHeight(),
+            runwayItems: component.runwayItems(),
+            runwayItemsOpposite: component.runwayItemsOpposite(),
+            dynamicSize: component.dynamicSize(),
+          };
+          const range = expectedRange(rangeConfig, items, 0);
+          fixture.componentRef.setInput('items', items.slice(0, 200));
+          fixture.detectChanges();
+          fixture.componentRef.setInput('items', [...items]);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]').should(
+            'have.length',
+            range.end - range.start,
+          );
+          cy.get('@viewRange').should((viewRange: any) => {
+            expect(viewRange.lastCall.args[0]).to.deep.eq(range);
+          });
+          const sentinel = fixture.debugElement.query(
+            By.css('.rx-virtual-scroll__sentinel'),
+          );
+          expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
+            `translate(0px, ${totalItemHeight(items) - 1}px)`,
+          );
+        },
+      );
+    });
+    it('recovers when the data is emptied and repopulated', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          const rangeConfig = {
+            containerHeight: component.containerHeight(),
+            runwayItems: component.runwayItems(),
+            runwayItemsOpposite: component.runwayItemsOpposite(),
+            dynamicSize: component.dynamicSize(),
+          };
+          const range = expectedRange(rangeConfig, items, 0);
+          fixture.componentRef.setInput('items', []);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]')
+            .should('have.length', 0)
+            .then(() => {
+              fixture.componentRef.setInput('items', [...items]);
+              fixture.detectChanges();
+            });
+          cy.get('[data-cy=item]').should(
+            'have.length',
+            range.end - range.start,
+          );
+          cy.get('@viewRange').should((viewRange: any) => {
+            expect(viewRange.lastCall.args[0]).to.deep.eq(range);
+          });
+        },
+      );
+    });
+  });
   describe('with trackBy', () => {
     it('should throw an error', () => {
       mountDynamicSize({ trackBy: {} as any }).then(() => {
