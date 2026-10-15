@@ -1,5 +1,6 @@
 import {
   Directive,
+  EmbeddedViewRef,
   inject,
   Input,
   NgIterable,
@@ -27,6 +28,7 @@ import {
 } from 'rxjs/operators';
 import {
   ListRange,
+  RxVirtualForViewContext,
   RxVirtualScrollStrategy,
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
@@ -121,18 +123,26 @@ export class DynamicSizeVirtualScrollStrategy<
 
   /**
    * @description
-   * Function returning the size of an item
+   * Function returning the size of an item.
+   *
+   * Assigning a new function reference forces the strategy to re-run it for
+   * every item and to re-layout the list. This is the way to inform the
+   * strategy about changes which affect the size of items, but are not caused
+   * by a change of the data itself.
    */
   @Input('dynamic')
   set itemSize(fn: (item: T) => number) {
-    if (fn) {
+    if (fn && fn !== this._itemSizeFn) {
       this._itemSizeFn = fn;
+      this._itemSizeFnChanged = true;
     }
   }
   get itemSize() {
     return this._itemSizeFn;
   }
   private _itemSizeFn: (item: T) => number = defaultItemSize;
+  /** @internal */
+  private _itemSizeFnChanged = false;
 
   /** @internal */
   private waitForScroll = false;
@@ -206,6 +216,8 @@ export class DynamicSizeVirtualScrollStrategy<
   /** @internal */
   private _virtualItems: VirtualViewItem[] = [];
   /** @internal */
+  private _values: T[] = [];
+  /** @internal */
   private scrollTop = 0;
   /** @internal */
   private scrollTopWithOutOffset = 0;
@@ -246,6 +258,15 @@ export class DynamicSizeVirtualScrollStrategy<
     ) {
       this.recalculateRange$.next();
     }
+    if (
+      this._itemSizeFnChanged &&
+      changes['itemSize'] &&
+      !changes['itemSize'].firstChange &&
+      this.viewport
+    ) {
+      this.recalculateSizes();
+    }
+    this._itemSizeFnChanged = false;
   }
 
   /** @internal */
@@ -270,6 +291,7 @@ export class DynamicSizeVirtualScrollStrategy<
     this.viewport = null;
     this.viewRepeater = null;
     this._virtualItems = [];
+    this._values = [];
     this.detached$.next();
   }
 
@@ -305,6 +327,7 @@ export class DynamicSizeVirtualScrollStrategy<
     );
 
     valueArray$.pipe(this.until$()).subscribe((dataArr) => {
+      this._values = dataArr;
       const dataLength = dataArr.length;
       if (!dataLength) {
         this._virtualItems = [];
@@ -397,6 +420,28 @@ export class DynamicSizeVirtualScrollStrategy<
           this.scrollToIndex(scrollTo);
         }
       });
+  }
+
+  /**
+   * @internal
+   * re-runs the itemSize function for the whole dataset and re-layouts the list
+   * based on the new sizes. This is an O(n) operation.
+   */
+  private recalculateSizes(): void {
+    let contentSize = 0;
+    for (let i = 0; i < this._values.length; i++) {
+      const size = this.itemSize(this._values[i]);
+      this._virtualItems[i] = { size };
+      contentSize += size;
+    }
+    this.contentSize = contentSize;
+    // the anchor is the only fixpoint we have, it needs to be re-measured
+    // against the new sizes before anything can be positioned
+    this.calcAnchorScrollTop();
+    // the rendered range can stay the same, in which case the viewRepeater
+    // won't render (and therefore position) anything. position what's there
+    this.positionRenderedViews();
+    this.recalculateRange$.next();
   }
 
   /** @internal */
@@ -514,6 +559,28 @@ export class DynamicSizeVirtualScrollStrategy<
       }),
       this.until$(),
     ).subscribe();
+  }
+
+  /**
+   * @internal
+   * re-positions all currently rendered views without waiting for the
+   * viewRepeater to re-render them
+   */
+  private positionRenderedViews(): void {
+    const viewContainer = this.viewRepeater!.viewContainer;
+    const start = this.renderedRange.start;
+    let position = this.calcInitialPosition(start);
+    for (let i = 0; i < viewContainer.length; i++) {
+      const index = start + i;
+      if (index >= this.contentLength) {
+        break;
+      }
+      const view = <EmbeddedViewRef<RxVirtualForViewContext<T, U>>>(
+        viewContainer.get(i)!
+      );
+      this.positionElement(this.getElement(view), position);
+      position += this.getItemSize(index);
+    }
   }
 
   /**
