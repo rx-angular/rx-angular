@@ -96,11 +96,11 @@ Wire `@rx-angular/isr` into an existing Angular SSR application so that routes m
      server.set('view engine', 'html');
      server.set('views', browserDistFolder);
 
-     server.get('*.*', express.static(browserDistFolder, { maxAge: '1y' }));
+     server.use(express.static(browserDistFolder, { maxAge: '1y', index: false, redirect: false }));
 
      // highlight-start
      server.get(
-       '*',
+       '/{*splat}',
        // Serve the page if it exists in cache…
        async (req, res, next) => await isr.serveFromCache(req, res, next),
        // …otherwise render it and add it to the cache when needed.
@@ -131,6 +131,10 @@ Wire `@rx-angular/isr` into an existing Angular SSR application so that routes m
    });
    ```
 
+   :::
+
+   :::note Express 5 / Angular 20+
+   `@rx-angular/isr` supports both express 4 and express 5, so it works with the `express@^5.1.0` that `ng new --ssr` scaffolds on Angular 20+. Express 5 no longer accepts a bare `'*'` as a route path — write it as `'/{*splat}'` instead, as shown above.
    :::
 
 5. **Mark the routes you want cached** with a `revalidate` value in the route `data`. Routes without `revalidate` are passed through un-cached.
