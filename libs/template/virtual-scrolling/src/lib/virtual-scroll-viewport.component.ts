@@ -136,6 +136,20 @@ export class RxVirtualScrollViewportComponent
   /**
    * @description
    *
+   * The range of items intersecting the viewport. `start` is the index of the
+   * first, `end` the exclusive index of the last intersecting item. Partially
+   * visible items are part of the range.
+   *
+   * In contrast to `viewRange`, this range is not widened by `runwayItems`,
+   * `runwayItemsOpposite` or `appendOnly`. Use it whenever you need to know what
+   * the user actually sees, e.g. to drive lazy loading of data.
+   */
+  @Output()
+  readonly visibleRange = this.scrollStrategy.visibleRange$;
+
+  /**
+   * @description
+   *
    * The index of the currently scrolled item. The scrolled item is the topmost
    * item actually being visible to the user.
    */
