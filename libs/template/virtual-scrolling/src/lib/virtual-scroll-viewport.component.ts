@@ -21,7 +21,7 @@ import {
   RxVirtualViewRepeater,
 } from './model';
 import { observeElementSize } from './observe-element-size';
-import { unpatchedScroll } from './util';
+import { hasLayoutBox, unpatchedScroll } from './util';
 
 /**
  * @description Will be provided through Terser global definitions by Angular CLI
@@ -152,17 +152,22 @@ export class RxVirtualScrollViewportComponent
         'Error: rx-virtual-scroll-viewport requires an `RxVirtualScrollStrategy` to be set.',
       );
     }
-    observeElementSize(
+    const observedElement: HTMLElement =
       this.scrollElement?.getElementRef()?.nativeElement ??
-        this.elementRef.nativeElement,
-      {
-        extract: (entries) => ({
-          height: Math.round(entries[0].contentRect.height),
-          width: Math.round(entries[0].contentRect.width),
-        }),
-      },
-    )
+      this.elementRef.nativeElement;
+    observeElementSize(observedElement, {
+      extract: (entries) => ({
+        height: Math.round(entries[0].contentRect.height),
+        width: Math.round(entries[0].contentRect.width),
+      }),
+    })
       .pipe(
+        // while the viewport has no layout box it is not rendered at all (e.g.
+        // an ancestor is `display: none`, as Ionic's page stack does). The
+        // collapsed rect reported in that case is not a measurement, forwarding
+        // it would collapse the rendered range. The real size arrives as soon as
+        // the viewport is rendered again
+        filter(() => hasLayoutBox(observedElement)),
         distinctUntilChanged(
           ({ height: prevHeight, width: prevWidth }, { height, width }) =>
             prevHeight === height && prevWidth === width,
