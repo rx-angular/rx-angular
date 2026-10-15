@@ -164,3 +164,6 @@ zone-based behavior) and link back to this concept as their shared explanation.
 - [Understanding change detection in Angular](./E1-change-detection.md): how the
   change-detection cycle works and why the default model over-renders; the "why is
   this slow" hub this page's legacy context builds on.
+- How-to: [Fix router navigation that does not trigger change detection](../packages/template/how-to/router-navigation-and-change-detection.md):
+  the concrete `ApplicationRef.tick()`/`NgZone.run()` fix for `Router.navigate()`
+  and `routerLink` not re-rendering a zoneless, `OnPush` template.
