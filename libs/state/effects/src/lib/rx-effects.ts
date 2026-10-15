@@ -9,15 +9,13 @@ import {
 import { from, Subscription } from 'rxjs';
 import { SideEffectFnOrObserver, SideEffectObservable } from './types';
 
-interface RxEffects {
+export interface RxEffects {
   register<T>(
     observable: SideEffectObservable<T>,
     sideEffectOrObserver?: SideEffectFnOrObserver<T>,
-  ): Fn;
-  onDestroy: (fn: Fn) => Fn;
+  ): () => void;
+  onDestroy: (fn: () => void) => () => void;
 }
-
-type Fn = () => void;
 
 export type RxEffectsSetupFn = (
   cfg: Pick<RxEffects, 'register' | 'onDestroy'>,
@@ -156,11 +154,11 @@ export function rxEffects(
      *   }
      * }
      *
-     * @param {Fn} callback onDestroy callback
+     * @param {Function} callback onDestroy callback
      *
-     * @return {Fn} unregisterFn
+     * @return {Function} unregisterFn
      */
-    function onDestroy(callback: Fn): Fn {
+    function onDestroy(callback: () => void): () => void {
       return destroyRef.onDestroy(callback);
     }
 
