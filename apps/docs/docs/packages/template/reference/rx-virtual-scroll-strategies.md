@@ -136,18 +136,81 @@ export class MyComponent {
 
 All parts of the package are based on injection tokens. To provide a custom strategy,
 create a directive that provides itself as `RxVirtualScrollStrategy` and extends it
-(the abstract base already implements some helpers).
+(the abstract base already implements some helpers, e.g. `getElement()` and the
+`viewRenderCallback` subject used by `*rxVirtualFor`).
+
+`RxVirtualScrollStrategy` requires you to implement three observables and three
+methods:
+
+| Member                                  | Description                                                                                                         |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `scrolledIndex$: Observable<number>`    | Emits the index of the first item currently visible in the viewport.                                                |
+| `renderedRange$: Observable<ListRange>` | Emits the `{ start, end }` slice of the iterable that should currently be rendered to the DOM.                      |
+| `contentSize$: Observable<number>`      | Emits the total scrollable size (in px) of the list, used to size the viewport's scrollbar.                         |
+| `attach(viewport, viewRepeater)`        | Called when the strategy is connected to a viewport. Wire up your scroll listeners and start computing ranges here. |
+| `detach()`                              | Called when the strategy is disconnected (e.g. on `ngOnDestroy`). Tear down subscriptions here.                     |
+| `scrollToIndex(index, behavior?)`       | Scroll the viewport so the item at `index` becomes visible.                                                         |
+
+A minimal (simplified) fixed-size implementation looks like this:
 
 ```ts
 import { Directive } from '@angular/core';
-import { RxVirtualScrollStrategy } from '@rx-angular/template/virtual-scrolling';
+import { ReplaySubject } from 'rxjs';
+import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
+import { ListRange, RxVirtualScrollStrategy, RxVirtualScrollViewport, RxVirtualViewRepeater } from '@rx-angular/template/virtual-scrolling';
+
+const ITEM_SIZE = 50;
 
 @Directive({
   selector: 'rx-virtual-scroll-viewport[custom]',
   providers: [{ provide: RxVirtualScrollStrategy, useExisting: CustomScrollStrategy }],
 })
-export class CustomScrollStrategy extends RxVirtualScrollStrategy {}
+export class CustomScrollStrategy extends RxVirtualScrollStrategy<any> {
+  private viewport: RxVirtualScrollViewport | null = null;
+  private readonly detached$ = new ReplaySubject<void>(1);
+
+  private readonly _scrolledIndex$ = new ReplaySubject<number>(1);
+  readonly scrolledIndex$ = this._scrolledIndex$.pipe(distinctUntilChanged());
+
+  private readonly _renderedRange$ = new ReplaySubject<ListRange>(1);
+  readonly renderedRange$ = this._renderedRange$.asObservable();
+
+  private readonly _contentSize$ = new ReplaySubject<number>(1);
+  readonly contentSize$ = this._contentSize$.asObservable();
+
+  attach(viewport: RxVirtualScrollViewport, viewRepeater: RxVirtualViewRepeater<any>): void {
+    this.viewport = viewport;
+    viewRepeater.values$
+      .pipe(
+        map((values) => (Array.isArray(values) ? values.length : 0)),
+        takeUntil(this.detached$),
+      )
+      .subscribe((length) => this._contentSize$.next(length * ITEM_SIZE));
+
+    viewport.elementScrolled$.pipe(takeUntil(this.detached$)).subscribe(() => {
+      const scrollTop = viewport.getScrollTop();
+      const start = Math.floor(scrollTop / ITEM_SIZE);
+      this._scrolledIndex$.next(start);
+      this._renderedRange$.next({ start, end: start + 20 }); // + a fixed runway
+    });
+  }
+
+  detach(): void {
+    this.detached$.next();
+    this.viewport = null;
+  }
+
+  scrollToIndex(index: number, behavior?: ScrollBehavior): void {
+    this.viewport?.scrollTo(index * ITEM_SIZE, behavior);
+  }
+}
 ```
+
+This example leaves out positioning the rendered views (done via `viewRenderCallback`
+and CSS `transform`s, see the `_setViewPosition` helper) and runway/overscan handling
+for brevity. For a complete, production-ready reference, read the source of the
+simplest shipped strategy:
+[`FixedSizeVirtualScrollStrategy`](https://github.com/rx-angular/rx-angular/blob/main/libs/template/virtual-scrolling/src/lib/scroll-strategies/fixed-size-virtual-scroll-strategy.ts).
 
 ## See also
 
