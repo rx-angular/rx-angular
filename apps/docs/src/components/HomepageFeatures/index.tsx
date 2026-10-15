@@ -42,7 +42,7 @@ const PACKAGES: Package[] = [
   },
 ];
 
-export default function HomepageFeatures(): JSX.Element {
+export default function HomepageFeatures(): React.JSX.Element {
   return (
     <ul className={styles.grid}>
       {PACKAGES.map((pkg) => (

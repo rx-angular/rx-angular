@@ -103,7 +103,7 @@ The browser has one main UI thread that performs tasks one after another. Long t
 
 The image shows the execution deadline concept.
 6 userBlocking tasks are scheduled.
-The first 2 tasks meet the deadline and are executed in separate tasks, but the third task exceeds the deadline of 250ms and the scheduler executes all remaining tasks with a deadline <= 250ms in one task.
+The first 2 tasks meet the deadline and are executed in separate tasks, but the third task exceeds the deadline of 250ms and the scheduler executes all remaining tasks with a deadline &lt;= 250ms in one task.
 
 #### [Native strategies:](https://www.rx-angular.io/docs/cdk/render-strategies/strategies/basic-strategies) Improve Default Change Detection
 
@@ -145,7 +145,7 @@ These tools help to ensure that data is in the desired format before it is used 
 
 #### [Transformations](https://www.rx-angular.io/docs/cdk/api/transformation-helpers) Tree Shakable Entity Management
 
-The transformation helpers provided by the `@rx-angular/cdk/transformations` are a complete set of utilities to manage entities. They are immutable by default and include transformation functions to handle insertions, updates, dictionary <-> array conversions & more to help you build store like state management systems.
+The transformation helpers provided by the `@rx-angular/cdk/transformations` are a complete set of utilities to manage entities. They are immutable by default and include transformation functions to handle insertions, updates, dictionary &lt;-&gt; array conversions & more to help you build store like state management systems.
 
 ## Roadmap
 

@@ -8,7 +8,7 @@ As a contributor, here are the guidelines we would like you to follow:
 - [Feature Requests](#feature)
 - [Coding Rules](#rules)
 
-## <a name="developing"></a> Developing
+## <a id="developing"></a> Developing
 
 Start by installing all dependencies (we're using Yarn):
 
@@ -28,12 +28,12 @@ Either you can run all tests for all targets:
 yarn nx run-many --all --target=test
 ```
 
-## <a name="issue"></a> Found a Bug?
+## <a id="issue"></a> Found a Bug?
 
 If you find a bug in the source code, you can help us by submitting an issue to our [GitHub Repository](https://github.com/rx-angular/rx-angular).
 Even better, you can submit a Pull Request with a fix.
 
-## <a name="feature"></a> Missing a Feature?
+## <a id="feature"></a> Missing a Feature?
 
 You can _request_ a new feature by submitting an issue to our GitHub Repository.
 If you would like to _implement_ a new feature, please consider the size of the change in order to determine the right steps to proceed:
@@ -45,7 +45,7 @@ If you would like to _implement_ a new feature, please consider the size of the 
 
 - **Small Features** can be crafted and directly submitted as a Pull Request.
 
-## <a name="commit"></a> Commit Message Format
+## <a id="commit"></a> Commit Message Format
 
 We have very precise rules over how our Git commit messages must be formatted.
 This format leads to **easier to read commit history**.
@@ -69,7 +69,7 @@ The `footer` is optional. The [Commit Message Footer](#commit-footer) format des
 
 Any line of the commit message cannot be longer than 100 characters.
 
-#### <a name="commit-header"></a>Commit Message Header
+#### <a id="commit-header"></a>Commit Message Header
 
 ```
 <type>(<scope>): <short summary>

@@ -77,7 +77,7 @@ jobs:
           files: coverage/state/lcov.info, coverage/template/lcov.info, coverage/cdk/lcov.info, coverage/isr/lcov.info, coverage/eslint-plugin/lcov.info
           flags: state, template, cdk, isr, eslint-plugin
 
-  # The docs project is built in a separate job because it requires Node.js 16
+  # The docs project (Docusaurus) is built in a separate job
   build-docs:
     name: Build docs
     runs-on: ubuntu-latest
