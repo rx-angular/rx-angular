@@ -1,4 +1,4 @@
-import { Injector, runInInjectionContext } from '@angular/core';
+import { Injector, runInInjectionContext, signal } from '@angular/core';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { select } from '@rx-angular/state/selections';
 import {
@@ -7,7 +7,7 @@ import {
   jestMatcher,
   PrimitiveState,
 } from '@test-helpers/rx-angular';
-import { of, scheduled, Subject } from 'rxjs';
+import { NEVER, of, scheduled, Subject } from 'rxjs';
 import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 import { map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
@@ -16,6 +16,13 @@ import { ReadOnly } from '../src/lib/rx-state.service';
 import { createStateChecker } from './fixtures';
 
 type ReadOnlyPrimitiveState = Pick<RxState<PrimitiveState>, ReadOnly>;
+
+const symbolKey = Symbol('symbolKey');
+
+interface SymbolState {
+  num: number;
+  [symbolKey]: number;
+}
 
 function setupState<T extends object>(cfg: { initialState?: T } = {}) {
   const { initialState } = { ...cfg };
@@ -534,6 +541,167 @@ describe('RxStateService', () => {
           (sta, newVal) => newVal,
         );
       });
+    });
+
+    it('should work with an object of observables', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      state.connect({ num: of(1337), str: of('connected') });
+
+      expect(state.get('num')).toBe(1337);
+      expect(state.get('str')).toBe('connected');
+    });
+
+    it('should work with an object of signals', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      state.connect({ num: signal(1337), str: signal('connected') });
+      TestBed.flushEffects();
+
+      expect(state.get('num')).toBe(1337);
+      expect(state.get('str')).toBe('connected');
+    });
+
+    it('should work with an object of observables and signals', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      state.connect({ num: of(1337), str: signal('connected') });
+      TestBed.flushEffects();
+
+      expect(state.get('num')).toBe(1337);
+      expect(state.get('str')).toBe('connected');
+    });
+
+    it('should connect the sources of an object independently of each other', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      state.connect({ num: of(1337), str: NEVER });
+
+      expect(state.get('num')).toBe(1337);
+    });
+
+    it('should not gate the sources of an object on the slowest one', () => {
+      testScheduler.run(({ expectObservable, cold }) => {
+        const state = setupState({ initialState: initialPrimitiveState });
+
+        expectObservable(
+          state.$.pipe(map(({ num, str }) => `${num}|${str}`)),
+        ).toBe('-a-b', {
+          a: '1337|str',
+          b: '1337|connected',
+        });
+
+        state.connect({
+          num: cold('-a', { a: 1337 }),
+          str: cold('---a', { a: 'connected' }),
+        });
+      });
+    });
+
+    it('should ignore undefined entries of an object', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() =>
+        state.connect({ num: of(1337), str: undefined }),
+      ).not.toThrow();
+      expect(state.get('num')).toBe(1337);
+    });
+
+    it('should connect the symbol keyed sources of an object', () => {
+      // `keyof State` includes symbols, so the overload accepts symbol keys
+      const state = TestBed.inject<RxState<SymbolState>>(RxState);
+      state.set({ num: 42, [symbolKey]: 0 });
+
+      state.connect({ [symbolKey]: of(1337), num: of(43) });
+
+      expect(state.get(symbolKey)).toBe(1337);
+      expect(state.get('num')).toBe(43);
+    });
+
+    it('should throw with an object holding wrong params', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() => state.connect({ num: 5 } as any)).toThrow(
+        'wrong params passed to connect',
+      );
+    });
+
+    it('should not connect any source of an object holding wrong params', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+      const num$ = new Subject<number>();
+
+      expect(() => state.connect({ num: num$, str: 5 } as any)).toThrow(
+        'wrong params passed to connect',
+      );
+
+      // connecting is all or nothing, the valid entry must not have been applied
+      expect(state.get('num')).toBe(42);
+      expect(state.get('str')).toBe('str');
+      // ... and no subscription must have been left behind either
+      num$.next(1337);
+      expect(state.get('num')).toBe(42);
+    });
+
+    it('should throw with an object holding no source at all', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() => state.connect({})).toThrow('wrong params passed to connect');
+      expect(() => state.connect(new Date() as any)).toThrow(
+        'wrong params passed to connect',
+      );
+      // sources reachable by neither Object.keys nor Reflect.ownKeys
+      expect(() => state.connect(new Map([['num', of(1337)]]) as any)).toThrow(
+        'wrong params passed to connect',
+      );
+      expect(state.get()).toEqual(initialPrimitiveState);
+    });
+
+    it('should tolerate an object whose entries are all undefined', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      // every entry is a `Partial<>` hole, so there is nothing to connect - but the
+      // record itself is well formed and must not throw
+      expect(() =>
+        state.connect({ num: undefined, str: undefined }),
+      ).not.toThrow();
+      expect(state.get()).toEqual(initialPrimitiveState);
+    });
+
+    it('should ignore non-enumerable properties of an object of sources', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+      const slices: Record<string, unknown> = { num: of(1337) };
+      // a brand or metadata property carried along with the record is not a source
+      Object.defineProperty(slices, 'meta', {
+        value: 'not a source',
+        enumerable: false,
+      });
+
+      expect(() => state.connect(slices as any)).not.toThrow();
+      expect(state.get('num')).toBe(1337);
+    });
+
+    it('should throw with an object holding its sources on the prototype', () => {
+      class NumSource {
+        get num() {
+          return of(1337);
+        }
+      }
+
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() => state.connect(new NumSource() as any)).toThrow(
+        'wrong params passed to connect',
+      );
+      expect(state.get('num')).toBe(42);
+    });
+
+    it('should throw with an array of sources', () => {
+      const state = setupState({ initialState: initialPrimitiveState });
+
+      expect(() => state.connect([of(1337)] as any)).toThrow(
+        'wrong params passed to connect',
+      );
+      expect(state.get()).toEqual(initialPrimitiveState);
     });
 
     it('should throw with wrong params', () => {
