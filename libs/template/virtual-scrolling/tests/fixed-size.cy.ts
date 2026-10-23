@@ -444,13 +444,12 @@ describe('data mutations', () => {
   });
   describe('with trackBy', () => {
     it('should throw an error', () => {
-      mountFixedSize({ trackBy: {} as any }).then(() => {
-        cy.on('uncaught:exception', (e) => {
-          expect(e.message).eq(
-            'trackBy must be typeof function or keyof T, but received {}',
-          );
-        });
+      cy.on('fail', (e) => {
+        expect(e.message).contain(
+          'trackBy must be typeof function or keyof T, but received {}.',
+        );
       });
+      mountFixedSize({ trackBy: {} as any });
     });
     it('should keep nodes on add', () => {
       mountFixedSize({ trackBy: (i, item) => item.id }).then(
