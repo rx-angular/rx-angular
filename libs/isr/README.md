@@ -6,7 +6,7 @@
 
 A library that enables Angular SSR (`@angular/ssr`) applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
 
-Requires the peer dependency `@angular/ssr` `^21`.
+Requires the peer dependency `@angular/ssr` `>=22`.
 
 ## Features
 
@@ -29,11 +29,15 @@ npm install @rx-angular/isr
 
 ## Version Compatibility
 
-| RxAngular | Angular   |
-| --------- | --------- |
-| `^18.0.0` | `^18.0.0` |
-| `^17.1.0` | `^17.0.0` |
-| `^16.0.0` | `^16.0.0` |
+| RxAngular | Angular    |
+| --------- | ---------- |
+| `^22.0.0` | `>=22.0.0` |
+| `^21.0.0` | `^21.0.0`  |
+| `^20.0.0` | `^20.0.0`  |
+| `^19.0.0` | `^19.0.0`  |
+| `^18.0.0` | `^18.0.0`  |
+| `^17.1.0` | `^17.0.0`  |
+| `^16.0.0` | `^16.0.0`  |
 
 ## How to use it?
 
