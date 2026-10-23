@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { Subject } from 'rxjs';
@@ -23,6 +23,7 @@ import { SideEffectsStart } from './side-effects.start.component';
     <rxa-side-effects-start [refreshInterval]="refreshInterval$ | async">
     </rxa-side-effects-start>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatFormField, MatInput, SideEffectsStart, AsyncPipe],
 })
 export class SideEffectsContainerComponent {

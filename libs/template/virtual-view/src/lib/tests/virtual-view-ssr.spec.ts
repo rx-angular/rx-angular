@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RxVirtualView } from '../virtual-view.directive';
@@ -46,6 +46,7 @@ import { configureBrowser } from './test-utils/testbed';
     RxVirtualViewContent,
     RxVirtualViewPlaceholder,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container" rxVirtualViewObserver [root]="null">
       <div rxVirtualView #vv="rxVirtualView" class="widget">

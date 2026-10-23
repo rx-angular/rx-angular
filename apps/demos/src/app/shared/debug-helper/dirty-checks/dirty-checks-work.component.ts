@@ -5,6 +5,7 @@ import {
   Input,
   Renderer2,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { RxEffects } from '@rx-angular/state/effects';
@@ -38,6 +39,7 @@ import { Hooks } from '../hooks';
     `,
   ],
   providers: [RxEffects],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatRipple, NgStyle],
 })
 export class DirtyChecksWorkComponent extends Hooks {

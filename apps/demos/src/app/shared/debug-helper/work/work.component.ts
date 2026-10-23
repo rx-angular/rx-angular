@@ -1,5 +1,11 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, Input, Renderer2 } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  Renderer2,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { selectSlice } from '@rx-angular/state/selections';
 import { RxLet } from '@rx-angular/template/let';
@@ -20,6 +26,7 @@ type workType = 'scripting' | 'layouting';
   `,
   styleUrls: ['./work.component.scss'],
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, NgClass],
 })
 export class WorkComponent extends Hooks {

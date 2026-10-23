@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { DirtyChecksComponent } from '../../dirty-checks/dirty-checks.component';
@@ -31,6 +31,7 @@ import { RenderingsComponent } from '../../renderings/renderings.component';
     '[style.width.px]': 'size',
     '[class]': 'classNames',
   },
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DirtyChecksComponent, RenderingsComponent],
 })
 export class VisualizerComponent extends Hooks {

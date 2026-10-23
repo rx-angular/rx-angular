@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
   MatExpansionPanel,
   MatExpansionPanelHeader,
@@ -54,6 +54,7 @@ import { RxLet } from '../../../rx-angular-pocs/template/directives/let/rx-let.d
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, MatExpansionPanel, MatExpansionPanelHeader],
 })
 export class ColorPrioComponent extends RxState<{

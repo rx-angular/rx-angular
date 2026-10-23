@@ -1,4 +1,9 @@
-import { Component, signal, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  signal,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   RxVirtualView,
   RxVirtualViewContent,
@@ -32,6 +37,7 @@ interface MarketCard {
     RxVirtualViewPlaceholder,
   ],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container demo-page">
       <h2>&#64;switch content swap</h2>

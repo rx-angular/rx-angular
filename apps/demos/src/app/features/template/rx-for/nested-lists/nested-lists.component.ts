@@ -70,7 +70,7 @@ import { immutableArr } from './utils';
                   min="1"
                   #r
                   type="number"
-                  [value]="table?.rows + ''"
+                  [value]="$safeNavigationMigration(table?.rows) + ''"
                   (input)="set({ rows: +r.value })"
                 />
               </mat-form-field>
@@ -81,7 +81,7 @@ import { immutableArr } from './utils';
                   min="1"
                   #c
                   type="number"
-                  [value]="table?.columns + ''"
+                  [value]="$safeNavigationMigration(table?.columns) + ''"
                   (input)="set({ columns: +c.value })"
                 />
               </mat-form-field>

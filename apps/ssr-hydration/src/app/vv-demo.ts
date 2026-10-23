@@ -8,6 +8,7 @@ import {
   PLATFORM_ID,
   signal,
   ViewEncapsulation,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   RxVirtualView,
@@ -34,6 +35,7 @@ interface User {
       </span>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
 })
 export class Item implements OnDestroy {
@@ -79,6 +81,7 @@ function doWork() {
     RxVirtualViewPlaceholder,
   ],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @let a = '1';
     @if (show()) {

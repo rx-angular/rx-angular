@@ -1,4 +1,10 @@
-import { Component, Input, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  Input,
+  signal,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 
 @Component({
@@ -22,6 +28,7 @@ import { MatRipple } from '@angular/material/core';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatRipple],
 })
 export class DirtyChecksComponent {

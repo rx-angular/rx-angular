@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -87,6 +87,7 @@ import { updateCount } from '../shared/utils';
       </mat-form-field>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CounterDisplayComponent,
     MatButton,

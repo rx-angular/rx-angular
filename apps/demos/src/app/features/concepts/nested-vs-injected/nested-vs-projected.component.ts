@@ -52,7 +52,7 @@ import { DetectChangesNestedComponent } from './nested/detect-changes.nested.com
     </rxa-visualizer>
   `,
   providers: [CdHelper],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     VisualizerComponent,
     MatButtonToggleGroup,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -76,6 +76,7 @@ import { updateCount } from '../shared/utils';
     </form>
   `,
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ReactiveFormsModule,

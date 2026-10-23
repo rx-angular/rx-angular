@@ -9,7 +9,12 @@
  * `virtual-view.directive.spec.ts` so that multiple specs can share them.
  */
 
-import { Component, input, signal } from '@angular/core';
+import {
+  Component,
+  input,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { RxVirtualView } from '../../virtual-view.directive';
 import { RxVirtualViewContent } from '../../virtual-view-content.directive';
 import { RxVirtualViewObserver } from '../../virtual-view-observer.directive';
@@ -80,6 +85,7 @@ export function defaultExtractSize(entry: ResizeObserverEntry): {
     RxVirtualViewContent,
     RxVirtualViewPlaceholder,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container" rxVirtualViewObserver [root]="null">
       <div
@@ -129,6 +135,7 @@ export class SimpleHost {
     RxVirtualViewContent,
     RxVirtualViewPlaceholder,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container" rxVirtualViewObserver [root]="null">
       @if (show()) {
@@ -166,6 +173,7 @@ export class IfHost {
     RxVirtualViewContent,
     RxVirtualViewPlaceholder,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container" rxVirtualViewObserver [root]="null">
       @for (item of items(); track item.id) {
@@ -214,6 +222,7 @@ export class ForHost {
     RxVirtualViewContent,
     RxVirtualViewPlaceholder,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container" rxVirtualViewObserver [root]="null">
       <div rxVirtualView #vv="rxVirtualView" class="widget">
@@ -264,6 +273,7 @@ export class SwitchHost {
     RxVirtualViewContent,
     RxVirtualViewPlaceholder,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container" rxVirtualViewObserver [root]="null">
       @for (item of items(); track item.id) {
@@ -338,6 +348,7 @@ export class ForSwitchHost {
     RxVirtualViewContent,
     RxVirtualViewPlaceholder,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container" rxVirtualViewObserver [root]="null">
       <div
@@ -376,6 +387,7 @@ export class SizeHost {
   selector: 'rx-no-observer-host',
   standalone: true,
   imports: [RxVirtualView, RxVirtualViewContent, RxVirtualViewPlaceholder],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div rxVirtualView #vv="rxVirtualView" class="widget-no-observer">
       <div *rxVirtualViewContent class="template">ze-template</div>

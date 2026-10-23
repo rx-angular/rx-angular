@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -114,6 +114,7 @@ import { PokemonStateService } from './states/pokemon-state.service';
     `,
   ],
   providers: [PokemonStateService],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     RxLet,
     MatPaginator,

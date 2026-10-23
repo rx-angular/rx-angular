@@ -44,7 +44,7 @@ export enum SchedulingPriority {
       </button>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     VisualizerComponent,
     ValueProviderComponent,

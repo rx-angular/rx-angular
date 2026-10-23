@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -93,6 +93,7 @@ import { ToStringPipe } from '../to-string.pipe';
       ></mat-progress-spinner>
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       h1 {

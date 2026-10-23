@@ -1,4 +1,9 @@
-import { Component, signal, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  signal,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   provideVirtualViewConfig,
   RxVirtualView,
@@ -53,6 +58,7 @@ interface Card {
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container demo-page">
       <h2>Deferred content behind an inactive branch</h2>

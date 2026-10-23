@@ -109,7 +109,7 @@ import { RecursiveStaticComponent } from '../../../shared/template-structures/re
       }
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     VisualizerComponent,
     MatFormField,

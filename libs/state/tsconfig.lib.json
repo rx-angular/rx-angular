@@ -13,6 +13,12 @@
     "compilationMode": "partial",
     "annotateForClosureCompiler": true,
     "skipTemplateCodegen": true,
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    },
     "strictMetadataEmit": true,
     "enableResourceInlining": true,
     "strictTemplates": false

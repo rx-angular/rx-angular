@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { RxState } from '@rx-angular/state';
 import { RxLet } from '@rx-angular/template/let';
@@ -35,6 +35,7 @@ import { toBoolean } from '../utils';
     `,
   ],
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, MatIcon, NgClass],
 })
 export class ValueComponent {

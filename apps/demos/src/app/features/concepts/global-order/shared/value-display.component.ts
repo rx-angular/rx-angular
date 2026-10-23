@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
@@ -19,6 +19,7 @@ import { MatIcon } from '@angular/material/icon';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIcon, NgClass],
 })
 export class ValueDisplayComponent {

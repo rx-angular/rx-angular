@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -54,6 +54,7 @@ import { CounterState, INITIAL_STATE } from '../shared/model';
       </mat-form-field>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatButton, MatFormField, MatInput, RxPush, ToArrayPipe, PushPipe],
 })
 export class StarterComponent {

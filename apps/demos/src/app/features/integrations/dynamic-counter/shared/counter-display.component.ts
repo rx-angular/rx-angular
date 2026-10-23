@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { RxPush } from '@rx-angular/template/push';
 import { EMPTY } from 'rxjs';
 import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
@@ -16,6 +16,7 @@ import { ToArrayPipe } from '../../../../shared/utils/to-array.pipe';
   host: {
     class: 'count',
   },
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxPush, ToArrayPipe, PushPipe],
 })
 export class CounterDisplayComponent {

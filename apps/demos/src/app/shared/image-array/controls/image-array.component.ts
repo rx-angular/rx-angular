@@ -4,6 +4,7 @@ import {
   ElementRef,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import {
@@ -77,6 +78,7 @@ interface ComponentState {
     </div>
   `,
   providers: [RxEffects, RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatExpansionPanel, MatExpansionPanelHeader, MatButton],
 })
 export class ImageArrayComponent extends Hooks implements AfterViewInit {

@@ -5,6 +5,7 @@ import {
   inject,
   PLATFORM_ID,
   ViewEncapsulation,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { HydrationTracker } from '@rx-angular/cdk/ssr';
 import { VVHydrationDemo } from '../vv-demo';
@@ -23,6 +24,7 @@ import { VVHydrationDemo } from '../vv-demo';
   selector: 'app-basic-hydration-demo',
   imports: [VVHydrationDemo],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container">
       @if (showAfterHydration()) {

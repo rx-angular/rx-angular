@@ -1,5 +1,9 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, Component } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -20,6 +24,7 @@ import { AppPresenter } from './app-presenter.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppPresenter],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     AppShellModule,
     RouterOutlet,

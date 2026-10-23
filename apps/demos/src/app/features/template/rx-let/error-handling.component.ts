@@ -61,7 +61,11 @@ import { FormGhostComponent } from '../../../shared/ghost-elements/form-ghost/fo
             <input
               type="text"
               [value]="r"
-              (input)="numbersSubject$.next($event.target?.value)"
+              (input)="
+                numbersSubject$.next(
+                  $safeNavigationMigration($event.target?.value)
+                )
+              "
               matInput
             />
           </mat-form-field>

@@ -12,5 +12,12 @@
     "jest.config.cts",
     "src/test-setup.ts"
   ],
-  "angularCompilerOptions": {}
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

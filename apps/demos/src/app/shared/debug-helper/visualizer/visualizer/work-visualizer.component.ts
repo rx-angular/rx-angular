@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { DirtyChecksComponent } from '../../dirty-checks/dirty-checks.component';
@@ -59,6 +59,7 @@ import { VisualizerComponent } from './visualizer.component';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     DirtyChecksComponent,
     RenderingsComponent,

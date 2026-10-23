@@ -55,7 +55,7 @@ import { SiblingModule } from '../../../../shared/template-structures/sibling/si
       </ng-container>
       <div class="w-100 d-flex flex-wrap">
         <div class="w-100 mb-2">
-          @if (imgConverter?.loading$ | push) {
+          @if ($safeNavigationMigration(imgConverter?.loading$) | push) {
             <mat-progress-bar [mode]="'buffer'"></mat-progress-bar>
           }
 

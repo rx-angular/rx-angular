@@ -1,4 +1,9 @@
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM } from '@rx-angular/cdk/ssr';
 import { RxaResizeObserver } from '../resize-observer';
@@ -156,6 +161,7 @@ describe('RxaResizeObserver', () => {
 @Component({
   standalone: true,
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [RxaResizeObserver],
 })
 class ResizeObserverHost {
