@@ -22,10 +22,20 @@ export async function rolldownRebundle(
     plugins: [loaderPlugin],
     preserveEntrySignatures: false,
     logLevel: 'silent',
+    optimization: {
+      pifeForModuleWrappers: false,
+    },
+    experimental: {
+      attachDebugInfo: 'none',
+    },
   });
 
   const bundleOutput = await bundle.generate({
     sourcemap,
+    minify: true,
+    comments: {
+      legal: false,
+    },
     hashCharacters: 'base36',
     chunkFileNames: preserveFacade,
     codeSplitting: rolldownCodeSplitting(strategy),

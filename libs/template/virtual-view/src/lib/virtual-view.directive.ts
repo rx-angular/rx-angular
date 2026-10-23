@@ -4,6 +4,7 @@ import {
   computed,
   DestroyRef,
   Directive,
+  effect,
   ElementRef,
   EmbeddedViewRef,
   inject,
@@ -236,6 +237,15 @@ export class RxVirtualView
 
   #contentIsShown = false;
 
+  /**
+   * The `_RxVirtualViewContent` directive whose template is currently embedded
+   * in the view container. Used to detect runtime content-template swaps (e.g.
+   * an `@switch` / `@if` case change inside `rxVirtualView` that replaces the
+   * active `*rxVirtualViewContent` while the host element stays mounted) so the
+   * new template is rendered instead of leaving the card blank.
+   */
+  #renderedContent: _RxVirtualViewContent | null = null;
+
   readonly #visible$ = new ReplaySubject<boolean>(1);
 
   readonly size = signal({ width: 0, height: 0 });
@@ -310,25 +320,70 @@ export class RxVirtualView
       }
     }
 
-    // if not enabled, we want to render sync and do nothing else
     // when enabled:
     // - register visibility listener
     // - hide things that are not visible anymore
-
     if (this.#enabled()) {
       this.#registerRenderingBasedOnVisibility();
-    } else {
-      // if not enabled immediately, we want to render sync
-      this.#showContentWhenDisabled();
-
-      if (this.#config.enableAfterHydration) {
-        effectOnceIf(
-          () => this.#enabled(),
-          () => this.#registerRenderingBasedOnVisibility(),
-          { injector: this.#injector },
-        );
-      }
+    } else if (this.#config.enableAfterHydration) {
+      // Disabled now (server / pre-hydration). Once the view becomes enabled
+      // (e.g. after hydration) switch to visibility-based rendering.
+      effectOnceIf(
+        () => this.#enabled(),
+        () => this.#registerRenderingBasedOnVisibility(),
+        { injector: this.#injector },
+      );
     }
+
+    // Keep the embedded content in sync with the active *rxVirtualViewContent
+    // directive. A single effect covers every case where #content() changes:
+    //  - the disabled/SSR initial render (show content as soon as available),
+    //  - deferred content that starts inside an inactive @if/@switch branch,
+    //  - runtime content-template swaps (e.g. an @switch case change) while the
+    //    host element stays mounted, in both the disabled and enabled states.
+    this.#registerContentSync();
+  }
+
+  /**
+   * Reactively renders the active content directive whenever it changes.
+   *
+   * While disabled the current content is always shown. While enabled the
+   * visibility pipeline owns the initial show/hide (and size handling), so this
+   * only re-renders a *swap* that happens while content is already shown —
+   * otherwise it would fight the placeholder/visibility logic.
+   * @private
+   */
+  #registerContentSync() {
+    effect(
+      () => {
+        const content = this.#content();
+        if (!content || content === this.#renderedContent) {
+          return;
+        }
+        const shouldShow = this.#enabled() ? this.#contentIsShown : true;
+        if (shouldShow) {
+          this.#renderContent(content);
+        }
+      },
+      { injector: this.#injector },
+    );
+  }
+
+  /**
+   * Creates the embedded view for the given content directive and marks it as
+   * the currently rendered content. Used for the disabled render and for
+   * runtime content-template swaps.
+   * @private
+   */
+  #renderContent(content: _RxVirtualViewContent) {
+    this.#contentIsShown = true;
+    this.#placeholderVisible.set(false);
+    this.#renderedContent = content;
+    const view = content.viewContainerRef.createEmbeddedView(
+      content.templateRef,
+    );
+    view.detectChanges();
+    this.visibilityChanged.emit({ content: true, placeholder: false });
   }
 
   #registerRenderingBasedOnVisibility() {
@@ -370,6 +425,7 @@ export class RxVirtualView
   ngOnDestroy() {
     this.#content.set(null);
     this.#placeholder.set(null);
+    this.#renderedContent = null;
     this.#viewCache?.clear(this);
   }
 
@@ -389,6 +445,7 @@ export class RxVirtualView
     return this.#strategyProvider.schedule(
       () => {
         this.#contentIsShown = true;
+        this.#renderedContent = this.#content();
         this.#placeholderVisible.set(false);
         const placeHolder = this.#content()!.viewContainerRef.detach();
         if (this.cacheEnabled() && placeHolder) {
@@ -406,32 +463,6 @@ export class RxVirtualView
       },
       { scope: this, strategy: this.contentStrategy() },
     );
-  }
-
-  /**
-   * Shows the content when the virtual view is disabled
-   * (e.g. while on the server, while hydration is in progress, or during tests)
-   * @private
-   */
-  #showContentWhenDisabled() {
-    const render = (content: _RxVirtualViewContent) => {
-      this.#contentIsShown = true;
-      this.#placeholderVisible.set(false);
-      content.viewContainerRef.createEmbeddedView(content.templateRef);
-      this.visibilityChanged.emit({ content: true, placeholder: false });
-    };
-
-    if (this.#content()) {
-      render(this.#content()!);
-    } else {
-      // if the content is not available immediately, we register an effect to wait for it
-      // e.g., when the content is inside a switch block that is not immediately active
-      effectOnceIf(
-        () => this.#content(),
-        (content) => render(content),
-        { injector: this.#injector },
-      );
-    }
   }
 
   /**

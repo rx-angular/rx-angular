@@ -1,6 +1,18 @@
-# Configuration
+---
+id: configure-merge-strategies
+title: 'How to configure merge strategies'
+diataxis_type: how-to
+package: rebundle
+legacy_guard: false
+sidebar_label: 'Configure merge strategies'
+sidebar_position: 2
+tags: [rebundle, guides]
+---
 
-You can add the plugin without any configuration. The default configuration uses the reachability strategy:
+# How to configure merge strategies
+
+You can add the plugin without any configuration. The default configuration uses
+the reachability strategy:
 
 ```ts title="esbuild.plugins.ts"
 import optimizeChunksPlugin from '@rx-angular/rebundle';
@@ -22,16 +34,19 @@ That is equivalent to this merge strategy config:
 }
 ```
 
-The default is the recommended starting point. It analyzes the esbuild output graph from the application entry chunk and merges chunks into the entry point that dominates them in the reachable graph.
+The default is the recommended starting point. It analyzes the esbuild output
+graph from the application entry chunk and merges chunks into the entry point
+that dominates them in the reachable graph.
 
 If you need more control, configure the plugin in one of two ways:
 
 1. Pass a static config from the build target.
 2. Reference a plugin file and build the config in TypeScript.
 
-### Static target config
+## Static target config
 
-Use target config when the strategy is static JSON and does not need environment variables, helper functions, comments, or shared TypeScript constants.
+Use target config when the strategy is static JSON and does not need environment
+variables, helper functions, comments, or shared TypeScript constants.
 
 ```json title="angular.json"
 {
@@ -73,11 +88,13 @@ import optimizeChunksPlugin from '@rx-angular/rebundle';
 export default optimizeChunksPlugin;
 ```
 
-The custom esbuild builder passes the `options` object from `angular.json` to the exported factory.
+The custom esbuild builder passes the `options` object from `angular.json` to the
+exported factory.
 
-### Plugin file config
+## Plugin file config
 
-Use a plugin file when the config benefits from TypeScript: shared constants, comments, conditionals, helper functions, or different configs per build mode.
+Use a plugin file when the config benefits from TypeScript: shared constants,
+comments, conditionals, helper functions, or different configs per build mode.
 
 ```ts title="esbuild.plugins.ts"
 import optimizeChunksPlugin from '@rx-angular/rebundle';
@@ -104,7 +121,7 @@ The build target only needs to reference the file:
 }
 ```
 
-### Merge strategy config
+## Merge strategy config
 
 The merge strategy config has this shape:
 
@@ -116,19 +133,26 @@ interface MergeStrategyConfig {
 }
 ```
 
-`name` identifies the config in logs and diagnostics. `strategies` is applied in order. `verbose` is reserved for more detailed diagnostics.
+`name` identifies the config in logs and diagnostics. `strategies` is applied in
+order. `verbose` is reserved for more detailed diagnostics.
 
-Strategies are intentionally order-dependent. Each strategy assigns one or more emitted JavaScript chunks to a merge group. Once a chunk has been assigned, later strategies cannot assign it again. Any JavaScript chunks left unassigned after all configured strategies run are kept as their own chunks.
+Strategies are intentionally order-dependent. Each strategy assigns one or more
+emitted JavaScript chunks to a merge group. Once a chunk has been assigned, later
+strategies cannot assign it again. Any JavaScript chunks left unassigned after
+all configured strategies run are kept as their own chunks.
 
-Entry point values in strategy config refer to esbuild metafile entry points, not emitted output filenames. In practice, that usually means source paths such as `src/main.ts`, `src/app/admin/admin.routes.ts`, or another source file used as a dynamic import entry point.
+Entry point values in strategy config refer to esbuild metafile entry points, not
+emitted output filenames. In practice, that usually means source paths such as
+`src/main.ts`, `src/app/admin/admin.routes.ts`, or another source file used as a
+dynamic import entry point.
 
-### Strategy examples
+## Strategy examples
 
 For detailed strategy behavior, see:
 
-- [Reachability](reachability.md)
-- [Static closure](static-closure.md)
-- [Common](common.md)
+- [Reachability](../reference/reachability.md)
+- [Static closure](../reference/static-closure.md)
+- [Common](../reference/common.md)
 
 Example with reachability plus one explicit static closure:
 
@@ -179,12 +203,17 @@ const mergeStrategy: MergeStrategyConfig = {
 export default optimizeChunksPlugin({ mergeStrategy });
 ```
 
-### Choosing a strategy
+## Choosing a strategy
 
-Start with no config. That uses reachability and is the safest default for large Angular applications with many lazy routes.
+Start with no config. That uses reachability and is the safest default for large
+Angular applications with many lazy routes.
 
-Add `static-closure` when a specific entry point should carry more of its static dependencies with it.
+Add `static-closure` when a specific entry point should carry more of its static
+dependencies with it.
 
-Add `common` when you have a known set of entry points that should share a dependency group.
+Add `common` when you have a known set of entry points that should share a
+dependency group.
 
-Prefer small, intentional configs. A strategy config is a bundling policy, so each extra rule should describe a real loading behavior you want in the application.
+Prefer small, intentional configs. A strategy config is a bundling policy, so
+each extra rule should describe a real loading behavior you want in the
+application.

@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import React from 'react';
 import styles from './index.module.css';
 
-function HomepageHeader(): JSX.Element {
+function HomepageHeader(): React.JSX.Element {
   return (
     <header className={styles.hero}>
       <div className={clsx('container', styles.heroInner)}>
@@ -37,21 +37,21 @@ function HomepageHeader(): JSX.Element {
         </div>
         <p className={styles.heroPackages}>
           state <b>·</b> template <b>·</b> cdk <b>·</b> isr <b>·</b>{' '}
-          eslint-plugin
+          eslint-plugin <b>·</b> rebundle
         </p>
       </div>
     </header>
   );
 }
 
-export default function Home(): JSX.Element {
+export default function Home(): React.JSX.Element {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout title={siteConfig.title} description={siteConfig.tagline}>
       <HomepageHeader />
       <main className={styles.main}>
         <section id="packages" className={styles.packages}>
-          <h2 className={styles.sectionTitle}>Five packages, one job each.</h2>
+          <h2 className={styles.sectionTitle}>Six packages, one job each.</h2>
           <p className={styles.sectionLede}>
             Each package stands alone. Reach for signals and native control flow
             first, then add the one that fits your problem.

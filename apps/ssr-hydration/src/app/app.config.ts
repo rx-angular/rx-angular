@@ -8,6 +8,7 @@ import {
   provideClientHydration,
   withEventReplay,
 } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
 import {
   provideRxRenderStrategies,
   RX_CONCURRENT_STRATEGIES,
@@ -15,9 +16,11 @@ import {
 import { HydrationTracker } from '@rx-angular/cdk/ssr';
 import { provideVirtualViewConfig } from '@rx-angular/template/virtual-view';
 import { switchMap, tap } from 'rxjs';
+import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),

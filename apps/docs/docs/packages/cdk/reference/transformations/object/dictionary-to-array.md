@@ -86,4 +86,4 @@ function dictionaryToArray<T>(dictionary: { [key: string]: T }): T[];
 
 #### dictionary
 
-###### typeof: { [key: string]: T }
+###### typeof: \{ [key: string]: T \}

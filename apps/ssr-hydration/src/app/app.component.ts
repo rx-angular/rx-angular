@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { HydrationDemo } from './hydration-demo';
-import { VVHydrationDemo } from './vv-demo';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
-  imports: [VVHydrationDemo, HydrationDemo],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {}

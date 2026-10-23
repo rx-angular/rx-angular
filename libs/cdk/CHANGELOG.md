@@ -1,3 +1,19 @@
+## 21.1.1 (2026-07-21)
+
+### Documentation Changes
+
+- restructure into Diátaxis and redesign the homepage ([#1913](https://github.com/rx-angular/rx-angular/pull/1913), [#1918](https://github.com/rx-angular/rx-angular/issues/1918))
+- fix broken CI status badge URLs ([a8ac8477](https://github.com/rx-angular/rx-angular/commit/a8ac8477))
+
+### ❤️ Thank You
+
+- Enea Jahollari @eneajaho
+- Hanna Skryl @hanna-skryl
+- hanna-skryl
+- Julian Jandl @hoebbelsB
+- Kirill
+- Michael Hladky @rx-angular
+
 ## 21.1.0 (2026-03-17)
 
 ### 🚀 Features
