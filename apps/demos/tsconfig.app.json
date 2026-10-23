@@ -6,6 +6,6 @@
     "moduleResolution": "bundler"
   },
   "files": ["src/main.ts", "src/polyfills.ts"],
-  "exclude": ["jest.config.ts"],
+  "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
   "include": ["src/**/*.ts"]
 }
