@@ -10,10 +10,10 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   Component,
   input,
   signal,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { RxVirtualView } from '../../virtual-view.directive';
 import { RxVirtualViewContent } from '../../virtual-view-content.directive';

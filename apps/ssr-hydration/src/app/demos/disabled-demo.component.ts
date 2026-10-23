@@ -1,8 +1,8 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   signal,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   provideVirtualViewConfig,

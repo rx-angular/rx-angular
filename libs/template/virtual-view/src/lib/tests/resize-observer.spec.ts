@@ -1,8 +1,8 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   inject,
   PLATFORM_ID,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM } from '@rx-angular/cdk/ssr';

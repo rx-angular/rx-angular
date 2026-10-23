@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   inject,
   Input,
@@ -8,7 +9,6 @@ import {
   PLATFORM_ID,
   signal,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   RxVirtualView,

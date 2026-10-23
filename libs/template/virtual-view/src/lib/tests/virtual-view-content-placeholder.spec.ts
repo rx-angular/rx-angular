@@ -1,8 +1,8 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   TemplateRef,
   ViewContainerRef,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxVirtualView } from '../virtual-view.directive';

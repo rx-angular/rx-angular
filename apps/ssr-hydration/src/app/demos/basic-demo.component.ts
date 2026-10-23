@@ -1,11 +1,11 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
   PLATFORM_ID,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { HydrationTracker } from '@rx-angular/cdk/ssr';
 import { VVHydrationDemo } from '../vv-demo';
