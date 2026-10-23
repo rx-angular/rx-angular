@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
-import { Hooks } from '../../hooks';
 import { DirtyChecksComponent } from '../../dirty-checks/dirty-checks.component';
+import { Hooks } from '../../hooks';
 import { RenderingsComponent } from '../../renderings/renderings.component';
 
 @Component({
@@ -31,6 +31,7 @@ import { RenderingsComponent } from '../../renderings/renderings.component';
     '[style.width.px]': 'size',
     '[class]': 'classNames',
   },
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DirtyChecksComponent, RenderingsComponent],
 })
 export class VisualizerComponent extends Hooks {
@@ -82,9 +83,7 @@ export class VisualizerComponent extends Hooks {
       switchMap(() =>
         this.changeO$.pipe(
           distinctUntilChanged(),
-          switchMap((o$) =>
-            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$,
-          ),
+          switchMap((o$) => (this.key ? o$.pipe(map((s) => s[this.key])) : o$)),
           distinctUntilChanged(),
           tap((v) => console.log('value', v)),
         ),

@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   selector: 'app-root',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <nav>
       <a routerLink="/static" routerLinkActive="active">Static</a>

@@ -46,8 +46,8 @@ export function actionProxyHandler<T extends object, U extends object>({
     apply(_: RxActions<T, U>, __: any, props: [T]): any {
       props.forEach((slice) =>
         Object.entries(slice).forEach(([k, v]) =>
-          dispatch(v as any, k as any as KeysOfT)
-        )
+          dispatch(v as any, k as any as KeysOfT),
+        ),
       );
     },
     get(_, property: string) {
@@ -61,7 +61,7 @@ export function actionProxyHandler<T extends object, U extends object>({
             merge(
               ...props.map((k) => {
                 return getEventEmitter(k);
-              })
+              }),
             );
         }
         // the user wants to get a single EventEmitter as observable `eventEmitter.prop$`
@@ -78,7 +78,7 @@ export function actionProxyHandler<T extends object, U extends object>({
           slicedPropName.slice(1)) as KeysOfT;
         return (
           behaviour: OperatorFunction<T[KeysOfT], T[KeysOfT]>,
-          sf: (v: T[KeysOfT]) => void
+          sf: (v: T[KeysOfT]) => void,
         ) => {
           const sub = getEventEmitter(propName).pipe(behaviour).subscribe(sf);
           effectMap[propName] = sub;

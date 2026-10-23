@@ -14,7 +14,7 @@ describe('onStrategy', () => {
       return (o$) =>
         o$.pipe(
           observeOn(animationFrameScheduler),
-          tap(() => work())
+          tap(() => work()),
         );
     },
   };

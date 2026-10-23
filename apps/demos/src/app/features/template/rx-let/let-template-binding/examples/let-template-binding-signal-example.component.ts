@@ -1,5 +1,11 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject, Injector, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  Injector,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -74,6 +80,7 @@ import { Subject } from 'rxjs';
       ></mat-progress-spinner>
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       h1 {

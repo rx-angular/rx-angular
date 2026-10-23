@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   bail: true,
   preset: '../../jest.preset.js',

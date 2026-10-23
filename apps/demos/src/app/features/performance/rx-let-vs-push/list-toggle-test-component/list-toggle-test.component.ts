@@ -1,11 +1,11 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
+import { AfterViewInit, Component, Input } from '@angular/core';
+import { RxLet } from '@rx-angular/template/let';
+import { RxPush } from '@rx-angular/template/push';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { finalize, take, tap } from 'rxjs/operators';
-import { RenderingWorkComponent } from '../../../../shared/debug-helper/rendering-work/rendering-work/rendering-work.component';
-import { RxLet } from '../../../../../../../../libs/template/let/src/lib/let.directive';
-import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
+import { environment } from '../../../../../environments/environment';
 import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { RenderingWorkComponent } from '../../../../shared/debug-helper/rendering-work/rendering-work/rendering-work.component';
 
 @Component({
   selector: 'rxa-list-toggle-test',

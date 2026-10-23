@@ -29,8 +29,10 @@ const initState: DemoBasicsBaseModel = {
 };
 
 @Injectable()
-export class DemoBasicsViewModelService extends RxState<DemoBasicsBaseModel>
-  implements DemoBasicsView {
+export class DemoBasicsViewModelService
+  extends RxState<DemoBasicsBaseModel>
+  implements DemoBasicsView
+{
   baseModel$ = this.select();
 
   refreshClicks = new Subject<Event>();
@@ -40,8 +42,8 @@ export class DemoBasicsViewModelService extends RxState<DemoBasicsBaseModel>
     this.refreshClicks,
     this.select(
       map((s) => s.refreshInterval),
-      filter((refreshInterval) => refreshInterval > 4000)
-    ).pipe(switchMap((ms) => timer(ms)))
+      filter((refreshInterval) => refreshInterval > 4000),
+    ).pipe(switchMap((ms) => timer(ms))),
   );
 
   constructor() {

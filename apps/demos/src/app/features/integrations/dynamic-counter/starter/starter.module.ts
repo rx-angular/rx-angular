@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ROUTES } from './starter.routes';
-import { StarterComponent } from './starter.component';
 import { SharedModule } from '../shared/shared.module';
+import { StarterComponent } from './starter.component';
+import { ROUTES } from './starter.routes';
 
 const DECLARATIONS = [StarterComponent];
 

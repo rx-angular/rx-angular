@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DataService } from '../shared/data.service';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { RxLet } from '../../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { DataService } from '../shared/data.service';
 import { ValueDisplayComponent } from '../shared/value-display.component';
 import { V2HComponent } from './v2-h.component';
 

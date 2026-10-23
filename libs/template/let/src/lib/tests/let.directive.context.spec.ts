@@ -1,5 +1,10 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectorRef, Component, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewContainerRef,
+} from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -23,6 +28,7 @@ import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ng-container
       *rxLet="

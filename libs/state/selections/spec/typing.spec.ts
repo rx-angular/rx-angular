@@ -15,7 +15,7 @@ describe('isPromiseGuard', () => {
     expect(
       isPromiseGuard({
         then: () => {},
-      })
+      }),
     ).toBeTruthy();
   });
 
@@ -73,7 +73,7 @@ describe('isIterableGuard', () => {
     expect(
       isIterableGuard({
         [Symbol.iterator]: () => {},
-      })
+      }),
     ).toBeTruthy();
   });
 
@@ -90,7 +90,7 @@ describe('isKeyOf', () => {
     expect(isKeyOf<{ num: number }>('num')).toBeTruthy();
     expect(isKeyOf<{ 1: number }>(1)).toBeTruthy();
     expect(
-      isKeyOf<{ [Symbol.iterator]: number }>(Symbol.iterator)
+      isKeyOf<{ [Symbol.iterator]: number }>(Symbol.iterator),
     ).toBeTruthy();
   });
 

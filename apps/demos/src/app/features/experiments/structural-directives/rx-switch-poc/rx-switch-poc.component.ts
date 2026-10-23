@@ -1,15 +1,12 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { toInt } from '../../../../shared/debug-helper/value-provider';
-import { stateful } from '@rx-angular/state/selections';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { BehaviorSubject } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
 import { RxSwitch } from '../../../../rx-angular-pocs/template/directives/switch/rx-switch.directive';
 import { RxSwitchCase } from '../../../../rx-angular-pocs/template/directives/switch/rx-switch-case.directive';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-switch-poc',

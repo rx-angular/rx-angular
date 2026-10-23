@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
@@ -23,6 +24,7 @@ import { VVHydrationDemo } from '../vv-demo';
   selector: 'app-basic-hydration-demo',
   imports: [VVHydrationDemo],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container">
       @if (showAfterHydration()) {

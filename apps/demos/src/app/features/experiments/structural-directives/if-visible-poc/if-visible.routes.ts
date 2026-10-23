@@ -4,6 +4,6 @@ import { IfVisibleComponent } from './if-visible.component';
 export const ROUTES: Routes = [
   {
     path: '',
-    component: IfVisibleComponent
-  }
+    component: IfVisibleComponent,
+  },
 ];

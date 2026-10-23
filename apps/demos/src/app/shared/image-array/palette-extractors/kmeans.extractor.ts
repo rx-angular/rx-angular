@@ -1,5 +1,5 @@
-import { computeAverageColor } from '../pixel-image';
 import { RGBA, RGBAs } from '../model';
+import { computeAverageColor } from '../pixel-image';
 
 const RERUN_COUNT = 10;
 
@@ -8,26 +8,27 @@ type Groups = RGBA[][];
 type Means = RGBA[];
 
 interface ClusterResult {
-  means: Means
-  clusters: Clusters,
-  error: number
+  means: Means;
+  clusters: Clusters;
+  error: number;
 }
 
 interface MeanResult {
-  means: Means,
-  groups: Groups,
-  error: number
+  means: Means;
+  groups: Groups;
+  error: number;
 }
 
 interface KMeansResult {
-  clusters: Clusters,
-  error: number
+  clusters: Clusters;
+  error: number;
 }
 
 class KMeansRunner {
-
   palette(result: KMeansResult): RGBAs {
-    return result.clusters.map(rgba => computeAverageColor(rgba).map(v => ~~v) as RGBA)
+    return result.clusters.map(
+      (rgba) => computeAverageColor(rgba).map((v) => ~~v) as RGBA,
+    );
   }
 
   run(k: number, pixels: RGBAs): KMeansResult {
@@ -45,7 +46,7 @@ class KMeansRunner {
 
     return {
       clusters: clusters,
-      error: error
+      error: error,
     };
   }
 
@@ -70,7 +71,7 @@ class KMeansRunner {
     return {
       clusters: result.groups,
       error: result.error,
-      means: result.means
+      means: result.means,
     };
   }
 
@@ -85,9 +86,11 @@ class KMeansRunner {
     meansA.forEach((mean) => {
       let meanIsAlsoInMeansB = false;
       meansB.forEach((otherMean) => {
-        if ((mean[0].toFixed(2) === otherMean[0].toFixed(2)) &&
-          (mean[1].toFixed(2) === otherMean[1].toFixed(2)) &&
-          (mean[2].toFixed(2) === otherMean[2].toFixed(2))) {
+        if (
+          mean[0].toFixed(2) === otherMean[0].toFixed(2) &&
+          mean[1].toFixed(2) === otherMean[1].toFixed(2) &&
+          mean[2].toFixed(2) === otherMean[2].toFixed(2)
+        ) {
           meanIsAlsoInMeansB = true;
         }
       });
@@ -106,7 +109,10 @@ class KMeansRunner {
       let bestGroupError = Infinity;
 
       means.forEach((mean, index) => {
-        const error = this.distance([pixel[0], pixel[1], pixel[2]], [mean[0], mean[1], mean[2]]);
+        const error = this.distance(
+          [pixel[0], pixel[1], pixel[2]],
+          [mean[0], mean[1], mean[2]],
+        );
         if (error < bestGroupError) {
           bestGroupError = error;
           bestGroupIndex = index;
@@ -118,7 +124,7 @@ class KMeansRunner {
     return {
       means: means,
       groups: groups,
-      error: totalError
+      error: totalError,
     };
   }
 
@@ -129,7 +135,6 @@ class KMeansRunner {
     });
     return Math.sqrt(squaredDiffs.reduce((s, n) => s + n, 0));
   }
-
 }
 
 export const kMeansRunner = new KMeansRunner();

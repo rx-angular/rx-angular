@@ -4,6 +4,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxState } from '@rx-angular/state';
 import { RxFor } from '@rx-angular/template/for';
 import { RxLet } from '@rx-angular/template/let';
 import {
@@ -16,11 +17,10 @@ import {
   Subject,
 } from 'rxjs';
 import { scan, share, switchMap } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
+import { environment } from '../../../../../environments/environment';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
-import { environment } from '../../../../../environments/environment';
 import { RxForValueComponent } from './rx-for-value.component';
 import { immutableArr } from './utils';
 
@@ -70,7 +70,7 @@ import { immutableArr } from './utils';
                   min="1"
                   #r
                   type="number"
-                  [value]="table?.rows + ''"
+                  [value]="$safeNavigationMigration(table?.rows) + ''"
                   (input)="set({ rows: +r.value })"
                 />
               </mat-form-field>
@@ -81,7 +81,7 @@ import { immutableArr } from './utils';
                   min="1"
                   #c
                   type="number"
-                  [value]="table?.columns + ''"
+                  [value]="$safeNavigationMigration(table?.columns) + ''"
                   (input)="set({ columns: +c.value })"
                 />
               </mat-form-field>

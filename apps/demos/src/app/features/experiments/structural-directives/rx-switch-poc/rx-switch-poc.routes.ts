@@ -4,6 +4,6 @@ import { RxSwitchPocComponent } from './rx-switch-poc.component';
 export const ROUTES: Routes = [
   {
     path: '',
-    component: RxSwitchPocComponent
-  }
+    component: RxSwitchPocComponent,
+  },
 ];

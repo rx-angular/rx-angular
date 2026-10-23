@@ -4,12 +4,12 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { MatButton } from '@angular/material/button';
-import { UnpatchEventsDirective } from '../../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.directive';
+import { Subject } from 'rxjs';
 import { RxLet } from '../../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { UnpatchEventsDirective } from '../../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.directive';
 import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-v3-b',

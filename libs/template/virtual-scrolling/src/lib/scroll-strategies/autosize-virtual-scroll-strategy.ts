@@ -101,9 +101,9 @@ const defaultSizeExtract = (entry: ResizeObserverEntry) =>
   standalone: true,
 })
 export class AutoSizeVirtualScrollStrategy<
-    T,
-    U extends NgIterable<T> = NgIterable<T>,
-  >
+  T,
+  U extends NgIterable<T> = NgIterable<T>,
+>
   extends RxVirtualScrollStrategy<T, U>
   implements OnChanges, OnDestroy
 {

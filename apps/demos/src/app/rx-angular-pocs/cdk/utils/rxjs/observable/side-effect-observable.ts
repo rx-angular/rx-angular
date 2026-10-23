@@ -1,5 +1,4 @@
 import {
-  EMPTY,
   merge,
   Observable,
   queueScheduler,
@@ -7,16 +6,16 @@ import {
   Subscribable,
   Subscription,
 } from 'rxjs';
-import { catchError, mergeAll, observeOn } from 'rxjs/operators';
+import { mergeAll, observeOn } from 'rxjs/operators';
 
 export function createSideEffectObservable<T>(
-  stateObservables = new Subject<Observable<T>>()
+  stateObservables = new Subject<Observable<T>>(),
 ): {
   effects$: Observable<T>;
   nextEffectObservable: (effect$: Observable<T>) => void;
 } & Subscribable<T> {
   const effects$: Observable<T> = merge(
-    stateObservables.pipe(mergeAll(), observeOn(queueScheduler))
+    stateObservables.pipe(mergeAll(), observeOn(queueScheduler)),
   );
 
   function nextEffectObservable(effect$: Observable<T>): void {

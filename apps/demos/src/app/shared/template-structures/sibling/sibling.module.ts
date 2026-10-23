@@ -4,23 +4,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RxPush } from '@rx-angular/template/push';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
-
+import { RxForModule, RxLetModule } from '../../../rx-angular-pocs';
 import { DirtyChecksModule } from '../../debug-helper/dirty-checks';
 import { RenderingsModule } from '../../debug-helper/renderings';
 import { StrategySelectModule } from '../../debug-helper/strategy-select';
-
 import { VisualizerModule } from '../../debug-helper/visualizer';
 import { WorkModule } from '../../debug-helper/work/work.module';
+import { ImageArrayModule } from '../../image-array/image-array.module';
 import { SiblingAsyncComponent } from './sibling-async.component';
 import { SiblingCustomComponent } from './sibling-custom.component';
+import { SiblingPixelImgComponent } from './sibling-pixel-img.component';
 import { SiblingProgressiveComponent } from './sibling-progressive.component';
 import { SiblingPushComponent } from './sibling-push.component';
 import { SiblingStaticComponent } from './sibling-static.component';
-
 import { SiblingStrategyComponent } from './sibling-strategy.component';
-import { ImageArrayModule } from '../../image-array/image-array.module';
-import { SiblingPixelImgComponent } from './sibling-pixel-img.component';
-import { RxForModule, RxLetModule } from '../../../rx-angular-pocs';
 
 const DECLARATIONS = [
   SiblingStaticComponent,

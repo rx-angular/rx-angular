@@ -27,7 +27,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
       'connect',
       'hold',
     ])} ${rxstateMethodCallExpression(['get', 'set'])}`]: (
-      node: TSESTree.CallExpression
+      node: TSESTree.CallExpression,
     ) => {
       context.report({
         node,

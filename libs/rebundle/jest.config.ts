@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: 'rebundle',
   preset: '../../jest.preset.js',

@@ -1,4 +1,9 @@
-import { Component, ElementRef, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  input,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RxVirtualView } from '../virtual-view.directive';
@@ -27,6 +32,7 @@ import { configureBrowser, configureServer } from './test-utils/testbed';
     RxVirtualViewContent,
     RxVirtualViewPlaceholder,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container" rxVirtualViewObserver [root]="root()">
       <div rxVirtualView class="widget">

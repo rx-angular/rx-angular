@@ -1,7 +1,7 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { WorkVisualizerComponent } from '../../debug-helper/visualizer/visualizer/work-visualizer.component';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'rxa-recursive-observable-work-async',

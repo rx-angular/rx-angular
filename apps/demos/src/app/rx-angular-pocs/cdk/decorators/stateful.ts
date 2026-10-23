@@ -1,6 +1,6 @@
 import {
-  ɵɵdirectiveInject as directiveInject,
   ChangeDetectorRef,
+  ɵɵdirectiveInject as directiveInject,
   Type,
 } from '@angular/core';
 import {
@@ -16,7 +16,7 @@ export function renderOnChange<T = Type<any>>(
   config: {
     cdRef: ChangeDetectorRef;
     strategyName?: string;
-  }
+  },
 ) {
   const strategyProvider: RxStrategyProvider =
     directiveInject(RxStrategyProvider);
@@ -25,13 +25,13 @@ export function renderOnChange<T = Type<any>>(
 
   function scheduleCD(
     s: RxStrategyCredentials,
-    work: () => void
+    work: () => void,
   ): AbortController {
     const abC = new AbortController();
     of(null)
       .pipe(
         s.behavior({ work, scope: component as any }),
-        takeUntil(fromEvent(abC.signal, 'abort'))
+        takeUntil(fromEvent(abC.signal, 'abort')),
       )
       .subscribe();
     return abC;

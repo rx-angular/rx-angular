@@ -7,12 +7,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RxState } from '@rx-angular/state';
 import { RxLet } from '@rx-angular/template/let';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
-import { RxState } from '@rx-angular/state';
 import { Observable, Subject } from 'rxjs';
 import { map, scan, share } from 'rxjs/operators';
-
 import { DocsLinkComponent } from '../../../shared/docs-link';
 import { FormGhostComponent } from '../../../shared/ghost-elements/form-ghost/form-ghost.component';
 
@@ -62,7 +61,11 @@ import { FormGhostComponent } from '../../../shared/ghost-elements/form-ghost/fo
             <input
               type="text"
               [value]="r"
-              (input)="numbersSubject$.next($event.target?.value)"
+              (input)="
+                numbersSubject$.next(
+                  $safeNavigationMigration($event.target?.value)
+                )
+              "
               matInput
             />
           </mat-form-field>

@@ -5,5 +5,5 @@ export const TUTORIALS_MENU = [
     label: 'Basics',
     link: 'basics',
     children: TUTORIAL_BASICS_MENU,
-  }
+  },
 ];

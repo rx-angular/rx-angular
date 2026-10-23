@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-recursive-static',

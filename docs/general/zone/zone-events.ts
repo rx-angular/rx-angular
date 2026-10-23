@@ -9,7 +9,7 @@ export const mouseEvent = [
   'mouseup',
   'click',
   // (WheelEvent)[https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent]
-  'wheel'
+  'wheel',
 ];
 
 export const touchEvents = [
@@ -39,7 +39,7 @@ export const touchEvents = [
   'dragleave',
   'dragover',
   'dragstart',
-  'drop'
+  'drop',
 ];
 
 export const formControlsEvents = [
@@ -47,28 +47,28 @@ export const formControlsEvents = [
   'blur',
   'focus',
   'contextmenu',
-  'input'
+  'input',
 ];
 
 export const globalEvents = [
   // window
   'scroll',
   'load',
-  'error'
+  'error',
 ];
 
 export const eventGroups = {
   mouseEvents: mouseEvent,
   touchEvents,
   formControlsEvents,
-  globalEvents
+  globalEvents,
 };
 
 export const allEvents = [
   ...mouseEvent,
   ...touchEvents,
   ...formControlsEvents,
-  ...globalEvents
+  ...globalEvents,
 ];
 
 export const eventTargets = [
@@ -77,13 +77,12 @@ export const eventTargets = [
   HTMLBodyElement,
   HTMLBodyElement.prototype,
   HTMLElement,
-  HTMLElement.prototype
+  HTMLElement.prototype,
 ];
 
 export function setupTargets(targets) {
   (window as any).__Zone_ignore_on_properties = targets.forEach((target) => ({
-      target,
-      ignoreProperties: allEvents
-    })
-  );
+    target,
+    ignoreProperties: allEvents,
+  }));
 }

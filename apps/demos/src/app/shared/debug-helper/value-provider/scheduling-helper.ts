@@ -1,50 +1,56 @@
 import { BehaviorSubject, EMPTY, Observable, Subject } from 'rxjs';
 import { scan, share, switchAll, switchMap } from 'rxjs/operators';
-import { toTick } from './utils';
 import { SchedulingPriority } from './model';
+import { toTick } from './utils';
 
 export const schedulingHelper = () => {
-
   let active = false;
 
-  const schedulerSubject = new BehaviorSubject<SchedulingPriority>(SchedulingPriority.animationFrame);
+  const schedulerSubject = new BehaviorSubject<SchedulingPriority>(
+    SchedulingPriority.animationFrame,
+  );
   const tickSubject$ = new Subject<Observable<number>>();
   const ticks$ = tickSubject$.pipe(
     switchAll(),
-    scan(a => ++a, 0),
-    share()
+    scan((a) => ++a, 0),
+    share(),
   );
 
   const toggle = (): void => {
-    tickSubject$.next(active ? EMPTY as Observable<any> : schedulerSubject.pipe(
-      switchMap((s) => toTick({ scheduler: s }))
-    ));
+    tickSubject$.next(
+      active
+        ? (EMPTY as Observable<any>)
+        : schedulerSubject.pipe(switchMap((s) => toTick({ scheduler: s }))),
+    );
     active = !active;
   };
-
 
   const duration = (d: number): void => {
-    tickSubject$.next(active ? EMPTY as Observable<any> : schedulerSubject.pipe(
-      switchMap((s) => toTick({ scheduler: s, duration: d }))
-    ));
+    tickSubject$.next(
+      active
+        ? (EMPTY as Observable<any>)
+        : schedulerSubject.pipe(
+            switchMap((s) => toTick({ scheduler: s, duration: d })),
+          ),
+    );
     active = !active;
   };
-
 
   const scheduler = (schedulerName: SchedulingPriority): void => {
     schedulerSubject.next(schedulerName);
   };
 
-  const tick = (numEmissions: number = 1, tickSpeed?: number|number[]): void => {
+  const tick = (numEmissions = 1, tickSpeed?: number | number[]): void => {
     tickSubject$.next(
       schedulerSubject.pipe(
-        switchMap((s) => toTick({
+        switchMap((s) =>
+          toTick({
             scheduler: s,
             numEmissions,
-            tickSpeed
-          })
-        )
-      )
+            tickSpeed,
+          }),
+        ),
+      ),
     );
   };
 
@@ -53,7 +59,6 @@ export const schedulingHelper = () => {
     ticks$,
     tick,
     toggle,
-    duration
+    duration,
   };
-
 };

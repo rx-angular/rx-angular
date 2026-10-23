@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,22 +7,21 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 //👇 Import { map }
 import { map, startWith, tap } from 'rxjs/operators';
 import { ListServerItem, ListService } from '../data-access/list-resource';
-import {
-  MatExpansionPanel,
-  MatExpansionPanelHeader,
-  MatExpansionPanelTitle,
-  MatExpansionPanelDescription,
-} from '@angular/material/expansion';
-import { MatProgressBar } from '@angular/material/progress-bar';
-import { MatButton } from '@angular/material/button';
-import { MatList, MatListItem } from '@angular/material/list';
-import { MatCard } from '@angular/material/card';
-import { AsyncPipe } from '@angular/common';
 
 export interface DemoBasicsItem {
   id: string;

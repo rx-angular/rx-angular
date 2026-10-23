@@ -4,11 +4,10 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DirtyChecksModule } from '../../../rx-angular-pocs/cdk/debug/dirty-check/dirty-checks.module';
 import { UnpatchEventsModule } from '../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.module';
-
-import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
-import { DocsLinkComponent } from '../../../shared/docs-link';
 import { StrategySelectComponent } from '../../../shared/debug-helper/strategy-select';
 import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
+import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
+import { DocsLinkComponent } from '../../../shared/docs-link';
 
 @Component({
   selector: 'rxa-rx-let-basic',

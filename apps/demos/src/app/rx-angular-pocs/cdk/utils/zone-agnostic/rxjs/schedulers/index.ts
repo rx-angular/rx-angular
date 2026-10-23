@@ -1,4 +1,4 @@
-export * from './async/async';
-export * from './asap/asap';
-export * from './queue/queue';
 export * from './animation-frame/animationFrame';
+export * from './asap/asap';
+export * from './async/async';
+export * from './queue/queue';

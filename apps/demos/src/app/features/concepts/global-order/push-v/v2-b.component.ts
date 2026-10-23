@@ -1,18 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
   Output,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { RxPush } from '@rx-angular/template/push';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
-import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
-import { MatButton } from '@angular/material/button';
 import { UnpatchEventsDirective } from '../../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.directive';
 import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
-import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
+import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-v2-b',

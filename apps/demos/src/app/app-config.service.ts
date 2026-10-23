@@ -23,12 +23,12 @@ export class AppConfigService extends RxState<CdConfig> {
 
   constructor(
     protected appRef: ApplicationRef,
-    protected ngZone: NgZone
+    protected ngZone: NgZone,
   ) {
     super();
     this.set({
       rippleOn: false,
-      strategy: 'local'
+      strategy: 'local',
     });
   }
 

@@ -23,6 +23,7 @@
 ## General test cases:
 
 ### Static Template Structures
+
 Test cases targeting the common scenarios in statically created template structures.
 
 #### Passing Values through input bindings:
@@ -30,25 +31,28 @@ Test cases targeting the common scenarios in statically created template structu
 - statically/async/push/observable (dirtyCheck scripting work)
 
 #### Eager vs Lazy Template:
+
 - Bootstrap *ngIf vs *rxLet / *ngIf+placeholders *rxLet+placeholder
 - Updating *ngIf vs *rxLet / *ngIf+placeholders *rxLet+placeholder
 
 ### Conditional Template Structures
 
-Test cases targeting the common scenarios in conditionally created template structures. 
-These are all kind of template expressions as well as structural directives used to 
-conditionally set a value or render a template snippet. e.g. *ngIf, ngClass
+Test cases targeting the common scenarios in conditionally created template structures.
+These are all kind of template expressions as well as structural directives used to
+conditionally set a value or render a template snippet. e.g. \*ngIf, ngClass
 
 #### EmbeddedView Caching vs No EmbeddedView Caching
-  - *ngIf vs *rxLet / *ngIf+placeholder vs *rxLet+placeholder
+
+- *ngIf vs *rxLet / *ngIf+placeholder vs *rxLet+placeholder
   low num of components & high num of work load / high num of components & low num of work load
 
 ### Iterable Template Structures
-  - *ngIf vs *rxLet / *ngIf+placeholder vs *rxLet+placeholder
+
+- *ngIf vs *rxLet / *ngIf+placeholder vs *rxLet+placeholder
   low num of components & high num of work load / high num of components & low num of work load
 
+Lists:
 
-Lists: 
 - creating 1,000 rows
 - updating all 1,000 rows (5 warmup runs)
 - updating every 10th row for 1,000 rows (3 warmup runs).

@@ -1,30 +1,29 @@
 # Zone Configuration
-  
-  ## Event Coalescing
 
-  ```typescript
-  // main.ts
+## Event Coalescing
 
-  platformBrowserDynamic()
+```typescript
+// main.ts
+
+platformBrowserDynamic()
   .bootstrapModule(AppModule, { ngZoneEventCoalescing: true })
-  .catch(err => console.error(err));
-  ```
+  .catch((err) => console.error(err));
+```
 
-  ## Global API patching
+## Global API patching
 
-  ```typescript
-  // main.ts
-  import { disableGlobalAPIs, globalAPIs } from './zone-global-aps';
+```typescript
+// main.ts
+import { disableGlobalAPIs, globalAPIs } from './zone-global-aps';
 
-  disableGlobalAPIs(globalAPIs);
-  ```
+disableGlobalAPIs(globalAPIs);
+```
 
-  ## Event intersection
+## Event intersection
 
-  ```typescript
-  // main.ts
-  import { eventTargets, setupTargets } from './zone-events';
+```typescript
+// main.ts
+import { eventTargets, setupTargets } from './zone-events';
 
-  setupTargets(eventTargets);
-  ```
-
+setupTargets(eventTargets);
+```

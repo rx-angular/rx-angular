@@ -5,13 +5,13 @@ import {
   Input,
   Output,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { RxState } from '@rx-angular/state';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { Observable, Subject } from 'rxjs';
+import { ZonePatchedIconComponent } from '../../../zone-patched-icon/zone-patched-icon.component';
 import { ProvidedValues } from '../model';
 import { PrimitivesProviderService } from '../primitives-provider.service';
-import { MatButton } from '@angular/material/button';
-import { ZonePatchedIconComponent } from '../../../zone-patched-icon/zone-patched-icon.component';
-import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
 
 @Component({
   selector: 'rxa-value-provider',
