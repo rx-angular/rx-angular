@@ -70,7 +70,7 @@ export class AnyComponent {}
 
 ## Version compatibility
 
-`@rx-angular/template` v21 peers Angular `^21`. For RxJS, RxAngular follows the
+`@rx-angular/template` v22 peers Angular `>=22`. For RxJS, RxAngular follows the
 same compatibility ranges as the Angular framework itself; see the
 [official Angular versioning guide](https://angular.dev/reference/versions).
 
