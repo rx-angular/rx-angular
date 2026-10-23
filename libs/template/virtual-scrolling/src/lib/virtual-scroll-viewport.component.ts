@@ -77,11 +77,7 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
   imports: [],
 })
 export class RxVirtualScrollViewportComponent
-  implements
-    RxVirtualScrollViewport,
-    AfterViewInit,
-    AfterContentInit,
-    OnDestroy
+  implements RxVirtualScrollViewport, AfterViewInit, AfterContentInit, OnDestroy
 {
   private elementRef = inject(ElementRef<HTMLElement>);
   private scrollStrategy = inject(RxVirtualScrollStrategy<unknown>, {
@@ -173,6 +169,20 @@ export class RxVirtualScrollViewportComponent
   }
 
   ngAfterViewInit() {
+    // The ResizeObserver delivers its first entry only when the browser
+    // produces a rendering frame. Hidden or occluded tabs don't produce any
+    // (e.g. chrome treats a fully covered window as invisible), which would
+    // leave the strategies without a container size - rendering nothing until
+    // the tab becomes visible again. Layout information is available
+    // synchronously even in that state, so the initial rect gets measured
+    // directly. The ResizeObserver keeps it up to date from here on.
+    const containerElement =
+      this.scrollElement?.getElementRef()?.nativeElement ??
+      this.elementRef.nativeElement;
+    this._containerRect$.next({
+      height: containerElement.clientHeight,
+      width: containerElement.clientWidth,
+    });
     this.scrollStrategy.contentSize$
       .pipe(distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((size) => {

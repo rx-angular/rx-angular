@@ -30,6 +30,13 @@ export interface Message {
 export class MessageService {
   constructor() {}
 
+  /**
+   * Simulated network latency. Deliberately slow enough that the loading state
+   * is actually visible - a real chat backend rarely answers a history request
+   * in under a couple hundred ms.
+   */
+  latency = 700;
+
   getMessages = (
     lastSeenMessage: Message | null,
     batchSize: number,
@@ -41,8 +48,9 @@ export class MessageService {
       ? sortedMessages.findIndex((item) => item.id === lastSeenMessage.id)
       : messages.length;
 
-    const batch = sortedMessages.slice(index - batchSize, index);
-    return timer(250).pipe(map(() => batch));
-    // return of(batch);
+    // slice() clamps a negative start to 0, so the batch simply runs dry
+    // once the beginning of the conversation is reached
+    const batch = sortedMessages.slice(Math.max(0, index - batchSize), index);
+    return timer(this.latency).pipe(map(() => batch));
   };
 }

@@ -647,6 +647,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   private render() {
+    let lastRange: ListRange = { start: 0, end: 0 };
     return combineLatest<[T[], ListRange, RxStrategyCredentials]>([
       this.values$.pipe(
         map((values) =>
@@ -691,8 +692,54 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
               }
               changes = differ.diff(iterable);
             }
+            const rangeChanged =
+              lastRange.end !== range.end || lastRange.start !== range.start;
+            lastRange = { start: range.start, end: range.end };
             if (!changes) {
-              return NEVER;
+              if (!rangeChanged) {
+                return NEVER;
+              }
+              /*
+               * The rendered slice is unchanged although the range moved. This
+               * happens when items are prepended and the range shifts by exactly
+               * the amount of inserted items - the differ reports no changes, but
+               * every view now maps to a new index and has to be re-positioned.
+               *
+               * Every view emits `viewRendered$` below, so the batch passed to
+               * the strategy has to name every view index. An empty set makes
+               * the strategies' position pass fast-forward its running cursor
+               * past views that still emit afterwards, stacking them at the end
+               * of the content (visible as gaps/blank viewport).
+               */
+              const allViewIndices = new Set<number>();
+              for (let i = 0, ilen = this.viewContainer.length; i < ilen; i++) {
+                allViewIndices.add(i);
+              }
+              this.renderingStart$.next(allViewIndices);
+              const viewsRendered: EmbeddedViewRef<
+                RxVirtualForViewContext<T, U>
+              >[] = [];
+              for (let i = 0, ilen = this.viewContainer.length; i < ilen; i++) {
+                const view = <EmbeddedViewRef<RxVirtualForViewContext<T, U>>>(
+                  this.viewContainer.get(i)
+                );
+                this.updateViewContext(view.context.$implicit, view, {
+                  index: range.start + i,
+                  count: items.length,
+                });
+                view.detectChanges();
+                this.viewRendered$.next({
+                  view,
+                  item: view.context.$implicit,
+                  // the strategies expect the view container index here, not
+                  // the context index - they diverge whenever range.start > 0
+                  index: i,
+                });
+                viewsRendered.push(view);
+              }
+              this.templateManager.setItemCount(items.length);
+              this.viewsRendered$.next(viewsRendered as any);
+              return of(iterable);
             }
             const listChanges = this.templateManager.getListChanges(
               changes,
