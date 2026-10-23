@@ -23,6 +23,10 @@ Requires the peer dependency `@angular/ssr` `^21`.
 npm install @rx-angular/isr
 ```
 
+## Express 5 / Angular 20+
+
+`@rx-angular/isr` supports both express 4 and express 5, so it works with the `express@^5.1.0` that `ng new --ssr` scaffolds on Angular 20+. Note that express 5 no longer accepts a bare `'*'` as a route path (`'*'` must be written as `'/{*splat}'`), so make sure any `server.get('*', ...)` calls in your own `server.ts` are updated as shown below. This applies regardless of which express major version you use with the library.
+
 ## Version Compatibility
 
 | RxAngular | Angular   |
@@ -55,7 +59,7 @@ server.post('/api/invalidate', async (req, res) => await isr.invalidate(req, res
 Replace
 
 ```ts
-server.get('*', (req, res) => {
+server.get('/{*splat}', (req, res) => {
   res.render(indexHtml, {
     req,
     providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
@@ -67,7 +71,7 @@ with
 
 ```ts
 server.get(
-  '*',
+  '/{*splat}',
   // Serve page if it exists in cache
   async (req, res, next) => await isr.serveFromCache(req, res, next),
   // Server side render the page and add to cache if needed
@@ -79,7 +83,7 @@ You can also pass `providers` to each of the `ISRHandler` methods.
 
 ```ts
 server.get(
-  '*',
+  '/{*splat}',
   ...async (req, res, next) =>
     await isr.render(req, res, next, {
       providers: [
@@ -98,7 +102,7 @@ These methods provide a way to modify the html served from cache or the html tha
 
 ```ts
 server.get(
-  '*',
+  '/{*splat}',
   // Serve page if it exists in cache
   async (req, res, next) =>
     await isr.serveFromCache(req, res, next, {
