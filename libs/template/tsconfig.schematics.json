@@ -20,7 +20,9 @@
     "strict": false,
     "strictNullChecks": true,
     "target": "es6",
-    "types": ["node"]
+    "types": ["node"],
+    "noUncheckedSideEffectImports": false,
+    "esModuleInterop": false
   },
   "include": ["schematics/**/*"],
   "exclude": [

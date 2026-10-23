@@ -68,7 +68,10 @@
         "libs/template/virtual-view/src/index.ts"
       ],
       "@test-helpers/rx-angular": ["libs/test-helpers/src/index.ts"]
-    }
+    },
+    "noUncheckedSideEffectImports": false,
+    "types": ["*"],
+    "esModuleInterop": false
   },
   "exclude": ["node_modules", "tmp"]
 }
