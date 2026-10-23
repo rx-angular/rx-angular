@@ -8,6 +8,7 @@
   "targets": {
     "e2e": {
       "executor": "@nx/cypress:cypress",
+      "dependsOn": ["rebundle:build"],
       "options": {
         "cypressConfig": "apps/rebundle-demo-e2e/cypress.config.ts",
         "testingType": "e2e",
