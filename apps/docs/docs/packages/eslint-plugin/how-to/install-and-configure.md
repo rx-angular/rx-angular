@@ -13,7 +13,7 @@ tags: [eslint-plugin, guides, tooling]
 
 ## Goal
 
-Add `@rx-angular/eslint-plugin` to an Angular workspace and turn on its rules: either the whole [recommended](#recommended-config) or [zoneless](#zoneless-config) preset, or a hand-picked subset. This page covers the task only; for the full rule catalogue see the [rules overview](../reference/rules-overview.md).
+Add `@rx-angular/eslint-plugin` to an Angular workspace and turn on its rules: either the whole [recommended or zoneless](#the-two-shipped-presets) preset, or a hand-picked subset. This page covers the task only; for the full rule catalogue see the [rules overview](../reference/rules-overview.md).
 
 ## Steps
 
