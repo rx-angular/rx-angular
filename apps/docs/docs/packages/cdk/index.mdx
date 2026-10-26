@@ -47,7 +47,7 @@ in only what you use:
 | `@rx-angular/cdk/ssr`                 | `HydrationTracker` / `provideHydrationTracker`: an app-wide "fully hydrated" signal for SSR apps.                                                                                 | CDK reference / how-to                    |
 | `@rx-angular/cdk/coalescing`          | The `coalesceWith` RxJS operator for coalescing work over a duration selector.                                                                                                    | Legacy · Zone.js shelf                    |
 | `@rx-angular/cdk/zone-configurations` | Zone.js flag configuration helpers.                                                                                                                                               | Legacy · Zone.js shelf                    |
-| `@rx-angular/cdk/zone-less/browser`   | Zone-unpatched browser APIs: `cancelAnimationFrame`, `clearInterval`, `clearTimeout`, `Promise`, `requestAnimationFrame`, `setInterval`, `setTimeout`, `unpatchAddEventListener`. | Legacy · Zone.js shelf                    |
+| `@rx-angular/cdk/zone-less/browser`   | Zone-unpatched browser APIs: `cancelAnimationFrame`, `clearInterval`, `clearTimeout`, `Promise`, `requestAnimationFrame`, `setInterval`, `setTimeout`, `unpatchAddEventListener`. | Zoneless & Zone.js concept                |
 | `@rx-angular/cdk/internals/core`      | Low-level internals, including `getZoneUnPatchedApi`.                                                                                                                             | Internals                                 |
 | `@rx-angular/cdk/internals/scheduler` | The concurrent scheduler powering the render strategies.                                                                                                                          | Internals                                 |
 | `@rx-angular/cdk/template`            | EmbeddedView management primitives underpinning the template directives.                                                                                                          | Internals                                 |
@@ -74,14 +74,16 @@ in only what you use:
 
 :::note Zone.js history
 
-Older CDK material was framed around Zone.js: configuring zone flags, running
-zone-less, and coalescing zone-triggered change detection. Since Angular v21 change
-detection is **zoneless by default** and Zone.js is dropped from the default bundle, so
-that guidance now lives on the **Legacy · Zone.js** shelf for apps still running
-Zone.js. Only the bare `@rx-angular/cdk/zone-less` entry point was **dropped**
-(rx#1355) and is not a current path; the `@rx-angular/cdk/zone-less/browser`
-sub-entry still ships for apps that need zone-unpatched browser globals directly. To
-reach a zone-unpatched API generically, use `getZoneUnPatchedApi` from
+Older CDK material was framed around Zone.js. It covered zone flags, zone-less APIs
+and coalescing of zone-triggered change detection. Since Angular v21 change
+detection is **zoneless by default** and Zone.js is dropped from the default bundle.
+The zone flag and coalescing guides now live on the **Legacy · Zone.js** shelf for
+apps still running Zone.js. The zone-less utilities have no page of their own. The
+[Zoneless & Zone.js concept](../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+explains how they work. Only the bare `@rx-angular/cdk/zone-less` entry point was
+**dropped** (rx#1355). The `@rx-angular/cdk/zone-less/browser` sub-entry still ships
+for apps that need zone-unpatched browser globals directly. To reach a
+zone-unpatched API generically, use `getZoneUnPatchedApi` from
 `@rx-angular/cdk/internals/core`.
 
 :::

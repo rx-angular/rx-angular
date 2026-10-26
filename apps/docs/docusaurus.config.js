@@ -30,6 +30,7 @@ module.exports = {
     locales: ['en'],
   },
   onBrokenLinks: 'throw',
+  onBrokenAnchors: 'throw',
   markdown: {
     hooks: {
       onBrokenMarkdownLinks: 'throw',
@@ -83,6 +84,7 @@ module.exports = {
           },
           { from: '/isr/benefits', to: '/docs/packages/isr/' },
           { from: '/isr/isr', to: '/docs/packages/isr/' },
+          { from: '/isr', to: '/docs/packages/isr/' },
           {
             from: '/isr/getting-started',
             to: '/docs/packages/isr/how-to/set-up-isr',
@@ -112,6 +114,7 @@ module.exports = {
             to: '/docs/packages/isr/how-to/pass-extra-data',
           },
           { from: '/docs/isr/isr', to: '/docs/packages/isr/' },
+          { from: '/docs/isr', to: '/docs/packages/isr/' },
           {
             from: '/docs/isr/introduction',
             to: '/docs/packages/isr/isr-introduction',
@@ -158,6 +161,8 @@ module.exports = {
           // are preserved to match the hedging above.
           //
           // Reference
+          { from: '/state/api', to: '/docs/packages/state/reference' },
+          { from: '/docs/state/api', to: '/docs/packages/state/reference' },
           {
             from: '/state/api/functional-rx-state',
             to: '/docs/packages/state/reference/rx-state-functional',
@@ -189,6 +194,14 @@ module.exports = {
           {
             from: '/docs/state/api/interfaces/key-compare-map',
             to: '/docs/packages/state/reference/key-compare-map',
+          },
+          {
+            from: '/state/api/interfaces',
+            to: '/docs/packages/state/reference',
+          },
+          {
+            from: '/docs/state/api/interfaces',
+            to: '/docs/packages/state/reference',
           },
           {
             from: '/state/api/rxjs-operators/stateful',
@@ -223,6 +236,14 @@ module.exports = {
             to: '/docs/packages/state/reference/distinct-until-some-changed',
           },
           {
+            from: '/state/api/rxjs-operators',
+            to: '/docs/packages/state/reference',
+          },
+          {
+            from: '/docs/state/api/rxjs-operators',
+            to: '/docs/packages/state/reference',
+          },
+          {
             from: '/state/recipes/run-partial-updates',
             to: '/docs/packages/state/reference/partial-updates',
           },
@@ -240,6 +261,10 @@ module.exports = {
           },
           {
             from: '/state/selections',
+            to: '/docs/packages/state/reference/selections-api',
+          },
+          {
+            from: '/docs/state/selections',
             to: '/docs/packages/state/reference/selections-api',
           },
           // How-to
@@ -268,6 +293,14 @@ module.exports = {
             to: '/docs/packages/state/how-to/manage-effects',
           },
           {
+            from: '/state/effects',
+            to: '/docs/packages/state/how-to/manage-effects',
+          },
+          {
+            from: '/docs/state/effects',
+            to: '/docs/packages/state/how-to/manage-effects',
+          },
+          {
             from: '/state/testing/testing',
             to: '/docs/packages/state/how-to/testing',
           },
@@ -280,6 +313,10 @@ module.exports = {
             to: '/docs/packages/state/how-to/testing',
           },
           {
+            from: '/docs/state/testing',
+            to: '/docs/packages/state/how-to/testing',
+          },
+          {
             from: '/state/concepts-and-best-practices/concepts-and-best-practices',
             to: '/docs/packages/state/how-to/best-practices',
           },
@@ -289,6 +326,10 @@ module.exports = {
           },
           {
             from: '/state/concepts-and-best-practices',
+            to: '/docs/packages/state/how-to/best-practices',
+          },
+          {
+            from: '/docs/state/concepts-and-best-practices',
             to: '/docs/packages/state/how-to/best-practices',
           },
           {
@@ -322,6 +363,14 @@ module.exports = {
           {
             from: '/docs/state/integrations/manage-entities-using-ngrx-entity',
             to: '/docs/packages/state/how-to/manage-entities',
+          },
+          {
+            from: '/state/integrations/resuse-ngrx-selectors-to-compose-state',
+            to: '/docs/packages/state/how-to/derive-a-view-model',
+          },
+          {
+            from: '/docs/state/integrations/resuse-ngrx-selectors-to-compose-state',
+            to: '/docs/packages/state/how-to/derive-a-view-model',
           },
           // Landing
           { from: '/state/state', to: '/docs/packages/state/' },
@@ -437,6 +486,8 @@ module.exports = {
             from: '/docs/template/concepts/local-variables',
             to: '/docs/concepts/E9-reactive-templating',
           },
+          { from: '/template/concepts', to: '/docs/concepts' },
+          { from: '/docs/template/concepts', to: '/docs/concepts' },
           // Concept-SOURCE retirements (Stage 3.A) — these three pages were
           // absorbed into site Concepts E1 / E4 during Phase B and are deleted
           // this phase; redirect their old URLs to the absorbing Concept.
@@ -457,6 +508,14 @@ module.exports = {
             to: '/docs/concepts/E1-change-detection',
           },
           {
+            from: '/template/performance-issues',
+            to: '/docs/concepts/E1-change-detection',
+          },
+          {
+            from: '/docs/template/performance-issues',
+            to: '/docs/concepts/E1-change-detection',
+          },
+          {
             from: '/template/concepts/reactive-context',
             to: '/docs/concepts/E4-reactive-context',
           },
@@ -469,6 +528,34 @@ module.exports = {
           { from: '/docs/template/template', to: '/docs/packages/template/' },
           { from: '/template', to: '/docs/packages/template/' },
           { from: '/docs/template', to: '/docs/packages/template/' },
+          {
+            from: '/docs/template/let-directive',
+            to: '/docs/packages/template/reference/rx-let',
+          },
+          {
+            from: '/docs/template/cdk/render-strategies/strategies/concurrent-strategies',
+            to: '/docs/packages/cdk/reference/concurrent-strategies',
+          },
+          {
+            from: '/docs/state/setup',
+            to: '/docs/packages/state/how-to/getting-started',
+          },
+          {
+            from: '/docs/state/tutorials/basic-tutorial/setup',
+            to: '/docs/tutorials/T1-your-first-rxstate',
+          },
+          {
+            from: '/docs/cdk/api/transformation-helpers',
+            to: '/docs/packages/cdk/reference/transformations',
+          },
+          {
+            from: '/docs/template/api',
+            to: '/docs/packages/template/reference',
+          },
+          {
+            from: '/docs/template/viewport-prio-directive',
+            to: '/docs/packages/template/',
+          },
           // Phase C — @rx-angular/cdk package MOVE into the Diátaxis IA.
           // Every `to` target below is verified to exist on disk this phase
           // (packages/cdk/{reference,how-to,legacy}/* — the concurrent-rendering
@@ -485,6 +572,14 @@ module.exports = {
           },
           {
             from: '/docs/cdk/transformations/transformations',
+            to: '/docs/packages/cdk/reference/transformations/',
+          },
+          {
+            from: '/cdk/transformations',
+            to: '/docs/packages/cdk/reference/transformations/',
+          },
+          {
+            from: '/docs/cdk/transformations',
             to: '/docs/packages/cdk/reference/transformations/',
           },
           {
@@ -593,11 +688,27 @@ module.exports = {
             to: '/docs/packages/cdk/reference/coercing',
           },
           {
+            from: '/cdk/coercing',
+            to: '/docs/packages/cdk/reference/coercing',
+          },
+          {
+            from: '/docs/cdk/coercing',
+            to: '/docs/packages/cdk/reference/coercing',
+          },
+          {
             from: '/cdk/notifications/notifications',
             to: '/docs/packages/cdk/reference/notifications',
           },
           {
             from: '/docs/cdk/notifications/notifications',
+            to: '/docs/packages/cdk/reference/notifications',
+          },
+          {
+            from: '/cdk/notifications',
+            to: '/docs/packages/cdk/reference/notifications',
+          },
+          {
+            from: '/docs/cdk/notifications',
             to: '/docs/packages/cdk/reference/notifications',
           },
           {
@@ -614,6 +725,14 @@ module.exports = {
           },
           {
             from: '/docs/cdk/hydration-tracker/hydration-tracker',
+            to: '/docs/packages/cdk/reference/hydration-tracker',
+          },
+          {
+            from: '/cdk/hydration-tracker',
+            to: '/docs/packages/cdk/reference/hydration-tracker',
+          },
+          {
+            from: '/docs/cdk/hydration-tracker',
             to: '/docs/packages/cdk/reference/hydration-tracker',
           },
           {
@@ -650,6 +769,14 @@ module.exports = {
             to: '/docs/packages/cdk/legacy/zone-configurations',
           },
           {
+            from: '/cdk/zone-configurations',
+            to: '/docs/packages/cdk/legacy/zone-configurations',
+          },
+          {
+            from: '/docs/cdk/zone-configurations',
+            to: '/docs/packages/cdk/legacy/zone-configurations',
+          },
+          {
             from: '/cdk/zone-configurations/how-to-setup-zone-flags',
             to: '/docs/packages/cdk/legacy/setup-zone-flags',
           },
@@ -673,9 +800,27 @@ module.exports = {
             from: '/docs/cdk/coalescing/coalescing',
             to: '/docs/packages/cdk/legacy/coalescing',
           },
+          {
+            from: '/cdk/coalescing',
+            to: '/docs/packages/cdk/legacy/coalescing',
+          },
+          {
+            from: '/docs/cdk/coalescing',
+            to: '/docs/packages/cdk/legacy/coalescing',
+          },
+          {
+            from: '/cdk/zone-less',
+            to: '/docs/concepts/E2-zoneless-and-zonejs-change-detection',
+          },
+          {
+            from: '/docs/cdk/zone-less',
+            to: '/docs/concepts/E2-zoneless-and-zonejs-change-detection',
+          },
           // Landing
           { from: '/cdk/cdk', to: '/docs/packages/cdk/' },
           { from: '/docs/cdk/cdk', to: '/docs/packages/cdk/' },
+          { from: '/cdk', to: '/docs/packages/cdk/' },
+          { from: '/docs/cdk', to: '/docs/packages/cdk/' },
           // Phase C — @rx-angular/eslint-plugin package MOVE into the Diátaxis
           // IA. The 12 rule pages moved from /eslint-plugin/rules/<rule> to
           // /packages/eslint-plugin/reference/<rule>, and the old landing
@@ -787,6 +932,33 @@ module.exports = {
             from: '/docs/eslint-plugin/eslint-plugin',
             to: '/docs/packages/eslint-plugin/',
           },
+          { from: '/eslint-plugin', to: '/docs/packages/eslint-plugin/' },
+          { from: '/docs/eslint-plugin', to: '/docs/packages/eslint-plugin/' },
+          {
+            from: '/eslint-plugin/rules',
+            to: '/docs/packages/eslint-plugin/reference',
+          },
+          {
+            from: '/docs/eslint-plugin/rules',
+            to: '/docs/packages/eslint-plugin/reference',
+          },
+          ...[
+            'no-explicit-change-detection-apis',
+            'no-rxstate-imperative-in-reactive',
+            'no-rxstate-subscriptions-outside-constructor',
+            'no-zone-critical-browser-apis',
+            'no-zone-critical-lodash-apis',
+            'no-zone-critical-rxjs-creation-apis',
+            'no-zone-critical-rxjs-operators',
+            'no-zone-critical-rxjs-schedulers',
+            'no-zone-run-apis',
+            'prefer-no-layout-sensitive-apis',
+            'prefer-no-lodash-clone-deep',
+            'prefer-no-lodash-is-equal',
+          ].map((rule) => ({
+            from: `/docs/eslint-plugin/rules/${rule}.md`,
+            to: `/docs/packages/eslint-plugin/reference/${rule}`,
+          })),
           // Phase D — Learn phase landed the net-new tutorials/concepts, so the
           // previously-pending KILL/MOVE redirects now have live targets on
           // disk. Wired here (both bare and /docs-prefixed) and removed from
@@ -852,6 +1024,8 @@ module.exports = {
             from: '/docs/cdk/template-management/template-management',
             to: '/docs/packages/cdk/',
           },
+          { from: '/cdk/template-management', to: '/docs/packages/cdk/' },
+          { from: '/docs/cdk/template-management', to: '/docs/packages/cdk/' },
         ],
       },
     ],
