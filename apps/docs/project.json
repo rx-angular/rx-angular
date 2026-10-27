@@ -9,12 +9,7 @@
       "options": {
         "outputPath": "dist/apps/docs"
       },
-      "outputs": ["{options.outputPath}"],
-      "dependsOn": [
-        {
-          "target": "check-links"
-        }
-      ]
+      "outputs": ["{options.outputPath}"]
     },
     "serve": {
       "executor": "@nx-plus/docusaurus:dev-server",
@@ -36,11 +31,7 @@
     "check-links": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          {
-            "command": "find ./apps/docs/docs -name \\*.md -print0 | xargs -0 -n1 markdown-link-check -q -p -v -c markdown-link-check.config.json"
-          }
-        ]
+        "command": "find ./apps/docs/docs ./apps/docs/blog ./CONTRIBUTING.md \\( -name \"*.md\" -o -name \"*.mdx\" \\) -not -path \"*/_diataxis-templates/*\" -print0 | xargs -0 -n1 markdown-link-check -q -c markdown-link-check.config.json"
       }
     }
   },
