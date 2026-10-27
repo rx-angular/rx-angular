@@ -299,4 +299,5 @@ export class AppComponent {
 - Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
 - How-to: [Tune rendering with strategies](../how-to/tune-rendering-with-strategies.md)
 - How-to: [Test scheduled rendering](../how-to/test-scheduled-rendering.md)
+- How-to: [Choose & combine directives](../how-to/choosing-and-combining-directives.md)
 - Example application: [angular-movies](https://github.com/tastejs/angular-movies)
