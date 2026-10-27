@@ -854,6 +854,42 @@ describe('visibleRange', () => {
       });
     });
   });
+
+  /**
+   * items are 30px, the tombstoneSize is 50px. Jumping to 100 * 50 + 40 anchors
+   * at item 100 with an offset of 40px. Measuring the rendered items shrinks
+   * item 100 below that offset and the content above it, the strategy corrects
+   * the scroll position. The anchor has to be re-derived afterwards, item 100
+   * is out of view.
+   */
+  it('re-derives the scrolledIndex after a scroll position correction', () => {
+    mountAutoSize({
+      containerHeight: 300,
+      dynamicSize: () => 30,
+      tombstoneSize: 50,
+      showItemDescription: false,
+      // renders the range in one go, the concurrent strategies chunk it
+      // depending on the frame budget which changes what gets measured when
+      strategy: 'native',
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      viewport.scrollTo(100 * 50 + 40);
+      waitUntilStable(() => viewport.getScrollTop());
+      cy.get('[data-cy=viewport]').should(([scrollContainer]) => {
+        const top = scrollContainer.getBoundingClientRect().top;
+        const firstVisible = [
+          ...scrollContainer.querySelectorAll('[data-cy=item]'),
+        ]
+          .filter((item) => item.getBoundingClientRect().bottom > top)
+          .map((item) => Number(item.textContent!.trim()))
+          .sort((a, b) => a - b)[0];
+        expect(firstVisible, 'first visible item').to.eq(101);
+      });
+      cy.get('@scrolledIndex').its('lastCall.args.0').should('eq', 101);
+      expectVisibleRangeStartToEqualScrolledIndex();
+    });
+  });
 });
 
 describe('data mutations', () => {
