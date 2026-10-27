@@ -56,6 +56,35 @@ export function unpatchedAnimationFrameTick(): Observable<void> {
   });
 }
 
+/**
+ * @description
+ *
+ * Emits once, right after the browser computed the layout of a frame and
+ * before it paints it. It is the moment where layout information is clean, so
+ * reading it or writing the scroll position does not force a synchronous
+ * layout. It relies on `ResizeObserver` delivering an initial observation for
+ * every observed element at that point of the rendering steps.
+ * The observation starts in an animation frame, so it is never registered
+ * while a `ResizeObserver` loop is running, which would leave it undelivered.
+ */
+export function afterNextLayout(element: Element): Observable<void> {
+  return new Observable<void>((observer) => {
+    let resizeObserver: ResizeObserver | undefined;
+    const tick = requestAnimationFrame(() => {
+      resizeObserver = new ResizeObserver(() => {
+        resizeObserver!.disconnect();
+        observer.next();
+        observer.complete();
+      });
+      resizeObserver.observe(element);
+    });
+    return () => {
+      cancelAnimationFrame(tick);
+      resizeObserver?.disconnect();
+    };
+  });
+}
+
 export function unpatchedMicroTask(): Observable<void> {
   return from(Promise.resolve()) as Observable<void>;
 }

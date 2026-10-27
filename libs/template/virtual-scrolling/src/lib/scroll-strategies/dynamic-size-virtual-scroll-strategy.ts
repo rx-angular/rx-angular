@@ -1,5 +1,6 @@
 import {
   Directive,
+  EmbeddedViewRef,
   inject,
   Input,
   NgIterable,
@@ -10,10 +11,12 @@ import {
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   combineLatest,
+  merge,
   MonoTypeOperatorFunction,
   Observable,
   ReplaySubject,
   Subject,
+  Subscription,
 } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -27,15 +30,18 @@ import {
 } from 'rxjs/operators';
 import {
   ListRange,
+  RxVirtualForViewContext,
   RxVirtualScrollStrategy,
   RxVirtualScrollViewport,
   RxVirtualViewRepeater,
 } from '../model';
 import {
+  afterNextLayout,
   calculateVisibleContainerSize,
   parseScrollTopBoundaries,
   rangesEqual,
   toBoolean,
+  unpatchedAnimationFrameTick,
   unpatchedMicroTask,
 } from '../util';
 import {
@@ -122,18 +128,32 @@ export class DynamicSizeVirtualScrollStrategy<
 
   /**
    * @description
-   * Function returning the size of an item
+   * Function returning the size of an item.
+   *
+   * Assigning a new function reference forces the strategy to re-run it for
+   * every item and to re-layout the list. This is the way to inform the
+   * strategy about changes which affect the size of items, but are not caused
+   * by a change of the data itself.
    */
   @Input('dynamic')
   set itemSize(fn: (item: T) => number) {
-    if (fn) {
+    if (fn && fn !== this._itemSizeFn) {
       this._itemSizeFn = fn;
+      this._itemSizeFnChanged = true;
     }
   }
   get itemSize() {
     return this._itemSizeFn;
   }
   private _itemSizeFn: (item: T) => number = defaultItemSize;
+  /** @internal */
+  private _itemSizeFnChanged = false;
+  /** @internal */
+  private scrollTopAlignment?: Subscription;
+  /** @internal */
+  private alignedContentSize = 0;
+  /** @internal */
+  private renderingInFlight = false;
 
   /** @internal */
   private waitForScroll = false;
@@ -217,6 +237,8 @@ export class DynamicSizeVirtualScrollStrategy<
   /** @internal */
   private _virtualItems: VirtualViewItem[] = [];
   /** @internal */
+  private _values: T[] = [];
+  /** @internal */
   private scrollTop = 0;
   /** @internal */
   private scrollTopWithOutOffset = 0;
@@ -257,6 +279,15 @@ export class DynamicSizeVirtualScrollStrategy<
     ) {
       this.recalculateRange$.next();
     }
+    if (
+      this._itemSizeFnChanged &&
+      changes['itemSize'] &&
+      !changes['itemSize'].firstChange &&
+      this.viewport
+    ) {
+      this.recalculateSizes();
+    }
+    this._itemSizeFnChanged = false;
   }
 
   /** @internal */
@@ -281,6 +312,7 @@ export class DynamicSizeVirtualScrollStrategy<
     this.viewport = null;
     this.viewRepeater = null;
     this._virtualItems = [];
+    this._values = [];
     this.detached$.next();
   }
 
@@ -316,6 +348,7 @@ export class DynamicSizeVirtualScrollStrategy<
     );
 
     valueArray$.pipe(this.until$()).subscribe((dataArr) => {
+      this._values = dataArr;
       const dataLength = dataArr.length;
       if (!dataLength) {
         this._virtualItems = [];
@@ -413,6 +446,109 @@ export class DynamicSizeVirtualScrollStrategy<
         valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
         if (scrollTo !== this.scrolledIndex) {
           this.scrollToIndex(scrollTo);
+        }
+      });
+  }
+
+  /**
+   * @internal
+   * re-runs the itemSize function for the whole dataset and re-layouts the list
+   * based on the new sizes. This is an O(n) operation.
+   */
+  private recalculateSizes(): void {
+    const anchorIndex = this.anchorItem.index;
+    const previousAnchorSize = this._virtualItems[anchorIndex]?.size;
+    let contentSize = 0;
+    let anchorPosition = 0;
+    for (let i = 0; i < this._values.length; i++) {
+      if (i === anchorIndex) {
+        anchorPosition = contentSize;
+      }
+      const size = this.itemSize(this._values[i]);
+      this._virtualItems[i] = { size };
+      contentSize += size;
+    }
+    // keep the anchored item where the user sees it. Rendered views are
+    // positioned relative to (anchorScrollTop, anchorItem), so leaving both in
+    // place keeps the viewport visually stable without touching the scroll
+    // position - writing it now would force a layout, every item size just
+    // changed. Only the offset into the anchored item follows its new size.
+    const anchorSize = this._virtualItems[anchorIndex]?.size;
+    if (previousAnchorSize && anchorSize !== undefined) {
+      this.anchorItem = {
+        index: anchorIndex,
+        offset: Math.round(
+          (this.anchorItem.offset * anchorSize) / previousAnchorSize,
+        ),
+      };
+    }
+    // the content after the anchor might not fill the viewport anymore. The
+    // anchored item can't stay at the top then, the end of the list is kept
+    // at the bottom of the viewport instead.
+    const maxScrollTop = Math.max(0, contentSize - this.containerSize);
+    const anchorScrollPosition = anchorPosition + this.anchorItem.offset;
+    if (anchorScrollPosition > maxScrollTop) {
+      this.anchorItem = this.calculateAnchoredItem(
+        this.anchorItem,
+        maxScrollTop - anchorScrollPosition,
+      );
+      anchorPosition = maxScrollTop - this.anchorItem.offset;
+    }
+    // until the scroll position is aligned, the views live in the anchor
+    // relative coordinate system. If the content above the anchor shrank, it
+    // ends further down than the new content size. The runway has to cover it,
+    // otherwise the browser clamps the scroll position and the anchor is lost.
+    const drift =
+      anchorPosition + this.anchorItem.offset - this.anchorScrollTop;
+    this.alignedContentSize = contentSize;
+    this.contentSize = contentSize + Math.max(0, -drift);
+    // the rendered range can stay the same, in which case the viewRepeater
+    // won't render (and therefore position) anything. position what's there
+    this.positionRenderedViews();
+    this.recalculateRange$.next();
+    this.alignScrollTopWithAnchor();
+  }
+
+  /**
+   * @internal
+   * After `recalculateSizes` the views are positioned relative to the anchor,
+   * which differs from their absolute position by the size change above the
+   * anchor. This moves the scroll position and the views by that difference
+   * at once, so nothing visibly moves, but `scrollToIndex` & co. operate on
+   * absolute positions again.
+   * It runs right after the layout of the next frame, before paint: the layout
+   * is clean at that point, so writing the scroll position doesn't force a
+   * synchronous layout. A running render positions its views in the current
+   * coordinate system, so the alignment waits for it to finish.
+   * The runway is shrunk to its final size in the following frame, so the
+   * layout for it happens in that frame's regular rendering steps.
+   */
+  private alignScrollTopWithAnchor(): void {
+    this.scrollTopAlignment?.unsubscribe();
+    this.scrollTopAlignment = afterNextLayout(this.viewport!.getScrollElement())
+      .pipe(this.until$())
+      .subscribe(() => {
+        if (this.renderingInFlight) {
+          this.alignScrollTopWithAnchor();
+          return;
+        }
+        let anchorPosition = this.anchorItem.offset;
+        for (let i = 0; i < this.anchorItem.index; i++) {
+          anchorPosition += this._virtualItems[i].size;
+        }
+        const drift = anchorPosition - this.anchorScrollTop;
+        if (drift !== 0) {
+          this.scrollTo(anchorPosition);
+          this.anchorScrollTop = anchorPosition;
+          this.scrollTop = anchorPosition;
+          this.scrollTopWithOutOffset += drift;
+          this.scrollTopAfterOffset += drift;
+          this.positionRenderedViews();
+        }
+        if (this.contentSize !== this.alignedContentSize) {
+          this.scrollTopAlignment = unpatchedAnimationFrameTick()
+            .pipe(this.until$())
+            .subscribe(() => (this.contentSize = this.alignedContentSize));
         }
       });
   }
@@ -520,6 +656,14 @@ export class DynamicSizeVirtualScrollStrategy<
 
   /** @internal */
   private positionElements(): void {
+    merge(
+      this.viewRepeater!.renderingStart$.pipe(map(() => true)),
+      this.viewRepeater!.viewsRendered$.pipe(map(() => false)),
+    )
+      .pipe(this.until$())
+      .subscribe((renderingInFlight) => {
+        this.renderingInFlight = renderingInFlight;
+      });
     this.viewRepeater!.renderingStart$.pipe(
       switchMap((batchedUpdates) => {
         const renderedRange = this.renderedRange;
@@ -544,6 +688,28 @@ export class DynamicSizeVirtualScrollStrategy<
       }),
       this.until$(),
     ).subscribe();
+  }
+
+  /**
+   * @internal
+   * re-positions all currently rendered views without waiting for the
+   * viewRepeater to re-render them
+   */
+  private positionRenderedViews(): void {
+    const viewContainer = this.viewRepeater!.viewContainer;
+    const start = this.renderedRange.start;
+    let position = this.calcInitialPosition(start);
+    for (let i = 0; i < viewContainer.length; i++) {
+      const index = start + i;
+      if (index >= this.contentLength) {
+        break;
+      }
+      const view = <EmbeddedViewRef<RxVirtualForViewContext<T, U>>>(
+        viewContainer.get(i)!
+      );
+      this.positionElement(this.getElement(view), position);
+      position += this.getItemSize(index);
+    }
   }
 
   /**
