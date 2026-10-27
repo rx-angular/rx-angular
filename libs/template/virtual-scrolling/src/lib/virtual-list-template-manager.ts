@@ -21,7 +21,7 @@ export type RxVirtualListChanges<T, C> = [
  */
 export interface RxVirtualListTemplateManager<T, C> {
   getListChanges(
-    changes: IterableChanges<T>,
+    changes: IterableChanges<T> | null,
     items: T[],
     renderCount: number,
     adjustIndexWith: number,
@@ -172,9 +172,11 @@ export function createVirtualListTemplateManager<
 
   /**
    * @internal
+   * Without `changes`, only the context (index, count) of the views gets
+   * updated where it's stale.
    */
   function getListChanges(
-    changes: IterableChanges<T>,
+    changes: IterableChanges<T> | null,
     items: T[],
     count: number,
     adjustIndexWith: number,
@@ -184,7 +186,7 @@ export function createVirtualListTemplateManager<
     let notifyParent = false;
     let appendedAtEnd = 0;
     const otherMovedIds: number[] = [];
-    changes.forEachOperation(
+    changes?.forEachOperation(
       ({ item, previousIndex }, adjustedPreviousIndex, currentIndex) => {
         if (previousIndex == null) {
           // insert
@@ -246,7 +248,7 @@ export function createVirtualListTemplateManager<
         }
       },
     );
-    changes.forEachIdentityChange(({ item, currentIndex }) => {
+    changes?.forEachIdentityChange(({ item, currentIndex }) => {
       if (currentIndex != null && !changedIdxs.has(item)) {
         listChanges.push([
           currentIndex,
