@@ -151,12 +151,12 @@ methods:
 | `detach()`                              | Called when the strategy is disconnected (e.g. on `ngOnDestroy`). Tear down subscriptions here.                     |
 | `scrollToIndex(index, behavior?)`       | Scroll the viewport so the item at `index` becomes visible.                                                         |
 
-A minimal (simplified) fixed-size implementation looks like this:
+A minimal fixed-size implementation looks like this:
 
 ```ts
 import { Directive } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 import { ListRange, RxVirtualScrollStrategy, RxVirtualScrollViewport, RxVirtualViewRepeater } from '@rx-angular/template/virtual-scrolling';
 
 const ITEM_SIZE = 50;
@@ -187,11 +187,18 @@ export class CustomScrollStrategy extends RxVirtualScrollStrategy<any> {
       )
       .subscribe((length) => this._contentSize$.next(length * ITEM_SIZE));
 
-    viewport.elementScrolled$.pipe(takeUntil(this.detached$)).subscribe(() => {
-      const scrollTop = viewport.getScrollTop();
-      const start = Math.floor(scrollTop / ITEM_SIZE);
+    // compute the range initially and on every scroll event
+    viewport.elementScrolled$.pipe(startWith(undefined), takeUntil(this.detached$)).subscribe(() => {
+      const start = Math.floor(viewport.getScrollTop() / ITEM_SIZE);
       this._scrolledIndex$.next(start);
       this._renderedRange$.next({ start, end: start + 20 }); // + a fixed runway
+    });
+
+    // every rendered view is positioned absolutely inside the viewport
+    viewRepeater.viewRendered$.pipe(takeUntil(this.detached$)).subscribe(({ view, item }) => {
+      const index = view.context.index;
+      this.getElement(view).style.transform = `translateY(${index * ITEM_SIZE}px)`;
+      this.viewRenderCallback.next({ view, item, index });
     });
   }
 
@@ -206,10 +213,14 @@ export class CustomScrollStrategy extends RxVirtualScrollStrategy<any> {
 }
 ```
 
-This example leaves out positioning the rendered views (done via `viewRenderCallback`
-and CSS `transform`s, see the `_setViewPosition` helper) and runway/overscan handling
-for brevity. For a complete, production-ready reference, read the source of the
-simplest shipped strategy:
+Two parts make the list visible: the range has to be emitted before the first scroll
+event (`startWith`), and every rendered view has to be positioned, because all views
+are `position: absolute` inside the viewport. Emitting `viewRenderCallback` keeps the
+`renderCallback` of `*rxVirtualFor` working.
+
+The example leaves out direction aware runway/overscan handling, coalescing scroll
+events and support for an offset between the scroll container and the viewport. For a
+complete, production-ready reference, read the source of the simplest shipped strategy:
 [`FixedSizeVirtualScrollStrategy`](https://github.com/rx-angular/rx-angular/blob/main/libs/template/virtual-scrolling/src/lib/scroll-strategies/fixed-size-virtual-scroll-strategy.ts).
 
 ## See also
