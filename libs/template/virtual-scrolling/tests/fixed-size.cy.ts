@@ -1,11 +1,11 @@
+import {
+  CollectionViewer as CdkCollectionViewer,
+  DataSource as CdkDataSource,
+} from '@angular/cdk/collections';
 import { Component, input, NgIterable, output, Type } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { createOutputSpy, mount } from 'cypress/angular';
-import {
-  DataSource as CdkDataSource,
-  CollectionViewer as CdkCollectionViewer,
-} from '@angular/cdk/collections';
 import {
   BehaviorSubject,
   connectable,
@@ -25,6 +25,7 @@ import {
   RxVirtualScrollViewportComponent,
   RxVirtualScrollWindowDirective,
 } from '../src/index';
+import { DEFAULT_ITEM_SIZE } from '../src/lib/virtual-scroll.config';
 import {
   defaultItemLength,
   defaultMountConfig,
@@ -35,7 +36,6 @@ import {
   Item,
   VirtualScrollMountConfig,
 } from './fixtures';
-import { DEFAULT_ITEM_SIZE } from '../src/lib/virtual-scroll.config';
 
 const testComponentImports = [
   RxVirtualScrollViewportComponent,
