@@ -43,6 +43,7 @@ import {
 } from '../model';
 import {
   calculateVisibleContainerSize,
+  isNotRendered,
   parseScrollTopBoundaries,
   toBoolean,
   unpatchedMicroTask,
@@ -850,6 +851,14 @@ export class AutoSizeVirtualScrollStrategy<
           (event) =>
             event.target.isConnected &&
             !!this._virtualItems[viewRef.context.index],
+        ),
+        // a view that is not rendered at all (e.g. an ancestor is
+        // `display: none`) reports a collapsed box. That is not a measurement,
+        // booking it would wipe out the cached size. The real size arrives as
+        // soon as the view is rendered again.
+        filter(
+          ({ target, contentRect }) =>
+            !isNotRendered(target, contentRect.width, contentRect.height),
         ),
         map((event) => {
           const index = viewRef.context.index;
