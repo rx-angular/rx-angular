@@ -59,7 +59,7 @@ type RxState<T extends object> = Pick<LegacyState<T>, 'get' | 'select' | 'connec
 | `$`              | `Observable<State>` | The raw, unmodified state observable; not shared, distinct, or replayed.                                                                                                                                                                                                         |
 | `get`            | method              | Read a one-shot, **non-reactive** snapshot; creates no dependency and never re-runs on change, so never call it inside `computed()`/`state.computed()` or a template binding. Use `signal`/`select`/`computed` for reactive reads. See [`RxState#get`](./rx-state-class.md#get). |
 | `set`            | method              | Write a `Partial<State>`, a projection function, or a single-key value. See [`RxState#set`](./rx-state-class.md#set).                                                                                                                                                            |
-| `connect`        | method              | Merge an `Observable`/`Signal` source into state (8 overloads). See [`RxState#connect`](./rx-state-class.md#connect).                                                                                                                                                            |
+| `connect`        | method              | Merge an `Observable`/`Signal` source into state (9 overloads). See [`RxState#connect`](./rx-state-class.md#connect).                                                                                                                                                            |
 | `select`         | method              | Read state reactively as a cached, distinct `Observable`. See [`RxState#select`](./rx-state-class.md#select).                                                                                                                                                                    |
 | `signal`         | method              | Read a single key as a `Signal<State[Key]>`, the signals-first template surface. See [`RxState#signal`](./rx-state-class.md#signal).                                                                                                                                             |
 | `computed`       | method              | Derive a `Signal` from multiple keys. See [`RxState#computed`](./rx-state-class.md#computed).                                                                                                                                                                                    |
@@ -126,6 +126,7 @@ export class MovieListComponent {
 - `state.computed((s) => s.a + s.b)`: derive a `Signal` from multiple keys.
 - `state.computedFrom(map(...), filter(...))`: derive a `Signal` through RxJS operators.
 - `connect('key', someSignal)`: write a `Signal` source into state.
+- `connect({ key: someSignal, otherKey: source$ })`: write several sources into state at once, each connected independently.
 
 Prefer these signal accessors over `$` / `select()` for template bindings on modern, zoneless apps.
 
