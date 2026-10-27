@@ -20,6 +20,7 @@ import {
   getViewportComponent,
   Item,
   VirtualScrollMountConfig,
+  waitUntilStable,
 } from './fixtures';
 
 interface DynamicVirtualScrollMountConfig extends VirtualScrollMountConfig<Item> {
@@ -1002,24 +1003,27 @@ describe('dynamic size function changes', () => {
         0,
       );
       cy.get('[data-cy=item]').should('have.length', range.end - range.start);
-      let position = 0;
-      cy.get('[data-cy=item]').each((element) => {
-        expect(element.attr('style')).to.contain(`translateY(${position}px)`);
-        position += 100;
+      cy.get('[data-cy=item]').should((elements) => {
+        elements.each((i, element) => {
+          expect(element.getAttribute('style')).to.contain(
+            `translateY(${i * 100}px)`,
+          );
+        });
       });
     });
   });
 
-  /** top of the given item relative to the top of the scroll container */
-  function itemOffset(id: number) {
-    return cy.get('.rx-virtual-scroll__runway').then(([runway]) => {
+  /** asserts the top of the given item relative to the scroll container */
+  function expectItemOffset(id: number, offset: number) {
+    cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
       const item = [...runway.querySelectorAll('[data-cy=item]')].find(
         (element) => element.textContent!.trim() === `${id}`,
       );
       expect(item, `item ${id} is rendered`).not.to.eq(undefined);
-      return (
-        item!.getBoundingClientRect().top - runway.getBoundingClientRect().top
-      );
+      expect(
+        item!.getBoundingClientRect().top - runway.getBoundingClientRect().top,
+        `offset of item ${id}`,
+      ).to.eq(offset);
     });
   }
 
@@ -1029,7 +1033,7 @@ describe('dynamic size function changes', () => {
       fixture.detectChanges();
       getViewportComponent(fixture).scrollToIndex(200);
       cy.get('@scrolledIndex').should('have.been.calledWith', 200);
-      itemOffset(items[200].id).should('eq', 0);
+      expectItemOffset(items[200].id, 0);
       cy.then(() => {
         fixture.componentRef.setInput('dynamicSize', () => 25);
         fixture.detectChanges();
@@ -1038,16 +1042,20 @@ describe('dynamic size function changes', () => {
       cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
         expect(runway.scrollTop).to.eq(200 * 25);
       });
-      itemOffset(items[200].id).should('eq', 0);
+      expectItemOffset(items[200].id, 0);
       cy.get('@scrolledIndex').should((spy: any) => {
         expect(spy.lastCall.args[0]).to.eq(200);
       });
       // every rendered view sits on its absolute position again
-      cy.get('[data-cy=item]').each((element) => {
-        const index = items.findIndex(
-          (item) => `${item.id}` === element.text().trim(),
-        );
-        expect(element.attr('style')).to.contain(`translateY(${index * 25}px)`);
+      cy.get('[data-cy=item]').should((elements) => {
+        elements.each((_, element) => {
+          const index = items.findIndex(
+            (item) => `${item.id}` === element.textContent!.trim(),
+          );
+          expect(element.getAttribute('style')).to.contain(
+            `translateY(${index * 25}px)`,
+          );
+        });
       });
     });
   });
@@ -1075,7 +1083,7 @@ describe('dynamic size function changes', () => {
       cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
         expect(runway.scrollTop).to.eq(endScrollTop);
       });
-      itemOffset(items[items.length - 1].id).should('eq', containerHeight - 20);
+      expectItemOffset(items[items.length - 1].id, containerHeight - 20);
       // the list goes straight to its end, the browser never had to clamp
       // the scroll position on the way
       cy.wrap(scrollPositions).should('deep.eq', [endScrollTop]);
@@ -1097,7 +1105,7 @@ describe('dynamic size function changes', () => {
       });
       cy.then(() => getViewportComponent(fixture).scrollToIndex(300));
       cy.get('@scrolledIndex').should('have.been.calledWith', 300);
-      itemOffset(items[300].id).should('eq', 0);
+      expectItemOffset(items[300].id, 0);
     });
   });
 
@@ -1106,10 +1114,9 @@ describe('dynamic size function changes', () => {
       ({ fixture }) => {
         fixture.detectChanges();
         // wait for the initial rendering to settle
-        cy.get('@viewRange').should('have.been.called');
-        cy.wait(50);
         cy.get('@viewRange')
-          .its('callCount')
+          .should('have.been.called')
+          .then((spy: any) => waitUntilStable(() => spy.callCount))
           .then((callCount) => {
             fixture.componentRef.setInput('dynamicSize', () => 100);
             fixture.detectChanges();
@@ -1127,14 +1134,14 @@ describe('dynamic size function changes', () => {
       ({ fixture }) => {
         fixture.detectChanges();
         // wait for the initial rendering to settle
-        cy.get('@viewRange').should('have.been.called');
-        cy.wait(50);
         cy.get('@viewRange')
-          .its('callCount')
+          .should('have.been.called')
+          .then((spy: any) => waitUntilStable(() => spy.callCount))
           .then((callCount) => {
             fixture.componentRef.setInput('dynamicSize', dynamicSize);
             fixture.detectChanges();
-            cy.wait(50);
+            // nothing may happen - give it the time a recalculation would take
+            cy.wait(100);
             cy.get('@viewRange').should('have.callCount', callCount);
           });
       },

@@ -117,3 +117,35 @@ export function expectVisibleRangeStartToEqualScrolledIndex() {
     });
   });
 }
+
+/**
+ * Yields `read()` once it returned the same value for `stableReads` consecutive
+ * reads, `interval` ms apart. Use it to capture a baseline only after the
+ * rendering, measuring and scrolling triggered so far has settled - on a slow
+ * or busy machine that takes longer than any fixed `cy.wait`.
+ */
+export function waitUntilStable<T>(
+  read: () => T,
+  interval = 50,
+  stableReads = 3,
+): Cypress.Chainable<T> {
+  let last: string | undefined;
+  let stable = 0;
+  let reads = 0;
+  const check = (): Cypress.Chainable<T> =>
+    cy.wait(interval, { log: false }).then(() => {
+      const value = read();
+      const serialized = JSON.stringify(value);
+      stable = serialized === last ? stable + 1 : 0;
+      last = serialized;
+      reads++;
+      if (stable >= stableReads) {
+        return cy.wrap(value, { log: false });
+      }
+      if (reads > 200) {
+        throw new Error(`value did not settle: ${serialized}`);
+      }
+      return check();
+    });
+  return check();
+}
