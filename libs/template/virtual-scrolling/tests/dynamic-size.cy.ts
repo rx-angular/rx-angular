@@ -501,26 +501,36 @@ describe('data mutations', () => {
     });
   });
   describe('when the data shrinks', () => {
-    it('keeps range and positions within the new bounds', () => {
+    it('renders the end of the list after shrinking while scrolled to the middle', () => {
       mountDynamicSize({ showItemDescription: false }).then(
         ({ fixture, component }) => {
           const items = [...(component.items() as Item[])];
-          const shrunkItems = items.slice(0, 200);
+          // the rendered range (~200) stays below the new length, so the
+          // shrink itself does not re-anchor the viewport
+          const shrunkItems = items.slice(0, 300);
+          const lastItem = shrunkItems[shrunkItems.length - 1];
           const runwayHeight = totalItemHeight(shrunkItems);
           fixture.detectChanges();
-          // scroll close to the end, so the anchor lives past the new length
-          getViewportComponent(fixture).scrollToIndex(480);
+          getViewportComponent(fixture).scrollToIndex(200);
           cy.get('@scrolledIndex')
-            .should('have.been.calledWith', 480)
+            .should('have.been.calledWith', 200)
             .then(() => {
               fixture.componentRef.setInput('items', [...shrunkItems]);
               fixture.detectChanges();
             });
+          // scroll to the very end of the shrunk list, like a user would
+          cy.get('.rx-virtual-scroll__runway').then(([runway]) => {
+            runway.scrollTop = runway.scrollHeight;
+          });
           cy.get('@viewRange').should((viewRange: any) => {
             const range: ListRange = viewRange.lastCall.args[0];
-            expect(range.end).to.be.at.most(shrunkItems.length);
+            expect(range.end).to.eq(shrunkItems.length);
+            expect(range.start).to.be.lessThan(range.end);
           });
           cy.get('[data-cy=item]').should((elements) => {
+            // views are recycled, the DOM order is not the index order
+            const rendered = [...elements].map((e) => e.textContent!.trim());
+            expect(rendered).to.include(`${lastItem.id}`);
             elements.each((_, element) => {
               const position = Number(
                 /translateY\((-?[\d.]+)px\)/.exec(
