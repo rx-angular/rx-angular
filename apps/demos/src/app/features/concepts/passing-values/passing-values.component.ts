@@ -1,5 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
+import {
+  MatButtonToggle,
+  MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { BehaviorSubject } from 'rxjs';
+import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { RecursiveObservableComponent } from '../../../shared/template-structures/recursive/recursive-observable.component';
+import { RecursiveStaticComponent } from '../../../shared/template-structures/recursive/recursive-static.component';
 
 @Component({
   selector: 'rxa-passing-values',
@@ -49,48 +63,69 @@ import { BehaviorSubject } from 'rxjs';
           </div>
         </div>
       </ng-container>
-      <div class="row w-100" *ngIf="isVisible">
-        <div class="col" *ngIf="visible(group, displayStates.static)">
-          <h2 class="mat-subheader">Static</h2>
-          <rxa-value-provider
-            [min]="min"
-            [max]="max"
-            [changes$]="btnBothClick$"
-            #staticVal="rxaValueProvider"
-          ></rxa-value-provider>
-          <div class="mb-1">
-            <button mat-mini-fab (click)="staticVal.next()">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-          <rxa-recursive-static
-            [depth]="depth"
-            [value]="staticVal.int"
-          ></rxa-recursive-static>
+      @if (isVisible) {
+        <div class="row w-100">
+          @if (visible(group, displayStates.static)) {
+            <div class="col">
+              <h2 class="mat-subheader">Static</h2>
+              <rxa-value-provider
+                [min]="min"
+                [max]="max"
+                [changes$]="btnBothClick$"
+                #staticVal="rxaValueProvider"
+              ></rxa-value-provider>
+              <div class="mb-1">
+                <button mat-mini-fab (click)="staticVal.next()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              <rxa-recursive-static
+                [depth]="depth"
+                [value]="staticVal.int"
+              ></rxa-recursive-static>
+            </div>
+          }
+          @if (visible(group, displayStates.observable)) {
+            <div class="col">
+              <h2 class="mat-subheader">Observable</h2>
+              <rxa-value-provider
+                [min]="min"
+                [max]="max"
+                [changes$]="btnBothClick$"
+                #observableVal="rxaValueProvider"
+              ></rxa-value-provider>
+              <div class="mb-1">
+                <button mat-mini-fab [unpatch] (click)="observableVal.next()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              <rxa-recursive-observable
+                [depth]="depth"
+                [value$]="observableVal.int$"
+              ></rxa-recursive-observable>
+            </div>
+          }
         </div>
-        <div class="col" *ngIf="visible(group, displayStates.observable)">
-          <h2 class="mat-subheader">Observable</h2>
-          <rxa-value-provider
-            [min]="min"
-            [max]="max"
-            [changes$]="btnBothClick$"
-            #observableVal="rxaValueProvider"
-          ></rxa-value-provider>
-          <div class="mb-1">
-            <button mat-mini-fab [unpatch] (click)="observableVal.next()">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-          <rxa-recursive-observable
-            [depth]="depth"
-            [value$]="observableVal.int$"
-          ></rxa-recursive-observable>
-        </div>
-      </div>
+      }
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    VisualizerComponent,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    MatButton,
+    ValueProviderComponent,
+    MatMiniFabButton,
+    MatIcon,
+    RecursiveStaticComponent,
+    RxUnpatch,
+    RecursiveObservableComponent,
+  ],
 })
 export class PassingValuesComponent {
   min = 0;

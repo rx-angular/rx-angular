@@ -1,12 +1,16 @@
 import { Provider } from '@angular/core';
-import { CommonEngine, CommonEngineRenderOptions } from '@angular/ssr/node';
+import {
+  AngularNodeAppEngine,
+  CommonEngine,
+  CommonEngineRenderOptions,
+} from '@angular/ssr/node';
 import { Request } from 'express';
 import { CacheHandler, RenderVariant } from './cache-handler';
 
 export interface ISRHandlerConfig {
   /**
    * Path to the HTML file that should be served for any incoming HTTP request.
-   * Most of the time this will be the indexHtml file that Angular Universal has setup for you.
+   * Most of the time this will be the index HTML file that Angular SSR (`@angular/ssr`) produces.
    */
   indexHtml: string;
 
@@ -31,6 +35,12 @@ export interface ISRHandlerConfig {
    * rendering the HTML of the application.
    */
   commonEngine?: CommonEngine;
+
+  /**
+   * An instance of an Angular App Engine. This engine is responsible for
+   * rendering the HTML of the application.
+   */
+  angularAppEngine?: AngularNodeAppEngine;
 
   /**
    * The bootstrap function of the application. This function is responsible for

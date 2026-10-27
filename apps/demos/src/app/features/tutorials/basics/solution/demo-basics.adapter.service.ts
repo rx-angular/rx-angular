@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { RxState } from '@rx-angular/state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DemoBasicsItem } from './demo-basics.view-model.service';
 import { ListServerItem, ListService } from '../data-access/list-resource';
-import { ActivatedRoute } from '@angular/router';
+import { DemoBasicsItem } from './demo-basics.view-model.service';
 
 @Injectable()
 export class DemoBasicsAdapterService extends RxState<any> {
   loadingSignal$ = this.listService.loadingSignal$;
   list$: Observable<DemoBasicsItem[]> = this.listService.list$.pipe(
-    map(this.parseListItems)
+    map(this.parseListItems),
   );
 
-  constructor(private listService: ListService, route: ActivatedRoute) {
+  constructor(
+    private listService: ListService,
+    route: ActivatedRoute,
+  ) {
     super();
     this.hold(route.params, () => this.refetchList());
   }

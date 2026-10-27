@@ -12,17 +12,17 @@ import { ɵglobal } from '@angular/core';
  *
  */
 export function getZoneUnPatchedApi<
-  N extends keyof (Window & typeof globalThis)
+  N extends keyof (Window & typeof globalThis),
 >(name: N): (Window & typeof globalThis)[N];
 
 export function getZoneUnPatchedApi<T extends object, N extends keyof T>(
   target: T,
-  name: N
+  name: N,
 ): T[N];
 
 export function getZoneUnPatchedApi<T extends object, N extends keyof T>(
   targetOrName: T | string,
-  name?: N
+  name?: N,
 ) {
   // If the user has provided the API name as the first argument, for instance:
   // `const addEventListener = getZoneUnPatchedApi('addEventListener');`

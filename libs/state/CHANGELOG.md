@@ -1,6 +1,88 @@
+## 21.1.2 (2026-07-21)
+
+### Documentation Changes
+
+- restructure into Diátaxis and redesign the homepage ([#1913](https://github.com/rx-angular/rx-angular/pull/1913), [#1918](https://github.com/rx-angular/rx-angular/issues/1918))
+- fix broken CI status badge URLs ([a8ac8477](https://github.com/rx-angular/rx-angular/commit/a8ac8477))
+
+### 🧱 Updated Dependencies
+
+- Updated cdk to 21.1.1
+
+### ❤️ Thank You
+
+- Enea Jahollari @eneajaho
+- Hanna Skryl @hanna-skryl
+- hanna-skryl
+- Julian Jandl @hoebbelsB
+- Kirill
+- Michael Hladky @rx-angular
+
+## 21.1.1 (2026-03-17)
+
+### 🧱 Updated Dependencies
+
+- Updated cdk to 21.1.0
+
+## 21.1.0 (2026-03-05)
+
+### 🚀 Features
+
+- **state:** allow to pass injector to rxEffects ([751994e5](https://github.com/rx-angular/rx-angular/commit/751994e5))
+- **state:** allow to pass injector to rxState ([8ab41bf7](https://github.com/rx-angular/rx-angular/commit/8ab41bf7))
+
+### 🩹 Fixes
+
+- **state:** improve options check on getInjectorFromOptions ([4fb30a39](https://github.com/rx-angular/rx-angular/commit/4fb30a39))
+
+### 🧱 Updated Dependencies
+
+- Updated cdk to 21.0.1
+
+### ❤️ Thank You
+
+- Michael Berger
+
 # Changelog
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+# [21.0.0](https://github.com/rx-angular/rx-angular/compare/state@20.1.0...state@21.0.0) (2025-12-31)
+
+
+### Features
+
+* **state:** bump peerDependencies ([b8f0856](https://github.com/rx-angular/rx-angular/commit/b8f085621fc9e6bb05ac8a902a2cf53fcb2ba13b))
+
+
+### BREAKING CHANGES
+
+* **state:** bump angular peerDependencies to version 21
+
+
+
+# [20.1.0](https://github.com/rx-angular/rx-angular/compare/state@20.0.0...state@20.1.0) (2025-11-12)
+
+
+### Features
+
+* upgrade nx & ng dependencies ([2e48488](https://github.com/rx-angular/rx-angular/commit/2e4848804bb6efbe1ce53f061e4b2c57df161bed))
+
+
+
+# [20.0.0](https://github.com/rx-angular/rx-angular/compare/state@19.0.3...state@20.0.0) (2025-07-14)
+
+
+### Features
+
+* **state:** bump peerDependency to @angular/core ^20 ([c675292](https://github.com/rx-angular/rx-angular/commit/c6752920d7d61b57b53fc3def36f2c013eb92a20))
+
+
+### BREAKING CHANGES
+
+* **state:** bump ng to version 20
+
+
 
 ## [19.0.3](https://github.com/rx-angular/rx-angular/compare/state@19.0.2...state@19.0.3) (2025-01-28)
 

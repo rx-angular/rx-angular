@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-rx-let-poc',
@@ -14,13 +15,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'm-1 p-1',
     style: 'display: block;',
   },
   providers: [],
-  standalone: false,
+  imports: [VisualizerComponent],
 })
 export class IfVisibleComponent {
   log(n) {

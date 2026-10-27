@@ -323,7 +323,7 @@ describe('rxIf directive signal values', () => {
 
       fixture = createTestComponent(template);
 
-      expect(() => fixture.detectChanges()).toThrowError(
+      expect(() => fixture.detectChanges()).toThrow(
         /rxThen must be a TemplateRef, but received/,
       );
     }));
@@ -335,7 +335,7 @@ describe('rxIf directive signal values', () => {
 
       fixture = createTestComponent(template);
 
-      expect(() => fixture.detectChanges()).toThrowError(
+      expect(() => fixture.detectChanges()).toThrow(
         /rxElse must be a TemplateRef, but received/,
       );
     }));

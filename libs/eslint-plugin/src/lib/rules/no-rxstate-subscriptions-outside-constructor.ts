@@ -14,14 +14,13 @@ export type MessageIds = typeof MESSAGE_ID;
 export type Options = [
   {
     allowedMethods?: string[];
-  }
+  },
 ];
 
 export default ESLintUtils.RuleCreator(docsUrl)({
   name: path.parse(__filename).name,
   meta: {
     docs: {
-      recommended: 'recommended',
       description:
         'Warns against using RxState subscription methods outside constructor.',
     },
@@ -52,9 +51,9 @@ export default ESLintUtils.RuleCreator(docsUrl)({
     ];
     return {
       [`MethodDefinition[key.name!=${namesToRegex(
-        methodNames
+        methodNames,
       )}] ${rxstateMethodCallExpression(['connect', 'hold'])}`]: (
-        node: TSESTree.CallExpression
+        node: TSESTree.CallExpression,
       ) => {
         if (
           node.callee.type === AST_NODE_TYPES.MemberExpression &&

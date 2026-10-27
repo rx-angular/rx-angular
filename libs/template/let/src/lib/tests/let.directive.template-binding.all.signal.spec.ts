@@ -1,5 +1,11 @@
 import { JsonPipe } from '@angular/common';
-import { Component, Injector, Signal, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  Signal,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   ComponentFixture,
@@ -42,6 +48,7 @@ import { RxLet } from '../let.directive';
     <ng-template #error>error</ng-template>
     <ng-template #suspense>suspense</ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, JsonPipe],
 })
 class LetDirectiveAllTemplatesTestComponent {
@@ -99,7 +106,7 @@ describe('LetDirective reactive context templates w/ signals', () => {
 
   it('should render "suspense" template before the first value is emitted', () => {
     component.valueSignal = signal<number>(undefined);
-    fixture.detectChanges();
+    TestBed.tick();
     expectContentToBe('suspense');
   });
 
@@ -108,7 +115,7 @@ describe('LetDirective reactive context templates w/ signals', () => {
       throwError(() => new Error('test error')),
       { injector },
     );
-    fixture.detectChanges();
+    TestBed.tick();
     expectContentToBe('error');
   });
 
@@ -117,16 +124,19 @@ describe('LetDirective reactive context templates w/ signals', () => {
       requireSync: false,
       injector,
     });
-    fixture.detectChanges();
+    TestBed.tick();
     expectContentToBe('suspense');
 
     tick(1000);
+    TestBed.tick();
     expectContentToBe('0');
 
     tick(1000);
+    TestBed.tick();
     expectContentToBe('1');
 
     tick(1000);
+    TestBed.tick();
     // the last emitted value ('2') and complete notification are in sync
     // so we expect "complete" here
     expectContentToBe('2');
@@ -134,14 +144,14 @@ describe('LetDirective reactive context templates w/ signals', () => {
 
   it('should render "suspense" template when observable never emits (by passing NEVER)', () => {
     component.valueSignal = toSignal(NEVER, { requireSync: false, injector });
-    fixture.detectChanges();
+    TestBed.tick();
     expectContentToBe('suspense');
   });
 
   describe('triggers', () => {
     beforeEach(() => {
       component.valueSignal = signal(1);
-      fixture.detectChanges();
+      TestBed.tick();
     });
 
     it('should render suspense', () => {

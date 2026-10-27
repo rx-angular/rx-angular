@@ -1,10 +1,20 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
+import { CdkScrollable as CdkScrollable_1 } from '@angular/cdk/scrolling';
+import { AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ViewChild,
 } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatSidenav,
+  MatSidenavContainer,
+  MatSidenavContent,
+} from '@angular/material/sidenav';
+import { MatToolbar } from '@angular/material/toolbar';
 import { NavigationEnd, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
 import { Subject } from 'rxjs';
@@ -23,7 +33,16 @@ interface AppShellState {
   styleUrls: ['./app-shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
-  standalone: false,
+  imports: [
+    MatSidenavContainer,
+    MatSidenav,
+    MatToolbar,
+    MatSidenavContent,
+    MatIconButton,
+    MatIcon,
+    CdkScrollable_1,
+    AsyncPipe,
+  ],
 })
 export class AppShellComponent implements AfterViewInit {
   readonly viewState$ = this.state.select();

@@ -1,6 +1,85 @@
+## 21.1.1 (2026-07-21)
+
+### Documentation Changes
+
+- restructure into Diátaxis and redesign the homepage ([#1913](https://github.com/rx-angular/rx-angular/pull/1913), [#1918](https://github.com/rx-angular/rx-angular/issues/1918))
+- fix broken CI status badge URLs ([a8ac8477](https://github.com/rx-angular/rx-angular/commit/a8ac8477))
+
+### ❤️ Thank You
+
+- Enea Jahollari @eneajaho
+- Hanna Skryl @hanna-skryl
+- hanna-skryl
+- Julian Jandl @hoebbelsB
+- Kirill
+- Michael Hladky @rx-angular
+
+## 21.1.0 (2026-03-17)
+
+### 🚀 Features
+
+- **cdk:** introduce PLATFORM token ([3bfd804f](https://github.com/rx-angular/rx-angular/commit/3bfd804f))
+- **cdk:** introduce HydrationTracker utility for SSR ([f7a789cf](https://github.com/rx-angular/rx-angular/commit/f7a789cf))
+
+### ❤️ Thank You
+
+- Enea Jahollari
+
+## 21.0.1 (2026-03-05)
+
+### 🩹 Fixes
+
+- **cdk:** ability to override default strategies ([82b539dd](https://github.com/rx-angular/rx-angular/commit/82b539dd))
+
+### ❤️ Thank You
+
+- Julian Jandl @hoebbelsB
+
 # Changelog
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+# [21.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@20.1.0...cdk@21.0.0) (2025-12-31)
+
+
+### Features
+
+* **cdk:** bump peerDependencies ([8d7690c](https://github.com/rx-angular/rx-angular/commit/8d7690c9f6d823e84ebb61c7be08ccfb947eecb6))
+
+
+### BREAKING CHANGES
+
+* **cdk:** bump angular peerDependencies to version 21
+
+
+
+# [20.1.0](https://github.com/rx-angular/rx-angular/compare/cdk@20.0.0...cdk@20.1.0) (2025-11-12)
+
+
+### Bug Fixes
+
+* **cdk:** preserve prototype chains in array helpers ([#1874](https://github.com/rx-angular/rx-angular/issues/1874)) ([8534203](https://github.com/rx-angular/rx-angular/commit/8534203f41e0e175c959018b07a40d1e61ffd16e))
+
+
+### Features
+
+* upgrade nx & ng dependencies ([2e48488](https://github.com/rx-angular/rx-angular/commit/2e4848804bb6efbe1ce53f061e4b2c57df161bed))
+
+
+
+# [20.0.0](https://github.com/rx-angular/rx-angular/compare/cdk@19.1.0...cdk@20.0.0) (2025-07-14)
+
+
+### Features
+
+* **cdk:** bump peerDependency to @angular/core ^20 ([5d09b55](https://github.com/rx-angular/rx-angular/commit/5d09b55d7067eeadab8185f324a1c99c862faecd))
+
+
+### BREAKING CHANGES
+
+* **cdk:** bump ng to version 20
+
+
 
 # [19.1.0](https://github.com/rx-angular/rx-angular/compare/cdk@19.0.1...cdk@19.1.0) (2025-01-09)
 

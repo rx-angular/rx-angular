@@ -1,6 +1,6 @@
-import 'jest-preset-angular/setup-jest'; // TODO: move this into test-setup when zone-config.spec is in its own lib
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -29,6 +29,7 @@ import {
 
 @Component({
   selector: 'rx-angular-error-test',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `{{ value }}`,
 })
 class ErrorTestComponent {
@@ -52,6 +53,7 @@ class ErrorTestComponent {
     </ng-template>
     <span #host></span>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ErrorTestComponent],
 })
 class ListTemplateManagerSpecComponent implements AfterViewInit {

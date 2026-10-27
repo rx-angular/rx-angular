@@ -1,14 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RxFor } from './rx-for.directive';
 
-const DECLARATIONS = [
-  RxFor
-];
+const DECLARATIONS = [RxFor];
 
 @NgModule({
-  declarations: DECLARATIONS,
-  imports: [],
-  exports: DECLARATIONS
+  imports: [...DECLARATIONS],
+  exports: DECLARATIONS,
 })
-export class RxForModule {
-}
+export class RxForModule {}

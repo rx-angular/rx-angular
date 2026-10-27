@@ -1,9 +1,13 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'rxa-rendering-work',
-  template: ` <div *ngFor="let item of items">{{ item }}</div> `,
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: `
+    @for (item of items; track item) {
+      <div>{{ item }}</div>
+    }
+  `,
 })
 export class RenderingWorkComponent {
   @Input() set factor(factor: number) {

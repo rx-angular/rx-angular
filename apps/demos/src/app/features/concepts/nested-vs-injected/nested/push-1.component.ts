@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CdTriggerComponent } from '../../../../shared/debug-helper/cd-trigger/cd-trigger/cd-trigger.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { CdHelper } from '../../../../shared/utils/cd-helper';
 
 @Component({
@@ -16,7 +18,7 @@ import { CdHelper } from '../../../../shared/utils/cd-helper';
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [CdHelper],
-  standalone: false,
+  imports: [VisualizerComponent, CdTriggerComponent],
 })
 export class CdOnPush1Component {
   constructor(public cdHelper: CdHelper) {}

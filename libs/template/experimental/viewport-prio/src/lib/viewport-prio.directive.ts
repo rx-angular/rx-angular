@@ -62,12 +62,12 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
     this.entriesSubject.pipe(mergeAll());
 
   _viewportPrioObservables = new BehaviorSubject<Observable<string> | string>(
-    of('noop')
+    of('noop'),
   );
   _viewportPrio = this._viewportPrioObservables.pipe(
     coerceObservableWith(),
     mergeAll(),
-    map((v) => (!v ? 'noop' : v))
+    map((v) => (!v ? 'noop' : v)),
   );
   @Input('viewport-prio')
   set viewportPrio(prio: string | Observable<string>) {
@@ -81,7 +81,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
         },
         {
           threshold: 0,
-        }
+        },
       )
     : null;
 
@@ -92,7 +92,7 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
       } else {
         return 'invisible';
       }
-    })
+    }),
   );
 
   constructor(
@@ -100,12 +100,12 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
     private strategyProvider: RxStrategyProvider,
     @Inject(RxLet)
     @Optional()
-    private letDirective: RxLet<any> | null
+    private letDirective: RxLet<any> | null,
   ) {}
 
   ngOnInit() {
     const letStrategyName$ = this.strategyProvider.primaryStrategy$.pipe(
-      map(({ name }) => name)
+      map(({ name }) => name),
     );
 
     let lastValue = undefined;
@@ -120,15 +120,15 @@ export class ViewportPrioDirective implements OnInit, OnDestroy {
       .pipe(
         withLatestFrom(
           combineLatest(letStrategyName$, this._viewportPrio).pipe(
-            filter(([newN, oldN]) => newN !== oldN)
-          )
+            filter(([newN, oldN]) => newN !== oldN),
+          ),
         ),
         map(([visibility, strategyNames]) => {
           const [inStrategyName, outStrategyName] = strategyNames;
           return visibility === 'visible'
             ? [visibility, inStrategyName]
             : [visibility, outStrategyName];
-        })
+        }),
       )
       .subscribe(([visibility, strategyName]) => {
         if (this.letDirective !== null) {

@@ -1,22 +1,46 @@
-import { AfterViewInit, Component } from '@angular/core';
-import { AppShellModule } from '../app-shell/index';
-import { AppPresenter } from './app-presenter.service';
-import { MENU_ITEMS } from './app.menu';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import { filter, take, tap } from 'rxjs/operators';
+import { AppShellModule } from '../app-shell/index';
+import { ThemeService } from '../shared/theme.service';
+import { MENU_ITEMS } from './app.menu';
+import { AppPresenter } from './app-presenter.service';
 
 @Component({
   selector: 'rxa-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [AppPresenter],
-  imports: [AppShellModule, RouterOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    AppShellModule,
+    RouterOutlet,
+    RouterLink,
+    MatIconButton,
+    MatIcon,
+    MatTooltip,
+    AsyncPipe,
+  ],
 })
 export class AppComponent implements AfterViewInit {
   menuItems = MENU_ITEMS;
 
   constructor(
     public vm: AppPresenter,
+    public theme: ThemeService,
     router: Router,
   ) {
     performance.mark('startRouting');

@@ -1,6 +1,107 @@
+## 21.2.1 (2026-07-21)
+
+### 🩹 Fixes
+
+- **template:** add virtual-view coverage + content-swap fix ([091d6700](https://github.com/rx-angular/rx-angular/commit/091d6700))
+
+### Documentation Changes
+
+- restructure into Diátaxis and redesign the homepage ([#1913](https://github.com/rx-angular/rx-angular/pull/1913), [#1918](https://github.com/rx-angular/rx-angular/issues/1918))
+- fix broken CI status badge URLs ([a8ac8477](https://github.com/rx-angular/rx-angular/commit/a8ac8477))
+
+### 🧱 Updated Dependencies
+
+- Updated cdk to 21.1.1
+
+### ❤️ Thank You
+
+- Enea Jahollari @eneajaho
+- Hanna Skryl @hanna-skryl
+- hanna-skryl
+- Julian Jandl @hoebbelsB
+- Kirill
+- Michael Hladky @rx-angular
+
+## 21.2.0 (2026-03-17)
+
+### 🚀 Features
+
+- **template:** add scrollMargin configuration to RxVirtualView ([ab6a5634](https://github.com/rx-angular/rx-angular/commit/ab6a5634))
+- **template:** add runtime enable/disable support for VirtualView ([ba1874df](https://github.com/rx-angular/rx-angular/commit/ba1874df))
+- **template:** add  PLATFORM and `effectOnceIf` utilities ([d892044b](https://github.com/rx-angular/rx-angular/commit/d892044b))
+- **template:** add `assertInjector` utility from ngxtension ([d614d4d9](https://github.com/rx-angular/rx-angular/commit/d614d4d9))
+
+### 🩹 Fixes
+
+- **template:** handle delayed content in VirtualView directive ([e21fe9a2](https://github.com/rx-angular/rx-angular/commit/e21fe9a2))
+
+### 🧱 Updated Dependencies
+
+- Updated cdk to 21.1.0
+
+### ❤️ Thank You
+
+- Enea Jahollari
+
+## 21.1.0 (2026-03-05)
+
+### 🚀 Features
+
+- **template:** add visibility state tracking and new outputs to `RxVirtualView` ([0e543664](https://github.com/rx-angular/rx-angular/commit/0e543664))
+- **template:** add visibility state tracking and new outputs to `RxVirtualView` ([2410b60e](https://github.com/rx-angular/rx-angular/commit/2410b60e))
+
+### 🧱 Updated Dependencies
+
+- Updated cdk to 21.0.1
+
+### ❤️ Thank You
+
+- Enea Jahollari @eneajaho
+
 # Changelog
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+# [21.0.0](https://github.com/rx-angular/rx-angular/compare/template@20.1.0...template@21.0.0) (2025-12-31)
+
+
+### Features
+
+* **template:** bump peerDependencies ([ad6f291](https://github.com/rx-angular/rx-angular/commit/ad6f291f60877496fcbab30fa77401ddc53b43ec))
+* **template:** create auto migration from experimental to stable path ([f9920ae](https://github.com/rx-angular/rx-angular/commit/f9920ae17df62c211daccec7538a970acda9dd58))
+* **template:** virtual-scrolling considered stable ([878427a](https://github.com/rx-angular/rx-angular/commit/878427ab198553d4480c973affaf07a9f952c24c))
+
+
+### BREAKING CHANGES
+
+* **template:** bump angular peerDependencies to version 21
+* **template:** the virtual-scrolling package is widely considered as stable and has moved from @rx-angular/template/experimental/virtual-scrolling to @rx-angular/template/virtual-scrolling
+
+
+
+# [20.1.0](https://github.com/rx-angular/rx-angular/compare/template@20.0.0...template@20.1.0) (2025-11-12)
+
+
+### Features
+
+* **template:** make virtual views not set a height by default ([bf7fa14](https://github.com/rx-angular/rx-angular/commit/bf7fa145b9a338e84ba5cde7d2e5807af3bc15c7))
+* upgrade nx & ng dependencies ([2e48488](https://github.com/rx-angular/rx-angular/commit/2e4848804bb6efbe1ce53f061e4b2c57df161bed))
+
+
+
+# [20.0.0](https://github.com/rx-angular/rx-angular/compare/template@19.2.2...template@20.0.0) (2025-07-14)
+
+
+### Features
+
+* **template:** bump peerDependency to @angular/core ^20 ([7b6e1be](https://github.com/rx-angular/rx-angular/commit/7b6e1be76a1656c77f1c7e63a0fa0ee334606268))
+
+
+### BREAKING CHANGES
+
+* **template:** bump ng to version 20
+
+
 
 ## [19.2.2](https://github.com/rx-angular/rx-angular/compare/template@19.2.1...template@19.2.2) (2025-05-15)
 

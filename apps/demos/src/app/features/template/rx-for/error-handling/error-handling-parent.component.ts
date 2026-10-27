@@ -1,20 +1,50 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RxFor } from '@rx-angular/template/for';
+import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
+import { DocsLinkComponent } from '../../../../shared/docs-link';
+import { ErrorHandlingChildComponent } from './error-handling-child.component';
 
 @Component({
   selector: 'rxa-error-handling-parent',
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    RxFor,
+    ArrayProviderComponent,
+    DocsLinkComponent,
+    ErrorHandlingChildComponent,
+  ],
   template: `
     <div class="container pt-5">
-      <div class="d-flex">
-        <rxa-array-provider
-          [unpatched]="[]"
-          [buttons]="true"
-          #arrayP="rxaArrayProvider"
-        ></rxa-array-provider>
-      </div>
-      <div class="d-flex justify-content-between">
+      <header class="rxa-demo-header">
         <div>
-          <h2 class="mat-subheading-1">*rxFor</h2>
+          <h2>Error Handling</h2>
+          <p class="rxa-demo-subtitle">
+            Compare how <code>*rxFor</code> and <code>*ngFor</code> behave when
+            a child view throws while rendering.
+          </p>
+        </div>
+        <rxa-docs-link
+          docs="packages/template/reference/rx-for"
+          source="apps/demos/src/app/features/template/rx-for"
+        />
+      </header>
+
+      <div class="rxa-demo-toolbar">
+        <section class="rxa-demo-group rxa-demo-group--wide">
+          <span class="rxa-demo-label">Data</span>
+          <rxa-array-provider
+            [unpatched]="[]"
+            [buttons]="true"
+            #arrayP="rxaArrayProvider"
+          ></rxa-array-provider>
+        </section>
+      </div>
+
+      <div class="rxa-demo-columns">
+        <div>
+          <h3 class="rxa-demo-section-title">*rxFor</h3>
           <div class="d-flex flex-wrap">
             <rxa-error-handling-child
               *rxFor="
@@ -27,16 +57,15 @@ import { Subject } from 'rxjs';
           </div>
         </div>
         <div>
-          <h2 class="mat-subheading-1">*ngFor</h2>
+          <h3 class="rxa-demo-section-title">*ngFor</h3>
           <div class="d-flex flex-wrap">
-            <rxa-error-handling-child
-              *ngFor="
-                let child of arrayP.array$ | async;
-                let i = index;
-                trackBy: trackItem
-              "
-              [index]="i"
-            ></rxa-error-handling-child>
+            @for (
+              child of arrayP.array$ | async;
+              track trackItem(i, child);
+              let i = $index
+            ) {
+              <rxa-error-handling-child [index]="i"></rxa-error-handling-child>
+            }
           </div>
         </div>
       </div>
@@ -44,7 +73,6 @@ import { Subject } from 'rxjs';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [],
-  standalone: false,
 })
 export class ErrorHandlingParentComponent {
   trackItem = (i: number, item: any) => item.id;

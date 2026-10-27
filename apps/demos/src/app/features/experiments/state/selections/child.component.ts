@@ -1,23 +1,42 @@
+import { AsyncPipe, KeyValuePipe } from '@angular/common';
 import { Component, Input, Output } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+} from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'rxa-state-child-selections',
   template: `
     <div class="case-content">
-      <form *ngIf="formGroup$ | async as formGroup" [formGroup]="formGroup">
-        <mat-form-field *ngFor="let c of formGroup.controls | keyvalue">
-          <label>{{ c.key }}</label>
-          <input matInput [formControlName]="c.key" />
-        </mat-form-field>
-      </form>
+      @if (formGroup$ | async; as formGroup) {
+        <form [formGroup]="formGroup">
+          @for (c of formGroup.controls | keyvalue; track c) {
+            <mat-form-field>
+              <label>{{ c.key }}</label>
+              <input matInput [formControlName]="c.key" />
+            </mat-form-field>
+          }
+        </form>
+      }
     </div>
   `,
   changeDetection: environment.changeDetection,
-  standalone: false,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormField,
+    MatInput,
+    AsyncPipe,
+    KeyValuePipe,
+  ],
 })
 export class RxStateChildSelectionsComponent {
   state$ = new ReplaySubject(1);

@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
 import { Promise } from '@rx-angular/cdk/zone-less/browser';
+import { Observable } from 'rxjs';
 
 // @NOTICE replace logic with 7v handling of promises in RxJS
 

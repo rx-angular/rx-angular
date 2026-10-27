@@ -1,7 +1,7 @@
 # @rx-angular/template
 
 [![npm](https://img.shields.io/npm/v/%40rx-angular%2Ftemplate.svg)](https://www.npmjs.com/package/%40rx-angular%2Ftemplate)
-![rx-angular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
+![rx-angular CI](https://github.com/rx-angular/rx-angular/actions/workflows/build-and-test.yml/badge.svg?branch=main)
 [![codecov](https://codecov.io/gh/rx-angular/rx-angular/branch/main/graph/badge.svg?token=Jxy4xLJSs1&flag=template)](https://codecov.io/gh/rx-angular/rx-angular)
 
 > A lib for handling data streams in templates for high performance and ergonomic Angular UI's in large-scale applications
@@ -68,6 +68,10 @@ export class AnyComponent {}
 
 | RxAngular | Angular    |
 | --------- | ---------- |
+| `^22.0.0` | `>=22.0.0` |
+| `^21.0.0` | `^21.0.0`  |
+| `^20.0.0` | `^20.0.0`  |
+| `^19.0.0` | `^19.0.0`  |
 | `^18.0.0` | `^18.0.0`  |
 | `^17.0.0` | `^17.0.0`  |
 | `^16.0.0` | `^16.0.0`  |

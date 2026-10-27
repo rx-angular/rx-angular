@@ -1,6 +1,6 @@
 [![RxAngular logo](https://raw.githubusercontent.com/rx-angular/rx-angular/main/docs/images/rx-angular_logo.png)](https://rx-angular.io/)
 
-# RxAngular ![RxAngular CI](https://github.com/rx-angular/rx-angular/workflows/rx-angular%20CI/badge.svg?branch=main)
+# RxAngular ![RxAngular CI](https://github.com/rx-angular/rx-angular/actions/workflows/build-and-test.yml/badge.svg?branch=main)
 
 > RxAngular offers a comprehensive toolkit for handling fully reactive Angular applications with the main focus on runtime performance, template rendering, and Developer eXperience.
 
@@ -97,35 +97,6 @@ export class CounterComponent {
 ```
 
 To learn more about `@rx-angular/state` and its capabilities, check out the official documentation at [https://rx-angular.io/docs/state](https://rx-angular.io/docs/state).
-
-## Used by
-
-<table style="width:100%">
-  <tr>
-    <td><img width="140" src="https://clickup.com/landing/images/logo-clickup_color.svg"></td>
-    <td><img width="140" src="https://get.tapeapp.com/wp-content/uploads/2021/08/tape_logo_24px.svg"></td>
-    <td><img height="80" src="https://avatars.githubusercontent.com/u/1733746?s=200&v=4"></td>
-  </tr>
-   <tr>
-    <th>Large scale application</th>
-    <th>Medium size project</th>
-    <th>Small project</th>
-  </tr>
-  <tr>
-    <td>
-      Url: https://clickup.com <br/>
-      Platforms: Web
-    </td>
-    <td>
-      Url: https://get.tapeapp.com<br/>
-      Platforms: Web, Mobile (ionic)
-    </td>
-    <td>
-      Url: https://angular-movies-a12d3.web.app<br/>
-      Platforms: Web
-    </td>
-  </tr>
-</table>
 
 ## Links
 

@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   bail: true,
   displayName: 'cdk',
@@ -21,5 +20,4 @@ export default {
   transform: {
     '^.+.(ts|mjs|js|html)$': 'jest-preset-angular',
   },
-  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
 };

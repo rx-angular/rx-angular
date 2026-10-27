@@ -7,7 +7,6 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-
 import {
   ObservableInput,
   ReplaySubject,
@@ -25,10 +24,7 @@ export interface PocLetViewContext<T> {
   $suspense: boolean;
 }
 
-@Directive({
-  selector: '[poc1Let]',
-  standalone: false,
-})
+@Directive({ selector: '[poc1Let]' })
 export class Poc1LetDirective<U> implements OnInit, OnDestroy {
   observables$ = new ReplaySubject(1);
   viewContext = { $implicit: undefined };

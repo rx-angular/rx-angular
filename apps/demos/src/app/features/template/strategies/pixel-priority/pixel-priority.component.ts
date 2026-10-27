@@ -1,16 +1,53 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { RxEffects } from '@rx-angular/state/effects';
+import { RxLet } from '@rx-angular/template/let';
+import { RxPush } from '@rx-angular/template/push';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { UnpatchEventsModule } from '../../../../rx-angular-pocs/template/directives/unpatch';
+import { CanvasViewComponent } from '../../../../shared/canvas-view/canvas-view.component';
+import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
+import { DocsLinkComponent } from '../../../../shared/docs-link';
 import { createImageConverter } from '../../../../shared/image-array';
+import { ImageArrayModule } from '../../../../shared/image-array/image-array.module';
 import { computeColorPrio } from '../../../../shared/image-array/pixel-image';
-import { RxEffects } from '@rx-angular/state/effects';
+import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
 
 @Component({
   selector: 'rxa-concurrent-strategies',
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressBarModule,
+    RxLet,
+    RxPush,
+    UnpatchEventsModule,
+    CanvasViewComponent,
+    ImageArrayModule,
+    SiblingModule,
+    VisualizerModule,
+    DocsLinkComponent,
+  ],
   template: `
     <rxa-visualizer>
       <ng-container visualizerHeader>
-        <h1 class="mat-headline">Pixels with priorities</h1>
+        <header class="rxa-demo-header">
+          <div>
+            <h2>Pixels With Priorities</h2>
+            <p class="rxa-demo-subtitle">
+              Repaint many pixel components at once and watch prioritized render
+              strategies driven by each color's priority.
+            </p>
+          </div>
+          <rxa-docs-link
+            docs="packages/cdk/reference/concurrent-strategies"
+            source="apps/demos/src/app/features/template/strategies"
+          />
+        </header>
         <rxa-image-array
           (img)="imgChange$.next($event)"
           class="mb-2"
@@ -18,10 +55,9 @@ import { RxEffects } from '@rx-angular/state/effects';
       </ng-container>
       <div class="w-100 d-flex flex-wrap">
         <div class="w-100 mb-2">
-          <mat-progress-bar
-            *ngIf="imgConverter?.loading$ | push"
-            [mode]="'buffer'"
-          ></mat-progress-bar>
+          @if ($safeNavigationMigration(imgConverter?.loading$) | push) {
+            <mat-progress-bar [mode]="'buffer'"></mat-progress-bar>
+          }
 
           <rxa-color-prio class="w-100" [colors$]="colors$"></rxa-color-prio>
         </div>
@@ -59,9 +95,8 @@ import { RxEffects } from '@rx-angular/state/effects';
             </mat-form-field>
             <button
               *rxLet="pixelArray$; let a"
+              class="btn btn-outline-primary btn-sm"
               style="width: 200px"
-              mat-raised-button
-              color="primary"
               [unpatch]
               (click)="filled$.next(!filled$.getValue())"
             >
@@ -83,9 +118,10 @@ import { RxEffects } from '@rx-angular/state/effects';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxEffects],
-  standalone: false,
 })
 export class PixelPriorityComponent {
+  readonly rxEf = inject(RxEffects);
+
   selectedStrategies: { [name: string]: boolean } = {};
 
   filled$ = new BehaviorSubject<boolean>(true);
@@ -98,7 +134,7 @@ export class PixelPriorityComponent {
   colors$ = this.imgInfoChange$.pipe(map((r) => computeColorPrio(r.colors)));
   pixelArray$ = this.imgInfoChange$.pipe(map((d) => d.pixelArray));
 
-  constructor(public rxEf: RxEffects) {
+  constructor() {
     this.rxEf.register(this.imgChange$, (img: CanvasImageSource) =>
       this.imgConverter.renderImage(img),
     );

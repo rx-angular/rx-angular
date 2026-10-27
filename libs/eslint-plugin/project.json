@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/eslint-plugin/src",
   "projectType": "library",
+  "tags": ["type:lib"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -25,12 +26,6 @@
         "main": "libs/eslint-plugin/src/index.ts",
         "assets": ["libs/eslint-plugin/*.md"]
       }
-    },
-    "publish": {
-      "command": "npm publish dist/libs/eslint-plugin"
-    },
-    "version": {},
-    "github": {}
-  },
-  "tags": ["type:lib"]
+    }
+  }
 }

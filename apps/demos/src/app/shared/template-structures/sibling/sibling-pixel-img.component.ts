@@ -1,14 +1,13 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  Input,
-} from '@angular/core';
+import { NgStyle } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { Observable } from 'rxjs';
-import { selectSlice } from '@rx-angular/state/selections';
 import { RxState } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
+import { RxPush } from '@rx-angular/template/push';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { RxLet } from '../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
 import { toInt } from '../../debug-helper/value-provider';
 import { ImgInfo } from '../../image-array';
 import { computeColorPrio } from '../../image-array/pixel-image';
@@ -24,9 +23,7 @@ const chunk = (arr, n) =>
       [style.width.px]="width"
       *rxLet="width$; let width; strategy: 'reactNormal'"
     >
-      <ng-container
-        *ngFor="let sibling of pixelArray$ | push; trackBy: trackBy"
-      >
+      @for (sibling of pixelArray$ | push; track trackBy($index, sibling)) {
         <div
           class="pixel"
           [style.width.px]="pixelSize$ | push"
@@ -37,7 +34,7 @@ const chunk = (arr, n) =>
             [ngStyle]="{ background: c ? c : sibling }"
           ></div>
         </div>
-      </ng-container>
+      }
     </div>
   `,
   styles: [
@@ -67,7 +64,7 @@ const chunk = (arr, n) =>
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [RxLet, NgStyle, RxPush, PushPipe],
 })
 export class SiblingPixelImgComponent extends RxState<
   {

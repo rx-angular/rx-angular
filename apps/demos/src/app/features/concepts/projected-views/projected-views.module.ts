@@ -1,22 +1,17 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
-import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select/strategy-select.module';
-import { ROUTES } from './projected-views.routes';
-import { ProjectedViewsComponent } from './projected-views.component';
+import { RxForModule, RxLetModule } from '../../../rx-angular-pocs';
+import { StrategySelectComponent } from '../../../shared/debug-helper/strategy-select';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
 import { ContentChildComponent } from './content-child.component';
+import { ProjectedViewsComponent } from './projected-views.component';
+import { ROUTES } from './projected-views.routes';
 import { ViewChildComponent } from './view-child.component';
-import { RxForModule, RxLetModule } from '../../../rx-angular-pocs';
-import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [
-    ProjectedViewsComponent,
-    ContentChildComponent,
-    ViewChildComponent,
-  ],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -24,8 +19,11 @@ import { MatButtonModule } from '@angular/material/button';
     RxUnpatch,
     MatButtonModule,
     RxLetModule,
-    StrategySelectModule,
+    StrategySelectComponent,
     RxForModule,
+    ProjectedViewsComponent,
+    ContentChildComponent,
+    ViewChildComponent,
   ],
 })
 export class ProjectedViewsModule {}

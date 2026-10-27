@@ -1,13 +1,16 @@
 import {
+  CdkDrag,
   CdkDragDrop,
+  CdkDropList,
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { delay, map, shareReplay, tap } from 'rxjs/operators';
+import { RxFor } from '../../../rx-angular-pocs/template/directives/for/rx-for.directive';
 import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx-for.module';
 
 @Component({
@@ -16,21 +19,24 @@ import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx
     <div cdkDropList (cdkDropListDropped)="drop($event)">
       <h3>ngFor</h3>
       <ul>
-        <li cdkDrag *ngFor="let item of items$ | async">{{ item.value }}</li>
+        @for (item of items$ | async; track item) {
+          <li cdkDrag>{{ item.value }}</li>
+        }
       </ul>
     </div>
 
     <div cdkDropList (cdkDropListDropped)="drop($event)">
       <h3>ngFor with error</h3>
       <ul>
-        <li
-          cdkDrag
-          (cdkDragStarted)="dragging$.next(true)"
-          (cdkDragEnded)="dragging$.next(false)"
-          *ngFor="let item of errorItems$ | async; trackBy: trackItem"
-        >
-          {{ item.value }}
-        </li>
+        @for (item of errorItems$ | async; track trackItem($index, item)) {
+          <li
+            cdkDrag
+            (cdkDragStarted)="dragging$.next(true)"
+            (cdkDragEnded)="dragging$.next(false)"
+          >
+            {{ item.value }}
+          </li>
+        }
       </ul>
     </div>
 
@@ -114,7 +120,7 @@ import { RxForModule } from '../../../rx-angular-pocs/template/directives/for/rx
     </style>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [CdkDropList, CdkDrag, RxFor, AsyncPipe],
 })
 export class DndComponent {
   items$ = new BehaviorSubject<any>(createItems(50));
@@ -192,8 +198,8 @@ export class DndComponent {
     DragDropModule,
     CommonModule,
     RxForModule,
+    DndComponent,
   ],
-  declarations: [DndComponent],
 })
 export class DndComponentModule {}
 

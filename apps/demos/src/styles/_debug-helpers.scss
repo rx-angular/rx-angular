@@ -1,13 +1,25 @@
-.dh-l-view, .dh-embedded-view {
-  padding: 3px;
-}
-
+// Demo container produced by <rxa-visualizer> — a clean, modern card.
 .dh-l-view {
-  outline: 2px solid green;
+  padding: 1rem !important;
+  border: 1px solid var(--rxa-border);
+  border-radius: var(--rxa-radius);
+  background: var(--rxa-surface);
+  box-shadow: var(--rxa-shadow-sm);
 }
 
+// Nested demo views read as flatter, lighter cards (no heavy stacked shadows).
+.dh-l-view .dh-l-view {
+  box-shadow: none;
+  background: var(--rxa-surface-2);
+}
+
+// A dynamically/conditionally rendered view — keep it visually distinct (this
+// is a debug marker) but make it tasteful: subtle dashed accent + faint tint.
 .dh-embedded-view {
-  outline: 2px dashed green;
+  padding: 0.75rem;
+  border: 1px dashed rgba(var(--rxa-brand-rgb), 0.45);
+  border-radius: var(--rxa-radius-sm);
+  background: rgba(var(--rxa-brand-rgb), 0.03);
 }
 
 .indicator-ripple {

@@ -1,5 +1,9 @@
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RxPush } from '@rx-angular/template/push';
 import { ReplaySubject } from 'rxjs';
+import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 import { toBooleanArray } from './utils';
 
 const chunk = (arr, n) =>
@@ -11,12 +15,11 @@ const chunk = (arr, n) =>
     <rxa-visualizer>
       <p visualizerHeader>{{ siblings.length }} Siblings Push</p>
       <div class="w-100 siblings">
-        <span
-          class="sibling"
-          *ngFor="let sibling of siblings$ | push; trackBy: trackBy"
-        >
-          <div [ngClass]="{ filled: filled }">&nbsp;</div>
-        </span>
+        @for (sibling of siblings$ | push; track trackBy($index, sibling)) {
+          <span class="sibling">
+            <div [ngClass]="{ filled: filled }">&nbsp;</div>
+          </span>
+        }
       </div>
     </rxa-visualizer>
   `,
@@ -25,7 +28,7 @@ const chunk = (arr, n) =>
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent, NgClass, RxPush, PushPipe],
 })
 export class SiblingPushComponent {
   siblings = [];
@@ -42,5 +45,5 @@ export class SiblingPushComponent {
   @Input()
   value: any;
 
-  trackBy = (i) => i;
+  trackBy = (i: number, sibling: boolean) => i;
 }

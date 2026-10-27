@@ -1,6 +1,10 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { OutputBindingsStart } from './output-bindings.start.component';
 
 @Component({
   selector: 'rxa-output-bindings-container',
@@ -22,7 +26,7 @@ import { map } from 'rxjs/operators';
     </rxa-output-bindings-start>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatFormField, MatInput, OutputBindingsStart, AsyncPipe],
 })
 export class OutputBindingsContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();

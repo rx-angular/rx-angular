@@ -5,7 +5,6 @@ import { Directive, HostBinding, Input } from '@angular/core';
   host: {
     class: 'app-shell-sidenav-item',
   },
-  standalone: false,
 })
 export class AppShellSideNavItemDirective {
   @Input('rxaAppShellSideNavItemLevel') level = 0;

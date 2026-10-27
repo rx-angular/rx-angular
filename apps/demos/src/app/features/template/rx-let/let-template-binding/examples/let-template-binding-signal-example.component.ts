@@ -1,17 +1,32 @@
+import { JsonPipe } from '@angular/common';
 import {
   Component,
-  computed,
-  effect,
   inject,
   Injector,
   signal,
-  untracked,
+  ChangeDetectionStrategy,
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RxLet } from '@rx-angular/template/let';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'rxa-let-template-binding-signal-example',
+  standalone: true,
+  imports: [
+    JsonPipe,
+    RxLet,
+    RxUnpatch,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+  ],
   template: `
     <mat-card class="card">
       <mat-card-header>
@@ -65,6 +80,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
       ></mat-progress-spinner>
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       h1 {
@@ -103,7 +119,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
       }
     `,
   ],
-  standalone: false,
 })
 export class LetTemplateBindingSignalExampleComponent {
   errorStub = new Error('Template observable error!');
@@ -114,16 +129,6 @@ export class LetTemplateBindingSignalExampleComponent {
   value = signal<number | undefined>(undefined);
 
   valueCount = signal(0);
-
-  constructor() {
-    // this.reset();
-    // effect(() => {
-    //   this.value();
-    //   untracked(() => {
-    //     this.valueCount.update((v) => v + 1);
-    //   })
-    // });
-  }
 
   random() {
     return Math.random();

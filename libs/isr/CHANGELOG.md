@@ -1,6 +1,54 @@
+## 21.0.2 (2026-07-21)
+
+### Documentation Changes
+
+- restructure into Diátaxis and redesign the homepage ([#1913](https://github.com/rx-angular/rx-angular/pull/1913), [#1918](https://github.com/rx-angular/rx-angular/issues/1918))
+
+### ❤️ Thank You
+
+- Enea Jahollari @eneajaho
+- Hanna Skryl @hanna-skryl
+- Julian Jandl @hoebbelsB
+- Kirill
+- Michael Hladky @rx-angular
+
+## 21.0.1 (2026-03-05)
+
+This was a version bump only for isr to align it with other projects, there were no code changes.
+
 # Changelog
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
+
+# [21.0.0](https://github.com/rx-angular/rx-angular/compare/isr@20.0.0...isr@21.0.0) (2025-12-31)
+
+
+### Features
+
+* **isr:** bump peerDependencies ([e9e2a46](https://github.com/rx-angular/rx-angular/commit/e9e2a466f22c6bcd64d7123a5c3605df1d766726))
+
+
+### BREAKING CHANGES
+
+* **isr:** bump angular peerDependencies to version 21
+
+
+
+# [20.0.0](https://github.com/rx-angular/rx-angular/compare/isr@19.0.0...isr@20.0.0) (2025-11-12)
+
+
+### Features
+
+* **isr:** add AngularNodeAppEngine as a render engine option ([#1888](https://github.com/rx-angular/rx-angular/issues/1888)) ([a9fecc0](https://github.com/rx-angular/rx-angular/commit/a9fecc09d8c52bff3bbd9f83e4399c3527a1d966))
+* **isr:** bump peerDependency to @angular/core ^20 ([#1883](https://github.com/rx-angular/rx-angular/issues/1883)) ([73d0743](https://github.com/rx-angular/rx-angular/commit/73d07438941927d48fd3907a8db0c8f7f7764da7))
+* upgrade nx & ng dependencies ([2e48488](https://github.com/rx-angular/rx-angular/commit/2e4848804bb6efbe1ce53f061e4b2c57df161bed))
+
+
+### BREAKING CHANGES
+
+* **isr:** bump ng to version 20
+
+
 
 # [19.0.0](https://github.com/rx-angular/rx-angular/compare/isr@18.1.0...isr@19.0.0) (2024-12-05)
 

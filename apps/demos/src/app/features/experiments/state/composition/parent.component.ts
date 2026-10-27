@@ -1,7 +1,9 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
+import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { scan, shareReplay } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
 import { SourceService } from './source.service';
 
 @Component({
@@ -10,12 +12,14 @@ import { SourceService } from './source.service';
     <h2>Composition Handling</h2>
     <label>Visible:</label>
     <input type="checkbox" [(ngModel)]="visible" /><br />
-    <div class="case-content" *ngIf="visible">
-      numberOfEmissions{{ composition1$ | async }}
-    </div>
+    @if (visible) {
+      <div class="case-content">
+        numberOfEmissions{{ composition1$ | async }}
+      </div>
+    }
   `,
   changeDetection: environment.changeDetection,
-  standalone: false,
+  imports: [FormsModule, AsyncPipe],
 })
 export class RxStateParentCompositionComponent implements OnDestroy {
   subscription = new Subscription();

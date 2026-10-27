@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 @Component({
   selector: 'rxa-v1-d',
   template: `
@@ -10,7 +11,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent],
 })
 export class V1DComponent {
   constructor() {}

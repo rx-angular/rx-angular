@@ -7,36 +7,31 @@
   "targets": {
     "build": {
       "executor": "@nx/angular:package",
-      "options": {
-        "project": "libs/isr/ng-package.json"
-      },
       "outputs": ["{workspaceRoot}/dist/libs/isr"],
+      "defaultConfiguration": "production",
+      "options": {
+        "project": "libs/isr/ng-package.json",
+        "tsConfig": "libs/isr/tsconfig.lib.json"
+      },
       "configurations": {
         "production": {
           "tsConfig": "libs/isr/tsconfig.lib.prod.json"
         },
-        "development": {
-          "tsConfig": "libs/isr/tsconfig.lib.json"
-        }
-      },
-      "defaultConfiguration": "production"
+        "development": {}
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/isr"],
       "options": {
         "jestConfig": "libs/isr/jest.config.ts",
-        "codeCoverage": true
+        "codeCoverage": true,
+        "tsConfig": "libs/isr/tsconfig.spec.json"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "publish": {
-      "command": "npm publish dist/libs/isr"
-    },
-    "version": {},
-    "github": {}
+    }
   }
 }

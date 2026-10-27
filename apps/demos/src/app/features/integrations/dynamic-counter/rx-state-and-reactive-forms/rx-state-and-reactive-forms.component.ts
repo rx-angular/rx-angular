@@ -1,12 +1,19 @@
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+} from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { RxState } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
 import { EMPTY, Observable, Subject, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { Component } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-
-import { selectSlice } from '@rx-angular/state/selections';
-import { RxState } from '@rx-angular/state';
-import { CounterState, INITIAL_STATE } from '../shared/model';
 import { toLatestFrom } from '../../../../shared/utils/to-latest-from';
+import { CounterDisplayComponent } from '../shared/counter-display.component';
+import { CounterState, INITIAL_STATE } from '../shared/model';
 import { updateCount } from '../shared/utils';
 
 @Component({
@@ -69,7 +76,15 @@ import { updateCount } from '../shared/utils';
     </form>
   `,
   providers: [RxState],
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CounterDisplayComponent,
+    MatButton,
+    MatFormField,
+    MatInput,
+  ],
 })
 export class RxStateAndReactiveFormsCounterComponent {
   readonly initialCounterState = INITIAL_STATE;

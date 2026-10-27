@@ -1,8 +1,7 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  TemplateRef,
-  ViewContainerRef,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRxRenderStrategies } from '@rx-angular/cdk/render-strategies';
@@ -17,6 +16,7 @@ import { MockChangeDetectorRef } from './fixtures';
       {{ value }}
     </ng-container>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet],
 })
 class LetDirectiveSubscribableTestComponent {
@@ -35,8 +35,6 @@ const setupLetDirectiveTestComponent = (): void => {
     imports: [LetDirectiveSubscribableTestComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      TemplateRef,
-      ViewContainerRef,
       provideRxRenderStrategies({ primaryStrategy: 'native' }),
     ],
     teardown: { destroyAfterEach: true },

@@ -8,7 +8,6 @@ export enum SchedulingName {
   setInterval = 'setInterval',
 }
 
-
 export enum SchedulingPriority {
   sync,
   animationFrame,
@@ -19,6 +18,5 @@ export enum SchedulingPriority {
   idleCallback,
   userBlocking,
   userVisible,
-  background
+  background,
 }
-

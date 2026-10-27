@@ -1,0 +1,7 @@
+.legacyGuardIntro {
+  margin-bottom: 0.75rem;
+}
+
+.legacyGuardIntro:last-child {
+  margin-bottom: 0;
+}

@@ -1,9 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { RxState } from '@rx-angular/state';
+import { RxLet } from '@rx-angular/template/let';
 import { isObservable, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
-import { toBoolean } from '../utils';
 import { TestItem } from '../model';
+import { toBoolean } from '../utils';
 
 @Component({
   selector: 'rxa-value',
@@ -32,7 +35,8 @@ import { TestItem } from '../model';
     `,
   ],
   providers: [RxState],
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [RxLet, MatIcon, NgClass],
 })
 export class ValueComponent {
   value$ = this.state.select(map((s) => toBoolean(s.item.value, 0.5)));

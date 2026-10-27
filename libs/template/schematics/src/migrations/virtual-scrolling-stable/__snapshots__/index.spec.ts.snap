@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Template Migration virtual-scrolling-stable should replace module specifier 1`] = `
+"import { ListRange, RxVirtualForViewContext, RxVirtualScrollElement, RxVirtualScrollStrategy, RxVirtualScrollViewport, RxVirtualViewRepeater, AutoSizeVirtualScrollStrategy, DynamicSizeVirtualScrollStrategy, FixedSizeVirtualScrollStrategy, RxVirtualFor, RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS, RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS_FACTORY, RxVirtualScrollDefaultOptions, RxVirtualScrollElementDirective, RxVirtualScrollViewportComponent, RxVirtualScrollWindowDirective } from "@rx-angular/template/virtual-scrolling";
+
+      import { NgModule } from '@angular/core';
+      import { BrowserModule } from '@angular/platform-browser';
+      import { AppComponent } from './app.component';
+
+      @NgModule({
+        declarations: [
+          AppComponent,
+        ],
+        imports: [
+          BrowserModule,
+          RxVirtualFor,
+          RxVirtualScrollViewportComponent,
+          RxVirtualScrollElementDirective,
+          RxVirtualScrollWindowDirective
+        ],
+        providers: [
+          { provide: RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS, useValue: {} }
+        ],
+        bootstrap: [AppComponent]
+      })
+      export class AppModule { }
+  "
+`;

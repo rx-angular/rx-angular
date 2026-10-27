@@ -9,59 +9,34 @@ const ROUTES: Routes = [
   },
   {
     path: 'push',
-    loadChildren: () =>
-      import('./push/push.module').then((m) => m.PushDemoModule),
+    loadChildren: () => import('./push/push.routes').then((m) => m.PUSH_ROUTES),
   },
   {
     path: 'rx-let',
     loadChildren: () =>
-      import('./rx-let/rx-let-demo.module').then((m) => m.RxLetDemoModule),
+      import('./rx-let/rx-let.routes').then((m) => m.RX_LET_ROUTES),
   },
   {
     path: 'rx-if',
-    loadChildren: () =>
-      import('./rx-if/rx-if-demo.module').then((m) => m.RxIfDemoModule),
+    loadComponent: () =>
+      import('./rx-if/rx-if-basic.component').then((m) => m.RxIfBasicComponent),
   },
   {
     path: 'rx-for',
     loadChildren: () =>
-      import('./rx-for/rx-for.module').then((m) => m.RxForDemoModule),
+      import('./rx-for/rx-for.routes').then((m) => m.RX_FOR_ROUTES),
   },
   {
     path: 'rx-virtual-for',
     loadChildren: () =>
-      import('./rx-virtual-for/rx-virtual-for.module').then(
-        (m) => m.RxVirtualForDemoModule,
-      ),
-  },
-  {
-    path: 'pipes',
-    loadChildren: () =>
-      import('./pipes/pipes.module').then((m) => m.PipesModule),
-  },
-  {
-    path: 'unpatch',
-    loadChildren: () =>
-      import('./unpatch/unpatch.module').then((m) => m.RxUnpatch),
-  },
-  {
-    path: 'rx-context',
-    loadChildren: () =>
-      import('./rx-context/rx-context.routed.module').then(
-        (m) => m.RxContextRoutedModule,
+      import('./rx-virtual-for/rx-virtual-for.routes').then(
+        (m) => m.RX_VIRTUAL_FOR_ROUTES,
       ),
   },
   {
     path: 'strategies',
     loadChildren: () =>
-      import('./strategies/strategies.module').then((m) => m.StrategiesModule),
-  },
-  {
-    path: 'view-port-prio',
-    loadChildren: () =>
-      import('./viewport-prio/viewport-prio-demo.module').then(
-        (m) => m.ViewportPrioModule,
-      ),
+      import('./strategies/strategies.routes').then((m) => m.STRATEGIES_ROUTES),
   },
   {
     path: 'virtual-view',
@@ -73,8 +48,8 @@ const ROUTES: Routes = [
   {
     path: 'render-callback',
     loadChildren: () =>
-      import('./render-callback/render-callback.module').then(
-        (m) => m.RenderCallbackModule,
+      import('./render-callback/render-callback.routes').then(
+        (m) => m.RENDER_CALLBACK_ROUTES,
       ),
   },
 ];

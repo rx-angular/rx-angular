@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: 'state',
   preset: '../../jest.preset.js',
@@ -20,5 +19,4 @@ export default {
   transform: {
     '^.+.(ts|mjs|js|html)$': 'jest-preset-angular',
   },
-  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
 };

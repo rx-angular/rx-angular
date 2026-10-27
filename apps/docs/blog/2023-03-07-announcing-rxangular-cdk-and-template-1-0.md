@@ -31,13 +31,13 @@ It improves the DX by reducing boilerplate code and provides fast and reliable c
 It's implementation is zone agnostic by default and optimizes internally regardless of the environment.
 By leveraging the `@rx-angular/cdk/render-strategies` package, it enables the concurrent mode for #angular
 
-#### [Push pipe:](https://www.rx-angular.io/docs/template/api/push-pipe) A Better Alternative to Async Pipe
+#### [Push pipe:](/docs/packages/template/legacy/push-pipe) A Better Alternative to Async Pipe
 
 The push pipe works like the async pipe but offers prioritized scheduling and local change detection.
 This means optimized cd cycles resulting in better performance.
 Unlike the async pipe, the push pipe can work in environments without zone.js.
 
-#### [RxLet directive:](https://www.rx-angular.io/docs/template/api/let-directive) Advanced Template Control
+#### [RxLet directive:](/docs/packages/template/reference/rx-let) Advanced Template Control
 
 <p align="center">
  <img src="/img/template/rx-let.png" alt="rxLet directive"/>
@@ -57,7 +57,7 @@ The scoped rendering gives you more control over how Angular updates your user i
 With the rxLet directive, you can bind observables, promises, and other reactive data sources to display different templates based on their state.
 This includes feedback for suspense, next, error, and complete. You can also provide an observable as a trigger to switch between template types.
 
-#### [RxFor directive:](https://www.rx-angular.io/docs/template/api/rx-for-directive) Efficient Lists
+#### [RxFor directive:](/docs/packages/template/reference/rx-for) Efficient Lists
 
 <p align="center">
  <img src="/img/template/rx-for.png" alt="rxFor directive"/>
@@ -71,7 +71,7 @@ The rendering behavior can also be customized through the RenderStrategies API.
 
 Check this [tweet by Chau Tran](https://twitter.com/Nartc1410/status/1614114301970886656) to see the ultimate difference between ngFor and rxFor performance.
 
-#### [RxIf directive:](https://www.rx-angular.io/docs/template/api/rx-if-directive) Switch Templates Easily
+#### [RxIf directive:](/docs/packages/template/reference/rx-if) Switch Templates Easily
 
 The rxIf directive is an alternative to the ngIf directive.
 It makes switching templates based on an observable condition easier.
@@ -103,7 +103,7 @@ The browser has one main UI thread that performs tasks one after another. Long t
 
 The image shows the execution deadline concept.
 6 userBlocking tasks are scheduled.
-The first 2 tasks meet the deadline and are executed in separate tasks, but the third task exceeds the deadline of 250ms and the scheduler executes all remaining tasks with a deadline <= 250ms in one task.
+The first 2 tasks meet the deadline and are executed in separate tasks, but the third task exceeds the deadline of 250ms and the scheduler executes all remaining tasks with a deadline &lt;= 250ms in one task.
 
 #### [Native strategies:](https://www.rx-angular.io/docs/cdk/render-strategies/strategies/basic-strategies) Improve Default Change Detection
 
@@ -124,28 +124,28 @@ The `scheduleCD` method is an imperative option for scheduling change detection 
 
 Try the RxStrategyProvider and see rendering strategies in action in this [stackblitz demo](https://stackblitz.com/edit/angular-ivy-1vfpoe?file=src%2Fapp%2Fapp.component.ts).
 
-#### [Zone configuration](https://www.rx-angular.io/docs/cdk/zone-configurations) and [Zone-less utils:](https://www.rx-angular.io/docs/cdk/zone-less) Reliable Zone.js tuning
+#### [Zone configuration](/docs/packages/cdk/legacy/zone-configurations) and [Zone-less utils:](/docs/concepts/E2-zoneless-and-zonejs-change-detection) Reliable Zone.js tuning
 
 Our CDK provides zone-configuration utils for partially disabling zone.js, reducing the risk of unexpected bugs.
 These utils provide autocompletion, event groups, and assertions to ensure proper usage.
 The zone-less utils allow for selective disabling of zone patching for specific browser APIs, including requestAnimationFrame, cancelAnimationFrame, setInterval, clearInterval, setTimeout, clearTimeout.
 The utility function `getZoneUnpatchedApi` can be used to get an unpatched version of any browser API.
 
-#### [Coalescing:](https://www.rx-angular.io/docs/cdk/coalescing) Optimize Frequent Events
+#### [Coalescing:](/docs/packages/cdk/legacy/coalescing) Optimize Frequent Events
 
 Coalescing sub-package provides set of utilities that implement a technique of merging multiple emissions, streams, or calls into one during a given time frame to improve the performance.
 This helps to minimize the number of updates made to the user interface, improving the overall efficiency and speed of the application.
 This technique is one of the key building blocks for optimizing change detection cycles in Angular, and is utilized to ensure that the application is functioning smoothly and effectively.
 
-#### [Coercing:](https://www.rx-angular.io/docs/cdk/coercing) Seamless Type Conversion
+#### [Coercing:](/docs/packages/cdk/reference/coercing) Seamless Type Conversion
 
 Our coercion package provides a set of utilities to perform type coercion (data type conversion) in a seamless and efficient manner.
 These utilities include factories, such as 'coerceObservable' and 'coerceDistinctObservable', and operators, such as 'coerceObservableWith' and 'coerceDistinctWith'.
 These tools help to ensure that data is in the desired format before it is used in the application, improving overall functionality and preventing unexpected errors.
 
-#### [Transformations](https://www.rx-angular.io/docs/cdk/api/transformation-helpers) Tree Shakable Entity Management
+#### [Transformations](/docs/packages/cdk/reference/transformations) Tree Shakable Entity Management
 
-The transformation helpers provided by the `@rx-angular/cdk/transformations` are a complete set of utilities to manage entities. They are immutable by default and include transformation functions to handle insertions, updates, dictionary <-> array conversions & more to help you build store like state management systems.
+The transformation helpers provided by the `@rx-angular/cdk/transformations` are a complete set of utilities to manage entities. They are immutable by default and include transformation functions to handle insertions, updates, dictionary &lt;-&gt; array conversions & more to help you build store like state management systems.
 
 ## Roadmap
 

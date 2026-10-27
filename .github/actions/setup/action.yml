@@ -4,7 +4,11 @@ inputs:
   node-version:
     description: Node.js version
     required: false
-    default: '20.9.0' # latest working version for our CI
+    default: '24.14.0' # latest working version for our CI
+  cache-cypress:
+    description: Whether to cache Cypress executable
+    required: false
+    default: 'true'
 runs:
   using: composite
   steps:
@@ -15,8 +19,10 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: 'yarn'
+        registry-url: 'https://registry.npmjs.org'
 
     - name: Cypress executable cache
+      if: ${{ inputs.cache-cypress == 'true' }}
       uses: actions/cache@v3
       with:
         path: |

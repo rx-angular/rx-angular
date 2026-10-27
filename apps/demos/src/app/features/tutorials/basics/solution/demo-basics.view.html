@@ -1,23 +1,27 @@
 <h3>Final Example</h3>
 <br />
+@if (vm.baseModel$ | async; as bm) {
 <mat-expansion-panel
   class="list"
-  *ngIf="vm.baseModel$ | async as bm"
   (expandedChange)="vm.listExpandedChanges.next($event)"
   [expanded]="bm.listExpanded"
 >
-  <mat-expansion-panel-header style="position: relative;">
-    <mat-progress-bar *ngIf="bm.isPending" [mode]="'query'"></mat-progress-bar>
+  <mat-expansion-panel-header style="position: relative">
+    @if (bm.isPending) {
+    <mat-progress-bar [mode]="'query'"></mat-progress-bar>
+    }
     <mat-panel-title>User Name</mat-panel-title>
     <mat-panel-description>
-      <span *ngIf="!bm.listExpanded"
+      @if (!bm.listExpanded) {
+      <span
         >{{bm.list.length}} Repositories Updated every: {{bm.refreshInterval}}
         ms
       </span>
-      <span *ngIf="bm.listExpanded">{{bm.list.length}}</span>
+      } @if (bm.listExpanded) {
+      <span>{{bm.list.length}}</span>
+      }
     </mat-panel-description>
   </mat-expansion-panel-header>
-
   <!-- NOTE: in the view the only variable we want to touch is `vm`-->
   <button
     mat-raised-button
@@ -26,16 +30,16 @@
   >
     Refresh List
   </button>
-
-  <div *ngIf="bm.list.length; else noList">
+  @if (bm.list.length) {
+  <div>
     <mat-list>
-      <mat-list-item *ngFor="let item of bm.list">
-        {{item.name}}
-      </mat-list-item>
+      @for (item of bm.list; track item) {
+      <mat-list-item> {{item.name}} </mat-list-item>
+      }
     </mat-list>
   </div>
-
-  <ng-template #noList>
-    <mat-card>No list given!</mat-card>
-  </ng-template>
+  } @else {
+  <mat-card>No list given!</mat-card>
+  }
 </mat-expansion-panel>
+}

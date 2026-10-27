@@ -23,7 +23,6 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   name: path.parse(__filename).name,
   meta: {
     docs: {
-      recommended: 'recommended',
       description: 'Detects Zone related Lodash APIs.',
     },
     type: 'problem',
@@ -40,7 +39,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
         if (node.callee.type === AST_NODE_TYPES.Identifier) {
           const lodashApiName = node.callee.name;
           const browserApiName = Object.entries(apis).find(([, lodashApis]) =>
-            lodashApis.includes(lodashApiName)
+            lodashApis.includes(lodashApiName),
           )?.[0];
           context.report({
             node,

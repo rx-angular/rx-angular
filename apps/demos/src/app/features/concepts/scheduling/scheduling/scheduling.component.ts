@@ -4,10 +4,12 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { Observable, of, Subject } from 'rxjs';
 import { scan, tap } from 'rxjs/operators';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { priorityTickMap, SchedulingPriority } from './utils';
 
 @Component({
@@ -89,7 +91,7 @@ import { priorityTickMap, SchedulingPriority } from './utils';
       }
     `,
   ],
-  standalone: false,
+  imports: [VisualizerComponent, MatButton, RxUnpatch],
 })
 export class SchedulingComponent implements OnInit {
   prios = SchedulingPriority;

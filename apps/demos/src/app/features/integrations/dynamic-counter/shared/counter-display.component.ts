@@ -1,17 +1,23 @@
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { RxPush } from '@rx-angular/template/push';
 import { EMPTY } from 'rxjs';
-import { Component, Input } from '@angular/core';
+import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { ToArrayPipe } from '../../../../shared/utils/to-array.pipe';
 
 @Component({
   selector: 'rxa-counter-display',
   template: `
-    <span class="position" *ngFor="let d of count$ | push | toArray">
-      <span class="digit static">{{ d }}</span>
-    </span>
+    @for (d of count$ | push | toArray; track d) {
+      <span class="position">
+        <span class="digit static">{{ d }}</span>
+      </span>
+    }
   `,
   host: {
     class: 'count',
   },
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [RxPush, ToArrayPipe, PushPipe],
 })
 export class CounterDisplayComponent {
   @Input()

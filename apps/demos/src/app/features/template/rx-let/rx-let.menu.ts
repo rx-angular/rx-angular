@@ -15,14 +15,10 @@ export const MENU_ITEMS = [
     label: 'Exception Handling',
     link: 'exception-handling',
   },
-  {
-    label: 'Http Errors',
-    link: 'http-errors',
-  },
-  {
-    label: '*ngif hack',
-    link: 'ng-if-hack',
-  },
+  // {
+  //   label: 'Http Errors',
+  //   link: 'http-errors',
+  // },
   {
     label: 'Template Bindings',
     link: 'template-bindings',
@@ -31,12 +27,8 @@ export const MENU_ITEMS = [
     label: 'Template Triggers',
     link: 'template-triggers',
   },
-  {
-    label: 'Preloading Techniques',
-    link: 'preloading-images',
-  },
-  {
-    label: 'Lazy Components',
-    link: 'lazy-components',
-  },
+  // {
+  //   label: 'Preloading Techniques',
+  //   link: 'preloading-images',
+  // },
 ];

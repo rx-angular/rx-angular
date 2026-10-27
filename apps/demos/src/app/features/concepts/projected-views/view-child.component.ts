@@ -1,10 +1,10 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
 } from '@angular/core';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { ContentChildComponent } from './content-child.component';
 
 @Component({
@@ -16,7 +16,7 @@ import { ContentChildComponent } from './content-child.component';
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent],
 })
 export class ViewChildComponent {
   _renders = 0;

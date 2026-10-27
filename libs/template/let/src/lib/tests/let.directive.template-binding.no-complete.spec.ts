@@ -1,8 +1,8 @@
 import { JsonPipe } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -22,6 +22,7 @@ import { MockChangeDetectorRef } from './fixtures';
           : (value | json)
     }}</ng-container>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, JsonPipe],
 })
 class LetDirectiveNoCompleteTemplateTestComponent {
@@ -37,7 +38,6 @@ const setupTestComponent = () => {
     imports: [LetDirectiveNoCompleteTemplateTestComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      TemplateRef,
       ViewContainerRef,
       provideRxRenderStrategies({ primaryStrategy: 'native' }),
     ],

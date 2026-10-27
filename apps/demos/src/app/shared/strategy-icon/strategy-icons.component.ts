@@ -1,12 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { RxState } from '@rx-angular/state';
+import { RxLet } from '@rx-angular/template/let';
 
 @Component({
   selector: 'rxa-strategy-icon',
   template: ` <mat-icon *rxLet="strategy$; let strategy">{{
     strategy
   }}</mat-icon>`,
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [RxLet, MatIcon],
 })
 export class StrategyIconComponent extends RxState<{ strategy: string }> {
   strategies = {

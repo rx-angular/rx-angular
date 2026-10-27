@@ -1,0 +1,7 @@
+.signalsFirstIntro {
+  margin-bottom: 0.75rem;
+}
+
+.signalsFirstIntro:last-child {
+  margin-bottom: 0;
+}

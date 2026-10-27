@@ -5,19 +5,12 @@ import styles from './styles.module.css';
 type ReferenceItem = {
   title: string;
   Svg: React.ComponentType<React.ComponentProps<'svg'>>;
-  description: JSX.Element;
+  description: React.JSX.Element;
   url: string;
   platforms: string[];
 };
 
 const ReferenceList: ReferenceItem[] = [
-  {
-    title: 'ClickUp',
-    Svg: require('@site/static/img/references/clickup-logo.svg').default,
-    description: <>Large scale application</>,
-    url: 'https://clickup.com',
-    platforms: ['Web'],
-  },
   {
     title: 'Tape',
     Svg: require('@site/static/img/references/tape-logo.svg').default,
@@ -40,7 +33,7 @@ function Reference({
   description,
   url,
   platforms,
-}: ReferenceItem): JSX.Element {
+}: ReferenceItem): React.JSX.Element {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
@@ -59,7 +52,7 @@ function Reference({
   );
 }
 
-export default function HomepageReferences(): JSX.Element {
+export default function HomepageReferences(): React.JSX.Element {
   return (
     <section className={styles.references}>
       <div className="container">

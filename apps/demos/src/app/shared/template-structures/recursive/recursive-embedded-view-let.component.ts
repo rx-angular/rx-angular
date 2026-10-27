@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
+import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-recursive-embedded-view-let',
   template: `
-    <ng-container *ngIf="level === 0; else branch">
+    @if (level === 0) {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-renders *poc1Let="value$; let v" [value$]="v"></rxa-renders>
       </rxa-visualizer>
-    </ng-container>
-    <ng-template #branch>
+    } @else {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-recursive-embedded-view-let
@@ -20,13 +21,17 @@ import { ReplaySubject } from 'rxjs';
           [value]="v"
         ></rxa-recursive-embedded-view-let>
       </rxa-visualizer>
-    </ng-template>
+    }
   `,
   host: {
     class: 'd-flex w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    RenderingsComponent,
+    RecursiveEmbeddedViewLetComponent,
+  ],
 })
 export class RecursiveEmbeddedViewLetComponent {
   @Input()

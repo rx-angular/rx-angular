@@ -1,49 +1,30 @@
-import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { NgTemplateOutlet } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  OnInit,
-  QueryList,
-  TemplateRef,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
-import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
-import { patch, toDictionary, update } from '@rx-angular/cdk/transformations';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import {
-  BehaviorSubject,
-  combineLatest,
-  defer,
-  pairwise,
-  ReplaySubject,
-  Subject,
-  switchMap,
-} from 'rxjs';
-import {
-  distinctUntilChanged,
-  map,
-  shareReplay,
-  startWith,
-  withLatestFrom,
-} from 'rxjs/operators';
-import { ArrayProviderComponent } from '../../../../shared/debug-helper/value-provider/array-provider/array-provider.component';
-import { TestItem } from '../../../../shared/debug-helper/value-provider/index';
 import {
   AutoSizeVirtualScrollStrategy,
   RxVirtualFor,
   RxVirtualScrollViewportComponent,
-} from '@rx-angular/template/experimental/virtual-scrolling';
+} from '@rx-angular/template/virtual-scrolling';
+import { DocsLinkComponent } from '../../../../shared/docs-link';
 
 @Component({
   selector: 'rxa-virtual-for-scroll-to',
   template: `
-    <h1 class="mat-headline mt-2">Scroll To</h1>
-    <div class="container position-relative">
+    <header class="rxa-demo-header">
+      <div>
+        <h2>Scroll To</h2>
+        <p class="rxa-demo-subtitle">
+          Uses <code>*rxVirtualFor</code> with an autosized viewport that jumps
+          to an <code>initialScrollIndex</code> and reports the current scrolled
+          index.
+        </p>
+      </div>
+      <rxa-docs-link
+        docs="packages/template/reference/rx-virtual-for"
+        source="apps/demos/src/app/features/template/rx-virtual-for"
+      />
+    </header>
+    <div class="container position-relative rxa-viewport-card">
       <rx-virtual-scroll-viewport
         autosize
         [initialScrollIndex]="initialScrollIndex"
@@ -65,6 +46,11 @@ import {
       .container {
         height: 100%;
         flex-grow: 1;
+        border: 1px solid var(--rxa-border);
+        border-radius: var(--rxa-radius-sm);
+        overflow: hidden;
+        background: var(--rxa-surface);
+        box-shadow: var(--rxa-shadow-sm);
       }
       rx-virtual-scroll-viewport {
         position: absolute;
@@ -77,11 +63,20 @@ import {
       .item {
         width: 100%;
         height: 50px;
+        box-sizing: border-box;
+        overflow: hidden;
+        will-change: transform;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: lightpink;
-        border-top: 1px solid gray;
+        background: var(--rxa-surface);
+        border-bottom: 1px solid var(--rxa-border);
+        border-left: 3px solid rgba(var(--rxa-brand-rgb), 0.45);
+        color: var(--rxa-text);
+        font-size: 0.85rem;
+      }
+      .item:hover {
+        background: var(--rxa-surface-3);
       }
     `,
   ],
@@ -91,6 +86,7 @@ import {
     RxVirtualScrollViewportComponent,
     AutoSizeVirtualScrollStrategy,
     RxVirtualFor,
+    DocsLinkComponent,
   ],
 })
 export class VirtualForScrollToDemoComponent implements OnInit {

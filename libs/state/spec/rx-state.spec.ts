@@ -1,4 +1,9 @@
-import { Component, isSignal, signal } from '@angular/core';
+import {
+  Component,
+  EnvironmentInjector,
+  isSignal,
+  signal,
+} from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { selectSlice } from '@rx-angular/state/selections';
 import {
@@ -329,7 +334,7 @@ describe(rxState, () => {
         state = rxState<{ foo: string }>();
         state.set({ foo: 'bar' });
       });
-      expect(scheduled).toBeCalled();
+      expect(scheduled).toHaveBeenCalled();
       expect(state.get('foo')).not.toBeDefined();
       await Promise.resolve();
       expect(state.get('foo')).toEqual('bar');
@@ -345,7 +350,7 @@ describe(rxState, () => {
         state.set({ foo: 'bar' });
         expect(state.get('foo')).toEqual('bar');
       });
-      expect(scheduled).not.toBeCalled();
+      expect(scheduled).not.toHaveBeenCalled();
       expect(scheduled).not.toHaveBeenCalled();
       scheduled.mockClear();
     });
@@ -376,7 +381,7 @@ describe(rxState, () => {
           'count',
           (state: { count: number }) => state.count + 1,
         );
-      }).toThrowError('readOnlyState.set is not a function');
+      }).toThrow('readOnlyState.set is not a function');
     });
 
     it('should throw error when trying to call connect from readOnlystate', () => {
@@ -386,7 +391,25 @@ describe(rxState, () => {
 
       expect((): void => {
         readOnlyState['connect']('count', of(10));
-      }).toThrowError('readOnlyState.connect is not a function');
+      }).toThrow('readOnlyState.connect is not a function');
+    });
+  });
+
+  describe('without injection context', () => {
+    it('should throw when invoked without injection context', () => {
+      const { rxState } = setUpWithoutInjectionContext();
+      expect(() => rxState(() => {}, {})).toThrow(
+        /rxState\(\) can only be used within an injection context/,
+      );
+    });
+
+    it('should be able to use a custom Injector', () => {
+      const { rxState } = setUpWithoutInjectionContext();
+
+      const envInjector = TestBed.inject(EnvironmentInjector);
+
+      const state = rxState(() => {}, { injector: envInjector });
+      expect(state).toBeDefined();
     });
   });
 });
@@ -418,5 +441,14 @@ function setupComponent<State extends { count: number }>(
   return {
     fixture,
     component: fixture.componentInstance,
+  };
+}
+
+function setUpWithoutInjectionContext() {
+  return {
+    rxState<T extends object>(...args: Parameters<typeof rxState<T>>) {
+      const state = rxState(...args);
+      return state;
+    },
   };
 }

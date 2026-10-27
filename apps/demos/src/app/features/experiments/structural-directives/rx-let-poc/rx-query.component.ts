@@ -1,9 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatCard, MatCardTitle } from '@angular/material/card';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { RouterLink } from '@angular/router';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { RickAndMortyService } from './rick-and-morty.service';
+import { RxLet as RxLet_1 } from '@rx-angular/template/let';
 import { query } from 'rx-query';
 import { Observable, Subject } from 'rxjs';
 import { delay, filter, map, mapTo, share } from 'rxjs/operators';
+import { RxLet } from '../../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { ListItemGhostComponent } from '../../../../shared/ghost-elements/list-item-ghost/list-item-ghost.component';
+import { RickAndMortyService } from './rick-and-morty.service';
 
 @Component({
   selector: 'rxa-rx-query',
@@ -52,17 +62,20 @@ import { delay, filter, map, mapTo, share } from 'rxjs/operators';
               "
             >
               suspenseVal : {{ suspenseVal }}
-              <mat-progress-bar
-                *ngIf="suspenseVal"
-                [mode]="suspenseVal"
-              ></mat-progress-bar>
-              <mat-card *ngIf="errorVal">
-                <mat-card-title>Error</mat-card-title>
-              </mat-card>
+              @if (suspenseVal) {
+                <mat-progress-bar [mode]="suspenseVal"></mat-progress-bar>
+              }
+              @if (errorVal) {
+                <mat-card>
+                  <mat-card-title>Error</mat-card-title>
+                </mat-card>
+              }
               <ul>
-                <li *ngFor="let character of characters">
-                  <a [routerLink]="character.id">{{ character.name }}</a>
-                </li>
+                @for (character of characters; track character) {
+                  <li>
+                    <a [routerLink]="character.id">{{ character.name }}</a>
+                  </li>
+                }
               </ul>
             </div>
           </div>
@@ -79,9 +92,11 @@ import { delay, filter, map, mapTo, share } from 'rxjs/operators';
             "
           >
             <ul>
-              <li *ngFor="let character of characters">
-                <a [routerLink]="character.id">{{ character.name }}</a>
-              </li>
+              @for (character of characters; track character) {
+                <li>
+                  <a [routerLink]="character.id">{{ character.name }}</a>
+                </li>
+              }
             </ul>
           </div>
           <!-- Templates -->
@@ -97,13 +112,25 @@ import { delay, filter, map, mapTo, share } from 'rxjs/operators';
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'm-1 p-1',
     style: 'display: block;',
   },
   providers: [],
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    StrategySelectComponent,
+    MatFormField,
+    MatInput,
+    RxLet,
+    RxLet_1,
+    MatProgressBar,
+    MatCard,
+    MatCardTitle,
+    RouterLink,
+    ListItemGhostComponent,
+  ],
 })
 export class RxQueryComponent {
   search$ = new Subject<string>();

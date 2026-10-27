@@ -1,7 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import { DirtyChecksComponent } from '../../dirty-checks/dirty-checks.component';
 import { Hooks } from '../../hooks';
+import { RenderingsComponent } from '../../renderings/renderings.component';
 
 @Component({
   selector: 'rxa-visualizer',
@@ -11,12 +13,12 @@ import { Hooks } from '../../hooks';
         style="margin-right: 1rem"
         [radius]="radius"
       ></rxa-dirty-check>
-      <rxa-renders
-        *ngIf="renderingsOn"
-        [value$]="valuesO$"
-        [radius]="radius"
-      ></rxa-renders>
-      <span *ngIf="cDS">{{ cDS }}</span>
+      @if (renderingsOn) {
+        <rxa-renders [value$]="valuesO$" [radius]="radius"></rxa-renders>
+      }
+      @if (cDS) {
+        <span>{{ cDS }}</span>
+      }
     </div>
     <ng-content select="[visualizerHeader]"></ng-content>
     <div
@@ -29,7 +31,8 @@ import { Hooks } from '../../hooks';
     '[style.width.px]': 'size',
     '[class]': 'classNames',
   },
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [DirtyChecksComponent, RenderingsComponent],
 })
 export class VisualizerComponent extends Hooks {
   @Input()
@@ -80,9 +83,7 @@ export class VisualizerComponent extends Hooks {
       switchMap(() =>
         this.changeO$.pipe(
           distinctUntilChanged(),
-          switchMap((o$) =>
-            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$,
-          ),
+          switchMap((o$) => (this.key ? o$.pipe(map((s) => s[this.key])) : o$)),
           distinctUntilChanged(),
           tap((v) => console.log('value', v)),
         ),

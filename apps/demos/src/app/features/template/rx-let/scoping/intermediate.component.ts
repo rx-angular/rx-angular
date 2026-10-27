@@ -3,24 +3,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChild,
-  ContentChildren,
   Directive,
-  OnInit,
-  QueryList,
 } from '@angular/core';
-import { startWith } from 'rxjs';
 
 @Directive({
   selector: '[rxaContentChild]',
-  standalone: false,
+  standalone: true,
 })
 export class ContentChildDirective {}
 
 @Component({
   selector: 'rxa-content-parent',
+  standalone: true,
   template: ` <ng-content></ng-content> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
 })
 export class ContentParent implements AfterContentInit {
   // @ContentChildren(ContentChildDirective) children: QueryList<ContentChildDirective>;

@@ -23,17 +23,17 @@ export interface RxStrategyHandler {
  */
 export function strategyHandling(
   defaultStrategyName: string,
-  strategies: RxCustomStrategyCredentials<string>
+  strategies: RxCustomStrategyCredentials<string>,
 ): RxStrategyHandler {
   const hotFlattened = coerceAllFactory<string>(
     () => new ReplaySubject<RxStrategyNames | Observable<RxStrategyNames>>(1),
-    switchAll()
+    switchAll(),
   );
   return {
     strategy$: hotFlattened.values$.pipe(
       startWith(defaultStrategyName),
       nameToStrategyCredentials(strategies, defaultStrategyName),
-      share()
+      share(),
     ) as Observable<RxStrategyCredentials>,
     next(name: RxStrategyNames | Observable<RxStrategyNames>) {
       hotFlattened.next(name);
@@ -46,16 +46,16 @@ export function strategyHandling(
  */
 function nameToStrategyCredentials(
   strategies: RxCustomStrategyCredentials<string>,
-  defaultStrategyName: string
+  defaultStrategyName: string,
 ) {
   return (
-    o$: Observable<string | null | undefined>
+    o$: Observable<string | null | undefined>,
   ): Observable<RxStrategyCredentials> =>
     o$.pipe(
       map((name) =>
         name && Object.keys(strategies).includes(name)
           ? strategies[name]
-          : strategies[defaultStrategyName]
-      )
+          : strategies[defaultStrategyName],
+      ),
     );
 }

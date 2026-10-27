@@ -1,7 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { defer, isObservable, Observable, of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import { DirtyChecksComponent } from '../../dirty-checks/dirty-checks.component';
 import { Hooks } from '../../hooks';
+import { RenderingsComponent } from '../../renderings/renderings.component';
+import { VisualizerComponent } from './visualizer.component';
 
 @Component({
   selector: 'rxa-work-visualizer',
@@ -11,16 +15,16 @@ import { Hooks } from '../../hooks';
         style="margin-right: 1rem"
         [radius]="radius"
       ></rxa-dirty-check>
-      <rxa-renders
-        *ngIf="renderingsOn"
-        [value$]="valuesO$"
-        [radius]="radius"
-      ></rxa-renders>
+      @if (renderingsOn) {
+        <rxa-renders [value$]="valuesO$" [radius]="radius"></rxa-renders>
+      }
     </div>
     <div class="d-flex flex-wrap w-100">
-      <div class="work-child" *ngFor="let child of getChildren()">
-        <div [ngClass]="{ filled: child % 2 === 0 }">&nbsp;</div>
-      </div>
+      @for (child of getChildren(); track child) {
+        <div class="work-child">
+          <div [ngClass]="{ filled: child % 2 === 0 }">&nbsp;</div>
+        </div>
+      }
     </div>
     <ng-content select="[visualizerHeader]"> </ng-content>
     <div
@@ -55,7 +59,13 @@ import { Hooks } from '../../hooks';
       }
     `,
   ],
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    DirtyChecksComponent,
+    RenderingsComponent,
+    NgClass,
+    VisualizerComponent,
+  ],
 })
 export class WorkVisualizerComponent extends Hooks {
   @Input()
@@ -105,9 +115,7 @@ export class WorkVisualizerComponent extends Hooks {
       switchMap(() =>
         this.changeO$.pipe(
           distinctUntilChanged(),
-          switchMap((o$) =>
-            !!this.key ? o$.pipe(map((s) => s[this.key])) : o$,
-          ),
+          switchMap((o$) => (this.key ? o$.pipe(map((s) => s[this.key])) : o$)),
           distinctUntilChanged(),
           tap((v) => console.log('value', v)),
         ),

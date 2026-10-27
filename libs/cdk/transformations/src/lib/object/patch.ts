@@ -38,7 +38,7 @@ import { isObjectGuard } from '../_internals/guards';
  *
  *    // Imperative implementation
  *    changeName(name: string): void {
- *        this.state.set(patch(this.get(), { name }));
+ *        this.state.set(patch(this.state.get(), { name }));
  *    }
  * }
  *
@@ -57,7 +57,7 @@ export function patch<T extends object>(object: T, upd: Partial<T>): T {
 
   if (!isObjectGuard(object) && !isObjectGuard(upd)) {
     console.warn(
-      `Patch: original value ${object} and updates ${upd} are not objects.`
+      `Patch: original value ${object} and updates ${upd} are not objects.`,
     );
     return object;
   }

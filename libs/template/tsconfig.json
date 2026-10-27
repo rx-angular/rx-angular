@@ -15,5 +15,10 @@
     {
       "path": "./cypress/tsconfig.cy.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "ignoreDeprecations": "6.0"
+  }
 }

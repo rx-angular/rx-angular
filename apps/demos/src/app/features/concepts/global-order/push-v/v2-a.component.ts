@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RxPush } from '@rx-angular/template/push';
+import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { DataService } from '../shared/data.service';
+import { V2BComponent } from './v2-b.component';
 
 @Component({
   selector: 'rxa-v2-a',
@@ -24,7 +29,13 @@ import { DataService } from '../shared/data.service';
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    DirtyChecksComponent,
+    V2BComponent,
+    PushPipe,
+    RxPush,
+  ],
 })
 export class V2AComponent {
   constructor(public data: DataService) {}

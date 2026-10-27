@@ -18,3 +18,8 @@
   top: 0;
   z-index: 1;
 }
+
+// Push the header actions (theme toggle) to the far right of the toolbar.
+.app-shell-header-spacer {
+  flex: 1 1 auto;
+}

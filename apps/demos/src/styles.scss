@@ -6,7 +6,6 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 html.window-scrolling {
@@ -24,6 +23,9 @@ html.window-scrolling {
 
 @import 'styles/utils';
 @import 'styles/theme';
+@import 'styles/design-system';
+@import 'styles/material-overrides';
+@import 'styles/demo-layout';
 @import 'styles/general';
 @import 'styles/debug-helpers';
 @import 'app/features/integrations/dynamic-counter/dynamic-counter.scss';

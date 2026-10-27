@@ -65,7 +65,7 @@ describe('upsert', () => {
         upsert(
           originalCreatures,
           creaturesForUpdate[0],
-          (o, n) => o.id === n.id
+          (o, n) => o.id === n.id,
         );
 
         expect(originalCreatures).toEqual(creatures);
@@ -76,7 +76,7 @@ describe('upsert', () => {
         const result = upsert(
           originalCreatures,
           creaturesForUpdate[0],
-          (o, n) => o.id === n.id
+          (o, n) => o.id === n.id,
         );
         const result2 = upsert(null as any, originalCreatures);
 
@@ -98,25 +98,25 @@ describe('upsert', () => {
     describe('functionality', () => {
       it('should update value if matching by compareFn', () => {
         expect(
-          upsert(creatures, creaturesForUpdate, (a, b) => a.id === b.id)
+          upsert(creatures, creaturesForUpdate, (a, b) => a.id === b.id),
         ).toEqual(creaturesAfterMultipleItemsUpdate);
       });
 
       it('should update value if matching by key', () => {
         expect(upsert(creatures, creaturesForUpdate, 'id')).toEqual(
-          creaturesAfterMultipleItemsUpdate
+          creaturesAfterMultipleItemsUpdate,
         );
       });
 
       it('should update value if matching by array of keys', () => {
         expect(upsert(creatures, creaturesForUpdate, ['id'])).toEqual(
-          creaturesAfterMultipleItemsUpdate
+          creaturesAfterMultipleItemsUpdate,
         );
       });
 
       it('should update partials', () => {
         expect(upsert(creatures, { id: 1, type: 'lion' }, 'id')).toEqual(
-          creaturesAfterSingleItemUpdate
+          creaturesAfterSingleItemUpdate,
         );
       });
     });
@@ -316,6 +316,58 @@ describe('upsert', () => {
           expect(upsert(1 as any, undefined as any)).toEqual(1);
         });
       });
+    });
+  });
+
+  describe('prototype preservation', () => {
+    class TestClass {
+      constructor(
+        public id: number,
+        public value: string,
+      ) {}
+
+      getDescription(): string {
+        return `${this.id}: ${this.value}`;
+      }
+    }
+
+    it('should preserve prototype chain when updating class instances', () => {
+      const instances = [new TestClass(1, 'first'), new TestClass(2, 'second')];
+
+      const result = upsert(instances, { id: 1, value: 'updated' }, 'id');
+
+      expect(result[0]).toBeInstanceOf(TestClass);
+      expect(result[0].getDescription()).toBe('1: updated');
+
+      expect(result[1]).toBeInstanceOf(TestClass);
+      expect(result[1].getDescription()).toBe('2: second');
+    });
+
+    it('should preserve prototype chain when inserting class instances', () => {
+      const instances = [new TestClass(1, 'first'), new TestClass(2, 'second')];
+
+      const result = upsert(instances, new TestClass(3, 'third'), 'id');
+
+      expect(result[0]).toBeInstanceOf(TestClass);
+      expect(result[1]).toBeInstanceOf(TestClass);
+
+      expect(result[2]).toBeInstanceOf(TestClass);
+      expect(result[2].getDescription()).toBe('3: third');
+    });
+
+    it('should preserve prototype chain when upserting with comparison function', () => {
+      const instances = [new TestClass(1, 'first'), new TestClass(2, 'second')];
+
+      const result = upsert(
+        instances,
+        new TestClass(1, 'updated'),
+        (a, b) => a.id === b.id,
+      );
+
+      expect(result[0]).toBeInstanceOf(TestClass);
+      expect(result[1]).toBeInstanceOf(TestClass);
+      expect(result[0].getDescription()).toBe('1: updated');
+      expect(result[1].getDescription()).toBe('2: second');
     });
   });
 });

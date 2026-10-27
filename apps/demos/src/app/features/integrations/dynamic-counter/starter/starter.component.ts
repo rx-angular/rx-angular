@@ -1,8 +1,11 @@
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { RxPush } from '@rx-angular/template/push';
 import { Observable } from 'rxjs';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-
-import { RxState } from '@rx-angular/state';
+import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { ToArrayPipe } from '../../../../shared/utils/to-array.pipe';
 import { CounterState, INITIAL_STATE } from '../shared/model';
 
 @Component({
@@ -11,11 +14,13 @@ import { CounterState, INITIAL_STATE } from '../shared/model';
     <h1>Counter</h1>
     <div class="counter">
       <div class="count">
-        <span class="position" *ngFor="let d of count$ | push | toArray">
-          <span class="digit static">
-            {{ d }}
+        @for (d of count$ | push | toArray; track d) {
+          <span class="position">
+            <span class="digit static">
+              {{ d }}
+            </span>
           </span>
-        </span>
+        }
       </div>
 
       <button mat-raised-button>Start</button>
@@ -49,7 +54,8 @@ import { CounterState, INITIAL_STATE } from '../shared/model';
       </mat-form-field>
     </div>
   `,
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [MatButton, MatFormField, MatInput, RxPush, ToArrayPipe, PushPipe],
 })
 export class StarterComponent {
   readonly initialCounterState: CounterState = INITIAL_STATE;

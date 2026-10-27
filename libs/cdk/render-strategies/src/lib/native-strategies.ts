@@ -32,7 +32,7 @@ const localCredentials: RxStrategyCredentials = {
     (o$) =>
       o$.pipe(
         coalesceWith(animationFrameTick(), scope as Record<string, unknown>),
-        tap(() => (ngZone ? ngZone.run(() => work()) : work()))
+        tap(() => (ngZone ? ngZone.run(() => work()) : work())),
       ),
 };
 
@@ -52,8 +52,8 @@ const nativeCredentials: RxStrategyCredentials = {
         tap(() =>
           ngZone && !NgZone.isInAngularZone()
             ? ngZone.run(() => work())
-            : work()
-        )
+            : work(),
+        ),
       ),
 };
 

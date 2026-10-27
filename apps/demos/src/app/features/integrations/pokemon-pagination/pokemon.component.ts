@@ -1,6 +1,26 @@
-import { Component } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { PageEvent } from '@angular/material/paginator';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl,
+} from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
+  MatTable,
+} from '@angular/material/table';
+import { RxLet } from '@rx-angular/template/let';
 import { debounceTime } from 'rxjs/operators';
 import { PokemonStateService } from './states/pokemon-state.service';
 
@@ -43,11 +63,9 @@ import { PokemonStateService } from './states/pokemon-state.service';
         <tr mat-header-row *matHeaderRowDef="['name', 'url']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['name', 'url']"></tr>
       </table>
-      <mat-spinner
-        *ngIf="vm.status === 'loading'"
-        mode="indeterminate"
-        color="primary"
-      ></mat-spinner>
+      @if (vm.status === 'loading') {
+        <mat-spinner mode="indeterminate" color="primary"></mat-spinner>
+      }
     </ng-container>
   `,
   styles: [
@@ -96,7 +114,27 @@ import { PokemonStateService } from './states/pokemon-state.service';
     `,
   ],
   providers: [PokemonStateService],
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    RxLet,
+    MatPaginator,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    ReactiveFormsModule,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    MatProgressSpinner,
+  ],
 })
 export class PokemonComponent {
   vm$ = this.pokemonStateService.vm$;

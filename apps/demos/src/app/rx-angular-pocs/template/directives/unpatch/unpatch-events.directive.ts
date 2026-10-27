@@ -5,14 +5,14 @@ import {
   Input,
   OnDestroy,
 } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { unpatchAddEventListener } from '@rx-angular/cdk/zone-less/browser';
 import {
   focusEvents,
   inputEvents,
   mouseEvents,
 } from '@rx-angular/cdk/zone-configurations';
+import { unpatchAddEventListener } from '@rx-angular/cdk/zone-less/browser';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 /**
  *
@@ -27,6 +27,11 @@ import {
  * @returns void
  */
 export function unpatchEventListener(elem: HTMLElement, event: string): void {
+  // `eventListeners` is a Chrome DevTools-only helper and is undefined in a
+  // normal browser runtime — bail out instead of throwing.
+  if (typeof (elem as any).eventListeners !== 'function') {
+    return;
+  }
   const eventListeners = (elem as any).eventListeners(event);
   // Return if no event listeners are present
   if (!eventListeners) {
@@ -86,10 +91,7 @@ const eventsToUnpatch: string[] = [
  *
  * @publicApi
  */
-@Directive({
-  selector: '[unpatch]',
-  standalone: false,
-})
+@Directive({ selector: '[unpatch]' })
 export class UnpatchEventsDirective implements AfterViewInit, OnDestroy {
   /**
    * @description

@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Directive,
   EmbeddedViewRef,
+  inject,
   Input,
   IterableChangeRecord,
   IterableChanges,
@@ -13,7 +14,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-
+import { RxEffects } from '@rx-angular/state/effects';
 import {
   BehaviorSubject,
   defer,
@@ -34,9 +35,7 @@ import {
   startWith,
   switchAll,
   take,
-  tap,
 } from 'rxjs/operators';
-import { RxEffects } from '@rx-angular/state/effects';
 
 type RxForTemplateNames = 'rxSuspense' | 'rxNext' | 'rxError' | 'rxComplete';
 
@@ -101,13 +100,13 @@ export interface RecordViewTuple<T extends object, U extends NgIterable<T>> {
 
 @Directive({
   selector: '[rxMinimalFor]',
+  standalone: true,
   providers: [RxEffects],
-  standalone: false,
 })
 export class RxMinimalForOf<
-    T extends object,
-    U extends NgIterable<T> = NgIterable<T>,
-  >
+  T extends object,
+  U extends NgIterable<T> = NgIterable<T>,
+>
   implements OnInit, OnDestroy
 {
   private evMap: Map<string, EmbeddedViewRef<RxForViewContext<T, U>>> =
@@ -158,13 +157,12 @@ export class RxMinimalForOf<
     }
   }
 
-  constructor(
-    private rxEffects: RxEffects,
-    private cdRef: ChangeDetectorRef,
-    private readonly templateRef: TemplateRef<RxForViewContext<T, U>>,
-    private readonly viewContainerRef: ViewContainerRef,
-    private iterableDiffers: IterableDiffers,
-  ) {}
+  private rxEffects = inject(RxEffects);
+  private cdRef = inject(ChangeDetectorRef);
+  private readonly templateRef =
+    inject<TemplateRef<RxForViewContext<T, U>>>(TemplateRef);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+  private iterableDiffers = inject(IterableDiffers);
 
   initDiffer(iterable: U = [] as U) {
     this.differ = this.iterableDiffers

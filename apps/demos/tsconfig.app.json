@@ -2,9 +2,13 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": []
+    "types": [],
+    "moduleResolution": "bundler"
   },
   "files": ["src/main.ts", "src/polyfills.ts"],
   "exclude": ["jest.config.ts"],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  }
 }

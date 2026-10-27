@@ -1,14 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  Input,
-} from '@angular/core';
+import { NgStyle } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { Observable, Subject } from 'rxjs';
-import { toBooleanArray } from './utils';
 import { RxState } from '@rx-angular/state';
-import { delay, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { RxFor } from '../../../rx-angular-pocs/template/directives/for/rx-for.directive';
+import { toBooleanArray } from './utils';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
@@ -36,7 +33,7 @@ const chunk = (arr, n) =>
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [RxFor, NgStyle],
 })
 export class SiblingStrategyComponent extends RxState<{
   siblings: { filled: boolean; id: number; color: string }[];

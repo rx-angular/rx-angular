@@ -72,7 +72,7 @@ describe('createAccumulationObservable', () => {
       state.nextSliceObservable(throwError('test') as any);
       state.subscribe();
 
-      expect(spy).toBeCalled();
+      expect(spy).toHaveBeenCalled();
     });
   });
 

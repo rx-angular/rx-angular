@@ -1,5 +1,12 @@
-import { Component } from '@angular/core';
-import { BehaviorSubject, from, interval, Subject, throwError } from 'rxjs';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RxLet } from '@rx-angular/template/let';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { BehaviorSubject, interval, Subject, throwError } from 'rxjs';
 import {
   map,
   share,
@@ -10,6 +17,16 @@ import {
 
 @Component({
   selector: 'rxa-let-template-binding-http-example',
+  standalone: true,
+  imports: [
+    RxLet,
+    RxPush,
+    RxUnpatch,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+  ],
   template: `
     <mat-card class="card">
       <mat-card-header>
@@ -33,30 +50,17 @@ import {
       </mat-card-content>
 
       <mat-card-actions>
-        <button
-          mat-button
-          [unpatch]
-          *ngIf="!(heroes$ | push)"
-          (click)="startFetch()"
-        >
-          START
-        </button>
-        <button
-          mat-button
-          [unpatch]
-          *ngIf="heroes$ | push"
-          (click)="completeFetch()"
-        >
-          COMPLETE
-        </button>
-        <button
-          mat-button
-          [unpatch]
-          *ngIf="heroes$ | push"
-          (click)="errorFetch()"
-        >
-          ERROR
-        </button>
+        @if (!(heroes$ | push)) {
+          <button mat-button [unpatch] (click)="startFetch()">START</button>
+        }
+        @if (heroes$ | push) {
+          <button mat-button [unpatch] (click)="completeFetch()">
+            COMPLETE
+          </button>
+        }
+        @if (heroes$ | push) {
+          <button mat-button [unpatch] (click)="errorFetch()">ERROR</button>
+        }
       </mat-card-actions>
     </mat-card>
 
@@ -81,6 +85,7 @@ import {
       ></mat-progress-spinner>
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       mat-card-content {
@@ -111,7 +116,6 @@ import {
       }
     `,
   ],
-  standalone: false,
 })
 export class LetTemplateBindingHttpExampleComponent {
   visibleStrategy = 'local';

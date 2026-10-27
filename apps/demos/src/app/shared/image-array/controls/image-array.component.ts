@@ -4,11 +4,17 @@ import {
   ElementRef,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { RxEffects } from '@rx-angular/state/effects';
-import { Hooks } from '../../debug-helper/hooks';
+import { MatButton } from '@angular/material/button';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
 import { RxState } from '@rx-angular/state';
+import { RxEffects } from '@rx-angular/state/effects';
+import { Observable, Subject } from 'rxjs';
+import { Hooks } from '../../debug-helper/hooks';
 import { fileReaderFromBlob, imageFromFileReader } from '../pixel-image';
 
 interface ComponentState {
@@ -29,20 +35,20 @@ interface ComponentState {
             <mat-expansion-panel-header>
               Select Image
             </mat-expansion-panel-header>
-            <div
-              class="w-100 d-flex align-items-center"
-              *ngFor="let imgSet of all; let setIdx = index"
-            >
-              <img
-                [tabindex]="0"
-                (keydown.enter)="imgSelectionChange$.next($event.target)"
-                [alt]="name"
-                class="mr-2"
-                (click)="imgSelectionChange$.next($event.target)"
-                [src]="'assets/' + name"
-                *ngFor="let name of imgSet[1]; let idx = index"
-              />
-            </div>
+            @for (imgSet of all; track imgSet; let setIdx = $index) {
+              <div class="w-100 d-flex align-items-center">
+                @for (name of imgSet[1]; track name; let idx = $index) {
+                  <img
+                    [tabindex]="0"
+                    (keydown.enter)="imgSelectionChange$.next($event.target)"
+                    [alt]="name"
+                    class="mr-2"
+                    (click)="imgSelectionChange$.next($event.target)"
+                    [src]="'assets/' + name"
+                  />
+                }
+              </div>
+            }
             <button
               type="button"
               class="mr-2"
@@ -72,7 +78,8 @@ interface ComponentState {
     </div>
   `,
   providers: [RxEffects, RxState],
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [MatExpansionPanel, MatExpansionPanelHeader, MatButton],
 })
 export class ImageArrayComponent extends Hooks implements AfterViewInit {
   big = [

@@ -1,0 +1,12 @@
+{
+  "label": "Tutorials",
+  "position": 7,
+  "collapsible": true,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "title": "Tutorials",
+    "slug": "/tutorials",
+    "description": "Guided, single-path lessons that build a working feature end to end — the learn-by-doing entry point into RxAngular."
+  }
+}

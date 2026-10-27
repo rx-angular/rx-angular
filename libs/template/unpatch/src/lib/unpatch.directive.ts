@@ -1,12 +1,16 @@
 import {
   AfterViewInit,
+  DestroyRef,
   Directive,
   ElementRef,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
+  ɵZONELESS_ENABLED as ZONELESS_ENABLED,
   SimpleChanges,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { getZoneUnPatchedApi } from '@rx-angular/cdk/internals/core';
 import {
   focusEvents,
@@ -16,7 +20,7 @@ import {
   touchEvents,
   wheelEvents,
 } from '@rx-angular/cdk/zone-configurations';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 const zonePatchedEvents: string[] = [
   ...focusEvents,
@@ -43,7 +47,7 @@ export function unpatchEventListener(
   element: HTMLElement & {
     eventListeners?: (event: string) => EventListenerOrEventListenerObject[];
   },
-  event: string
+  event: string,
 ): EventListenerOrEventListenerObject[] {
   // `EventTarget` is patched only in the browser environment, thus
   // running this code on the server-side will throw an exception:
@@ -61,7 +65,7 @@ export function unpatchEventListener(
 
   const addEventListener = getZoneUnPatchedApi(
     element,
-    'addEventListener'
+    'addEventListener',
   ).bind(element) as typeof element.addEventListener;
 
   const listeners: EventListenerOrEventListenerObject[] = [];
@@ -81,6 +85,8 @@ export function unpatchEventListener(
  * @Directive RxUnpatch
  *
  * @description
+ *
+ * NOTE: This directive does nothing on zoneless mode.
  *
  * The `unpatch` directive helps in partially migrating to zone-less apps as well as getting rid
  * of unnecessary renderings through zones `addEventListener` patches.
@@ -118,6 +124,9 @@ export function unpatchEventListener(
  */
 @Directive({ selector: '[unpatch]', standalone: true })
 export class RxUnpatch implements OnChanges, AfterViewInit, OnDestroy {
+  private isZoneless = inject(ZONELESS_ENABLED);
+  private destroyRef = inject(DestroyRef);
+
   /**
    * @description
    * List of events that the element should be unpatched from. When input is empty or undefined,
@@ -129,27 +138,34 @@ export class RxUnpatch implements OnChanges, AfterViewInit, OnDestroy {
    */
   @Input('unpatch') events?: string[];
 
-  private subscription = new Subscription();
   private events$ = new BehaviorSubject<string[]>(zonePatchedEvents);
   private listeners = new Map<string, EventListenerOrEventListenerObject[]>();
 
   constructor(private host: ElementRef<HTMLElement>) {}
 
   ngOnChanges({ events }: SimpleChanges): void {
+    if (this.isZoneless) {
+      return;
+    }
+
     if (events && Array.isArray(this.events)) {
       this.events$.next(this.events);
     }
   }
 
   ngAfterViewInit(): void {
-    this.subscription = this.events$.subscribe((events) => {
-      this.reapplyUnPatchedEventListeners(events);
-    });
+    if (this.isZoneless) {
+      return;
+    }
+
+    this.events$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((events) => {
+        this.reapplyUnPatchedEventListeners(events);
+      });
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
-
     for (const [event, listeners = []] of this.listeners) {
       listeners.forEach((listener) => {
         this.host.nativeElement.removeEventListener(event, listener);

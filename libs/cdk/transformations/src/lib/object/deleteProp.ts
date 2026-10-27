@@ -35,7 +35,7 @@ import { isDefined, isKeyOf, isObjectGuard } from '../_internals/guards';
  *
  *    // Imperative implementation
  *    removeName(): void {
- *        this.state.set(remove(this.get(), 'name'));
+ *        this.state.set(deleteProp(this.state.get(), 'name'));
  *    }
  * }
  *
@@ -46,7 +46,7 @@ import { isDefined, isKeyOf, isObjectGuard } from '../_internals/guards';
  */
 export function deleteProp<T extends object, K extends keyof T>(
   object: T,
-  key: K
+  key: K,
 ): Omit<T, K> {
   if (!isDefined(object) || !isObjectGuard(object)) {
     console.warn(`DeleteProp: original value ${object} is not an object.`);

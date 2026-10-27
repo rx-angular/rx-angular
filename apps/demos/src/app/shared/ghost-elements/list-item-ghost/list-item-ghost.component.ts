@@ -1,17 +1,25 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'rxa-list-item-ghost',
   template: `
-    <div *ngFor="let n of numItems" class="list-item-ghost">
-      <ngx-skeleton-loader
-        class="icon-ghost"
-        [appearance]="'circle'"
-      ></ngx-skeleton-loader>
-      <div class="text-ghost">
-        <ngx-skeleton-loader [count]="3"></ngx-skeleton-loader>
+    @for (n of numItems; track n) {
+      <div class="list-item-ghost">
+        <ngx-skeleton-loader
+          class="icon-ghost"
+          [appearance]="'circle'"
+        ></ngx-skeleton-loader>
+        <div class="text-ghost">
+          <ngx-skeleton-loader [count]="3"></ngx-skeleton-loader>
+        </div>
       </div>
-    </div>
+    }
   `,
   encapsulation: ViewEncapsulation.None,
   styles: [
@@ -58,7 +66,8 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
       }
     `,
   ],
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [NgxSkeletonLoaderComponent],
 })
 export class ListItemGhostComponent {
   numItems = [0];

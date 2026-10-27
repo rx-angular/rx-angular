@@ -1,9 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'toArray',
-  standalone: false,
-})
+@Pipe({ name: 'toArray' })
 export class ToArrayPipe implements PipeTransform {
   transform(value: number | string): any[] {
     if (typeof value === 'number') {

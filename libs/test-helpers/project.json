@@ -3,11 +3,13 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/test-helpers/src",
   "projectType": "library",
+  "tags": ["type:test-util"],
   "generators": {},
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "defaultConfiguration": "production",
       "options": {
         "project": "libs/test-helpers/ng-package.json"
       },
@@ -18,20 +20,18 @@
         "development": {
           "tsConfig": "libs/test-helpers/tsconfig.lib.json"
         }
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/${projectRoot}"],
       "options": {
         "jestConfig": "libs/test-helpers/jest.config.ts"
-      },
-      "outputs": ["{workspaceRoot}/coverage/${projectRoot}"]
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["type:test-util"]
+  }
 }

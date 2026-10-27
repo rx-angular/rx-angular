@@ -68,7 +68,7 @@ export class RxStrategyProvider<T extends string = string> {
 
   /**
    * @description
-   * Returns current `RxAngularConfig` used in the service.
+   * Returns current `RxRenderStrategiesConfig` used in the service.
    * Config includes:
    * - strategy that currently in use - `primaryStrategy`
    * - array of custom user defined strategies - `customStrategies`
@@ -108,7 +108,7 @@ export class RxStrategyProvider<T extends string = string> {
    */
   set primaryStrategy(strategyName: RxStrategyNames<T>) {
     this._primaryStrategy$.next(
-      <RxStrategyCredentials<RxStrategyNames<T>>>this.strategies[strategyName]
+      <RxStrategyCredentials<RxStrategyNames<T>>>this.strategies[strategyName],
     );
   }
 
@@ -131,7 +131,7 @@ export class RxStrategyProvider<T extends string = string> {
    */
   readonly strategyNames$ = this.strategies$.pipe(
     map((strategies) => Object.values(strategies).map((s) => s.name)),
-    shareReplay({ bufferSize: 1, refCount: true })
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   /**
@@ -140,7 +140,7 @@ export class RxStrategyProvider<T extends string = string> {
   constructor(
     @Optional()
     @Inject(RX_RENDER_STRATEGIES_CONFIG)
-    cfg: RxRenderStrategiesConfig<T>
+    cfg: RxRenderStrategiesConfig<T>,
   ) {
     this._cfg = mergeDefaultConfig(cfg);
     this._strategies$.next(this._cfg.customStrategies as any);
@@ -165,7 +165,7 @@ export class RxStrategyProvider<T extends string = string> {
    */
   scheduleWith<R>(
     work: (v?: R) => void,
-    options?: ScheduleOnStrategyOptions
+    options?: ScheduleOnStrategyOptions,
   ): MonoTypeOperatorFunction<R> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || {};
@@ -180,9 +180,9 @@ export class RxStrategyProvider<T extends string = string> {
             (_v) => {
               _work(_v);
             },
-            { scope, ngZone }
-          )
-        )
+            { scope, ngZone },
+          ),
+        ),
       );
   }
 
@@ -202,7 +202,7 @@ export class RxStrategyProvider<T extends string = string> {
    */
   schedule<R>(
     work: () => R,
-    options?: ScheduleOnStrategyOptions
+    options?: ScheduleOnStrategyOptions,
   ): Observable<R> {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || {};
@@ -215,7 +215,7 @@ export class RxStrategyProvider<T extends string = string> {
       () => {
         returnVal = _work();
       },
-      { scope, ngZone }
+      { scope, ngZone },
     ).pipe(map(() => returnVal));
   }
 
@@ -227,7 +227,7 @@ export class RxStrategyProvider<T extends string = string> {
    * - abortCtrl is an AbortController that you can use to cancel the scheduled cycle.
    *
    * @example
-   * this.strategyProvider.scheduleCd(this.changeDetectorRef, {afterCD: myWork()});
+   * this.strategyProvider.scheduleCD(this.changeDetectorRef, {afterCD: myWork()});
    *
    * @return AbortController
    */
@@ -236,7 +236,7 @@ export class RxStrategyProvider<T extends string = string> {
     options?: ScheduleOnStrategyOptions & {
       afterCD?: () => void;
       abortCtrl?: AbortController;
-    }
+    },
   ): AbortController {
     const strategy = this.strategies[options?.strategy || this.primaryStrategy];
     const scope = options?.scope || cdRef;
@@ -254,7 +254,7 @@ export class RxStrategyProvider<T extends string = string> {
       () => {
         work();
       },
-      { scope, ngZone }
+      { scope, ngZone },
     )
       .pipe(takeUntil(fromEvent(abC.signal, 'abort')))
       .subscribe();
@@ -264,7 +264,7 @@ export class RxStrategyProvider<T extends string = string> {
 
 function getWork<T>(
   work: (args?: any) => T,
-  patchZone?: false | NgZone
+  patchZone?: false | NgZone,
 ): (args?: any) => T {
   let _work = work;
   if (patchZone) {

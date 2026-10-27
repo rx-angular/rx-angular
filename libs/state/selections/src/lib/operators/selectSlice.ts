@@ -21,7 +21,7 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  *
  * // An example with a custom comparison applied to each key
  * import { of } from 'rxjs';
- * import { selectSlice } from 'rx-angular/state';
+ * import { selectSlice } from '@rx-angular/state/selections';
  *
  *
  * const state$: Observable<MyState> = of(
@@ -45,7 +45,7 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  *
  * import { of, Observable } from 'rxjs';
  * import { tap } from 'rxjs/operators';
- * import { selectSlice } from 'rx-angular/state';
+ * import { selectSlice } from '@rx-angular/state/selections';
  *
  * interface MyState {
  *    title: string;
@@ -78,7 +78,7 @@ import { distinctUntilSomeChanged } from './distinctUntilSomeChanged';
  */
 export function selectSlice<T extends object, K extends keyof T>(
   keys: K[],
-  keyCompareMap?: KeyCompareMap<{ [P in K]: T[P] }>
+  keyCompareMap?: KeyCompareMap<{ [P in K]: T[P] }>,
 ): OperatorFunction<T, PickSlice<T, K>> {
   return (o$: Observable<T>): Observable<PickSlice<T, K>> =>
     o$.pipe(
@@ -108,12 +108,15 @@ export function selectSlice<T extends object, K extends keyof T>(
         }
 
         // create the selected slice
-        return definedKeys.reduce((vm, key) => {
-          vm[key] = state[key];
-          return vm;
-        }, {} as PickSlice<T, K>);
+        return definedKeys.reduce(
+          (vm, key) => {
+            vm[key] = state[key];
+            return vm;
+          },
+          {} as PickSlice<T, K>,
+        );
       }),
       filter((v) => v !== undefined),
-      distinctUntilSomeChanged(keys, keyCompareMap)
+      distinctUntilSomeChanged(keys, keyCompareMap),
     );
 }

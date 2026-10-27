@@ -13,7 +13,7 @@ import * as klawSync from 'klaw-sync';
 export function generateFrontMatter(
   title: string,
   weight: number,
-  showToc: boolean = true
+  showToc = true,
 ): string {
   return `---
 title: "${titleCase(title.replace(/-/g, ' '))}"
@@ -64,5 +64,5 @@ export function deleteGeneratedDocs(outputPath: string) {
  * Returns true if the content matches that of a generated document.
  */
 function isGenerated(content: string) {
-  return /generated\: true\n---\n/.test(content);
+  return /generated: true\n---\n/.test(content);
 }

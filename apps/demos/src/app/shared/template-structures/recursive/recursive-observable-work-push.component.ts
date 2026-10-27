@@ -1,16 +1,18 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RxPush } from '@rx-angular/template/push';
 import { Observable } from 'rxjs';
+import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { WorkVisualizerComponent } from '../../debug-helper/visualizer/visualizer/work-visualizer.component';
 
 @Component({
   selector: 'rxa-recursive-observable-work-push',
   template: `
-    <ng-container *ngIf="level === 0; else branch">
+    @if (level === 0) {
       <rxa-work-visualizer [work]="work">
         <p visualizerHeader>Level {{ total - level }}</p>
         {{ value$ | push }}
       </rxa-work-visualizer>
-    </ng-container>
-    <ng-template #branch>
+    } @else {
       <rxa-work-visualizer [work]="work">
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-recursive-observable-work-push
@@ -20,13 +22,18 @@ import { Observable } from 'rxjs';
           [value$]="value$"
         ></rxa-recursive-observable-work-push>
       </rxa-work-visualizer>
-    </ng-template>
+    }
   `,
   host: {
     class: 'd-flex w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    WorkVisualizerComponent,
+    RecursiveObservableWorkPushComponent,
+    RxPush,
+    PushPipe,
+  ],
 })
 export class RecursiveObservableWorkPushComponent {
   @Input()

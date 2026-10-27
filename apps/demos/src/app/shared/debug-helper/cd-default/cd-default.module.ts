@@ -1,17 +1,10 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CdDefaultComponent } from './cd-default/cd-default.component';
+import { NgModule } from '@angular/core';
 import { VisualizerModule } from '../visualizer/visualizer.module';
-import { CdTriggerModule } from '../cd-trigger/cd-trigger.module';
-
+import { CdDefaultComponent } from './cd-default/cd-default.component';
 
 @NgModule({
-  declarations: [CdDefaultComponent],
-  imports: [
-    CommonModule,
-    VisualizerModule,
-    CdTriggerModule
-  ],
-  exports: [CdDefaultComponent]
+  imports: [CommonModule, VisualizerModule, CdDefaultComponent],
+  exports: [CdDefaultComponent],
 })
-export class CdDefaultModule { }
+export class CdDefaultModule {}

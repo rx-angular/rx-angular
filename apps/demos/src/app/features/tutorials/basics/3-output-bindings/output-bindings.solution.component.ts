@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,6 +7,16 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { distinctUntilKeyChanged, map, startWith, tap } from 'rxjs/operators';
@@ -32,47 +43,61 @@ const initComponentState = {
   selector: 'rxa-output-bindings-solution',
   template: `
     <h3>Output Bindings</h3>
-    <mat-expansion-panel
-      *ngIf="model$ | async as vm"
-      (expandedChange)="listExpandedChanges.next($event)"
-      [expanded]="vm.listExpanded"
-    >
-      <mat-expansion-panel-header class="list">
-        <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
-        <mat-panel-title> List </mat-panel-title>
-        <mat-panel-description>
-          <span
-            >{{ (storeList$ | async)?.length }} Repositories Updated every:
-            {{ vm.refreshInterval }} ms
-          </span>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="onRefreshClicks($event)"
+    @if (model$ | async; as vm) {
+      <mat-expansion-panel
+        (expandedChange)="listExpandedChanges.next($event)"
+        [expanded]="vm.listExpanded"
       >
-        Refresh List
-      </button>
-
-      <ng-container *ngIf="storeList$ | async as list">
-        <div *ngIf="list?.length; else noList">
-          <mat-list>
-            <mat-list-item *ngFor="let item of list">
-              {{ item.name }}
-            </mat-list-item>
-          </mat-list>
-        </div>
-      </ng-container>
-
-      <ng-template #noList>
-        <mat-card>No list given!</mat-card>
-      </ng-template>
-    </mat-expansion-panel>
+        <mat-expansion-panel-header class="list">
+          @if (false) {
+            <mat-progress-bar [mode]="'query'"></mat-progress-bar>
+          }
+          <mat-panel-title> List </mat-panel-title>
+          <mat-panel-description>
+            <span
+              >{{ (storeList$ | async)?.length }} Repositories Updated every:
+              {{ vm.refreshInterval }} ms
+            </span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="onRefreshClicks($event)"
+        >
+          Refresh List
+        </button>
+        @if (storeList$ | async; as list) {
+          @if (list?.length) {
+            <div>
+              <mat-list>
+                @for (item of list; track item) {
+                  <mat-list-item>
+                    {{ item.name }}
+                  </mat-list-item>
+                }
+              </mat-list>
+            </div>
+          } @else {
+            <mat-card>No list given!</mat-card>
+          }
+        }
+      </mat-expansion-panel>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatProgressBar,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatButton,
+    MatList,
+    MatListItem,
+    MatCard,
+    AsyncPipe,
+  ],
 })
 export class OutputBindingsSolution
   extends RxState<ComponentState>

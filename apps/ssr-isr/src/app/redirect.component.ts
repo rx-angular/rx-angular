@@ -1,5 +1,6 @@
-import { CommonModule, isPlatformServer } from '@angular/common';
+import { isPlatformServer } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   Inject,
   InjectionToken,
@@ -13,8 +14,9 @@ export const RESPONSE = new InjectionToken<Response>('RESPONSE');
 
 @Component({
   selector: 'app-redirect',
-  imports: [CommonModule],
+  imports: [],
   template: ``,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: ``,
 })
 export class RedirectComponent {

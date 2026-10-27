@@ -1,6 +1,11 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
+import { RxFor } from '@rx-angular/template/for';
+import { RxIf } from '@rx-angular/template/if';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestItem } from '../../../../shared/debug-helper/value-provider/model';
@@ -21,6 +26,8 @@ function getItems(num: number) {
 
 @Component({
   selector: 'rxa-routed-rx-for',
+  standalone: true,
+  imports: [MatButtonModule, MatCheckboxModule, MatIconModule, RxFor, RxIf],
   template: `
     <div
       class="d-flex py-3 w-100 align-items-center justify-content-around header"
@@ -30,8 +37,12 @@ function getItems(num: number) {
         <span class="mr-2">ID</span>
         <button mat-icon-button (click)="toggleSortBy$.next('id')">
           <ng-container *rxIf="sorting.isSortedBy$('id')">
-            <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
-            <mat-icon *ngIf="sorting.isDesc()">arrow_downward </mat-icon>
+            @if (sorting.isAsc()) {
+              <mat-icon>arrow_upward</mat-icon>
+            }
+            @if (sorting.isDesc()) {
+              <mat-icon>arrow_downward </mat-icon>
+            }
           </ng-container>
         </button>
       </div>
@@ -39,8 +50,12 @@ function getItems(num: number) {
         <span class="mr-2">Value</span>
         <button mat-icon-button (click)="toggleSortBy$.next('value')">
           <ng-container *rxIf="sorting.isSortedBy$('value')">
-            <mat-icon *ngIf="sorting.isAsc()">arrow_upward</mat-icon>
-            <mat-icon *ngIf="sorting.isDesc()">arrow_downward </mat-icon>
+            @if (sorting.isAsc()) {
+              <mat-icon>arrow_upward</mat-icon>
+            }
+            @if (sorting.isDesc()) {
+              <mat-icon>arrow_downward </mat-icon>
+            }
           </ng-container>
         </button>
       </div>
@@ -81,33 +96,35 @@ function getItems(num: number) {
       }
 
       .item {
-        border: 1px solid magenta;
+        border-bottom: 1px solid var(--rxa-border);
+        transition: background-color 0.12s ease;
       }
 
       .item:hover {
-        background: rgba(0, 0, 0, 0.35);
+        background: var(--rxa-surface-3);
       }
 
       .header {
-        font-weight: bold;
+        font-weight: 700;
         position: sticky;
         top: 0;
-        background-color: #424242;
+        color: var(--rxa-text);
+        background-color: var(--rxa-surface-2);
+        border-bottom: 1px solid var(--rxa-border);
         z-index: 2;
       }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SortingPresenter],
-  standalone: false,
 })
 export class RoutedRxForComponent {
+  private activeRoute = inject(ActivatedRoute);
+  readonly sorting = inject<SortingPresenter<TestItem>>(SortingPresenter);
+
   toggleSortBy$ = new Subject<SortProps<TestItem>>();
 
-  constructor(
-    private activeRoute: ActivatedRoute,
-    public sorting: SortingPresenter<TestItem>,
-  ) {
+  constructor() {
     this.sorting.connectToggleSortBy(this.toggleSortBy$);
   }
 

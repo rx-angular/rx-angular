@@ -1,13 +1,18 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptors,
+  withXhr,
+} from '@angular/common/http';
 import { ApplicationConfig, mergeApplicationConfig } from '@angular/core';
-import { provideServerRendering } from '@angular/platform-server';
+import { provideServerRendering, withRoutes } from '@angular/ssr';
 import { isrHttpInterceptors, provideISR } from '@rx-angular/isr/server';
 import { appConfig } from './app.config';
+import { serverRoutes } from './app.routes.server';
 
 const serverConfig: ApplicationConfig = {
   providers: [
-    provideServerRendering(),
-    provideHttpClient(withInterceptors(isrHttpInterceptors)),
+    provideServerRendering(withRoutes(serverRoutes)),
+    provideHttpClient(withXhr(), withInterceptors(isrHttpInterceptors)),
     provideISR(),
   ],
 };

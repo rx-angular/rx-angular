@@ -1,13 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  Input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { BehaviorSubject } from 'rxjs';
-import { toBooleanArray, toFloatArray, toIntArray } from './utils';
 import { map } from 'rxjs/operators';
+import { RxFor } from '../../../rx-angular-pocs/template/directives/for/rx-for.directive';
+import { StrategySelectComponent } from '../../debug-helper/strategy-select/strategy-select.component';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { WorkComponent } from '../../debug-helper/work/work.component';
+import { toIntArray } from './utils';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];
@@ -40,7 +41,14 @@ const chunk = (arr, n) =>
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    StrategySelectComponent,
+    MatButton,
+    RxUnpatch,
+    RxFor,
+    WorkComponent,
+  ],
 })
 export class SiblingCustomComponent {
   num = 0;

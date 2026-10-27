@@ -1,18 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { IfVisibleDirective } from './if-visible.directive';
-import { CommonModule } from '@angular/common';
 
-const DECLARATIONS = [
-  IfVisibleDirective
-];
+const DECLARATIONS = [IfVisibleDirective];
 
 @NgModule({
-  declarations: DECLARATIONS,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule, ...DECLARATIONS],
   exports: DECLARATIONS,
-  providers: []
+  providers: [],
 })
-export class IfVisibleModule {
-}
+export class IfVisibleModule {}

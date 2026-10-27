@@ -1,12 +1,14 @@
+import { ChangeDetectionStrategy, Component, Output } from '@angular/core';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  Output,
-} from '@angular/core';
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  Validators,
+} from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import { Subject } from 'rxjs';
-import { FormGhostComponent } from '../../../../shared/ghost-elements';
-import { UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UnpatchEventsDirective } from '../../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.directive';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-v4-b',
@@ -23,9 +25,9 @@ import { UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
           <form [formGroup]="form">
             <label for="phone"
               >Value
-              <span *ngIf="!form.get('value').valid"
-                >- {{ form.get('value').value }}</span
-              >
+              @if (!form.get('value').valid) {
+                <span>- {{ form.get('value').value }}</span>
+              }
             </label>
             <input
               type="text"
@@ -44,7 +46,13 @@ import { UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    MatButton,
+    UnpatchEventsDirective,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
 })
 export class V4BComponent {
   form = this.fb.group({ value: ['t', Validators.minLength(2)] });

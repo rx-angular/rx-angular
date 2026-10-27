@@ -1,5 +1,6 @@
 import { JsonPipe } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -22,6 +23,7 @@ function wrapWithSpace(str: string): string {
 }
 @Component({
   selector: 'rx-child',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `{{ value }}`,
 })
 class ChildComponent {
@@ -30,6 +32,7 @@ class ChildComponent {
 
 @Component({
   template: ` {{ (value$ | push: strategy | json) || 'undefined' }} `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxPush, JsonPipe, ChildComponent],
 })
 class PushPipeTestComponent {
@@ -190,7 +193,7 @@ describe('RxPush', () => {
           wrapWithSpace('undefined'),
         );
         await Promise.resolve();
-        expect(cdSpy).toBeCalledTimes(1);
+        expect(cdSpy).toHaveBeenCalledTimes(1);
         expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
       });
 
@@ -211,7 +214,7 @@ describe('RxPush', () => {
         );
         await unpatchedPromise.resolve();
         await fixturePushPipeTestComponent.whenStable();
-        expect(cdSpy).toBeCalledTimes(1);
+        expect(cdSpy).toHaveBeenCalledTimes(1);
         expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
       });
 
@@ -223,7 +226,7 @@ describe('RxPush', () => {
           wrapWithSpace('undefined'),
         );
         await Promise.resolve();
-        expect(cdSpy).toBeCalledTimes(1);
+        expect(cdSpy).toHaveBeenCalledTimes(1);
         expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
       });
 
@@ -237,7 +240,7 @@ describe('RxPush', () => {
         await new Promise((resolve) => {
           setTimeout(resolve);
         });
-        expect(cdSpy).toBeCalledTimes(1);
+        expect(cdSpy).toHaveBeenCalledTimes(1);
         expect(componentNativeElement.textContent).toBe(wrapWithSpace('44'));
       });
     });

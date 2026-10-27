@@ -4,7 +4,12 @@ import {
   Input,
   Output,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { Subject } from 'rxjs';
+import { RxLet } from '../../../../rx-angular-pocs/template/directives/let/rx-let.directive';
+import { UnpatchEventsDirective } from '../../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.directive';
+import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-v3-b',
@@ -31,7 +36,13 @@ import { Subject } from 'rxjs';
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    MatButton,
+    UnpatchEventsDirective,
+    RxLet,
+    DirtyChecksComponent,
+  ],
 })
 export class V3BComponent {
   @Input()

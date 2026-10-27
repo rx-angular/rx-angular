@@ -1,14 +1,10 @@
 import { NgModule } from '@angular/core';
 import { PushPipe } from './push.pipe';
 
-const DECLARATIONS = [
-  PushPipe
-];
+const DECLARATIONS = [PushPipe];
 
 @NgModule({
-  declarations: DECLARATIONS,
-  imports: [],
-  exports: DECLARATIONS
+  imports: [...DECLARATIONS],
+  exports: DECLARATIONS,
 })
-export class PushModule {
-}
+export class PushModule {}

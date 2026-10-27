@@ -1,8 +1,8 @@
 import { JsonPipe } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
@@ -14,6 +14,7 @@ import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ng-container *rxLet="value$; let value">{{
       value === undefined
@@ -41,7 +42,6 @@ const setupLetDirectiveTestComponent = (): void => {
     imports: [LetDirectiveTestComponent],
     providers: [
       { provide: ChangeDetectorRef, useClass: MockChangeDetectorRef },
-      TemplateRef,
       ViewContainerRef,
       provideRxRenderStrategies({ primaryStrategy: 'native' }),
     ],

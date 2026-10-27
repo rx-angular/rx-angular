@@ -1,1 +1,1 @@
-export {kMeansRunner} from './kmeans.extractor';
+export { kMeansRunner } from './kmeans.extractor';

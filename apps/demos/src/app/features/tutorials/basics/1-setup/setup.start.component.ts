@@ -2,26 +2,26 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnDestroy,
-  OnInit,
   Output,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
 import {
-  filter,
-  interval,
-  merge,
-  Observable,
-  Subject,
-  Subscription,
-  switchMap,
-  takeUntil,
-} from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
-import { ListServerItem, ListService } from '../data-access/list-resource';
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatProgressBar } from '@angular/material/progress-bar';
 //👇 1- import RxState
 import { RxState } from '@rx-angular/state';
 import { RxActionFactory } from '@rx-angular/state/actions';
 import { RxEffects } from '@rx-angular/state/effects';
+import { RxLet } from '@rx-angular/template/let';
+import { filter, interval, merge, Observable, switchMap } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ListServerItem, ListService } from '../data-access/list-resource';
 
 //👇 2- define a component state
 interface ComponentState {
@@ -55,7 +55,9 @@ const initComponentState = {
       [expanded]="listExpanded"
     >
       <mat-expansion-panel-header class="list">
-        <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
+        @if (false) {
+          <mat-progress-bar [mode]="'query'"></mat-progress-bar>
+        }
         <mat-panel-title> List</mat-panel-title>
         <mat-panel-description>
           <span
@@ -73,17 +75,19 @@ const initComponentState = {
         Refresh List
       </button>
 
-      <div *ngIf="vm.list.length; else noList">
-        <mat-list>
-          <mat-list-item *ngFor="let item of list">
-            {{ item.name }}
-          </mat-list-item>
-        </mat-list>
-      </div>
-
-      <ng-template #noList>
+      @if (vm.list.length) {
+        <div>
+          <mat-list>
+            @for (item of list; track item) {
+              <mat-list-item>
+                {{ item.name }}
+              </mat-list-item>
+            }
+          </mat-list>
+        </div>
+      } @else {
         <mat-card>No list given!</mat-card>
-      </ng-template>
+      }
     </mat-expansion-panel>
   `,
   styles: [
@@ -105,7 +109,18 @@ const initComponentState = {
   ],
   providers: [RxActionFactory, RxState, RxEffects],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    RxLet,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatProgressBar,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatButton,
+    MatList,
+    MatListItem,
+    MatCard,
+  ],
 })
 export class SetupStart {
   ui = this.rxActions.create();

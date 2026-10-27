@@ -1,6 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   Input,
   Output,
@@ -24,6 +25,7 @@ const initialChildState = { str: 'initialChildState' };
       (str$ | async) == null ? 'undefined' : (str$ | async)
     }}</span>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AsyncPipe],
 })
 export class RxStateGlueComponent
@@ -69,6 +71,7 @@ export class RxStateGlueComponent
     >
     </rx-angular-state-glue-test>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AsyncPipe, RxStateGlueComponent],
 })
 export class RxStateGlueContainerComponent

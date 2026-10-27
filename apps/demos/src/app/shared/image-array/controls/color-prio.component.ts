@@ -1,7 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from '@angular/material/expansion';
+import { RxState } from '@rx-angular/state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RxState } from '@rx-angular/state';
+import { RxLet } from '../../../rx-angular-pocs/template/directives/let/rx-let.directive';
 
 @Component({
   selector: 'rxa-color-prio',
@@ -10,31 +15,31 @@ import { RxState } from '@rx-angular/state';
       <mat-expansion-panel-header>
         <p class="mr-1">Total: {{ colors.length }}</p>
         <div class="d-flex align-items-center">
-          <div
-            class="color m-1"
-            style=""
-            [style.background]="i[0]"
-            [title]="i[0]"
-            *ngFor="let i of colors"
-          >
-            &nbsp;
-          </div>
+          @for (i of colors; track i) {
+            <div
+              class="color m-1"
+              style=""
+              [style.background]="i[0]"
+              [title]="i[0]"
+            >
+              &nbsp;
+            </div>
+          }
         </div>
       </mat-expansion-panel-header>
       <div class="w-100 d-flex flex-wrap">
-        <div
-          class="d-flex align-items-center w-25 mb-1"
-          *ngFor="let i of colors"
-        >
-          <div
-            class="mr-1 color"
-            style="width: 15px; height: 15px;"
-            [style.background]="i[0]"
-          >
-            &nbsp;
+        @for (i of colors; track i) {
+          <div class="d-flex align-items-center w-25 mb-1">
+            <div
+              class="mr-1 color"
+              style="width: 15px; height: 15px;"
+              [style.background]="i[0]"
+            >
+              &nbsp;
+            </div>
+            <span class="priority">{{ i[1] }}</span>
           </div>
-          <span class="priority">{{ i[1] }}</span>
-        </div>
+        }
       </div>
     </mat-expansion-panel>
   `,
@@ -49,7 +54,8 @@ import { RxState } from '@rx-angular/state';
       }
     `,
   ],
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [RxLet, MatExpansionPanel, MatExpansionPanelHeader],
 })
 export class ColorPrioComponent extends RxState<{
   colors: [string, string][];

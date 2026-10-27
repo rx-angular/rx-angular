@@ -1,17 +1,41 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Demos</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      SPA deep-link restore for GitHub Pages. When the app is served from a
+      subpath (rx-angular.io/demos/), a deep link like /demos/features/foo has
+      no static file, so GitHub Pages serves the site-root 404 (Docusaurus),
+      which stashes the intended path and redirects here to /demos/. This runs
+      before Angular bootstraps and rewrites the URL back to the clean path so
+      the router (PathLocationStrategy) resolves it. No-op during local dev.
+    -->
+    <script>
+      (function () {
+        try {
+          var r = sessionStorage.getItem('rxaSpaRedirect');
+          if (r) {
+            sessionStorage.removeItem('rxaSpaRedirect');
+            if (r.indexOf('/demos/') === 0) history.replaceState(null, '', r);
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI8C380tX89ecSgk-QlyKysjo03nUBQi4">
-    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI8C380tX89ecSgk-QlyKysjo03nUBQi4"></script>
   </head>
   <body>
     <rxa-root></rxa-root>

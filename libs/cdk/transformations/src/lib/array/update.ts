@@ -76,7 +76,7 @@ import { ComparableData } from '../interfaces/comparable-data-type';
 export function update<T extends object>(
   source: T[],
   updates: Partial<T>[] | Partial<T>,
-  compare?: ComparableData<T>
+  compare?: ComparableData<T>,
 ): T[] {
   const updatesDefined = updates != null;
   const updatesAsArray = updatesDefined
@@ -101,10 +101,18 @@ export function update<T extends object>(
   const x: T[] = [];
   for (const existingItem of source) {
     const match = customFind(updatesAsArray, (item) =>
-      valuesComparer(item as T, existingItem, compare)
+      valuesComparer(item as T, existingItem, compare),
     );
 
-    x.push(match ? { ...existingItem, ...match } : existingItem);
+    x.push(
+      match
+        ? Object.assign(
+            Object.create(Object.getPrototypeOf(existingItem)),
+            existingItem,
+            match,
+          )
+        : existingItem,
+    );
   }
 
   return x;

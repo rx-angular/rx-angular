@@ -5,15 +5,18 @@ import {
   Input,
   Output,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { RxState } from '@rx-angular/state';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { Observable, Subject } from 'rxjs';
+import { ZonePatchedIconComponent } from '../../../zone-patched-icon/zone-patched-icon.component';
 import { ProvidedValues } from '../model';
 import { PrimitivesProviderService } from '../primitives-provider.service';
 
 @Component({
   selector: 'rxa-value-provider',
   exportAs: 'rxaValueProvider',
-  template: ` <ng-container *ngIf="buttons">
+  template: ` @if (buttons) {
       <button mat-raised-button (click)="reset()">
         Reset
         <rxa-zone-patched-icon
@@ -42,10 +45,10 @@ import { PrimitivesProviderService } from '../primitives-provider.service';
           [zoneState]="getZoneState()"
         ></rxa-zone-patched-icon>
       </button>
-    </ng-container>
+    }
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatButton, ZonePatchedIconComponent, RxUnpatch],
 })
 export class ValueProviderComponent extends PrimitivesProviderService {
   @Input()

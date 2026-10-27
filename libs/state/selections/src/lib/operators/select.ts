@@ -106,7 +106,7 @@ export function select<T extends object, K extends keyof T, R>(
 /**
  * @description
  * Transform a single property of the state by providing a key and map function.
- * Returns result of applying function to state property as cached and distinct `Observable<T[R]>`.
+ * Returns result of applying function to state property as cached and distinct `Observable<R>`.
  *
  * @example
  * // Project state based on single property

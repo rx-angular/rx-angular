@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
+import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-recursive-observable',
   template: `
-    <ng-container *ngIf="level === 0; else branch">
+    @if (level === 0) {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-renders [value$]="value$"></rxa-renders>
       </rxa-visualizer>
-    </ng-container>
-    <ng-template #branch>
+    } @else {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-recursive-observable
@@ -19,13 +20,17 @@ import { Observable } from 'rxjs';
           [value$]="value$"
         ></rxa-recursive-observable>
       </rxa-visualizer>
-    </ng-template>
+    }
   `,
   host: {
     class: 'd-flex w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    RenderingsComponent,
+    RecursiveObservableComponent,
+  ],
 })
 export class RecursiveObservableComponent {
   @Input()

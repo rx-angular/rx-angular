@@ -7,8 +7,8 @@
   "tags": ["type:app"],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:application",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@nx/angular:application",
+      "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/ssr-isr",
         "index": "apps/ssr-isr/src/index.html",
@@ -20,12 +20,11 @@
         "styles": ["apps/ssr-isr/src/styles.scss"],
         "scripts": [],
         "server": "apps/ssr-isr/src/main.server.ts",
-        "prerender": {
-          "discoverRoutes": false
-        },
+        "prerender": false,
         "ssr": {
           "entry": "apps/ssr-isr/server.ts"
-        }
+        },
+        "outputMode": "server"
       },
       "configurations": {
         "production": {
@@ -48,11 +47,12 @@
           "extractLicenses": false,
           "sourceMap": true
         }
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:dev-server",
+      "defaultConfiguration": "development",
+      "continuous": true,
       "configurations": {
         "production": {
           "buildTarget": "ssr-isr:build:production"
@@ -60,8 +60,7 @@
         "development": {
           "buildTarget": "ssr-isr:build:development"
         }
-      },
-      "defaultConfiguration": "development"
+      }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",

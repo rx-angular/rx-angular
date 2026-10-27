@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CdHelper } from '../../../utils/cd-helper';
+import { CdTriggerComponent } from '../../cd-trigger/cd-trigger/cd-trigger.component';
+import { VisualizerComponent } from '../../visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-cd-default',
@@ -14,9 +16,9 @@ import { CdHelper } from '../../../utils/cd-helper';
   host: {
     class: 'd-block w-100',
   },
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CdHelper],
-  standalone: false,
+  imports: [VisualizerComponent, CdTriggerComponent],
 })
 export class CdDefaultComponent {
   constructor(public cdHelper: CdHelper) {}

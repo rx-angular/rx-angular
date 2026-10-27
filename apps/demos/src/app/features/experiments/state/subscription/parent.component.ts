@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
+import { environment } from '../../../../../environments/environment';
 import { SourceService } from './source.service';
 import { SubscriptionHandlingService } from './subscription.service';
 
@@ -13,7 +13,6 @@ import { SubscriptionHandlingService } from './subscription.service';
   `,
   changeDetection: environment.changeDetection,
   providers: [SubscriptionHandlingService],
-  standalone: false,
 })
 export class RxStateParentSubscriptionComponent implements OnDestroy {
   subscription = new Subscription();

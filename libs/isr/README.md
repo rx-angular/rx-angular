@@ -4,7 +4,9 @@
 
 # @rx-angular/isr
 
-A library that enables Angular Universal applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
+A library that enables Angular SSR (`@angular/ssr`) applications to generate static pages at runtime and then update them incrementally on demand or on a schedule.
+
+Requires the peer dependency `@angular/ssr` `>=22`.
 
 ## Features
 
@@ -12,7 +14,7 @@ A library that enables Angular Universal applications to generate static pages a
 - ▶️ On-demand cache invalidation
 - 🔌 Plugin based cache handlers
 - 👌 No build changes required!
-- 🅰️ Supports Angular Universal
+- 🅰️ Supports Angular SSR (`@angular/ssr`)
 - 🛡️ NgModules & Standalone Compatible
 
 ## Installation
@@ -21,13 +23,21 @@ A library that enables Angular Universal applications to generate static pages a
 npm install @rx-angular/isr
 ```
 
+## Express 5 / Angular 20+
+
+`@rx-angular/isr` supports both express 4 and express 5, so it works with the `express@^5.1.0` that `ng new --ssr` scaffolds on Angular 20+. Note that express 5 no longer accepts a bare `'*'` as a route path (`'*'` must be written as `'/{*splat}'`), so make sure any `server.get('*', ...)` calls in your own `server.ts` are updated as shown below. This applies regardless of which express major version you use with the library.
+
 ## Version Compatibility
 
-| RxAngular | Angular   |
-| --------- | --------- |
-| `^18.0.0` | `^18.0.0` |
-| `^17.1.0` | `^17.0.0` |
-| `^16.0.0` | `^16.0.0` |
+| RxAngular | Angular    |
+| --------- | ---------- |
+| `^22.0.0` | `>=22.0.0` |
+| `^21.0.0` | `^21.0.0`  |
+| `^20.0.0` | `^20.0.0`  |
+| `^19.0.0` | `^19.0.0`  |
+| `^18.0.0` | `^18.0.0`  |
+| `^17.1.0` | `^17.0.0`  |
+| `^16.0.0` | `^16.0.0`  |
 
 ## How to use it?
 
@@ -53,7 +63,7 @@ server.post('/api/invalidate', async (req, res) => await isr.invalidate(req, res
 Replace
 
 ```ts
-server.get('*', (req, res) => {
+server.get('/{*splat}', (req, res) => {
   res.render(indexHtml, {
     req,
     providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
@@ -65,7 +75,7 @@ with
 
 ```ts
 server.get(
-  '*',
+  '/{*splat}',
   // Serve page if it exists in cache
   async (req, res, next) => await isr.serveFromCache(req, res, next),
   // Server side render the page and add to cache if needed
@@ -77,7 +87,7 @@ You can also pass `providers` to each of the `ISRHandler` methods.
 
 ```ts
 server.get(
-  '*',
+  '/{*splat}',
   ...async (req, res, next) =>
     await isr.render(req, res, next, {
       providers: [
@@ -96,7 +106,7 @@ These methods provide a way to modify the html served from cache or the html tha
 
 ```ts
 server.get(
-  '*',
+  '/{*splat}',
   // Serve page if it exists in cache
   async (req, res, next) =>
     await isr.serveFromCache(req, res, next, {

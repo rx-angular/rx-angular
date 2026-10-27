@@ -1,5 +1,7 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 import { toBooleanArray } from './utils';
 
 const chunk = (arr, n) =>
@@ -11,13 +13,11 @@ const chunk = (arr, n) =>
     <rxa-visualizer>
       <p visualizerHeader>{{ siblings.length }} Async</p>
       <div class="w-100 siblings">
-        <span
-          class="sibling"
-          [ngClass]="{ filled: sibling }"
-          *ngFor="let sibling of siblings$ | async; trackBy: trackBy"
-        >
-          <div [ngClass]="{ filled: filled }">&nbsp;</div>
-        </span>
+        @for (sibling of siblings$ | async; track trackBy($index, sibling)) {
+          <span class="sibling" [ngClass]="{ filled: sibling }">
+            <div [ngClass]="{ filled: filled }">&nbsp;</div>
+          </span>
+        }
       </div>
     </rxa-visualizer>
   `,
@@ -26,7 +26,7 @@ const chunk = (arr, n) =>
   },
   styleUrls: ['./sibling.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [VisualizerComponent, NgClass, AsyncPipe],
 })
 export class SiblingAsyncComponent {
   siblings = [];
@@ -43,5 +43,5 @@ export class SiblingAsyncComponent {
   @Input()
   value: any;
 
-  trackBy = (i) => i;
+  trackBy = (i: number, sibling: boolean) => i;
 }

@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { SideEffectsStart } from './side-effects.start.component';
 
 @Component({
   selector: 'rxa-side-effects-container',
@@ -19,7 +23,8 @@ import { map } from 'rxjs/operators';
     <rxa-side-effects-start [refreshInterval]="refreshInterval$ | async">
     </rxa-side-effects-start>
   `,
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [MatFormField, MatInput, SideEffectsStart, AsyncPipe],
 })
 export class SideEffectsContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();

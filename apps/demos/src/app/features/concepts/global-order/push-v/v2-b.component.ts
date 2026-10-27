@@ -1,12 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
   Output,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { RxPush } from '@rx-angular/template/push';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { UnpatchEventsDirective } from '../../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.directive';
+import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { DirtyChecksComponent } from '../../../../shared/debug-helper/dirty-checks/dirty-checks.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-v2-b',
@@ -15,7 +20,9 @@ import { tap } from 'rxjs/operators';
       <div visualizerHeader>
         <h1>B<small>v2</small></h1>
         <div class="d-flex">
-          <rxa-dirty-check *ngFor="let i of numExpressions"></rxa-dirty-check>
+          @for (i of numExpressions; track i) {
+            <rxa-dirty-check />
+          }
         </div>
       </div>
       <div class="row w-100">
@@ -37,7 +44,14 @@ import { tap } from 'rxjs/operators';
   `,
   host: { class: 'w-100' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    DirtyChecksComponent,
+    MatButton,
+    UnpatchEventsDirective,
+    PushPipe,
+    RxPush,
+  ],
 })
 export class V2BComponent {
   numExpressions = new Array(1).fill(0);

@@ -3,14 +3,14 @@
   "compilerOptions": {
     "outDir": "../dist/out-tsc/tools",
     "rootDir": ".",
-    "module": "commonjs",
+    "module": "preserve",
     "target": "es5",
-    "types": [
-      "node"
-    ],
-    "downlevelIteration": true
+    "types": ["node"],
+    "downlevelIteration": true,
+    "moduleResolution": "bundler"
   },
-  "include": [
-    "./perf/**/*.ts"
-  ]
+  "include": ["./perf/**/*.ts"],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  }
 }

@@ -17,9 +17,9 @@ export class PokemonService {
    * @param prev - We pass in the previous data so we can still display the data while showing the loading on fetching new data
    */
   getPokemon(
-    limit: number = 20,
-    offset: number = 0,
-    prev: PaginatedPokemon
+    limit = 20,
+    offset = 0,
+    prev: PaginatedPokemon,
   ): Observable<{ status: 'loading' | 'success'; data: PaginatedPokemon }> {
     const params = {
       limit: limit.toString(),
@@ -30,7 +30,7 @@ export class PokemonService {
       .get<PaginatedPokemon>('https://pokeapi.co/api/v2/pokemon', { params })
       .pipe(
         delay(1500), // delay 1.5s to simulate fetching data
-        toApiResponse(prev) // transform PaginatedPokemon to { status, data: PaginatedPokemon }
+        toApiResponse(prev), // transform PaginatedPokemon to { status, data: PaginatedPokemon }
       );
   }
 }

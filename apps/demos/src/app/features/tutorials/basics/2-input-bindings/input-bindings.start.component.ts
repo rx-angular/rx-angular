@@ -1,3 +1,4 @@
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,6 +7,16 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { RxState } from '@rx-angular/state';
 import { interval, Subject, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -39,7 +50,9 @@ const initComponentState = {
       [expanded]="listExpanded"
     >
       <mat-expansion-panel-header class="list">
-        <mat-progress-bar *ngIf="false" [mode]="'query'"></mat-progress-bar>
+        @if (false) {
+          <mat-progress-bar [mode]="'query'"></mat-progress-bar>
+        }
         <mat-panel-title> List </mat-panel-title>
         <!--👇 Replace the refreshInterval component -->
         <mat-panel-description>
@@ -58,19 +71,21 @@ const initComponentState = {
         Refresh List
       </button>
 
-      <ng-container *ngIf="storeList$ | async as list">
-        <div *ngIf="list?.length; else noList">
-          <mat-list>
-            <mat-list-item *ngFor="let item of list">
-              {{ item.name }}
-            </mat-list-item>
-          </mat-list>
-        </div>
-      </ng-container>
-
-      <ng-template #noList>
-        <mat-card>No list given!</mat-card>
-      </ng-template>
+      @if (storeList$ | async; as list) {
+        @if (list?.length) {
+          <div>
+            <mat-list>
+              @for (item of list; track item) {
+                <mat-list-item>
+                  {{ item.name }}
+                </mat-list-item>
+              }
+            </mat-list>
+          </div>
+        } @else {
+          <mat-card>No list given!</mat-card>
+        }
+      }
     </mat-expansion-panel>
   `,
   styles: [
@@ -91,7 +106,19 @@ const initComponentState = {
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatProgressBar,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatButton,
+    MatList,
+    MatListItem,
+    MatCard,
+    AsyncPipe,
+    JsonPipe,
+  ],
 })
 export class InputBindingsStart
   extends RxState<ComponentState>

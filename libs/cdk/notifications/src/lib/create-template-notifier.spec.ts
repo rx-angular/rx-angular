@@ -71,7 +71,7 @@ describe(createTemplateNotifier.name, () => {
     });
 
     expect(n.kind).toBe(RxNotificationKind.Error);
-    expect(spy.error).not.toBeCalled();
+    expect(spy.error).not.toHaveBeenCalled();
   });
 
   it('should handle `null` values', () => {
@@ -83,7 +83,7 @@ describe(createTemplateNotifier.name, () => {
     templateNotifier.next(of(null));
     templateNotifier.next(null);
 
-    expect(spy.next).toBeCalledTimes(3);
-    expect(spy.error).not.toBeCalled();
+    expect(spy.next).toHaveBeenCalledTimes(3);
+    expect(spy.error).not.toHaveBeenCalled();
   });
 });

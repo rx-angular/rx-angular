@@ -1,16 +1,18 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
+import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-recursive-async',
   template: `
-    <ng-container *ngIf="level === 0; else branch">
+    @if (level === 0) {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-renders [value$]="value$ | async"></rxa-renders>
       </rxa-visualizer>
-    </ng-container>
-    <ng-template #branch>
+    } @else {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-recursive-async
@@ -19,13 +21,18 @@ import { ReplaySubject } from 'rxjs';
           [value]="value$ | async"
         ></rxa-recursive-async>
       </rxa-visualizer>
-    </ng-template>
+    }
   `,
   host: {
     class: 'd-flex w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    RenderingsComponent,
+    RecursiveAsyncComponent,
+    AsyncPipe,
+  ],
 })
 export class RecursiveAsyncComponent {
   @Input()

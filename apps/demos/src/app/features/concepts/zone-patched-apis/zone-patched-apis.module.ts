@@ -1,18 +1,16 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ROUTES } from './zone-patched-apis.routes';
+import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 import { RxPush } from '@rx-angular/template/push';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
-import { ZonePatchedApisComponent } from './zone-patched-apis.component';
+import { CdDefaultModule } from '../../../shared/debug-helper/cd-default/cd-default.module';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer/visualizer.module';
-import { CdDefaultModule } from '../../../shared/debug-helper/cd-default/cd-default.module';
-import { ValueProvidersModule } from '../../../shared/debug-helper/value-provider';
+import { ZonePatchedApisComponent } from './zone-patched-apis.component';
+import { ROUTES } from './zone-patched-apis.routes';
 
 @NgModule({
-  declarations: [ZonePatchedApisComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ROUTES),
@@ -22,7 +20,7 @@ import { ValueProvidersModule } from '../../../shared/debug-helper/value-provide
     RxPush,
     VisualizerModule,
     CdDefaultModule,
-    ValueProvidersModule,
+    ZonePatchedApisComponent,
   ],
 })
 export class ZonePatchedApisModule {}

@@ -1,16 +1,19 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RxPush } from '@rx-angular/template/push';
 import { ReplaySubject } from 'rxjs';
+import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { RenderingsComponent } from '../../debug-helper/renderings/renderings.component';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-recursive-push',
   template: `
-    <ng-container *ngIf="level === 0; else branch">
+    @if (level === 0) {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-renders [value$]="value$ | push"></rxa-renders>
       </rxa-visualizer>
-    </ng-container>
-    <ng-template #branch>
+    } @else {
       <rxa-visualizer>
         <p visualizerHeader>Level {{ total - level }}</p>
         <rxa-recursive-push
@@ -19,13 +22,19 @@ import { ReplaySubject } from 'rxjs';
           [value]="value$ | push"
         ></rxa-recursive-push>
       </rxa-visualizer>
-    </ng-template>
+    }
   `,
   host: {
     class: 'd-flex w-100',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    RenderingsComponent,
+    RecursivePushComponent,
+    RxPush,
+    PushPipe,
+  ],
 })
 export class RecursivePushComponent {
   @Input()

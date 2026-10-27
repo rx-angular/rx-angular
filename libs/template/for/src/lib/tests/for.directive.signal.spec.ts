@@ -75,7 +75,7 @@ describe('rxFor with signals', () => {
         x.push(3);
         return [...x];
       });
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('1;2;3;');
     });
 
@@ -85,7 +85,7 @@ describe('rxFor with signals', () => {
       const newValues = getComponent().itemsHotSignal();
       newValues.splice(1, 1);
       getComponent().itemsHotSignal.set([...newValues]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('1;');
     });
 
@@ -96,7 +96,7 @@ describe('rxFor with signals', () => {
       newValues.splice(0, 1);
       newValues.push(1);
       getComponent().itemsHotSignal.set([...newValues]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('2;1;');
     });
 
@@ -106,7 +106,7 @@ describe('rxFor with signals', () => {
       getComponent().itemsHotSignal.set([0, 1, 2, 3, 4, 5]);
       getComponent().itemsHotSignal.set([6, 2, 7, 0, 4, 8]);
 
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('6;2;7;0;4;8;');
     });
 
@@ -118,21 +118,21 @@ describe('rxFor with signals', () => {
 
       // INIT
       getComponent().itemsHotSignal.set([{ name: 'misko' }, { name: 'shyam' }]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('misko;shyam;');
 
       // GROW
       const values = getComponent().itemsHotSignal();
       values.push({ name: 'adam' });
       getComponent().itemsHotSignal.set([...values]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('misko;shyam;adam;');
 
       // SHRINK
       values.splice(2, 1);
       values.splice(0, 1);
       getComponent().itemsHotSignal.set([...values]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('shyam;');
     }));
 
@@ -146,7 +146,7 @@ describe('rxFor with signals', () => {
       const errorSpy = jest.spyOn(errorHandler, 'handleError');
 
       expectText('');
-      expect(errorSpy).toBeCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
       errorSpy.mockClear();
     }));
 
@@ -158,13 +158,13 @@ describe('rxFor with signals', () => {
       detectChangesAndExpectText('1;2;');
 
       getComponent().itemsHotSignal.set(null);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('');
 
       getComponent().itemsHotSignal.set([1, 2, 3]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('1;2;3;');
-      expect(errorSpy).toBeCalledTimes(0);
+      expect(errorSpy).toHaveBeenCalledTimes(0);
       errorSpy.mockClear();
     }));
 
@@ -193,7 +193,7 @@ describe('rxFor with signals', () => {
       detectChangesAndExpectText('1;2;');
 
       getComponent().itemsHotSignal.set(<any>errorValue);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expect(errorSpy).toHaveBeenCalledWith(expectedError);
       errorSpy.mockClear();
     });
@@ -204,7 +204,7 @@ describe('rxFor with signals', () => {
 
       const a = new Foo();
       getComponent().itemsHotSignal.set([a, a]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('foo;foo;');
     }));
 
@@ -217,11 +217,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([['a', 'b'], ['c']]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('a-2;b-2;|c-1;|');
 
       getComponent().itemsHotSignal.set([['e'], ['f', 'g']]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('e-1;|f-2;g-2;|');
     }));
 
@@ -233,11 +233,11 @@ describe('rxFor with signals', () => {
       fixture = createTestComponent(template);
       fixture.detectChanges();
       getComponent().itemsHotSignal.set([['a', 'b'], ['c']]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('a-2;b-2;c-1;');
 
       getComponent().itemsHotSignal.set([['e'], ['f', 'g']]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('e-1;f-2;g-2;');
     }));
 
@@ -249,11 +249,11 @@ describe('rxFor with signals', () => {
       fixture = createTestComponent(template);
       fixture.detectChanges();
       getComponent().itemsHotSignal.set([{ items: ['a', 'b', 'c'] }]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('a-3;b-3;c-3;');
 
       getComponent().itemsHotSignal.set([{ items: ['d', 'e', 'f'] }]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('d-3;e-3;f-3;');
     }));
 
@@ -269,17 +269,17 @@ describe('rxFor with signals', () => {
 
       const items = [1];
       getComponent().itemsHotSignal.set([...items]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0|even|');
 
       items.push(1);
       getComponent().itemsHotSignal.set([...items]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0|even|1|');
 
       items.push(1);
       getComponent().itemsHotSignal.set([...items]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0|even|1|2|even|');
     }));
 
@@ -293,7 +293,7 @@ describe('rxFor with signals', () => {
       expectText('0/2 - 1;1/2 - 2;');
 
       getComponent().itemsHotSignal.set([1, 2, 3]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0/3 - 1;1/3 - 2;2/3 - 3;');
     }));
 
@@ -304,11 +304,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0123456789');
 
       getComponent().itemsHotSignal.set([1, 2, 6, 7, 4, 3, 5, 8, 9, 0]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0123456789');
     }));
 
@@ -319,11 +319,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0123456789');
 
       getComponent().itemsHotSignal.set([1, 2, 6, 7, 4, 3, 5, 8, 9, 0]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0123456789');
     }));
 
@@ -334,11 +334,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('333');
 
       getComponent().itemsHotSignal.set([4, 3, 2, 1, 0, -1]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('666666');
     }));
 
@@ -349,11 +349,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('333');
 
       getComponent().itemsHotSignal.set([4, 3, 2, 1, 0, -1]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('666666');
     }));
 
@@ -364,11 +364,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('truefalsefalse');
 
       getComponent().itemsHotSignal.set([2, 1]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('truefalse');
     }));
 
@@ -379,11 +379,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('truefalsefalse');
 
       getComponent().itemsHotSignal.set([2, 1]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('truefalse');
     }));
 
@@ -394,11 +394,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('falsefalsetrue');
 
       getComponent().itemsHotSignal.set([2, 1]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('falsetrue');
     }));
 
@@ -409,11 +409,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('falsefalsetrue');
 
       getComponent().itemsHotSignal.set([2, 1]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('falsetrue');
     }));
 
@@ -424,11 +424,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('truefalsetrue');
 
       getComponent().itemsHotSignal.set([2, 1]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('truefalse');
     }));
 
@@ -439,11 +439,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('truefalsetrue');
 
       getComponent().itemsHotSignal.set([2, 1]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('truefalse');
     }));
 
@@ -454,11 +454,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2, 3]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('falsetruefalsetrue');
 
       getComponent().itemsHotSignal.set([2, 1]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('falsetrue');
     }));
 
@@ -469,11 +469,11 @@ describe('rxFor with signals', () => {
       fixture.detectChanges();
 
       getComponent().itemsHotSignal.set([0, 1, 2, 3]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('falsetruefalsetrue');
 
       getComponent().itemsHotSignal.set([2, 1]);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('falsetrue');
     }));
 
@@ -484,7 +484,7 @@ describe('rxFor with signals', () => {
       fixture = createTestComponent(template);
       fixture.detectChanges();
       getComponent().itemsHotSignal.set(['a', 'b', 'c']);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0: a;1: b;2: c;');
     }));
 
@@ -493,7 +493,7 @@ describe('rxFor with signals', () => {
       fixture = createTestComponent(template);
       fixture.detectChanges();
       getComponent().itemsHotSignal.set(['a', 'b', 'c']);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0: a;1: b;2: c;');
     }));
 
@@ -504,7 +504,7 @@ describe('rxFor with signals', () => {
       fixture = createTestComponent(template);
       fixture.detectChanges();
       getComponent().itemsHotSignal.set(['a', 'b', 'c']);
-      TestBed.flushEffects();
+      fixture.detectChanges();
       expectText('0: a;1: b;2: c;');
     }));
 
@@ -514,7 +514,7 @@ describe('rxFor with signals', () => {
         fixture = createTestComponent(template);
         fixture.componentInstance.value = 0;
         fixture.detectChanges();
-        expect(warnSpy).toBeCalledTimes(1);
+        expect(warnSpy).toHaveBeenCalledTimes(1);
       }));
 
       it('should track by identity when trackBy is to `null` or `undefined`', waitForAsync(() => {
@@ -525,7 +525,7 @@ describe('rxFor with signals', () => {
         detectChangesAndExpectText('abc');
         fixture.componentInstance.value = undefined;
         detectChangesAndExpectText('abc');
-        expect(warnSpy).toBeCalledTimes(0);
+        expect(warnSpy).toHaveBeenCalledTimes(0);
       }));
 
       it('should set the context to the component instance', waitForAsync(() => {
@@ -558,11 +558,11 @@ describe('rxFor with signals', () => {
         fixture.detectChanges();
 
         getComponent().itemsHotSignal.set([{ id: 'a', color: 'blue' }]);
-        TestBed.flushEffects();
+        fixture.detectChanges();
         expectText('blue');
 
         getComponent().itemsHotSignal.set([{ id: 'a', color: 'red' }]);
-        TestBed.flushEffects();
+        fixture.detectChanges();
         expectText('red');
       }));
 
@@ -575,14 +575,14 @@ describe('rxFor with signals', () => {
           { id: 'a', color: 'blue' },
           { id: 'b', color: 'yellow' },
         ]);
-        TestBed.flushEffects();
+        fixture.detectChanges();
         expectText('blueyellow');
 
         getComponent().itemsHotSignal.set([
           { id: 'b', color: 'orange' },
           { id: 'a', color: 'red' },
         ]);
-        TestBed.flushEffects();
+        fixture.detectChanges();
         expectText('orangered');
       }));
 
@@ -594,7 +594,7 @@ describe('rxFor with signals', () => {
         getComponent().itemsHotSignal.set(['a', 'b', 'c', 'd']);
         getComponent().itemsHotSignal.set(['e', 'f', 'g', 'h']);
         getComponent().itemsHotSignal.set(['e', 'f', 'h']);
-        TestBed.flushEffects();
+        fixture.detectChanges();
         expectText('efh');
       }));
     });

@@ -2,13 +2,14 @@
   "name": "demos",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
+  "sourceRoot": "apps/demos/src",
+  "prefix": "rxa",
+  "tags": ["type:app"],
   "generators": {
     "@schematics/angular:component": {
       "style": "css"
     }
   },
-  "sourceRoot": "apps/demos/src",
-  "prefix": "rxa",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser-esbuild",
@@ -31,6 +32,7 @@
       },
       "configurations": {
         "production": {
+          "baseHref": "/demos/",
           "fileReplacements": [
             {
               "replace": "apps/demos/src/environments/environment.ts",
@@ -116,7 +118,8 @@
           "buildTarget": "demos:build:development",
           "open": true
         }
-      }
+      },
+      "continuous": true
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
@@ -127,10 +130,10 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/demos/jest.config.ts"
+        "jestConfig": "apps/demos/jest.config.ts",
+        "tsConfig": "apps/demos/tsconfig.spec.json"
       },
       "outputs": ["{workspaceRoot}/coverage/apps/demos"]
     }
-  },
-  "tags": ["type:app"]
+  }
 }

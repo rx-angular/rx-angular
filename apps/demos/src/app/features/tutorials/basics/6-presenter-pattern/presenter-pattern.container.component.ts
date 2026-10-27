@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { PresenterPatternStart } from './presenter-pattern.start.component';
 
 @Component({
   selector: 'rxa-presenter-pattern-container',
@@ -18,7 +22,8 @@ import { map } from 'rxjs/operators';
     <rxa-presenter-pattern-start [refreshInterval]="refreshInterval$ | async">
     </rxa-presenter-pattern-start>
   `,
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [MatFormField, MatInput, PresenterPatternStart, AsyncPipe],
 })
 export class PresenterPatternContainerComponent {
   refreshIntervalInput$ = new Subject<Event>();

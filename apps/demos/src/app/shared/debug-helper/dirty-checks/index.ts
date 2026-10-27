@@ -1,2 +1,2 @@
-export {DirtyChecksModule} from './dirty-checks.module';
-export {DirtyChecksComponent} from './dirty-checks.component';
+export { DirtyChecksComponent } from './dirty-checks.component';
+export { DirtyChecksModule } from './dirty-checks.module';

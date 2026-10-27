@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { Subject } from 'rxjs';
+import { ZonePatchedIconComponent } from '../../zone-patched-icon/zone-patched-icon.component';
 
 @Component({
   selector: 'rxa-trigger-provider',
@@ -42,7 +45,7 @@ import { Subject } from 'rxjs';
     </button>
     <ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [MatButton, ZonePatchedIconComponent, RxUnpatch],
 })
 export class TriggerProviderComponent {
   suspense$ = new Subject<void>();

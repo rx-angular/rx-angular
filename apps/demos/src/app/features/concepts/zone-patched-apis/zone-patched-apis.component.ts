@@ -1,5 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
 import { schedulingHelper } from '../../../shared/debug-helper/value-provider/scheduling-helper';
+import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 export enum SchedulingPriority {
   sync,
@@ -38,8 +44,15 @@ export enum SchedulingPriority {
       </button>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    VisualizerComponent,
+    ValueProviderComponent,
+    MatButton,
+    RxUnpatch,
+    RxPush,
+    PushPipe,
+  ],
 })
 export class ZonePatchedApisComponent {
   p = SchedulingPriority;

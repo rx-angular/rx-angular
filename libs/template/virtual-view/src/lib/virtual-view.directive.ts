@@ -4,11 +4,15 @@ import {
   computed,
   DestroyRef,
   Directive,
+  effect,
   ElementRef,
   EmbeddedViewRef,
   inject,
+  INJECTOR,
   input,
+  isSignal,
   OnDestroy,
+  output,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,20 +20,16 @@ import {
   RxStrategyNames,
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
-import { NEVER, Observable, ReplaySubject } from 'rxjs';
-import {
-  distinctUntilChanged,
-  finalize,
-  map,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
+import { PLATFORM } from '@rx-angular/cdk/ssr';
+import { finalize, NEVER, Observable, ReplaySubject } from 'rxjs';
+import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import {
   _RxVirtualView,
   _RxVirtualViewContent,
   _RxVirtualViewObserver,
   _RxVirtualViewPlaceholder,
 } from './model';
+import { effectOnceIf } from './util';
 import { VIRTUAL_VIEW_CONFIG_TOKEN } from './virtual-view.config';
 import { VirtualViewCache } from './virtual-view-cache';
 
@@ -70,6 +70,7 @@ import { VirtualViewCache } from './virtual-view-cache';
     '[style.contain-intrinsic-height]': 'intrinsicHeight()',
     '[style.content-visibility]': 'useContentVisibility() ? "auto" : null',
   },
+  exportAs: 'rxVirtualView',
   providers: [{ provide: _RxVirtualView, useExisting: RxVirtualView }],
 })
 export class RxVirtualView
@@ -81,9 +82,17 @@ export class RxVirtualView
   readonly #viewCache = inject(VirtualViewCache, { optional: true });
   readonly #destroyRef = inject(DestroyRef);
   readonly #config = inject(VIRTUAL_VIEW_CONFIG_TOKEN);
+  readonly #platform = inject(PLATFORM);
+  readonly #injector = inject(INJECTOR);
 
-  #content: _RxVirtualViewContent | null = null;
-  #placeholder: _RxVirtualViewPlaceholder | null = null;
+  readonly #enabled = computed(() =>
+    isSignal(this.#config.enabled)
+      ? this.#config.enabled()
+      : this.#config.enabled,
+  );
+
+  #content = signal<_RxVirtualViewContent | null>(null);
+  #placeholder = signal<_RxVirtualViewPlaceholder | null>(null);
 
   /**
    * Useful when we want to cache the templates and placeholders to optimize view rendering.
@@ -104,9 +113,7 @@ export class RxVirtualView
    */
   readonly startWithPlaceholderAsap = input(
     this.#config.startWithPlaceholderAsap,
-    {
-      transform: booleanAttribute,
-    },
+    { transform: booleanAttribute },
   );
 
   /**
@@ -164,24 +171,95 @@ export class RxVirtualView
    */
   readonly resizeObserverOptions = input<ResizeObserverOptions>();
 
+  /**
+   * Emits when the visibility state of the virtual view changes.
+   *
+   * This output fires whenever the virtual view transitions between showing content and showing placeholder.
+   * The emitted value is an object containing the current visibility state of both the content and placeholder.
+   *
+   * @example
+   * ```html
+   * <div rxVirtualViewObserver>
+   *   <div rxVirtualView (visibilityChanged)="onVisibilityChanged($event)">
+   *     <div *rxVirtualViewContent>Virtual View Content</div>
+   *     <div *rxVirtualViewPlaceholder>Loading...</div>
+   *   </div>
+   * </div>
+   * ```
+   *
+   * ```typescript
+   * onVisibilityChanged(event: { content: boolean; placeholder: boolean }) {
+   *   console.log('Content visible:', event.content);
+   *   console.log('Placeholder visible:', event.placeholder);
+   * }
+   * ```
+   */
+  readonly visibilityChanged = output<{
+    content: boolean;
+    placeholder: boolean;
+  }>();
+
+  /**
+   * Returns the current visibility state of the content and placeholder.
+   *
+   * This getter provides synchronous access to the visibility state, which can be useful
+   * when you need to check the current state imperatively or from the template.
+   *
+   * @returns An object containing:
+   * - `content`: `true` if the content is currently visible, `false` otherwise
+   * - `placeholder`: `true` if the placeholder is currently visible, `false` otherwise
+   *
+   * @example
+   * ```html
+   * <!-- Access visibility state in template using exportAs -->
+   * <div rxVirtualViewObserver>
+   *   <div rxVirtualView #virtualView="rxVirtualView">
+   *     <div *rxVirtualViewContent>Virtual View Content</div>
+   *     <div *rxVirtualViewPlaceholder>Loading...</div>
+   *   </div>
+   *
+   *   <!-- Display visibility state -->
+   *   <div>
+   *     Content visible: {{ virtualView.visibility.content }}
+   *     Placeholder visible: {{ virtualView.visibility.placeholder }}
+   *   </div>
+   * </div>
+   * ```
+   */
+  get visibility() {
+    return {
+      content: this.#contentIsShown,
+      placeholder: !this.#contentIsShown,
+    };
+  }
+
   readonly #placeholderVisible = signal(false);
 
   #contentIsShown = false;
+
+  /**
+   * The `_RxVirtualViewContent` directive whose template is currently embedded
+   * in the view container. Used to detect runtime content-template swaps (e.g.
+   * an `@switch` / `@if` case change inside `rxVirtualView` that replaces the
+   * active `*rxVirtualViewContent` while the host element stays mounted) so the
+   * new template is rendered instead of leaving the card blank.
+   */
+  #renderedContent: _RxVirtualViewContent | null = null;
 
   readonly #visible$ = new ReplaySubject<boolean>(1);
 
   readonly size = signal({ width: 0, height: 0 });
 
   readonly width = computed(() =>
-    this.size().width ? `${this.size().width}px` : 'auto',
+    this.#enabled() && this.size().width ? `${this.size().width}px` : null,
   );
 
   readonly height = computed(() =>
-    this.size().height ? `${this.size().height}px` : 'auto',
+    this.#enabled() && this.size().height ? `${this.size().height}px` : null,
   );
 
   readonly containment = computed(() => {
-    if (!this.useContainment()) {
+    if (!this.useContainment() || !this.#enabled()) {
       return null;
     }
     return this.useContentVisibility() && this.#placeholderVisible()
@@ -190,47 +268,125 @@ export class RxVirtualView
   });
 
   readonly intrinsicWidth = computed(() => {
-    if (!this.useContentVisibility()) {
+    if (!this.useContentVisibility() || !this.#enabled()) {
       return null;
     }
     return this.width() === 'auto' ? 'auto' : `auto ${this.width()}`;
   });
   readonly intrinsicHeight = computed(() => {
-    if (!this.useContentVisibility()) {
+    if (!this.useContentVisibility() || !this.#enabled()) {
       return null;
     }
     return this.height() === 'auto' ? 'auto' : `auto ${this.height()}`;
   });
 
   readonly minHeight = computed(() => {
-    return this.keepLastKnownSize() && this.#placeholderVisible()
+    return this.keepLastKnownSize() &&
+      this.#placeholderVisible() &&
+      this.#enabled()
       ? this.height()
       : null;
   });
   readonly minWidth = computed(() => {
-    return this.keepLastKnownSize() && this.#placeholderVisible()
+    return this.keepLastKnownSize() &&
+      this.#placeholderVisible() &&
+      this.#enabled()
       ? this.width()
       : null;
   });
 
   constructor() {
-    if (!this.#observer) {
-      throw new Error(
-        'RxVirtualView expects you to provide a RxVirtualViewObserver',
-      );
-    }
+    effectOnceIf(
+      () => this.#enabled(),
+      () => {
+        if (this.#platform.isBrowser && !this.#observer) {
+          throw new Error(
+            'RxVirtualView expects you to provide a RxVirtualViewObserver',
+          );
+        }
+      },
+    );
   }
 
   ngAfterContentInit() {
-    if (!this.#content) {
-      throw new Error(
-        'RxVirtualView expects you to provide a RxVirtualViewContent',
-      );
-    }
-    if (this.startWithPlaceholderAsap()) {
-      this.renderPlaceholder();
+    if (this.#enabled()) {
+      if (!this.#content()) {
+        throw new Error(
+          'RxVirtualView expects you to provide a RxVirtualViewContent',
+        );
+      }
+      if (this.startWithPlaceholderAsap()) {
+        this.renderPlaceholder();
+      }
     }
 
+    // when enabled:
+    // - register visibility listener
+    // - hide things that are not visible anymore
+    if (this.#enabled()) {
+      this.#registerRenderingBasedOnVisibility();
+    } else if (this.#config.enableAfterHydration) {
+      // Disabled now (server / pre-hydration). Once the view becomes enabled
+      // (e.g. after hydration) switch to visibility-based rendering.
+      effectOnceIf(
+        () => this.#enabled(),
+        () => this.#registerRenderingBasedOnVisibility(),
+        { injector: this.#injector },
+      );
+    }
+
+    // Keep the embedded content in sync with the active *rxVirtualViewContent
+    // directive. A single effect covers every case where #content() changes:
+    //  - the disabled/SSR initial render (show content as soon as available),
+    //  - deferred content that starts inside an inactive @if/@switch branch,
+    //  - runtime content-template swaps (e.g. an @switch case change) while the
+    //    host element stays mounted, in both the disabled and enabled states.
+    this.#registerContentSync();
+  }
+
+  /**
+   * Reactively renders the active content directive whenever it changes.
+   *
+   * While disabled the current content is always shown. While enabled the
+   * visibility pipeline owns the initial show/hide (and size handling), so this
+   * only re-renders a *swap* that happens while content is already shown —
+   * otherwise it would fight the placeholder/visibility logic.
+   * @private
+   */
+  #registerContentSync() {
+    effect(
+      () => {
+        const content = this.#content();
+        if (!content || content === this.#renderedContent) {
+          return;
+        }
+        const shouldShow = this.#enabled() ? this.#contentIsShown : true;
+        if (shouldShow) {
+          this.#renderContent(content);
+        }
+      },
+      { injector: this.#injector },
+    );
+  }
+
+  /**
+   * Creates the embedded view for the given content directive and marks it as
+   * the currently rendered content. Used for the disabled render and for
+   * runtime content-template swaps.
+   * @private
+   */
+  #renderContent(content: _RxVirtualViewContent) {
+    this.#contentIsShown = true;
+    this.#placeholderVisible.set(false);
+    this.#renderedContent = content;
+    const view = content.viewContainerRef.createEmbeddedView(
+      content.templateRef,
+    );
+    view.detectChanges();
+    this.visibilityChanged.emit({ content: true, placeholder: false });
+  }
+
+  #registerRenderingBasedOnVisibility() {
     this.#observer
       ?.observeElementVisibility(this.#elementRef.nativeElement)
       .pipe(takeUntilDestroyed(this.#destroyRef))
@@ -267,16 +423,18 @@ export class RxVirtualView
   }
 
   ngOnDestroy() {
-    this.#content = null;
-    this.#placeholder = null;
+    this.#content.set(null);
+    this.#placeholder.set(null);
+    this.#renderedContent = null;
+    this.#viewCache?.clear(this);
   }
 
   registerContent(content: _RxVirtualViewContent) {
-    this.#content = content;
+    this.#content.set(content);
   }
 
   registerPlaceholder(placeholder: _RxVirtualViewPlaceholder) {
-    this.#placeholder = placeholder;
+    this.#placeholder.set(placeholder);
   }
 
   /**
@@ -287,20 +445,21 @@ export class RxVirtualView
     return this.#strategyProvider.schedule(
       () => {
         this.#contentIsShown = true;
+        this.#renderedContent = this.#content();
         this.#placeholderVisible.set(false);
-        const placeHolder = this.#content!.viewContainerRef.detach();
+        const placeHolder = this.#content()!.viewContainerRef.detach();
         if (this.cacheEnabled() && placeHolder) {
           this.#viewCache!.storePlaceholder(this, placeHolder);
         } else if (!this.cacheEnabled() && placeHolder) {
           placeHolder.destroy();
         }
-        const tmpl =
+        const contentTpl =
           (this.#viewCache!.getContent(this) as EmbeddedViewRef<unknown>) ??
-          this.#content!.templateRef.createEmbeddedView({});
-        this.#content!.viewContainerRef.insert(tmpl);
+          this.#content()!.templateRef.createEmbeddedView({});
+        this.#content()!.viewContainerRef.insert(contentTpl);
         placeHolder?.detectChanges();
-
-        return tmpl;
+        this.visibilityChanged.emit({ content: true, placeholder: false });
+        return contentTpl;
       },
       { scope: this, strategy: this.contentStrategy() },
     );
@@ -332,7 +491,7 @@ export class RxVirtualView
     this.#placeholderVisible.set(true);
     this.#contentIsShown = false;
 
-    const content = this.#content!.viewContainerRef.detach();
+    const content = this.#content()!.viewContainerRef.detach();
 
     if (content) {
       if (this.cacheEnabled()) {
@@ -344,14 +503,16 @@ export class RxVirtualView
       content?.detectChanges();
     }
 
-    if (this.#placeholder) {
+    if (this.#placeholder()) {
       const placeholderRef =
         this.#viewCache!.getPlaceholder(this) ??
-        this.#placeholder.templateRef.createEmbeddedView({});
+        this.#placeholder()!.templateRef.createEmbeddedView({});
 
-      this.#content!.viewContainerRef.insert(placeholderRef);
+      this.#content()!.viewContainerRef.insert(placeholderRef);
       placeholderRef.detectChanges();
     }
+
+    this.visibilityChanged.emit({ content: false, placeholder: true });
   }
 }
 

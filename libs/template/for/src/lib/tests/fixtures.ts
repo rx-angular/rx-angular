@@ -1,5 +1,10 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import { Component, ErrorHandler, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ErrorHandler,
+  signal,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { RxFor } from '../for.directive';
@@ -13,6 +18,7 @@ export function setThis(arg: any) {
 @Component({
   selector: 'rx-test-cmp',
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxFor, NgIf, AsyncPipe],
 })
 export class TestComponent {

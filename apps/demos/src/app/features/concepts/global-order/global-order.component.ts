@@ -1,4 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  MatButtonToggle,
+  MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
+import { V1AComponent } from './native-v/v1-a.component';
+import { V2AComponent } from './push-v/v2-a.component';
+import { V4AComponent } from './rx-form-v/v4-a.component';
+import { V3AComponent } from './rx-let-v/v3-a.component';
 import { DataService } from './shared/data.service';
 
 @Component({
@@ -33,47 +42,51 @@ import { DataService } from './shared/data.service';
         </mat-button-toggle-group>
       </div>
       <div class="row w-100">
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.native ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-v1-a></rxa-v1-a>
-        </div>
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.push ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-v2-a></rxa-v2-a>
-        </div>
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.rxLet ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-v3-a></rxa-v3-a>
-        </div>
-        <div
-          class="col"
-          *ngIf="
-            group.value === displayStates.rxForm ||
-            group.value === displayStates.all
-          "
-        >
-          <rxa-v4-a></rxa-v4-a>
-        </div>
+        @if (
+          group.value === displayStates.native ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-v1-a></rxa-v1-a>
+          </div>
+        }
+        @if (
+          group.value === displayStates.push ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-v2-a></rxa-v2-a>
+          </div>
+        }
+        @if (
+          group.value === displayStates.rxLet ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-v3-a></rxa-v3-a>
+          </div>
+        }
+        @if (
+          group.value === displayStates.rxForm ||
+          group.value === displayStates.all
+        ) {
+          <div class="col">
+            <rxa-v4-a></rxa-v4-a>
+          </div>
+        }
       </div>
     </rxa-visualizer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    VisualizerComponent,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    V1AComponent,
+    V2AComponent,
+    V3AComponent,
+    V4AComponent,
+  ],
 })
 export class GlobalOrderComponent {
   displayStates = {
