@@ -3,7 +3,7 @@ import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { Observable } from 'rxjs';
-import { RxVirtualScrollViewportComponent } from '../src/index';
+import { ListRange, RxVirtualScrollViewportComponent } from '../src/index';
 import {
   DEFAULT_ITEM_SIZE,
   DEFAULT_RUNWAY_ITEMS,
@@ -72,6 +72,7 @@ export interface VirtualScrollMountConfig<T> {
   itemSize?: number;
   strategy?: RxStrategyNames<string> | Observable<RxStrategyNames<string>>;
   containerHeight?: number;
+  appendOnly?: boolean;
 }
 
 export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
@@ -81,6 +82,7 @@ export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
   viewCache: DEFAULT_TEMPLATE_CACHE_SIZE,
   containerHeight: 300,
   showItemDescription: true,
+  appendOnly: false,
 } as const;
 export const defaultItemLength = 500;
 export function getDefaultMountConfig(): VirtualScrollMountConfig<Item> {
@@ -93,4 +95,25 @@ export function getViewportComponent(fixture: ComponentFixture<any>) {
   return fixture.debugElement.query(
     By.directive(RxVirtualScrollViewportComponent),
   ).componentInstance as RxVirtualScrollViewportComponent;
+}
+
+/** the part of a `createOutputSpy` we care about when it's yielded by `cy.get` */
+type OutputSpy<T> = { lastCall: { args: [T] } };
+
+function asOutputSpy<T>(spy: unknown): OutputSpy<T> {
+  return spy as OutputSpy<T>;
+}
+
+/**
+ * the `scrolledIndex` is defined as the first item visible in the viewport,
+ * which is exactly what `visibleRange.start` points to
+ */
+export function expectVisibleRangeStartToEqualScrolledIndex() {
+  cy.get('@scrolledIndex').then((scrolledIndex) => {
+    cy.get('@visibleRange').should((visibleRange) => {
+      expect(asOutputSpy<ListRange>(visibleRange).lastCall.args[0].start).to.eq(
+        asOutputSpy<number>(scrolledIndex).lastCall.args[0],
+      );
+    });
+  });
 }
