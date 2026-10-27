@@ -10,6 +10,30 @@ export function toBoolean(input: null | boolean | string | undefined): boolean {
   return input != null && `${input}` !== 'false';
 }
 
+/**
+ * @description
+ *
+ * Whether a `ResizeObserver` measurement of `width` x `height` belongs to an
+ * element that is not rendered at all, e.g. because an ancestor is
+ * `display: none` (Ionic's page stack, cached router outlets). Such a collapsed
+ * box is not a measurement and must not overwrite cached sizes.
+ *
+ * Only a box collapsed on both axes is ambiguous: an absolutely positioned,
+ * empty item legitimately measures `0x0` as well. Just in that case the DOM is
+ * asked whether the element has a layout box. Every regular measurement is
+ * decided without touching the DOM, so this never forces a style recalc or
+ * layout in the middle of a `ResizeObserver` batch that is writing positions.
+ *
+ * @internal
+ */
+export function isNotRendered(
+  element: Element,
+  width: number,
+  height: number,
+): boolean {
+  return width === 0 && height === 0 && element.getClientRects().length === 0;
+}
+
 export function unpatchedAnimationFrameTick(): Observable<void> {
   return new Observable<void>((observer) => {
     const tick = requestAnimationFrame(() => {
