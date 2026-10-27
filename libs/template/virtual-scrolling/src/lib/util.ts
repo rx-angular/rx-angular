@@ -44,6 +44,42 @@ export function rangesEqual(a: ListRange, b: ListRange): boolean {
   return a.start === b.start && a.end === b.end;
 }
 
+/**
+ * @description
+ *
+ * Locates the item at `index` of a previous dataset in the next one, both
+ * given as their trackBy ids. Lookups by id net out inserts, removals and
+ * moves in one go. If the item got removed, the nearest following survivor
+ * takes its place.
+ *
+ * Returns `[previousIndex, nextIndex]` of the item that was found, or
+ * `undefined` when nothing from `index` on survived.
+ */
+export function relocateItem(
+  previousIds: unknown[],
+  nextIds: unknown[],
+  index: number,
+): [number, number] | undefined {
+  if (index < 0 || index >= previousIds.length) {
+    return undefined;
+  }
+  const nextIndex = nextIds.indexOf(previousIds[index]);
+  if (nextIndex > -1) {
+    return [index, nextIndex];
+  }
+  const nextIndices = new Map<unknown, number>();
+  for (let i = 0; i < nextIds.length; i++) {
+    nextIndices.set(nextIds[i], i);
+  }
+  for (let i = index + 1; i < previousIds.length; i++) {
+    const next = nextIndices.get(previousIds[i]);
+    if (next !== undefined) {
+      return [i, next];
+    }
+  }
+  return undefined;
+}
+
 export function unpatchedAnimationFrameTick(): Observable<void> {
   return new Observable<void>((observer) => {
     const tick = requestAnimationFrame(() => {

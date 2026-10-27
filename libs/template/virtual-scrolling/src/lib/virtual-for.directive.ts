@@ -62,6 +62,7 @@ import {
   RxVirtualScrollStrategy,
   RxVirtualViewRepeater,
 } from './model';
+import { rangesEqual } from './util';
 import {
   createVirtualListTemplateManager,
   RxVirtualListTemplateManager,
@@ -693,6 +694,7 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   private render() {
+    let renderedRange: ListRange = { start: 0, end: 0 };
     return combineLatest<[T[], ListRange, RxStrategyCredentials]>([
       this.values$.pipe(
         map((values) =>
@@ -737,7 +739,10 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
               }
               changes = differ.diff(iterable);
             }
-            if (!changes) {
+            // the range the views carry their context for. It's only updated
+            // once a pass completed, a superseded one has to be redone
+            const rangeChanged = !rangesEqual(renderedRange, range);
+            if (!changes && !rangeChanged) {
               if (!this.partiallyFinished) {
                 return NEVER;
               }
@@ -747,6 +752,10 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
               this.reportRendered(items.length);
               return of(iterable);
             }
+            // without changes, the range moved by exactly the amount of items
+            // inserted before it (e.g. a prepend). The rendered slice is the
+            // same, but every view maps to a new index: its context gets
+            // updated and it has to be re-positioned.
             const listChanges = this.templateManager.getListChanges(
               changes,
               iterable,
@@ -780,7 +789,10 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
               // emit after all changes are rendered
               work$.length > 0 ? work$ : [of(iterable)],
             ).pipe(
-              tap(() => this.reportRendered(items.length)),
+              tap(() => {
+                renderedRange = range;
+                this.reportRendered(items.length);
+              }),
               notifyParent
                 ? switchMap((v) =>
                     concat(

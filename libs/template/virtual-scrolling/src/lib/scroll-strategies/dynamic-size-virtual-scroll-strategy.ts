@@ -14,6 +14,7 @@ import {
   merge,
   MonoTypeOperatorFunction,
   Observable,
+  of,
   ReplaySubject,
   Subject,
   Subscription,
@@ -25,6 +26,7 @@ import {
   shareReplay,
   startWith,
   switchMap,
+  take,
   takeUntil,
   tap,
 } from 'rxjs/operators';
@@ -40,6 +42,7 @@ import {
   calculateVisibleContainerSize,
   parseScrollTopBoundaries,
   rangesEqual,
+  relocateItem,
   toBoolean,
   unpatchedAnimationFrameTick,
   unpatchedMicroTask,
@@ -123,6 +126,9 @@ export class DynamicSizeVirtualScrollStrategy<
    * If this flag is true, the virtual scroll strategy maintains the scrolled item when new data
    * is prepended to the list. This is very useful when implementing a reversed infinite scroller, that prepends
    * data instead of appending it
+   *
+   * The item at the bottom edge of the viewport is kept in place, any data
+   * change before it (inserts, removals, moves) shifts the content above it.
    */
   @Input({ transform: toBoolean }) keepScrolledIndexOnPrepend = false;
 
@@ -326,8 +332,20 @@ export class DynamicSizeVirtualScrollStrategy<
   }
 
   private scrollTo(scrollTo: number, behavior?: ScrollBehavior): void {
+    /*
+     * `waitForScroll` blocks rendering until the scroll event arrives. That
+     * event only fires if the position can actually change - a target beyond
+     * the scrollable bounds gets clamped by the browser. Deciding on the raw
+     * target would latch `isStable` to false forever when the clamped position
+     * equals the current one (e.g. compensating a removed transient row while
+     * already scrolled to the very top).
+     */
+    const clampedTarget = Math.min(
+      Math.max(scrollTo, 0),
+      Math.max(0, this.contentSize - this.containerSize),
+    );
     this.waitForScroll =
-      scrollTo !== this.scrollTop && this.contentSize > this.containerSize;
+      clampedTarget !== this.scrollTop && this.contentSize > this.containerSize;
     if (this.waitForScroll) {
       this.isStable$.next(false);
     }
@@ -347,9 +365,20 @@ export class DynamicSizeVirtualScrollStrategy<
       shareReplay({ bufferSize: 1, refCount: true }),
     );
 
+    let ids: unknown[] = [];
     valueArray$.pipe(this.until$()).subscribe((dataArr) => {
       this._values = dataArr;
       const dataLength = dataArr.length;
+      let keptItem: AnchorItem | undefined;
+      if (this.keepScrolledIndexOnPrepend && dataLength) {
+        const previousIds = ids;
+        const trackBy = this.viewRepeater!._trackBy;
+        ids = dataArr.map((item, i) => trackBy(i, item));
+        // the lookup needs the sizes of the previous dataset
+        keptItem = this.relocateLastScreenItem(previousIds, ids);
+      } else {
+        ids = [];
+      }
       if (!dataLength) {
         this._virtualItems = [];
         this.contentSize = 0;
@@ -387,7 +416,7 @@ export class DynamicSizeVirtualScrollStrategy<
           this._virtualItems.length = dataLength;
           shouldRecalculateRange = true;
         }
-        if (dataLength < this._renderedRange.end) {
+        if (!keptItem && dataLength < this._renderedRange.end) {
           this.anchorItem = this.calculateAnchoredItem(
             {
               index: dataLength,
@@ -409,45 +438,86 @@ export class DynamicSizeVirtualScrollStrategy<
           this.scrollTop = this.anchorScrollTop;
         }
         this.contentSize = contentSize;
+        if (keptItem) {
+          this._renderedRange = {
+            start: this._renderedRange.start,
+            end: Math.min(this._renderedRange.end, dataLength),
+          };
+          this.keepInPlace(keptItem);
+          shouldRecalculateRange = true;
+        }
         if (shouldRecalculateRange) {
           this.recalculateRange$.next();
         }
       }
     });
+  }
 
-    let valueCache: Record<any, T> = {};
-    /*
-     * when keepScrolledIndexOnPrepend is active, we need to listen to data changes and figure out what was appended
-     * before the last scrolledToItem
-     */
-    valueArray$
-      .pipe(
-        // TODO: this might cause issues when turning on/off at runtime
-        filter(() => this.keepScrolledIndexOnPrepend),
-        this.until$(),
-      )
-      .subscribe((valueArray) => {
-        const trackBy = this.viewRepeater!._trackBy;
-        let scrollTo = this.scrolledIndex;
-        const dataLength = valueArray.length;
-        const oldDataLength = Object.keys(valueCache).length;
+  /**
+   * @internal
+   * Where the item at the bottom edge of the viewport ends up in the next
+   * dataset, see `keepScrolledIndexOnPrepend`. The item is looked up with the
+   * sizes of the previous dataset, so this has to run before they get updated.
+   */
+  private relocateLastScreenItem(
+    previousIds: unknown[],
+    ids: unknown[],
+  ): AnchorItem | undefined {
+    if (!previousIds.length) {
+      return undefined;
+    }
+    let { index, offset } = this.lastScreenItem;
+    // the list ends above the bottom edge, keep its last item in place
+    if (index >= previousIds.length) {
+      index = previousIds.length - 1;
+      offset += this._virtualItems[index]?.size ?? 0;
+    }
+    const relocated = relocateItem(previousIds, ids, index);
+    // nothing to keep in place, the anchor still holds
+    if (!relocated || (relocated[0] === index && relocated[1] === index)) {
+      return undefined;
+    }
+    // removed items hand their place over to the next survivor
+    for (let i = index; i < relocated[0]; i++) {
+      offset -= this._virtualItems[i]?.size ?? 0;
+    }
+    return { index: relocated[1], offset };
+  }
 
-        if (oldDataLength > 0) {
-          let i = 0;
-          // check for each item from the last known scrolledIndex if it's an insert
-          for (i; i <= scrollTo && i < dataLength; i++) {
-            // item is not in the valueCache, so it was added
-            if (!valueCache[trackBy(i, valueArray[i])]) {
-              scrollTo++;
-            }
-          }
-        }
-        valueCache = {};
-        valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
-        if (scrollTo !== this.scrolledIndex) {
-          this.scrollToIndex(scrollTo);
-        }
-      });
+  /**
+   * @internal
+   * Keeps `item` (see `relocateLastScreenItem`) where the user sees it after
+   * a data change. Rendered views are positioned relative to
+   * (anchorScrollTop, anchorItem), so deriving the anchor from the kept item
+   * while leaving anchorScrollTop alone keeps the viewport visually stable
+   * without touching the scroll position. It gets aligned once the views are
+   * rendered, see `alignScrollTopWithAnchor`.
+   */
+  private keepInPlace(item: AnchorItem): void {
+    const visibleSize = calculateVisibleContainerSize(
+      this.containerSize,
+      this.scrollTopWithOutOffset,
+      this.scrollTopAfterOffset,
+    );
+    const anchorItem = this.calculateAnchoredItem(item, -visibleSize);
+    // not enough content above the item to keep it in place
+    this.anchorItem =
+      anchorItem.offset < 0 ? { index: 0, offset: 0 } : anchorItem;
+    this.lastScreenItem = this.calculateAnchoredItem(
+      this.anchorItem,
+      visibleSize,
+    );
+    let anchorPosition = this.anchorItem.offset;
+    for (let i = 0; i < this.anchorItem.index; i++) {
+      anchorPosition += this._virtualItems[i].size;
+    }
+    const drift = anchorPosition - this.anchorScrollTop;
+    if (drift === 0) {
+      return;
+    }
+    this.alignedContentSize = this.contentSize;
+    this.contentSize += Math.max(0, -drift);
+    this.alignScrollTopWithAnchor();
   }
 
   /**
@@ -519,14 +589,21 @@ export class DynamicSizeVirtualScrollStrategy<
    * It runs right after the layout of the next frame, before paint: the layout
    * is clean at that point, so writing the scroll position doesn't force a
    * synchronous layout. A running render positions its views in the current
-   * coordinate system, so the alignment waits for it to finish.
+   * coordinate system, so the alignment waits for it to finish. Aligning in
+   * the frame the render gets painted in keeps it visually stable.
    * The runway is shrunk to its final size in the following frame, so the
    * layout for it happens in that frame's regular rendering steps.
    */
   private alignScrollTopWithAnchor(): void {
     this.scrollTopAlignment?.unsubscribe();
-    this.scrollTopAlignment = afterNextLayout(this.viewport!.getScrollElement())
-      .pipe(this.until$())
+    const rendered$ = this.renderingInFlight
+      ? this.viewRepeater!.viewsRendered$.pipe(take(1))
+      : of(void 0);
+    this.scrollTopAlignment = rendered$
+      .pipe(
+        switchMap(() => afterNextLayout(this.viewport!.getScrollElement())),
+        this.until$(),
+      )
       .subscribe(() => {
         if (this.renderingInFlight) {
           this.alignScrollTopWithAnchor();
@@ -594,7 +671,9 @@ export class DynamicSizeVirtualScrollStrategy<
           const range = { start: 0, end: 0 };
           const length = this.contentLength;
           const delta = this.scrollTop - this.anchorScrollTop;
-          if (this.scrollTop == 0) {
+          // a kept anchor (see keepInPlace) isn't aligned with the scroll
+          // position yet, without scrolling it stays where it is
+          if (this.scrollTop == 0 && delta !== 0) {
             this.anchorItem = { index: 0, offset: 0 };
           } else {
             this.anchorItem = this.calculateAnchoredItem(

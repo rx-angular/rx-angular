@@ -73,6 +73,7 @@ export interface VirtualScrollMountConfig<T> {
   strategy?: RxStrategyNames<string> | Observable<RxStrategyNames<string>>;
   containerHeight?: number;
   appendOnly?: boolean;
+  keepScrolledIndexOnPrepend?: boolean;
 }
 
 export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
@@ -83,6 +84,7 @@ export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
   containerHeight: 300,
   showItemDescription: true,
   appendOnly: false,
+  keepScrolledIndexOnPrepend: false,
 } as const;
 export const defaultItemLength = 500;
 export function getDefaultMountConfig(): VirtualScrollMountConfig<Item> {
@@ -148,4 +150,18 @@ export function waitUntilStable<T>(
       return check();
     });
   return check();
+}
+
+/** asserts the top of the given item relative to the scroll container */
+export function expectItemOffset(id: number, offset: number) {
+  cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
+    const item = [...runway.querySelectorAll('[data-cy=item]')].find(
+      (element) => element.textContent!.trim() === `${id}`,
+    );
+    expect(item, `item ${id} is rendered`).not.to.eq(undefined);
+    expect(
+      item!.getBoundingClientRect().top - runway.getBoundingClientRect().top,
+      `offset of item ${id}`,
+    ).to.eq(offset);
+  });
 }
