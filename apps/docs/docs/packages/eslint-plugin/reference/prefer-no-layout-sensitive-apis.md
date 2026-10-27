@@ -73,6 +73,13 @@ el.addEventListener('click', () => {
 });
 ```
 
+```ts
+// object literals are not element writes
+readonly positions: ConnectionPositionPair[] = [
+  { overlayY: 'top', overlayX: 'end', originY: 'bottom', originX: 'end', offsetX: 4, offsetY: 4 },
+];
+```
+
 ## Why
 
 See [Understanding change detection in Angular](../../../concepts/E1-change-detection.md).
