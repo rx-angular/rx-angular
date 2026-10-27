@@ -336,6 +336,13 @@ export class DynamicSizeVirtualScrollStrategy<
             }
           }
         }
+        // drop stale entries when the data shrank, otherwise `contentLength`
+        // (= _virtualItems.length) desyncs from the data and the anchor math
+        // positions items outside of [0, contentSize]
+        if (this._virtualItems.length > dataLength) {
+          this._virtualItems.length = dataLength;
+          shouldRecalculateRange = true;
+        }
         if (dataLength < this._renderedRange.end) {
           this.anchorItem = this.calculateAnchoredItem(
             {
