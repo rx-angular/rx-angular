@@ -2,7 +2,7 @@ import { Component, input, NgIterable, output, Type } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { createOutputSpy, mount } from 'cypress/angular';
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import {
   DynamicSizeVirtualScrollStrategy,
   ListRange,
@@ -12,6 +12,7 @@ import {
   RxVirtualScrollWindowDirective,
 } from '../src/index';
 import {
+  defaultItemLength,
   defaultMountConfig,
   expectVisibleRangeStartToEqualScrolledIndex,
   generateItems,
@@ -967,7 +968,11 @@ describe('dynamic size function changes', () => {
    * sizes as a side effect
    */
   function mountWithSize(dynamicSize: (item: Item) => number, items: Item[]) {
-    return mountDynamicSize({ items: of(items), dynamicSize });
+    return mountDynamicSize({
+      items: of(items),
+      dynamicSize,
+      showItemDescription: false,
+    });
   }
 
   it('recomputes item sizes when the size function changes', () => {
@@ -1005,46 +1010,94 @@ describe('dynamic size function changes', () => {
     });
   });
 
-  it('repositions rendered views after the size function changes', () => {
+  /** top of the given item relative to the top of the scroll container */
+  function itemOffset(id: number) {
+    return cy.get('.rx-virtual-scroll__runway').then(([runway]) => {
+      const item = [...runway.querySelectorAll('[data-cy=item]')].find(
+        (element) => element.textContent!.trim() === `${id}`,
+      );
+      expect(item, `item ${id} is rendered`).not.to.eq(undefined);
+      return (
+        item!.getBoundingClientRect().top - runway.getBoundingClientRect().top
+      );
+    });
+  }
+
+  it('keeps the scrolled item in place when the size function changes', () => {
+    const items = generateItems(defaultItemLength);
+    mountWithSize(() => 50, items).then(({ fixture }) => {
+      fixture.detectChanges();
+      getViewportComponent(fixture).scrollToIndex(200);
+      cy.get('@scrolledIndex').should('have.been.calledWith', 200);
+      itemOffset(items[200].id).should('eq', 0);
+      cy.then(() => {
+        fixture.componentRef.setInput('dynamicSize', () => 25);
+        fixture.detectChanges();
+      });
+      // the scroll position follows the new size of the content above
+      cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
+        expect(runway.scrollTop).to.eq(200 * 25);
+      });
+      itemOffset(items[200].id).should('eq', 0);
+      cy.get('@scrolledIndex').should((spy: any) => {
+        expect(spy.lastCall.args[0]).to.eq(200);
+      });
+      // every rendered view sits on its absolute position again
+      cy.get('[data-cy=item]').each((element) => {
+        const index = items.findIndex(
+          (item) => `${item.id}` === element.text().trim(),
+        );
+        expect(element.attr('style')).to.contain(`translateY(${index * 25}px)`);
+      });
+    });
+  });
+
+  it('keeps the end of the list at the bottom when it no longer fills the viewport', () => {
     const items = generateItems(defaultItemLength);
     mountWithSize(() => 50, items).then(({ fixture, component }) => {
       fixture.detectChanges();
-      getViewportComponent(fixture).scrollToIndex(200);
-      cy.get('@scrolledIndex')
-        .should('have.been.calledWith', 200)
-        .then(() => {
-          const dynamicSize = () => 25;
-          fixture.componentRef.setInput('dynamicSize', dynamicSize);
-          fixture.detectChanges();
-          // the scroll position is kept, so the item shown on top changes
-          const scrolledIndex = (200 * 50) / 25;
-          const range = expectedRange(
-            {
-              containerHeight: component.containerHeight(),
-              runwayItems: component.runwayItems(),
-              runwayItemsOpposite: component.runwayItemsOpposite(),
-              dynamicSize,
-            },
-            items,
-            scrolledIndex,
-            'down',
-          );
-          cy.get('@scrolledIndex').should(
-            'have.been.calledWith',
-            scrolledIndex,
-          );
-          cy.get('[data-cy=item]').should(
-            'have.length',
-            range.end - range.start,
-          );
-          let position = range.start * 25;
-          cy.get('[data-cy=item]').each((element) => {
-            expect(element.attr('style')).to.contain(
-              `translateY(${position}px)`,
-            );
-            position += 25;
-          });
-        });
+      cy.get('.rx-virtual-scroll__runway').then(([runway]) => {
+        runway.scrollTop = runway.scrollHeight;
+      });
+      cy.get('@viewRange').should((spy: any) => {
+        expect(spy.lastCall.args[0].end).to.eq(items.length);
+      });
+      const scrollPositions: number[] = [];
+      cy.get('.rx-virtual-scroll__runway').then(([runway]) => {
+        runway.addEventListener('scroll', () =>
+          scrollPositions.push(runway.scrollTop),
+        );
+        fixture.componentRef.setInput('dynamicSize', () => 20);
+        fixture.detectChanges();
+      });
+      const containerHeight = component.containerHeight();
+      const endScrollTop = items.length * 20 - containerHeight;
+      cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
+        expect(runway.scrollTop).to.eq(endScrollTop);
+      });
+      itemOffset(items[items.length - 1].id).should('eq', containerHeight - 20);
+      // the list goes straight to its end, the browser never had to clamp
+      // the scroll position on the way
+      cy.wrap(scrollPositions).should('deep.eq', [endScrollTop]);
+    });
+  });
+
+  it('scrolls to the exact index after the size function changed', () => {
+    const items = generateItems(defaultItemLength);
+    mountWithSize(() => 50, items).then(({ fixture }) => {
+      fixture.detectChanges();
+      getViewportComponent(fixture).scrollToIndex(100);
+      cy.get('@scrolledIndex').should('have.been.calledWith', 100);
+      cy.then(() => {
+        fixture.componentRef.setInput('dynamicSize', () => 30);
+        fixture.detectChanges();
+      });
+      cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
+        expect(runway.scrollTop).to.eq(100 * 30);
+      });
+      cy.then(() => getViewportComponent(fixture).scrollToIndex(300));
+      cy.get('@scrolledIndex').should('have.been.calledWith', 300);
+      itemOffset(items[300].id).should('eq', 0);
     });
   });
 

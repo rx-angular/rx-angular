@@ -107,7 +107,9 @@ The strategy runs the `dynamic` function for every item whenever the data change
 If the size of your items also depends on state outside of the data - a toggled
 detail section, the width of the viewport, the current locale - bind a **new function
 reference** to `[dynamic]`. The strategy detects the changed reference, re-runs the
-function for the whole dataset and re-positions the list.
+function for the whole dataset and re-positions the list. The item at the top of the
+viewport stays where it is, the scroll position follows the new size of the content
+above it.
 
 ```ts
 @Component({
