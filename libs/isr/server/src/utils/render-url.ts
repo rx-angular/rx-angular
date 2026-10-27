@@ -21,12 +21,27 @@ export interface RenderUrlConfig {
   inlineCriticalCss?: boolean;
 }
 
+export interface RenderUrlRedirect {
+  status: number;
+  location: string;
+}
+
+/**
+ * The rendered html, or the redirect the render ended in. The Angular app
+ * engine answers router redirects with a 3xx response without a body.
+ */
+export type RenderUrlResult =
+  | { html: string; redirect?: never }
+  | { html?: never; redirect: RenderUrlRedirect };
+
 const EXTRA_PROVIDERS: Provider[] = [
   { provide: SERVER_CONTEXT, useValue: 'isr' },
 ];
 
 // helper method that generates html of an url
-export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
+export const renderUrl = async (
+  options: RenderUrlConfig,
+): Promise<RenderUrlResult> => {
   const {
     req,
     res,
@@ -59,14 +74,16 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
     if (angularAppEngine) {
       angularAppEngine
         .handle(req)
-        .then((response) => {
-          if (response) {
-            return response.text();
+        .then(async (response) => {
+          if (!response) {
+            throw new Error('No response from Angular App Engine');
           }
-          throw new Error('No response from Angular App Engine');
-        })
-        .then((html) => {
-          resolve(html);
+          const location = response.headers.get('Location');
+          if (location && response.status >= 300 && response.status < 400) {
+            resolve({ redirect: { status: response.status, location } });
+          } else {
+            resolve({ html: await response.text() });
+          }
         })
         .catch((err) => {
           reject(err);
@@ -82,7 +99,7 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
           providers: [...allProviders] as StaticProvider[], // we need to cast to StaticProvider[] because of a bug in the types
         })
         .then((html) => {
-          resolve(html);
+          resolve({ html });
         })
         .catch((err) => {
           reject(err);
@@ -95,7 +112,7 @@ export const renderUrl = async (options: RenderUrlConfig): Promise<string> => {
           if (err) {
             reject(err);
           } else {
-            resolve(html);
+            resolve({ html });
           }
         },
       );
