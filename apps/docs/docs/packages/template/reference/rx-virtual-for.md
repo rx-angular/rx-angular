@@ -42,18 +42,18 @@ class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
 
 ## Inputs
 
-The microsyntax input `rxVirtualForOf` accepts an `Observable`, a `Signal`, or a
-static (unwrapped) value.
+The microsyntax input `rxVirtualForOf` accepts an `Observable`, a `Signal`, a
+[data source](#data-source), or a static (unwrapped) value.
 
-| Input               | Microsyntax alias   | Type                                                             | Default                                  | Description                                                                                                                                                                                                                                                                               |
-| ------------------- | ------------------- | ---------------------------------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rxVirtualForOf`    | `of` / `in`         | `Observable<U> \| Signal<U> \| U \| null \| undefined`           | —                                        | The iterable to render. A `Signal` or plain array is treated as a static value.                                                                                                                                                                                                           |
-| `trackBy`           | `trackBy`           | `keyof T \| ((index: number, item: T) => unknown)`               | —                                        | Identity for items. Accepts a property name shorthand (`trackBy: 'id'`) or a `TrackByFunction`.                                                                                                                                                                                           |
-| `strategy`          | `strategy`          | `RxStrategyNames<string> \| Observable<RxStrategyNames<string>>` | `'normal'`                               | The render strategy used to schedule change detection. See [tuning rendering with strategies](../how-to/tune-rendering-with-strategies.md).                                                                                                                                               |
-| `renderCallback`    | `renderCallback`    | `Subject<U>`                                                     | —                                        | Emits the currently rendered set of items whenever the directive finishes rendering a change set.                                                                                                                                                                                         |
-| `templateCacheSize` | `templateCacheSize` | `number`                                                         | `20`                                     | Number of views held in cache for re-use while scrolling. `0` disables caching (views are destroyed and re-created on scroll).                                                                                                                                                            |
-| `parent`            | `parent`            | `boolean`                                                        | `false`                                  | When `true`, runs change detection on the host component after rendering so `@ContentChild`/`@ViewChild` queries stay in sync. **Deprecated**: no longer required with signal-based view/content queries. See [handling view and content queries](../legacy/view-and-content-queries.md). |
-| `patchZone`         | `patchZone`         | `boolean`                                                        | `true` (from `RxRenderStrategiesConfig`) | When `false`, the directive creates its `EmbeddedView`s outside `NgZone`.                                                                                                                                                                                                                 |
+| Input               | Microsyntax alias   | Type                                                                                | Default                                  | Description                                                                                                                                                                                                                                                                               |
+| ------------------- | ------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rxVirtualForOf`    | `of` / `in`         | `Observable<U> \| Signal<U> \| RxVirtualForDataSource<T> \| U \| null \| undefined` | —                                        | The iterable to render. A `Signal` or plain array is treated as a static value.                                                                                                                                                                                                           |
+| `trackBy`           | `trackBy`           | `keyof T \| ((index: number, item: T) => unknown)`                                  | —                                        | Identity for items. Accepts a property name shorthand (`trackBy: 'id'`) or a `TrackByFunction`.                                                                                                                                                                                           |
+| `strategy`          | `strategy`          | `RxStrategyNames<string> \| Observable<RxStrategyNames<string>>`                    | `'normal'`                               | The render strategy used to schedule change detection. See [tuning rendering with strategies](../how-to/tune-rendering-with-strategies.md).                                                                                                                                               |
+| `renderCallback`    | `renderCallback`    | `Subject<U>`                                                                        | —                                        | Emits the currently rendered set of items whenever the directive finishes rendering a change set.                                                                                                                                                                                         |
+| `templateCacheSize` | `templateCacheSize` | `number`                                                                            | `20`                                     | Number of views held in cache for re-use while scrolling. `0` disables caching (views are destroyed and re-created on scroll).                                                                                                                                                            |
+| `parent`            | `parent`            | `boolean`                                                                           | `false`                                  | When `true`, runs change detection on the host component after rendering so `@ContentChild`/`@ViewChild` queries stay in sync. **Deprecated**: no longer required with signal-based view/content queries. See [handling view and content queries](../legacy/view-and-content-queries.md). |
+| `patchZone`         | `patchZone`         | `boolean`                                                                           | `true` (from `RxRenderStrategiesConfig`) | When `false`, the directive creates its `EmbeddedView`s outside `NgZone`.                                                                                                                                                                                                                 |
 
 :::note Deprecated input
 
@@ -160,6 +160,46 @@ export class ListComponent {
 
 > `*rxVirtualFor` ships the non-star structural syntax; the `*` is the standard
 > Angular structural-directive shorthand and stays valid.
+
+## Data source
+
+Instead of the data itself, `rxVirtualForOf` accepts a data source: an object with a
+`connect` and a `disconnect` method (`RxVirtualForDataSource<T>`). It is structurally
+compatible with `DataSource` of `@angular/cdk/collections`, a cdk data source can be
+bound as is.
+
+`connect` is called when the data source is bound and receives a viewer whose
+`viewChange` emits the range of items currently rendered. Use it to load data on demand.
+`disconnect` is called when the data source is replaced by any other value or the
+directive is destroyed.
+
+```ts
+import { RxVirtualForCollectionViewer, RxVirtualForDataSource } from '@rx-angular/template/virtual-scrolling';
+
+export class MovieDataSource implements RxVirtualForDataSource<Movie> {
+  private readonly movies = new BehaviorSubject<Movie[]>([]);
+  private subscription?: Subscription;
+
+  connect(viewer: RxVirtualForCollectionViewer): Observable<Movie[]> {
+    this.subscription = viewer.viewChange.subscribe(({ start, end }) => this.loadPage(start, end));
+    return this.movies;
+  }
+
+  disconnect(): void {
+    this.subscription?.unsubscribe();
+  }
+
+  private loadPage(start: number, end: number) {
+    /* fetch the missing movies and emit them via this.movies */
+  }
+}
+```
+
+```html
+<rx-virtual-scroll-viewport [itemSize]="50">
+  <div *rxVirtualFor="let movie of dataSource">{{ movie.name }}</div>
+</rx-virtual-scroll-viewport>
+```
 
 ## See also
 
