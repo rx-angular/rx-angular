@@ -1,7 +1,7 @@
 export {
-  CollectionViewer,
-  DataSource,
   ListRange,
+  RxVirtualForCollectionViewer,
+  RxVirtualForDataSource,
   RxVirtualForViewContext,
   RxVirtualScrollElement,
   RxVirtualScrollStrategy,

@@ -34,7 +34,6 @@ import { Promise } from '@rx-angular/cdk/zone-less/browser';
 import {
   combineLatest,
   concat,
-  ConnectableObservable,
   isObservable,
   MonoTypeOperatorFunction,
   NEVER,
@@ -56,9 +55,9 @@ import {
   tap,
 } from 'rxjs/operators';
 import {
-  CollectionViewer,
-  DataSource,
   ListRange,
+  RxVirtualForCollectionViewer,
+  RxVirtualForDataSource,
   RxVirtualForViewContext,
   RxVirtualScrollStrategy,
   RxVirtualViewRepeater,
@@ -79,6 +78,19 @@ import {
 declare const ngDevMode: boolean;
 
 const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
+
+/**
+ * A data source is anything that can be connected and disconnected, except for
+ * observables: an RxJS `connectable()` observable has a `connect` method too.
+ */
+function isDataSource<T>(value: unknown): value is RxVirtualForDataSource<T> {
+  return (
+    value != null &&
+    typeof (value as RxVirtualForDataSource<T>).connect === 'function' &&
+    typeof (value as RxVirtualForDataSource<T>).disconnect === 'function' &&
+    !isObservable(value)
+  );
+}
 
 /**
  * @Directive RxVirtualFor
@@ -217,9 +229,9 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   });
 
   /** @internal */
-  private connectedDataSource?: DataSource<T>;
+  private connectedDataSource?: RxVirtualForDataSource<T>;
   /** @internal */
-  private collectionViewer?: CollectionViewer;
+  private collectionViewer?: RxVirtualForCollectionViewer;
 
   /** @internal */
   private _differ?: IterableDiffer<T>;
@@ -249,60 +261,40 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
     potentialSignalOrObservableOrDataSource:
       | Observable<(U & NgIterable<T>) | undefined | null>
       | Signal<(U & NgIterable<T>) | undefined | null>
-      | DataSource<T>
+      | RxVirtualForDataSource<T>
       | (U & NgIterable<T>)
       | null
       | undefined,
   ) {
-    if (isSignal(potentialSignalOrObservableOrDataSource)) {
-      this.staticValue = undefined;
-      this.renderStatic = false;
-      this.observables$.next(
-        toObservable(potentialSignalOrObservableOrDataSource, {
-          injector: this.injector,
-        }),
-      );
-    } else if (this.isDataSource(potentialSignalOrObservableOrDataSource)) {
+    const value = potentialSignalOrObservableOrDataSource;
+    if (isDataSource<T>(value)) {
       this.disconnectDataSource();
-
       this.staticValue = undefined;
       this.renderStatic = false;
-
-      const collectionViewer: CollectionViewer = {
+      const collectionViewer: RxVirtualForCollectionViewer = {
         viewChange: this.scrollStrategy.renderedRange$,
       };
-
       this.collectionViewer = collectionViewer;
-      this.connectedDataSource = potentialSignalOrObservableOrDataSource;
-
+      this.connectedDataSource = value;
       this.observables$.next(
-        potentialSignalOrObservableOrDataSource.connect(collectionViewer),
+        value.connect(collectionViewer) as Observable<U & NgIterable<T>>,
       );
-    } else if (!isObservable(potentialSignalOrObservableOrDataSource)) {
-      this.staticValue = potentialSignalOrObservableOrDataSource;
+      return;
+    }
+    // whatever was bound before is replaced, a connected data source is done
+    this.disconnectDataSource();
+    if (isSignal(value)) {
+      this.staticValue = undefined;
+      this.renderStatic = false;
+      this.observables$.next(toObservable(value, { injector: this.injector }));
+    } else if (!isObservable(value)) {
+      this.staticValue = value;
       this.renderStatic = true;
     } else {
       this.staticValue = undefined;
       this.renderStatic = false;
-      this.observables$.next(potentialSignalOrObservableOrDataSource);
+      this.observables$.next(value);
     }
-  }
-
-  /** @internal */
-  private isDataSource(
-    value:
-      | (U & NgIterable<T>)
-      | Observable<U & NgIterable<T>>
-      | DataSource<T>
-      | null
-      | undefined,
-  ): value is DataSource<T> {
-    return (
-      value != null &&
-      'connect' in value &&
-      typeof value.connect === 'function' &&
-      !(value instanceof ConnectableObservable)
-    );
   }
 
   /**

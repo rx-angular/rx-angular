@@ -2,11 +2,24 @@ import { Component, input, NgIterable, output, Type } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { createOutputSpy, mount } from 'cypress/angular';
-import { Observable, Subject } from 'rxjs';
+import {
+  DataSource as CdkDataSource,
+  CollectionViewer as CdkCollectionViewer,
+} from '@angular/cdk/collections';
+import {
+  BehaviorSubject,
+  connectable,
+  Observable,
+  ReplaySubject,
+  Subject,
+  Subscription,
+} from 'rxjs';
 import {
   FixedSizeVirtualScrollStrategy,
   ListRange,
   RxVirtualFor,
+  RxVirtualForCollectionViewer,
+  RxVirtualForDataSource,
   RxVirtualScrollElementDirective,
   RxVirtualScrollViewportComponent,
   RxVirtualScrollWindowDirective,
@@ -20,6 +33,7 @@ import {
   Item,
   VirtualScrollMountConfig,
 } from './fixtures';
+import { DEFAULT_ITEM_SIZE } from '../src/lib/virtual-scroll.config';
 
 const testComponentImports = [
   RxVirtualScrollViewportComponent,
@@ -686,5 +700,118 @@ describe('window scrolling', () => {
         });
       },
     );
+  });
+});
+
+describe('data source', () => {
+  class TestDataSource implements RxVirtualForDataSource<Item> {
+    readonly ranges: ListRange[] = [];
+    connected = 0;
+    disconnected = 0;
+    private subscription?: Subscription;
+    constructor(private readonly items: Item[]) {}
+    connect(viewer: RxVirtualForCollectionViewer): Observable<Item[]> {
+      this.connected++;
+      this.subscription = viewer.viewChange.subscribe((range) =>
+        this.ranges.push(range),
+      );
+      return new BehaviorSubject(this.items);
+    }
+    disconnect(): void {
+      this.disconnected++;
+      this.subscription?.unsubscribe();
+    }
+  }
+
+  class TestCdkDataSource extends CdkDataSource<Item> {
+    connected = 0;
+    disconnected = 0;
+    constructor(private readonly items: Item[]) {
+      super();
+    }
+    connect(viewer: CdkCollectionViewer): Observable<readonly Item[]> {
+      this.connected++;
+      return new BehaviorSubject<readonly Item[]>(this.items);
+    }
+    disconnect(): void {
+      this.disconnected++;
+    }
+  }
+
+  const visibleItems = defaultMountConfig.containerHeight / DEFAULT_ITEM_SIZE;
+
+  it('renders the data of a data source and reports the rendered range', () => {
+    const dataSource = new TestDataSource(generateItems(defaultItemLength));
+    mountFixedSize({ items: dataSource as never }).then(() => {
+      cy.get('[data-cy=item]').should('have.length.at.least', visibleItems);
+      cy.wrap(dataSource).its('connected').should('eq', 1);
+      cy.wrap(dataSource.ranges).should('have.length.greaterThan', 0);
+      cy.get('@viewRange').should((spy: any) => {
+        expect(dataSource.ranges.at(-1)).to.deep.eq(spy.lastCall.args[0]);
+      });
+    });
+  });
+
+  it('accepts a DataSource of @angular/cdk/collections', () => {
+    const dataSource = new TestCdkDataSource(generateItems(defaultItemLength));
+    mountFixedSize({ items: dataSource as never }).then(() => {
+      cy.get('[data-cy=item]').should('have.length.at.least', visibleItems);
+      cy.wrap(dataSource).its('connected').should('eq', 1);
+    });
+  });
+
+  it('disconnects when it is replaced by another data source', () => {
+    const first = new TestDataSource(generateItems(defaultItemLength));
+    const second = new TestDataSource(generateItems(10, 1000));
+    mountFixedSize({ items: first as never }).then(({ fixture }) => {
+      cy.get('[data-cy=item]').should('have.length.at.least', visibleItems);
+      cy.then(() => {
+        fixture.componentRef.setInput('items', second);
+        fixture.detectChanges();
+      });
+      cy.get('[data-cy=item]').first().should('contain.text', '1000');
+      cy.wrap(first).its('disconnected').should('eq', 1);
+      cy.wrap(second).its('connected').should('eq', 1);
+    });
+  });
+
+  it('disconnects when it is replaced by a plain array', () => {
+    const dataSource = new TestDataSource(generateItems(defaultItemLength));
+    mountFixedSize({ items: dataSource as never }).then(({ fixture }) => {
+      cy.get('[data-cy=item]').should('have.length.at.least', visibleItems);
+      cy.then(() => {
+        fixture.componentRef.setInput('items', generateItems(3, 2000));
+        fixture.detectChanges();
+      });
+      cy.get('[data-cy=item]').should('have.length', 3);
+      cy.wrap(dataSource).its('disconnected').should('eq', 1);
+    });
+  });
+
+  it('disconnects when the directive is destroyed', () => {
+    const dataSource = new TestDataSource(generateItems(defaultItemLength));
+    mountFixedSize({ items: dataSource as never }).then(({ fixture }) => {
+      cy.get('[data-cy=item]').should('have.length.at.least', visibleItems);
+      cy.then(() => fixture.destroy());
+      cy.wrap(dataSource).its('disconnected').should('eq', 1);
+    });
+  });
+
+  it('treats a connectable observable as an observable', () => {
+    const items = generateItems(defaultItemLength);
+    const items$ = connectable(new BehaviorSubject(items), {
+      connector: () => new ReplaySubject<Item[]>(1),
+    });
+    const connection = items$.connect();
+    mountFixedSize({ items: items$ }).then(({ fixture }) => {
+      cy.get('[data-cy=item]').should('have.length.at.least', visibleItems);
+      cy.then(() => {
+        fixture.componentRef.setInput('items', generateItems(3, 2000));
+        fixture.detectChanges();
+      });
+      cy.get('[data-cy=item]')
+        .should('have.length', 3)
+        .then(() => connection.unsubscribe());
+    });
   });
 });

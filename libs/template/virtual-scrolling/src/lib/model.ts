@@ -34,15 +34,33 @@ export interface ListRange {
   end: number;
 }
 
-export abstract class DataSource<T> {
-  abstract connect(
-    collectionViewer: CollectionViewer,
-  ): Observable<NgIterable<T>>;
-  abstract disconnect(collectionViewer: CollectionViewer): void;
+/**
+ * @description
+ *
+ * The viewer a `RxVirtualForDataSource` is connected to. `viewChange` emits the
+ * range of items currently rendered by `*rxVirtualFor`.
+ *
+ * Structurally compatible with `CollectionViewer` of `@angular/cdk/collections`.
+ */
+export interface RxVirtualForCollectionViewer {
+  viewChange: Observable<ListRange>;
 }
 
-export interface CollectionViewer {
-  viewChange: Observable<ListRange>;
+/**
+ * @description
+ *
+ * A data source for `*rxVirtualFor`. It is connected when it is bound to
+ * `rxVirtualForOf` and disconnected when it is replaced or the directive is
+ * destroyed.
+ *
+ * Structurally compatible with `DataSource` of `@angular/cdk/collections`, a cdk
+ * data source can be used as is.
+ */
+export interface RxVirtualForDataSource<T> {
+  connect(
+    collectionViewer: RxVirtualForCollectionViewer,
+  ): Observable<NgIterable<T> | null | undefined>;
+  disconnect(collectionViewer: RxVirtualForCollectionViewer): void;
 }
 
 /**
