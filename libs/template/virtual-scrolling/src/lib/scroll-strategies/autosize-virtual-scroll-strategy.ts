@@ -1063,7 +1063,8 @@ export class AutoSizeVirtualScrollStrategy<
     initialAnchor: AnchorItem,
     delta: number,
   ): AnchorItem {
-    if (delta === 0) return initialAnchor;
+    // no early return for delta === 0: measuring items can shrink the anchor
+    // below its offset, walking from it re-normalizes the anchor
     delta += initialAnchor.offset;
     let i = initialAnchor.index;
     const items = this._virtualItems;
