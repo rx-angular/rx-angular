@@ -21,7 +21,7 @@ import {
   RxVirtualViewRepeater,
 } from './model';
 import { observeElementSize } from './observe-element-size';
-import { hasLayoutBox, unpatchedScroll } from './util';
+import { isNotRendered, unpatchedScroll } from './util';
 
 /**
  * @description Will be provided through Terser global definitions by Angular CLI
@@ -163,7 +163,9 @@ export class RxVirtualScrollViewportComponent
         // collapsed rect reported in that case is not a measurement, forwarding
         // it would collapse the rendered range. The real size arrives as soon as
         // the viewport is rendered again
-        filter(() => hasLayoutBox(observedElement)),
+        filter(
+          ({ width, height }) => !isNotRendered(observedElement, width, height),
+        ),
         distinctUntilChanged(
           ({ height: prevHeight, width: prevWidth }, { height, width }) =>
             prevHeight === height && prevWidth === width,

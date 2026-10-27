@@ -43,7 +43,7 @@ import {
 } from '../model';
 import {
   calculateVisibleContainerSize,
-  hasLayoutBox,
+  isNotRendered,
   parseScrollTopBoundaries,
   toBoolean,
   unpatchedMicroTask,
@@ -852,14 +852,14 @@ export class AutoSizeVirtualScrollStrategy<
             event.target.isConnected &&
             !!this._virtualItems[viewRef.context.index],
         ),
-        // a view without a layout box is not rendered at all (e.g. an ancestor
-        // is `display: none`). Its collapsed border box is not a measurement,
+        // a view that is not rendered at all (e.g. an ancestor is
+        // `display: none`) reports a collapsed box. That is not a measurement,
         // booking it would wipe out the cached size. The real size arrives as
         // soon as the view is rendered again.
-        // note this deliberately still accepts a rendered view that measures
-        // `0x0` - items are `position: absolute` and therefore shrink-to-fit,
-        // so an empty item template legitimately reports zero on both axes
-        filter((event) => hasLayoutBox(event.target)),
+        filter(
+          ({ target, contentRect }) =>
+            !isNotRendered(target, contentRect.width, contentRect.height),
+        ),
         map((event) => {
           const index = viewRef.context.index;
           const size = Math.round(this.extractSize(event));
