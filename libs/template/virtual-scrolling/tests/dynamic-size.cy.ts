@@ -500,6 +500,132 @@ describe('data mutations', () => {
       );
     });
   });
+  describe('when the data shrinks', () => {
+    it('renders the end of the list after shrinking while scrolled to the middle', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          // the rendered range (~200) stays below the new length, so the
+          // shrink itself does not re-anchor the viewport
+          const shrunkItems = items.slice(0, 300);
+          const lastItem = shrunkItems[shrunkItems.length - 1];
+          const runwayHeight = totalItemHeight(shrunkItems);
+          fixture.detectChanges();
+          getViewportComponent(fixture).scrollToIndex(200);
+          cy.get('@scrolledIndex')
+            .should('have.been.calledWith', 200)
+            .then(() => {
+              fixture.componentRef.setInput('items', [...shrunkItems]);
+              fixture.detectChanges();
+            });
+          // scroll to the very end of the shrunk list, like a user would
+          cy.get('.rx-virtual-scroll__runway').then(([runway]) => {
+            runway.scrollTop = runway.scrollHeight;
+          });
+          cy.get('@viewRange').should((viewRange: any) => {
+            const range: ListRange = viewRange.lastCall.args[0];
+            expect(range.end).to.eq(shrunkItems.length);
+            expect(range.start).to.be.lessThan(range.end);
+          });
+          cy.get('[data-cy=item]').should((elements) => {
+            // views are recycled, the DOM order is not the index order
+            const rendered = [...elements].map((e) => e.textContent!.trim());
+            expect(rendered).to.include(`${lastItem.id}`);
+            elements.each((_, element) => {
+              const position = Number(
+                /translateY\((-?[\d.]+)px\)/.exec(
+                  element.getAttribute('style')!,
+                )![1],
+              );
+              expect(position).to.be.at.least(0);
+              expect(position).to.be.lessThan(runwayHeight);
+            });
+          });
+        },
+      );
+    });
+    it('truncates the virtual items to the new data length', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          const shrunkItems = items.slice(0, 200);
+          fixture.detectChanges();
+          getViewportComponent(fixture).scrollToIndex(480);
+          cy.get('@scrolledIndex')
+            .should('have.been.calledWith', 480)
+            .then(() => {
+              fixture.componentRef.setInput('items', [...shrunkItems]);
+              fixture.detectChanges();
+              // `_virtualItems` is private, but its length is what `contentLength`
+              // reports and therefore exactly the state this regression is about
+              const { _virtualItems } = (getViewportComponent(fixture) as any)
+                .scrollStrategy as { _virtualItems: unknown[] };
+              expect(_virtualItems.length).to.eq(shrunkItems.length);
+            });
+        },
+      );
+    });
+    it('renders the full range again when the data grows back', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          const rangeConfig = {
+            containerHeight: component.containerHeight(),
+            runwayItems: component.runwayItems(),
+            runwayItemsOpposite: component.runwayItemsOpposite(),
+            dynamicSize: component.dynamicSize(),
+          };
+          const range = expectedRange(rangeConfig, items, 0);
+          fixture.componentRef.setInput('items', items.slice(0, 200));
+          fixture.detectChanges();
+          fixture.componentRef.setInput('items', [...items]);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]').should(
+            'have.length',
+            range.end - range.start,
+          );
+          cy.get('@viewRange').should((viewRange: any) => {
+            expect(viewRange.lastCall.args[0]).to.deep.eq(range);
+          });
+          const sentinel = fixture.debugElement.query(
+            By.css('.rx-virtual-scroll__sentinel'),
+          );
+          expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
+            `translate(0px, ${totalItemHeight(items) - 1}px)`,
+          );
+        },
+      );
+    });
+    it('recovers when the data is emptied and repopulated', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          const rangeConfig = {
+            containerHeight: component.containerHeight(),
+            runwayItems: component.runwayItems(),
+            runwayItemsOpposite: component.runwayItemsOpposite(),
+            dynamicSize: component.dynamicSize(),
+          };
+          const range = expectedRange(rangeConfig, items, 0);
+          fixture.componentRef.setInput('items', []);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]')
+            .should('have.length', 0)
+            .then(() => {
+              fixture.componentRef.setInput('items', [...items]);
+              fixture.detectChanges();
+            });
+          cy.get('[data-cy=item]').should(
+            'have.length',
+            range.end - range.start,
+          );
+          cy.get('@viewRange').should((viewRange: any) => {
+            expect(viewRange.lastCall.args[0]).to.deep.eq(range);
+          });
+        },
+      );
+    });
+  });
   describe('with trackBy', () => {
     it('should throw an error', () => {
       cy.on('fail', (e) => {
