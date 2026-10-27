@@ -481,7 +481,7 @@ export class AutoSizeVirtualScrollStrategy<
             itemCache.set(id, { item: dataArr[i], index: i });
           }
           existingIds.add(id);
-          size += virtualItems[i].size || this.tombstoneSize;
+          size += this.virtualItemSize(virtualItems[i]);
         }
         this._virtualItems = virtualItems;
         // sync delete operations
@@ -1053,7 +1053,17 @@ export class AutoSizeVirtualScrollStrategy<
 
   /** @internal */
   private getItemSize(index: number): number {
-    return this._virtualItems[index].size || this.tombstoneSize;
+    return this.virtualItemSize(this._virtualItems[index]);
+  }
+  /**
+   * @internal
+   * A size of `0` is ambiguous: a new item starts at `0` before it was ever
+   * measured, an item rendering no content is measured as `0`. Only measured
+   * (cached) sizes are taken as they are, unknown ones fall back to the
+   * tombstone size.
+   */
+  private virtualItemSize(item: VirtualViewItem): number {
+    return item.cached ? item.size : item.size || this.tombstoneSize;
   }
   /** @internal */
   private getElementSize(element: HTMLElement): number {
