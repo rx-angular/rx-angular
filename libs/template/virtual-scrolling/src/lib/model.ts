@@ -59,6 +59,17 @@ export abstract class RxVirtualScrollStrategy<
   abstract scrolledIndex$: Observable<number>;
   /** @internal */
   abstract renderedRange$: Observable<ListRange>;
+  /**
+   * Emits the range of items intersecting the viewport. `start` is the index of
+   * the first, `end` the exclusive index of the last intersecting item.
+   * Partially visible items are part of the range.
+   *
+   * Unlike `renderedRange$` it is not widened by runway items or `appendOnly`.
+   * Defaults to `renderedRange$` for strategies not implementing it.
+   */
+  get visibleRange$(): Observable<ListRange> {
+    return this.renderedRange$;
+  }
   /** @internal */
   abstract contentSize$: Observable<number>;
   /** @internal */
