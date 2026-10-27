@@ -56,6 +56,8 @@ import {
 } from 'rxjs/operators';
 import {
   ListRange,
+  RxVirtualForCollectionViewer,
+  RxVirtualForDataSource,
   RxVirtualForViewContext,
   RxVirtualScrollStrategy,
   RxVirtualViewRepeater,
@@ -76,6 +78,19 @@ import {
 declare const ngDevMode: boolean;
 
 const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
+
+/**
+ * A data source is anything that can be connected and disconnected, except for
+ * observables: an RxJS `connectable()` observable has a `connect` method too.
+ */
+function isDataSource<T>(value: unknown): value is RxVirtualForDataSource<T> {
+  return (
+    value != null &&
+    typeof (value as RxVirtualForDataSource<T>).connect === 'function' &&
+    typeof (value as RxVirtualForDataSource<T>).disconnect === 'function' &&
+    !isObservable(value)
+  );
+}
 
 /**
  * @Directive RxVirtualFor
@@ -214,6 +229,11 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   });
 
   /** @internal */
+  private connectedDataSource?: RxVirtualForDataSource<T>;
+  /** @internal */
+  private collectionViewer?: RxVirtualForCollectionViewer;
+
+  /** @internal */
   private _differ?: IterableDiffer<T>;
 
   /** @internal */
@@ -234,30 +254,46 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    *     [hero]="hero"></app-hero>
    * </rx-virtual-scroll-viewport>
    *
-   * @param potentialSignalOrObservable
+   * @param potentialSignalOrObservableOrDataSource
    */
   @Input()
   set rxVirtualForOf(
-    potentialSignalOrObservable:
+    potentialSignalOrObservableOrDataSource:
       | Observable<(U & NgIterable<T>) | undefined | null>
       | Signal<(U & NgIterable<T>) | undefined | null>
+      | RxVirtualForDataSource<T>
       | (U & NgIterable<T>)
       | null
       | undefined,
   ) {
-    if (isSignal(potentialSignalOrObservable)) {
+    const value = potentialSignalOrObservableOrDataSource;
+    if (isDataSource<T>(value)) {
+      this.disconnectDataSource();
       this.staticValue = undefined;
       this.renderStatic = false;
+      const collectionViewer: RxVirtualForCollectionViewer = {
+        viewChange: this.scrollStrategy.renderedRange$,
+      };
+      this.collectionViewer = collectionViewer;
+      this.connectedDataSource = value;
       this.observables$.next(
-        toObservable(potentialSignalOrObservable, { injector: this.injector }),
+        value.connect(collectionViewer) as Observable<U & NgIterable<T>>,
       );
-    } else if (!isObservable(potentialSignalOrObservable)) {
-      this.staticValue = potentialSignalOrObservable;
+      return;
+    }
+    // whatever was bound before is replaced, a connected data source is done
+    this.disconnectDataSource();
+    if (isSignal(value)) {
+      this.staticValue = undefined;
+      this.renderStatic = false;
+      this.observables$.next(toObservable(value, { injector: this.injector }));
+    } else if (!isObservable(value)) {
+      this.staticValue = value;
       this.renderStatic = true;
     } else {
       this.staticValue = undefined;
       this.renderStatic = false;
-      this.observables$.next(potentialSignalOrObservable);
+      this.observables$.next(value);
     }
   }
 
@@ -641,7 +677,17 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /** @internal */
+  private disconnectDataSource(): void {
+    if (this.connectedDataSource && this.collectionViewer) {
+      this.connectedDataSource.disconnect(this.collectionViewer);
+      this.connectedDataSource = undefined;
+      this.collectionViewer = undefined;
+    }
+  }
+
+  /** @internal */
   ngOnDestroy() {
+    this.disconnectDataSource();
     this._destroy$.next();
     this.templateManager.detach();
   }
