@@ -11,18 +11,21 @@ import {
 import { coalesceWith } from '@rx-angular/cdk/coalescing';
 import {
   combineLatest,
+  merge,
   MonoTypeOperatorFunction,
   Observable,
+  of,
   ReplaySubject,
   Subject,
+  Subscription,
 } from 'rxjs';
 import {
   distinctUntilChanged,
-  filter,
   map,
   shareReplay,
   startWith,
   switchMap,
+  take,
   takeUntil,
   tap,
 } from 'rxjs/operators';
@@ -34,11 +37,14 @@ import {
   RxVirtualViewRepeater,
 } from '../model';
 import {
+  afterNextLayout,
   calculateVisibleContainerSize,
   parseScrollTopBoundaries,
   rangesEqual,
+  relocateItem,
   toBoolean,
   unpatchedAnimationFrameTick,
+  unpatchedMicroTask,
 } from '../util';
 import {
   DEFAULT_ITEM_SIZE,
@@ -123,8 +129,25 @@ export class FixedSizeVirtualScrollStrategy<
    * If this flag is true, the virtual scroll strategy maintains the scrolled item when new data
    * is prepended to the list. This is very useful when implementing a reversed infinite scroller, that prepends
    * data instead of appending it
+   *
+   * The item at the bottom edge of the viewport is kept in place, any data
+   * change before it (inserts, removals, moves) shifts the content above it.
    */
   @Input({ transform: toBoolean }) keepScrolledIndexOnPrepend = false;
+
+  /**
+   * @internal
+   * How far the scroll position the range is calculated for is ahead of the
+   * one of the browser, see `keepInPlace`. Views are positioned in the
+   * coordinate system of the browser until both get aligned.
+   */
+  private scrollDrift = 0;
+  /** @internal */
+  private scrollAlignment?: Subscription;
+  /** @internal */
+  private renderingInFlight = false;
+  /** @internal the item at the bottom edge of the viewport */
+  private lastScreenIndex = -1;
 
   /** @internal */
   private readonly runwayStateChanged$ = new Subject<void>();
@@ -216,16 +239,26 @@ export class FixedSizeVirtualScrollStrategy<
   }
 
   private positionElements(): void {
+    merge(
+      this.viewRepeater!.renderingStart$.pipe(map(() => true)),
+      this.viewRepeater!.viewsRendered$.pipe(map(() => false)),
+    )
+      .pipe(this.untilDetached$())
+      .subscribe((renderingInFlight) => {
+        this.renderingInFlight = renderingInFlight;
+      });
     this.viewRepeater!.renderingStart$.pipe(
       switchMap(() => {
-        const start = this.renderedRange.start;
         return this.viewRepeater!.viewRendered$.pipe(
-          tap(({ view, index, item }) => {
-            this._setViewPosition(view, (index + start) * this.itemSize);
+          tap(({ view, item }) => {
+            this._setViewPosition(
+              view,
+              view.context.index * this.itemSize - this.scrollDrift,
+            );
             this.viewRenderCallback.next({
               view,
               item,
-              index,
+              index: view.context.index,
             });
           }),
         );
@@ -245,61 +278,36 @@ export class FixedSizeVirtualScrollStrategy<
       ),
       shareReplay({ bufferSize: 1, refCount: true }),
     );
-    /*
-     * when keepScrolledIndexOnPrepend is active, we need to listen to data changes and figure out what was appended
-     * before the last scrolledToItem
-     */
-    let valueCache: Record<any, T> = {};
-    valueArray$
-      .pipe(
-        // TODO: this might cause issues when turning on/off
-        filter(() => this.keepScrolledIndexOnPrepend),
-        this.untilDetached$(),
-      )
-      .subscribe((valueArray) => {
-        const trackBy = this.viewRepeater!._trackBy;
-        let scrollTo = this.scrolledIndex;
-        const dataLength = valueArray.length;
-        const oldDataLength = Object.keys(valueCache).length;
-
-        if (oldDataLength > 0) {
-          let i = 0;
-          // check for each item from the last known scrolledIndex if it's an insert
-          for (i; i <= scrollTo && i < dataLength; i++) {
-            // item is not in the valueCache, so it was added
-            if (!valueCache[trackBy(i, valueArray[i])]) {
-              scrollTo++;
-            }
-          }
+    let ids: unknown[] = [];
+    valueArray$.pipe(this.untilDetached$()).subscribe((valueArray) => {
+      if (!this.keepScrolledIndexOnPrepend || !valueArray.length) {
+        ids = [];
+        return;
+      }
+      const previousIds = ids;
+      const trackBy = this.viewRepeater!._trackBy;
+      ids = valueArray.map((item, i) => trackBy(i, item));
+      const relocated = relocateItem(previousIds, ids, this.lastScreenIndex);
+      if (relocated) {
+        // removed items hand their place over to the next survivor
+        const shift = relocated[1] - relocated[0];
+        this.lastScreenIndex += shift;
+        if (shift !== 0) {
+          this.keepInPlace(shift * this.itemSize, valueArray.length);
         }
-        valueCache = {};
-        valueArray.forEach((v, i) => (valueCache[trackBy(i, v)] = v));
-        if (scrollTo !== this.scrolledIndex) {
-          this.scrollToIndex(scrollTo);
-        }
-      });
+      }
+    });
     const dataLengthChanged$ = valueArray$.pipe(
       map((values) => values.length),
       distinctUntilChanged(),
-      tap((dataLength) => (this.contentSize = dataLength * this.itemSize)),
+      tap((dataLength) => this.updateContentSize(dataLength)),
     );
     const onScroll$ = this.viewport!.elementScrolled$.pipe(
       coalesceWith(unpatchedAnimationFrameTick()),
       startWith(void 0),
       tap(() => {
         this.viewportOffset = this.viewport!.measureOffset();
-        const { scrollTop, scrollTopWithOutOffset, scrollTopAfterOffset } =
-          parseScrollTopBoundaries(
-            this.viewport!.getScrollTop(),
-            this.viewportOffset,
-            this._contentSize,
-            this.containerSize,
-          );
-        this.direction =
-          scrollTopWithOutOffset > this.scrollTopWithOutOffset ? 'down' : 'up';
-        this.scrollTopWithOutOffset = scrollTopWithOutOffset;
-        this.scrollTopAfterOffset = scrollTopAfterOffset;
-        this.scrollTop = scrollTop;
+        this.updateScrollTop(this.viewport!.getScrollTop() + this.scrollDrift);
       }),
     );
     combineLatest([
@@ -315,6 +323,7 @@ export class FixedSizeVirtualScrollStrategy<
       this.runwayStateChanged$.pipe(startWith(void 0)),
     ])
       .pipe(
+        coalesceWith(unpatchedMicroTask()),
         map(([length]) => {
           const containerSize = calculateVisibleContainerSize(
             this.containerSize,
@@ -354,12 +363,14 @@ export class FixedSizeVirtualScrollStrategy<
             );
           }
           this.scrolledIndex = Math.floor(this.scrollTop / this.itemSize);
+          const visibleEnd = Math.min(
+            length,
+            Math.ceil((this.scrollTop + containerSize) / this.itemSize),
+          );
+          this.lastScreenIndex = visibleEnd - 1;
           this.visibleRange = {
             start: this.scrolledIndex,
-            end: Math.min(
-              length,
-              Math.ceil((this.scrollTop + containerSize) / this.itemSize),
-            ),
+            end: visibleEnd,
           };
           if (this.appendOnly) {
             range.start = Math.min(this._renderedRange.start, range.start);
@@ -375,7 +386,99 @@ export class FixedSizeVirtualScrollStrategy<
 
   scrollToIndex(index: number, behavior?: ScrollBehavior): void {
     const scrollTop = this.itemSize * index;
-    this.viewport!.scrollTo(this.viewportOffset + scrollTop, behavior);
+    this.viewport!.scrollTo(
+      this.viewportOffset + scrollTop - this.scrollDrift,
+      behavior,
+    );
+  }
+
+  /**
+   * @internal
+   * Keeps the content in place after a data change shifted it by `delta`, see
+   * `keepScrolledIndexOnPrepend`. The range is calculated for the shifted
+   * scroll position right away, so the same views stay rendered. Writing the
+   * scroll position now would force a layout and move the views before they
+   * are re-positioned. Both happen at once after the views are rendered
+   * instead, see `alignScrollTop`.
+   */
+  private keepInPlace(delta: number, dataLength: number): void {
+    this.scrollDrift += delta;
+    this.updateContentSize(dataLength);
+    this.updateScrollTop(
+      this.scrollTopWithOutOffset + this.viewportOffset + delta,
+      false,
+    );
+    this.alignScrollTop();
+  }
+
+  /**
+   * @internal
+   * Moves the scroll position and the views by `scrollDrift` at once. It runs
+   * right after the layout of the frame the rendered views get painted in:
+   * the layout is clean at that point, so neither reading nor writing the
+   * scroll position forces a synchronous layout.
+   */
+  private alignScrollTop(): void {
+    this.scrollAlignment?.unsubscribe();
+    const rendered$ = this.renderingInFlight
+      ? this.viewRepeater!.viewsRendered$.pipe(take(1))
+      : of(void 0);
+    this.scrollAlignment = rendered$
+      .pipe(
+        switchMap(() => afterNextLayout(this.viewport!.getScrollElement())),
+        this.untilDetached$(),
+      )
+      .subscribe(() => {
+        // a running render positions its views in the current coordinate system
+        if (this.renderingInFlight) {
+          this.alignScrollTop();
+          return;
+        }
+        const drift = this.scrollDrift;
+        this.scrollDrift = 0;
+        this.viewport!.scrollTo(this.viewport!.getScrollTop() + drift);
+        const viewContainer = this.viewRepeater!.viewContainer;
+        for (let i = 0; i < viewContainer.length; i++) {
+          const view = <EmbeddedViewRef<RxVirtualForViewContext<T, U>>>(
+            viewContainer.get(i)
+          );
+          this._setViewPosition(view, view.context.index * this.itemSize);
+        }
+        if (drift < 0) {
+          this.contentSize = this._contentSize + drift;
+        }
+      });
+  }
+
+  /**
+   * @internal
+   * the runway has to cover views positioned in the coordinate system of the
+   * browser, see `scrollDrift`
+   */
+  private updateContentSize(dataLength: number): void {
+    this.contentSize =
+      dataLength * this.itemSize + Math.max(0, -this.scrollDrift);
+  }
+
+  /**
+   * @internal
+   * updates the cached values the range calculation operates on
+   */
+  private updateScrollTop(rawScrollTop: number, updateDirection = true): void {
+    const { scrollTop, scrollTopWithOutOffset, scrollTopAfterOffset } =
+      parseScrollTopBoundaries(
+        rawScrollTop,
+        this.viewportOffset,
+        this._contentSize,
+        this.containerSize,
+      );
+    if (updateDirection) {
+      this.direction =
+        scrollTopWithOutOffset > this.scrollTopWithOutOffset ? 'down' : 'up';
+    }
+    this.scrollTopWithOutOffset = scrollTopWithOutOffset;
+    this.scrollTopAfterOffset = scrollTopAfterOffset;
+    this.scrollTop = scrollTop;
   }
 
   private untilDetached$<A>(): MonoTypeOperatorFunction<A> {

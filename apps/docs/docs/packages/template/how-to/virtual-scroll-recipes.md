@@ -131,7 +131,9 @@ especially useful for mobile.
 
 A reversed infinite scroller starts at the bottom and _prepends_ data when the user
 hits the top (as in a chat window). Set `keepScrolledIndexOnPrepend` so the strategy
-keeps the scrolled index stable as new data arrives.
+keeps the visible content in place as new data arrives. The item at the bottom edge
+of the viewport is the one kept in place, so a transient "loading older messages" row
+at the top can be inserted and removed without moving what the user reads.
 
 ```ts title="reverse-infinite-list.component.ts"
 import { Component, inject } from '@angular/core';

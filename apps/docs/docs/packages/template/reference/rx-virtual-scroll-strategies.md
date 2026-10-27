@@ -35,7 +35,7 @@ Every pre-packaged strategy exposes these inputs.
 | `runwayItems`                | `number`  | `10`    | Number of items rendered upfront in scroll direction.                                                                                                                                                           |
 | `runwayItemsOpposite`        | `number`  | `2`     | Number of items rendered upfront in the opposite scroll direction.                                                                                                                                              |
 | `appendOnly`                 | `boolean` | `false` | Keep already-rendered views in the DOM after they scroll out of view. Reacts to changes; can be toggled at runtime. This widens the `viewRange` output, use `visibleRange` to observe what is actually visible. |
-| `keepScrolledIndexOnPrepend` | `boolean` | `false` | Maintain the currently scrolled index when new data is prepended. Used for reverse infinite scrollers.                                                                                                          |
+| `keepScrolledIndexOnPrepend` | `boolean` | `false` | Keep the visible content in place when data changes before it, e.g. prepends. The item at the bottom edge of the viewport stays put. Used for reverse infinite scrollers.                                       |
 
 ## `FixedSizeVirtualScrollStrategy`
 

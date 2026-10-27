@@ -14,6 +14,7 @@ import {
 import {
   defaultItemLength,
   defaultMountConfig,
+  expectItemOffset,
   expectVisibleRangeStartToEqualScrolledIndex,
   generateItems,
   getDefaultMountConfig,
@@ -46,6 +47,7 @@ const testComponentImports = [
     [runwayItemsOpposite]="runwayItemsOpposite()"
     [appendOnly]="appendOnly()"
     [dynamic]="dynamicSize()"
+    [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
   >
     <div
       [style.height.px]="dynamicSize()(item)"
@@ -73,6 +75,7 @@ class DynamicSizeTestComponent {
   viewCache = input.required<number>();
   trackBy = input.required<keyof Item | ((idx: number, i: Item) => unknown)>();
   dynamicSize = input.required<(item: Item) => number>();
+  keepScrolledIndexOnPrepend = input(false);
   strategy = input.required<
     RxStrategyNames<string> | Observable<RxStrategyNames<string>>
   >();
@@ -102,6 +105,7 @@ class DynamicSizeTestComponent {
       [runwayItemsOpposite]="runwayItemsOpposite()"
       [appendOnly]="appendOnly()"
       [dynamic]="dynamicSize()"
+      [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
     >
       <div
         [style.height.px]="dynamicSize()(item)"
@@ -136,6 +140,7 @@ class DynamicSizeCustomScrollElementTestComponent extends DynamicSizeTestCompone
       [runwayItemsOpposite]="runwayItemsOpposite()"
       [appendOnly]="appendOnly()"
       [dynamic]="dynamicSize()"
+      [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
     >
       <div
         [style.height.px]="dynamicSize()(item)"
@@ -174,6 +179,7 @@ function mountDynamicSize(
     showItemDescription,
     dynamicSize,
     appendOnly,
+    keepScrolledIndexOnPrepend,
   } = {
     dynamicSize: defaultDynamicSize,
     ...getDefaultMountConfig(),
@@ -191,6 +197,7 @@ function mountDynamicSize(
       trackBy,
       dynamicSize,
       showItemDescription,
+      keepScrolledIndexOnPrepend,
       strategy,
       items,
       renderCallback: renderCallback$,
@@ -1013,20 +1020,6 @@ describe('dynamic size function changes', () => {
     });
   });
 
-  /** asserts the top of the given item relative to the scroll container */
-  function expectItemOffset(id: number, offset: number) {
-    cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
-      const item = [...runway.querySelectorAll('[data-cy=item]')].find(
-        (element) => element.textContent!.trim() === `${id}`,
-      );
-      expect(item, `item ${id} is rendered`).not.to.eq(undefined);
-      expect(
-        item!.getBoundingClientRect().top - runway.getBoundingClientRect().top,
-        `offset of item ${id}`,
-      ).to.eq(offset);
-    });
-  }
-
   it('keeps the scrolled item in place when the size function changes', () => {
     const items = generateItems(defaultItemLength);
     mountWithSize(() => 50, items).then(({ fixture }) => {
@@ -1146,5 +1139,289 @@ describe('dynamic size function changes', () => {
           });
       },
     );
+  });
+});
+
+describe('keepScrolledIndexOnPrepend', () => {
+  // fixed 40px per item keeps the arithmetic in the test obvious - the
+  // strategy still goes through its full size-function code path
+  const sizeFn = () => 40;
+
+  it('keeps the scroll position stable when prepending', () => {
+    mountDynamicSize({
+      dynamicSize: sizeFn,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      // 8 items + 13px -> deliberately not on an item boundary
+      const scrollTop = 8 * 40 + 13;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 8)
+        .then(() => {
+          const prepended = generateItems(6, 10000);
+          fixture.componentRef.setInput('items', [
+            ...prepended,
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            expect(viewport.getScrollTop()).to.eq(scrollTop + 6 * 40);
+          });
+        });
+    });
+  });
+
+  it('compensates using the real inserted height, not the item count', () => {
+    // inserted items are deliberately taller than the anchor, so a fix that
+    // counted items instead of pixels would land in the wrong place
+    const mixedSize = (item: Item) => (item.id >= 10000 ? 120 : 40);
+    mountDynamicSize({
+      dynamicSize: mixedSize,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 8 * 40 + 13;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 8)
+        .then(() => {
+          const prepended = generateItems(4, 10000);
+          fixture.componentRef.setInput('items', [
+            ...prepended,
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            expect(viewport.getScrollTop()).to.eq(scrollTop + 4 * 120);
+          });
+        });
+    });
+  });
+
+  it('does not move the scroll position when disabled', () => {
+    mountDynamicSize({
+      dynamicSize: sizeFn,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: false,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 8 * 40 + 13;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 8)
+        .then(() => {
+          fixture.componentRef.setInput('items', [
+            ...generateItems(6, 10000),
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            expect(viewport.getScrollTop()).to.eq(scrollTop);
+          });
+        });
+    });
+  });
+
+  it('compensates repeated prepends without accumulating drift', () => {
+    mountDynamicSize({
+      dynamicSize: sizeFn,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 15 * 40 + 7;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 15)
+        .then(() => {
+          let expected = scrollTop;
+          let nextId = 10000;
+          [3, 5, 2].forEach((amount) => {
+            const prepended = generateItems(amount, nextId);
+            nextId += amount;
+            expected += amount * 40;
+            fixture.componentRef.setInput('items', [
+              ...prepended,
+              ...(fixture.componentInstance.items() as Item[]),
+            ]);
+            fixture.detectChanges();
+            cy.wrap(null).should(() => {
+              expect(viewport.getScrollTop()).to.eq(expected);
+            });
+          });
+        });
+    });
+  });
+  it('keeps the content in place when the batch lands below the loading row', () => {
+    // a reverse infinite scroller parked at the very top: the loading row is
+    // the top most item. The batch gets inserted below it, the loading row is
+    // removed afterwards. The rows the user is looking at must not move,
+    // otherwise the viewport stays at the top and loads forever.
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const items = generateItems(30);
+    const batch = generateItems(4, 10000);
+    mountDynamicSize({
+      dynamicSize: () => size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      showItemDescription: false,
+      items: [loader, ...items],
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      expectItemOffset(items[0].id, size);
+      cy.then(() => {
+        fixture.componentRef.setInput('items', [loader, ...batch, ...items]);
+        fixture.detectChanges();
+      });
+      cy.wrap(null).should(() => {
+        expect(viewport.getScrollTop()).to.eq(4 * size);
+      });
+      expectItemOffset(items[0].id, size);
+      cy.then(() => {
+        fixture.componentRef.setInput('items', [...batch, ...items]);
+        fixture.detectChanges();
+      });
+      cy.wrap(null).should(() => {
+        expect(viewport.getScrollTop()).to.eq(3 * size);
+      });
+      expectItemOffset(items[0].id, size);
+    });
+  });
+  it('keeps the content stable when the anchor sits on the transient row', () => {
+    // the user parks the viewport at the very top while the loading row is
+    // visible - the anchor is the loading row itself. When the batch replaces
+    // it, the nearest surviving row below has to stay in place, otherwise the
+    // viewport pins to the top and (in an infinite scroller) loads forever.
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const items = generateItems(30);
+    mountDynamicSize({
+      dynamicSize: () => size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      items: [loader, ...items],
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 0)
+        .then(() => {
+          const batch = generateItems(4, 10000);
+          fixture.componentRef.setInput('items', [...batch, ...items]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            // the first surviving row moved from y=size to y=4*size, so the
+            // scroll position has to move down by 3*size to keep it in place
+            expect(viewport.getScrollTop()).to.eq(3 * size);
+          });
+        });
+    });
+  });
+  it('compensates a transient row that is replaced by the batch', () => {
+    const sizeFn = () => 40;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    mountDynamicSize({
+      dynamicSize: sizeFn,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 8 * 40 + 13;
+      const original = fixture.componentInstance.items() as Item[];
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 8)
+        .then(() => {
+          fixture.componentRef.setInput('items', [loader, ...original]);
+          fixture.detectChanges();
+          cy.wrap(null)
+            .should(() => {
+              expect(viewport.getScrollTop()).to.eq(scrollTop + 40);
+            })
+            .then(() => {
+              const batch = generateItems(4, 10000);
+              fixture.componentRef.setInput('items', [...batch, ...original]);
+              fixture.detectChanges();
+              cy.wrap(null).should(() => {
+                expect(viewport.getScrollTop()).to.eq(scrollTop + 4 * 40);
+              });
+            });
+        });
+    });
+  });
+});
+
+describe('layout integrity on range shift', () => {
+  const extractTranslateYValue = (str: string): number | null => {
+    const matches = str.match(/translateY\(([-0-9]+(\.[0-9]+)?)px?\)/);
+    return matches && matches.length >= 2 ? parseFloat(matches[1]) : null;
+  };
+  /**
+   * A prepend shifts the renderedRange by exactly the inserted amount while
+   * the rendered slice stays identical. The differ reports no changes, but
+   * every view maps to a new index and gets re-rendered - the position pass
+   * has to keep the views contiguous. If the directive announces the pass
+   * with a wrong batch (e.g. an empty set), the strategy's position cursor
+   * runs ahead and stacks the views at the end of the content, which shows
+   * up as a blank viewport with gaps between the views.
+   */
+  it('keeps rendered views contiguous when a transient row shrinks the range', () => {
+    // mirrors a chat client's "loading older messages" row: the row resolves,
+    // the data shrinks below the rendered end, which the strategy stages
+    // without emitting a range. The next range emission then carries a range
+    // that differs from the directive's bookkeeping while the rendered slice
+    // is identical.
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const items = generateItems(4);
+    mountDynamicSize({
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      dynamicSize: () => size,
+      items: [loader, ...items],
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      cy.get('[data-cy=item]')
+        .should('have.length', 5)
+        .then(() => {
+          fixture.componentRef.setInput('items', [...items]);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]')
+            .should('have.length', 4)
+            .then(() => {
+              // trigger a range recalculation - the emitted range differs from
+              // the last one the directive saw, but the slice is unchanged
+              fixture.componentRef.setInput('runwayItems', 3);
+              fixture.detectChanges();
+              cy.wrap(null).should(() => {
+                const views = fixture.debugElement
+                  .queryAll(By.css('[data-cy=item]'))
+                  .map((de) => de.nativeElement as HTMLElement)
+                  .map((e) => ({
+                    y: extractTranslateYValue(e.style.transform),
+                    h: e.offsetHeight,
+                  }))
+                  .sort((a, b) => a.y - b.y);
+                expect(views.length).to.eq(4);
+                expect(views[0].y, 'first view starts at 0').to.eq(0);
+                for (let i = 1; i < views.length; i++) {
+                  expect(views[i].y, `view ${i} is contiguous`).to.eq(
+                    views[i - 1].y + views[i - 1].h,
+                  );
+                }
+              });
+            });
+        });
+    });
   });
 });

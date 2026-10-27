@@ -29,6 +29,7 @@ import { DEFAULT_ITEM_SIZE } from '../src/lib/virtual-scroll.config';
 import {
   defaultItemLength,
   defaultMountConfig,
+  expectItemOffset,
   expectVisibleRangeStartToEqualScrolledIndex,
   generateItems,
   getDefaultMountConfig,
@@ -56,6 +57,7 @@ const testComponentImports = [
     [runwayItemsOpposite]="runwayItemsOpposite()"
     [appendOnly]="appendOnly()"
     [itemSize]="itemSize()"
+    [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
   >
     <div
       [style.height.px]="itemSize()"
@@ -83,6 +85,7 @@ class FixedSizeTestComponent {
   viewCache = input.required<number>();
   trackBy = input.required<keyof Item | ((idx: number, i: Item) => unknown)>();
   itemSize = input.required<number>();
+  keepScrolledIndexOnPrepend = input(false);
   strategy = input.required<
     RxStrategyNames<string> | Observable<RxStrategyNames<string>>
   >();
@@ -113,6 +116,7 @@ class FixedSizeTestComponent {
       [runwayItemsOpposite]="runwayItemsOpposite()"
       [appendOnly]="appendOnly()"
       [itemSize]="itemSize()"
+      [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
     >
       <div
         [style.height.px]="itemSize()"
@@ -148,6 +152,7 @@ class FixedSizeCustomScrollElementTestComponent extends FixedSizeTestComponent {
       [runwayItemsOpposite]="runwayItemsOpposite()"
       [appendOnly]="appendOnly()"
       [itemSize]="itemSize()"
+      [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
     >
       <div
         [style.height.px]="itemSize()"
@@ -196,6 +201,7 @@ function mountFixedSize(
     containerHeight,
     showItemDescription,
     appendOnly,
+    keepScrolledIndexOnPrepend,
   } = {
     ...getDefaultMountConfig(),
     showItemDescription: false,
@@ -215,6 +221,7 @@ function mountFixedSize(
       strategy,
       items,
       showItemDescription,
+      keepScrolledIndexOnPrepend,
       renderCallback: renderCallback$,
       appendOnly,
       viewRange: createOutputSpy<ListRange>('viewRange'),
@@ -945,6 +952,306 @@ describe('superseded render', () => {
       fixture.detectChanges();
       cy.wrap(null).should(() => expect(triggered).to.eq(true));
       cy.get('@renderCallback').should('have.been.called');
+    });
+  });
+});
+
+describe('keepScrolledIndexOnPrepend', () => {
+  const itemSize = 50;
+
+  /**
+   * The anchor is the item under the top edge of the viewport. Prepending must
+   * leave it visually where it is, which means the scroll position has to move
+   * by exactly the height the inserted items introduced - including the part of
+   * the anchor that is scrolled out of view (see #1857).
+   */
+  it('keeps the scroll position stable when prepending', () => {
+    mountFixedSize({
+      itemSize,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      // deliberately *not* aligned to an item boundary - 10 items + 25px
+      const scrollTop = 10 * itemSize + 25;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 10)
+        .then(() => {
+          expect(viewport.getScrollTop()).to.eq(scrollTop);
+          const prepended = generateItems(5, 10000);
+          fixture.componentRef.setInput('items', [
+            ...prepended,
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            expect(viewport.getScrollTop()).to.eq(
+              scrollTop + prepended.length * itemSize,
+            );
+          });
+        });
+    });
+  });
+
+  it('does not move the scroll position when disabled', () => {
+    mountFixedSize({
+      itemSize,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: false,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 10 * itemSize + 25;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 10)
+        .then(() => {
+          fixture.componentRef.setInput('items', [
+            ...generateItems(5, 10000),
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            expect(viewport.getScrollTop()).to.eq(scrollTop);
+          });
+        });
+    });
+  });
+
+  it('keeps the anchor item under the viewport top', () => {
+    mountFixedSize({
+      itemSize,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 10 * itemSize + 25;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 10)
+        .then(() => {
+          // item 10 is the anchor, 25px of it are scrolled past
+          const prepended = generateItems(3, 10000);
+          fixture.componentRef.setInput('items', [
+            ...prepended,
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            const anchor = fixture.debugElement.queryAll(
+              By.css('[data-cy=item]'),
+            )[0];
+            expect(anchor).to.not.eq(undefined);
+            // the anchor moved down by the inserted height, and the scroll
+            // position followed it - so the offset into it is unchanged
+            expect(
+              viewport.getScrollTop() - (10 + prepended.length) * itemSize,
+            ).to.eq(25);
+          });
+        });
+    });
+  });
+
+  it('compensates repeated prepends without accumulating drift', () => {
+    mountFixedSize({
+      itemSize,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 20 * itemSize + 17;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 20)
+        .then(() => {
+          let expected = scrollTop;
+          let nextId = 10000;
+          const prependOnce = (amount: number) => {
+            const prepended = generateItems(amount, nextId);
+            nextId += amount;
+            expected += amount * itemSize;
+            fixture.componentRef.setInput('items', [
+              ...prepended,
+              ...(fixture.componentInstance.items() as Item[]),
+            ]);
+            fixture.detectChanges();
+            cy.wrap(null).should(() => {
+              expect(viewport.getScrollTop()).to.eq(expected);
+            });
+          };
+          prependOnce(4);
+          prependOnce(7);
+          prependOnce(2);
+        });
+    });
+  });
+  /**
+   * When a prepend shifts the range by exactly the number of inserted items, the
+   * rendered slice is *identical* - the differ reports no changes at all. Every
+   * view still maps to a new index though, so they have to be re-positioned.
+   * Regression guard for the "range moved, slice unchanged" path in rxVirtualFor.
+   */
+  it('repositions views when the range shifts but the slice is unchanged', () => {
+    const size = 50;
+    const runwayItems = 5;
+    mountFixedSize({
+      itemSize: size,
+      runwayItems,
+      runwayItemsOpposite: 2,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      // approach the target scrolling upwards, so the 'up' runway applies both
+      // before and after the prepend and the range shifts by exactly N
+      viewport.scrollTo(40 * size);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 40)
+        .then(() => {
+          // second scroll has to wait for the first, otherwise both run
+          // synchronously and the strategy only ever sees the last position
+          viewport.scrollTo(20 * size);
+          cy.get('@scrolledIndex')
+            .should('have.been.calledWith', 20)
+            .then(() => {
+              const startBefore = 20 - runwayItems;
+              const firstBefore = fixture.debugElement.queryAll(
+                By.css('[data-cy=item]'),
+              )[0].nativeElement as HTMLElement;
+              expect(firstBefore.style.transform).to.eq(
+                `translateY(${startBefore * size}px)`,
+              );
+              const prepended = generateItems(4, 10000);
+              fixture.componentRef.setInput('items', [
+                ...prepended,
+                ...(fixture.componentInstance.items() as Item[]),
+              ]);
+              fixture.detectChanges();
+              cy.wrap(null).should(() => {
+                const startAfter = startBefore + prepended.length;
+                const firstAfter = fixture.debugElement.queryAll(
+                  By.css('[data-cy=item]'),
+                )[0].nativeElement as HTMLElement;
+                expect(firstAfter.style.transform).to.eq(
+                  `translateY(${startAfter * size}px)`,
+                );
+              });
+            });
+        });
+    });
+  });
+  /**
+   * A transient row - e.g. a "loading older messages" item that is inserted while
+   * the request is in flight and replaced by the batch when it resolves - is both
+   * an insert and a remove ahead of the anchor. The compensation has to net the
+   * two out, otherwise the list drifts by the height of that row.
+   */
+  it('keeps the content in place when the batch lands below the loading row', () => {
+    // a reverse infinite scroller parked at the very top: the loading row is
+    // the top most item. The batch gets inserted below it, the loading row is
+    // removed afterwards. The rows the user is looking at must not move,
+    // otherwise the viewport stays at the top and loads forever.
+    const size = DEFAULT_ITEM_SIZE;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const items = generateItems(30);
+    const batch = generateItems(4, 10000);
+    mountFixedSize({
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      showItemDescription: false,
+      items: [loader, ...items],
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      expectItemOffset(items[0].id, size);
+      cy.then(() => {
+        fixture.componentRef.setInput('items', [loader, ...batch, ...items]);
+        fixture.detectChanges();
+      });
+      cy.wrap(null).should(() => {
+        expect(viewport.getScrollTop()).to.eq(4 * size);
+      });
+      expectItemOffset(items[0].id, size);
+      cy.then(() => {
+        fixture.componentRef.setInput('items', [...batch, ...items]);
+        fixture.detectChanges();
+      });
+      cy.wrap(null).should(() => {
+        expect(viewport.getScrollTop()).to.eq(3 * size);
+      });
+      expectItemOffset(items[0].id, size);
+    });
+  });
+  it('keeps the content stable when the anchor sits on the transient row', () => {
+    // the user parks the viewport at the very top while the loading row is
+    // visible - the anchor is the loading row itself. When the batch replaces
+    // it, the nearest surviving row below has to stay in place, otherwise the
+    // viewport pins to the top and (in an infinite scroller) loads forever.
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const items = generateItems(30);
+    mountFixedSize({
+      itemSize: size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      items: [loader, ...items],
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 0)
+        .then(() => {
+          const batch = generateItems(4, 10000);
+          fixture.componentRef.setInput('items', [...batch, ...items]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            // the first surviving row moved from y=size to y=4*size, so the
+            // scroll position has to move down by 3*size to keep it in place
+            expect(viewport.getScrollTop()).to.eq(3 * size);
+          });
+        });
+    });
+  });
+  it('compensates a transient row that is replaced by the batch', () => {
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    mountFixedSize({
+      itemSize: size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 10 * size + 25;
+      const original = fixture.componentInstance.items() as Item[];
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 10)
+        .then(() => {
+          // 1. the loading row appears ahead of the anchor
+          fixture.componentRef.setInput('items', [loader, ...original]);
+          fixture.detectChanges();
+          cy.wrap(null)
+            .should(() => {
+              expect(viewport.getScrollTop()).to.eq(scrollTop + size);
+            })
+            .then(() => {
+              // 2. it is replaced by the 4 messages that just arrived
+              const batch = generateItems(4, 10000);
+              fixture.componentRef.setInput('items', [...batch, ...original]);
+              fixture.detectChanges();
+              cy.wrap(null).should(() => {
+                // net effect over the whole cycle is +4 rows, the loader was
+                // transient and must not leave a trace
+                expect(viewport.getScrollTop()).to.eq(scrollTop + 4 * size);
+              });
+            });
+        });
     });
   });
 });
