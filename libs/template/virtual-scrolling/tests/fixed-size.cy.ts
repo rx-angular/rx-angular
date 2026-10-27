@@ -918,3 +918,33 @@ describe('data source', () => {
     });
   });
 });
+
+describe('superseded render', () => {
+  it('reports a render that got superseded after it applied its changes', () => {
+    mountFixedSize().then(({ fixture }) => {
+      const viewRepeater = getViewportComponent(fixture).viewRepeater;
+      let pending = 0;
+      let triggered = false;
+      viewRepeater.renderingStart$.subscribe((batch) => (pending = batch.size));
+      viewRepeater.viewRendered$.subscribe(() => {
+        pending--;
+        if (pending === 0 && !triggered) {
+          triggered = true;
+          // the range flaps away and back while the render pass applied all
+          // of its changes, but did not report back yet
+          const strategy = (getViewportComponent(fixture) as any)
+            .scrollStrategy;
+          const range = { ...strategy._renderedRange };
+          strategy._renderedRange$.next({
+            start: range.start + 1,
+            end: range.end + 1,
+          });
+          strategy._renderedRange$.next(range);
+        }
+      });
+      fixture.detectChanges();
+      cy.wrap(null).should(() => expect(triggered).to.eq(true));
+      cy.get('@renderCallback').should('have.been.called');
+    });
+  });
+});

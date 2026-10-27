@@ -21,6 +21,7 @@ import {
   getViewportComponent,
   Item,
   VirtualScrollMountConfig,
+  waitUntilStable,
 } from './fixtures';
 
 interface AutoSizeVirtualScrollMountConfig extends VirtualScrollMountConfig<Item> {
@@ -389,9 +390,12 @@ describe('viewport', () => {
               items.filter((item, i) => i < range.end),
             )
             .then(() => {
-              expect(
-                (sentinel.nativeElement as HTMLElement).style.transform,
-              ).eq(`translate(0px, ${runwayHeight - 1}px)`);
+              // the measurements of the rendered views arrive asynchronously
+              cy.wrap(null).should(() => {
+                expect(
+                  (sentinel.nativeElement as HTMLElement).style.transform,
+                ).eq(`translate(0px, ${runwayHeight - 1}px)`);
+              });
             });
         });
     });
@@ -493,18 +497,18 @@ describe('rendering, scrolling & positioning', () => {
       };
       const range = expectedRange(rangeConfig, items, 0);
       cy.get('[data-cy=item]').should('have.length', range.end - range.start);
-      let position = 0;
       cy.get('[data-cy=item]')
         .first()
         .then((element) => {
           element.css('height', `${defaultDynamicSize(items[0]) + 50}px`);
-          // position = 0;
-          cy.wait(50);
-          cy.get('[data-cy=item]').each((element, i) => {
-            expect(element.attr('style')).to.contain(
-              `translateY(${position}px)`,
-            );
-            position += defaultDynamicSize(items[i]) + (i === 0 ? 50 : 0);
+          cy.get('[data-cy=item]').should((elements) => {
+            let position = 0;
+            elements.each((i, element) => {
+              expect(element.getAttribute('style')).to.contain(
+                `translateY(${position}px)`,
+              );
+              position += defaultDynamicSize(items[i]) + (i === 0 ? 50 : 0);
+            });
           });
         });
     });
@@ -1108,24 +1112,26 @@ describe('hidden viewport (display: none)', () => {
       fixture.detectChanges();
       const viewportComponent = getViewportComponent(fixture);
       viewportComponent.scrollTo(5000);
-      cy.wait(200);
-      cy.then(() => {
-        const scrollTopBeforeHide = viewportComponent.getScrollTop();
-        fixture.componentRef.setInput('isHidden', true);
-        fixture.detectChanges();
-        cy.wait(100);
-        cy.then(() => {
-          fixture.componentRef.setInput('isHidden', false);
+      waitUntilStable(() => viewportComponent.getScrollTop()).then(
+        (scrollTopBeforeHide) => {
+          fixture.componentRef.setInput('isHidden', true);
           fixture.detectChanges();
-          cy.wait(200);
+          cy.wait(100);
           cy.then(() => {
-            expect(viewportComponent.getScrollTop()).to.be.closeTo(
-              scrollTopBeforeHide,
-              2,
-            );
+            fixture.componentRef.setInput('isHidden', false);
+            fixture.detectChanges();
+            // a wrong scroll position would only show up after a while, give
+            // the strategy time to (wrongly) correct it
+            cy.wait(200);
+            cy.then(() => {
+              expect(viewportComponent.getScrollTop()).to.be.closeTo(
+                scrollTopBeforeHide,
+                2,
+              );
+            });
           });
-        });
-      });
+        },
+      );
     });
   });
 
@@ -1137,9 +1143,12 @@ describe('hidden viewport (display: none)', () => {
       );
       cy.get('@renderCallback')
         .should('have.been.called')
-        .then(() => {
-          const runwayHeightBeforeHide = (sentinel.nativeElement as HTMLElement)
-            .style.transform;
+        .then(() =>
+          waitUntilStable(
+            () => (sentinel.nativeElement as HTMLElement).style.transform,
+          ),
+        )
+        .then((runwayHeightBeforeHide) => {
           fixture.componentRef.setInput('isHidden', true);
           fixture.detectChanges();
           cy.wait(100);
@@ -1157,13 +1166,12 @@ describe('hidden viewport (display: none)', () => {
       mountAutoSize({}, AutoSizeHideableTestComponent).then(({ fixture }) => {
         fixture.componentRef.setInput('withResizeObserver', withResizeObserver);
         fixture.detectChanges();
-        let renderedItems = 0;
-        cy.get('[data-cy=item]')
-          .should('have.length.greaterThan', 0)
-          .then((elements) => {
-            renderedItems = elements.length;
+        cy.get('[data-cy=item]').should('have.length.greaterThan', 0);
+        waitUntilStable(() => Cypress.$('[data-cy=item]').length).then(
+          (renderedItems) => {
             fixture.componentRef.setInput('isHidden', true);
             fixture.detectChanges();
+            // a collapse would only show up after a while, give it the time
             cy.wait(100);
             cy.get('[data-cy=item]').should('have.length', renderedItems);
             cy.then(() => {
@@ -1172,7 +1180,8 @@ describe('hidden viewport (display: none)', () => {
               cy.wait(200);
               cy.get('[data-cy=item]').should('have.length', renderedItems);
             });
-          });
+          },
+        );
       });
     });
   });
@@ -1243,10 +1252,9 @@ describe('hidden viewport (display: none)', () => {
                 'item has a layout box',
               ).to.eq(1);
             });
-          cy.wait(200);
           cy.get('[data-cy=item]')
             .eq(1)
-            .then((collapsed) => {
+            .should((collapsed) => {
               // the collapse has to be booked, the following items must not keep
               // sitting behind a phantom row
               expect(
