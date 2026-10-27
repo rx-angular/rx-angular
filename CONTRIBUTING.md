@@ -4,11 +4,11 @@ We would love for you to contribute to RxAngular and help make it even better th
 As a contributor, here are the guidelines we would like you to follow:
 
 - [Developing](#developing)
-- [Issues and Bugs](#issue)
-- [Feature Requests](#feature)
-- [Coding Rules](#rules)
+- [Issues and Bugs](#found-a-bug)
+- [Feature Requests](#missing-a-feature)
+- [Commit Message Format](#commit-message-format)
 
-## <a id="developing"></a> Developing
+## Developing
 
 Start by installing all dependencies (we're using Yarn):
 
@@ -28,12 +28,12 @@ Either you can run all tests for all targets:
 yarn nx run-many --all --target=test
 ```
 
-## <a id="issue"></a> Found a Bug?
+## Found a Bug?
 
 If you find a bug in the source code, you can help us by submitting an issue to our [GitHub Repository](https://github.com/rx-angular/rx-angular).
 Even better, you can submit a Pull Request with a fix.
 
-## <a id="feature"></a> Missing a Feature?
+## Missing a Feature?
 
 You can _request_ a new feature by submitting an issue to our GitHub Repository.
 If you would like to _implement_ a new feature, please consider the size of the change in order to determine the right steps to proceed:
@@ -45,7 +45,7 @@ If you would like to _implement_ a new feature, please consider the size of the 
 
 - **Small Features** can be crafted and directly submitted as a Pull Request.
 
-## <a id="commit"></a> Commit Message Format
+## Commit Message Format
 
 We have very precise rules over how our Git commit messages must be formatted.
 This format leads to **easier to read commit history**.
@@ -60,16 +60,16 @@ Each commit message consists of a **header**, a **body**, and a **footer**.
 <footer>
 ```
 
-The `header` is mandatory and must conform to the [Commit Message Header](#commit-header) format.
+The `header` is mandatory and must conform to the [Commit Message Header](#commit-message-header) format.
 
 The `body` is mandatory for all commits except for those of type "docs".
-When the body is present it must be at least 20 characters long and must conform to the [Commit Message Body](#commit-body) format.
+When the body is present it must be at least 20 characters long and must explain what changed and why.
 
-The `footer` is optional. The [Commit Message Footer](#commit-footer) format describes what the footer is used for and the structure it must have.
+The `footer` is optional. Use it for breaking changes and issue references.
 
 Any line of the commit message cannot be longer than 100 characters.
 
-#### <a id="commit-header"></a>Commit Message Header
+#### Commit Message Header
 
 ```
 <type>(<scope>): <short summary>

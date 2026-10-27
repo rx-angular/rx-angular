@@ -32,7 +32,7 @@ export function rxActions<T extends Partial<Actions>, U extends ActionTransforms
 | Param     | Type                                            | Meaning                                                                                                                               |
 | --------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `setupFn` | `(cfg: { transforms: (t: U) => void }) => void` | Optional. Runs once on creation. Use `cfg.transforms({...})` to register per-key transform functions (see [Transforms](#transforms)). |
-| _returns_ | `RxActions<T, U>`                               | The actions proxy (see [Returned handle](#returned-handle--rxactionst-u)).                                                            |
+| _returns_ | `RxActions<T, U>`                               | The actions proxy (see [Returned handle](#returned-handle-rxactionst-u)).                                                             |
 
 Type parameters:
 
@@ -104,7 +104,7 @@ Exported from `@rx-angular/state/actions`:
 
 ## `RxActionFactory` (deprecated class API)
 
-> **`@deprecated`**: use [`rxActions`](#rxactions) instead. The class-based factory predates the functional API and requires a `providers` entry; the functional creator needs no providers. See the [manage actions](../how-to/manage-actions.md) how-to for the migration.
+> **`@deprecated`**: use [`rxActions`](#signature) instead. The class-based factory predates the functional API and requires a `providers` entry; the functional creator needs no providers. See the [manage actions](../how-to/manage-actions.md) how-to for the migration.
 
 ```ts
 @Injectable()
