@@ -3,6 +3,7 @@ import { By } from '@angular/platform-browser';
 import { fc, test } from '@fast-check/jest';
 import {
   provideVirtualViewConfig,
+  RxVirtualViewConfig,
   VIRTUAL_VIEW_CONFIG_DEFAULT,
   VIRTUAL_VIEW_CONFIG_TOKEN,
 } from '../virtual-view.config';
@@ -78,6 +79,47 @@ describe('RxVirtualView configuration', () => {
       expect(config.cache.placeholderCacheSize).toBe(
         VIRTUAL_VIEW_CONFIG_DEFAULT.cache.placeholderCacheSize,
       );
+    });
+
+    it('supplies a default for every key of RxVirtualViewConfig', () => {
+      // `provideVirtualViewConfig` deep-merges over VIRTUAL_VIEW_CONFIG_DEFAULT, so
+      // this object is what a consumer passing a partial config falls back to.
+      //
+      // Typing the checklist as `Record<keyof RxVirtualViewConfig, true>` is the
+      // load-bearing part: adding a key to the interface fails to compile here
+      // until it is listed, so the list cannot silently drift from the interface.
+      //
+      // What this catches that the type system does not: a key declared OPTIONAL
+      // on the interface (`foo?: number`) and then left out of the defaults, or one
+      // explicitly set to `undefined`. Both type-check fine while resolving to
+      // `undefined` for every consumer that does not set them, which is how a
+      // directive input quietly loses its documented fallback. A *required* key
+      // missing from the defaults is already a compile error at the source.
+      const required: Record<keyof RxVirtualViewConfig, true> = {
+        enabled: true,
+        keepLastKnownSize: true,
+        useContentVisibility: true,
+        useContainment: true,
+        placeholderStrategy: true,
+        contentStrategy: true,
+        cacheEnabled: true,
+        startWithPlaceholderAsap: true,
+        scrollMargin: true,
+        enableAfterHydration: true,
+        cache: true,
+      };
+
+      const missing = (
+        Object.keys(required) as (keyof RxVirtualViewConfig)[]
+      ).filter((key) => VIRTUAL_VIEW_CONFIG_DEFAULT[key] === undefined);
+
+      expect(missing).toEqual([]);
+      expect(
+        VIRTUAL_VIEW_CONFIG_DEFAULT.cache.contentCacheSize,
+      ).toBeGreaterThan(0);
+      expect(
+        VIRTUAL_VIEW_CONFIG_DEFAULT.cache.placeholderCacheSize,
+      ).toBeGreaterThan(0);
     });
   });
 
