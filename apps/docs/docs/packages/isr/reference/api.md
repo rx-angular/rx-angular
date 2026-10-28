@@ -62,7 +62,8 @@ import { CommonEngine } from '@angular/ssr/node';
 const isr = new ISRHandler({
   indexHtml,
   invalidateSecretToken: process.env['ISR_TOKEN'] ?? null,
-  commonEngine: new CommonEngine(),
+  // List every host the server answers on, or set NG_ALLOWED_HOSTS.
+  commonEngine: new CommonEngine({ allowedHosts: ['localhost', 'example.com'] }),
   browserDistFolder,
   bootstrap,
 });
