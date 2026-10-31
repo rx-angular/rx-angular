@@ -72,7 +72,11 @@ Wire `@rx-angular/isr` into an existing Angular SSR application so that routes m
      const browserDistFolder = resolve(serverDistFolder, '../browser');
      const indexHtml = join(serverDistFolder, 'index.server.html');
 
-     const commonEngine = new CommonEngine();
+     // CommonEngine rejects requests whose host isn't listed in `allowedHosts`.
+     // You can also set the list with the `NG_ALLOWED_HOSTS` environment variable.
+     const commonEngine = new CommonEngine({
+       allowedHosts: ['localhost', 'example.com'],
+     });
 
      // Query params allowed in the cache key. `undefined` = all, `[]` = none.
      const allowedQueryParams = ['page'];
