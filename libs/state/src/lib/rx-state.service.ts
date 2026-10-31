@@ -410,6 +410,36 @@ export class RxState<State extends object> implements Subscribable<State> {
 
   /**
    * @description
+   * Connect an object of `Observable` and/or `Signal` sources to the state `State`.
+   * Every source gets connected to the property matching its key.
+   * Sources are connected independently of each other, a source that never emits does not
+   * block the other ones.
+   * Subscription handling is done automatically.
+   *
+   * Entries whose value is `undefined` are skipped, so `Partial<>` holes are tolerated.
+   * The record is validated before any source gets connected: an entry which is neither an
+   * `Observable` nor a `Signal` throws without connecting anything, and so does an object
+   * that carries no own enumerable entry at all - which is not a record of sources.
+   *
+   * @example
+   * const currentTime = signal(Date.now());
+   * state.connect({
+   *   timer: interval(250),
+   *   currentTime
+   * });
+   * // the property timer gets updated every 250ms, currentTime on every change of the signal
+   *
+   *  @param {Partial<{ [Key in keyof State]: Observable<State[Key]> | Signal<State[Key]> }>} slices
+   *  @return void
+   */
+  connect(
+    slices: Partial<{
+      [Key in keyof State]: Observable<State[Key]> | Signal<State[Key]>;
+    }>,
+  ): void;
+
+  /**
+   * @description
    * Connect an `Observable<Value>` to the state `State`.
    * Any change emitted by the source will get forwarded to project function and merged into the state.
    * Subscription handling is done automatically.
@@ -543,7 +573,10 @@ export class RxState<State extends object> implements Subscribable<State> {
     keyOrInputOrSlice$:
       | Key
       | Observable<Partial<State> | Value>
-      | Signal<Partial<State> | Value>,
+      | Signal<Partial<State> | Value>
+      | Partial<{
+          [K in keyof State]: Observable<State[K]> | Signal<State[K]>;
+        }>,
     projectOrSlices$?:
       | ProjectStateReducer<State, Value>
       | Observable<State[Key] | Value>
@@ -553,6 +586,72 @@ export class RxState<State extends object> implements Subscribable<State> {
     /**
      * From top to bottom the overloads are handled.
      */
+    if (
+      !projectOrSlices$ &&
+      !projectValueFn &&
+      keyOrInputOrSlice$ &&
+      typeof keyOrInputOrSlice$ === 'object' &&
+      !Array.isArray(keyOrInputOrSlice$) &&
+      !isObservable(keyOrInputOrSlice$)
+    ) {
+      const slices = keyOrInputOrSlice$ as Partial<{
+        [K in keyof State]: Observable<State[K]> | Signal<State[K]>;
+      }>;
+      /**
+       * Only own enumerable properties make up the record. Symbol keys are included,
+       * `Object.keys` would drop the ones `Partial<{ [Key in keyof State]: ... }>`
+       * explicitly allows, but a non-enumerable property is not part of the data and
+       * must not be mistaken for a malformed source.
+       */
+      const keys = Reflect.ownKeys(slices).filter((key) =>
+        Object.prototype.propertyIsEnumerable.call(slices, key),
+      ) as Key[];
+      /**
+       * An object carrying no own enumerable property at all is not a record of
+       * sources (`{}`, `new Date()`, `new Map([['num', of(1)]])`, an instance holding
+       * its sources on the prototype). That throws, as every other malformed argument
+       * of `connect` always did. A record whose entries are all `undefined` is a
+       * different case: those are `Partial<>` holes and contribute no source, so it
+       * connects nothing and does not throw.
+       */
+      if (!keys.length) {
+        throw new Error('wrong params passed to connect');
+      }
+      /**
+       * The whole record is validated before anything gets connected, otherwise an
+       * invalid entry would leave the state half connected.
+       */
+      const connectSlices: (() => void)[] = [];
+      for (const key of keys) {
+        const slice = slices[key];
+        /**
+         * `Partial<>` holes are tolerated, they simply do not contribute a source.
+         */
+        if (slice === undefined) {
+          continue;
+        }
+        if (isObservable(slice)) {
+          connectSlices.push(() =>
+            this.connect(key, slice as Observable<State[Key]>),
+          );
+          continue;
+        }
+        if (isSignal(slice)) {
+          connectSlices.push(() =>
+            this.connect(key, slice as Signal<State[Key]>),
+          );
+          continue;
+        }
+        throw new Error('wrong params passed to connect');
+      }
+      /**
+       * Every source is connected on its own. Combining them would hold back all of
+       * them until every single source emitted at least once.
+       */
+      connectSlices.forEach((connectSlice) => connectSlice());
+      return;
+    }
+
     if (
       isObservable(keyOrInputOrSlice$) &&
       !projectOrSlices$ &&
