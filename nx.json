@@ -148,14 +148,34 @@
       "inputs": ["production", "^production"],
       "cache": true
     },
-    "e2e": {
-      "inputs": ["default", "^production"],
-      "cache": true
-    },
-    "component-test": {
-      "inputs": ["default", "^production"],
-      "cache": true
-    },
+    "e2e": [
+      {
+        "inputs": ["default", "^production"],
+        "cache": true
+      },
+      {
+        "filter": {
+          "plugin": "@nx/cypress/plugin"
+        },
+        "options": {
+          "browser": "chrome"
+        }
+      }
+    ],
+    "component-test": [
+      {
+        "inputs": ["default", "^production"],
+        "cache": true
+      },
+      {
+        "filter": {
+          "plugin": "@nx/cypress/plugin"
+        },
+        "options": {
+          "browser": "chrome"
+        }
+      }
+    ],
     "build-lib": {
       "cache": true
     },
@@ -187,5 +207,15 @@
   },
   "parallel": 1,
   "nxCloudId": "68cae3e68a64e3329d3ced1e",
-  "analytics": false
+  "analytics": false,
+  "plugins": [
+    {
+      "plugin": "@nx/cypress/plugin",
+      "options": {
+        "targetName": "e2e",
+        "componentTestingTargetName": "component-test",
+        "openTargetName": "open-cypress"
+      }
+    }
+  ]
 }

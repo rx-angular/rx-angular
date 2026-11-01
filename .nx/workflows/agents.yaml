@@ -1,0 +1,43 @@
+# Custom Nx Cloud launch template.
+#
+# Mirrors the built-in `linux-extra-large-js` template
+# (https://github.com/nrwl/nx-cloud-workflows/blob/main/launch-templates/linux.yaml)
+# and adds a step that installs Google Chrome, because Cypress runs with
+# `--browser chrome` (see `targetDefaults` in nx.json) and the stock image
+# only ships the Electron browser bundled with Cypress.
+launch-templates:
+  linux-extra-large-js-chrome:
+    resource-class: 'docker_linux_amd64/extra_large'
+    image: 'ubuntu22.04-node24.14-v1'
+    init-steps:
+      - name: Checkout
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/checkout/main.yaml'
+      - name: Restore Node Modules Cache
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/cache/main.yaml'
+        inputs:
+          key: 'package-lock.json|yarn.lock|pnpm-lock.yaml|patches/**|.yarn/patches/**'
+          paths: 'node_modules'
+          base-branch: 'main'
+      - name: Restore Browser Binary Cache
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/cache/main.yaml'
+        inputs:
+          key: 'package-lock.json|yarn.lock|pnpm-lock.yaml|"browsers"'
+          paths: |
+            '../.cache/Cypress'
+          base-branch: 'main'
+      - name: Install Node
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/install-node/main.yaml'
+      - name: Install Node Modules
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/install-node-modules/main.yaml'
+      - name: Install Browsers (if needed)
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/install-browsers/main.yaml'
+      - name: Install Google Chrome (if needed)
+        script: |
+          if command -v google-chrome >/dev/null 2>&1; then
+            echo "Google Chrome already installed: $(google-chrome --version)"
+            exit 0
+          fi
+          wget -q -O /tmp/google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq /tmp/google-chrome-stable.deb
+          google-chrome --version

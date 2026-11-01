@@ -3,6 +3,13 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   e2e: {
-    ...nxE2EPreset(__filename, { cypressDir: 'cypress' }),
+    ...nxE2EPreset(__filename, {
+      webServerCommands: {
+        default: 'npx nx run ssr-isr:serve',
+        production: 'npx nx run ssr-isr:serve:production',
+      },
+      cypressDir: 'cypress',
+    }),
+    baseUrl: 'http://localhost:4200',
   },
 });

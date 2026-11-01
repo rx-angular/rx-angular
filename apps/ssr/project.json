@@ -79,19 +79,6 @@
         "tsConfig": "apps/ssr/tsconfig.spec.json"
       }
     },
-    "e2e": {
-      "executor": "@nx/cypress:cypress",
-      "options": {
-        "cypressConfig": "apps/ssr/cypress.config.ts",
-        "testingType": "e2e",
-        "devServerTarget": "ssr:serve"
-      },
-      "configurations": {
-        "production": {
-          "devServerTarget": "ssr:serve:production"
-        }
-      }
-    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]

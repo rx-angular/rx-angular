@@ -7,18 +7,7 @@
   "implicitDependencies": ["rebundle-demo"],
   "targets": {
     "e2e": {
-      "executor": "@nx/cypress:cypress",
-      "dependsOn": ["rebundle:build"],
-      "options": {
-        "cypressConfig": "apps/rebundle-demo-e2e/cypress.config.ts",
-        "testingType": "e2e",
-        "devServerTarget": "rebundle-demo:serve:production"
-      },
-      "configurations": {
-        "production": {
-          "devServerTarget": "rebundle-demo:serve:production"
-        }
-      }
+      "dependsOn": ["rebundle:build"]
     },
     "lint": {
       "executor": "@nx/eslint:lint"
