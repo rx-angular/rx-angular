@@ -71,19 +71,6 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "e2e": {
-      "executor": "@nx/cypress:cypress",
-      "options": {
-        "cypressConfig": "apps/ssr-isr/cypress.config.ts",
-        "testingType": "e2e",
-        "devServerTarget": "ssr-isr:serve"
-      },
-      "configurations": {
-        "production": {
-          "devServerTarget": "ssr-isr:serve:production"
-        }
-      }
     }
   }
 }

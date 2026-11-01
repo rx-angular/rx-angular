@@ -57,7 +57,7 @@ jobs:
         uses: nrwl/nx-set-shas@v4
 
       - name: Initialize the Nx Cloud distributed CI run
-        run: npx nx-cloud start-ci-run --distribute-on="./nx/workflows/dynamic-changesets.yml" --stop-agents-after="e2e" --require-explicit-completion
+        run: npx nx-cloud start-ci-run --distribute-on="./.nx/workflows/dynamic-changesets.yml" --stop-agents-after="e2e" --require-explicit-completion
 
       - name: Set up dependencies
         uses: ./.github/actions/setup
