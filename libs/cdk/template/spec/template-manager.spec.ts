@@ -100,11 +100,11 @@ describe('template-manager', () => {
         fixtureComponent.detectChanges();
         const items = 2;
         componentInstance.values$.next(items);
-        try {
-          fixtureComponent.detectChanges();
-        } catch (e) {
-          expect(componentInstance.latestRenderedValue[0]).toEqual(e);
-        }
+        fixtureComponent.detectChanges();
+        expect(componentInstance.latestRenderedValue).toEqual([
+          new Error('isEven'),
+          items,
+        ]);
         expect(customErrorHandler.handleError).toHaveBeenCalled();
       });
 
