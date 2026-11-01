@@ -198,11 +198,8 @@ describe('list-manager', () => {
       fixtureComponent.detectChanges();
       const items = [2];
       componentInstance.values$.next(items);
-      try {
-        fixtureComponent.detectChanges();
-      } catch (e) {
-        expect(componentInstance.latestRenderedValue).toEqual(items);
-      }
+      fixtureComponent.detectChanges();
+      expect(componentInstance.latestRenderedValue).toEqual(items);
       expect(customErrorHandler.handleError).toHaveBeenCalled();
     });
 
