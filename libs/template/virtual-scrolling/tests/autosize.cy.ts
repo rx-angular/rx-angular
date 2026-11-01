@@ -856,11 +856,13 @@ describe('visibleRange', () => {
   });
 
   /**
-   * items are 30px, the tombstoneSize is 50px. Jumping to 100 * 50 + 40 anchors
-   * at item 100 with an offset of 40px. Measuring the rendered items shrinks
-   * item 100 below that offset and the content above it, the strategy corrects
-   * the scroll position. The anchor has to be re-derived afterwards, item 100
-   * is out of view.
+   * items are 30px, the tombstoneSize is 50px. The initial render measures the
+   * first items, every item after them is estimated with the tombstoneSize.
+   * Jumping 40px past the estimated position of item 100 anchors at item 100
+   * with an offset of 40px. Measuring the rendered items shrinks item 100
+   * below that offset and the content above it, the strategy corrects the
+   * scroll position. The anchor has to be re-derived afterwards, item 100 is
+   * out of view.
    */
   it('re-derives the scrolledIndex after a scroll position correction', () => {
     mountAutoSize({
@@ -874,7 +876,16 @@ describe('visibleRange', () => {
     }).then(({ fixture }) => {
       fixture.detectChanges();
       const viewport = getViewportComponent(fixture);
-      viewport.scrollTo(100 * 50 + 40);
+      // the initial render settles in a few passes, each measuring more items.
+      // Where a jump lands depends on how many items are measured by then, so
+      // jump only after the last pass and estimate the position like the
+      // strategy does: measured items with their size, the rest as tombstones
+      cy.get('[data-cy=item]').should('have.length.greaterThan', 0);
+      waitUntilStable(() => Cypress.$('[data-cy=item]').length).then(
+        (measured) => {
+          viewport.scrollTo(measured * 30 + (100 - measured) * 50 + 40);
+        },
+      );
       waitUntilStable(() => viewport.getScrollTop());
       cy.get('[data-cy=viewport]').should(([scrollContainer]) => {
         const top = scrollContainer.getBoundingClientRect().top;
