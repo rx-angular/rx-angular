@@ -4,13 +4,14 @@ import {
   concat,
   defer,
   from,
+  lastValueFrom,
   NEVER,
   Observable,
   of,
   scheduled,
   timer,
 } from 'rxjs';
-import { mergeMapTo, share } from 'rxjs/operators';
+import { mergeMapTo, share, toArray } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { coalesceWith } from '../src/lib/coalesceWith';
 
@@ -129,26 +130,20 @@ describe('coalesce operator additional logic', () => {
       });
     });
 
-    it('should emit last for multiple sync values when durationSelector is a Promise', () => {
-      const durationSelector = of();
+    it('should emit last for multiple sync values when durationSelector is a Promise', async () => {
+      const durationSelector = from(Promise.resolve());
       const e1 = concat(
         of(1, 2, 3),
         timer(10).pipe(mergeMapTo(of(4, 5, 6))),
         timer(10).pipe(mergeMapTo(of(7, 8, 9))),
         timer(50).pipe(mergeMapTo(of(10, 11, 12))),
       );
-      const expected = [3, 6, 9, 12];
-      e1.pipe(coalesceWith(durationSelector)).subscribe(
-        (x: number) => {
-          expect(x).toEqual(expected.shift());
-        },
-        () => {
-          throw new Error('should not be called');
-        },
-        () => {
-          expect(expected.length).toEqual(0);
-        },
+
+      const received = await lastValueFrom(
+        e1.pipe(coalesceWith(durationSelector), toArray()),
       );
+
+      expect(received).toEqual([3, 6, 9, 12]);
     });
   });
 
@@ -243,7 +238,7 @@ describe('coalesce operator additional logic', () => {
       });
     });
 
-    it('should emit once per micro task with default durationSelector', (done) => {
+    it('should emit once per micro task with default durationSelector', async () => {
       const scope = {};
       const arrNum = [1, 2, 3, 4];
       const num$ = from(arrNum).pipe(
@@ -254,35 +249,24 @@ describe('coalesce operator additional logic', () => {
         ),
       );
 
-      num$.subscribe(
-        (x: number) => {
-          expect(x).toBe(4);
-          done();
-        },
-        () => {
-          throw new Error('should not be called');
-        },
-        () => {
-          throw new Error('should not be called');
-        },
-      );
+      const received = await lastValueFrom(num$.pipe(toArray()));
+
+      expect(received).toEqual([4]);
     });
 
     describe('with different durationSelector', () => {
-      it('should emit once per micro task (THEORY)', () => {
+      it('should emit once per micro task (THEORY)', async () => {
         let syncEmission1: any;
-        emit(undefined, 'promise1');
+        const first = emit(undefined, 'promise1');
         expect(syncEmission1).not.toBeDefined();
-        emit('promise1', 'promise2');
+        const second = emit('promise1', 'promise2');
         expect(syncEmission1).not.toBeDefined();
-        setTimeout(() => {
-          expect(syncEmission1).toBe('promise2');
-        });
 
-        //
+        await Promise.all([first, second]);
+        expect(syncEmission1).toBe('promise2');
 
-        function emit(prev: any, next: any): any {
-          Promise.resolve().then(() => {
+        function emit(prev: any, next: any): Promise<void> {
+          return Promise.resolve().then(() => {
             expect(syncEmission1).toBe(prev);
             syncEmission1 = next;
           });

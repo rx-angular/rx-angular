@@ -34,11 +34,15 @@ describe('valuesComparer', () => {
       });
 
       it('should return true if matching by compareFn', () => {
-        expect(valuesComparer(1, 1, (a, b) => a.toString() === b.toString()));
+        expect(
+          valuesComparer(1, 1, (a, b) => a.toString() === b.toString()),
+        ).toBeTruthy();
       });
 
-      it('should return false if matching by compareFn', () => {
-        expect(valuesComparer(1, 2, (a, b) => a.toString() === b.toString()));
+      it('should return false if not matching by compareFn', () => {
+        expect(
+          valuesComparer(1, 2, (a, b) => a.toString() === b.toString()),
+        ).toBeFalsy();
       });
     });
 

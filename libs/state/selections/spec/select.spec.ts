@@ -53,7 +53,15 @@ describe('select', () => {
       });
     });
 
-    it('should replay the last emitted value', () => {});
+    it('should replay the last emitted value', () => {
+      testScheduler.run(({ hot, expectObservable }) => {
+        const source = hot('-a-b-c---|');
+        const shared = source.pipe(select());
+        expectObservable(shared).toBe('-a-b-c---|');
+        // a late subscriber immediately receives the latest value
+        expectObservable(shared, '------^').toBe('------c--|');
+      });
+    });
 
     it('should accept one operator', () => {
       testScheduler.run(({ cold, expectObservable }) => {
