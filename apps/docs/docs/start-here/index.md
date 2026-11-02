@@ -31,13 +31,13 @@ the helper layer underneath them: the substrate of render strategies, coercing,
 and transformations that most consumers never import directly. isr and
 eslint-plugin are standalone tools you add when you have the specific need.
 
-| Package                                                           | Reach for it when…                                                                                              | npm (2026-07-02) | Angular peer           |
-| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------- | ---------------------- |
-| [`@rx-angular/state`](../packages/state/index.md)                 | you need global/shared, complex-derived, or async-heavy state (signals already cover local state)               | v21.1.1          | `^21.0.0`              |
-| [`@rx-angular/template`](../packages/template/index.md)           | you need high-performance rendering — large live lists, concurrent scheduling, reactive suspense/error/complete | v21.2.0          | `^21.0.0`              |
-| [`@rx-angular/cdk`](../packages/cdk/index.mdx)                    | you are building on the primitives (render strategies, coercing, transformations) — the helper layer            | v21.1.0          | `^21.0.0`              |
-| [`@rx-angular/isr`](../packages/isr/index.md)                     | you run Angular SSR and want Incremental Static Regeneration                                                    | v21.0.1          | `@angular/ssr ^21.0.0` |
-| [`@rx-angular/eslint-plugin`](../packages/eslint-plugin/index.md) | you want to enforce reactive discipline / keep a codebase zoneless-ready                                        | v3.0.0           | eslint `>=8`           |
+| Package                                                           | Reach for it when…                                                                                              | Version | Angular peer            |
+| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------- | ----------------------- |
+| [`@rx-angular/state`](../packages/state/index.md)                 | you need global/shared, complex-derived, or async-heavy state (signals already cover local state)               | v22     | `>=22.0.0`              |
+| [`@rx-angular/template`](../packages/template/index.md)           | you need high-performance rendering — large live lists, concurrent scheduling, reactive suspense/error/complete | v22     | `>=22.0.0`              |
+| [`@rx-angular/cdk`](../packages/cdk/index.mdx)                    | you are building on the primitives (render strategies, coercing, transformations) — the helper layer            | v22     | `>=22.0.0`              |
+| [`@rx-angular/isr`](../packages/isr/index.md)                     | you run Angular SSR and want Incremental Static Regeneration                                                    | v22     | `@angular/ssr >=22.0.0` |
+| [`@rx-angular/eslint-plugin`](../packages/eslint-plugin/index.md) | you want to enforce reactive discipline / keep a codebase zoneless-ready                                        | v3      | eslint `>=8`            |
 
 If you are unsure where to begin: reach for **State** first if your question is
 about _data_, and **Template** first if your question is about _rendering_. The
@@ -68,11 +68,8 @@ npm install @rx-angular/isr        # also needs @angular/ssr
 npm install @rx-angular/eslint-plugin --save-dev
 ```
 
-Every package peers on **Angular `^21`** (isr peers `@angular/ssr ^21`;
-eslint-plugin peers `eslint >=8`). One currency caveat: **there is
-no v22-targeted release yet; all peers are `^21` despite Angular 22 shipping in
-June 2026.** On an Angular 21 baseline the packages are current; if you are
-already on Angular 22, confirm peer compatibility before adopting.
+Every package peers on **Angular `>=22`** (isr peers `@angular/ssr >=22`;
+eslint-plugin peers `eslint >=8`). On Angular 21, stay on the v21 releases.
 
 For anything deeper than this orientation, follow the package links above. The
 detail lives there.

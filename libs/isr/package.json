@@ -4,11 +4,11 @@
   "description": "Incremental Static Regeneration for Angular",
   "version": "21.0.2",
   "peerDependencies": {
-    "@angular/common": "^22.0.0",
-    "@angular/core": "^22.0.0",
-    "@angular/ssr": "^22.0.0",
-    "@types/node": "^18.0.0 || ^20.0.0",
-    "express": "^4.15.2"
+    "@angular/common": ">=22.0.0",
+    "@angular/core": ">=22.0.0",
+    "@angular/ssr": ">=22.0.0",
+    "@types/node": ">=18.0.0",
+    "express": "^4.15.2 || ^5.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
