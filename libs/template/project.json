@@ -7,7 +7,7 @@
   "tags": ["type:lib", "template"],
   "targets": {
     "build-lib": {
-      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "executor": "@nx/angular:package",
       "dependsOn": ["^build"],
       "outputs": ["{workspaceRoot}/dist/libs/template"],
       "options": {
