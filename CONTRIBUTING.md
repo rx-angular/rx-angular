@@ -76,7 +76,7 @@ Any line of the commit message cannot be longer than 100 characters.
   │       │             │
   │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
   │       │
-  │       └─⫸ Commit Scope: cdk|template|state|docs|demos|schematics|ci
+  │       └─⫸ Commit Scope: cdk|template|state|isr|eslint-plugin|rebundle|docs|demos|...
   │
   └─⫸ Commit Type: fix|feat|perf|docs|refactor|test|chore
 ```
@@ -104,10 +104,18 @@ The following is the list of supported scopes:
 - `cdk`
 - `template`
 - `state`
+- `isr`
+- `eslint-plugin`
+- `rebundle`
 - `docs`
 - `demos`
 - `schematics`
 - `ci`
+- `release`
+
+Package scopes must match the Nx project name exactly: `nx release` uses them to decide which package gets which version bump.
+A change touching several packages can list them comma-separated, e.g. `feat(cdk,state): ...`.
+Mark breaking changes with `!` (`feat(cdk)!: ...`) or a `BREAKING CHANGE:` footer. Without a scope, a breaking commit bumps the major version of every package whose files it touches.
 
 ## How to release (maintainers)
 
