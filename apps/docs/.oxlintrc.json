@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../.oxlintrc.json"],
+  "plugins": [],
+  "rules": {
+    "@nx/enforce-module-boundaries": "off",
+    "typescript/no-require-imports": "off"
+  }
+}

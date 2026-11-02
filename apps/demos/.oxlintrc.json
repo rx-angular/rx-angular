@@ -1,0 +1,18 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../.oxlintrc.json"],
+  "plugins": [],
+  "rules": {
+    "@angular-eslint/prefer-standalone": "off",
+    "@angular-eslint/prefer-inject": "off",
+    "@angular-eslint/prefer-on-push-component-change-detection": "off",
+    "@angular-eslint/no-input-rename": "off",
+    "@angular-eslint/no-empty-lifecycle-method": "off",
+    "@angular-eslint/contextual-lifecycle": "off",
+    "no-unused-expressions": "off",
+    "typescript/no-empty-object-type": "off",
+    "no-case-declarations": "off",
+    "prefer-spread": "off",
+    "prefer-const": "off"
+  }
+}
