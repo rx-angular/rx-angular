@@ -37,7 +37,7 @@ const strategiesUiConfig: { [key: string]: { name: string; icon: string } } = {
         <mat-select-trigger>
           {{ strategyProvider.primaryStrategy }}
         </mat-select-trigger>
-        <mat-option [value]="s" *rxFor="let s of stratNames$">
+        <mat-option [value]="s" *rxFor="let s of stratNames$; parent: true">
           <mat-icon class="mr-2">{{ strategiesUiConfig[s]?.icon }}</mat-icon>
           {{ s }}
         </mat-option>
