@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # Keeps action versions current; npm dependencies are updated manually
+  - package-ecosystem: github-actions
+    directories: ['/', '/.github/actions/*']
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']
