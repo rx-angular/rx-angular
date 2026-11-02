@@ -159,7 +159,8 @@
         },
         "options": {
           "browser": "chrome"
-        }
+        },
+        "parallelism": false
       }
     ],
     "component-test": [
@@ -173,7 +174,8 @@
         },
         "options": {
           "browser": "chrome"
-        }
+        },
+        "parallelism": false
       }
     ],
     "build-lib": {
