@@ -60,7 +60,7 @@ describe('Template Migration virtual-scrolling-stable', () => {
   function setupTestFile(fileInput: string, filePath = './app.module.ts') {
     const runner = new SchematicTestRunner(
       '@rx-angular/template',
-      path.join(__dirname, '../../../migration.json'),
+      path.resolve('libs/template/schematics/migration.json'),
     );
     const tree = new UnitTestTree(Tree.empty());
 

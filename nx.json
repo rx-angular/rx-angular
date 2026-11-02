@@ -16,11 +16,11 @@
       "e2eTestRunner": "cypress",
       "linter": "none",
       "style": "scss",
-      "unitTestRunner": "vitest-analog"
+      "unitTestRunner": "vitest-angular"
     },
     "@nx/angular:library": {
       "linter": "none",
-      "unitTestRunner": "vitest-analog"
+      "unitTestRunner": "vitest-angular"
     },
     "@nx/angular:component": {
       "style": "scss",
@@ -195,7 +195,24 @@
           }
         ]
       }
-    ]
+    ],
+    "@nx/angular:unit-test": {
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/tools/vitest/**/*"],
+      "outputs": ["{workspaceRoot}/coverage/{projectName}"],
+      "options": {
+        "include": ["../**/*.spec.ts"],
+        "runnerConfig": "tools/vitest/runner.config.mts",
+        "providersFile": "tools/vitest/test-providers.ts",
+        "setupFiles": [
+          "tools/vitest/setup-zone.ts",
+          "tools/vitest/setup-schematics.ts"
+        ],
+        "coverage": true,
+        "coverageReporters": ["lcov"],
+        "isolate": true
+      }
+    }
   },
   "parallel": 1,
   "nxCloudId": "68cae3e68a64e3329d3ced1e",

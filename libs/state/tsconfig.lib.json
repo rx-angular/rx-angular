@@ -18,10 +18,5 @@
     "strictTemplates": false
   },
   "include": ["**/*.ts"],
-  "exclude": [
-    "./test-setup.ts",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "vitest.config.mts"
-  ]
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

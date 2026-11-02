@@ -2,8 +2,12 @@ export {
   createAccumulationObservable,
   defaultAccumulator,
 } from './lib/accumulation-observable';
-export { CompareFn, KeyCompareMap, PickSlice } from './lib/interfaces/index';
-export { AccumulationFn, Accumulator } from './lib/model';
+export type {
+  CompareFn,
+  KeyCompareMap,
+  PickSlice,
+} from './lib/interfaces/index';
+export type { AccumulationFn, Accumulator } from './lib/model';
 export {
   distinctUntilSomeChanged,
   select,

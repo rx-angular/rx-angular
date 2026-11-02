@@ -137,7 +137,7 @@ describe(rxEffects, () => {
 });
 
 function setupComponent(setupFn?: RxEffectsSetupFn) {
-  @Component({})
+  @Component({ template: '' })
   class TestComponent {
     readonly effects = rxEffects(setupFn);
   }

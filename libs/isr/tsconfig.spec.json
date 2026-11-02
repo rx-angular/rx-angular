@@ -8,7 +8,6 @@
     "moduleResolution": "bundler",
     "isolatedModules": true
   },
-  "files": ["src/test-setup.ts"],
   "include": ["**/*.ts"],
   "angularCompilerOptions": {}
 }

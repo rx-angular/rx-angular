@@ -11,8 +11,7 @@
     "moduleResolution": "bundler",
     "isolatedModules": true
   },
-  "files": ["src/test-setup.ts"],
-  "include": ["**/*.spec.ts", "**/*.d.ts", "vitest.config.mts"],
+  "include": ["**/*.spec.ts", "**/*.d.ts"],
   "angularCompilerOptions": {
     "strictTemplates": false
   }

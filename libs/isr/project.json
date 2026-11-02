@@ -19,6 +19,9 @@
         },
         "development": {}
       }
+    },
+    "test": {
+      "executor": "@nx/angular:unit-test"
     }
   }
 }

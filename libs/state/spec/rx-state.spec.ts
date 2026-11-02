@@ -422,9 +422,7 @@ function setupComponent<State extends { count: number }>(
   setupFn?: RxStateSetupFn<State>,
   template?: string,
 ) {
-  @Component({
-    template,
-  })
+  @Component({ template: '' })
   class TestComponent implements ITestComponent<State> {
     readonly state = rxState<State>(setupFn);
 
@@ -435,6 +433,9 @@ function setupComponent<State extends { count: number }>(
   TestBed.configureTestingModule({
     imports: [TestComponent],
   });
+  if (template) {
+    TestBed.overrideTemplate(TestComponent, template);
+  }
 
   const fixture = TestBed.createComponent(TestComponent);
 

@@ -2,10 +2,10 @@ import {
   SchematicTestRunner,
   UnitTestTree,
 } from '@angular-devkit/schematics/testing';
-import { join } from 'path';
+import { resolve } from 'path';
 import { readJsonInTree } from '../../utils/read-json-in-tree';
 
-const collectionPath = join(__dirname, '../../../collection.json');
+const collectionPath = resolve('libs/template/schematics/collection.json');
 
 const workspaceOptions = {
   name: 'workspace',

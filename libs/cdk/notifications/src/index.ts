@@ -1,13 +1,13 @@
 export { createTemplateNotifier } from './lib/create-template-notifier';
-export {
+export type {
   RxCompleteNotification,
   RxErrorNotification,
   RxNextNotification,
   RxNotification,
-  RxNotificationKind,
   RxNotificationValue,
   RxSuspenseNotification,
 } from './lib/model';
+export { RxNotificationKind } from './lib/model';
 export {
   toRxCompleteNotification,
   toRxErrorNotification,

@@ -34,6 +34,12 @@
       "options": {
         "config-file": "./cypress.config.ts"
       }
+    },
+    "test": {
+      "executor": "@nx/angular:unit-test",
+      "options": {
+        "buildTarget": "template:build-lib"
+      }
     }
   }
 }

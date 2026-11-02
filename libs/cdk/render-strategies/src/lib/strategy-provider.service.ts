@@ -15,7 +15,7 @@ import { map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import {
   mergeDefaultConfig,
   RX_RENDER_STRATEGIES_CONFIG,
-  RxRenderStrategiesConfig,
+  type RxRenderStrategiesConfig,
 } from './config';
 import {
   RxStrategies,

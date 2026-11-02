@@ -46,6 +46,12 @@
       "options": {
         "buildTarget": "state:perfBuild"
       }
+    },
+    "test": {
+      "executor": "@nx/angular:unit-test",
+      "options": {
+        "buildTarget": "state:build-lib"
+      }
     }
   }
 }
