@@ -1,45 +1,48 @@
 ⚙️ Chore:
-  - '.github/*'
-  - '.tools/*'
-  - './*'
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**'
+          - '.tools/**'
+          - '*'
 
 🃏 Demos:
-  - ./apps/demos/*
-  - ./apps/demos/**/*
+  - changed-files:
+      - any-glob-to-any-file: 'apps/demos/**'
 
 '🛠️ CDK':
-  - libs/cdk/*
-  - libs/cdk/**/*
+  - changed-files:
+      - any-glob-to-any-file: 'libs/cdk/**'
 
 '{ } State':
-  - libs/state/*
-  - libs/state/**/*
+  - changed-files:
+      - any-glob-to-any-file: 'libs/state/**'
 
 '</> Template':
-  - libs/template/*
-  - libs/template/**/*
+  - changed-files:
+      - any-glob-to-any-file: 'libs/template/**'
 
 '🚀 ISR':
-  - libs/isr/*
-  - libs/isr/**/*
+  - changed-files:
+      - any-glob-to-any-file: 'libs/isr/**'
 
 '📐 ESLint plugin':
-  - libs/eslint-plugin/*
-  - libs/eslint-plugin/**/*
+  - changed-files:
+      - any-glob-to-any-file: 'libs/eslint-plugin/**'
 
 📖 Docs API:
-  - libs/**/docs/**/*
+  - changed-files:
+      - any-glob-to-any-file: 'libs/**/docs/**'
 
 📚 Docs Web:
-  - apps/docs/*
-  - apps/docs/**/*
+  - changed-files:
+      - any-glob-to-any-file: 'apps/docs/**'
 
 🔬 Experimental:
-  - libs/**/experimental/*
-  - libs/**/experimental/**/*
+  - changed-files:
+      - any-glob-to-any-file: 'libs/**/experimental/**'
 
 🛂 Test:
-  - libs/**/spec/*
-  - libs/**/spec/**/*
-  - libs/**/perf/*
-  - libs/**/perf/**/*
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'libs/**/spec/**'
+          - 'libs/**/perf/**'
