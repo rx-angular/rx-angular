@@ -1,3 +1,27 @@
+# 22.0.0 (2026-11-02)
+
+### 🚀 Features
+
+- ⚠️  **cdk,state,template,isr:** support angular 22 ([#1905](https://github.com/rx-angular/rx-angular/issues/1905))
+
+### ⚠️  Breaking Changes
+
+- **cdk,state,template,isr:** support angular 22  ([#1905](https://github.com/rx-angular/rx-angular/issues/1905))
+  @rx-angular/cdk now requires @angular/core >=22.0.0.
+  * feat(state)!: support angular 22
+   BREAKING CHANGE: @rx-angular/state now requires @angular/core >=22.0.0 and @rx-angular/cdk ^22.0.0.
+  * feat(template)!: support angular 22
+   BREAKING CHANGE: @rx-angular/template now requires @angular/core >=22.0.0 and @rx-angular/cdk ^22.0.0.
+  * feat(isr)!: support angular 22
+   BREAKING CHANGE: @rx-angular/isr now requires @angular/common, @angular/core and @angular/ssr >=22.0.0.
+  * feat(eslint-plugin): support typescript-eslint 8
+  * fix(rebundle): allow @nx/devkit 23
+  * docs: update start-here package table for v22
+
+### ❤️ Thank You
+
+- Julian Jandl @hoebbelsB
+
 ## 21.1.1 (2026-07-21)
 
 ### Documentation Changes

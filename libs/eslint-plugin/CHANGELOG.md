@@ -1,3 +1,13 @@
+## 3.1.0 (2026-11-02)
+
+### 🚀 Features
+
+- support typescript-eslint 8 ([570197b3](https://github.com/rx-angular/rx-angular/commit/570197b3))
+
+### ❤️ Thank You
+
+- Julian Jandl @hoebbelsB
+
 ## 3.0.1 (2026-07-21)
 
 This was a version bump only for eslint-plugin to align it with other projects, there were no code changes.
