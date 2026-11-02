@@ -97,10 +97,13 @@ describe('RxStateService', () => {
       const state = service;
       state.set({ num: 42 });
       const slice$ = state.$.pipe(select('num'));
-      let i = -1;
-      const valuesInOrder = ['', { num: 777 }];
-      slice$.subscribe((next) => expect(next).toBe(valuesInOrder[++i]));
+
+      // `$` does not replay, so only changes after subscribing arrive
+      const received: number[] = [];
+      slice$.subscribe((next) => received.push(next));
       state.set({ num: 777 });
+
+      expect(received).toEqual([777]);
     });
   });
 
@@ -317,22 +320,25 @@ describe('RxStateService', () => {
   describe('set', () => {
     describe('with state partial', () => {
       it('should add new slices', () => {
-        const state = setupState({});
-        state.select().subscribe((s) => {
-          throw Error('should never emit');
-        });
+        const state = setupState<PrimitiveState>({});
+        const received: PrimitiveState[] = [];
+        state.select().subscribe((s) => received.push(s));
+        expect(received).toEqual([]);
+
         state.set(initialPrimitiveState);
-        state.select().subscribe((s) => expect(s).toBe(initialPrimitiveState));
+        expect(received).toEqual([initialPrimitiveState]);
       });
       it('should override previous state slices', () => {
         const state = setupState({ initialState: initialPrimitiveState });
-        state.select().subscribe((s) => {
-          throw Error('should never emit');
-        });
-        state.set(initialPrimitiveState);
-        state.select().subscribe((s) => expect(s).toBe(initialPrimitiveState));
+        const received: PrimitiveState[] = [];
+        state.select().subscribe((s) => received.push(s));
+        expect(received).toEqual([initialPrimitiveState]);
+
         state.set({ num: 1 });
-        state.select().subscribe((s) => expect(s).toBe({ num: 1 }));
+        expect(received).toEqual([
+          initialPrimitiveState,
+          { ...initialPrimitiveState, num: 1 },
+        ]);
       });
 
       it('should throw with wrong params', () => {
@@ -345,36 +351,48 @@ describe('RxStateService', () => {
     });
     describe('with state project partial', () => {
       it('should add new slices', () => {
-        const state = setupState({});
-        state.select().subscribe((s) => {
-          throw Error('should never emit');
-        });
-        state.set((s) => initialPrimitiveState);
-        state.select().subscribe((s) => expect(s).toBe(initialPrimitiveState));
+        const state = setupState<PrimitiveState>({});
+        const received: PrimitiveState[] = [];
+        state.select().subscribe((s) => received.push(s));
+        expect(received).toEqual([]);
+
+        state.set(() => initialPrimitiveState);
+        expect(received).toEqual([initialPrimitiveState]);
       });
       it('should override previous state slices', () => {
         const state = setupState({ initialState: initialPrimitiveState });
-        state
-          .select()
-          .subscribe((s) => expect(state).toBe(initialPrimitiveState));
+        const received: PrimitiveState[] = [];
+        state.select().subscribe((s) => received.push(s));
+        expect(received).toEqual([initialPrimitiveState]);
+
         state.set((s) => ({ num: s.num + 1 }));
-        state.select().subscribe((s) => expect(state).toBe({ num: 43 }));
+        expect(received).toEqual([
+          initialPrimitiveState,
+          { ...initialPrimitiveState, num: 43 },
+        ]);
       });
     });
     describe('with state key and value partial', () => {
       it('should add new slices', () => {
         const state = setupState<PrimitiveState>({});
-        state.select().subscribe((s) => {
-          // throw Error('should never emit');
-        });
-        state.set('num', (s) => 1);
-        state.select().subscribe((s) => expect(s).toBe(initialPrimitiveState));
+        const received: Partial<PrimitiveState>[] = [];
+        state.select().subscribe((s) => received.push(s));
+        expect(received).toEqual([]);
+
+        state.set('num', () => 1);
+        expect(received).toEqual([{ num: 1 }]);
       });
       it('should override previous state slices', () => {
         const state = setupState({ initialState: initialPrimitiveState });
-        state.select().subscribe((s) => expect(s).toBe(initialPrimitiveState));
+        const received: PrimitiveState[] = [];
+        state.select().subscribe((s) => received.push(s));
+        expect(received).toEqual([initialPrimitiveState]);
+
         state.set('num', (s) => s.num + 1);
-        state.select().subscribe((s) => expect(s).toBe({ num: 43 }));
+        expect(received).toEqual([
+          initialPrimitiveState,
+          { ...initialPrimitiveState, num: 43 },
+        ]);
       });
     });
     describe('with read only state', () => {

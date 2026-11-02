@@ -60,10 +60,12 @@ describe('createAccumulationObservable', () => {
       state.nextSlice({ num: 42 });
       const slice$ = state.signal$.pipe(select('num'));
 
-      let i = -1;
-      const valuesInOrder = ['', { num: 777 }];
-      slice$.subscribe((next) => expect(next).toBe(valuesInOrder[++i]));
+      // signal$ does not replay, so only changes after subscribing arrive
+      const received: number[] = [];
+      slice$.subscribe((next) => received.push(next));
       state.nextSlice({ num: 777 });
+
+      expect(received).toEqual([777]);
     });
 
     it('should log error if getting error', () => {
@@ -151,13 +153,12 @@ describe('createAccumulationObservable', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
         initialState: initialPrimitiveState,
       });
-      acc.state$
-        .pipe(map((s) => s.num))
-        .subscribe((res) => expect(res).toBe({ s: 42 }));
+      const received: number[] = [];
+      acc.state$.pipe(map((s) => s.num)).subscribe((num) => received.push(num));
+      expect(received).toEqual([42]);
+
       acc.nextSlice({ num: 43 });
-      acc.state$
-        .pipe(map((s) => s.num))
-        .subscribe((res) => expect(res).toBe({ s: 43 }));
+      expect(received).toEqual([42, 43]);
     });
   });
 
@@ -176,13 +177,12 @@ describe('createAccumulationObservable', () => {
       const acc = setupAccumulationObservable<PrimitiveState>({
         initialState: initialPrimitiveState,
       });
-      acc.state$
-        .pipe(map((s) => s.num))
-        .subscribe((res) => expect(res).toBe({ s: 42 }));
+      const received: number[] = [];
+      acc.state$.pipe(map((s) => s.num)).subscribe((num) => received.push(num));
+      expect(received).toEqual([42]);
+
       acc.nextSliceObservable(of({ num: 43 }));
-      acc.state$
-        .pipe(map((s) => s.num))
-        .subscribe((res) => expect(res).toBe({ s: 42 }));
+      expect(received).toEqual([42, 43]);
     });
   });
 
