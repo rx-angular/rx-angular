@@ -62,13 +62,14 @@ describe('LetDirective renderCallback', () => {
     expect(componentNativeElement).toBeDefined();
   });
 
-  it('should emit the latest value after rendering via renderCallback', (done) => {
-    letDirectiveTestComponent.renderCallback$.subscribe((renderedValue) => {
-      expect(renderedValue).toBe(42);
-      done();
-    });
-    letDirectiveTestComponent.value$ = new BehaviorSubject(42);
-    fixtureLetDirectiveTestComponent.detectChanges();
-    expect(componentNativeElement.textContent).toBe('42');
-  });
+  it('should emit the latest value after rendering via renderCallback', () =>
+    new Promise<void>((done) => {
+      letDirectiveTestComponent.renderCallback$.subscribe((renderedValue) => {
+        expect(renderedValue).toBe(42);
+        done();
+      });
+      letDirectiveTestComponent.value$ = new BehaviorSubject(42);
+      fixtureLetDirectiveTestComponent.detectChanges();
+      expect(componentNativeElement.textContent).toBe('42');
+    }));
 });

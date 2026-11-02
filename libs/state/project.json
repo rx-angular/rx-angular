@@ -30,11 +30,6 @@
         "parallel": false
       }
     },
-    "test": {
-      "options": {
-        "coverage": true
-      }
-    },
     "perfBuild": {
       "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],

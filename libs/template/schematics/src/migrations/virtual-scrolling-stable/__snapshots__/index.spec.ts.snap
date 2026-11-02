@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Template Migration virtual-scrolling-stable should replace module specifier 1`] = `
+exports[`Template Migration virtual-scrolling-stable > should replace module specifier 1`] = `
 "import { ListRange, RxVirtualForViewContext, RxVirtualScrollElement, RxVirtualScrollStrategy, RxVirtualScrollViewport, RxVirtualViewRepeater, AutoSizeVirtualScrollStrategy, DynamicSizeVirtualScrollStrategy, FixedSizeVirtualScrollStrategy, RxVirtualFor, RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS, RX_VIRTUAL_SCROLL_DEFAULT_OPTIONS_FACTORY, RxVirtualScrollDefaultOptions, RxVirtualScrollElementDirective, RxVirtualScrollViewportComponent, RxVirtualScrollWindowDirective } from "@rx-angular/template/virtual-scrolling";
 
       import { NgModule } from '@angular/core';

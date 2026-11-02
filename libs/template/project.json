@@ -30,11 +30,6 @@
         "parallel": false
       }
     },
-    "test": {
-      "options": {
-        "coverage": true
-      }
-    },
     "component-test": {
       "options": {
         "config-file": "./cypress.config.ts"

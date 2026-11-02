@@ -4,8 +4,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
 import { RxLet } from '../let.directive';
-import Spy = jasmine.Spy;
-import SpyInstance = jest.SpyInstance;
 
 @Component({
   template: `
@@ -63,7 +61,7 @@ describe('LetDirective strategies', () => {
       componentInstance.strategy = 'normal';
       componentInstance.patchZone = false;
       fixture.detectChanges();
-      const ngZoneSpy = jest.spyOn(ngZone, 'run');
+      const ngZoneSpy = vi.spyOn(ngZone, 'run');
       const v = await firstValueFrom(componentInstance.renderedValue$);
       expect(v).toBe(42);
       expect(ngZoneSpy).toHaveBeenCalledTimes(1);
@@ -73,7 +71,7 @@ describe('LetDirective strategies', () => {
     it('should run inside ngZone', async () => {
       componentInstance.strategy = 'normal';
       fixture.detectChanges();
-      const ngZoneSpy = jest.spyOn(ngZone, 'run');
+      const ngZoneSpy = vi.spyOn(ngZone, 'run');
       const v = await firstValueFrom(componentInstance.renderedValue$);
       expect(v).toBe(42);
       expect(ngZoneSpy).toHaveBeenCalledTimes(2);
@@ -91,23 +89,25 @@ describe('LetDirective strategies', () => {
     ['low'],
     ['idle'],
     ['native'],
-  ])('Strategy: %p', (strategy) => {
-    it('should render with given strategy', (done) => {
-      componentInstance.strategy = strategy;
-      componentInstance.renderedValue$.subscribe((v) => {
-        expect(v).toBe(42);
-        done();
-      });
-      fixture.detectChanges();
-    });
-    it('should not affect primary strategy', (done) => {
-      componentInstance.strategy = strategy;
-      componentInstance.renderedValue$.subscribe((v) => {
-        expect(v).toBe(42);
-        expect(strategyProvider.primaryStrategy).toBe(primaryStrategy);
-        done();
-      });
-      fixture.detectChanges();
-    });
+  ])('Strategy: %s', (strategy) => {
+    it('should render with given strategy', () =>
+      new Promise<void>((done) => {
+        componentInstance.strategy = strategy;
+        componentInstance.renderedValue$.subscribe((v) => {
+          expect(v).toBe(42);
+          done();
+        });
+        fixture.detectChanges();
+      }));
+    it('should not affect primary strategy', () =>
+      new Promise<void>((done) => {
+        componentInstance.strategy = strategy;
+        componentInstance.renderedValue$.subscribe((v) => {
+          expect(v).toBe(42);
+          expect(strategyProvider.primaryStrategy).toBe(primaryStrategy);
+          done();
+        });
+        fixture.detectChanges();
+      }));
   });
 });

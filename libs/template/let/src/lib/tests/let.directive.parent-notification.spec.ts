@@ -80,7 +80,7 @@ describe('LetDirective parent notification', () => {
     ['normal'],
     ['low'],
     ['idle'],
-  ])('Strategy: %p', (strategy) => {
+  ])('Strategy: %s', (strategy) => {
     describe('parent: true', () => {
       beforeEach(() => {
         componentInstance.strategy = strategy;
@@ -88,60 +88,63 @@ describe('LetDirective parent notification', () => {
         componentInstance.withParent = true;
       });
 
-      it('should update ViewChild', (done) => {
-        const behavior = strategyProvider.strategies[strategy].behavior;
-        componentInstance.rendered$
-          .pipe(
-            behavior({
-              work: () => {},
-            }),
-            delay(0, asapScheduler),
-          )
-          .subscribe(() => {
-            expect(componentInstance.viewChild).toBeDefined();
-            done();
-          });
-        fixture.detectChanges();
-        expect(componentInstance.otherChild).toBeDefined();
-      });
+      it('should update ViewChild', () =>
+        new Promise<void>((done) => {
+          const behavior = strategyProvider.strategies[strategy].behavior;
+          componentInstance.rendered$
+            .pipe(
+              behavior({
+                work: () => {},
+              }),
+              delay(0, asapScheduler),
+            )
+            .subscribe(() => {
+              expect(componentInstance.viewChild).toBeDefined();
+              done();
+            });
+          fixture.detectChanges();
+          expect(componentInstance.otherChild).toBeDefined();
+        }));
 
-      it('should update parent', (done) => {
-        fixture.detectChanges();
-        const cdRef = (componentInstance.letChildren.first as any).cdRef;
-        cdRef.detectChanges = jest.fn();
-        const behavior = strategyProvider.strategies[strategy].behavior;
-        componentInstance.rendered$
-          .pipe(
-            behavior({
-              work: () => {},
-            }),
-            delay(0, asapScheduler),
-          )
-          .subscribe(() => {
-            expect(cdRef.detectChanges).toHaveBeenCalled();
-            done();
-          });
-      });
+      it('should update parent', () =>
+        new Promise<void>((done) => {
+          fixture.detectChanges();
+          const cdRef = (componentInstance.letChildren.first as any).cdRef;
+          cdRef.detectChanges = vi.fn();
+          const behavior = strategyProvider.strategies[strategy].behavior;
+          componentInstance.rendered$
+            .pipe(
+              behavior({
+                work: () => {},
+              }),
+              delay(0, asapScheduler),
+            )
+            .subscribe(() => {
+              expect(cdRef.detectChanges).toHaveBeenCalled();
+              done();
+            });
+        }));
 
-      it('should scope parent notifications', (done) => {
-        fixture.detectChanges();
-        const cdRef = (componentInstance.letChildren.first as any).cdRef;
-        const cdRef2 = (componentInstance.letChildren.last as any).cdRef;
-        expect(cdRef2).toEqual(cdRef);
-        cdRef.detectChanges = jest.fn();
-        const behavior = strategyProvider.strategies[strategy].behavior;
-        componentInstance.rendered$
-          .pipe(
-            behavior({
-              work: () => {},
-            }),
-            delay(0, asapScheduler),
-          )
-          .subscribe(() => {
-            expect(cdRef.detectChanges).toHaveBeenCalledTimes(1);
-            done();
-          });
-      });
+      it('should scope parent notifications', () =>
+        new Promise<void>((done) => {
+          fixture.detectChanges();
+          const cdRef = (componentInstance.letChildren.first as any).cdRef;
+          const cdRef2 = (componentInstance.letChildren.last as any).cdRef;
+          expect(cdRef2).toEqual(cdRef);
+          cdRef.detectChanges = vi.fn();
+          const behavior = strategyProvider.strategies[strategy].behavior;
+          componentInstance.rendered$
+            .pipe(
+              behavior({
+                work: () => {},
+              }),
+              delay(0, asapScheduler),
+            )
+            .subscribe(() => {
+              expect(cdRef.detectChanges).toHaveBeenCalledTimes(1);
+              done();
+            });
+        }));
     });
 
     describe('parent: false', () => {
@@ -151,40 +154,42 @@ describe('LetDirective parent notification', () => {
         componentInstance.withParent = false;
       });
 
-      it('should not update ViewChild', (done) => {
-        const behavior = strategyProvider.strategies[strategy].behavior;
-        componentInstance.rendered$
-          .pipe(
-            behavior({
-              work: () => {},
-            }),
-            delay(0, asapScheduler),
-          )
-          .subscribe(() => {
-            expect(componentInstance.viewChild).not.toBeDefined();
-            done();
-          });
-        fixture.detectChanges();
-        expect(componentInstance.otherChild).toBeDefined();
-      });
+      it('should not update ViewChild', () =>
+        new Promise<void>((done) => {
+          const behavior = strategyProvider.strategies[strategy].behavior;
+          componentInstance.rendered$
+            .pipe(
+              behavior({
+                work: () => {},
+              }),
+              delay(0, asapScheduler),
+            )
+            .subscribe(() => {
+              expect(componentInstance.viewChild).not.toBeDefined();
+              done();
+            });
+          fixture.detectChanges();
+          expect(componentInstance.otherChild).toBeDefined();
+        }));
 
-      it('should not update parent', (done) => {
-        fixture.detectChanges();
-        const cdRef = (componentInstance.letChildren.first as any).cdRef;
-        cdRef.detectChanges = jest.fn();
-        const behavior = strategyProvider.strategies[strategy].behavior;
-        componentInstance.rendered$
-          .pipe(
-            behavior({
-              work: () => {},
-            }),
-            delay(0, asapScheduler),
-          )
-          .subscribe(() => {
-            expect(cdRef.detectChanges).not.toHaveBeenCalled();
-            done();
-          });
-      });
+      it('should not update parent', () =>
+        new Promise<void>((done) => {
+          fixture.detectChanges();
+          const cdRef = (componentInstance.letChildren.first as any).cdRef;
+          cdRef.detectChanges = vi.fn();
+          const behavior = strategyProvider.strategies[strategy].behavior;
+          componentInstance.rendered$
+            .pipe(
+              behavior({
+                work: () => {},
+              }),
+              delay(0, asapScheduler),
+            )
+            .subscribe(() => {
+              expect(cdRef.detectChanges).not.toHaveBeenCalled();
+              done();
+            });
+        }));
     });
   });
 });

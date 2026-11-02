@@ -19,10 +19,12 @@ function createTestComponent(
 }
 
 describe('rxFor with signals', () => {
-  describe.each([['legacy'], ['new']])('conciler: %p', (conciler) => {
+  describe.each([['legacy'], ['new']])('conciler: %s', (conciler) => {
     let fixture: ComponentFixture<TestComponent>;
     let errorHandler: ErrorHandler;
-    const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+    const warnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => undefined);
 
     function getComponent(): TestComponent {
       return fixture.componentInstance;
@@ -44,7 +46,7 @@ describe('rxFor with signals', () => {
 
     beforeEach(() => {
       const customErrorHandler: ErrorHandler = {
-        handleError: jest.fn(),
+        handleError: vi.fn(),
       };
 
       TestBed.configureTestingModule({
@@ -143,7 +145,7 @@ describe('rxFor with signals', () => {
       getComponent().itemsHotSignal.set(null);
       errorHandler = createErrorHandler();
       fixture.detectChanges();
-      const errorSpy = jest.spyOn(errorHandler, 'handleError');
+      const errorSpy = vi.spyOn(errorHandler, 'handleError');
 
       expectText('');
       expect(errorSpy).toHaveBeenCalledTimes(0);
@@ -153,7 +155,7 @@ describe('rxFor with signals', () => {
     it('should gracefully handle ref changing to null and back', waitForAsync(() => {
       fixture = createTestComponent();
       errorHandler = createErrorHandler();
-      const errorSpy = jest.spyOn(errorHandler, 'handleError');
+      const errorSpy = vi.spyOn(errorHandler, 'handleError');
 
       detectChangesAndExpectText('1;2;');
 
@@ -171,7 +173,7 @@ describe('rxFor with signals', () => {
     it('should throw on non-iterable ref and suggest using an array', waitForAsync(() => {
       fixture = createTestComponent();
       errorHandler = createErrorHandler();
-      const errorSpy = jest.spyOn(errorHandler, 'handleError');
+      const errorSpy = vi.spyOn(errorHandler, 'handleError');
       const errorValue = 123;
       const expectedError = new Error(
         `Error trying to diff '${errorValue}'. Only arrays and iterables are allowed`,
@@ -185,7 +187,7 @@ describe('rxFor with signals', () => {
     it('should throw on ref changing to number', () => {
       fixture = createTestComponent();
       errorHandler = createErrorHandler();
-      const errorSpy = jest.spyOn(errorHandler, 'handleError');
+      const errorSpy = vi.spyOn(errorHandler, 'handleError');
       const errorValue = 123;
       const expectedError = new Error(
         `Error trying to diff '${errorValue}'. Only arrays and iterables are allowed`,

@@ -45,7 +45,7 @@ describe('RxVirtualViewContent / RxVirtualViewPlaceholder (R3)', () => {
   });
 
   it('registers the content template with the host RxVirtualView (R3.1)', () => {
-    const registerContentSpy = jest.spyOn(
+    const registerContentSpy = vi.spyOn(
       RxVirtualView.prototype,
       'registerContent',
     );
@@ -59,7 +59,7 @@ describe('RxVirtualViewContent / RxVirtualViewPlaceholder (R3)', () => {
   });
 
   it('registers the placeholder template with the host RxVirtualView (R3.2)', () => {
-    const registerPlaceholderSpy = jest.spyOn(
+    const registerPlaceholderSpy = vi.spyOn(
       RxVirtualView.prototype,
       'registerPlaceholder',
     );
@@ -74,7 +74,7 @@ describe('RxVirtualViewContent / RxVirtualViewPlaceholder (R3)', () => {
   });
 
   it('exposes viewContainerRef and templateRef on RxVirtualViewContent (R3.3)', () => {
-    const registerContentSpy = jest.spyOn(
+    const registerContentSpy = vi.spyOn(
       RxVirtualView.prototype,
       'registerContent',
     );

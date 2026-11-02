@@ -2,10 +2,7 @@
 
 import { getZoneUnPatchedApi } from './get-zone-unpatched-api';
 
-// These tests are actually passing. The test spec is skipped because there's no `Zone` in the global
-// scope (since `jest-preset-angular` is not imported). Shouldn't be skipped when zone configuration
-// is moved to a separate library.
-xdescribe('getZoneUnPatchedApi', () => {
+describe('getZoneUnPatchedApi', () => {
   it('should get the unpatched "addEventListener"', () => {
     // Arrange & act & assert
     expect(getZoneUnPatchedApi('addEventListener')).toBe(
@@ -34,7 +31,7 @@ xdescribe('getZoneUnPatchedApi', () => {
 
   it('should add the event listener through the unpatched API', () => {
     // Arrange
-    const listener = jest.fn();
+    const listener = vi.fn();
     const event = new Event('message');
     const addEventListener = getZoneUnPatchedApi('addEventListener');
     const removeEventListener = getZoneUnPatchedApi('removeEventListener');

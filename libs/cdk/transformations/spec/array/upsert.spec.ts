@@ -47,7 +47,7 @@ beforeEach(() => {
     },
     { id: 3, type: 'catDog', name: 'Cat-Dog' },
   ];
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  vi.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 describe('upsert', () => {

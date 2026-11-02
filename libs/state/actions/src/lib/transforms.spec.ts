@@ -24,22 +24,22 @@ describe('Signal transforms', () => {
   });
 
   it('preventDefault should call preventDefault on the event', () => {
-    const preventDefaultSpy = jest.spyOn(e, 'preventDefault');
+    const preventDefaultSpy = vi.spyOn(e, 'preventDefault');
     const res = preventDefault(e);
     expect(preventDefaultSpy).toHaveBeenCalled();
     expect(res).toStrictEqual(e);
   });
 
   it('stopPropagation should call stopPropagation on the event', () => {
-    const stopPropagationSpy = jest.spyOn(e, 'stopPropagation');
+    const stopPropagationSpy = vi.spyOn(e, 'stopPropagation');
     const res = stopPropagation(e);
     expect(stopPropagationSpy).toHaveBeenCalled();
     expect(res).toStrictEqual(e);
   });
 
   it('preventDefaultStopPropagation should call preventDefault and stopPropagation on the event', () => {
-    const preventDefaultSpy = jest.spyOn(e, 'preventDefault');
-    const stopPropagationSpy = jest.spyOn(e, 'stopPropagation');
+    const preventDefaultSpy = vi.spyOn(e, 'preventDefault');
+    const stopPropagationSpy = vi.spyOn(e, 'stopPropagation');
     const res = preventDefaultStopPropagation(e);
     expect(preventDefaultSpy).toHaveBeenCalled();
     expect(stopPropagationSpy).toHaveBeenCalled();

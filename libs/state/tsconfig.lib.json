@@ -22,6 +22,6 @@
     "./test-setup.ts",
     "**/*.spec.ts",
     "**/*.test.ts",
-    "jest.config.ts"
+    "vitest.config.mts"
   ]
 }

@@ -8,7 +8,7 @@ let primitiveState: PrimitiveState;
 
 beforeEach(() => {
   primitiveState = initialPrimitiveState;
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  vi.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 describe('deleteProp', () => {

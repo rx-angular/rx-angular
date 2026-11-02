@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`state migration update-1.4.7 should keep rx-angular/state 1`] = `
+exports[`state migration update-1.4.7 > should keep rx-angular/state 1`] = `
 "import { RxState } from "@rx-angular/state";
 
       import { Injectable } from '@angular/core';
@@ -13,7 +13,7 @@ exports[`state migration update-1.4.7 should keep rx-angular/state 1`] = `
   "
 `;
 
-exports[`state migration update-1.4.7 should replace cdk/state 1`] = `
+exports[`state migration update-1.4.7 > should replace cdk/state 1`] = `
 "import { createSideEffectObservable, createAccumulationObservable, select, stateful, distinctUntilSomeChanged, selectSlice, KeyCompareMap, CompareFn, PickSlice } from "@rx-angular/state/selections";
 import { RxState } from "@rx-angular/state";
 
@@ -35,7 +35,7 @@ import { RxState } from "@rx-angular/state";
   "
 `;
 
-exports[`state migration update-1.4.7 should replace cdk/transformations 1`] = `
+exports[`state migration update-1.4.7 > should replace cdk/transformations 1`] = `
 "import { RxState } from "@rx-angular/state";
 import { insert, remove, toDictionary, update, extract, upsert, setProp, patch, deleteProp, dictionaryToArray, toggle, slice } from "@rx-angular/cdk/transformations";
 

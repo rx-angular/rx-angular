@@ -273,45 +273,46 @@ describe('coalesce operator additional logic', () => {
         }
       });
 
-      it('should emit once per micro task', (done) => {
-        const scope = {};
-        const arrNum = [1, 2, 3, 4];
-        const arrAlph = ['a', 'b', 'c', 'd'];
-        const num$ = concat(from(arrNum), NEVER).pipe(
-          share(),
-          coalesceWith(scheduled([1], asapScheduler), scope),
-        );
-        const alph$ = concat(from(arrAlph), NEVER).pipe(
-          share(),
-          coalesceWith(scheduled([1], asapScheduler), scope),
-        );
-        let numValue;
-        num$.subscribe({
-          next: (x: number) => {
-            numValue = x;
-            throw new Error('should not be called');
-          },
-          error: () => {
-            throw new Error('should not be called');
-          },
-          complete: () => {
-            throw new Error('should not be called');
-          },
-        });
-        alph$.subscribe({
-          next: (x: string) => {
-            expect(x).toBe('d');
-            expect(numValue).not.toBeDefined();
-            done();
-          },
-          error: () => {
-            throw new Error('should not be called');
-          },
-          complete: () => {
-            throw new Error('should not be called');
-          },
-        });
-      });
+      it('should emit once per micro task', () =>
+        new Promise<void>((done) => {
+          const scope = {};
+          const arrNum = [1, 2, 3, 4];
+          const arrAlph = ['a', 'b', 'c', 'd'];
+          const num$ = concat(from(arrNum), NEVER).pipe(
+            share(),
+            coalesceWith(scheduled([1], asapScheduler), scope),
+          );
+          const alph$ = concat(from(arrAlph), NEVER).pipe(
+            share(),
+            coalesceWith(scheduled([1], asapScheduler), scope),
+          );
+          let numValue;
+          num$.subscribe({
+            next: (x: number) => {
+              numValue = x;
+              throw new Error('should not be called');
+            },
+            error: () => {
+              throw new Error('should not be called');
+            },
+            complete: () => {
+              throw new Error('should not be called');
+            },
+          });
+          alph$.subscribe({
+            next: (x: string) => {
+              expect(x).toBe('d');
+              expect(numValue).not.toBeDefined();
+              done();
+            },
+            error: () => {
+              throw new Error('should not be called');
+            },
+            complete: () => {
+              throw new Error('should not be called');
+            },
+          });
+        }));
 
       // different durationSelectors (NOT RECOMMENDED!)
       it('should emit after the second durationSelectors completion if sync', () => {

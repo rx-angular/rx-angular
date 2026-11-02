@@ -19,14 +19,14 @@ describe(rxEffects, () => {
   });
 
   it('should register an observable', () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
     setupComponent(({ register }) => register(of('src').pipe(tap(spy))));
     expect(spy).toHaveBeenCalledWith('src');
   });
 
   it('should unregister a subscription', () => {
     expect.assertions(1);
-    const spy = jest.fn();
+    const spy = vi.fn();
     const scheduler = new TestScheduler(jestMatcher);
 
     setupComponent(({ register }) => {
@@ -38,13 +38,13 @@ describe(rxEffects, () => {
   });
 
   it('should register an observable and sideEffect fn', () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
     setupComponent(({ register }) => register(of('src'), spy));
     expect(spy).toHaveBeenCalledWith('src');
   });
 
   it('should continuously run sideEffect', () => {
-    const spyNext = jest.fn();
+    const spyNext = vi.fn();
     const trigger = new Subject();
     setupComponent(({ register }) => {
       register(trigger, spyNext);
@@ -58,7 +58,7 @@ describe(rxEffects, () => {
   });
 
   it('should register multiple observables', () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
     setupComponent(({ register }) => {
       register(of('src').pipe(tap(spy)));
       register(of('src2'), spy);
@@ -68,8 +68,8 @@ describe(rxEffects, () => {
   });
 
   it('should handle errors', () => {
-    const spyNext = jest.fn();
-    const spyError = jest.fn();
+    const spyNext = vi.fn();
+    const spyError = vi.fn();
     const trigger = new Subject();
     setupComponent(({ register }) => {
       register(trigger, spyNext);
@@ -85,7 +85,7 @@ describe(rxEffects, () => {
   });
 
   it('should unsubscribe onDestroy', () => {
-    const spyInternalOnCleanup = jest.fn();
+    const spyInternalOnCleanup = vi.fn();
 
     const { fixture } = setupComponent(({ register }) => {
       register(
@@ -99,14 +99,14 @@ describe(rxEffects, () => {
   });
 
   it('should call onDestroy', () => {
-    const spySideEffect = jest.fn();
-    const spyInternalOnCleanup = jest.fn();
+    const spySideEffect = vi.fn();
+    const spyInternalOnCleanup = vi.fn();
 
     const { fixture, component } = setupComponent(({ register, onDestroy }) => {
       register(of('src').pipe(tap(spySideEffect)));
       onDestroy(spyInternalOnCleanup);
     });
-    const spyOnCleanup = jest.fn();
+    const spyOnCleanup = vi.fn();
     component.effects.onDestroy(spyOnCleanup);
 
     expect(spySideEffect).toHaveBeenCalled();

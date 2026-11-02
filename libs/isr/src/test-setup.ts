@@ -1,10 +1,11 @@
-// @ts-expect-error https://thymikee.github.io/jest-preset-angular/docs/getting-started/test-environment
-globalThis.ngJest = {
-  testEnvironmentOptions: {
-    errorOnUnknownElements: true,
-    errorOnUnknownProperties: true,
-  },
-};
-import { setupZoneTestEnv } from 'jest-preset-angular/setup-env/zone';
+import '@angular/compiler';
+import '@analogjs/vitest-angular/setup-zone';
+import { setupTestBed } from '@analogjs/vitest-angular/setup-testbed';
+import { provideZoneChangeDetection } from '@angular/core';
 
-setupZoneTestEnv();
+setupTestBed({
+  zoneless: false,
+  providers: [provideZoneChangeDetection()],
+  errorOnUnknownElements: true,
+  errorOnUnknownProperties: true,
+});

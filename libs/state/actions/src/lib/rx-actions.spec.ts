@@ -14,83 +14,88 @@ describe('actions fn', () => {
     expect(typeof component.actions.onProp).toBe('function');
   });
 
-  it('should emit on the subscribed channels', (done) => {
-    const values = 'foo';
-    const exp = values;
-    const { component } = setupComponent<Actions>();
-    component.actions.prop$.subscribe((result) => {
-      expect(result).toBe(exp);
+  it('should emit on the subscribed channels', () =>
+    new Promise<void>((done) => {
+      const values = 'foo';
+      const exp = values;
+      const { component } = setupComponent<Actions>();
+      component.actions.prop$.subscribe((result) => {
+        expect(result).toBe(exp);
+        done();
+      });
+      component.actions.prop(values);
+    }));
+
+  it('should maintain channels per create call', () =>
+    new Promise<void>((done) => {
+      const values = 'foo';
+      const nextSpy = vi.fn((_: string) => void 0);
+      const exp = values;
+      const { component } = setupComponent<Actions>();
+      component.actions2.prop$.subscribe(nextSpy);
+      component.actions.prop$.subscribe((result) => {
+        expect(result).toBe(exp);
+        done();
+      });
+      expect(nextSpy).not.toHaveBeenCalled();
+      component.actions.prop(values);
+    }));
+
+  it('should emit and transform on the subscribed channels', () =>
+    new Promise<void>((done) => {
+      const exp = 'transformed';
+      const { component } = setupComponent<Actions>({
+        transformFns: { prop: (x: any) => 'transformed' },
+      });
+      component.actions.prop$.subscribe((result) => {
+        expect(result).toBe(exp);
+        done();
+      });
+      component.actions.prop('');
+    }));
+
+  it('should emit on multiple subscribed channels', () =>
+    new Promise<void>((done) => {
+      const value1 = 'foo';
+      const value2 = 'bar';
+      const res = {};
+      const { component } = setupComponent<Actions>();
+
+      component.actions.prop$.subscribe((result) => {
+        res['prop'] = result;
+      });
+      component.actions.prop2$.subscribe((result) => {
+        res['prop2'] = result;
+      });
+      component.actions({ prop: value1, prop2: value2 });
+      expect(res).toStrictEqual({ prop: value1, prop2: value2 });
       done();
-    });
-    component.actions.prop(values);
-  });
+    }));
 
-  it('should maintain channels per create call', (done) => {
-    const values = 'foo';
-    const nextSpy = jest.fn((_: string) => void 0);
-    const exp = values;
-    const { component } = setupComponent<Actions>();
-    component.actions2.prop$.subscribe(nextSpy);
-    component.actions.prop$.subscribe((result) => {
-      expect(result).toBe(exp);
+  it('should emit on multiple subscribed channels over merged output', () =>
+    new Promise<void>((done) => {
+      const value1 = 'foo';
+      const value2 = 'bar';
+
+      const res = [];
+      const { component } = setupComponent<Actions>();
+
+      expect(typeof component.actions.$).toBe('function');
+      component.actions.$(['prop', 'prop2']).subscribe((result) => {
+        res.push(result);
+      });
+      component.actions({ prop: value1, prop2: value2 });
+      expect(res.length).toBe(2);
+      expect(res).toStrictEqual([value1, value2]);
       done();
-    });
-    expect(nextSpy).not.toHaveBeenCalled();
-    component.actions.prop(values);
-  });
-
-  it('should emit and transform on the subscribed channels', (done) => {
-    const exp = 'transformed';
-    const { component } = setupComponent<Actions>({
-      transformFns: { prop: (x: any) => 'transformed' },
-    });
-    component.actions.prop$.subscribe((result) => {
-      expect(result).toBe(exp);
-      done();
-    });
-    component.actions.prop('');
-  });
-
-  it('should emit on multiple subscribed channels', (done) => {
-    const value1 = 'foo';
-    const value2 = 'bar';
-    const res = {};
-    const { component } = setupComponent<Actions>();
-
-    component.actions.prop$.subscribe((result) => {
-      res['prop'] = result;
-    });
-    component.actions.prop2$.subscribe((result) => {
-      res['prop2'] = result;
-    });
-    component.actions({ prop: value1, prop2: value2 });
-    expect(res).toStrictEqual({ prop: value1, prop2: value2 });
-    done();
-  });
-
-  it('should emit on multiple subscribed channels over merged output', (done) => {
-    const value1 = 'foo';
-    const value2 = 'bar';
-
-    const res = [];
-    const { component } = setupComponent<Actions>();
-
-    expect(typeof component.actions.$).toBe('function');
-    component.actions.$(['prop', 'prop2']).subscribe((result) => {
-      res.push(result);
-    });
-    component.actions({ prop: value1, prop2: value2 });
-    expect(res.length).toBe(2);
-    expect(res).toStrictEqual([value1, value2]);
-    done();
-  });
+    }));
 
   it('should trigger side effect', () => {
     const { component } = setupComponent<Actions>();
     const t = { se: () => void 0 };
     const dummyBehaviour = (o$) => o$;
-    const spyT = jest.fn((_: any) => void 0);
-    const spyF = jest.fn((_: any) => void 0);
+    const spyT = vi.fn((_: any) => void 0);
+    const spyF = vi.fn((_: any) => void 0);
 
     component.actions.onProp(dummyBehaviour, spyT);
     component.actions.prop('p');
@@ -106,7 +111,7 @@ describe('actions fn', () => {
   it('should apply behaviour to trigger', () => {
     const { component } = setupComponent<Actions>();
     const t = { se: () => void 0 };
-    const spyBehavior = jest.fn();
+    const spyBehavior = vi.fn();
     const dummyBehaviour = (o$) => o$.pipe(tap(spyBehavior));
 
     const sub = component.actions.onProp(dummyBehaviour);
@@ -121,7 +126,7 @@ describe('actions fn', () => {
     const { component, fixture } = setupComponent<Actions>();
     const t = { se: () => void 0 };
     const dummyBehaviour = (o$) => o$;
-    const spyT = jest.fn((_: any) => void 0);
+    const spyT = vi.fn((_: any) => void 0);
 
     const unsub = component.actions.onProp(dummyBehaviour, spyT);
     unsub(); // stop listening to the emissions
@@ -129,56 +134,58 @@ describe('actions fn', () => {
     expect(spyT).toHaveBeenCalledTimes(0);
   });
 
-  it('should destroy all created actions and subscriptions on component destroy', (done) => {
-    const dummyBehaviour = (o$) => o$;
-    const spyEmission = jest.fn((_: any) => void 0);
-    const spyEffect = jest.fn((_: any) => void 0);
-    const spyEmission2 = jest.fn((_: any) => void 0);
-    const spyEffect2 = jest.fn((_: any) => void 0);
+  it('should destroy all created actions and subscriptions on component destroy', () =>
+    new Promise<void>((done) => {
+      const dummyBehaviour = (o$) => o$;
+      const spyEmission = vi.fn((_: any) => void 0);
+      const spyEffect = vi.fn((_: any) => void 0);
+      const spyEmission2 = vi.fn((_: any) => void 0);
+      const spyEffect2 = vi.fn((_: any) => void 0);
 
-    const { component, fixture } = setupComponent<Actions>();
-    component.actions.prop$.subscribe(spyEmission);
-    component.actions2.prop$.subscribe(spyEmission2);
+      const { component, fixture } = setupComponent<Actions>();
+      component.actions.prop$.subscribe(spyEmission);
+      component.actions2.prop$.subscribe(spyEmission2);
 
-    const ef = component.actions.onProp(dummyBehaviour, spyEffect);
-    const ef2 = component.actions2.onProp(dummyBehaviour, spyEffect2);
+      const ef = component.actions.onProp(dummyBehaviour, spyEffect);
+      const ef2 = component.actions2.onProp(dummyBehaviour, spyEffect2);
 
-    expect(spyEmission).toHaveBeenCalledTimes(0);
-    expect(spyEffect).toHaveBeenCalledTimes(0);
+      expect(spyEmission).toHaveBeenCalledTimes(0);
+      expect(spyEffect).toHaveBeenCalledTimes(0);
 
-    expect(spyEmission2).toHaveBeenCalledTimes(0);
-    component.actions.prop('');
-    component.actions2.prop('');
-    expect(spyEmission).toHaveBeenCalledTimes(1);
-    expect(spyEffect).toHaveBeenCalledTimes(1);
+      expect(spyEmission2).toHaveBeenCalledTimes(0);
+      component.actions.prop('');
+      component.actions2.prop('');
+      expect(spyEmission).toHaveBeenCalledTimes(1);
+      expect(spyEffect).toHaveBeenCalledTimes(1);
 
-    expect(spyEmission2).toHaveBeenCalledTimes(1);
-    expect(spyEffect2).toHaveBeenCalledTimes(1);
+      expect(spyEmission2).toHaveBeenCalledTimes(1);
+      expect(spyEffect2).toHaveBeenCalledTimes(1);
 
-    fixture.destroy();
-    component.actions.prop('');
-    component.actions2.prop('');
-    expect(spyEmission).toHaveBeenCalledTimes(1);
-    expect(spyEffect).toHaveBeenCalledTimes(1);
+      fixture.destroy();
+      component.actions.prop('');
+      component.actions2.prop('');
+      expect(spyEmission).toHaveBeenCalledTimes(1);
+      expect(spyEffect).toHaveBeenCalledTimes(1);
 
-    expect(spyEmission2).toHaveBeenCalledTimes(1);
-    expect(spyEffect2).toHaveBeenCalledTimes(1);
+      expect(spyEmission2).toHaveBeenCalledTimes(1);
+      expect(spyEffect2).toHaveBeenCalledTimes(1);
 
-    done();
-  });
+      done();
+    }));
 
-  it('should throw if a setter is used', (done) => {
-    const { component } = setupComponent<Actions>();
-    expect(() => {
-      (component.actions as any).prop = 0;
-    }).toThrow('');
+  it('should throw if a setter is used', () =>
+    new Promise<void>((done) => {
+      const { component } = setupComponent<Actions>();
+      expect(() => {
+        (component.actions as any).prop = 0;
+      }).toThrow('');
 
-    done();
-  });
+      done();
+    }));
 
   it('should isolate errors and invoke provided ErrorHandler', () => {
     const customErrorHandler: ErrorHandler = {
-      handleError: jest.fn(),
+      handleError: vi.fn(),
     };
     const { fixture } = setupComponent<Actions>({
       transformFns: {

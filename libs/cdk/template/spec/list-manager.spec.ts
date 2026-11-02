@@ -125,7 +125,7 @@ const updateViewContext = (
 };
 
 const customErrorHandler: ErrorHandler = {
-  handleError: jest.fn(),
+  handleError: vi.fn(),
 };
 
 let fixtureComponent: any;

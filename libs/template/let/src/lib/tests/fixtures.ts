@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, ElementRef } from '@angular/core';
 
 export class MockChangeDetectorRef extends ChangeDetectorRef {
-  markForCheck = jest.fn();
-  detectChanges = jest.fn();
-  detach = jest.fn();
-  reattach = jest.fn();
-  checkNoChanges = jest.fn();
+  markForCheck = vi.fn();
+  detectChanges = vi.fn();
+  detach = vi.fn();
+  reattach = vi.fn();
+  checkNoChanges = vi.fn();
   context = { a: 'context' };
 }
 

@@ -32,7 +32,7 @@ beforeEach(() => {
     { id: 1, type: 'cat', name: 'Emma' },
     { id: 2, type: 'dog' },
   ];
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  vi.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 describe('extract', () => {

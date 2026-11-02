@@ -21,12 +21,6 @@
           "tsConfig": "libs/test-helpers/tsconfig.lib.json"
         }
       }
-    },
-    "test": {
-      "outputs": [
-        "{workspaceRoot}/coverage/${projectRoot}",
-        "{workspaceRoot}/coverage/libs/test-helpers"
-      ]
     }
   }
 }

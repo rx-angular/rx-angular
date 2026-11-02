@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`cdk migration 1.0.0-beta.1 should replace coalescing 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace coalescing 1`] = `
 "import { RxCoalescingOptions, coalescingObj, coalesceWith, coalescingManager, CoalescingManager } from "@rx-angular/cdk/coalescing";
 
       import { NgModule } from '@angular/core';
@@ -21,7 +21,7 @@ exports[`cdk migration 1.0.0-beta.1 should replace coalescing 1`] = `
   "
 `;
 
-exports[`cdk migration 1.0.0-beta.1 should replace coercing 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace coercing 1`] = `
 "import { coerceObservable, coerceObservableWith, coerceDistinctObservable, coerceDistinctWith, coerceAllFactory } from "@rx-angular/cdk/coercing";
 
       import { NgModule } from '@angular/core';
@@ -42,7 +42,7 @@ exports[`cdk migration 1.0.0-beta.1 should replace coercing 1`] = `
   "
 `;
 
-exports[`cdk migration 1.0.0-beta.1 should replace internals-scheduler 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace internals-scheduler 1`] = `
 "import { cancelCallback, scheduleCallback, forceFrameRate, PriorityLevel } from "@rx-angular/cdk/internals/scheduler";
 
       import { NgModule } from '@angular/core';
@@ -63,7 +63,7 @@ exports[`cdk migration 1.0.0-beta.1 should replace internals-scheduler 1`] = `
   "
 `;
 
-exports[`cdk migration 1.0.0-beta.1 should replace notifications 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace notifications 1`] = `
 "import { RxNotificationKind, RxNotification, RxCompleteNotification, RxErrorNotification, RxNextNotification, RxNotificationValue, RxSuspenseNotification, toRxErrorNotification, toRxSuspenseNotification, toRxCompleteNotification, templateTriggerHandling, rxMaterialize, createTemplateNotifier } from "@rx-angular/cdk/notifications";
 
       import { NgModule } from '@angular/core';
@@ -84,7 +84,7 @@ exports[`cdk migration 1.0.0-beta.1 should replace notifications 1`] = `
   "
 `;
 
-exports[`cdk migration 1.0.0-beta.1 should replace render-strategies 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace render-strategies 1`] = `
 "import { ScheduleOnStrategyOptions, RX_CONCURRENT_STRATEGIES, RxConcurrentStrategies, RX_NATIVE_STRATEGIES, RxNativeStrategies, onStrategy, strategyHandling, RxStrategies, RxStrategyNames, RxDefaultStrategyNames, RxConcurrentStrategyNames, RxNativeStrategyNames, RxCustomStrategyCredentials, RxStrategyCredentials, RxRenderBehavior, RxRenderWork, RX_RENDER_STRATEGIES_CONFIG, RX_RENDER_STRATEGIES_DEFAULTS, RxRenderStrategiesConfig } from "@rx-angular/cdk/render-strategies";
 
       import { NgModule } from '@angular/core';
@@ -107,7 +107,7 @@ exports[`cdk migration 1.0.0-beta.1 should replace render-strategies 1`] = `
   "
 `;
 
-exports[`cdk migration 1.0.0-beta.1 should replace state 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace state 1`] = `
 "import { ObservableAccumulation, ObservableMap, accumulateObservables } from "@rx-angular/cdk/internals/core";
 
       import { NgModule } from '@angular/core';
@@ -128,7 +128,7 @@ exports[`cdk migration 1.0.0-beta.1 should replace state 1`] = `
   "
 `;
 
-exports[`cdk migration 1.0.0-beta.1 should replace template 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace template 1`] = `
 "import { templateHandling, RxBaseTemplateNames, RxRenderAware, RxViewContext, rxBaseTemplateNames, RxTemplateManager, createTemplateManager, RxNotificationTemplateNameMap, RxListManager, createListTemplateManager, RxListViewComputedContext, RxDefaultListViewContext, RxListViewContext } from "@rx-angular/cdk/template";
 
       import { NgModule } from '@angular/core';
@@ -149,7 +149,7 @@ exports[`cdk migration 1.0.0-beta.1 should replace template 1`] = `
   "
 `;
 
-exports[`cdk migration 1.0.0-beta.1 should replace zone-configurations 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace zone-configurations 1`] = `
 "import { focusEvents, mouseEvents, wheelEvents, inputEvents, formControlsEvents, keyboardEvents, vrEvents, mSGestureEvents, printEvents, networkEvents, audioEvents, compositionEvents, touchEvents, globalEvents, websocketEvents, xhrEvents, windowEvents, allEvents, EventTarget, RxZoneFlagsHelperFunctions, RxZoneGlobalConfigurations, RxZoneTestConfigurations, RxZoneRuntimeConfigurations, zoneConfig } from "@rx-angular/cdk/zone-configurations";
 
       import { NgModule } from '@angular/core';
@@ -170,7 +170,7 @@ exports[`cdk migration 1.0.0-beta.1 should replace zone-configurations 1`] = `
   "
 `;
 
-exports[`cdk migration 1.0.0-beta.1 should replace zone-less 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace zone-less 1`] = `
 "import { asyncScheduler, asapScheduler, queueScheduler, animationFrameScheduler, interval, timer, fromEvent } from "@rx-angular/cdk/zone-less/rxjs";
 import { Promise as unpatchedPromise, requestAnimationFrame, cancelAnimationFrame, setInterval, clearInterval, setTimeout, clearTimeout, unpatchAddEventListener } from "@rx-angular/cdk/zone-less/browser";
 import { getZoneUnPatchedApi } from "@rx-angular/cdk/internals/core";
@@ -194,7 +194,7 @@ import { getZoneUnPatchedApi } from "@rx-angular/cdk/internals/core";
   "
 `;
 
-exports[`cdk migration 1.0.0-beta.1 should replace zone-less in edge case 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace zone-less in edge case 1`] = `
 "import { setTimeout } from "@rx-angular/cdk/zone-less/browser";
 
     import { ChangeDetectionStrategy, Component, TrackByFunction, ViewChild } from '@angular/core';
@@ -213,7 +213,7 @@ exports[`cdk migration 1.0.0-beta.1 should replace zone-less in edge case 1`] = 
   "
 `;
 
-exports[`cdk migration 1.0.0-beta.1 should replace zone-less sub-entrypoint 1`] = `
+exports[`cdk migration 1.0.0-beta.1 > should replace zone-less sub-entrypoint 1`] = `
 "import { interval, timer, fromEvent, asyncScheduler, asapScheduler, queueScheduler, animationFrameScheduler } from "@rx-angular/cdk/zone-less/rxjs";
 import { Promise, requestAnimationFrame, cancelAnimationFrame, setInterval, clearInterval, setTimeout, clearTimeout, unpatchAddEventListener } from "@rx-angular/cdk/zone-less/browser";
 

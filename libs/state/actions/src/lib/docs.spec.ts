@@ -79,7 +79,7 @@ describe('usage in component to handle UI interaction', () => {
       By.css('input[type="password"]'),
     );
     const btn = fixture.debugElement.query(By.css('button'));
-    const loginSpy = jest.spyOn(service, 'login');
+    const loginSpy = vi.spyOn(service, 'login');
     username.nativeElement.value = 'user';
     password.nativeElement.value = 'pwd';
 
@@ -230,7 +230,7 @@ describe('handling side effects on event emission', () => {
       By.css('input[type="password"]'),
     );
     const btn = fixture.debugElement.query(By.css('button'));
-    const alertSpy = jest.spyOn(documentMock.defaultView, 'alert');
+    const alertSpy = vi.spyOn(documentMock.defaultView, 'alert');
     username.nativeElement.value = 'user';
     password.nativeElement.value = 'pwd';
 

@@ -19,11 +19,6 @@
         },
         "development": {}
       }
-    },
-    "test": {
-      "options": {
-        "coverage": true
-      }
     }
   }
 }

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Template Migration drop-modules should replace LetDirective with RxLet 1`] = `
+exports[`Template Migration drop-modules > should replace LetDirective with RxLet 1`] = `
 "import { RxLet } from "@rx-angular/template/let";
 
       import { Component } from '@angular/core';
@@ -12,7 +12,7 @@ exports[`Template Migration drop-modules should replace LetDirective with RxLet 
   "
 `;
 
-exports[`Template Migration drop-modules should replace PushPipe with RxPush 1`] = `
+exports[`Template Migration drop-modules > should replace PushPipe with RxPush 1`] = `
 "import { RxPush } from "@rx-angular/template/push";
 
       import { Component } from '@angular/core';
@@ -24,7 +24,7 @@ exports[`Template Migration drop-modules should replace PushPipe with RxPush 1`]
   "
 `;
 
-exports[`Template Migration drop-modules should replace UnpatchDirective with RxUnpatch 1`] = `
+exports[`Template Migration drop-modules > should replace UnpatchDirective with RxUnpatch 1`] = `
 "import { RxUnpatch } from "@rx-angular/template/unpatch";
 
       import { Component } from '@angular/core';
@@ -36,7 +36,7 @@ exports[`Template Migration drop-modules should replace UnpatchDirective with Rx
   "
 `;
 
-exports[`Template Migration drop-modules should should replace modules with standalone 1`] = `
+exports[`Template Migration drop-modules > should should replace modules with standalone 1`] = `
 "import { RxIf } from "@rx-angular/template/if";
 import { RxPush } from "@rx-angular/template/push";
 import { RxUnpatch } from "@rx-angular/template/unpatch";

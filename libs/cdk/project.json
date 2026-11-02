@@ -28,11 +28,6 @@
         "tsConfig": "libs/cdk/tsconfig.lib.json",
         "project": "libs/cdk/ng-package.json"
       }
-    },
-    "test": {
-      "options": {
-        "coverage": true
-      }
     }
   }
 }

@@ -327,7 +327,7 @@ describe(rxState, () => {
 
     it('should use custom scheduler', async () => {
       const scheduler = asapScheduler;
-      const scheduled = jest.spyOn(scheduler, 'schedule');
+      const scheduled = vi.spyOn(scheduler, 'schedule');
       setupConfig(withScheduler(scheduler));
       let state: FnState<{ foo: string }>;
       TestBed.runInInjectionContext(() => {
@@ -343,7 +343,7 @@ describe(rxState, () => {
 
     it('should not use queueScheduler scheduler', () => {
       const scheduler = queueScheduler;
-      const scheduled = jest.spyOn(scheduler, 'schedule');
+      const scheduled = vi.spyOn(scheduler, 'schedule');
       setupConfig(withSyncScheduler());
       TestBed.runInInjectionContext(() => {
         const state = rxState<{ foo: string }>();
@@ -356,7 +356,7 @@ describe(rxState, () => {
     });
 
     it('should use custom accumulator', () => {
-      const accumulator = jest.fn().mockImplementation((state, slice) => ({
+      const accumulator = vi.fn().mockImplementation((state, slice) => ({
         ...state,
         ...slice,
       }));
