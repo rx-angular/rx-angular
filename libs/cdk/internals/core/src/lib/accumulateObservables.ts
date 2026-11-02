@@ -20,12 +20,12 @@ const resolvedPromise$ = from(resolvedPromise);
  * Used for typing
  */
 function getEntriesToObjectReducerFn<T extends Record<string, any>>(
-  keys: PropName<T>[]
+  keys: PropName<T>[],
 ): ArrayReducerFn<T> {
   return (
     accumulator: T,
     currentValue?: PropType<T>,
-    currentIndex?: number
+    currentIndex?: number,
   ): T => {
     return {
       ...accumulator,
@@ -73,7 +73,7 @@ function getEntriesToObjectReducerFn<T extends Record<string, any>>(
 export function accumulateObservables<T extends ObservableMap & NotEmpty<T>>(
   // @TODO type static or Observable to enable mixing of imperative and reatctive values
   obj: T,
-  durationSelector: Observable<any> = resolvedPromise$
+  durationSelector: Observable<any> = resolvedPromise$,
 ): Observable<{ [K in keyof T]: ExtractObservableValue<T[K]> }> {
   const keys = Object.keys(obj) as (keyof T)[];
   // @TODO better typing to enable static values => coerceObservable(obj[key])
@@ -82,8 +82,8 @@ export function accumulateObservables<T extends ObservableMap & NotEmpty<T>>(
       // we avoid using the nullish operator later ;)
       filter((v) => v !== undefined),
       // state "changes" differ from each other, this operator ensures distinct values
-      distinctUntilChanged()
-    )
+      distinctUntilChanged(),
+    ),
   );
   return combineLatest(observables).pipe(
     // As combineLatest will emit multiple times for a change in multiple properties we coalesce those emissions
@@ -91,9 +91,9 @@ export function accumulateObservables<T extends ObservableMap & NotEmpty<T>>(
     coalesceWith(durationSelector),
     // mapping array of values to object
     map((values) =>
-      values.reduce(getEntriesToObjectReducerFn(keys), {} as any)
+      values.reduce(getEntriesToObjectReducerFn(keys), {} as any),
     ),
     // by using shareReplay we share the last composition work done to create the accumulated object
-    shareReplay({ refCount: true, bufferSize: 1 })
+    shareReplay({ refCount: true, bufferSize: 1 }),
   );
 }

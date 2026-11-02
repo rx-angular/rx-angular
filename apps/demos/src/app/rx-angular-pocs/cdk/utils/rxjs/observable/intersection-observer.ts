@@ -9,7 +9,6 @@ export function intersectionObserver(options?: object): {
   observe: (target: Element) => void;
   unobserve: (target: Element) => void;
   entries$: Observable<any>;
-
 } {
   const subject = new Subject();
   const observer = observerSupported()

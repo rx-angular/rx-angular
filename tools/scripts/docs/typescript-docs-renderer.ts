@@ -29,7 +29,7 @@ export class TypescriptDocsRenderer {
     pages: DocsPage[],
     docsUrl: string,
     outputPath: string,
-    typeMap: TypeMap
+    typeMap: TypeMap,
   ): number {
     let generatedCount = 0;
     if (!fs.existsSync(outputPath)) {
@@ -89,7 +89,7 @@ export class TypescriptDocsRenderer {
   private renderInterfaceOrClass(
     info: InterfaceInfo | ClassInfo,
     knownTypeMap: TypeMap,
-    docsUrl: string
+    docsUrl: string,
   ): string {
     const { title, weight, category, description, members } = info;
     let output = '';
@@ -98,7 +98,7 @@ export class TypescriptDocsRenderer {
     output += `${this.renderDescription(
       description,
       knownTypeMap,
-      docsUrl
+      docsUrl,
     )}\n\n`;
     output += `## Signature\n\n`;
     output +=
@@ -118,7 +118,7 @@ export class TypescriptDocsRenderer {
   private renderTypeAlias(
     typeAliasInfo: TypeAliasInfo,
     knownTypeMap: TypeMap,
-    docsUrl: string
+    docsUrl: string,
   ): string {
     const { title, weight, description, type, fullText } = typeAliasInfo;
     let output = '';
@@ -127,7 +127,7 @@ export class TypescriptDocsRenderer {
     output += `${this.renderDescription(
       description,
       knownTypeMap,
-      docsUrl
+      docsUrl,
     )}\n\n`;
     output += `## Signature\n\n`;
     output += this.renderTypeAliasSignature(typeAliasInfo);
@@ -141,7 +141,7 @@ export class TypescriptDocsRenderer {
   private renderEnum(
     enumInfo: EnumInfo,
     knownTypeMap: TypeMap,
-    docsUrl: string
+    docsUrl: string,
   ): string {
     const { title, weight, description, fullText } = enumInfo;
     let output = '';
@@ -150,7 +150,7 @@ export class TypescriptDocsRenderer {
     output += `${this.renderDescription(
       description,
       knownTypeMap,
-      docsUrl
+      docsUrl,
     )}\n\n`;
     output += `## Signature\n\n`;
     output += this.renderEnumSignature(enumInfo);
@@ -160,7 +160,7 @@ export class TypescriptDocsRenderer {
   private renderFunction(
     functionInfo: FunctionInfo,
     knownTypeMap: TypeMap,
-    docsUrl: string
+    docsUrl: string,
   ): string {
     const { title, weight, description, fullText, parameters } = functionInfo;
     let output = '';
@@ -169,7 +169,7 @@ export class TypescriptDocsRenderer {
     output += `${this.renderDescription(
       description,
       knownTypeMap,
-      docsUrl
+      docsUrl,
     )}\n\n`;
     output += `## Signature\n\n`;
     output += this.renderFunctionSignature(functionInfo, knownTypeMap);
@@ -183,7 +183,7 @@ export class TypescriptDocsRenderer {
   private renderVariable(
     variableInfo: VariableInfo,
     knownTypeMap: TypeMap,
-    docsUrl: string
+    docsUrl: string,
   ): string {
     const { title, weight, description, fullText } = variableInfo;
     let output = '';
@@ -192,7 +192,7 @@ export class TypescriptDocsRenderer {
     output += `${this.renderDescription(
       description,
       knownTypeMap,
-      docsUrl
+      docsUrl,
     )}\n\n`;
     return output;
   }
@@ -288,7 +288,7 @@ export class TypescriptDocsRenderer {
 
   private renderFunctionSignature(
     functionInfo: FunctionInfo,
-    knownTypeMap: TypeMap
+    knownTypeMap: TypeMap,
   ): string {
     const { fullText, parameters, type } = functionInfo;
     const args = parameters
@@ -306,7 +306,7 @@ export class TypescriptDocsRenderer {
   private renderFunctionParams(
     params: MethodParameterInfo[],
     knownTypeMap: TypeMap,
-    docsUrl: string
+    docsUrl: string,
   ): string {
     let output = '';
     for (const param of params) {
@@ -320,7 +320,7 @@ export class TypescriptDocsRenderer {
   private renderMembers(
     info: InterfaceInfo | ClassInfo | TypeAliasInfo | EnumInfo,
     knownTypeMap: TypeMap,
-    docsUrl: string
+    docsUrl: string,
   ): string {
     const { members, title } = info;
     let output = '';
@@ -333,7 +333,7 @@ export class TypescriptDocsRenderer {
           ? `default="${this.renderType(
               member.defaultValue,
               knownTypeMap,
-              docsUrl
+              docsUrl,
             )}" `
           : '';
       } else if (member.kind === 'mutator') {
@@ -343,8 +343,8 @@ export class TypescriptDocsRenderer {
           .map((p) =>
             this.renderParameter(
               p,
-              this.renderType(p.type, knownTypeMap, docsUrl)
-            )
+              this.renderType(p.type, knownTypeMap, docsUrl),
+            ),
           )
           .join(', ');
         if (member.fullText === 'constructor') {
@@ -353,7 +353,7 @@ export class TypescriptDocsRenderer {
           type = `(${args}) => ${this.renderType(
             member.type,
             knownTypeMap,
-            docsUrl
+            docsUrl,
           )}`;
         }
       }
@@ -364,7 +364,7 @@ export class TypescriptDocsRenderer {
       output += `${this.renderDescription(
         member.description,
         knownTypeMap,
-        docsUrl
+        docsUrl,
       )}\n\n`;
     }
     return output;
@@ -389,12 +389,12 @@ export class TypescriptDocsRenderer {
   private renderType(
     type: string,
     knownTypeMap: TypeMap,
-    docsUrl: string
+    docsUrl: string,
   ): string {
-    let typeText = type
+    const typeText = type
       .trim()
       // encode HTML entities
-      .replace(/[\u00A0-\u9999<>\&]/gim, (i) => '&#' + i.charCodeAt(0) + ';')
+      .replace(/[\u00A0-\u9999<>&]/gim, (i) => '&#' + i.charCodeAt(0) + ';')
       // remove newlines
       .replace(/\n/g, ' ');
 
@@ -416,13 +416,13 @@ export class TypescriptDocsRenderer {
   private renderDescription(
     description: string,
     knownTypeMap: TypeMap,
-    docsUrl: string
+    docsUrl: string,
   ): string {
     for (const [key, val] of knownTypeMap) {
       const re = new RegExp(`{@link\\s*${key}}`, 'g');
       description = description.replace(
         re,
-        `<a href='${docsUrl}/${val}'>${key}</a>`
+        `<a href='${docsUrl}/${val}'>${key}</a>`,
       );
     }
     return description;

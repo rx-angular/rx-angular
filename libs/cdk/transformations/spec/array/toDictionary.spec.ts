@@ -7,7 +7,13 @@ interface Creature {
   breeds: string[];
 }
 
+interface NestedCreature {
+  id: number;
+  meta: { code: string };
+}
+
 let creatures: Creature[];
+let nestedCreatures: NestedCreature[];
 
 const genus = Symbol('genus');
 
@@ -41,12 +47,23 @@ const dictionaryBySymbol = {
   fake: { id: 3, type: 'catDog', real: false, breeds: [], [genus]: 'fake' },
 };
 
+const dictionaryByNestedKey = {
+  A: { id: 1, meta: { code: 'A' } },
+  B: { id: 2, meta: { code: 'B' } },
+  C: { id: 3, meta: { code: 'C' } },
+};
+
 beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
   creatures = [
     { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
     { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
     { id: 3, type: 'catDog', real: false, breeds: [] },
+  ];
+  nestedCreatures = [
+    { id: 1, meta: { code: 'A' } },
+    { id: 2, meta: { code: 'B' } },
+    { id: 3, meta: { code: 'C' } },
   ];
 });
 
@@ -86,6 +103,29 @@ describe('toDictionary', () => {
 
       expect(dictionaryResult).toEqual(dictionaryBySymbol);
     });
+
+    it('should create dictionary by nested property', () => {
+      const dictionaryResult = toDictionary(
+        nestedCreatures,
+        (creature) => creature.meta.code,
+      );
+
+      expect(dictionaryResult).toEqual(dictionaryByNestedKey);
+    });
+
+    it('should create dictionary by computed key', () => {
+      const dictionaryResult = toDictionary(
+        creatures,
+        (creature) => `${creature.id}-${creature.type}`,
+      );
+
+      expect(Object.keys(dictionaryResult)).toEqual([
+        '1-cat',
+        '2-dog',
+        '3-catDog',
+      ]);
+      expect(dictionaryResult['1-cat']).toEqual(creatures[0]);
+    });
   });
 
   describe('edge cases', () => {
@@ -118,6 +158,15 @@ describe('toDictionary', () => {
 
     it('should return empty object when key value is not string, number or symbol', () => {
       expect(toDictionary(creatures, 'breeds' as any)).toEqual({});
+    });
+
+    it('should return empty object when selector returns not string, number or symbol', () => {
+      const spy = jest.spyOn(console, 'warn').mockImplementation();
+
+      expect(
+        toDictionary(creatures, (creature) => creature.breeds as any),
+      ).toEqual({});
+      expect(spy).toHaveBeenCalled();
     });
 
     it('should return empty object when key is not provided', () => {
@@ -177,6 +226,21 @@ describe('toDictionary', () => {
 
       expect(result['cat'].getDescription()).toBe('1: cat');
       expect(result['dog'].getDescription()).toBe('2: dog');
+    });
+
+    it('should preserve prototype chain with a key selector', () => {
+      const instances = [new TestClass(1, 'cat'), new TestClass(2, 'dog')];
+
+      const result = toDictionary(
+        instances,
+        (instance) => `${instance.id}-${instance.value}`,
+      );
+
+      expect(result['1-cat']).toBeInstanceOf(TestClass);
+      expect(result['2-dog']).toBeInstanceOf(TestClass);
+
+      expect(result['1-cat'].getDescription()).toBe('1: cat');
+      expect(result['2-dog'].getDescription()).toBe('2: dog');
     });
 
     it('should preserve prototype chain with symbol keys', () => {

@@ -1,4 +1,9 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
@@ -61,6 +66,7 @@ import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgxSkeletonLoaderComponent],
 })
 export class ListItemGhostComponent {

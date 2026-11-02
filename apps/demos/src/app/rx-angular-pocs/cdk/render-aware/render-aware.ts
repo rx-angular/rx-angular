@@ -1,6 +1,18 @@
 import { ChangeDetectorRef } from '@angular/core';
-import { RxCustomStrategyCredentials, RxStrategyCredentials, strategyHandling } from '@rx-angular/cdk/render-strategies';
-import { ConnectableObservable, EMPTY, isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import {
+  RxCustomStrategyCredentials,
+  RxStrategyCredentials,
+  strategyHandling,
+} from '@rx-angular/cdk/render-strategies';
+import {
+  ConnectableObservable,
+  EMPTY,
+  isObservable,
+  Observable,
+  of,
+  ReplaySubject,
+  Subject,
+} from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -10,7 +22,6 @@ import {
   publishReplay,
   switchAll,
 } from 'rxjs/operators';
-
 import { RxNotification, RxTemplateObserver } from '../utils/rxjs/Notification';
 import { rxMaterialize } from '../utils/rxjs/operators/rx-materialize';
 
@@ -39,34 +50,30 @@ export function createRenderAware<U>(cfg: {
   getCdRef: (k: RxNotification<U>) => ChangeDetectorRef;
   getContext: (k?: RxNotification<U>) => any;
 }): RenderAware<U | undefined | null> {
-
   const strategyName$ = new ReplaySubject<Observable<string>>(1);
   const strategyHandling$ = strategyHandling(
     cfg.defaultStrategyName,
-    cfg.strategies
+    cfg.strategies,
   );
   const templateTriggerSubject = new Subject<Observable<RxNotification<U>>>();
-  const templateTrigger$ = templateTriggerSubject.pipe(
-    mergeAll()
-  );
+  const templateTrigger$ = templateTriggerSubject.pipe(mergeAll());
 
   const observablesFromTemplate$ = new ReplaySubject<Observable<U>>(1);
-  const renderingEffect$ =
-    observablesFromTemplate$.pipe(
-      map(o => isObservable(o) ? o : of(o)),
-      distinctUntilChanged(),
-      switchAll(),
-      distinctUntilChanged(),
-      rxMaterialize(),
-      mergeWith(templateTrigger$ || EMPTY),
-      /*observeTemplateByNotificationKind(cfg.templateObserver),
+  const renderingEffect$ = observablesFromTemplate$.pipe(
+    map((o) => (isObservable(o) ? o : of(o))),
+    distinctUntilChanged(),
+    switchAll(),
+    distinctUntilChanged(),
+    rxMaterialize(),
+    mergeWith(templateTrigger$ || EMPTY),
+    /*observeTemplateByNotificationKind(cfg.templateObserver),
       applyStrategy(strategy$, cfg.getContext, cfg.getCdRef),*/
-      catchError(e => {
-        console.error(e);
-        return EMPTY;
-      }),
-      publishReplay()
-    );
+    catchError((e) => {
+      console.error(e);
+      return EMPTY;
+    }),
+    publishReplay(),
+  );
 
   return {
     strategy$: strategyHandling$.strategy$,
@@ -82,6 +89,6 @@ export function createRenderAware<U>(cfg: {
     subscribe: () => {
       return (renderingEffect$ as ConnectableObservable<any>).connect();
     },
-    rendered$: renderingEffect$ as any
+    rendered$: renderingEffect$ as any,
   };
 }

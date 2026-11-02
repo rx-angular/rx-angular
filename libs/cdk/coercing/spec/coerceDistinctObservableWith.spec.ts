@@ -14,7 +14,7 @@ function createInputStream(
   cold: typeof TestScheduler.prototype.createColdObservable,
   marble: string,
   values: Record<string, any>,
-  inputHandler: Subject<string | Observable<string>>
+  inputHandler: Subject<string | Observable<string>>,
 ) {
   cold(marble, values)
     .pipe(take(Object.keys(values).length))

@@ -10,7 +10,6 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   name: path.parse(__filename).name,
   meta: {
     docs: {
-      recommended: 'recommended',
       description:
         'Warns against mixing imperative RxState methods in reactive methods.',
     },
@@ -27,7 +26,7 @@ export default ESLintUtils.RuleCreator(docsUrl)({
       'connect',
       'hold',
     ])} ${rxstateMethodCallExpression(['get', 'set'])}`]: (
-      node: TSESTree.CallExpression
+      node: TSESTree.CallExpression,
     ) => {
       context.report({
         node,

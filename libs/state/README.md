@@ -146,7 +146,11 @@ Optimize state selections and data transfer, ensure only the necessary data is t
 ## Version Compatibility
 
 | RxAngular | Angular    |
-|-----------|------------|
+| --------- | ---------- |
+| `^22.0.0` | `>=22.0.0` |
+| `^21.0.0` | `^21.0.0`  |
+| `^20.0.0` | `^20.0.0`  |
+| `^19.0.0` | `^19.0.0`  |
 | `^18.0.0` | `^18.0.0`  |
 | `^17.0.0` | `^17.0.0`  |
 | `^16.0.0` | `^16.0.0`  |

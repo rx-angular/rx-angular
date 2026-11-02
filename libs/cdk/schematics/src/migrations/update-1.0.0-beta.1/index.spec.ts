@@ -426,7 +426,7 @@ describe('cdk migration 1.0.0-beta.1', () => {
   function setupTestFile(fileInput: string, filePath = './app.module.ts') {
     const runner = new SchematicTestRunner(
       '@rx-angular/cdk',
-      path.join(__dirname, '../../../migration.json')
+      path.join(__dirname, '../../../migration.json'),
     );
     const tree = new UnitTestTree(Tree.empty());
 

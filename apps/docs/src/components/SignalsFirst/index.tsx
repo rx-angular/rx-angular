@@ -25,7 +25,7 @@ function conceptHref(conceptId: string): string {
 // deliberately NOT a maintainer-attributed quote — so it ships now under the
 // signals-first positioning (ADR-RXA-0005). Do not reword it into an attributed
 // quote of GH #1588 without clearing the publishing gate (recipes §3.2.3).
-function LocalCopy({ href }: { href: string }): JSX.Element {
+function LocalCopy({ href }: { href: string }): React.JSX.Element {
   return (
     <p className={styles.signalsFirstIntro}>
       For{' '}
@@ -47,7 +47,7 @@ function LocalCopy({ href }: { href: string }): JSX.Element {
   );
 }
 
-function GlobalCopy({ href }: { href: string }): JSX.Element {
+function GlobalCopy({ href }: { href: string }): React.JSX.Element {
   return (
     <p className={styles.signalsFirstIntro}>
       Angular signals — <code>signal()</code>, <code>computed()</code>, and{' '}
@@ -69,7 +69,7 @@ export default function SignalsFirst({
   conceptId = 'E3',
   scope = 'local',
   children,
-}: SignalsFirstProps): JSX.Element {
+}: SignalsFirstProps): React.JSX.Element {
   const href = conceptHref(conceptId);
   return (
     <Admonition type="note" title="Signals first">

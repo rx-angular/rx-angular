@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxVirtualView } from '../virtual-view.directive';
 import { RxVirtualViewContent } from '../virtual-view-content.directive';
@@ -96,6 +101,7 @@ describe('RxVirtualViewContent / RxVirtualViewPlaceholder (R3)', () => {
   selector: 'rx-missing-content-host',
   standalone: true,
   imports: [RxVirtualViewObserver, RxVirtualView, RxVirtualViewPlaceholder],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="container" rxVirtualViewObserver [root]="null">
       <div rxVirtualView #vv="rxVirtualView" class="widget">

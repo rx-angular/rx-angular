@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DataService } from './shared/data.service';
-import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import {
-  MatButtonToggleGroup,
   MatButtonToggle,
+  MatButtonToggleGroup,
 } from '@angular/material/button-toggle';
+import { VisualizerComponent } from '../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { V1AComponent } from './native-v/v1-a.component';
 import { V2AComponent } from './push-v/v2-a.component';
-import { V3AComponent } from './rx-let-v/v3-a.component';
 import { V4AComponent } from './rx-form-v/v4-a.component';
+import { V3AComponent } from './rx-let-v/v3-a.component';
+import { DataService } from './shared/data.service';
 
 @Component({
   selector: 'rxa-global-order',

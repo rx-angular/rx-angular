@@ -1,11 +1,11 @@
 import * as _ from 'lodash';
 
 function stringify(x: any): string {
-  return JSON.stringify(x, function(key: string, value: any) {
+  return JSON.stringify(x, function (key: string, value: any) {
     if (Array.isArray(value)) {
       return (
         '[' +
-        value.map(function(i) {
+        value.map(function (i) {
           return '\n\t' + stringify(i);
         }) +
         '\n]'
@@ -38,7 +38,7 @@ export function defaultAssert(value: any, message: string): void {
 
 export function observableMatcher(
   assert: (a: any, e: any) => void,
-  assertDeepEqual: (a: any, e: any) => void
+  assertDeepEqual: (a: any, e: any) => void,
 ): (actual: any, expected: any) => void {
   return (actual: any, expected: any) => {
     if (Array.isArray(actual) && Array.isArray(expected)) {

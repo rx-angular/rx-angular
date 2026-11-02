@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Ui2Component } from '../ui/ui-2.component';
 
 @Component({
@@ -7,6 +7,7 @@ import { Ui2Component } from '../ui/ui-2.component';
     <h2>Feature 2</h2>
     <app-ui-2 />
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [Ui2Component],
 })
 export default class Feature2Component {}

@@ -21,7 +21,7 @@ import {
   RxVirtualViewRepeater,
 } from './model';
 import { observeElementSize } from './observe-element-size';
-import { unpatchedScroll } from './util';
+import { isNotRendered, unpatchedScroll } from './util';
 
 /**
  * @description Will be provided through Terser global definitions by Angular CLI
@@ -77,11 +77,7 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
   imports: [],
 })
 export class RxVirtualScrollViewportComponent
-  implements
-    RxVirtualScrollViewport,
-    AfterViewInit,
-    AfterContentInit,
-    OnDestroy
+  implements RxVirtualScrollViewport, AfterViewInit, AfterContentInit, OnDestroy
 {
   private elementRef = inject(ElementRef<HTMLElement>);
   private scrollStrategy = inject(RxVirtualScrollStrategy<unknown>, {
@@ -136,6 +132,20 @@ export class RxVirtualScrollViewportComponent
   /**
    * @description
    *
+   * The range of items intersecting the viewport. `start` is the index of the
+   * first, `end` the exclusive index of the last intersecting item. Partially
+   * visible items are part of the range.
+   *
+   * In contrast to `viewRange`, this range is not widened by `runwayItems`,
+   * `runwayItemsOpposite` or `appendOnly`. Use it whenever you need to know what
+   * the user actually sees, e.g. to drive lazy loading of data.
+   */
+  @Output()
+  readonly visibleRange = this.scrollStrategy.visibleRange$;
+
+  /**
+   * @description
+   *
    * The index of the currently scrolled item. The scrolled item is the topmost
    * item actually being visible to the user.
    */
@@ -152,17 +162,24 @@ export class RxVirtualScrollViewportComponent
         'Error: rx-virtual-scroll-viewport requires an `RxVirtualScrollStrategy` to be set.',
       );
     }
-    observeElementSize(
+    const observedElement: HTMLElement =
       this.scrollElement?.getElementRef()?.nativeElement ??
-        this.elementRef.nativeElement,
-      {
-        extract: (entries) => ({
-          height: Math.round(entries[0].contentRect.height),
-          width: Math.round(entries[0].contentRect.width),
-        }),
-      },
-    )
+      this.elementRef.nativeElement;
+    observeElementSize(observedElement, {
+      extract: (entries) => ({
+        height: Math.round(entries[0].contentRect.height),
+        width: Math.round(entries[0].contentRect.width),
+      }),
+    })
       .pipe(
+        // while the viewport has no layout box it is not rendered at all (e.g.
+        // an ancestor is `display: none`, as Ionic's page stack does). The
+        // collapsed rect reported in that case is not a measurement, forwarding
+        // it would collapse the rendered range. The real size arrives as soon as
+        // the viewport is rendered again
+        filter(
+          ({ width, height }) => !isNotRendered(observedElement, width, height),
+        ),
         distinctUntilChanged(
           ({ height: prevHeight, width: prevWidth }, { height, width }) =>
             prevHeight === height && prevWidth === width,

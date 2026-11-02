@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/rebundle",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "@rx-angular/rebundle is an esbuild bundler plugin for Angular, optimized for reducing the amount of bundles.",
   "publishConfig": {
     "access": "public"
@@ -36,7 +36,7 @@
     "directory": "libs/rebundle"
   },
   "dependencies": {
-    "@nx/devkit": "22.3.3",
+    "@nx/devkit": "^22.3.3 || ^23.0.0",
     "esbuild": "^0.25.11",
     "rolldown": "^1.1.4"
   },

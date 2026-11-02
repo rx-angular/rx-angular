@@ -1,11 +1,23 @@
-import { Component, EnvironmentInjector } from '@angular/core';
+import { Component, EnvironmentInjector, InjectionToken } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { Observable, of, Subject, tap, timer } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { rxEffects, RxEffectsSetupFn } from './rx-effects';
 
+// https://github.com/rx-angular/rx-angular/issues/1737
+const GLOBAL_EFFECTS = new InjectionToken('GLOBAL_EFFECTS', {
+  providedIn: 'root',
+  factory: () => rxEffects(),
+});
+
 describe(rxEffects, () => {
+  it('should provide the handle via an injection token', () => {
+    const effects = TestBed.inject(GLOBAL_EFFECTS);
+    expect(effects.register).toBeInstanceOf(Function);
+    expect(effects.onDestroy).toBeInstanceOf(Function);
+  });
+
   it('should register an observable', () => {
     const spy = jest.fn();
     setupComponent(({ register }) => register(of('src').pipe(tap(spy))));

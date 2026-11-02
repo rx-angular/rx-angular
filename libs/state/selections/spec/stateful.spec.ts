@@ -1,6 +1,5 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { stateful } from '@rx-angular/state/selections';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { EMPTY, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -49,7 +48,15 @@ describe('stateful', () => {
     });
   });
 
-  it('should replay the last emitted value', () => {});
+  it('should replay the last emitted value', () => {
+    testScheduler.run(({ hot, expectObservable }) => {
+      const source = hot('-a-b-c---|');
+      const shared = source.pipe(stateful());
+      expectObservable(shared).toBe('-a-b-c---|');
+      // a late subscriber immediately receives the latest value
+      expectObservable(shared, '------^').toBe('------c--|');
+    });
+  });
 
   it('should accept one operator', () => {
     testScheduler.run(({ cold, expectObservable }) => {
@@ -57,7 +64,7 @@ describe('stateful', () => {
       const source = cold('a|', values);
       expectObservable(source.pipe(stateful(map((v) => v * 2)))).toBe(
         'b|',
-        values
+        values,
       );
     });
   });
@@ -73,9 +80,9 @@ describe('stateful', () => {
             map((v) => v / 2),
             map((v) => v * 2),
             map((v) => v / 2),
-            map((v) => v * 2)
-          )
-        )
+            map((v) => v * 2),
+          ),
+        ),
       ).toBe('b|', values);
     });
   });

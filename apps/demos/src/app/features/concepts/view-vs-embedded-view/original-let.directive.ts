@@ -7,7 +7,6 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-
 import {
   ObservableInput,
   ReplaySubject,

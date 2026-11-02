@@ -7,18 +7,18 @@
   "targets": {
     "build": {
       "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/libs/isr"],
+      "defaultConfiguration": "production",
       "options": {
         "project": "libs/isr/ng-package.json",
         "tsConfig": "libs/isr/tsconfig.lib.json"
       },
-      "outputs": ["{workspaceRoot}/dist/libs/isr"],
       "configurations": {
         "production": {
           "tsConfig": "libs/isr/tsconfig.lib.prod.json"
         },
         "development": {}
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",

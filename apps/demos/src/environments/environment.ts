@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 export const environment = {
   production: false,
   zoneless: false,
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
 };
 
 /*

@@ -29,7 +29,6 @@ export function preventDefaultStopPropagation(e: Event): Event {
   return e;
 }
 
-
 /**
  * @description
  * This transform is helps to pluck values from DOM `Event` or forward the value directly.
@@ -37,8 +36,8 @@ export function preventDefaultStopPropagation(e: Event): Event {
  */
 export function eventValue<T = string>(e: Event | T): T {
   // Consider https://stackoverflow.com/questions/1458894/how-to-determine-if-javascript-object-is-an-event
-  if((e as unknown as {target: {value: T}})?.target) {
-    return (e as unknown as {target: {value: T}})?.target?.value;
+  if ((e as unknown as { target: { value: T } })?.target) {
+    return (e as unknown as { target: { value: T } })?.target?.value;
   }
   return e as T;
 }

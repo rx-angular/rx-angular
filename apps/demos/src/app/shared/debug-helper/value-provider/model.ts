@@ -8,9 +8,8 @@ export enum SchedulingPriority {
   idleCallback,
   userBlocking,
   userVisible,
-  background
+  background,
 }
-
 
 export interface TestItem {
   id: number;
@@ -27,12 +26,12 @@ export interface ProvidedValues {
  * id: newIndex
  */
 export interface Positions {
-  [id: number]: number
+  [id: number]: number;
 }
 
 export interface SchedulerConfig {
   scheduler: SchedulingPriority;
   duration?: number;
   numEmissions?: number;
-  tickSpeed?: number|number[];
+  tickSpeed?: number | number[];
 }

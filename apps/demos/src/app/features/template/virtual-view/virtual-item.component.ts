@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
-  RxVirtualViewPlaceholder,
   RxVirtualViewContent,
+  RxVirtualViewPlaceholder,
 } from '@rx-angular/template/virtual-view';
 
 @Component({

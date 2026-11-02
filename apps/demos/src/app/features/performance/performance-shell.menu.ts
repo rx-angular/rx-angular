@@ -4,10 +4,10 @@ export const MENU_ITEMS = [
   ...RXLET_VS_PUSH_MENU_ITEMS,
   {
     label: 'Nested Component Structure',
-    link: 'nested-component-structure'
+    link: 'nested-component-structure',
   },
   {
     label: 'Sibling Component Structure',
-    link: 'sibling-component-structure'
-  }
+    link: 'sibling-component-structure',
+  },
 ];

@@ -3,7 +3,7 @@ import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { Observable } from 'rxjs';
-import { RxVirtualScrollViewportComponent } from '../src/index';
+import { ListRange, RxVirtualScrollViewportComponent } from '../src/index';
 import {
   DEFAULT_ITEM_SIZE,
   DEFAULT_RUNWAY_ITEMS,
@@ -72,6 +72,8 @@ export interface VirtualScrollMountConfig<T> {
   itemSize?: number;
   strategy?: RxStrategyNames<string> | Observable<RxStrategyNames<string>>;
   containerHeight?: number;
+  appendOnly?: boolean;
+  keepScrolledIndexOnPrepend?: boolean;
 }
 
 export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
@@ -81,6 +83,8 @@ export const defaultMountConfig: VirtualScrollMountConfig<Item> = {
   viewCache: DEFAULT_TEMPLATE_CACHE_SIZE,
   containerHeight: 300,
   showItemDescription: true,
+  appendOnly: false,
+  keepScrolledIndexOnPrepend: false,
 } as const;
 export const defaultItemLength = 500;
 export function getDefaultMountConfig(): VirtualScrollMountConfig<Item> {
@@ -93,4 +97,71 @@ export function getViewportComponent(fixture: ComponentFixture<any>) {
   return fixture.debugElement.query(
     By.directive(RxVirtualScrollViewportComponent),
   ).componentInstance as RxVirtualScrollViewportComponent;
+}
+
+/** the part of a `createOutputSpy` we care about when it's yielded by `cy.get` */
+type OutputSpy<T> = { lastCall: { args: [T] } };
+
+function asOutputSpy<T>(spy: unknown): OutputSpy<T> {
+  return spy as OutputSpy<T>;
+}
+
+/**
+ * the `scrolledIndex` is defined as the first item visible in the viewport,
+ * which is exactly what `visibleRange.start` points to
+ */
+export function expectVisibleRangeStartToEqualScrolledIndex() {
+  cy.get('@scrolledIndex').then((scrolledIndex) => {
+    cy.get('@visibleRange').should((visibleRange) => {
+      expect(asOutputSpy<ListRange>(visibleRange).lastCall.args[0].start).to.eq(
+        asOutputSpy<number>(scrolledIndex).lastCall.args[0],
+      );
+    });
+  });
+}
+
+/**
+ * Yields `read()` once it returned the same value for `stableReads` consecutive
+ * reads, `interval` ms apart. Use it to capture a baseline only after the
+ * rendering, measuring and scrolling triggered so far has settled - on a slow
+ * or busy machine that takes longer than any fixed `cy.wait`.
+ */
+export function waitUntilStable<T>(
+  read: () => T,
+  interval = 50,
+  stableReads = 3,
+): Cypress.Chainable<T> {
+  let last: string | undefined;
+  let stable = 0;
+  let reads = 0;
+  const check = (): Cypress.Chainable<T> =>
+    cy.wait(interval, { log: false }).then(() => {
+      const value = read();
+      const serialized = JSON.stringify(value);
+      stable = serialized === last ? stable + 1 : 0;
+      last = serialized;
+      reads++;
+      if (stable >= stableReads) {
+        return cy.wrap(value, { log: false });
+      }
+      if (reads > 200) {
+        throw new Error(`value did not settle: ${serialized}`);
+      }
+      return check();
+    });
+  return check();
+}
+
+/** asserts the top of the given item relative to the scroll container */
+export function expectItemOffset(id: number, offset: number) {
+  cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
+    const item = [...runway.querySelectorAll('[data-cy=item]')].find(
+      (element) => element.textContent!.trim() === `${id}`,
+    );
+    expect(item, `item ${id} is rendered`).not.to.eq(undefined);
+    expect(
+      item!.getBoundingClientRect().top - runway.getBoundingClientRect().top,
+      `offset of item ${id}`,
+    ).to.eq(offset);
+  });
 }

@@ -1,4 +1,9 @@
-import { Component, ElementRef, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  viewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   RxRenderBehavior,
@@ -23,6 +28,7 @@ import { RxIf } from '../if.directive';
     </div>
   `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxIf],
 })
 class RxIfTestComponent {

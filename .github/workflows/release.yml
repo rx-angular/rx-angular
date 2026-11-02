@@ -11,6 +11,10 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+# Pushes and GitHub releases use the GitHub App token, not GITHUB_TOKEN
+permissions:
+  contents: read
+
 jobs:
   release:
     name: Version and release
@@ -20,7 +24,7 @@ jobs:
       NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
     steps:
       - name: Authenticate as "RxAngular Bot" GitHub App
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.GH_APP_ID }}
@@ -35,14 +39,12 @@ jobs:
           git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
           git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
       - name: Clone the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
       - name: Set up dependencies
         uses: ./.github/actions/setup
-        with:
-          cache-cypress: 'false'
       - name: Version, release and generate changelog
         run: npx nx release --skip-publish
         env:

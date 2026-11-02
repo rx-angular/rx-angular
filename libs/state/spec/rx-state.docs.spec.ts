@@ -1,8 +1,7 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, Injectable } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injectable } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { jestMatcher } from '@test-helpers/rx-angular';
 import { map, merge, Subject } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
@@ -12,6 +11,7 @@ import { rxState } from '../src/lib/rx-state';
   selector: 'rx-counter',
   standalone: true,
   imports: [AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <button id="increment" (click)="increment.next()">Increment</button>
     <button id="decrement" (click)="decrement.next()">Decrement</button>
@@ -28,9 +28,9 @@ export class CounterComponent {
       'count',
       merge(
         this.increment.pipe(map(() => 1)),
-        this.decrement.pipe(map(() => -1))
+        this.decrement.pipe(map(() => -1)),
       ),
-      ({ count }, slice) => count + slice
+      ({ count }, slice) => count + slice,
     );
   });
 
@@ -52,7 +52,7 @@ describe('CounterComponent', () => {
     incrementButton.triggerEventHandler('click', null);
     fixture.detectChanges();
     expect(
-      fixture.debugElement.query(By.css('#counter')).nativeElement.textContent
+      fixture.debugElement.query(By.css('#counter')).nativeElement.textContent,
     ).toBe('1');
   });
 
@@ -61,7 +61,7 @@ describe('CounterComponent', () => {
     decrementButton.triggerEventHandler('click', null);
     fixture.detectChanges();
     expect(
-      fixture.debugElement.query(By.css('#counter')).nativeElement.textContent
+      fixture.debugElement.query(By.css('#counter')).nativeElement.textContent,
     ).toBe('-1');
   });
 });
@@ -77,9 +77,9 @@ export class CounterService {
       'count',
       merge(
         this.increment.pipe(map(() => 1)),
-        this.decrement.pipe(map(() => -1))
+        this.decrement.pipe(map(() => -1)),
       ),
-      ({ count }, slice) => count + slice
+      ({ count }, slice) => count + slice,
     );
   });
 

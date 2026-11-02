@@ -4,7 +4,7 @@ import { ApplicationRef, ChangeDetectorRef, Injectable } from '@angular/core';
 export class CdHelper {
   constructor(
     protected cdRef: ChangeDetectorRef,
-    protected appRef: ApplicationRef
+    protected appRef: ApplicationRef,
   ) {}
 
   appRef_tick() {

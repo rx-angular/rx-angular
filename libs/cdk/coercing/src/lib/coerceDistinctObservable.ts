@@ -14,12 +14,12 @@ import { coerceObservable } from './coerceObservable';
  */
 export function coerceDistinctObservable<T>(
   o$: Observable<Observable<T> | T>,
-  flattenOperator?: OperatorFunction<Observable<T>, T>
+  flattenOperator?: OperatorFunction<Observable<T>, T>,
 ) {
   flattenOperator = flattenOperator || switchAll();
   return coerceObservable(o$).pipe(
     distinctUntilChanged(),
     flattenOperator,
-    distinctUntilChanged()
+    distinctUntilChanged(),
   );
 }

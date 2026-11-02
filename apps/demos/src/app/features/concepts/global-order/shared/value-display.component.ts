@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import { NgClass } from '@angular/common';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'rxa-value-display',
@@ -19,6 +19,7 @@ import { NgClass } from '@angular/common';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIcon, NgClass],
 })
 export class ValueDisplayComponent {

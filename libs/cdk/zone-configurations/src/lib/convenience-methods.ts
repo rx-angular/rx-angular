@@ -5,7 +5,7 @@ import {
 } from './model/zone-config.types';
 
 export const convenienceMethods = (
-  config: RxZoneConfigConfiguration
+  config: RxZoneConfigConfiguration,
 ): RxZoneConfigConvenienceMethods => ({
   unpatchXHR: () => {
     config.global.disable.XHR();

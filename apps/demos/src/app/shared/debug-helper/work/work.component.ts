@@ -1,11 +1,17 @@
-import { Component, ElementRef, Input, Renderer2 } from '@angular/core';
+import { NgClass } from '@angular/common';
+import {
+  Component,
+  ElementRef,
+  Input,
+  Renderer2,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { RxState } from '@rx-angular/state';
+import { selectSlice } from '@rx-angular/state/selections';
+import { RxLet } from '@rx-angular/template/let';
 import { isObservable, Observable, of, Subject } from 'rxjs';
 import { map, scan, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { selectSlice } from '@rx-angular/state/selections';
-import { RxState } from '@rx-angular/state';
 import { Hooks } from '../hooks';
-import { RxLet } from '../../../../../../../libs/template/let/src/lib/let.directive';
-import { NgClass } from '@angular/common';
 
 type workType = 'scripting' | 'layouting';
 
@@ -20,6 +26,7 @@ type workType = 'scripting' | 'layouting';
   `,
   styleUrls: ['./work.component.scss'],
   providers: [RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, NgClass],
 })
 export class WorkComponent extends Hooks {

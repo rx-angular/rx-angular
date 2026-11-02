@@ -1,8 +1,8 @@
-import { AsyncAction } from './AsyncAction';
+import { Subscription } from 'rxjs';
 import { Action } from '../Action';
 import { Scheduler } from '../Scheduler';
 import { SchedulerAction } from '../types';
-import { Subscription } from 'rxjs';
+import { AsyncAction } from './AsyncAction';
 
 export class AsyncScheduler extends Scheduler {
   public static delegate?: Scheduler;
@@ -13,7 +13,7 @@ export class AsyncScheduler extends Scheduler {
    * @type {boolean}
    * @deprecated internal use only
    */
-  public active: boolean = false;
+  public active = false;
   /**
    * An internal ID used to track the latest asynchronous task such as those
    * coming from `setTimeout`, `setInterval`, `requestAnimationFrame`, and
@@ -25,7 +25,7 @@ export class AsyncScheduler extends Scheduler {
 
   constructor(
     SchedulerAction: typeof Action,
-    now: () => number = Scheduler.now
+    now: () => number = Scheduler.now,
   ) {
     super(SchedulerAction, () => {
       if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {
@@ -38,8 +38,8 @@ export class AsyncScheduler extends Scheduler {
 
   public schedule<T>(
     work: (this: SchedulerAction<T>, state?: T) => void,
-    delay: number = 0,
-    state?: T
+    delay = 0,
+    state?: T,
   ): Subscription {
     if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {
       return AsyncScheduler.delegate.schedule(work, delay, state);

@@ -5,13 +5,15 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {ElementRef} from '@angular/core';
-import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {isFakeMousedownFromScreenReader} from '@angular/cdk/a11y';
-import {coerceElement} from '@angular/cdk/coercion';
-import {setTimeout} from '../../rx-angular-pocs/cdk/utils/zone-agnostic/browser';
+import { isFakeMousedownFromScreenReader } from '@angular/cdk/a11y';
+import { coerceElement } from '@angular/cdk/coercion';
+import {
+  normalizePassiveListenerOptions,
+  Platform,
+} from '@angular/cdk/platform';
+import { ElementRef } from '@angular/core';
 import { getZoneUnPatchedApi } from '../../rx-angular-pocs/cdk/utils/zone-agnostic';
-
+import { setTimeout } from '../../rx-angular-pocs/cdk/utils/zone-agnostic/browser';
 
 /**
  * @license
@@ -23,7 +25,10 @@ import { getZoneUnPatchedApi } from '../../rx-angular-pocs/cdk/utils/zone-agnost
 
 /** Possible states for a ripple element. */
 export const enum RippleState {
-  FADING_IN, VISIBLE, FADING_OUT, HIDDEN
+  FADING_IN,
+  VISIBLE,
+  FADING_OUT,
+  HIDDEN,
 }
 
 export interface RippleConfig {
@@ -46,25 +51,22 @@ export interface RippleAnimationConfig {
   exitDuration?: number;
 }
 
-
 // let isTouch: boolean;
 
 /**
  * Reference to a previously launched ripple element.
  */
 export class RippleRef {
-
   /** Current state of the ripple. */
   state: RippleState = RippleState.HIDDEN;
 
   constructor(
-    private _renderer: {fadeOutRipple(ref: RippleRef): void},
+    private _renderer: { fadeOutRipple(ref: RippleRef): void },
     /** Reference to the ripple HTML element. */
     public element: HTMLElement,
     /** Ripple configuration used for the ripple. */
-    public config: RippleConfig
-  ) {
-  }
+    public config: RippleConfig,
+  ) {}
 
   /** Fades out the ripple element. */
   fadeOut() {
@@ -78,7 +80,7 @@ export class RippleRef {
  */
 export const defaultRippleAnimationConfig = {
   enterDuration: 450,
-  exitDuration: 400
+  exitDuration: 400,
 };
 
 /**
@@ -88,7 +90,7 @@ export const defaultRippleAnimationConfig = {
 const ignoreMouseEventsTimeout = 800;
 
 /** Options that apply to all the event listeners that are bound by the ripple renderer. */
-const passiveEventOptions = normalizePassiveListenerOptions({passive: true});
+const passiveEventOptions = normalizePassiveListenerOptions({ passive: true });
 
 /** Events that signal that the pointer is down. ['mousedown', 'touchstart']*/
 let pointerDownEvents;
@@ -131,25 +133,27 @@ export class RippleRenderer implements EventListenerObject {
    */
   private _containerRect: ClientRect | null;
 
-  constructor(elementOrElementRef: HTMLElement | ElementRef<HTMLElement>, platform: Platform) {
-
+  constructor(
+    elementOrElementRef: HTMLElement | ElementRef<HTMLElement>,
+    platform: Platform,
+  ) {
     // Only do anything if we're on the browser.
     if (platform.isBrowser) {
       this._containerElement = coerceElement(elementOrElementRef);
     }
 
     // detect touch support
-    if(pointerDownEvents === undefined) {
+    if (pointerDownEvents === undefined) {
       const s = touchOrMouseSupport(platform);
-      if(s === -1) {  // mouse only
-        pointerDownEvents = ['mousedown']
-      }
-      else if(s === 0) { // touch only
-        pointerDownEvents = ['touchstart']
-
-      }
-      else { // both (1)
-        pointerDownEvents = ['mousedown', 'touchstart']
+      if (s === -1) {
+        // mouse only
+        pointerDownEvents = ['mousedown'];
+      } else if (s === 0) {
+        // touch only
+        pointerDownEvents = ['touchstart'];
+      } else {
+        // both (1)
+        pointerDownEvents = ['mousedown', 'touchstart'];
       }
     }
   }
@@ -161,16 +165,20 @@ export class RippleRenderer implements EventListenerObject {
    * @param config Extra ripple options.
    */
   fadeInRipple(x: number, y: number, config: RippleConfig = {}): RippleRef {
-    const containerRect = this._containerRect =
-      this._containerRect || this._containerElement.getBoundingClientRect();
-    const animationConfig = {...defaultRippleAnimationConfig, ...config.animation};
+    const containerRect = (this._containerRect =
+      this._containerRect || this._containerElement.getBoundingClientRect());
+    const animationConfig = {
+      ...defaultRippleAnimationConfig,
+      ...config.animation,
+    };
 
     if (config.centered) {
       x = containerRect.left + containerRect.width / 2;
       y = containerRect.top + containerRect.height / 2;
     }
 
-    const radius = config.radius || distanceToFurthestCorner(x, y, containerRect);
+    const radius =
+      config.radius || distanceToFurthestCorner(x, y, containerRect);
     const offsetX = x - containerRect.left;
     const offsetY = y - containerRect.top;
     const duration = animationConfig.enterDuration;
@@ -214,7 +222,8 @@ export class RippleRenderer implements EventListenerObject {
     // Wait for the ripple element to be completely faded in.
     // Once it's faded in, the ripple can be hidden immediately if the mouse is released.
     setTimeout(() => {
-      const isMostRecentTransientRipple = rippleRef === this._mostRecentTransientRipple;
+      const isMostRecentTransientRipple =
+        rippleRef === this._mostRecentTransientRipple;
 
       rippleRef.state = RippleState.VISIBLE;
 
@@ -222,7 +231,10 @@ export class RippleRenderer implements EventListenerObject {
       // keep only the persistent ripples and the latest transient ripple. We do this,
       // because we don't want stacked transient ripples to appear after their enter
       // animation has finished.
-      if (!config.persistent && (!isMostRecentTransientRipple || !this._isPointerDown)) {
+      if (
+        !config.persistent &&
+        (!isMostRecentTransientRipple || !this._isPointerDown)
+      ) {
         rippleRef.fadeOut();
       }
     }, duration);
@@ -249,7 +261,10 @@ export class RippleRenderer implements EventListenerObject {
     }
 
     const rippleEl = rippleRef.element;
-    const animationConfig = {...defaultRippleAnimationConfig, ...rippleRef.config.animation};
+    const animationConfig = {
+      ...defaultRippleAnimationConfig,
+      ...rippleRef.config.animation,
+    };
 
     rippleEl.style.transitionDuration = `${animationConfig.exitDuration}ms`;
     rippleEl.style.opacity = '0';
@@ -264,11 +279,13 @@ export class RippleRenderer implements EventListenerObject {
 
   /** Fades out all currently active ripples. */
   fadeOutAll() {
-    this._activeRipples.forEach(ripple => ripple.fadeOut());
+    this._activeRipples.forEach((ripple) => ripple.fadeOut());
   }
 
   /** Sets up the trigger event listeners */
-  setupTriggerEvents(elementOrElementRef: HTMLElement | ElementRef<HTMLElement>) {
+  setupTriggerEvents(
+    elementOrElementRef: HTMLElement | ElementRef<HTMLElement>,
+  ) {
     const element = coerceElement(elementOrElementRef);
 
     if (!element || element === this._triggerElement) {
@@ -310,7 +327,8 @@ export class RippleRenderer implements EventListenerObject {
     // Screen readers will fire fake mouse events for space/enter. Skip launching a
     // ripple in this case for consistency with the non-screen-reader experience.
     const isFakeMousedown = isFakeMousedownFromScreenReader(event);
-    const isSyntheticEvent = this._lastTouchStartEvent &&
+    const isSyntheticEvent =
+      this._lastTouchStartEvent &&
       Date.now() < this._lastTouchStartEvent + ignoreMouseEventsTimeout;
 
     if (!isFakeMousedown && !isSyntheticEvent) {
@@ -321,19 +339,19 @@ export class RippleRenderer implements EventListenerObject {
 
   /** Function being called whenever the trigger is being pressed using touch. */
   private _onTouchStart(event: TouchEvent) {
-      // Some browsers fire mouse events after a `touchstart` event. Those synthetic mouse
-      // events will launch a second ripple if we don't ignore mouse events for a specific
-      // time after a touchstart event.
-      this._lastTouchStartEvent = Date.now();
-      this._isPointerDown = true;
+    // Some browsers fire mouse events after a `touchstart` event. Those synthetic mouse
+    // events will launch a second ripple if we don't ignore mouse events for a specific
+    // time after a touchstart event.
+    this._lastTouchStartEvent = Date.now();
+    this._isPointerDown = true;
 
-      // Use `changedTouches` so we skip any touches where the user put
-      // their finger down, but used another finger to tap the element again.
-      const touches = event.changedTouches;
+    // Use `changedTouches` so we skip any touches where the user put
+    // their finger down, but used another finger to tap the element again.
+    const touches = event.changedTouches;
 
-      for (let i = 0; i < touches.length; i++) {
-        this.fadeInRipple(touches[i].clientX, touches[i].clientY);
-      }
+    for (let i = 0; i < touches.length; i++) {
+      this.fadeInRipple(touches[i].clientX, touches[i].clientY);
+    }
   }
 
   /** Function being called whenever the trigger is being released. */
@@ -345,11 +363,13 @@ export class RippleRenderer implements EventListenerObject {
     this._isPointerDown = false;
 
     // Fade-out all ripples that are visible and not persistent.
-    this._activeRipples.forEach(ripple => {
+    this._activeRipples.forEach((ripple) => {
       // By default, only ripples that are completely visible will fade out on pointer release.
       // If the `terminateOnPointerUp` option is set, ripples that still fade in will also fade out.
-      const isVisible = ripple.state === RippleState.VISIBLE ||
-        ripple.config.terminateOnPointerUp && ripple.state === RippleState.FADING_IN;
+      const isVisible =
+        ripple.state === RippleState.VISIBLE ||
+        (ripple.config.terminateOnPointerUp &&
+          ripple.state === RippleState.FADING_IN);
 
       if (!ripple.config.persistent && isVisible) {
         ripple.fadeOut();
@@ -359,31 +379,42 @@ export class RippleRenderer implements EventListenerObject {
 
   /** Registers event listeners for a given list of events. */
   private _registerEvents(eventTypes: string[]) {
-      eventTypes.forEach((type) => {
-        if(this._triggerElement) {
-          getZoneUnPatchedApi('addEventListener', this._triggerElement)(type, this, passiveEventOptions)
-          //this._triggerElement!.addEventListener(type, this, passiveEventOptions);
-        }
-      });
+    eventTypes.forEach((type) => {
+      if (this._triggerElement) {
+        getZoneUnPatchedApi('addEventListener', this._triggerElement)(
+          type,
+          this,
+          passiveEventOptions,
+        );
+        //this._triggerElement!.addEventListener(type, this, passiveEventOptions);
+      }
+    });
   }
 
   /** Removes previously registered event listeners from the trigger element. */
   _removeTriggerEvents() {
     if (this._triggerElement) {
       pointerDownEvents.forEach((type) => {
-        getZoneUnPatchedApi('removeEventListener', this._triggerElement)(type, this, passiveEventOptions);
-       // this._triggerElement!.removeEventListener(type, this, passiveEventOptions);
+        getZoneUnPatchedApi('removeEventListener', this._triggerElement)(
+          type,
+          this,
+          passiveEventOptions,
+        );
+        // this._triggerElement!.removeEventListener(type, this, passiveEventOptions);
       });
 
       if (this._pointerUpEventsRegistered) {
         pointerUpEvents.forEach((type) => {
-          getZoneUnPatchedApi('removeEventListener', this._triggerElement)(type, this, passiveEventOptions)
-         // this._triggerElement!.removeEventListener(type, this, passiveEventOptions);
+          getZoneUnPatchedApi('removeEventListener', this._triggerElement)(
+            type,
+            this,
+            passiveEventOptions,
+          );
+          // this._triggerElement!.removeEventListener(type, this, passiveEventOptions);
         });
       }
     }
   }
-
 }
 
 /** Enforces a style recalculation of a DOM element by computing its styles. */
@@ -402,7 +433,6 @@ function distanceToFurthestCorner(x: number, y: number, rect: ClientRect) {
   const distY = Math.max(Math.abs(y - rect.top), Math.abs(y - rect.bottom));
   return Math.sqrt(distX * distX + distY * distY);
 }
-
 
 /**
  * Returns a 3 state value
@@ -423,10 +453,13 @@ function touchOrMouseSupport(platform: Platform): -1 | 0 | 1 {
     }
   } else {
     // no Pointer Events...
-    if (window.matchMedia && window.matchMedia("(any-pointer:coarse)").matches) {
+    if (
+      window.matchMedia &&
+      window.matchMedia('(any-pointer:coarse)').matches
+    ) {
       // check for any-pointer:coarse which mostly means touchscreen
       return 1;
-    } else if (window.TouchEvent || ('ontouchstart' in window)) {
+    } else if (window.TouchEvent || 'ontouchstart' in window) {
       // last resort - check for exposed touch events API / event handler
       return 1;
     }

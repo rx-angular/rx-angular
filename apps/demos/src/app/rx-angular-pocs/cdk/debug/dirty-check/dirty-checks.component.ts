@@ -1,4 +1,9 @@
-import { Component, Input, signal } from '@angular/core';
+import {
+  Component,
+  Input,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 @Component({
   selector: 'rxa-dirty-check',
@@ -7,6 +12,7 @@ import { Component, Input, signal } from '@angular/core';
       <span class="indicator">{{ dirtyChecks() }}</span>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host .indicator {

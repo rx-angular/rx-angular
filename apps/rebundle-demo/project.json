@@ -10,13 +10,15 @@
     "build": {
       "executor": "@nx/angular:application",
       "outputs": ["{options.outputPath}"],
+      "dependsOn": ["^build"],
+      "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/rebundle-demo",
         "browser": "apps/rebundle-demo/src/main.ts",
         "tsConfig": "apps/rebundle-demo/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "namedChunks": true,
-        "plugins": ["@rx-angular/rebundle"],
+        "plugins": ["dist/libs/rebundle/src/index.js"],
         "assets": [
           {
             "glob": "**/*",
@@ -46,12 +48,13 @@
           "extractLicenses": false,
           "sourceMap": true
         }
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "serve": {
       "continuous": true,
       "executor": "@nx/angular:dev-server",
+      "dependsOn": ["^build"],
+      "defaultConfiguration": "development",
       "options": {
         "port": 4201
       },
@@ -62,8 +65,7 @@
         "development": {
           "buildTarget": "rebundle-demo:build:development"
         }
-      },
-      "defaultConfiguration": "development"
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"

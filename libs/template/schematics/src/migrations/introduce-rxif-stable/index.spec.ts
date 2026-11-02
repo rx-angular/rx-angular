@@ -42,7 +42,7 @@ describe('Template Migration introduce-rxif-stable', () => {
   function setupTestFile(fileInput: string, filePath = './app.module.ts') {
     const runner = new SchematicTestRunner(
       '@rx-angular/template',
-      path.join(__dirname, '../../../migration.json')
+      path.join(__dirname, '../../../migration.json'),
     );
     const tree = new UnitTestTree(Tree.empty());
 

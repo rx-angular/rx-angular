@@ -1,10 +1,10 @@
 import {
-  NestedTreeControl,
+  CdkNestedTreeNode,
   CdkTree,
   CdkTreeNodeDef,
-  CdkNestedTreeNode,
-  CdkTreeNodeToggle,
   CdkTreeNodeOutlet,
+  CdkTreeNodeToggle,
+  NestedTreeControl,
 } from '@angular/cdk/tree';
 import {
   ChangeDetectionStrategy,
@@ -14,20 +14,20 @@ import {
   Output,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import {
   NavigationEnd,
   Router,
-  RouterLinkActive,
   RouterLink,
+  RouterLinkActive,
 } from '@angular/router';
 import { RxState } from '@rx-angular/state';
 import { filter, startWith, Subject } from 'rxjs';
 import { AppShellNavItem } from '../app-shell.models';
-import { generateRoutes } from './utils';
-import { MatButton } from '@angular/material/button';
 import { AppShellSideNavItemDirective } from './side-nav-item.directive';
-import { MatIcon } from '@angular/material/icon';
+import { generateRoutes } from './utils';
 
 interface SideNavState {
   navItems: AppShellNavItem[];

@@ -1,5 +1,11 @@
 import { JsonPipe } from '@angular/common';
-import { Component, ElementRef, viewChild, viewChildren } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  viewChild,
+  viewChildren,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { asapScheduler, delay, ReplaySubject, Subject } from 'rxjs';
@@ -27,6 +33,7 @@ import { RxLet } from '../let.directive';
     </div>
   `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RxLet, JsonPipe],
 })
 class LetDirectiveTestStrategyComponent {

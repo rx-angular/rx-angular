@@ -9,7 +9,7 @@ version: 1.0.0
 
 ## Objective
 
-<!-- 
+<!--
 A rough overall explanation of the idea as well as related terms and a quick scatch of the need.
 -->
 
@@ -17,14 +17,14 @@ A rough overall explanation of the idea as well as related terms and a quick sca
 
 ### Expected User/Developer Experience
 
-<!-- 
+<!--
 Describe what will the user be able to do and how will they be able to do it thanks to this new feature. This should be done in a story format, described from the user’s/developer’s perspective, with as many details as possible but without going into the implementation details.
 -->
 
 ### Background
 
 <!--
-Stuff one needs to know to understand this doc: 
+Stuff one needs to know to understand this doc:
 motivating examples, previous versions, and problems, links to related projects/design docs, etc. You should mention related work if applicable. This is background; do not write about ideas to solve problems here.
 -->
 
@@ -46,7 +46,7 @@ motivating examples, previous versions, and problems, links to related projects/
 
 ### Prior Art
 
-<!-- 
+<!--
 What has it done before to address this problem?
 
 Show the essential way of solving it at the moment. Do not include specific libraries or solutions/ideas. Those things are referenced in the backgrounds resources section.
@@ -56,7 +56,6 @@ Demonstrate the minimal way people solve it at the moment.
 -->
 
 ### Goals/NoGoals
-
 
 ## Prototype
 
@@ -93,11 +92,10 @@ Describe a specific situation in which we can run into performance problems
 If possible provide a POC or a theoretical explanation of a possible solution.
 -->
 
-
 ### Open Questions
 
-<!-- 
-List here all open questions, things that need more research or other further investigation. 
+<!--
+List here all open questions, things that need more research or other further investigation.
 
 The goal is not to answer them but ask the right questions or point out the area of related research.
 -->
@@ -110,8 +108,8 @@ Try to describe the important parts of the implementation and how to documented 
 
 ### Style Guide Impact
 
-<!-- 
-Does the documentation influence the way the current style guide is structured? 
+<!--
+Does the documentation influence the way the current style guide is structured?
 Also, does the new documentation introduces any technical implementations of the docs?
 
 If so please name them and give a detailed description of the impact and if possible some POCs.
@@ -138,13 +136,13 @@ Are we placing any new constraints on how the developer should write the code to
 
 ### Breaking Changes
 
-<!-- 
-Inclued all breaking changes 
+<!--
+Inclued all breaking changes
 -->
 
 ### Rollout Plan
 
-<!-- 
+<!--
 Are the implementation delays about to negatively affect or delay the release of other features or increase the size.
 -->
 
@@ -156,14 +154,14 @@ How do you plan to roll back the change if major issues are found?
 
 ### Maintenance Plan
 
-<!-- 
+<!--
 Explain how this library will be maintained going forward in releases after the initial release.
 This includes not only releases of the subject of this document but also respects its dependencies.
 -->
 
 ## Alternatives considered
 
-<!-- 
+<!--
 Include alternate design ideas you tried out, but didn't continue with them.
 List their disadvantages or at least why you did not invest more time in researching them.
 
@@ -174,8 +172,8 @@ List their disadvantages or at least why you did not invest more time in researc
 A rough description of the case
 
 List different sub path:
-- A) 
- -B) 
+- A)
+ -B)
 
 Drawbacks:
 - Filesize
@@ -193,7 +191,7 @@ Drawbacks:
 
 ## Work Breakdown
 
-<!-- 
+<!--
 Explain how multiple people would actively working on the suggested code base.
 If needed include branching suggestions or the way code interacts
 -->

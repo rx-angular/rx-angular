@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
-import { of, Subject } from 'rxjs';
-import { RxStateChildSelectionsComponent } from './child.component';
 import { AsyncPipe, JsonPipe } from '@angular/common';
+import { Component } from '@angular/core';
+import { of, Subject } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
+import { RxStateChildSelectionsComponent } from './child.component';
 
 @Component({
   selector: 'rxa-state-parent-selections',

@@ -109,7 +109,7 @@ describe('createAccumulationObservable', () => {
           prop2: cold('--a-b-', { a, b }),
           prop3: cold('----t-', { t }),
         },
-        cold('s')
+        cold('s'),
       );
       const expected = '----x-';
       expectObservable(vm$).toBe(expected, { x });
@@ -148,7 +148,7 @@ describe('createAccumulationObservable', () => {
           prop2: cold('a-a-a-b-b-b', { a, b }),
           prop3: cold('f-f-f-f-t-t', { f, t }),
         },
-        cold('s')
+        cold('s'),
       );
       const expected = 'u---v-w-x--';
       expectObservable(vm$).toBe(expected, values);
@@ -164,7 +164,7 @@ describe('createAccumulationObservable', () => {
           prop2: cold('_-a-a-_-b-_-b', { _, a, b }),
           prop3: cold('f-f-f-f-f-t-t', { f, t }),
         },
-        cold('s')
+        cold('s'),
       );
       const expected = '--u-v---w-x--';
       expectObservable(vm$).toBe(expected, values);
@@ -183,7 +183,7 @@ describe('createAccumulationObservable', () => {
           prop2: prop2$,
           prop3: prop3$,
         },
-        cold('s')
+        cold('s'),
       );
       const psubs = '^----';
       const expected = '--u--';
@@ -211,7 +211,7 @@ describe('createAccumulationObservable', () => {
           prop2: prop2$,
           prop3: prop3$,
         },
-        cold('s')
+        cold('s'),
       );
       const psubs = '^------';
       const expected = '--u--x-';
@@ -235,7 +235,7 @@ describe('createAccumulationObservable', () => {
           prop2: prop2$,
           prop3: prop3$,
         },
-        cold('s')
+        cold('s'),
       );
       const psubs = '^------';
       const expected = 'x';
@@ -259,7 +259,7 @@ describe('createAccumulationObservable', () => {
           prop2: prop2$,
           prop3: prop3$,
         },
-        cold('-----s')
+        cold('-----s'),
       );
       const psubs = '^-----';
       const expected = '-----x';

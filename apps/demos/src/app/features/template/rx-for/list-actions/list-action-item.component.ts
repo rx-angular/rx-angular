@@ -1,8 +1,9 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'list-action-item',
   template: ` <ng-content /> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       :host {

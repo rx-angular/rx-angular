@@ -21,7 +21,7 @@ export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
           kind: rxNotificationKind,
           complete: rxNotificationKind === RxNotificationKind.Complete,
         };
-      })
+      }),
     );
 }
 
@@ -34,7 +34,7 @@ export function rxMaterialize<T>(): OperatorFunction<T, RxNotification<T>> {
  * template names (`suspense`, `next`, `error` `complete`) in the directives of the template package
  */
 export function notificationKindToRxNotificationKind(
-  kind: Notification<unknown>['kind']
+  kind: Notification<unknown>['kind'],
 ): RxNotificationKind {
   switch (kind) {
     case 'C':

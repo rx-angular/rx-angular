@@ -1,3 +1,4 @@
+import { JsonPipe, NgStyle } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,6 +6,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
+import { RxEffects } from '@rx-angular/state/effects';
+import { select } from '@rx-angular/state/selections';
+import { RxPush } from '@rx-angular/template/push';
 import {
   isObservable,
   Observable,
@@ -19,13 +23,9 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { Hooks } from '../hooks';
-import { RxEffects } from '@rx-angular/state/effects';
-import { select } from '@rx-angular/state/selections';
 import { AppConfigService } from '../../../app-config.service';
-import { NgStyle, JsonPipe } from '@angular/common';
-import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
 import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { Hooks } from '../hooks';
 
 @Component({
   selector: 'rxa-renders',

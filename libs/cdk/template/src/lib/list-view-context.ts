@@ -7,8 +7,10 @@ export interface RxListViewComputedContext {
   count: number;
 }
 
-export interface RxListViewContext<T, U = RxListViewComputedContext>
-  extends RxListViewComputedContext {
+export interface RxListViewContext<
+  T,
+  U = RxListViewComputedContext,
+> extends RxListViewComputedContext {
   $implicit: T;
   item$: Observable<T>;
   updateContext(newProps: Partial<U>): void;
@@ -21,9 +23,8 @@ const computeEven = ({ count, index }) => index % 2 === 0;
 export class RxDefaultListViewContext<
   T,
   U extends NgIterable<T> = NgIterable<T>,
-  K = keyof T
-> implements RxListViewContext<T>
-{
+  K = keyof T,
+> implements RxListViewContext<T> {
   readonly _item = new ReplaySubject<T>(1);
   item$ = this._item.asObservable();
   private _$implicit: T;
@@ -83,14 +84,14 @@ export class RxDefaultListViewContext<
   get index$(): Observable<number> {
     return this._context$.pipe(
       map((c) => c.index),
-      distinctUntilChanged()
+      distinctUntilChanged(),
     );
   }
 
   get count$(): Observable<number> {
     return this._context$.pipe(
       map((s) => s.count),
-      distinctUntilChanged()
+      distinctUntilChanged(),
     );
   }
 
@@ -126,7 +127,7 @@ export class RxDefaultListViewContext<
 
   select = (props: K[]): Observable<any> => {
     return this.item$.pipe(
-      map((r) => props.reduce((acc, key) => acc?.[key as any], r))
+      map((r) => props.reduce((acc, key) => acc?.[key as any], r)),
     );
   };
 }

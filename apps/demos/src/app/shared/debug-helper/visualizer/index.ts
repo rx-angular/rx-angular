@@ -1,2 +1,2 @@
-export {VisualizerModule} from './visualizer.module';
-export {VisualizerComponent} from './visualizer/visualizer.component';
+export { VisualizerModule } from './visualizer.module';
+export { VisualizerComponent } from './visualizer/visualizer.component';

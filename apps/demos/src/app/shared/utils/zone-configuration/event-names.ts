@@ -3,21 +3,10 @@
 // User Interface Events
 
 // UIEvent
-export const uiEvent = [
-  'load',
-  'unload',
-  'abort',
-  'error',
-  'select'
-];
+export const uiEvent = ['load', 'unload', 'abort', 'error', 'select'];
 
 // Focus Events
-export const focusEvent = [
-  'blur',
-  'focus',
-  'focusin',
-  'focusout'
-];
+export const focusEvent = ['blur', 'focus', 'focusin', 'focusout'];
 
 // Mouse Events
 // (MouseEvent)[https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent]
@@ -30,32 +19,29 @@ export const mouseEvent: (keyof WindowEventMap)[] = [
   'mouseout',
   'mouseover',
   'mouseup',
-  'click'
+  'click',
 ];
 
 // Wheel Events
 export const wheelEvent: (keyof WindowEventMap)[] = [
   // (WheelEvent)[https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent]
-  'wheel'
+  'wheel',
 ];
 
 // Input Events
 export const inputEvent: (keyof WindowEventMap)[] = [
   // 'beforeinput',
-  'input'
+  'input',
 ];
 
 // Keyboard Events
-export const keyboardEvent: (keyof WindowEventMap)[] = [
-  'keydown',
-  'keyup'
-];
+export const keyboardEvent: (keyof WindowEventMap)[] = ['keydown', 'keyup'];
 
 // Composition Events
 export const compositionEvent = [
   'compositionstart',
   'compositionupdate',
-  'compositionend'
+  'compositionend',
 ];
 
 export const touchEvents: (keyof WindowEventMap)[] = [
@@ -85,7 +71,7 @@ export const touchEvents: (keyof WindowEventMap)[] = [
   'dragleave',
   'dragover',
   'dragstart',
-  'drop'
+  'drop',
 ];
 
 export const formControlsEvents: (keyof WindowEventMap)[] = [
@@ -93,21 +79,21 @@ export const formControlsEvents: (keyof WindowEventMap)[] = [
   'blur',
   'focus',
   'contextmenu',
-  'input'
+  'input',
 ];
 
 export const globalEvents: (keyof WindowEventMap)[] = [
   // window
   'scroll',
   'load',
-  'error'
+  'error',
 ];
 
 export const websocketEvents: (keyof WebSocketEventMap)[] = [
   'close',
   'error',
   'message',
-  'open'
+  'open',
 ];
 
 export const standardEvents: (keyof WindowEventMap)[] = [];
@@ -116,5 +102,5 @@ export const allEvents: (keyof WindowEventMap)[] = [
   ...mouseEvent,
   ...touchEvents,
   ...formControlsEvents,
-  ...globalEvents
+  ...globalEvents,
 ];

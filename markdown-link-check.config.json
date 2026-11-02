@@ -12,10 +12,19 @@
   "fallbackRetryDelay": "1s",
   "ignorePatterns": [
     {
+      "pattern": "^(?!https?://)"
+    },
+    {
       "pattern": "^https://ngrx.io/"
     },
     {
       "pattern": "^https://www.reddit.com/"
+    },
+    {
+      "pattern": "^https://www.npmjs.com/"
+    },
+    {
+      "pattern": "^https://itnext.io/"
     }
   ]
 }

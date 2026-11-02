@@ -15,7 +15,7 @@ export type SignalStateProxy<State extends object> = {
 
 export function createSignalStateProxy<State extends object>(
   state$: Observable<State>,
-  stateFn: <K extends keyof State>(k: K) => State[K]
+  stateFn: <K extends keyof State>(k: K) => State[K],
 ) {
   const destroyRef = inject(DestroyRef);
 
@@ -23,7 +23,7 @@ export function createSignalStateProxy<State extends object>(
   return new Proxy<SignalStateProxy<State>>(signalState, {
     get<K extends keyof State>(
       target: SignalStateProxy<State>,
-      p: K | string | symbol
+      p: K | string | symbol,
     ): Signal<State[K]> {
       let _signal = target[p as K];
       if (!_signal) {
@@ -38,7 +38,7 @@ export function createSignalStateProxy<State extends object>(
     },
     has<K extends keyof State>(
       target: SignalStateProxy<State>,
-      prop: K | string | symbol
+      prop: K | string | symbol,
     ) {
       return !!target[prop as K];
     },

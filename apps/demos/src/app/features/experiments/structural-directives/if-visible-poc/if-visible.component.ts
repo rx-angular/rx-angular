@@ -15,7 +15,7 @@ import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/
       </div>
     </rxa-visualizer>
   `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'm-1 p-1',
     style: 'display: block;',

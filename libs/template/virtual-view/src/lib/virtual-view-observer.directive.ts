@@ -120,7 +120,6 @@ export class RxVirtualViewObserver
         {
           root: this.#rootElement(),
           rootMargin: this.rootMargin(),
-          // @ts-expect-error - scrollMargin is not available in the type of IntersectionObserverInit
           scrollMargin: this.scrollMargin(),
           threshold: this.threshold(),
         },

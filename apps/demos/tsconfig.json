@@ -15,6 +15,7 @@
   ],
   "compilerOptions": {
     "module": "preserve",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "ignoreDeprecations": "6.0"
   }
 }

@@ -6,11 +6,10 @@ import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { RxLet } from '@rx-angular/template/let';
 import { ReplaySubject } from 'rxjs';
 import { StrategySelectModule } from '../../../../shared/debug-helper/strategy-select/index';
-
+import { TriggerProviderComponent } from '../../../../shared/debug-helper/trigger-provider/trigger-provider.component';
+import { ValueProviderComponent } from '../../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/index';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
-import { ValueProviderComponent } from '../../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
-import { TriggerProviderComponent } from '../../../../shared/debug-helper/trigger-provider/trigger-provider.component';
 
 @Component({
   selector: 'template-triggers',

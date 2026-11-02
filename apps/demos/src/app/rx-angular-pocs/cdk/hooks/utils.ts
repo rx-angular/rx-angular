@@ -8,6 +8,6 @@ export function toHook<H extends keyof HookProps>(name: H) {
       map((props) => props[name]),
       filter((init) => !!init),
       take(1),
-      shareReplay()
+      shareReplay(),
     );
 }

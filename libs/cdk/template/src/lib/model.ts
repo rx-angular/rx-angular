@@ -29,11 +29,11 @@ export const enum RxListTemplateChangeType {
 export type RxListTemplateChangePayload<T> = [T, number, number?];
 export type RxListTemplateChange<T = any> = [
   RxListTemplateChangeType,
-  RxListTemplateChangePayload<T>
+  RxListTemplateChangePayload<T>,
 ];
 export type RxListTemplateChanges<T = any> = [
   RxListTemplateChange<T>[], // changes to apply
-  boolean // notify parent
+  boolean, // notify parent
 ];
 
 export interface RxViewContext<T> {
@@ -63,22 +63,22 @@ export interface RxRenderSettings {
 
 export type CreateEmbeddedView<C> = (
   viewContainerRef: ViewContainerRef,
-  patchZone: NgZone | false
+  patchZone: NgZone | false,
 ) => (
   templateRef: TemplateRef<C>,
   context?: C,
-  index?: number
+  index?: number,
 ) => EmbeddedViewRef<C>;
 
 export type CreateViewContext<T, C, U = unknown> = (
   value: T,
-  computedContext: U
+  computedContext: U,
 ) => C;
 
 export type UpdateViewContext<T, C, U = unknown> = (
   value: T,
   view: EmbeddedViewRef<C>,
-  computedContext?: U
+  computedContext?: U,
 ) => void;
 
 export interface RxTemplateSettings<T, C> {

@@ -24,19 +24,19 @@ describe('ng-add schematic', () => {
   beforeEach(async () => {
     schematicRunner = new SchematicTestRunner(
       '@rx-angular/schematics',
-      collectionPath
+      collectionPath,
     );
     appTree = await schematicRunner.runExternalSchematic(
       '@schematics/angular',
       'workspace',
-      workspaceOptions
+      workspaceOptions,
     );
 
     appTree = await schematicRunner.runExternalSchematic(
       '@schematics/angular',
       'application',
       defaultAppOptions,
-      appTree
+      appTree,
     );
   });
 
@@ -44,7 +44,7 @@ describe('ng-add schematic', () => {
     const tree = await schematicRunner.runSchematic(
       'ng-add',
       undefined,
-      appTree
+      appTree,
     );
 
     const packageJson = readJsonInTree(tree, 'package.json');

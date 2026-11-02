@@ -5,12 +5,12 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { ArrayProviderService } from '../array-provider.service';
+import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
-import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
+import { ArrayProviderService } from '../array-provider.service';
 
 @Component({
   selector: 'rxa-array-provider',

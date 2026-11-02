@@ -8,16 +8,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { RxIf } from '@rx-angular/template/if';
+import { RxLetModule } from '../rx-angular-pocs/template/directives/let';
+import { AppShellComponent } from './app-shell-component/app-shell.component';
 import {
   AppShellHeaderContent,
   AppShellSidenavContent,
   AppShellSidenavTitle,
 } from './app-shell-content.directives';
-import { AppShellComponent } from './app-shell-component/app-shell.component';
-import { AppShellSideNavItemDirective } from './side-nav/side-nav-item.directive';
 import { AppShellSideNavComponent } from './side-nav/side-nav.component';
-import { RxLetModule } from '../rx-angular-pocs/template/directives/let';
-import { RxIf } from '@rx-angular/template/if';
+import { AppShellSideNavItemDirective } from './side-nav/side-nav-item.directive';
 
 const exportedDeclarations = [
   AppShellHeaderContent,

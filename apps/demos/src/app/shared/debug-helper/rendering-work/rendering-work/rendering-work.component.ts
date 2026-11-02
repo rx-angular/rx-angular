@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'rxa-rendering-work',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @for (item of items; track item) {
       <div>{{ item }}</div>

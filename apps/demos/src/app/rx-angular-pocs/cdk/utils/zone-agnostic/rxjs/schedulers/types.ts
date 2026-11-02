@@ -5,7 +5,7 @@ export interface SchedulerLike {
   schedule<T>(
     work: (this: SchedulerAction<T>, state?: T) => void,
     delay?: number,
-    state?: T
+    state?: T,
   ): Subscription;
 }
 

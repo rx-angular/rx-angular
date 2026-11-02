@@ -4,13 +4,13 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay, tap } from 'rxjs/operators';
-import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
-import { MatButton } from '@angular/material/button';
-import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 import {
   RxQueryContentComponent,
   RxQueryContentTestDirective,

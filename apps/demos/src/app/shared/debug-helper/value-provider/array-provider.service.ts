@@ -2,20 +2,20 @@ import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { from, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ProvidedValues } from './model';
 import {
   addItemImmutable,
   addItemMutable,
   moveItemMutable,
   moveItemsImmutable,
-  shuffleItemsImmutable,
+  prependItemImmutable,
   removeItemsImmutable,
   removeItemsMutable,
+  shuffleItemsImmutable,
   updateItemImmutable,
   updateItemMutable,
   withCompleteAndError,
-  prependItemImmutable,
 } from './utils';
-import { ProvidedValues } from './model';
 
 @Injectable()
 export class ArrayProviderService extends RxState<ProvidedValues> {
@@ -130,7 +130,7 @@ export class ArrayProviderService extends RxState<ProvidedValues> {
     this.addItemsImmutableSubject.next({ numItems, prepend: true });
   }
 
-  moveItemsImmutable(numPositions: number = 1): void {
+  moveItemsImmutable(numPositions = 1): void {
     this.moveItemsImmutableSubject.next(numPositions);
   }
 

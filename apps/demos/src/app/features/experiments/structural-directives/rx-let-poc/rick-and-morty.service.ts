@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { delay } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +11,9 @@ export class RickAndMortyService {
     return this.http.get('https://rickandmortyapi.com/api/character');
   }
 
-  getCharacter(params: {characterId?: string, name?: string}) {
-    return this.http.get(
-      'https://rickandmortyapi.com/api/character/', {params}
-    );
+  getCharacter(params: { characterId?: string; name?: string }) {
+    return this.http.get('https://rickandmortyapi.com/api/character/', {
+      params,
+    });
   }
 }

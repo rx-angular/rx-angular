@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   effect,
   inject,
@@ -29,6 +30,7 @@ interface User {
       </span>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
 })
 export class Item {
@@ -80,6 +82,7 @@ function doWork() {
 
     <router-outlet />
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: `
     .container {
       max-width: 1200px;

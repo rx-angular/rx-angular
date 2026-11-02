@@ -7,7 +7,7 @@ const defaultCompareFn = <T>(a: T, b: T) => a === b;
 export function valuesComparer<T>(
   original: T,
   incoming: T,
-  compare?: ComparableData<T>
+  compare?: ComparableData<T>,
 ): boolean {
   if (isKeyOf<T>(compare)) {
     return original[compare] === incoming[compare];

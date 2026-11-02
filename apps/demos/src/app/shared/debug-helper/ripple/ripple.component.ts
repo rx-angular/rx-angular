@@ -7,15 +7,15 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
-import { Hooks } from '../hooks';
 import { RxState } from '@rx-angular/state';
-import { AppConfigService } from '../../../app-config.service';
-import { switchMap } from 'rxjs/operators';
 import { isObservable, Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { AppConfigService } from '../../../app-config.service';
+import { Hooks } from '../hooks';
 
 @Component({
   selector: 'rxa-ripple',
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     {{ dirty() }}
     <div

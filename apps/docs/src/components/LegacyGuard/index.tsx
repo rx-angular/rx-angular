@@ -40,7 +40,7 @@ export default function LegacyGuard({
   conceptSlug = DEFAULT_CONCEPT_SLUG,
   conceptLabel = DEFAULT_CONCEPT_LABEL,
   children,
-}: LegacyGuardProps): JSX.Element {
+}: LegacyGuardProps): React.JSX.Element {
   const href = `/docs/concepts/${conceptSlug}`;
   return (
     <Admonition type="caution" title="Legacy guidance">

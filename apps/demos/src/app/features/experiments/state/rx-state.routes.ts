@@ -1,8 +1,8 @@
+import { RxStateParentCompositionComponent } from './composition/parent.component';
 import { RxStateOverviewComponent } from './rx-state.overview.component';
+import { RxStateParentSelectionsComponent } from './selections/parent.component';
 import { RxStateSelectSliceComponent } from './selectslice/select-slice.component';
 import { RxStateParentSubscriptionComponent } from './subscription/parent.component';
-import { RxStateParentSelectionsComponent } from './selections/parent.component';
-import { RxStateParentCompositionComponent } from './composition/parent.component';
 import { RxStateParentSubscriptionLessComponent } from './subscription-less-interaction/parent.component';
 
 export const ROUTES = [

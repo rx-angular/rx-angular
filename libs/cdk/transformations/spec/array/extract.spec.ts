@@ -101,7 +101,7 @@ describe('extract', () => {
       const result = extract(partialCreatures, ['name', 'id', 'type'] as any);
       const result2 = extract(
         [{ id: 1, type: 'cat', name: 'Emma' }, 1, 'string'] as any,
-        ['id', 'name'] as any
+        ['id', 'name'] as any,
       );
 
       expect(result).toEqual(partialCreaturesWithNames);

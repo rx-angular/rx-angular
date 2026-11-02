@@ -9,7 +9,7 @@ export function isPromiseGuard<T>(value: unknown): value is Promise<T> {
 }
 
 export function isOperateFnArrayGuard<T, R = T>(
-  op: any[]
+  op: any[],
 ): op is OperatorFunction<T, R>[] {
   if (!Array.isArray(op)) {
     return false;

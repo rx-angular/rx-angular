@@ -55,6 +55,7 @@
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
+      "continuous": true,
       "options": {
         "buildTarget": "ssr:build"
       },
@@ -62,8 +63,7 @@
         "production": {
           "buildTarget": "ssr:build:production"
         }
-      },
-      "continuous": true
+      }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",

@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { toBooleanArray } from './utils';
-import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
 import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
+import { toBooleanArray } from './utils';
 
 @Component({
   selector: 'rxa-sibling-static',

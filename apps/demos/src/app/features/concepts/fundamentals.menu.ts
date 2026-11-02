@@ -1,15 +1,15 @@
 export const FUNDAMENTALS_MENU = [
   {
     link: 'nested-vs-injected',
-    label: 'Nested vs Projected'
+    label: 'Nested vs Projected',
   },
   {
     link: 'projected-views',
-    label: 'Projected Views'
+    label: 'Projected Views',
   },
   {
     link: 'passing-values',
-    label: 'Passing Values'
+    label: 'Passing Values',
   },
   /*{
     link: 'zone-patched-apis',
@@ -21,7 +21,7 @@ export const FUNDAMENTALS_MENU = [
   },*/
   {
     label: 'Coalescing',
-    link: 'coalescing'
+    link: 'coalescing',
   },
   /*{
     label: 'Global Order',

@@ -2,11 +2,10 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RxLet } from '@rx-angular/template/let';
 import { placeholderImg } from '../../../shared/debug-helper/value-provider';
-
 import { schedulingHelper } from '../../../shared/debug-helper/value-provider/scheduling-helper';
+import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { DocsLinkComponent } from '../../../shared/docs-link';
-import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 
 @Component({
   selector: 'rxa-ngif-hack',

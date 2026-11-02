@@ -2,13 +2,16 @@ import { Observable, Subscriber } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getZoneUnPatchedApi } from '../../zone-checks';
 
-const isFunction = fn => typeof fn === 'function';
+const isFunction = (fn) => typeof fn === 'function';
 const isArray = Array.isArray;
 const toString: Function = (() => Object.prototype.toString)();
 
 export interface NodeStyleEventEmitter {
   addListener: (eventName: string | symbol, handler: NodeEventHandler) => this;
-  removeListener: (eventName: string | symbol, handler: NodeEventHandler) => this;
+  removeListener: (
+    eventName: string | symbol,
+    handler: NodeEventHandler,
+  ) => this;
 }
 
 export type NodeEventHandler = (...args: any[]) => void;
@@ -27,13 +30,27 @@ export interface JQueryStyleEventEmitter {
 }
 
 export interface HasEventTargetAddRemove<E> {
-  addEventListener(type: string, listener: ((evt: E) => void) | null, options?: boolean | AddEventListenerOptions): void;
-  removeEventListener(type: string, listener?: ((evt: E) => void) | null, options?: EventListenerOptions | boolean): void;
+  addEventListener(
+    type: string,
+    listener: ((evt: E) => void) | null,
+    options?: boolean | AddEventListenerOptions,
+  ): void;
+  removeEventListener(
+    type: string,
+    listener?: ((evt: E) => void) | null,
+    options?: EventListenerOptions | boolean,
+  ): void;
 }
 
-export type EventTargetLike<T> = HasEventTargetAddRemove<T> | NodeStyleEventEmitter | NodeCompatibleEventEmitter | JQueryStyleEventEmitter;
+export type EventTargetLike<T> =
+  | HasEventTargetAddRemove<T>
+  | NodeStyleEventEmitter
+  | NodeCompatibleEventEmitter
+  | JQueryStyleEventEmitter;
 
-export type FromEventTarget<T> = EventTargetLike<T> | ArrayLike<EventTargetLike<T>>;
+export type FromEventTarget<T> =
+  | EventTargetLike<T>
+  | ArrayLike<EventTargetLike<T>>;
 
 export interface EventListenerOptions {
   capture?: boolean;
@@ -46,25 +63,35 @@ export interface AddEventListenerOptions extends EventListenerOptions {
   passive?: boolean;
 }
 
-export function fromEvent<T>(target: FromEventTarget<T>, eventName: string): Observable<T>;
+export function fromEvent<T>(
+  target: FromEventTarget<T>,
+  eventName: string,
+): Observable<T>;
 /** @deprecated resultSelector no longer supported, pipe to map instead */
 export function fromEvent<T>(
-  target: FromEventTarget<T>, eventName: string, resultSelector: (...args: any[]) => T): Observable<T>;
+  target: FromEventTarget<T>,
+  eventName: string,
+  resultSelector: (...args: any[]) => T,
+): Observable<T>;
 export function fromEvent<T>(
-  target: FromEventTarget<T>, eventName: string, options: EventListenerOptions): Observable<T>;
+  target: FromEventTarget<T>,
+  eventName: string,
+  options: EventListenerOptions,
+): Observable<T>;
 /** @deprecated resultSelector no longer supported, pipe to map instead */
 export function fromEvent<T>(
-  target: FromEventTarget<T>, eventName: string, options: EventListenerOptions,
-  resultSelector: (...args: any[]) => T): Observable<T>;
-
+  target: FromEventTarget<T>,
+  eventName: string,
+  options: EventListenerOptions,
+  resultSelector: (...args: any[]) => T,
+): Observable<T>;
 
 export function fromEvent<T>(
   target: FromEventTarget<T>,
   eventName: string,
   options?: EventListenerOptions | ((...args: any[]) => T),
-  resultSelector?: ((...args: any[]) => T)
+  resultSelector?: (...args: any[]) => T,
 ): Observable<T> {
-
   if (isFunction(options)) {
     // DEPRECATED PATH
     // @ts-ignore
@@ -73,12 +100,18 @@ export function fromEvent<T>(
   }
   if (resultSelector) {
     // DEPRECATED PATH
-    return fromEvent<T>(target, eventName, <EventListenerOptions | undefined>options).pipe(
-      map(args => isArray(args) ? resultSelector(...args) : resultSelector(args))
+    return fromEvent<T>(
+      target,
+      eventName,
+      <EventListenerOptions | undefined>options,
+    ).pipe(
+      map((args) =>
+        isArray(args) ? resultSelector(...args) : resultSelector(args),
+      ),
     );
   }
 
-  return new Observable<T>(subscriber => {
+  return new Observable<T>((subscriber) => {
     function handler(e: T) {
       if (arguments.length > 1) {
         subscriber.next(Array.prototype.slice.call(arguments));
@@ -86,26 +119,39 @@ export function fromEvent<T>(
         subscriber.next(e);
       }
     }
-    setupSubscription(target, eventName, handler, subscriber, options as EventListenerOptions);
+    setupSubscription(
+      target,
+      eventName,
+      handler,
+      subscriber,
+      options as EventListenerOptions,
+    );
   });
 }
 
-function setupSubscription<T>(sourceObj: FromEventTarget<T>, eventName: string,
-                              handler: (...args: any[]) => void, subscriber: Subscriber<T>,
-                              options?: EventListenerOptions) {
+function setupSubscription<T>(
+  sourceObj: FromEventTarget<T>,
+  eventName: string,
+  handler: (...args: any[]) => void,
+  subscriber: Subscriber<T>,
+  options?: EventListenerOptions,
+) {
   let unsubscribe: () => void;
   if (isEventTarget(sourceObj)) {
     const source = sourceObj;
-    getZoneUnPatchedApi('addEventListener', sourceObj).call(sourceObj,
+    getZoneUnPatchedApi('addEventListener', sourceObj).call(
+      sourceObj,
       eventName,
       handler,
-      options
+      options,
     );
-    unsubscribe = () => getZoneUnPatchedApi('removeEventListener', source).call(source,
-      eventName,
-      handler,
-      options
-    );
+    unsubscribe = () =>
+      getZoneUnPatchedApi('removeEventListener', source).call(
+        source,
+        eventName,
+        handler,
+        options,
+      );
   } else if (isJQueryStyleEventEmitter(sourceObj)) {
     const source = sourceObj;
     sourceObj.on(eventName, handler);
@@ -113,7 +159,8 @@ function setupSubscription<T>(sourceObj: FromEventTarget<T>, eventName: string,
   } else if (isNodeStyleEventEmitter(sourceObj)) {
     const source = sourceObj;
     sourceObj.addListener(eventName, handler as NodeEventHandler);
-    unsubscribe = () => source.removeListener(eventName, handler as NodeEventHandler);
+    unsubscribe = () =>
+      source.removeListener(eventName, handler as NodeEventHandler);
   } else if (sourceObj && (sourceObj as any).length) {
     for (let i = 0, len = (sourceObj as any).length; i < len; i++) {
       setupSubscription(sourceObj[i], eventName, handler, subscriber, options);
@@ -125,14 +172,32 @@ function setupSubscription<T>(sourceObj: FromEventTarget<T>, eventName: string,
   subscriber.add(unsubscribe);
 }
 
-function isNodeStyleEventEmitter(sourceObj: any): sourceObj is NodeStyleEventEmitter {
-  return sourceObj && typeof sourceObj.addListener === 'function' && typeof sourceObj.removeListener === 'function';
+function isNodeStyleEventEmitter(
+  sourceObj: any,
+): sourceObj is NodeStyleEventEmitter {
+  return (
+    sourceObj &&
+    typeof sourceObj.addListener === 'function' &&
+    typeof sourceObj.removeListener === 'function'
+  );
 }
 
-function isJQueryStyleEventEmitter(sourceObj: any): sourceObj is JQueryStyleEventEmitter {
-  return sourceObj && typeof sourceObj.on === 'function' && typeof sourceObj.off === 'function';
+function isJQueryStyleEventEmitter(
+  sourceObj: any,
+): sourceObj is JQueryStyleEventEmitter {
+  return (
+    sourceObj &&
+    typeof sourceObj.on === 'function' &&
+    typeof sourceObj.off === 'function'
+  );
 }
 
-function isEventTarget(sourceObj: any): sourceObj is HasEventTargetAddRemove<any> {
-  return sourceObj && typeof sourceObj.addEventListener === 'function' && typeof sourceObj.removeEventListener === 'function';
+function isEventTarget(
+  sourceObj: any,
+): sourceObj is HasEventTargetAddRemove<any> {
+  return (
+    sourceObj &&
+    typeof sourceObj.addEventListener === 'function' &&
+    typeof sourceObj.removeEventListener === 'function'
+  );
 }

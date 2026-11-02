@@ -1,7 +1,10 @@
+import {
+  intervalTick,
+  timeoutTick,
+} from '../../../../../rx-angular-pocs/cdk/utils/rxjs/observable';
 import { animationFrameTick } from './animationFrameTick';
-import { promiseTick } from './promiseTick';
 import { SchedulingPriority } from './interfaces';
-import { intervalTick, timeoutTick } from '../../../../../rx-angular-pocs/cdk/utils/rxjs/observable';
+import { promiseTick } from './promiseTick';
 
 export const priorityTickMap = {
   [SchedulingPriority.animationFrame]: animationFrameTick(),

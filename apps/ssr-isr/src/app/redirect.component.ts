@@ -1,5 +1,6 @@
 import { isPlatformServer } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   Inject,
   InjectionToken,
@@ -15,6 +16,7 @@ export const RESPONSE = new InjectionToken<Response>('RESPONSE');
   selector: 'app-redirect',
   imports: [],
   template: ``,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: ``,
 })
 export class RedirectComponent {

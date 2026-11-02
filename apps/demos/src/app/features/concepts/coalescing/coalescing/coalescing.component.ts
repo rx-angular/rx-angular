@@ -1,13 +1,13 @@
+import { Platform } from '@angular/cdk/platform';
 import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { RxPush } from '@rx-angular/template/push';
+import { RxUnpatch } from '@rx-angular/template/unpatch';
 import { Subject } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { Platform } from '@angular/cdk/platform';
-import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
-import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
-import { MatButton } from '@angular/material/button';
-import { RxUnpatch } from '../../../../../../../../libs/template/unpatch/src/lib/unpatch.directive';
-import { RxPush } from '../../../../../../../../libs/template/push/src/lib/push.pipe';
 import { PushPipe } from '../../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select/strategy-select.component';
+import { VisualizerComponent } from '../../../../shared/debug-helper/visualizer/visualizer/visualizer.component';
 
 @Component({
   selector: 'rxa-demo-basics',

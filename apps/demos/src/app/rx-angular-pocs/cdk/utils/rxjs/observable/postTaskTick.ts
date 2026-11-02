@@ -1,7 +1,13 @@
 import { Observable } from 'rxjs';
-import { postTaskScheduler, SchedulerPostTaskOptions } from '../../zone-agnostic/browser/postTask';
+import {
+  postTaskScheduler,
+  SchedulerPostTaskOptions,
+} from '../../zone-agnostic/browser/postTask';
 
-export const postTaskTick = (options: SchedulerPostTaskOptions, work: () => void) =>
+export const postTaskTick = (
+  options: SchedulerPostTaskOptions,
+  work: () => void,
+) =>
   new Observable<number>((subscription) => {
     let active = true;
     if (options?.signal) {
@@ -9,11 +15,14 @@ export const postTaskTick = (options: SchedulerPostTaskOptions, work: () => void
     }
     const s = new AbortController();
     postTaskScheduler
-      .postTask(() => {
-        if (active) {
-          work();
-        }
-      }, { ...options, signal: s.signal })
+      .postTask(
+        () => {
+          if (active) {
+            work();
+          }
+        },
+        { ...options, signal: s.signal },
+      )
       .then(() => {
         subscription.next(0);
         subscription.complete();
@@ -23,4 +32,3 @@ export const postTaskTick = (options: SchedulerPostTaskOptions, work: () => void
       active = false;
     };
   });
-

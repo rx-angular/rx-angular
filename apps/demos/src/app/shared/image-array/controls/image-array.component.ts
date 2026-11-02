@@ -4,17 +4,18 @@ import {
   ElementRef,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { RxEffects } from '@rx-angular/state/effects';
-import { Hooks } from '../../debug-helper/hooks';
-import { RxState } from '@rx-angular/state';
-import { fileReaderFromBlob, imageFromFileReader } from '../pixel-image';
+import { MatButton } from '@angular/material/button';
 import {
   MatExpansionPanel,
   MatExpansionPanelHeader,
 } from '@angular/material/expansion';
-import { MatButton } from '@angular/material/button';
+import { RxState } from '@rx-angular/state';
+import { RxEffects } from '@rx-angular/state/effects';
+import { Observable, Subject } from 'rxjs';
+import { Hooks } from '../../debug-helper/hooks';
+import { fileReaderFromBlob, imageFromFileReader } from '../pixel-image';
 
 interface ComponentState {
   loading: boolean;
@@ -77,6 +78,7 @@ interface ComponentState {
     </div>
   `,
   providers: [RxEffects, RxState],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatExpansionPanel, MatExpansionPanelHeader, MatButton],
 })
 export class ImageArrayComponent extends Hooks implements AfterViewInit {

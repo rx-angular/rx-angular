@@ -3,13 +3,12 @@ import { RxIf } from '@rx-angular/template/if';
 import { RxLet } from '@rx-angular/template/let';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { UnpatchEventsModule } from '../../../rx-angular-pocs/template/directives/unpatch';
 import { DirtyChecksModule } from '../../../shared/debug-helper/dirty-checks';
 import { StrategySelectModule } from '../../../shared/debug-helper/strategy-select';
-
+import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 import { VisualizerModule } from '../../../shared/debug-helper/visualizer';
 import { DocsLinkComponent } from '../../../shared/docs-link';
-import { UnpatchEventsModule } from '../../../rx-angular-pocs/template/directives/unpatch';
-import { ValueProviderComponent } from '../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 
 @Component({
   selector: 'rxa-rx-if-poc',

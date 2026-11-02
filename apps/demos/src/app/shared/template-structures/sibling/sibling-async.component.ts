@@ -1,8 +1,8 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { toBooleanArray } from './utils';
 import { VisualizerComponent } from '../../debug-helper/visualizer/visualizer/visualizer.component';
-import { NgClass, AsyncPipe } from '@angular/common';
+import { toBooleanArray } from './utils';
 
 const chunk = (arr, n) =>
   arr.length ? [arr.slice(0, n), ...chunk(arr.slice(n), n)] : [];

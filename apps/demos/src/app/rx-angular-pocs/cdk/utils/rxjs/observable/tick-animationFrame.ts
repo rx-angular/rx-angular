@@ -1,5 +1,8 @@
 import { Observable } from 'rxjs';
-import { requestAnimationFrame, cancelAnimationFrame } from '../../zone-agnostic';
+import {
+  cancelAnimationFrame,
+  requestAnimationFrame,
+} from '../../zone-agnostic';
 
 export const animationFrameTick = () =>
   new Observable<number>((subscriber) => {

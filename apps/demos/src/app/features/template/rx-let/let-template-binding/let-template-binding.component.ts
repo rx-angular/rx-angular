@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
 import { LetTemplateBindingHttpExampleComponent } from './examples/let-template-binding-http-example.component';
 import { LetTemplateBindingSignalExampleComponent } from './examples/let-template-binding-signal-example.component';
@@ -13,6 +13,7 @@ import { LetTemplateBindingSubjectExampleComponent } from './examples/let-templa
     LetTemplateBindingSubjectExampleComponent,
     LetTemplateBindingHttpExampleComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <header class="rxa-demo-header">
       <div>

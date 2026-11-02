@@ -131,7 +131,9 @@ especially useful for mobile.
 
 A reversed infinite scroller starts at the bottom and _prepends_ data when the user
 hits the top (as in a chat window). Set `keepScrolledIndexOnPrepend` so the strategy
-keeps the scrolled index stable as new data arrives.
+keeps the visible content in place as new data arrives. The item at the bottom edge
+of the viewport is the one kept in place, so a transient "loading older messages" row
+at the top can be inserted and removed without moving what the user reads.
 
 ```ts title="reverse-infinite-list.component.ts"
 import { Component, inject } from '@angular/core';
@@ -175,22 +177,34 @@ export class ReverseInfiniteListComponent {
 </rx-virtual-scroll-viewport>
 ```
 
+## Hide the viewport with `display: none`
+
+Some routers and page stacks keep a page in the DOM and hide it with `display: none`
+instead of destroying it — Ionic's navigation stack and cached router outlets do this.
+The viewport tolerates that: an element inside a `display: none` subtree has no layout
+box at all, and measurements taken in that state are ignored instead of being booked as
+a real size. The cached item sizes, the rendered range and the scroll position therefore
+survive the hide/show cycle. Nothing needs to be configured.
+
+Note that this is about elements that are not rendered, not about elements that measure
+zero. An item that is rendered but happens to be `0px` tall — an empty item template, or
+one collapsed via `height: 0` — is still measured and booked as usual. The one case that
+cannot be told apart from a hidden page is putting `display: none` on the item's own root
+element: such an item keeps its previously measured size until it is shown again. Prefer
+filtering those items out of the data source, or collapse them with `height: 0`.
+
 ## Extend the package with a custom strategy
 
 Because every part of the package is based on injection tokens, you can provide your own
 `RxVirtualScrollStrategy`. Create a directive that provides itself as the strategy token
-and extends the abstract base.
+and extends the abstract base, implementing `scrolledIndex$`, `renderedRange$`,
+`contentSize$`, `attach()`, `detach()`, and `scrollToIndex()`. `attach()` is called when
+the strategy connects to a viewport (wire up your scroll listeners there) and `detach()`
+when it disconnects (tear them down there).
 
-```ts
-import { Directive } from '@angular/core';
-import { RxVirtualScrollStrategy } from '@rx-angular/template/virtual-scrolling';
-
-@Directive({
-  selector: 'rx-virtual-scroll-viewport[custom]',
-  providers: [{ provide: RxVirtualScrollStrategy, useExisting: CustomScrollStrategy }],
-})
-export class CustomScrollStrategy extends RxVirtualScrollStrategy {}
-```
+See [Extending with a custom strategy](../reference/rx-virtual-scroll-strategies.md#extending-with-a-custom-strategy)
+for a worked example and a pointer to the simplest shipped implementation,
+`FixedSizeVirtualScrollStrategy`, to read as a full reference.
 
 ## Result
 

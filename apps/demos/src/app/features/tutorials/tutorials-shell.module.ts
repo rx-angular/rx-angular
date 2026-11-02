@@ -11,7 +11,7 @@ const TUTORIAL_ROUTES: Routes = [
     path: 'basics',
     loadChildren: () =>
       import('./basics/tutorial-basics.module').then(
-        (m) => m.TutorialBasicsModule
+        (m) => m.TutorialBasicsModule,
       ),
   },
 ];

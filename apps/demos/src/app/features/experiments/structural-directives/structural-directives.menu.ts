@@ -14,5 +14,5 @@ export const MENU_ITEMS = [
   {
     link: 'if-visible',
     label: 'ifVisible POC',
-  }
+  },
 ];

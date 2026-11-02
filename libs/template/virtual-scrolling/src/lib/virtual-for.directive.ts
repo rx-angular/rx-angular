@@ -56,10 +56,13 @@ import {
 } from 'rxjs/operators';
 import {
   ListRange,
+  RxVirtualForCollectionViewer,
+  RxVirtualForDataSource,
   RxVirtualForViewContext,
   RxVirtualScrollStrategy,
   RxVirtualViewRepeater,
 } from './model';
+import { rangesEqual } from './util';
 import {
   createVirtualListTemplateManager,
   RxVirtualListTemplateManager,
@@ -76,6 +79,19 @@ import {
 declare const ngDevMode: boolean;
 
 const NG_DEV_MODE = typeof ngDevMode === 'undefined' || !!ngDevMode;
+
+/**
+ * A data source is anything that can be connected and disconnected, except for
+ * observables: an RxJS `connectable()` observable has a `connect` method too.
+ */
+function isDataSource<T>(value: unknown): value is RxVirtualForDataSource<T> {
+  return (
+    value != null &&
+    typeof (value as RxVirtualForDataSource<T>).connect === 'function' &&
+    typeof (value as RxVirtualForDataSource<T>).disconnect === 'function' &&
+    !isObservable(value)
+  );
+}
 
 /**
  * @Directive RxVirtualFor
@@ -214,6 +230,11 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   });
 
   /** @internal */
+  private connectedDataSource?: RxVirtualForDataSource<T>;
+  /** @internal */
+  private collectionViewer?: RxVirtualForCollectionViewer;
+
+  /** @internal */
   private _differ?: IterableDiffer<T>;
 
   /** @internal */
@@ -234,30 +255,46 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
    *     [hero]="hero"></app-hero>
    * </rx-virtual-scroll-viewport>
    *
-   * @param potentialSignalOrObservable
+   * @param potentialSignalOrObservableOrDataSource
    */
   @Input()
   set rxVirtualForOf(
-    potentialSignalOrObservable:
+    potentialSignalOrObservableOrDataSource:
       | Observable<(U & NgIterable<T>) | undefined | null>
       | Signal<(U & NgIterable<T>) | undefined | null>
+      | RxVirtualForDataSource<T>
       | (U & NgIterable<T>)
       | null
       | undefined,
   ) {
-    if (isSignal(potentialSignalOrObservable)) {
+    const value = potentialSignalOrObservableOrDataSource;
+    if (isDataSource<T>(value)) {
+      this.disconnectDataSource();
       this.staticValue = undefined;
       this.renderStatic = false;
+      const collectionViewer: RxVirtualForCollectionViewer = {
+        viewChange: this.scrollStrategy.renderedRange$,
+      };
+      this.collectionViewer = collectionViewer;
+      this.connectedDataSource = value;
       this.observables$.next(
-        toObservable(potentialSignalOrObservable, { injector: this.injector }),
+        value.connect(collectionViewer) as Observable<U & NgIterable<T>>,
       );
-    } else if (!isObservable(potentialSignalOrObservable)) {
-      this.staticValue = potentialSignalOrObservable;
+      return;
+    }
+    // whatever was bound before is replaced, a connected data source is done
+    this.disconnectDataSource();
+    if (isSignal(value)) {
+      this.staticValue = undefined;
+      this.renderStatic = false;
+      this.observables$.next(toObservable(value, { injector: this.injector }));
+    } else if (!isObservable(value)) {
+      this.staticValue = value;
       this.renderStatic = true;
     } else {
       this.staticValue = undefined;
       this.renderStatic = false;
-      this.observables$.next(potentialSignalOrObservable);
+      this.observables$.next(value);
     }
   }
 
@@ -641,12 +678,23 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
   }
 
   /** @internal */
+  private disconnectDataSource(): void {
+    if (this.connectedDataSource && this.collectionViewer) {
+      this.connectedDataSource.disconnect(this.collectionViewer);
+      this.connectedDataSource = undefined;
+      this.collectionViewer = undefined;
+    }
+  }
+
+  /** @internal */
   ngOnDestroy() {
+    this.disconnectDataSource();
     this._destroy$.next();
     this.templateManager.detach();
   }
 
   private render() {
+    let renderedRange: ListRange = { start: 0, end: 0 };
     return combineLatest<[T[], ListRange, RxStrategyCredentials]>([
       this.values$.pipe(
         map((values) =>
@@ -691,9 +739,23 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
               }
               changes = differ.diff(iterable);
             }
-            if (!changes) {
-              return NEVER;
+            // the range the views carry their context for. It's only updated
+            // once a pass completed, a superseded one has to be redone
+            const rangeChanged = !rangesEqual(renderedRange, range);
+            if (!changes && !rangeChanged) {
+              if (!this.partiallyFinished) {
+                return NEVER;
+              }
+              // a previous pass was superseded after it applied its changes,
+              // but before it reported back (e.g. the range flapped away and
+              // back). The DOM is up to date, only the report is missing.
+              this.reportRendered(items.length);
+              return of(iterable);
             }
+            // without changes, the range moved by exactly the amount of items
+            // inserted before it (e.g. a prepend). The rendered slice is the
+            // same, but every view maps to a new index: its context gets
+            // updated and it has to be re-positioned.
             const listChanges = this.templateManager.getListChanges(
               changes,
               iterable,
@@ -728,15 +790,8 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
               work$.length > 0 ? work$ : [of(iterable)],
             ).pipe(
               tap(() => {
-                this.templateManager.setItemCount(items.length);
-                this.partiallyFinished = false;
-                const viewsRendered = [];
-                const end = this.viewContainer.length;
-                let i = 0;
-                for (i; i < end; i++) {
-                  viewsRendered.push(this.viewContainer.get(i));
-                }
-                this.viewsRendered$.next(viewsRendered as any);
+                renderedRange = range;
+                this.reportRendered(items.length);
               }),
               notifyParent
                 ? switchMap((v) =>
@@ -764,6 +819,17 @@ export class RxVirtualFor<T, U extends NgIterable<T> = NgIterable<T>>
       ),
       this.handleError(),
     );
+  }
+
+  /** @internal */
+  private reportRendered(itemCount: number): void {
+    this.templateManager.setItemCount(itemCount);
+    this.partiallyFinished = false;
+    const viewsRendered = [];
+    for (let i = 0, end = this.viewContainer.length; i < end; i++) {
+      viewsRendered.push(this.viewContainer.get(i));
+    }
+    this.viewsRendered$.next(viewsRendered as any);
   }
 
   private handleError<T>(): MonoTypeOperatorFunction<T | null> {

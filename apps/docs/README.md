@@ -1,6 +1,6 @@
 # RxAngular Documentation
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+This website is built with [Docusaurus](https://docusaurus.io/). See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to run it and how pages are organized.
 
 ## Additional assets
 

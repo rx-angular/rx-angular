@@ -73,7 +73,7 @@ describe('slice', () => {
       expect(slice(primitiveState, undefined as any)).toEqual(undefined);
       expect(slice(primitiveState, (() => null) as any)).toEqual(undefined);
       expect(slice(primitiveState, ['nonExisting', 1] as any)).toEqual(
-        undefined
+        undefined,
       );
     });
   });

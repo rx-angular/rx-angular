@@ -2,37 +2,26 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnDestroy,
-  OnInit,
   Output,
 } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
 import {
-  filter,
-  interval,
-  merge,
-  Observable,
-  Subject,
-  Subscription,
-  switchMap,
-  takeUntil,
-} from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
-import { ListServerItem, ListService } from '../data-access/list-resource';
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatProgressBar } from '@angular/material/progress-bar';
 //👇 1- import RxState
 import { RxState } from '@rx-angular/state';
 import { RxActionFactory } from '@rx-angular/state/actions';
 import { RxEffects } from '@rx-angular/state/effects';
-import { RxLet } from '../../../../../../../../libs/template/let/src/lib/let.directive';
-import {
-  MatExpansionPanel,
-  MatExpansionPanelHeader,
-  MatExpansionPanelTitle,
-  MatExpansionPanelDescription,
-} from '@angular/material/expansion';
-import { MatProgressBar } from '@angular/material/progress-bar';
-import { MatButton } from '@angular/material/button';
-import { MatList, MatListItem } from '@angular/material/list';
-import { MatCard } from '@angular/material/card';
+import { RxLet } from '@rx-angular/template/let';
+import { filter, interval, merge, Observable, switchMap } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ListServerItem, ListService } from '../data-access/list-resource';
 
 //👇 2- define a component state
 interface ComponentState {

@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { RxLetPocComponent } from './rx-let-poc.component';
-import { RxQueryChildrenComponent } from './rx-query-children.component';
 import { RxQueryComponent } from './rx-query.component';
+import { RxQueryChildrenComponent } from './rx-query-children.component';
 
 export const ROUTES: Routes = [
   {

@@ -1,5 +1,6 @@
 import { JsonPipe } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Signal,
@@ -16,6 +17,7 @@ import { RxLet } from '../let.directive';
 import { MockChangeDetectorRef } from './fixtures';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ng-container *rxLet="value; let v">{{
       v === undefined ? 'undefined' : v === null ? 'null' : (v | json)
@@ -58,50 +60,48 @@ describe('LetDirective with signals as values', () => {
 
   it('should render undefined as value when initially signal(undefined) was passed (as undefined was emitted)', () => {
     letDirectiveTestComponent.value = signal(undefined);
-    TestBed.tick();
+    fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('undefined');
   });
 
   it('should render null as value when initially signal(null) was passed (as null was emitted)', () => {
     letDirectiveTestComponent.value = signal(null);
-    TestBed.tick();
+    fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('null');
   });
 
   it('should render emitted value from passed signal without changing it', () => {
     letDirectiveTestComponent.value = signal(42);
-    TestBed.tick();
+    fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('42');
   });
 
   it('should render undefined as value when a new observable NEVER was passed (as no value ever was emitted from new observable)', () => {
     letDirectiveTestComponent.value = signal(42);
-    TestBed.tick();
+    fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('42');
     letDirectiveTestComponent.value = NEVER;
-    TestBed.tick();
+    fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('undefined');
   });
 
   it('should render new value as value when a new signal was passed', () => {
-    TestBed.tick();
+    fixtureLetDirectiveTestComponent.detectChanges();
     letDirectiveTestComponent.value = signal(42);
-    TestBed.tick();
+    fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('42');
     letDirectiveTestComponent.value = signal(45);
-    TestBed.tick();
-    TestBed.tick();
-    TestBed.tick();
+    fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('45');
   });
 
   it('should render the last value when a new signal was passed', () => {
     letDirectiveTestComponent.value = signal(42);
-    TestBed.tick();
+    fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('42');
 
     (letDirectiveTestComponent.value as WritableSignal<number>).set(45);
-    TestBed.tick();
+    fixtureLetDirectiveTestComponent.detectChanges();
     expect(componentNativeElement.textContent).toBe('45');
   });
 

@@ -1,38 +1,24 @@
 name: Setup
-description: Set up Node.js, cache and install dependencies
+description: Set up Node.js and install dependencies
 inputs:
-  node-version:
-    description: Node.js version
+  registry-url:
+    description: npm registry to authenticate against (only needed for publishing)
     required: false
-    default: '24.14.0' # latest working version for our CI
-  cache-cypress:
-    description: Whether to cache Cypress executable
-    required: false
-    default: 'true'
+    default: ''
 runs:
   using: composite
   steps:
-    # Requires git checkout with fetch depth 0
-
     - name: Use Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
-        node-version: ${{ inputs.node-version }}
+        node-version-file: .nvmrc
         cache: 'yarn'
-        registry-url: 'https://registry.npmjs.org'
-
-    - name: Cypress executable cache
-      if: ${{ inputs.cache-cypress == 'true' }}
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cache/Cypress
-        key: ${{ runner.os }}-node-${{ inputs.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-node-${{ inputs.node-version }}-
+        registry-url: ${{ inputs.registry-url }}
 
     - name: Install dependencies
       shell: bash
       run: yarn --immutable
       env:
         HUSKY_SKIP_INSTALL: 'true'
+        # Cypress runs on the Nx Cloud agents, never on the GitHub runner
+        CYPRESS_INSTALL_BINARY: '0'

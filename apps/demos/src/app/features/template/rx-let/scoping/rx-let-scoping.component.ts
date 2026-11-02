@@ -12,12 +12,11 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnpatchEventsModule } from '../../../../rx-angular-pocs/template/directives/unpatch/unpatch-events.module';
 import { DirtyChecksModule } from '../../../../shared/debug-helper/dirty-checks/index';
-
+import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select';
+import { ValueProviderComponent } from '../../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer/visualizer.module';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
 import { ContentChildDirective, ContentParent } from './intermediate.component';
-import { StrategySelectComponent } from '../../../../shared/debug-helper/strategy-select';
-import { ValueProviderComponent } from '../../../../shared/debug-helper/value-provider/value-provider/value-provider.component';
 
 @Component({
   selector: 'rxa-rx-let-poc',

@@ -2,7 +2,7 @@ import { Component, input, NgIterable, output, Type } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { createOutputSpy, mount } from 'cypress/angular';
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import {
   DynamicSizeVirtualScrollStrategy,
   ListRange,
@@ -12,12 +12,16 @@ import {
   RxVirtualScrollWindowDirective,
 } from '../src/index';
 import {
+  defaultItemLength,
   defaultMountConfig,
+  expectItemOffset,
+  expectVisibleRangeStartToEqualScrolledIndex,
   generateItems,
   getDefaultMountConfig,
   getViewportComponent,
   Item,
   VirtualScrollMountConfig,
+  waitUntilStable,
 } from './fixtures';
 
 interface DynamicVirtualScrollMountConfig extends VirtualScrollMountConfig<Item> {
@@ -36,11 +40,14 @@ const testComponentImports = [
   template: `<rx-virtual-scroll-viewport
     (scrolledIndexChange)="scrolledIndex.emit($event)"
     (viewRange)="viewRange.emit($event)"
+    (visibleRange)="visibleRange.emit($event)"
     data-cy="viewport"
     [style.height.px]="containerHeight()"
     [runwayItems]="runwayItems()"
     [runwayItemsOpposite]="runwayItemsOpposite()"
+    [appendOnly]="appendOnly()"
     [dynamic]="dynamicSize()"
+    [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
   >
     <div
       [style.height.px]="dynamicSize()(item)"
@@ -68,6 +75,7 @@ class DynamicSizeTestComponent {
   viewCache = input.required<number>();
   trackBy = input.required<keyof Item | ((idx: number, i: Item) => unknown)>();
   dynamicSize = input.required<(item: Item) => number>();
+  keepScrolledIndexOnPrepend = input(false);
   strategy = input.required<
     RxStrategyNames<string> | Observable<RxStrategyNames<string>>
   >();
@@ -76,7 +84,9 @@ class DynamicSizeTestComponent {
   >();
   renderCallback = input.required<Subject<any>>();
   showItemDescription = input.required<boolean>();
+  appendOnly = input(false);
   viewRange = output<ListRange>();
+  visibleRange = output<ListRange>();
   scrolledIndex = output<number>();
 }
 
@@ -89,10 +99,13 @@ class DynamicSizeTestComponent {
     <rx-virtual-scroll-viewport
       (scrolledIndexChange)="scrolledIndex.emit($event)"
       (viewRange)="viewRange.emit($event)"
+      (visibleRange)="visibleRange.emit($event)"
       data-cy="viewport"
       [runwayItems]="runwayItems()"
       [runwayItemsOpposite]="runwayItemsOpposite()"
+      [appendOnly]="appendOnly()"
       [dynamic]="dynamicSize()"
+      [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
     >
       <div
         [style.height.px]="dynamicSize()(item)"
@@ -121,10 +134,13 @@ class DynamicSizeCustomScrollElementTestComponent extends DynamicSizeTestCompone
       scrollWindow
       (scrolledIndexChange)="scrolledIndex.emit($event)"
       (viewRange)="viewRange.emit($event)"
+      (visibleRange)="visibleRange.emit($event)"
       data-cy="viewport"
       [runwayItems]="runwayItems()"
       [runwayItemsOpposite]="runwayItemsOpposite()"
+      [appendOnly]="appendOnly()"
       [dynamic]="dynamicSize()"
+      [keepScrolledIndexOnPrepend]="keepScrolledIndexOnPrepend()"
     >
       <div
         [style.height.px]="dynamicSize()(item)"
@@ -162,6 +178,8 @@ function mountDynamicSize(
     containerHeight,
     showItemDescription,
     dynamicSize,
+    appendOnly,
+    keepScrolledIndexOnPrepend,
   } = {
     dynamicSize: defaultDynamicSize,
     ...getDefaultMountConfig(),
@@ -179,10 +197,13 @@ function mountDynamicSize(
       trackBy,
       dynamicSize,
       showItemDescription,
+      keepScrolledIndexOnPrepend,
       strategy,
       items,
       renderCallback: renderCallback$,
+      appendOnly,
       viewRange: createOutputSpy<ListRange>('viewRange'),
+      visibleRange: createOutputSpy<ListRange>('visibleRange'),
       scrolledIndex: createOutputSpy<number>('scrolledIndex'),
     },
     imports: [
@@ -225,6 +246,38 @@ function expectedRange(
     i + (scrollDirection === 'up' ? runwayItemsOpposite : runwayItems),
   );
   return { start, end };
+}
+
+/**
+ * derived from the layout instead of from `expectedRange`: walk the items from
+ * `scrolledIndex` and accumulate their sizes. every item which *starts* before
+ * the bottom edge of the viewport is (at least partially) visible, an item
+ * starting exactly at the bottom edge is not.
+ */
+function expectedVisibleRange(
+  config: DynamicVirtualScrollMountConfig,
+  items: Item[],
+  scrolledIndex = 0,
+): ListRange {
+  const { containerHeight, dynamicSize } = config;
+  let itemTop = 0;
+  let end = scrolledIndex;
+  while (itemTop < containerHeight && end < items.length) {
+    itemTop += dynamicSize(items[end]);
+    end++;
+  }
+  return { start: scrolledIndex, end };
+}
+
+function rangeConfigOf(
+  component: DynamicSizeTestComponent,
+): DynamicVirtualScrollMountConfig {
+  return {
+    containerHeight: component.containerHeight(),
+    runwayItems: component.runwayItems(),
+    runwayItemsOpposite: component.runwayItemsOpposite(),
+    dynamicSize: component.dynamicSize(),
+  };
 }
 
 describe('viewport', () => {
@@ -464,6 +517,131 @@ describe('rendering, scrolling & positioning', () => {
   });
 });
 
+describe('visibleRange', () => {
+  it('emits the visible range, excluding runway items', () => {
+    mountDynamicSize().then(({ component }) => {
+      const items = component.items() as Item[];
+      const config = rangeConfigOf(component);
+      cy.get('@visibleRange').should(
+        'have.been.calledWith',
+        expectedVisibleRange(config, items),
+      );
+      // the rendered range is wider, it includes the runway
+      cy.get('@viewRange').should(
+        'have.been.calledWith',
+        expectedRange(config, items),
+      );
+    });
+  });
+
+  it('advances visibleRange.start while scrolling with appendOnly=true', () => {
+    mountDynamicSize({ appendOnly: true }).then(({ fixture, component }) => {
+      fixture.detectChanges();
+      const viewportComponent = getViewportComponent(fixture);
+      viewportComponent.scrollToIndex(100);
+      const items = component.items() as Item[];
+      const config = rangeConfigOf(component);
+      // appendOnly keeps the rendered range anchored at the very first item
+      cy.get('@viewRange').should('have.been.calledWith', {
+        start: 0,
+        end: expectedRange(config, items, 100, 'down').end,
+      });
+      // ... while the visible range follows the viewport
+      cy.get('@visibleRange').should(
+        'have.been.calledWith',
+        expectedVisibleRange(config, items, 100),
+      );
+    });
+  });
+
+  it('visibleRange.start tracks scrolledIndexChange', () => {
+    mountDynamicSize().then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewportComponent = getViewportComponent(fixture);
+      [42, 180, 340].forEach((index) => {
+        cy.then(() => viewportComponent.scrollToIndex(index));
+        expectVisibleRangeStartToEqualScrolledIndex();
+      });
+    });
+  });
+
+  it('reacts to containerHeight changes', () => {
+    mountDynamicSize().then(({ fixture, component }) => {
+      const items = component.items() as Item[];
+      cy.get('@visibleRange')
+        .should(
+          'have.been.calledWith',
+          expectedVisibleRange(rangeConfigOf(component), items),
+        )
+        .then(() => {
+          fixture.componentRef.setInput('containerHeight', 100);
+          fixture.detectChanges();
+          cy.get('@visibleRange').should(
+            'have.been.calledWith',
+            expectedVisibleRange(rangeConfigOf(component), items),
+          );
+        });
+    });
+  });
+
+  /**
+   * hand computed expectations for a deterministic layout, so they don't share
+   * any code path with the implementation.
+   * 6 items of 50px exactly fill the 300px viewport: item 6 starts at y=300,
+   * which is below the fold, so it must not be part of the visible range.
+   */
+  it('excludes an item starting exactly at the bottom edge', () => {
+    mountDynamicSize({ containerHeight: 300, dynamicSize: () => 50 }).then(
+      () => {
+        cy.get('@visibleRange').should('have.been.calledWith', {
+          start: 0,
+          end: 6,
+        });
+      },
+    );
+  });
+
+  it('includes an item intersecting the bottom edge', () => {
+    // 6 items of 50px + 25px of item 6 fill the 325px viewport
+    mountDynamicSize({ containerHeight: 325, dynamicSize: () => 50 }).then(
+      () => {
+        cy.get('@visibleRange').should('have.been.calledWith', {
+          start: 0,
+          end: 7,
+        });
+      },
+    );
+  });
+
+  it('excludes an item starting exactly at the bottom edge while scrolled', () => {
+    // items 100 - 105 exactly fill the 300px viewport, item 106 starts at y=6000
+    mountDynamicSize({ containerHeight: 300, dynamicSize: () => 50 }).then(
+      ({ fixture }) => {
+        fixture.detectChanges();
+        getViewportComponent(fixture).scrollTo(100 * 50);
+        cy.get('@visibleRange').should('have.been.calledWith', {
+          start: 100,
+          end: 106,
+        });
+      },
+    );
+  });
+
+  it('accounts for the clamped container size of a custom scroll element', () => {
+    // the 300px scroll element holds 50px of static content before the
+    // viewport, leaving 250px = 5 items of 50px visible
+    mountDynamicSize(
+      { dynamicSize: () => 50 },
+      DynamicSizeCustomScrollElementTestComponent,
+    ).then(() => {
+      cy.get('@visibleRange').should('have.been.calledWith', {
+        start: 0,
+        end: 5,
+      });
+    });
+  });
+});
+
 describe('data mutations', () => {
   describe('without trackBy', () => {
     it('should add item', () => {
@@ -500,15 +678,140 @@ describe('data mutations', () => {
       );
     });
   });
+  describe('when the data shrinks', () => {
+    it('renders the end of the list after shrinking while scrolled to the middle', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          // the rendered range (~200) stays below the new length, so the
+          // shrink itself does not re-anchor the viewport
+          const shrunkItems = items.slice(0, 300);
+          const lastItem = shrunkItems[shrunkItems.length - 1];
+          const runwayHeight = totalItemHeight(shrunkItems);
+          fixture.detectChanges();
+          getViewportComponent(fixture).scrollToIndex(200);
+          cy.get('@scrolledIndex')
+            .should('have.been.calledWith', 200)
+            .then(() => {
+              fixture.componentRef.setInput('items', [...shrunkItems]);
+              fixture.detectChanges();
+            });
+          // scroll to the very end of the shrunk list, like a user would
+          cy.get('.rx-virtual-scroll__runway').then(([runway]) => {
+            runway.scrollTop = runway.scrollHeight;
+          });
+          cy.get('@viewRange').should((viewRange: any) => {
+            const range: ListRange = viewRange.lastCall.args[0];
+            expect(range.end).to.eq(shrunkItems.length);
+            expect(range.start).to.be.lessThan(range.end);
+          });
+          cy.get('[data-cy=item]').should((elements) => {
+            // views are recycled, the DOM order is not the index order
+            const rendered = [...elements].map((e) => e.textContent!.trim());
+            expect(rendered).to.include(`${lastItem.id}`);
+            elements.each((_, element) => {
+              const position = Number(
+                /translateY\((-?[\d.]+)px\)/.exec(
+                  element.getAttribute('style')!,
+                )![1],
+              );
+              expect(position).to.be.at.least(0);
+              expect(position).to.be.lessThan(runwayHeight);
+            });
+          });
+        },
+      );
+    });
+    it('truncates the virtual items to the new data length', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          const shrunkItems = items.slice(0, 200);
+          fixture.detectChanges();
+          getViewportComponent(fixture).scrollToIndex(480);
+          cy.get('@scrolledIndex')
+            .should('have.been.calledWith', 480)
+            .then(() => {
+              fixture.componentRef.setInput('items', [...shrunkItems]);
+              fixture.detectChanges();
+              // `_virtualItems` is private, but its length is what `contentLength`
+              // reports and therefore exactly the state this regression is about
+              const { _virtualItems } = (getViewportComponent(fixture) as any)
+                .scrollStrategy as { _virtualItems: unknown[] };
+              expect(_virtualItems.length).to.eq(shrunkItems.length);
+            });
+        },
+      );
+    });
+    it('renders the full range again when the data grows back', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          const rangeConfig = {
+            containerHeight: component.containerHeight(),
+            runwayItems: component.runwayItems(),
+            runwayItemsOpposite: component.runwayItemsOpposite(),
+            dynamicSize: component.dynamicSize(),
+          };
+          const range = expectedRange(rangeConfig, items, 0);
+          fixture.componentRef.setInput('items', items.slice(0, 200));
+          fixture.detectChanges();
+          fixture.componentRef.setInput('items', [...items]);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]').should(
+            'have.length',
+            range.end - range.start,
+          );
+          cy.get('@viewRange').should((viewRange: any) => {
+            expect(viewRange.lastCall.args[0]).to.deep.eq(range);
+          });
+          const sentinel = fixture.debugElement.query(
+            By.css('.rx-virtual-scroll__sentinel'),
+          );
+          expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
+            `translate(0px, ${totalItemHeight(items) - 1}px)`,
+          );
+        },
+      );
+    });
+    it('recovers when the data is emptied and repopulated', () => {
+      mountDynamicSize({ showItemDescription: false }).then(
+        ({ fixture, component }) => {
+          const items = [...(component.items() as Item[])];
+          const rangeConfig = {
+            containerHeight: component.containerHeight(),
+            runwayItems: component.runwayItems(),
+            runwayItemsOpposite: component.runwayItemsOpposite(),
+            dynamicSize: component.dynamicSize(),
+          };
+          const range = expectedRange(rangeConfig, items, 0);
+          fixture.componentRef.setInput('items', []);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]')
+            .should('have.length', 0)
+            .then(() => {
+              fixture.componentRef.setInput('items', [...items]);
+              fixture.detectChanges();
+            });
+          cy.get('[data-cy=item]').should(
+            'have.length',
+            range.end - range.start,
+          );
+          cy.get('@viewRange').should((viewRange: any) => {
+            expect(viewRange.lastCall.args[0]).to.deep.eq(range);
+          });
+        },
+      );
+    });
+  });
   describe('with trackBy', () => {
     it('should throw an error', () => {
-      mountDynamicSize({ trackBy: {} as any }).then(() => {
-        cy.on('uncaught:exception', (e) => {
-          expect(e.message).eq(
-            'trackBy must be typeof function or keyof T, but received {}',
-          );
-        });
+      cy.on('fail', (e) => {
+        expect(e.message).contain(
+          'trackBy must be typeof function or keyof T, but received {}.',
+        );
       });
+      mountDynamicSize({ trackBy: {} as any });
     });
   });
 });
@@ -663,5 +966,462 @@ describe('window scrolling', () => {
         cy.get('@viewRange').should('have.been.calledWith', range);
       },
     );
+  });
+});
+
+describe('dynamic size function changes', () => {
+  /*
+   * the data is provided as an observable on purpose. a static array is
+   * re-emitted on every change detection cycle, which would recalculate the
+   * sizes as a side effect
+   */
+  function mountWithSize(dynamicSize: (item: Item) => number, items: Item[]) {
+    return mountDynamicSize({
+      items: of(items),
+      dynamicSize,
+      showItemDescription: false,
+    });
+  }
+
+  it('recomputes item sizes when the size function changes', () => {
+    const items = generateItems(defaultItemLength);
+    mountWithSize(() => 50, items).then(({ fixture, component }) => {
+      fixture.detectChanges();
+      const sentinel = fixture.debugElement.query(
+        By.css('.rx-virtual-scroll__sentinel'),
+      );
+      expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
+        `translate(0px, ${items.length * 50 - 1}px)`,
+      );
+      const dynamicSize = () => 100;
+      fixture.componentRef.setInput('dynamicSize', dynamicSize);
+      fixture.detectChanges();
+      expect((sentinel.nativeElement as HTMLElement).style.transform).eq(
+        `translate(0px, ${items.length * 100 - 1}px)`,
+      );
+      const range = expectedRange(
+        {
+          containerHeight: component.containerHeight(),
+          runwayItems: component.runwayItems(),
+          runwayItemsOpposite: component.runwayItemsOpposite(),
+          dynamicSize,
+        },
+        items,
+        0,
+      );
+      cy.get('[data-cy=item]').should('have.length', range.end - range.start);
+      cy.get('[data-cy=item]').should((elements) => {
+        elements.each((i, element) => {
+          expect(element.getAttribute('style')).to.contain(
+            `translateY(${i * 100}px)`,
+          );
+        });
+      });
+    });
+  });
+
+  it('keeps the scrolled item in place when the size function changes', () => {
+    const items = generateItems(defaultItemLength);
+    mountWithSize(() => 50, items).then(({ fixture }) => {
+      fixture.detectChanges();
+      getViewportComponent(fixture).scrollToIndex(200);
+      cy.get('@scrolledIndex').should('have.been.calledWith', 200);
+      expectItemOffset(items[200].id, 0);
+      cy.then(() => {
+        fixture.componentRef.setInput('dynamicSize', () => 25);
+        fixture.detectChanges();
+      });
+      // the scroll position follows the new size of the content above
+      cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
+        expect(runway.scrollTop).to.eq(200 * 25);
+      });
+      expectItemOffset(items[200].id, 0);
+      cy.get('@scrolledIndex').should((spy: any) => {
+        expect(spy.lastCall.args[0]).to.eq(200);
+      });
+      // every rendered view sits on its absolute position again
+      cy.get('[data-cy=item]').should((elements) => {
+        elements.each((_, element) => {
+          const index = items.findIndex(
+            (item) => `${item.id}` === element.textContent!.trim(),
+          );
+          expect(element.getAttribute('style')).to.contain(
+            `translateY(${index * 25}px)`,
+          );
+        });
+      });
+    });
+  });
+
+  it('keeps the end of the list at the bottom when it no longer fills the viewport', () => {
+    const items = generateItems(defaultItemLength);
+    mountWithSize(() => 50, items).then(({ fixture, component }) => {
+      fixture.detectChanges();
+      cy.get('.rx-virtual-scroll__runway').then(([runway]) => {
+        runway.scrollTop = runway.scrollHeight;
+      });
+      cy.get('@viewRange').should((spy: any) => {
+        expect(spy.lastCall.args[0].end).to.eq(items.length);
+      });
+      const scrollPositions: number[] = [];
+      cy.get('.rx-virtual-scroll__runway').then(([runway]) => {
+        runway.addEventListener('scroll', () =>
+          scrollPositions.push(runway.scrollTop),
+        );
+        fixture.componentRef.setInput('dynamicSize', () => 20);
+        fixture.detectChanges();
+      });
+      const containerHeight = component.containerHeight();
+      const endScrollTop = items.length * 20 - containerHeight;
+      cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
+        expect(runway.scrollTop).to.eq(endScrollTop);
+      });
+      expectItemOffset(items[items.length - 1].id, containerHeight - 20);
+      // the list goes straight to its end, the browser never had to clamp
+      // the scroll position on the way
+      cy.wrap(scrollPositions).should('deep.eq', [endScrollTop]);
+    });
+  });
+
+  it('scrolls to the exact index after the size function changed', () => {
+    const items = generateItems(defaultItemLength);
+    mountWithSize(() => 50, items).then(({ fixture }) => {
+      fixture.detectChanges();
+      getViewportComponent(fixture).scrollToIndex(100);
+      cy.get('@scrolledIndex').should('have.been.calledWith', 100);
+      cy.then(() => {
+        fixture.componentRef.setInput('dynamicSize', () => 30);
+        fixture.detectChanges();
+      });
+      cy.get('.rx-virtual-scroll__runway').should(([runway]) => {
+        expect(runway.scrollTop).to.eq(100 * 30);
+      });
+      cy.then(() => getViewportComponent(fixture).scrollToIndex(300));
+      cy.get('@scrolledIndex').should('have.been.calledWith', 300);
+      expectItemOffset(items[300].id, 0);
+    });
+  });
+
+  it('emits a new viewRange when the size function changes', () => {
+    mountWithSize(() => 50, generateItems(defaultItemLength)).then(
+      ({ fixture }) => {
+        fixture.detectChanges();
+        // wait for the initial rendering to settle
+        cy.get('@viewRange')
+          .should('have.been.called')
+          .then((spy: any) => waitUntilStable(() => spy.callCount))
+          .then((callCount) => {
+            fixture.componentRef.setInput('dynamicSize', () => 100);
+            fixture.detectChanges();
+            cy.get('@viewRange')
+              .its('callCount')
+              .should('be.greaterThan', callCount);
+          });
+      },
+    );
+  });
+
+  it('does nothing when the same function reference is re-assigned', () => {
+    const dynamicSize = () => 50;
+    mountWithSize(dynamicSize, generateItems(defaultItemLength)).then(
+      ({ fixture }) => {
+        fixture.detectChanges();
+        // wait for the initial rendering to settle
+        cy.get('@viewRange')
+          .should('have.been.called')
+          .then((spy: any) => waitUntilStable(() => spy.callCount))
+          .then((callCount) => {
+            fixture.componentRef.setInput('dynamicSize', dynamicSize);
+            fixture.detectChanges();
+            // nothing may happen - give it the time a recalculation would take
+            cy.wait(100);
+            cy.get('@viewRange').should('have.callCount', callCount);
+          });
+      },
+    );
+  });
+});
+
+describe('keepScrolledIndexOnPrepend', () => {
+  // fixed 40px per item keeps the arithmetic in the test obvious - the
+  // strategy still goes through its full size-function code path
+  const sizeFn = () => 40;
+
+  it('keeps the scroll position stable when prepending', () => {
+    mountDynamicSize({
+      dynamicSize: sizeFn,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      // 8 items + 13px -> deliberately not on an item boundary
+      const scrollTop = 8 * 40 + 13;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 8)
+        .then(() => {
+          const prepended = generateItems(6, 10000);
+          fixture.componentRef.setInput('items', [
+            ...prepended,
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            expect(viewport.getScrollTop()).to.eq(scrollTop + 6 * 40);
+          });
+        });
+    });
+  });
+
+  it('compensates using the real inserted height, not the item count', () => {
+    // inserted items are deliberately taller than the anchor, so a fix that
+    // counted items instead of pixels would land in the wrong place
+    const mixedSize = (item: Item) => (item.id >= 10000 ? 120 : 40);
+    mountDynamicSize({
+      dynamicSize: mixedSize,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 8 * 40 + 13;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 8)
+        .then(() => {
+          const prepended = generateItems(4, 10000);
+          fixture.componentRef.setInput('items', [
+            ...prepended,
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            expect(viewport.getScrollTop()).to.eq(scrollTop + 4 * 120);
+          });
+        });
+    });
+  });
+
+  it('does not move the scroll position when disabled', () => {
+    mountDynamicSize({
+      dynamicSize: sizeFn,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: false,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 8 * 40 + 13;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 8)
+        .then(() => {
+          fixture.componentRef.setInput('items', [
+            ...generateItems(6, 10000),
+            ...(fixture.componentInstance.items() as Item[]),
+          ]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            expect(viewport.getScrollTop()).to.eq(scrollTop);
+          });
+        });
+    });
+  });
+
+  it('compensates repeated prepends without accumulating drift', () => {
+    mountDynamicSize({
+      dynamicSize: sizeFn,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 15 * 40 + 7;
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 15)
+        .then(() => {
+          let expected = scrollTop;
+          let nextId = 10000;
+          [3, 5, 2].forEach((amount) => {
+            const prepended = generateItems(amount, nextId);
+            nextId += amount;
+            expected += amount * 40;
+            fixture.componentRef.setInput('items', [
+              ...prepended,
+              ...(fixture.componentInstance.items() as Item[]),
+            ]);
+            fixture.detectChanges();
+            cy.wrap(null).should(() => {
+              expect(viewport.getScrollTop()).to.eq(expected);
+            });
+          });
+        });
+    });
+  });
+  it('keeps the content in place when the batch lands below the loading row', () => {
+    // a reverse infinite scroller parked at the very top: the loading row is
+    // the top most item. The batch gets inserted below it, the loading row is
+    // removed afterwards. The rows the user is looking at must not move,
+    // otherwise the viewport stays at the top and loads forever.
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const items = generateItems(30);
+    const batch = generateItems(4, 10000);
+    mountDynamicSize({
+      dynamicSize: () => size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      showItemDescription: false,
+      items: [loader, ...items],
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      expectItemOffset(items[0].id, size);
+      cy.then(() => {
+        fixture.componentRef.setInput('items', [loader, ...batch, ...items]);
+        fixture.detectChanges();
+      });
+      cy.wrap(null).should(() => {
+        expect(viewport.getScrollTop()).to.eq(4 * size);
+      });
+      expectItemOffset(items[0].id, size);
+      cy.then(() => {
+        fixture.componentRef.setInput('items', [...batch, ...items]);
+        fixture.detectChanges();
+      });
+      cy.wrap(null).should(() => {
+        expect(viewport.getScrollTop()).to.eq(3 * size);
+      });
+      expectItemOffset(items[0].id, size);
+    });
+  });
+  it('keeps the content stable when the anchor sits on the transient row', () => {
+    // the user parks the viewport at the very top while the loading row is
+    // visible - the anchor is the loading row itself. When the batch replaces
+    // it, the nearest surviving row below has to stay in place, otherwise the
+    // viewport pins to the top and (in an infinite scroller) loads forever.
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const items = generateItems(30);
+    mountDynamicSize({
+      dynamicSize: () => size,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      items: [loader, ...items],
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 0)
+        .then(() => {
+          const batch = generateItems(4, 10000);
+          fixture.componentRef.setInput('items', [...batch, ...items]);
+          fixture.detectChanges();
+          cy.wrap(null).should(() => {
+            // the first surviving row moved from y=size to y=4*size, so the
+            // scroll position has to move down by 3*size to keep it in place
+            expect(viewport.getScrollTop()).to.eq(3 * size);
+          });
+        });
+    });
+  });
+  it('compensates a transient row that is replaced by the batch', () => {
+    const sizeFn = () => 40;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    mountDynamicSize({
+      dynamicSize: sizeFn,
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      const viewport = getViewportComponent(fixture);
+      const scrollTop = 8 * 40 + 13;
+      const original = fixture.componentInstance.items() as Item[];
+      viewport.scrollTo(scrollTop);
+      cy.get('@scrolledIndex')
+        .should('have.been.calledWith', 8)
+        .then(() => {
+          fixture.componentRef.setInput('items', [loader, ...original]);
+          fixture.detectChanges();
+          cy.wrap(null)
+            .should(() => {
+              expect(viewport.getScrollTop()).to.eq(scrollTop + 40);
+            })
+            .then(() => {
+              const batch = generateItems(4, 10000);
+              fixture.componentRef.setInput('items', [...batch, ...original]);
+              fixture.detectChanges();
+              cy.wrap(null).should(() => {
+                expect(viewport.getScrollTop()).to.eq(scrollTop + 4 * 40);
+              });
+            });
+        });
+    });
+  });
+});
+
+describe('layout integrity on range shift', () => {
+  const extractTranslateYValue = (str: string): number | null => {
+    const matches = str.match(/translateY\(([-0-9]+(\.[0-9]+)?)px?\)/);
+    return matches && matches.length >= 2 ? parseFloat(matches[1]) : null;
+  };
+  /**
+   * A prepend shifts the renderedRange by exactly the inserted amount while
+   * the rendered slice stays identical. The differ reports no changes, but
+   * every view maps to a new index and gets re-rendered - the position pass
+   * has to keep the views contiguous. If the directive announces the pass
+   * with a wrong batch (e.g. an empty set), the strategy's position cursor
+   * runs ahead and stacks the views at the end of the content, which shows
+   * up as a blank viewport with gaps between the views.
+   */
+  it('keeps rendered views contiguous when a transient row shrinks the range', () => {
+    // mirrors a chat client's "loading older messages" row: the row resolves,
+    // the data shrinks below the rendered end, which the strategy stages
+    // without emitting a range. The next range emission then carries a range
+    // that differs from the directive's bookkeeping while the rendered slice
+    // is identical.
+    const size = 50;
+    const loader = { ...generateItems(1, 99999)[0], id: 99999 };
+    const items = generateItems(4);
+    mountDynamicSize({
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      dynamicSize: () => size,
+      items: [loader, ...items],
+    }).then(({ fixture }) => {
+      fixture.detectChanges();
+      cy.get('[data-cy=item]')
+        .should('have.length', 5)
+        .then(() => {
+          fixture.componentRef.setInput('items', [...items]);
+          fixture.detectChanges();
+          cy.get('[data-cy=item]')
+            .should('have.length', 4)
+            .then(() => {
+              // trigger a range recalculation - the emitted range differs from
+              // the last one the directive saw, but the slice is unchanged
+              fixture.componentRef.setInput('runwayItems', 3);
+              fixture.detectChanges();
+              cy.wrap(null).should(() => {
+                const views = fixture.debugElement
+                  .queryAll(By.css('[data-cy=item]'))
+                  .map((de) => de.nativeElement as HTMLElement)
+                  .map((e) => ({
+                    y: extractTranslateYValue(e.style.transform),
+                    h: e.offsetHeight,
+                  }))
+                  .sort((a, b) => a.y - b.y);
+                expect(views.length).to.eq(4);
+                expect(views[0].y, 'first view starts at 0').to.eq(0);
+                for (let i = 1; i < views.length; i++) {
+                  expect(views[i].y, `view ${i} is contiguous`).to.eq(
+                    views[i - 1].y + views[i - 1].h,
+                  );
+                }
+              });
+            });
+        });
+    });
   });
 });

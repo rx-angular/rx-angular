@@ -1,6 +1,9 @@
-import { Component, ErrorHandler } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ErrorHandler,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { mockConsole } from '@test-helpers/rx-angular';
 import { isObservable } from 'rxjs';
 import { RxActionFactory } from './actions.factory';
@@ -8,6 +11,7 @@ import { RxActionFactory } from './actions.factory';
 // tslint:disable-next-line: prefer-on-push-component-change-detection  use-component-selector
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [RxActionFactory],
 })
 class TestComponent {

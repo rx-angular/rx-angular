@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { RxPush } from '@rx-angular/template/push';
 import { Observable } from 'rxjs';
-import { WorkVisualizerComponent } from '../../debug-helper/visualizer/visualizer/work-visualizer.component';
-import { RxPush } from '../../../../../../../libs/template/push/src/lib/push.pipe';
 import { PushPipe } from '../../../rx-angular-pocs/template/pipes/push/push.pipe';
+import { WorkVisualizerComponent } from '../../debug-helper/visualizer/visualizer/work-visualizer.component';
 
 @Component({
   selector: 'rxa-recursive-observable-work-push',

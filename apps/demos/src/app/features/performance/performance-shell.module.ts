@@ -6,7 +6,7 @@ const ROUTES: Routes = [
     path: 'rx-let-vs-push',
     loadChildren: () =>
       import('./rx-let-vs-push/rx-let-vs-push.module').then(
-        (m) => m.RxLetVsPushModule
+        (m) => m.RxLetVsPushModule,
       ),
   },
 ];

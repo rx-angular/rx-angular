@@ -12,5 +12,8 @@
     "server.ts",
     "src/app/app.config.server.ts"
   ],
-  "exclude": ["jest.config.ts"]
+  "exclude": ["jest.config.ts"],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  }
 }

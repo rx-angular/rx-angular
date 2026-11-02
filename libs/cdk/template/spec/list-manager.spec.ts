@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -28,6 +29,7 @@ import {
 
 @Component({
   selector: 'rx-angular-error-test',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `{{ value }}`,
 })
 class ErrorTestComponent {
@@ -51,6 +53,7 @@ class ErrorTestComponent {
     </ng-template>
     <span #host></span>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ErrorTestComponent],
 })
 class ListTemplateManagerSpecComponent implements AfterViewInit {
@@ -195,11 +198,8 @@ describe('list-manager', () => {
       fixtureComponent.detectChanges();
       const items = [2];
       componentInstance.values$.next(items);
-      try {
-        fixtureComponent.detectChanges();
-      } catch (e) {
-        expect(componentInstance.latestRenderedValue).toEqual(items);
-      }
+      fixtureComponent.detectChanges();
+      expect(componentInstance.latestRenderedValue).toEqual(items);
       expect(customErrorHandler.handleError).toHaveBeenCalled();
     });
 

@@ -1,4 +1,5 @@
-import { CommonEngine } from '@angular/ssr/node';
+import 'zone.js/node';
+import { CommonEngine, isMainModule } from '@angular/ssr/node';
 import { ModifyHtmlCallbackFn } from '@rx-angular/isr/models';
 import { ISRHandler } from '@rx-angular/isr/server';
 import express, { Request } from 'express';
@@ -21,7 +22,7 @@ export function app(): express.Express {
   //   addPrerenderedPagesToCache: true,
   // });
 
-  const commonEngine = new CommonEngine();
+  const commonEngine = new CommonEngine({ allowedHosts: ['localhost'] });
 
   const isr = new ISRHandler({
     indexHtml,
@@ -92,4 +93,7 @@ function run(): void {
   });
 }
 
-run();
+// Prerendering imports this file too; only the entry module starts the server.
+if (isMainModule(import.meta.url)) {
+  run();
+}

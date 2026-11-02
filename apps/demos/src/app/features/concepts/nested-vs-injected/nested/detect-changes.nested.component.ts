@@ -5,7 +5,7 @@ import { CdDefault1Component } from './default-1.component';
 @Component({
   selector: 'rxa-cd-nested',
   template: ` <rxa-cd-default-1> </rxa-cd-default-1> `,
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CdHelper],
   imports: [CdDefault1Component],
 })

@@ -24,9 +24,7 @@ notifications.
 #### RenderCallback Input
 
 ```html
-<ng-container
-  *rxLet="content$; let content; strategy: strategyName$; renderCallback: renderCallback$"
->
+<ng-container *rxLet="content$; let content; strategy: strategyName$; renderCallback: renderCallback$">
   <div class="example-box">{{ content }}</div>
 </ng-container>
 ```
@@ -40,11 +38,7 @@ readonly renderCallback$ = new Subject<string>();
 
 ```html
 <!-- template syntax with output binding -->
-<ng-template
-  let-content
-  [rxLet]="content$"
-  (rendered)="onTemplateRendered($event)"
->
+<ng-template let-content [rxLet]="content$" (rendered)="onTemplateRendered($event)">
   <div class="example-box">{{ content }}</div>
 </ng-template>
 ```

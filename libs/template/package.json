@@ -1,6 +1,6 @@
 {
   "name": "@rx-angular/template",
-  "version": "21.2.1",
+  "version": "22.0.0",
   "description": "**Fully** Reactive Component Template Rendering in Angular. @rx-angular/template aims to be a reflection of Angular's built in renderings just reactive.",
   "publishConfig": {
     "access": "public"
@@ -47,8 +47,8 @@
     "url": "https://github.com/rx-angular/rx-angular.git"
   },
   "peerDependencies": {
-    "@angular/core": "^21.0.0",
-    "@rx-angular/cdk": "21.1.1",
+    "@angular/core": ">=22.0.0",
+    "@rx-angular/cdk": "^22.0.0",
     "rxjs": "^6.5.3 || ^7.4.0"
   },
   "dependencies": {

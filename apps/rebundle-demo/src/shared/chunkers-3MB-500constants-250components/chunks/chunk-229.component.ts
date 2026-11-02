@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CONSTANT_457 } from '../constants/constant-457';
 import { CONSTANT_458 } from '../constants/constant-458';
 
@@ -21,6 +21,7 @@ import { CONSTANT_458 } from '../constants/constant-458';
       </div>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [
     `
       .chunk-component {

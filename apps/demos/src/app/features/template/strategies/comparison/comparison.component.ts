@@ -5,12 +5,12 @@ import { MatInputModule } from '@angular/material/input';
 import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { RxLet } from '@rx-angular/template/let';
 import { RxUnpatch } from '@rx-angular/template/unpatch';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { RxForModule } from '../../../../rx-angular-pocs';
-import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
 import { VisualizerModule } from '../../../../shared/debug-helper/visualizer';
 import { DocsLinkComponent } from '../../../../shared/docs-link';
+import { SiblingModule } from '../../../../shared/template-structures/sibling/sibling.module';
 
 @Component({
   selector: 'rxa-concurrent-strategies',
