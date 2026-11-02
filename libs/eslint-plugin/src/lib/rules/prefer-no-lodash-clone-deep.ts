@@ -9,7 +9,6 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   name: path.parse(__filename).name,
   meta: {
     docs: {
-      recommended: 'recommended',
       description: 'Detects all usages of cloneDeep from Lodash.',
     },
     type: 'problem',

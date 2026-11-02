@@ -10,7 +10,6 @@ export default ESLintUtils.RuleCreator(docsUrl)({
   name: path.parse(__filename).name,
   meta: {
     docs: {
-      recommended: 'recommended',
       description:
         'Warns against mixing imperative RxState methods in reactive methods.',
     },
