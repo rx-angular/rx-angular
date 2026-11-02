@@ -2,6 +2,7 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RxVirtualView } from '../virtual-view.directive';
+import { RxVirtualViewObserver } from '../virtual-view-observer.directive';
 import { SimpleHost } from './test-utils/host-components';
 import {
   emitIntersection,
@@ -225,17 +226,6 @@ describe('RxVirtualView — hydration size reservation below the fold', () => {
     const widgetEl = fixture.debugElement.query(By.css('.widget'))
       .nativeElement as HTMLElement;
 
-    // Give the server-rendered content a real laid-out height, which is what
-    // the browser would have after hydration.
-    Object.defineProperty(widgetEl, 'offsetHeight', {
-      value: 200,
-      configurable: true,
-    });
-    Object.defineProperty(widgetEl, 'offsetWidth', {
-      value: 300,
-      configurable: true,
-    });
-
     enabled.set(true);
     fixture.detectChanges();
 
@@ -264,17 +254,74 @@ describe('RxVirtualView — hydration size reservation below the fold', () => {
     fixture.destroy();
   });
 
-  it('falls back to a synchronous read if it is hidden before any resize lands', () => {
-    const { fixture, widgetEl } = bootHydrated();
+  /**
+   * Client flow: the element is reported visible, its content mounts, and it is
+   * force-hidden (e.g. a modal calls `hideAll()`) before the browser's next
+   * rendering update has delivered the first ResizeObserver entry.
+   */
+  function bootMountedUnmeasured() {
+    configureBrowser({
+      host: SimpleHost,
+      config: {
+        placeholderStrategy: 'sync',
+        contentStrategy: 'sync',
+        keepLastKnownSize: true,
+      },
+    });
+    const fixture = TestBed.createComponent(SimpleHost);
+    fixture.componentRef.setInput('keepLastKnownSize', true);
+    fixture.detectChanges();
+    const widgetEl = fixture.debugElement.query(By.css('.widget'))
+      .nativeElement as HTMLElement;
+    const observer = fixture.debugElement
+      .query(By.directive(RxVirtualViewObserver))
+      .injector.get(RxVirtualViewObserver);
 
-    // No resize callback has been delivered yet — the element is mounted and
-    // hidden within the same frame. Reserving the laid-out height still beats
-    // collapsing to zero.
-    emitIntersection(widgetEl, false);
+    emitIntersection(widgetEl, true);
+    fixture.detectChanges();
+    expect(widgetEl.textContent?.trim()).toBe('ze-template');
+
+    return { fixture, widgetEl, observer };
+  }
+
+  it('waits for the first resize instead of forcing a layout when hidden before any resize lands', () => {
+    const { fixture, widgetEl, observer } = bootMountedUnmeasured();
+    const offsetHeight = jest.spyOn(
+      HTMLElement.prototype,
+      'offsetHeight',
+      'get',
+    );
+    const offsetWidth = jest.spyOn(HTMLElement.prototype, 'offsetWidth', 'get');
+
+    observer.hideAll();
+    fixture.detectChanges();
+
+    // The swap is held: swapping now would reserve nothing.
+    expect(widgetEl.textContent?.trim()).toBe('ze-template');
+
+    // The first entry lands in the next rendering update and releases the swap.
+    emitResize(widgetEl, { inlineSize: 300, blockSize: 200 });
     fixture.detectChanges();
 
     expect(widgetEl.textContent?.trim()).toBe('ze-placeholder');
     expect(widgetEl.style.minHeight).toBe('200px');
+    expect(offsetHeight).not.toHaveBeenCalled();
+    expect(offsetWidth).not.toHaveBeenCalled();
+    offsetHeight.mockRestore();
+    offsetWidth.mockRestore();
+
+    fixture.destroy();
+  });
+
+  it('cancels the held swap if the element becomes visible again first', () => {
+    const { fixture, widgetEl, observer } = bootMountedUnmeasured();
+
+    observer.hideAll();
+    observer.showAllVisible();
+    emitResize(widgetEl, { inlineSize: 300, blockSize: 200 });
+    fixture.detectChanges();
+
+    expect(widgetEl.textContent?.trim()).toBe('ze-template');
 
     fixture.destroy();
   });

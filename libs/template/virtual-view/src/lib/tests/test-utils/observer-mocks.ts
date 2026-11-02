@@ -76,6 +76,9 @@ export class ResizeObserverMock implements ResizeObserver {
   /** Elements currently observed by this instance. */
   readonly observed = new Set<Element>();
 
+  /** Observed elements whose initial entry has not been delivered yet. */
+  readonly pending = new Set<Element>();
+
   constructor(public cb: (entries: ResizeObserverEntry[]) => void) {
     ResizeObserverMock.cb = cb;
     ResizeObserverMock.instances.push(this);
@@ -83,14 +86,17 @@ export class ResizeObserverMock implements ResizeObserver {
 
   observe(element: Element, options?: ResizeObserverOptions): void {
     this.observed.add(element);
+    this.pending.add(element);
   }
 
   unobserve(element: Element): void {
     this.observed.delete(element);
+    this.pending.delete(element);
   }
 
   disconnect(): void {
     this.observed.clear();
+    this.pending.clear();
   }
 }
 
@@ -106,6 +112,12 @@ export function emitIntersection(
   target: Element,
   isIntersecting: boolean,
 ): void {
+  // Browsers run the resize steps before delivering intersection entries, so a
+  // newly observed element always gets its initial ResizeObserver entry first.
+  // jsdom has no layout, so that entry is 0x0 unless a test emitted a size.
+  if (ResizeObserverMock.instances.some((i) => i.pending.has(target))) {
+    emitResize(target, { inlineSize: 0, blockSize: 0 });
+  }
   const entry = { target, isIntersecting } as IntersectionObserverEntry;
   for (const instance of IntersectionObserverMock.instances) {
     if (instance.observed.has(target)) {
@@ -132,6 +144,7 @@ export function emitResize(
   } as unknown as ResizeObserverEntry;
   for (const instance of ResizeObserverMock.instances) {
     if (instance.observed.has(target)) {
+      instance.pending.delete(target);
       instance.cb([entry]);
     }
   }

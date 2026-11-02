@@ -21,8 +21,22 @@ import {
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import { PLATFORM } from '@rx-angular/cdk/ssr';
-import { finalize, NEVER, Observable, ReplaySubject, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import {
+  finalize,
+  NEVER,
+  Observable,
+  of,
+  ReplaySubject,
+  Subject,
+  Subscription,
+} from 'rxjs';
+import {
+  distinctUntilChanged,
+  map,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs/operators';
 import {
   _RxVirtualView,
   _RxVirtualViewContent,
@@ -240,6 +254,12 @@ export class RxVirtualView
   /** Live host-size subscription, held while the content is mounted. */
   #sizeSub: Subscription | null = null;
 
+  /** True once the ResizeObserver has delivered at least one entry. */
+  #measured = false;
+
+  /** Emits on every ResizeObserver entry while the content is mounted. */
+  readonly #sizeChanged$ = new Subject<void>();
+
   /**
    * The `_RxVirtualViewContent` directive whose template is currently embedded
    * in the view container. Used to detect runtime content-template swaps (e.g.
@@ -440,7 +460,11 @@ export class RxVirtualView
     }
     this.#sizeSub = size$
       .pipe(map(this.extractSize()), takeUntilDestroyed(this.#destroyRef))
-      .subscribe(({ width, height }) => this.size.set({ width, height }));
+      .subscribe(({ width, height }) => {
+        this.size.set({ width, height });
+        this.#measured = true;
+        this.#sizeChanged$.next();
+      });
   }
 
   /**
@@ -455,30 +479,19 @@ export class RxVirtualView
   }
 
   /**
-   * Last-resort synchronous measurement, taken just before mounted content is
-   * detached.
+   * Resolves once the mounted content has a measurement to reserve.
    *
-   * `#observeSize()` covers this in the normal case — the resize steps run
-   * before intersection observations are delivered, so a mounted element has
-   * already been measured by the time it is reported non-intersecting. This
-   * closes the gap when that has not happened yet: an element mounted and hidden
-   * inside the same frame, or a `hideAll()` issued before the first resize
-   * callback. Reserving an approximate height beats collapsing to zero.
-   *
-   * Reads the border box, so a custom `extractSize` narrowing to the content box
-   * may be over-reserved by the host's own padding until the next real
-   * measurement. Only ever runs when nothing has been measured at all.
+   * Content can be hidden before its first ResizeObserver entry lands (a
+   * non-concurrent placeholder strategy, or `hideAll()` while rows are still
+   * mounting). Rather than forcing a synchronous layout to read the size, hold
+   * the placeholder swap until that entry arrives: ResizeObserver delivers in
+   * the next rendering update, so this costs at most one frame and no reflow.
+   * Already measured, or not measuring at all, resolves synchronously.
    */
-  #captureSizeBeforeHiding() {
-    if (!this.#contentIsShown || this.size().height) {
-      return;
-    }
-    const el = this.#elementRef.nativeElement;
-    const width = el.offsetWidth;
-    const height = el.offsetHeight;
-    if (height) {
-      this.size.set({ width, height });
-    }
+  #whenMeasured$(): Observable<unknown> {
+    return this.#sizeSub && !this.#measured
+      ? this.#sizeChanged$.pipe(take(1))
+      : of(null);
   }
 
   #registerRenderingBasedOnVisibility() {
@@ -507,7 +520,11 @@ export class RxVirtualView
               ? NEVER
               : this.showContent$().pipe(tap((view) => view.detectChanges()));
           }
-          return this.#placeholderVisible() ? NEVER : this.showPlaceholder$();
+          return this.#placeholderVisible()
+            ? NEVER
+            : this.#whenMeasured$().pipe(
+                switchMap(() => this.showPlaceholder$()),
+              );
         }),
         finalize(() => {
           this.#viewCache!.clear(this);
@@ -585,8 +602,6 @@ export class RxVirtualView
    * Then insert the placeholder into the view container and trigger a CD.
    */
   private renderPlaceholder() {
-    // Freeze the last known content size before the content leaves the DOM.
-    this.#captureSizeBeforeHiding();
     this.#stopObservingSize();
 
     this.#placeholderVisible.set(true);
