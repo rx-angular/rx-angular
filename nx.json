@@ -41,12 +41,6 @@
     "@schematics/angular:service": {
       "type": "service"
     },
-    "@nx/angular:scam": {
-      "type": "component"
-    },
-    "@nx/angular:scam-directive": {
-      "type": "directive"
-    },
     "@nx/angular:guard": {
       "typeSeparator": "."
     },
