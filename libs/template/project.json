@@ -36,12 +36,8 @@
       }
     },
     "component-test": {
-      "executor": "@nx/cypress:cypress",
       "options": {
-        "cypressConfig": "libs/template/cypress.config.ts",
-        "testingType": "component",
-        "skipServe": true,
-        "devServerTarget": "demos:build"
+        "config-file": "./cypress.config.ts"
       }
     }
   }

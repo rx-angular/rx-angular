@@ -148,10 +148,20 @@
       "inputs": ["production", "^production"],
       "cache": true
     },
-    "e2e": {
-      "inputs": ["default", "^production"],
-      "cache": true
-    },
+    "e2e": [
+      {
+        "inputs": ["default", "^production"],
+        "cache": true
+      },
+      {
+        "filter": {
+          "plugin": "@nx/cypress/plugin"
+        },
+        "options": {
+          "config-file": "./cypress.config.ts"
+        }
+      }
+    ],
     "component-test": {
       "inputs": ["default", "^production"],
       "cache": true
@@ -216,6 +226,31 @@
       "options": {
         "targetName": "test"
       }
+    },
+    {
+      "plugin": "@nx/cypress/plugin",
+      "options": {
+        "targetName": "e2e",
+        "ciTargetName": "e2e-ci",
+        "componentTestingTargetName": "component-test",
+        "openTargetName": "open-cypress"
+      },
+      "include": [
+        "apps/rebundle-demo-e2e/**/*",
+        "apps/ssr/**/*",
+        "apps/ssr-hydration/**/*",
+        "apps/ssr-isr/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/cypress/plugin",
+      "options": {
+        "targetName": "component-test",
+        "ciTargetName": "e2e-ci",
+        "componentTestingTargetName": "component-test",
+        "openTargetName": "open-cypress"
+      },
+      "include": ["libs/template/**/*"]
     }
   ]
 }
