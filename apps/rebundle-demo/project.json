@@ -75,7 +75,11 @@
         "port": 4200,
         "staticFilePath": "dist/apps/rebundle-demo/browser",
         "spa": true
-      }
+      },
+      "readyWhen": {
+        "signal": true
+      },
+      "dependsOn": ["build"]
     }
   }
 }

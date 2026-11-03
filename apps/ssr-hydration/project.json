@@ -78,7 +78,11 @@
         "buildTarget": "ssr-hydration:build",
         "staticFilePath": "dist/apps/ssr-hydration/browser",
         "spa": true
-      }
+      },
+      "readyWhen": {
+        "signal": true
+      },
+      "dependsOn": ["build"]
     }
   }
 }
