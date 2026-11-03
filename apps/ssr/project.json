@@ -63,6 +63,9 @@
         "production": {
           "buildTarget": "ssr:build:production"
         }
+      },
+      "readyWhen": {
+        "signal": true
       }
     },
     "extract-i18n": {

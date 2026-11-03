@@ -119,6 +119,9 @@
           "buildTarget": "demos:build:development",
           "open": true
         }
+      },
+      "readyWhen": {
+        "signal": true
       }
     },
     "extract-i18n": {
