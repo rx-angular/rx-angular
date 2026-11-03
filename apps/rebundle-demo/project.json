@@ -67,9 +67,6 @@
         }
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",

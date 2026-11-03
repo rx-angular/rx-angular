@@ -91,10 +91,6 @@
           "devServerTarget": "ssr:serve:production"
         }
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
     }
   }
 }

@@ -172,10 +172,6 @@
         }
       }
     },
-    "@nx/eslint:lint": {
-      "inputs": ["default", "^default", "{workspaceRoot}/eslint.config.mjs"],
-      "cache": true
-    },
     "nx-release-publish": {
       "dependsOn": ["build"],
       "executor": "@nx/js:release-publish",
@@ -190,5 +186,27 @@
   "analytics": false,
   "affected": {
     "legacy": true
-  }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      },
+      "include": [
+        "apps/rebundle-demo/**/*",
+        "apps/rebundle-demo-e2e/**/*",
+        "apps/ssr/**/*",
+        "apps/ssr-hydration/**/*",
+        "apps/ssr-isr/**/*",
+        "libs/cdk/**/*",
+        "libs/eslint-plugin/**/*",
+        "libs/isr/**/*",
+        "libs/rebundle/**/*",
+        "libs/state/**/*",
+        "libs/template/**/*",
+        "libs/test-helpers/**/*"
+      ]
+    }
+  ]
 }

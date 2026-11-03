@@ -71,9 +71,6 @@
         "buildTarget": "ssr-hydration:build"
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    },
     "e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {

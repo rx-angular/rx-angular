@@ -19,9 +19,6 @@
           "devServerTarget": "rebundle-demo:serve:production"
         }
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
     }
   }
 }

@@ -55,10 +55,6 @@
       "options": {
         "buildTarget": "state:perfBuild"
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
     }
   }
 }

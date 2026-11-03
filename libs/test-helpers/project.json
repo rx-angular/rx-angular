@@ -28,10 +28,6 @@
       "options": {
         "jestConfig": "libs/test-helpers/jest.config.ts"
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
     }
   }
 }

@@ -28,10 +28,6 @@
         "codeCoverage": true,
         "tsConfig": "libs/isr/tsconfig.spec.json"
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
     }
   }
 }

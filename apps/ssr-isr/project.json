@@ -68,10 +68,6 @@
         "buildTarget": "ssr-isr:build"
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
-    },
     "e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {
