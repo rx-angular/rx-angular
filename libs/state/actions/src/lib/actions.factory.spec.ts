@@ -41,134 +41,141 @@ describe('RxActionFactory', () => {
     });
   });
 
-  it('should emit on the subscribed channels', (done) => {
-    TestBed.runInInjectionContext(() => {
-      const values = 'foo';
-      const actions = new RxActionFactory<{ prop: string }>().create();
-      const exp = values;
-      actions.prop$.subscribe((result) => {
-        expect(result).toBe(exp);
+  it('should emit on the subscribed channels', () =>
+    new Promise<void>((done) => {
+      TestBed.runInInjectionContext(() => {
+        const values = 'foo';
+        const actions = new RxActionFactory<{ prop: string }>().create();
+        const exp = values;
+        actions.prop$.subscribe((result) => {
+          expect(result).toBe(exp);
+          done();
+        });
+        actions.prop(values);
+      });
+    }));
+
+  it('should maintain channels per create call', () =>
+    new Promise<void>((done) => {
+      TestBed.runInInjectionContext(() => {
+        const values = 'foo';
+        const nextSpy = vi.spyOn({ nextSpy: (_: string) => void 0 }, 'nextSpy');
+        const actions = new RxActionFactory<{ prop: string }>().create();
+        const actions2 = new RxActionFactory<{ prop: string }>().create();
+        const exp = values;
+
+        actions2.prop$.subscribe(nextSpy as unknown as (_: string) => void);
+        actions.prop$.subscribe((result) => {
+          expect(result).toBe(exp);
+          done();
+        });
+        expect(nextSpy).not.toHaveBeenCalled();
+        actions.prop(values);
+      });
+    }));
+
+  it('should emit and transform on the subscribed channels', () =>
+    new Promise<void>((done) => {
+      TestBed.runInInjectionContext(() => {
+        const actions = new RxActionFactory<{ prop: string }>().create({
+          prop: () => 'transformed',
+        });
+        const exp = 'transformed';
+        actions.prop$.subscribe((result) => {
+          expect(result).toBe(exp);
+          done();
+        });
+        actions.prop();
+      });
+    }));
+
+  it('should emit on multiple subscribed channels', () =>
+    new Promise<void>((done) => {
+      TestBed.runInInjectionContext(() => {
+        const value1 = 'foo';
+        const value2 = 'bar';
+        const actions = new RxActionFactory<{
+          prop1: string;
+          prop2: string;
+        }>().create();
+        const res = {};
+        actions.prop1$.subscribe((result) => {
+          res['prop1'] = result;
+        });
+        actions.prop2$.subscribe((result) => {
+          res['prop2'] = result;
+        });
+        actions({ prop1: value1, prop2: value2 });
+        expect(res).toStrictEqual({ prop1: value1, prop2: value2 });
         done();
       });
-      actions.prop(values);
-    });
-  });
+    }));
 
-  it('should maintain channels per create call', (done) => {
-    TestBed.runInInjectionContext(() => {
-      const values = 'foo';
-      const nextSpy = jest.spyOn({ nextSpy: (_: string) => void 0 }, 'nextSpy');
-      const actions = new RxActionFactory<{ prop: string }>().create();
-      const actions2 = new RxActionFactory<{ prop: string }>().create();
-      const exp = values;
+  it('should emit on multiple subscribed channels over mreged output', () =>
+    new Promise<void>((done) => {
+      TestBed.runInInjectionContext(() => {
+        const value1 = 'foo';
+        const value2 = 'bar';
+        const actions = new RxActionFactory<{
+          prop1: string;
+          prop2: string;
+        }>().create();
 
-      actions2.prop$.subscribe(nextSpy as unknown as (_: string) => void);
-      actions.prop$.subscribe((result) => {
-        expect(result).toBe(exp);
+        const res = [];
+        expect(typeof actions.$).toBe('function');
+        actions.$(['prop1', 'prop2']).subscribe((result) => {
+          res.push(result);
+        });
+        actions({ prop1: value1, prop2: value2 });
+        expect(res.length).toBe(2);
+        expect(res).toStrictEqual([value1, value2]);
         done();
       });
-      expect(nextSpy).not.toHaveBeenCalled();
-      actions.prop(values);
-    });
-  });
+    }));
 
-  it('should emit and transform on the subscribed channels', (done) => {
-    TestBed.runInInjectionContext(() => {
-      const actions = new RxActionFactory<{ prop: string }>().create({
-        prop: () => 'transformed',
-      });
-      const exp = 'transformed';
-      actions.prop$.subscribe((result) => {
-        expect(result).toBe(exp);
+  it('should destroy all created actions', () =>
+    new Promise<void>((done) => {
+      TestBed.runInInjectionContext(() => {
+        let numCalls = 0;
+        let numCalls2 = 0;
+        const factory = new RxActionFactory<{ prop: void }>();
+        const actions = factory.create();
+        const actions2 = factory.create();
+
+        actions.prop$.subscribe(() => ++numCalls);
+        actions2.prop$.subscribe(() => ++numCalls2);
+        expect(numCalls).toBe(0);
+        expect(numCalls2).toBe(0);
+        actions.prop();
+        actions2.prop();
+        expect(numCalls).toBe(1);
+        expect(numCalls2).toBe(1);
+        factory.destroy();
+        actions.prop();
+        actions2.prop();
+        expect(numCalls).toBe(1);
+        expect(numCalls2).toBe(1);
         done();
       });
-      actions.prop();
-    });
-  });
+    }));
 
-  it('should emit on multiple subscribed channels', (done) => {
-    TestBed.runInInjectionContext(() => {
-      const value1 = 'foo';
-      const value2 = 'bar';
-      const actions = new RxActionFactory<{
-        prop1: string;
-        prop2: string;
-      }>().create();
-      const res = {};
-      actions.prop1$.subscribe((result) => {
-        res['prop1'] = result;
+  it('should throw if a setter is used', () =>
+    new Promise<void>((done) => {
+      TestBed.runInInjectionContext(() => {
+        const factory = new RxActionFactory<{ prop: number }>();
+        const actions = factory.create();
+
+        expect(() => {
+          (actions as any).prop = 0;
+        }).toThrow('');
+
+        done();
       });
-      actions.prop2$.subscribe((result) => {
-        res['prop2'] = result;
-      });
-      actions({ prop1: value1, prop2: value2 });
-      expect(res).toStrictEqual({ prop1: value1, prop2: value2 });
-      done();
-    });
-  });
-
-  it('should emit on multiple subscribed channels over mreged output', (done) => {
-    TestBed.runInInjectionContext(() => {
-      const value1 = 'foo';
-      const value2 = 'bar';
-      const actions = new RxActionFactory<{
-        prop1: string;
-        prop2: string;
-      }>().create();
-
-      const res = [];
-      expect(typeof actions.$).toBe('function');
-      actions.$(['prop1', 'prop2']).subscribe((result) => {
-        res.push(result);
-      });
-      actions({ prop1: value1, prop2: value2 });
-      expect(res.length).toBe(2);
-      expect(res).toStrictEqual([value1, value2]);
-      done();
-    });
-  });
-
-  it('should destroy all created actions', (done) => {
-    TestBed.runInInjectionContext(() => {
-      let numCalls = 0;
-      let numCalls2 = 0;
-      const factory = new RxActionFactory<{ prop: void }>();
-      const actions = factory.create();
-      const actions2 = factory.create();
-
-      actions.prop$.subscribe(() => ++numCalls);
-      actions2.prop$.subscribe(() => ++numCalls2);
-      expect(numCalls).toBe(0);
-      expect(numCalls2).toBe(0);
-      actions.prop();
-      actions2.prop();
-      expect(numCalls).toBe(1);
-      expect(numCalls2).toBe(1);
-      factory.destroy();
-      actions.prop();
-      actions2.prop();
-      expect(numCalls).toBe(1);
-      expect(numCalls2).toBe(1);
-      done();
-    });
-  });
-
-  it('should throw if a setter is used', (done) => {
-    TestBed.runInInjectionContext(() => {
-      const factory = new RxActionFactory<{ prop: number }>();
-      const actions = factory.create();
-
-      expect(() => {
-        (actions as any).prop = 0;
-      }).toThrow('');
-
-      done();
-    });
-  });
+    }));
 
   test('should isolate errors and invoke provided ', async () => {
     const custom: ErrorHandler = {
-      handleError: jest.fn(),
+      handleError: vi.fn(),
     };
     await TestBed.configureTestingModule({
       imports: [TestComponent],

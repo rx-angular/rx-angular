@@ -327,7 +327,7 @@ describe(rxState, () => {
 
     it('should use custom scheduler', async () => {
       const scheduler = asapScheduler;
-      const scheduled = jest.spyOn(scheduler, 'schedule');
+      const scheduled = vi.spyOn(scheduler, 'schedule');
       setupConfig(withScheduler(scheduler));
       let state: FnState<{ foo: string }>;
       TestBed.runInInjectionContext(() => {
@@ -343,7 +343,7 @@ describe(rxState, () => {
 
     it('should not use queueScheduler scheduler', () => {
       const scheduler = queueScheduler;
-      const scheduled = jest.spyOn(scheduler, 'schedule');
+      const scheduled = vi.spyOn(scheduler, 'schedule');
       setupConfig(withSyncScheduler());
       TestBed.runInInjectionContext(() => {
         const state = rxState<{ foo: string }>();
@@ -356,7 +356,7 @@ describe(rxState, () => {
     });
 
     it('should use custom accumulator', () => {
-      const accumulator = jest.fn().mockImplementation((state, slice) => ({
+      const accumulator = vi.fn().mockImplementation((state, slice) => ({
         ...state,
         ...slice,
       }));
@@ -422,9 +422,7 @@ function setupComponent<State extends { count: number }>(
   setupFn?: RxStateSetupFn<State>,
   template?: string,
 ) {
-  @Component({
-    template,
-  })
+  @Component({ template: '' })
   class TestComponent implements ITestComponent<State> {
     readonly state = rxState<State>(setupFn);
 
@@ -435,6 +433,9 @@ function setupComponent<State extends { count: number }>(
   TestBed.configureTestingModule({
     imports: [TestComponent],
   });
+  if (template) {
+    TestBed.overrideTemplate(TestComponent, template);
+  }
 
   const fixture = TestBed.createComponent(TestComponent);
 

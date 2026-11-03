@@ -16,11 +16,11 @@
       "e2eTestRunner": "cypress",
       "linter": "none",
       "style": "scss",
-      "unitTestRunner": "jest"
+      "unitTestRunner": "vitest-angular"
     },
     "@nx/angular:library": {
       "linter": "none",
-      "unitTestRunner": "jest"
+      "unitTestRunner": "vitest-angular"
     },
     "@nx/angular:component": {
       "style": "scss",
@@ -84,7 +84,7 @@
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/vitest.config.*",
       "!{projectRoot}/.oxlintrc.json",
       "!{projectRoot}/cypress/**/*",
       "!{projectRoot}/**/*.cy.[jt]s?(x)",
@@ -95,7 +95,7 @@
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/vitest.config.*",
       "!{projectRoot}/.oxlintrc.json",
       "!{projectRoot}/src/test-setup.[jt]s"
     ],
@@ -182,22 +182,6 @@
         "registry": "https://registry.npmjs.org/"
       }
     },
-    "test": [
-      {
-        "filter": {
-          "plugin": "@nx/jest/plugin"
-        },
-        "configurations": {
-          "ci": {
-            "ci": true,
-            "coverage": true
-          }
-        },
-        "options": {
-          "passWithNoTests": true
-        }
-      }
-    ],
     "lint-templates": [
       {
         "filter": {
@@ -211,7 +195,27 @@
           }
         ]
       }
-    ]
+    ],
+    "@nx/angular:unit-test": {
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/tools/vitest/**/*"],
+      "outputs": ["{workspaceRoot}/coverage/{projectName}"],
+      "options": {
+        "include": ["../**/*.spec.ts"],
+        "runnerConfig": "tools/vitest/runner.config.mts",
+        "providersFile": "tools/vitest/test-providers.ts",
+        "setupFiles": [
+          "tools/vitest/setup-zone.ts",
+          "tools/vitest/setup-schematics.ts"
+        ],
+        "coverageReporters": ["lcov"]
+      },
+      "configurations": {
+        "ci": {
+          "coverage": true
+        }
+      }
+    }
   },
   "parallel": 1,
   "nxCloudId": "68cae3e68a64e3329d3ced1e",
@@ -260,12 +264,6 @@
       ]
     },
     {
-      "plugin": "@nx/jest/plugin",
-      "options": {
-        "targetName": "test"
-      }
-    },
-    {
       "plugin": "@nx/cypress/plugin",
       "options": {
         "targetName": "e2e",
@@ -289,6 +287,13 @@
         "openTargetName": "open-cypress"
       },
       "include": ["libs/template/**/*"]
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "testTargetName": "test",
+        "testMode": "run"
+      }
     }
   ]
 }

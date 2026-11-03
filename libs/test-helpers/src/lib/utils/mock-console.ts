@@ -1,9 +1,11 @@
 export const mockConsole = (methods?: ('log' | 'warn' | 'error')[]) => {
   if (methods) {
-    return methods.forEach((m) => jest.spyOn(console, m).mockImplementation());
+    return methods.forEach((m) =>
+      vi.spyOn(console, m).mockImplementation(() => undefined),
+    );
   }
 
-  jest.spyOn(console, 'log').mockImplementation();
-  jest.spyOn(console, 'warn').mockImplementation();
-  jest.spyOn(console, 'error').mockImplementation();
+  vi.spyOn(console, 'log').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'error').mockImplementation(() => undefined);
 };

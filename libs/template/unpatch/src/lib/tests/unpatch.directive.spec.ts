@@ -49,18 +49,18 @@ describe(RxUnpatch.name, () => {
     const fixture = TestBed.createComponent(TestComponent);
     const appRef = TestBed.inject(ApplicationRef);
     const div = fixture.debugElement.query(By.css('div'));
-    const addEventListener = jest.spyOn(
+    const addEventListener = vi.spyOn(
       div.nativeElement,
       Zone.__symbol__('addEventListener'),
     );
-    const removeEventListener = jest.spyOn(
+    const removeEventListener = vi.spyOn(
       div.nativeElement,
       'removeEventListener',
     );
 
     // Act
     fixture.detectChanges();
-    const tick = jest.spyOn(appRef, 'tick');
+    const tick = vi.spyOn(appRef, 'tick');
     div.nativeElement.dispatchEvent(new Event('click'));
     div.nativeElement.dispatchEvent(new Event('mouseenter'));
 
@@ -87,17 +87,17 @@ describe(RxUnpatch.name, () => {
   //   fixture.detectChanges();
   //   const appRef = TestBed.inject(ApplicationRef);
   //   const div = fixture.debugElement.query(By.css('div'));
-  //   const addEventListener = jest.spyOn(
+  //   const addEventListener = vi.spyOn(
   //     div.nativeElement,
   //     Zone.__symbol__('addEventListener'),
   //   );
-  //   const removeEventListener = jest.spyOn(
+  //   const removeEventListener = vi.spyOn(
   //     div.nativeElement,
   //     'removeEventListener',
   //   );
   //
   //   // Act
-  //   const tick = jest.spyOn(appRef, 'tick');
+  //   const tick = vi.spyOn(appRef, 'tick');
   //   div.nativeElement.dispatchEvent(new Event('click'));
   //   div.nativeElement.dispatchEvent(new Event('mouseenter'));
   //

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Template Migration introduce-rxif-stable should replace module specifier 1`] = `
+exports[`Template Migration introduce-rxif-stable > should replace module specifier 1`] = `
 "import { IfModule, RxIf, RxIfViewContext } from "@rx-angular/template/if";
 
       import { NgModule } from '@angular/core';

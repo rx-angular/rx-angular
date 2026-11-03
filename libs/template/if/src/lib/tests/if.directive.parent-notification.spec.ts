@@ -58,7 +58,7 @@ describe('RxIf signal parent notification', () => {
     ['normal'],
     ['low'],
     ['idle'],
-  ])('Strategy: %p', (strategy) => {
+  ])('Strategy: %s', (strategy) => {
     describe('parent: false', () => {
       beforeEach(() => {
         componentInstance.strategy = strategy;

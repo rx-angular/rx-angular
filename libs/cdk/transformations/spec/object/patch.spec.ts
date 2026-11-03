@@ -12,7 +12,7 @@ let nestedState: NestedState;
 beforeEach(() => {
   primitiveState = initialPrimitiveState;
   nestedState = initialNestedState;
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  vi.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 describe('patch', () => {

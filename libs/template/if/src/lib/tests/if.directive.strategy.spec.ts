@@ -4,7 +4,7 @@ import { RxStrategyProvider } from '@rx-angular/cdk/render-strategies';
 import { createTestComponent, TestComponent } from './fixtures';
 
 const customErrorHandler: ErrorHandler = {
-  handleError: jest.fn(),
+  handleError: vi.fn(),
 };
 
 describe('rxIf strategies', () => {
@@ -43,25 +43,27 @@ describe('rxIf strategies', () => {
     ['low'],
     ['idle'],
     ['native'],
-  ])('Strategy: %p', (strategy) => {
-    it('should render with given strategy', (done) => {
-      component.strategy = strategy;
-      component.renderedValue$.subscribe((v) => {
-        expect(v).toEqual(true);
-        expect(nativeElement.textContent).toBe('true');
-        done();
-      });
-      fixture.detectChanges();
-    });
-    it('should not affect primary strategy', (done) => {
-      component.strategy = strategy;
-      component.renderedValue$.subscribe((v) => {
-        expect(v).toEqual(true);
-        expect(nativeElement.textContent).toBe('true');
-        expect(strategyProvider.primaryStrategy).toBe(primaryStrategy);
-        done();
-      });
-      fixture.detectChanges();
-    });
+  ])('Strategy: %s', (strategy) => {
+    it('should render with given strategy', () =>
+      new Promise<void>((done) => {
+        component.strategy = strategy;
+        component.renderedValue$.subscribe((v) => {
+          expect(v).toEqual(true);
+          expect(nativeElement.textContent).toBe('true');
+          done();
+        });
+        fixture.detectChanges();
+      }));
+    it('should not affect primary strategy', () =>
+      new Promise<void>((done) => {
+        component.strategy = strategy;
+        component.renderedValue$.subscribe((v) => {
+          expect(v).toEqual(true);
+          expect(nativeElement.textContent).toBe('true');
+          expect(strategyProvider.primaryStrategy).toBe(primaryStrategy);
+          done();
+        });
+        fixture.detectChanges();
+      }));
   });
 });

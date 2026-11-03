@@ -7,7 +7,7 @@
   "tags": ["type:lib", "template"],
   "targets": {
     "build-lib": {
-      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "executor": "@nx/angular:package",
       "dependsOn": ["^build"],
       "outputs": ["{workspaceRoot}/dist/libs/template"],
       "options": {
@@ -30,14 +30,15 @@
         "parallel": false
       }
     },
-    "test": {
-      "options": {
-        "coverage": true
-      }
-    },
     "component-test": {
       "options": {
         "config-file": "./cypress.config.ts"
+      }
+    },
+    "test": {
+      "executor": "@nx/angular:unit-test",
+      "options": {
+        "buildTarget": "template:build-lib"
       }
     }
   }

@@ -69,7 +69,9 @@ describe('createAccumulationObservable', () => {
     });
 
     it('should log error if getting error', () => {
-      const spy = jest.spyOn(console, 'error').mockImplementation();
+      const spy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
       const state = setupAccumulationObservable<PrimitiveState>({});
       state.nextSliceObservable(throwError('test') as any);
       state.subscribe();
@@ -215,7 +217,7 @@ describe('createAccumulationObservable', () => {
   describe('emissions', () => {
     // this test makes no sense since state$ won't reset itself after unsubscribing. re-subscribing would result in
     // the latest value emitted
-    xit('should stop on unsubscribe from state', () => {
+    it.skip('should stop on unsubscribe from state', () => {
       testScheduler.run(({ expectObservable }) => {
         const acc = createAccumulationObservable<PrimitiveState>();
         const sub = acc.subscribe();

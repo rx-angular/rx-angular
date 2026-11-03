@@ -127,15 +127,15 @@ class TestUnregisterComponent {
 
 describe('RxEffects', () => {
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   test('should invoke callback for each value emitted', async () => {
     const service = {
-      method1: jest.fn(),
-      method2: jest.fn(),
-      method3: jest.fn(),
-      method4: jest.fn(),
+      method1: vi.fn(),
+      method2: vi.fn(),
+      method3: vi.fn(),
+      method4: vi.fn(),
     };
     await TestBed.configureTestingModule({
       imports: [TestComponent],
@@ -161,10 +161,10 @@ describe('RxEffects', () => {
 
   test('should unsubscribe when component is destroyed', async () => {
     const service = {
-      method1: jest.fn(),
-      method2: jest.fn(),
-      method3: jest.fn(),
-      method4: jest.fn(),
+      method1: vi.fn(),
+      method2: vi.fn(),
+      method3: vi.fn(),
+      method4: vi.fn(),
     };
     await TestBed.configureTestingModule({
       imports: [TestComponent],
@@ -200,12 +200,12 @@ describe('RxEffects', () => {
       method1: () => {
         throw new Error('something went wrong');
       },
-      method2: jest.fn(),
-      method3: jest.fn(),
-      method4: jest.fn(),
+      method2: vi.fn(),
+      method3: vi.fn(),
+      method4: vi.fn(),
     };
     const customErrorHandler: ErrorHandler = {
-      handleError: jest.fn(),
+      handleError: vi.fn(),
     };
     await TestBed.configureTestingModule({
       imports: [TestComponent],
@@ -238,7 +238,7 @@ describe('RxEffects', () => {
       method2: () => {},
       method3: () => {},
       method4: () => {},
-      method4OnComplete: jest.fn(),
+      method4OnComplete: vi.fn(),
     };
     await TestBed.configureTestingModule({
       imports: [TestComponent],
@@ -263,15 +263,13 @@ describe('RxEffects', () => {
       method2: () => {},
       method3: () => {},
       method4: () => {},
-      method4OnError: jest.fn(),
+      method4OnError: vi.fn(),
     };
-    jest
-      .spyOn(Store.prototype, 'select')
-      .mockImplementation((selector) =>
-        selector === selector4
-          ? throwError(new Error('something went wrong'))
-          : EMPTY,
-      );
+    vi.spyOn(Store.prototype, 'select').mockImplementation((selector) =>
+      selector === selector4
+        ? throwError(new Error('something went wrong'))
+        : EMPTY,
+    );
     await TestBed.configureTestingModule({
       imports: [TestComponent],
       providers: [
@@ -297,8 +295,8 @@ describe('RxEffects', () => {
 
   test('should cancel side-effect if unregistered imperatively', async () => {
     const service = {
-      method1: jest.fn(),
-      method2: jest.fn(),
+      method1: vi.fn(),
+      method2: vi.fn(),
     };
     await TestBed.configureTestingModule({
       imports: [TestUnregisterComponent],
@@ -332,7 +330,7 @@ describe('RxEffects', () => {
 
   test('should cancel side-effect if components gets destroyed when using untilEffect', async () => {
     const service = {
-      method1: jest.fn(),
+      method1: vi.fn(),
     };
     await TestBed.configureTestingModule({
       imports: [TestUntilEffectComponent],
@@ -358,7 +356,7 @@ describe('RxEffects', () => {
 
   test('should cancel side-effect if components gets destroyed when using onDestroy', async () => {
     const service = {
-      method1: jest.fn(),
+      method1: vi.fn(),
     };
     await TestBed.configureTestingModule({
       imports: [TestOnDestroyComponent],

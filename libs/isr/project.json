@@ -21,9 +21,7 @@
       }
     },
     "test": {
-      "options": {
-        "coverage": true
-      }
+      "executor": "@nx/angular:unit-test"
     }
   }
 }

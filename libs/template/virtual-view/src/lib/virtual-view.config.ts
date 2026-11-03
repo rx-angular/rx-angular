@@ -125,6 +125,6 @@ export function provideVirtualViewConfig(
   } satisfies Provider;
 }
 
-type VVConfig = Partial<
-  RxVirtualViewConfig & { cache?: Partial<RxVirtualViewConfig['cache']> }
->;
+type VVConfig = Partial<Omit<RxVirtualViewConfig, 'cache'>> & {
+  cache?: Partial<RxVirtualViewConfig['cache']>;
+};

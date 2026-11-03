@@ -30,8 +30,9 @@
       }
     },
     "test": {
+      "executor": "@nx/angular:unit-test",
       "options": {
-        "coverage": true
+        "buildTarget": "cdk:build-lib"
       }
     }
   }

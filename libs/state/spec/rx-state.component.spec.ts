@@ -97,7 +97,7 @@ export class RxStateGlueComponent extends RxState<{ str: string }> {
     </rx-angular-state-glue-test>
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, RxStateGlueComponent],
 })
 export class RxStateGlueContainerComponent extends RxState<PrimitiveState> {
   strChange$ = new Subject<string>();

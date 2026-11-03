@@ -18,9 +18,9 @@ export {
   windowEvents,
   xhrEvents,
 } from './lib/event-names';
-export { RxZoneFlagsHelperFunctions } from './lib/model/configurations.types';
-export { EventTarget } from './lib/model/zone.api.extensions';
-export {
+export type { RxZoneFlagsHelperFunctions } from './lib/model/configurations.types';
+export type { EventTarget } from './lib/model/zone.api.extensions';
+export type {
   RxZoneGlobalConfigurations,
   RxZoneRuntimeConfigurations,
   RxZoneTestConfigurations,

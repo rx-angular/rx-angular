@@ -168,7 +168,7 @@ describe('RxVirtualViewObserver', () => {
       observer.observeElementVisibility(el).subscribe();
 
       const mock = IntersectionObserverMock.instances[0];
-      const disconnectSpy = jest.spyOn(mock, 'disconnect');
+      const disconnectSpy = vi.spyOn(mock, 'disconnect');
       expect(mock.observed.has(el)).toBe(true);
 
       fixture.destroy();

@@ -30,11 +30,6 @@
         "parallel": false
       }
     },
-    "test": {
-      "options": {
-        "coverage": true
-      }
-    },
     "perfBuild": {
       "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
@@ -50,6 +45,12 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "state:perfBuild"
+      }
+    },
+    "test": {
+      "executor": "@nx/angular:unit-test",
+      "options": {
+        "buildTarget": "state:build-lib"
       }
     }
   }

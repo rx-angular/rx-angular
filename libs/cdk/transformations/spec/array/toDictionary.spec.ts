@@ -54,7 +54,7 @@ const dictionaryByNestedKey = {
 };
 
 beforeEach(() => {
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  vi.spyOn(console, 'warn').mockImplementation(() => {});
   creatures = [
     { id: 1, type: 'cat', real: true, breeds: ['Persian'] },
     { id: 2, type: 'dog', real: true, breeds: ['Doberman'] },
@@ -137,7 +137,7 @@ describe('toDictionary', () => {
     });
 
     it('should not call console.warn when key not found and source is empty', () => {
-      const spy = jest.spyOn(console, 'warn').mockImplementation();
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
       // @ts-ignore
       toDictionary([] as any, 'fakeKey');
 
@@ -145,7 +145,7 @@ describe('toDictionary', () => {
     });
 
     it('should call console.warn when key not found and source not empty', () => {
-      const spy = jest.spyOn(console, 'warn').mockImplementation();
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
       // @ts-ignore
       toDictionary([{ notFake: 1 }] as any, 'fakeKey');
 
@@ -161,7 +161,7 @@ describe('toDictionary', () => {
     });
 
     it('should return empty object when selector returns not string, number or symbol', () => {
-      const spy = jest.spyOn(console, 'warn').mockImplementation();
+      const spy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
       expect(
         toDictionary(creatures, (creature) => creature.breeds as any),

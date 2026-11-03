@@ -211,7 +211,7 @@ describe('RxIf reactive context variables', () => {
   });
 
   describe('trigger', () => {
-    describe.each([[true], [false]])('condition: %p', (condition) => {
+    describe.each([[true], [false]])('condition: %s', (condition) => {
       const templateName = condition ? 'truthy' : 'falsy';
 
       beforeEach(() => {

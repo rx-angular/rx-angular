@@ -1,4 +1,4 @@
-import { fc, test } from '@fast-check/jest';
+import { fc, test } from '@fast-check/vitest';
 import { fakeViewRef } from './test-utils/fake-view-ref';
 import { createCache } from './test-utils/testbed';
 

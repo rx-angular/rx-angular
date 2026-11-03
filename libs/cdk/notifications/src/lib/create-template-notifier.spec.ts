@@ -31,7 +31,7 @@ describe(createTemplateNotifier.name, () => {
 
   it('should skip suspense when observable has value', () => {
     const templateNotifier = createTemplateNotifier();
-    const spy = jest.fn();
+    const spy = vi.fn();
     let n: RxNotification<any>;
     templateNotifier.next(new BehaviorSubject<number>(1));
     templateNotifier.values$.subscribe({
@@ -59,7 +59,7 @@ describe(createTemplateNotifier.name, () => {
   });
 
   it('should handle errors', () => {
-    const spy = { next: jest.fn(), error: jest.fn() };
+    const spy = { next: vi.fn(), error: vi.fn() };
     const templateNotifier = createTemplateNotifier();
     templateNotifier.next(throwError(() => new Error('')));
     let n: RxNotification<any>;
@@ -75,7 +75,7 @@ describe(createTemplateNotifier.name, () => {
   });
 
   it('should handle `null` values', () => {
-    const spy = { next: jest.fn(), error: jest.fn() };
+    const spy = { next: vi.fn(), error: vi.fn() };
     const templateNotifier = createTemplateNotifier();
 
     templateNotifier.values$.subscribe(spy);

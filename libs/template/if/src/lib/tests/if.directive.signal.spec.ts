@@ -341,7 +341,7 @@ describe('rxIf directive signal values', () => {
     }));
   });
 
-  fdescribe('Templates & Context', () => {
+  describe('Templates & Context', () => {
     it('should render suspense template when value is undefined', waitForAsync(() => {
       fixture = createTestComponent(`
          <span *rxIf="booleanConditionSignal; suspense: suspense; let v">{{v}}</span>
@@ -386,7 +386,7 @@ describe('rxIf directive signal values', () => {
     }));
 
     // TODO: signals do not support complete and error
-    xit('should render complete template when source completes', waitForAsync(() => {
+    it.skip('should render complete template when source completes', waitForAsync(() => {
       const template =
         '<span *rxIf="booleanConditionSignal; complete: complete; let v">{{v}}</span>' +
         '<ng-template #complete let-v>completed</ng-template>';
@@ -402,7 +402,7 @@ describe('rxIf directive signal values', () => {
     }));
 
     // TODO: signals do not support complete and error
-    xit('should render error template when source throws', waitForAsync(() => {
+    it.skip('should render error template when source throws', waitForAsync(() => {
       const template =
         '<span *rxIf="booleanConditionSignal; error: error; let v">{{v}}</span>' +
         '<ng-template #error let-v>error</ng-template>';
@@ -418,7 +418,7 @@ describe('rxIf directive signal values', () => {
     }));
 
     // TODO: signals do not support complete and error
-    xit('should have error context when source throws', waitForAsync(() => {
+    it.skip('should have error context when source throws', waitForAsync(() => {
       const template =
         '<span *rxIf="booleanConditionSignal; let v; let error = error">{{error}}</span>';
 
@@ -435,7 +435,7 @@ describe('rxIf directive signal values', () => {
     }));
 
     // TODO: signals do not support complete and error
-    xit('should have error context on else template', waitForAsync(() => {
+    it.skip('should have error context on else template', waitForAsync(() => {
       const template =
         '<span *rxIf="booleanConditionSignal; let v; else: elseTpl">then</span>' +
         '<ng-template #elseTpl let-e="error">else{{e}}</ng-template>';

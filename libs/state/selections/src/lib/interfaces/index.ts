@@ -1,4 +1,4 @@
-export { CompareFn } from './compare-fn';
-export { KeyCompareMap } from './key-compare-map';
-export { NonUndefined } from './non-undefined';
-export { PickSlice } from './pick-slice';
+export type { CompareFn } from './compare-fn';
+export type { KeyCompareMap } from './key-compare-map';
+export type { NonUndefined } from './non-undefined';
+export type { PickSlice } from './pick-slice';

@@ -24,7 +24,7 @@ beforeEach(() => {
     { id: 3, type: 'catDog' },
   ];
   creaturesAfterMultipleItemsRemove = [{ id: 3, type: 'catDog' }];
-  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  vi.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 describe('remove', () => {

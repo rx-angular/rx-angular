@@ -13,7 +13,7 @@ import {
 } from './fixtures';
 
 const customErrorHandler: ErrorHandler = {
-  handleError: jest.fn(),
+  handleError: vi.fn(),
 };
 
 let fixtureComponent: ComponentFixture<TemplateManagerSpecComponent>;

@@ -31,7 +31,7 @@ import {
 import {
   merge,
   NEVER,
-  NextObserver,
+  type NextObserver,
   Observable,
   ObservableInput,
   ReplaySubject,

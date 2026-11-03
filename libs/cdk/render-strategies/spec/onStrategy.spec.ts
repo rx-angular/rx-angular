@@ -24,7 +24,7 @@ describe('onStrategy', () => {
 
   it('should emit 42', () => {
     testScheduler.run(({ expectObservable }) => {
-      const work = jest.fn();
+      const work = vi.fn();
       const values = { x: 42 };
       const stream$ = onStrategy(values.x, RX_NATIVE_STRATEGIES.native, work);
       const expected = '(x|)';
@@ -48,7 +48,7 @@ describe('onStrategy', () => {
 
   it('should run on animationFrame', () => {
     testScheduler.run(({ expectObservable, animate }) => {
-      const work = jest.fn();
+      const work = vi.fn();
       animate('         --------x');
       const expected = '--------(x|)';
       const values = { x: 42 };
@@ -58,7 +58,7 @@ describe('onStrategy', () => {
   });
 
   it('it should call work once when async', () => {
-    const work = jest.fn();
+    const work = vi.fn();
     testScheduler.run(({ expectObservable, animate }) => {
       animate('         --------x');
       const expected = '--------(x|)';
@@ -71,7 +71,7 @@ describe('onStrategy', () => {
   });
 
   it('it should call work', () => {
-    const work = jest.fn();
+    const work = vi.fn();
     onStrategy(42, RX_NATIVE_STRATEGIES.native, work).subscribe();
     expect(work).toHaveBeenCalledTimes(1);
   });
