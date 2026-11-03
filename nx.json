@@ -187,5 +187,8 @@
   },
   "parallel": 1,
   "nxCloudId": "68cae3e68a64e3329d3ced1e",
-  "analytics": false
+  "analytics": false,
+  "affected": {
+    "legacy": true
+  }
 }
