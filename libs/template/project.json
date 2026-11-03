@@ -31,12 +31,8 @@
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/template"],
       "options": {
-        "jestConfig": "libs/template/jest.config.ts",
-        "codeCoverage": true,
-        "tsConfig": "libs/template/tsconfig.spec.json"
+        "coverage": true
       }
     },
     "component-test": {

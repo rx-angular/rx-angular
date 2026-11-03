@@ -30,12 +30,8 @@
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/cdk"],
       "options": {
-        "jestConfig": "libs/cdk/jest.config.ts",
-        "codeCoverage": true,
-        "tsConfig": "libs/cdk/tsconfig.spec.json"
+        "coverage": true
       }
     }
   }

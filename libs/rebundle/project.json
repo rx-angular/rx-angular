@@ -5,13 +5,6 @@
   "projectType": "library",
   "tags": ["type:lib", "rebundle"],
   "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/rebundle"],
-      "options": {
-        "jestConfig": "libs/rebundle/jest.config.ts"
-      }
-    },
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],

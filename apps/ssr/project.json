@@ -71,14 +71,6 @@
         "buildTarget": "ssr:build"
       }
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/ssr"],
-      "options": {
-        "jestConfig": "apps/ssr/jest.config.ts",
-        "tsConfig": "apps/ssr/tsconfig.spec.json"
-      }
-    },
     "e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {
