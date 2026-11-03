@@ -25,7 +25,11 @@
     "ssr:isr:serve": "node dist/apps/ssr-isr/server/server.mjs"
   },
   "lint-staged": {
-    "**/!(images)/**/*.{ts,js,html}": [
+    "**/!(images)/**/*.{ts,js}": [
+      "oxlint --fix --quiet",
+      "eslint --fix --quiet"
+    ],
+    "**/*.html": [
       "eslint --fix --quiet"
     ],
     "**/*.{ts,js,html,scss,md,mdx,json}": [
@@ -78,17 +82,15 @@
     "@angular/language-service": "22.2.3",
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-angular": "^20.2.0",
-    "@eslint/eslintrc": "^3.0.0",
-    "@eslint/js": "^9.8.0",
     "@fast-check/jest": "2.2.0",
     "@nx-plus/docusaurus": "patch:@nx-plus/docusaurus@npm%3A14.1.0#~/.yarn/patches/@nx-plus-docusaurus-npm-14.1.0-b526e34c01.patch",
     "@nx/angular": "24.0.3",
     "@nx/cypress": "24.0.3",
     "@nx/eslint": "24.0.3",
-    "@nx/eslint-plugin": "24.0.3",
     "@nx/jest": "24.0.3",
     "@nx/js": "24.0.3",
     "@nx/node": "24.0.3",
+    "@nx/oxlint": "24.0.3",
     "@nx/web": "24.0.3",
     "@nx/workspace": "24.0.3",
     "@schematics/angular": "22.2.4",
@@ -103,7 +105,6 @@
     "@types/node": "^24.0.0",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
-    "angular-eslint": "22.6.0",
     "autoprefixer": "^10.4.0",
     "benchmark": "^2.1.4",
     "browser-sync": "^3.0.0",
@@ -111,8 +112,6 @@
     "cypress": "^16.0.0",
     "esbuild": "^0.28.1",
     "eslint": "^9.8.0",
-    "eslint-config-prettier": "10.1.5",
-    "eslint-plugin-cypress": "^4.1.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "express": "4.21.2",
     "fast-check": "4.9.0",
@@ -121,7 +120,6 @@
     "jest-environment-jsdom": "30.2.0",
     "jest-preset-angular": "17.0.0",
     "jest-util": "30.2.0",
-    "jsonc-eslint-parser": "^2.1.0",
     "klaw-sync": "^6.0.0",
     "lint-staged": "^12.0.3",
     "lodash": "^4.17.21",
@@ -129,6 +127,7 @@
     "ng-morph": "^4.8.4",
     "ng-packagr": "22.2.4",
     "nx": "24.0.3",
+    "oxlint": "1.90.0",
     "postcss": "^8.4.6",
     "postcss-import": "14.1.0",
     "postcss-preset-env": "7.5.0",
@@ -136,8 +135,7 @@
     "prettier": "3.7.4",
     "ts-jest": "29.4.2",
     "ts-node": "10.9.1",
-    "typescript": "6.0.3",
-    "typescript-eslint": "^8.58.0"
+    "typescript": "6.0.3"
   },
   "packageManager": "yarn@4.12.0"
 }

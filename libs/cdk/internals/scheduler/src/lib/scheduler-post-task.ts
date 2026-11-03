@@ -10,8 +10,7 @@ import { ɵglobal } from '@angular/core';
 import { PriorityLevel } from './schedulerPriorities';
 
 declare class TaskController {
-  // @ts-ignore
-  constructor(options?: { priority?: string }): TaskController;
+  constructor(options?: { priority?: string });
   signal: unknown;
   abort(): void;
 }

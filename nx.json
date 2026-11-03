@@ -14,12 +14,12 @@
   "generators": {
     "@nx/angular:application": {
       "e2eTestRunner": "cypress",
-      "linter": "eslint",
+      "linter": "none",
       "style": "scss",
       "unitTestRunner": "jest"
     },
     "@nx/angular:library": {
-      "linter": "eslint",
+      "linter": "none",
       "unitTestRunner": "jest"
     },
     "@nx/angular:component": {
@@ -85,7 +85,7 @@
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/eslint.config.mjs",
+      "!{projectRoot}/.oxlintrc.json",
       "!{projectRoot}/cypress/**/*",
       "!{projectRoot}/**/*.cy.[jt]s?(x)",
       "!{projectRoot}/cypress.config.[jt]s",
@@ -96,7 +96,7 @@
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/eslint.config.mjs",
+      "!{projectRoot}/.oxlintrc.json",
       "!{projectRoot}/src/test-setup.[jt]s"
     ],
     "projectSpecificFiles": []
@@ -153,20 +153,6 @@
     "serve": {
       "inputs": ["production", "^production"]
     },
-    "lint": [
-      {
-        "filter": {
-          "plugin": "@nx/eslint/plugin"
-        },
-        "inputs": [
-          "default",
-          "^production",
-          "{workspaceRoot}/eslint.config.mjs",
-          "{workspaceRoot}/tools/eslint-rules/**/*",
-          { "externalDependencies": ["eslint"] }
-        ]
-      }
-    ],
     "e2e": [
       {
         "inputs": ["cypress", "^production"],
@@ -211,6 +197,20 @@
           "passWithNoTests": true
         }
       }
+    ],
+    "lint-templates": [
+      {
+        "filter": {
+          "plugin": "@nx/eslint/plugin"
+        },
+        "inputs": [
+          "default",
+          "{workspaceRoot}/eslint.config.mjs",
+          {
+            "externalDependencies": ["eslint"]
+          }
+        ]
+      }
     ]
   },
   "parallel": 1,
@@ -218,11 +218,33 @@
   "analytics": false,
   "plugins": [
     {
-      "plugin": "@nx/eslint/plugin",
+      "plugin": "@nx/oxlint",
       "options": {
         "targetName": "lint"
       },
       "include": [
+        ".oxlintrc.json",
+        "apps/rebundle-demo/**/*",
+        "apps/rebundle-demo-e2e/**/*",
+        "apps/ssr/**/*",
+        "apps/ssr-hydration/**/*",
+        "apps/ssr-isr/**/*",
+        "libs/cdk/**/*",
+        "libs/eslint-plugin/**/*",
+        "libs/isr/**/*",
+        "libs/rebundle/**/*",
+        "libs/state/**/*",
+        "libs/template/**/*",
+        "libs/test-helpers/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint-templates"
+      },
+      "include": [
+        "eslint.config.mjs",
         "apps/rebundle-demo/**/*",
         "apps/rebundle-demo-e2e/**/*",
         "apps/ssr/**/*",
