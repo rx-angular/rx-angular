@@ -63,6 +63,9 @@
       },
       "readyWhen": {
         "signal": true
+      },
+      "options": {
+        "port": 4202
       }
     },
     "extract-i18n": {
