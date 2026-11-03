@@ -21,17 +21,9 @@
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/isr"],
       "options": {
-        "jestConfig": "libs/isr/jest.config.ts",
-        "codeCoverage": true,
-        "tsConfig": "libs/isr/tsconfig.spec.json"
+        "coverage": true
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
     }
   }
 }

@@ -63,6 +63,9 @@
         "development": {
           "buildTarget": "ssr-hydration:build:development"
         }
+      },
+      "readyWhen": {
+        "signal": true
       }
     },
     "extract-i18n": {
@@ -71,25 +74,13 @@
         "buildTarget": "ssr-hydration:build"
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    },
-    "e2e": {
-      "executor": "@nx/cypress:cypress",
-      "options": {
-        "cypressConfig": "apps/ssr-hydration/cypress.config.ts",
-        "testingType": "e2e",
-        "devServerTarget": "ssr-hydration:serve"
-      },
-      "configurations": {
-        "production": {
-          "devServerTarget": "ssr-hydration:serve:production"
-        }
-      }
-    },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
+      "readyWhen": {
+        "signal": true
+      },
+      "dependsOn": ["build"],
       "options": {
         "buildTarget": "ssr-hydration:build",
         "staticFilePath": "dist/apps/ssr-hydration/browser",

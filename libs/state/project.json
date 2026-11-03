@@ -31,12 +31,8 @@
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/state"],
       "options": {
-        "jestConfig": "libs/state/jest.config.ts",
-        "codeCoverage": true,
-        "tsConfig": "libs/state/tsconfig.spec.json"
+        "coverage": true
       }
     },
     "perfBuild": {
@@ -55,10 +51,6 @@
       "options": {
         "buildTarget": "state:perfBuild"
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
     }
   }
 }

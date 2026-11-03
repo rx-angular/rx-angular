@@ -63,6 +63,9 @@
         "production": {
           "buildTarget": "ssr:build:production"
         }
+      },
+      "readyWhen": {
+        "signal": true
       }
     },
     "extract-i18n": {
@@ -70,31 +73,6 @@
       "options": {
         "buildTarget": "ssr:build"
       }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/ssr"],
-      "options": {
-        "jestConfig": "apps/ssr/jest.config.ts",
-        "tsConfig": "apps/ssr/tsconfig.spec.json"
-      }
-    },
-    "e2e": {
-      "executor": "@nx/cypress:cypress",
-      "options": {
-        "cypressConfig": "apps/ssr/cypress.config.ts",
-        "testingType": "e2e",
-        "devServerTarget": "ssr:serve"
-      },
-      "configurations": {
-        "production": {
-          "devServerTarget": "ssr:serve:production"
-        }
-      }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
     }
   }
 }

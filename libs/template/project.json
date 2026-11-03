@@ -31,25 +31,13 @@
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/template"],
       "options": {
-        "jestConfig": "libs/template/jest.config.ts",
-        "codeCoverage": true,
-        "tsConfig": "libs/template/tsconfig.spec.json"
+        "coverage": true
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
-    },
     "component-test": {
-      "executor": "@nx/cypress:cypress",
       "options": {
-        "cypressConfig": "libs/template/cypress.config.ts",
-        "testingType": "component",
-        "skipServe": true,
-        "devServerTarget": "demos:build"
+        "config-file": "./cypress.config.ts"
       }
     }
   }
