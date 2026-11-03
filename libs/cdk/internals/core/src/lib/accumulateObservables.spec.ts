@@ -196,7 +196,20 @@ describe('createAccumulationObservable', () => {
   });
 
   it('should replay the last emitted value', () => {
-    testScheduler.run(({ cold, expectObservable }) => {});
+    testScheduler.run(({ cold, expectObservable }) => {
+      const values = { u, v };
+      const vm$: Observable<ViewModelTest> = accumulateObservables(
+        {
+          prop1: cold('h---i---', { h, i }),
+          prop2: cold('a-------', { a }),
+          prop3: cold('f-------', { f }),
+        },
+        cold('s'),
+      );
+      expectObservable(vm$).toBe('u---v---', values);
+      // a late subscriber immediately receives the latest composition
+      expectObservable(vm$, '------^').toBe('------v-', values);
+    });
   });
 
   it('should return observable that coalesce sync emissions caused by combineLatest (over emitting)', () => {
