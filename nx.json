@@ -208,9 +208,12 @@
           "tools/vitest/setup-zone.ts",
           "tools/vitest/setup-schematics.ts"
         ],
-        "coverage": true,
-        "coverageReporters": ["lcov"],
-        "isolate": true
+        "coverageReporters": ["lcov"]
+      },
+      "configurations": {
+        "ci": {
+          "coverage": true
+        }
       }
     }
   },

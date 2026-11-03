@@ -7,5 +7,6 @@ export default defineConfig({
     environment: fileURLToPath(new URL('./jsdom-zone.ts', import.meta.url)),
     // schematics specs are slow without a warm cache
     testTimeout: 100_000,
+    pool: 'vmThreads',
   },
 });
