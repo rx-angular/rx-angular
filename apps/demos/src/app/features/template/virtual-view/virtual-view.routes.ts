@@ -20,4 +20,18 @@ export const VIRTUAL_VIEW_ROUTES: Routes = [
         (m) => m.VirtualViewCoolDemoComponent,
       ),
   },
+  {
+    path: 'benchmark',
+    loadComponent: () =>
+      import('./benchmark/virtual-view-benchmark.component').then(
+        (m) => m.VirtualViewBenchmarkComponent,
+      ),
+  },
+  {
+    path: 'benchmark/list',
+    loadComponent: () =>
+      import('./benchmark/virtual-view-benchmark-list.component').then(
+        (m) => m.VirtualViewBenchmarkListComponent,
+      ),
+  },
 ];
