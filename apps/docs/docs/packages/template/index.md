@@ -77,3 +77,4 @@ same compatibility ranges as the Angular framework itself; see the
 ## See also
 
 - Concept: [Understanding change detection in Angular](../../concepts/E1-change-detection.md)
+- How-to: [Fix router navigation that does not trigger change detection](./how-to/router-navigation-and-change-detection.md)
