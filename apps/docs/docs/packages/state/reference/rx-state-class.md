@@ -38,9 +38,10 @@ import { RxState } from '@rx-angular/state';
 class RxState<State extends object> implements Subscribable<State> {
   readonly $: Observable<State>;
 
-  // connect — 8 overloads (Observable + Signal sources)
+  // connect — 9 overloads (Observable + Signal sources)
   connect(inputOrSlice$: Observable<Partial<State>>): void;
   connect(signal: Signal<Partial<State>>): void;
+  connect(slices: Partial<{ [Key in keyof State]: Observable<State[Key]> | Signal<State[Key]> }>): void;
   connect<Value>(inputOrSlice$: Observable<Value>, projectFn: ProjectStateReducer<State, Value>): void;
   connect<Value>(signal: Signal<Value>, projectFn: ProjectStateReducer<State, Value>): void;
   connect<Key extends keyof State>(key: Key, slice$: Observable<State[Key]>): void;
@@ -85,7 +86,7 @@ The unmodified state exposed as `Observable<State>`. It is **not** shared, disti
 
 ### `connect`
 
-Connect an `Observable` or `Signal` source to the state; every emission is merged in. Subscription handling is automatic. **8 overloads** cover whole-slice source, single-key source, and single-key-with-projection, each in an `Observable` and a `Signal` variant.
+Connect an `Observable` or `Signal` source to the state; every emission is merged in. Subscription handling is automatic. **9 overloads** cover whole-slice source, single-key source, and single-key-with-projection, each in an `Observable` and a `Signal` variant, plus an object of per-key sources.
 
 ```ts
 // whole-slice observable
@@ -96,7 +97,13 @@ state.connect('timer', interval(250));
 state.connect('currentTime', currentTimeSignal);
 // single key with projection
 state.connect('timer', interval(250), (s, tick) => s.timer + tick);
+// an object of per-key sources, observables and signals can be mixed
+state.connect({ timer: interval(250), currentTime: currentTimeSignal });
 ```
+
+The object form is shorthand for one `connect(key, source)` call per entry. Every source is connected on its own, so a source that never emits does not hold back the others. Entries whose value is `undefined` are skipped, so `Partial<State>` holes are fine.
+
+The record is validated before anything is connected: if an entry is neither an `Observable` nor a `Signal`, or the object carries no own enumerable entry at all (`{}`, a `Map`, a class instance holding its sources on the prototype), `connect` throws `wrong params passed to connect` and no source is connected. A record whose entries are all `undefined` is well formed — it simply connects nothing. Own **symbol** keys are supported, just like every other `keyof State`, while non-enumerable properties are ignored so a brand or metadata property carried on the record is not mistaken for a source.
 
 ### `set`
 
