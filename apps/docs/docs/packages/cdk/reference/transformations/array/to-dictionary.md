@@ -1,9 +1,7 @@
 ---
-id: to-dictionary
 title: toDictionary
-diataxis_type: reference
+sidebar_position: 4
 package: cdk
-legacy_guard: false
 tags: [cdk, api-reference, state]
 ---
 
@@ -14,7 +12,7 @@ array `T[]` and a key of type `string`, `number`, or `symbol`, or a selector
 function returning the key for a given item. Returns a new dictionary and does
 not mutate the original array.
 
-Immutability is explained in the [immutability & serializable state](../../../../../concepts/E7-immutability-and-serializable-state.md) concept.
+Immutability is explained in the [immutability & serializable state](../../../../../concepts/immutability-and-serializable-state.md) concept.
 
 _Example_
 

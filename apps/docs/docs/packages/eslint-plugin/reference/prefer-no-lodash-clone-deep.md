@@ -1,9 +1,7 @@
 ---
-id: prefer-no-lodash-clone-deep
 title: 'prefer-no-lodash-clone-deep'
-diataxis_type: reference
+sidebar_position: 12
 package: eslint-plugin
-legacy_guard: false
 tags: [eslint-plugin, api-reference]
 ---
 
@@ -71,4 +69,4 @@ const clone = cloneDeep(orig);
 
 ## Why
 
-The immutability rationale (why cheap, native cloning of serializable state is preferred) belongs to the [immutability & serializable state](../../../concepts/E7-immutability-and-serializable-state.md) concept.
+The immutability rationale (why cheap, native cloning of serializable state is preferred) belongs to the [immutability & serializable state](../../../concepts/immutability-and-serializable-state.md) concept.

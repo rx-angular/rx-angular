@@ -1,19 +1,16 @@
 ---
-id: coalescing
 title: 'coalesceWith'
-diataxis_type: reference
 package: cdk
-legacy_guard: 'zoneful / RxJS users'
-sidebar_label: 'coalesceWith (legacy)'
+sidebar_label: 'coalesceWith'
+sidebar_position: 3
 tags: [cdk, api-reference, migration]
-concepts: [E2]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # `coalesceWith`
 
-<LegacyGuard audience="zoneful / RxJS users">
+<LegacyGuard audience="apps still running Zone.js">
 
 Since **Angular v21, change detection is zoneless by default** and **Zone.js is
 dropped from the default bundle**, the change-detection pressure `coalesceWith`
@@ -24,7 +21,7 @@ original motivation (coalescing manual change-detection calls in a Zone.js app)
 is legacy. For native event coalescing, use
 `provideZoneChangeDetection({ eventCoalescing: true })` (the CLI default since
 v18, and moot under zoneless). For background, see
-[Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+[Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).
 
 </LegacyGuard>
 
@@ -125,4 +122,4 @@ equivalent.
 
 ## See also
 
-- Concept (legacy context): [Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+- Concept (legacy context): [Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)

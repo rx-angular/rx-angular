@@ -1,9 +1,7 @@
 ---
-id: set-prop
 title: setProp
-diataxis_type: reference
+sidebar_position: 4
 package: cdk
-legacy_guard: false
 tags: [cdk, api-reference, state]
 ---
 
@@ -13,7 +11,7 @@ Accepts an object of type `T`, a key of type `K extends keyof T`, and a value of
 type `T[K]`. Sets the property and returns a new, updated object without mutating
 the original one.
 
-Immutability is explained in the [immutability & serializable state](../../../../../concepts/E7-immutability-and-serializable-state.md) concept.
+Immutability is explained in the [immutability & serializable state](../../../../../concepts/immutability-and-serializable-state.md) concept.
 
 _Example_
 

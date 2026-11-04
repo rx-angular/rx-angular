@@ -1,12 +1,9 @@
 ---
-id: concurrent-strategies
 title: 'Concurrent strategies'
-diataxis_type: reference
 package: cdk
-legacy_guard: false
 sidebar_label: 'Concurrent strategies'
+sidebar_position: 3
 tags: [cdk, api-reference]
-concepts: [E5]
 ---
 
 # Concurrent strategies
@@ -19,7 +16,7 @@ _what_ to re-render but has no notion of _how long_ a re-render may run before i
 should pause for user input ([angular#43168](https://github.com/angular/angular/issues/43168)).
 
 For the mental model (frame budget, chunking, priority, and render deadlines),
-see [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md).
+see [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md).
 For task-oriented usage, see
 [How to render heavy UI work without blocking the frame](../../template/how-to/concurrent-rendering.md).
 
@@ -139,5 +136,5 @@ export class DropdownComponent {
 ## See also
 
 - Reference: [`RxStrategyProvider`](./rx-strategy-provider.md), the service that schedules work against these strategies
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
 - How-to: [Render heavy UI work without blocking the frame](../../template/how-to/concurrent-rendering.md)

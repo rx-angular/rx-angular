@@ -1,10 +1,8 @@
 ---
-id: push-pipe
 title: 'RxPush'
-diataxis_type: reference
 package: template
-legacy_guard: 'Zone.js / <21 / per-binding scheduling'
-sidebar_label: 'RxPush (legacy)'
+sidebar_label: 'RxPush'
+sidebar_position: 2
 tags: [template, api-reference, migration]
 ---
 
@@ -12,7 +10,7 @@ import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # RxPush
 
-<LegacyGuard audience="Zone.js / <21 / per-binding scheduling" native="since Angular v21, change detection is zoneless by default and AsyncPipe works without Zone.js">
+<LegacyGuard audience="apps that still run Zone.js or schedule single bindings" native="Change detection runs without Zone.js by default and AsyncPipe works without it">
 
 Under zoneless change detection (default since Angular v21) the standard
 `AsyncPipe` works: it calls `markForCheck` on every emission, so it is a
@@ -38,7 +36,7 @@ frame-budgeted scheduling, not any Zone.js concern, is the reason to
 prefer it over `AsyncPipe`/`toSignal()` on modern Angular.
 
 For the scheduling model this builds on, see
-[Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md).
+[Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md).
 
 ## Import
 
@@ -113,6 +111,6 @@ The object-config overload accepts:
 
 ## See also
 
-- Concept (legacy context): [Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Concept (legacy context): [Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
 - How-to: [Tune rendering with strategies](../how-to/tune-rendering-with-strategies.md)

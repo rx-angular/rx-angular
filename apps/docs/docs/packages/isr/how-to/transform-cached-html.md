@@ -1,19 +1,16 @@
 ---
-id: transform-cached-html
-title: 'Transform cached HTML'
-diataxis_type: how-to
+title: 'How to transform cached HTML'
 package: isr
-legacy_guard: false
 sidebar_label: 'Transform cached HTML'
 sidebar_position: 5
 tags: [isr, guides]
 ---
 
-# Transform cached HTML
+# How to transform cached HTML
 
 Sometimes you need to alter the HTML ISR handles, for example injecting a tracking script into pages served from cache, or stamping generated pages before they are stored. ISR exposes two hooks for this: [`modifyCachedHtml`](../reference/isr-handler-config.md#servefromcacheconfig) (runs on serve-from-cache, on every request) and [`modifyGeneratedHtml`](../reference/isr-handler-config.md) (runs once, on the fresh render, before the page is cached).
 
-> **Which hook to pick:** transform on serve when the change is per-request; transform on generate when it can be baked into the cached copy. See [How ISR works](../../../concepts/E8-how-isr-works.md) for the serve-vs-generate split.
+> **Which hook to pick:** transform on serve when the change is per-request; transform on generate when it can be baked into the cached copy. See [How ISR works](../../../concepts/how-isr-works.md) for the serve-vs-generate split.
 
 ## Preconditions
 

@@ -1,20 +1,16 @@
 ---
-id: rx-if
 title: 'RxIf'
-diataxis_type: reference
 package: template
-legacy_guard: false
 sidebar_label: 'RxIf'
 sidebar_position: 3
 tags: [template, api-reference]
-concepts: [E4]
 ---
 
 # RxIf
 
 `RxIf` is a reactive suspense / error / complete template state machine driven from an `Observable` (or `Signal`, or static value). Bind an async condition directly and render loading, error, and complete UI from the source's notifications: no manual `@if` boilerplate, no extra `async` pipes to wire the states together.
 
-For a plain boolean toggle, prefer native `@if`: it is synchronous and needs no import. Reach for `RxIf` when you want the full [reactive context](../../../concepts/E4-reactive-context.md) (suspense / error / complete) of an async source expressed declaratively, together with per-directive [render scheduling](../how-to/tune-rendering-with-strategies.md).
+For a plain boolean toggle, prefer native `@if`: it is synchronous and needs no import. Reach for `RxIf` when you want the full [reactive context](../../../concepts/reactive-context.md) (suspense / error / complete) of an async source expressed declaratively, together with per-directive [render scheduling](../how-to/tune-rendering-with-strategies.md).
 
 ## Import
 
@@ -121,7 +117,7 @@ The full reactive context (suspense, error, complete) can only be derived from `
 
 ## Context
 
-`RxIf` exposes the [reactive context](../../../concepts/E4-reactive-context.md) of its source in two ways: **context variables** and **context templates**.
+`RxIf` exposes the [reactive context](../../../concepts/reactive-context.md) of its source in two ways: **context variables** and **context templates**.
 
 ### Context variables
 
@@ -261,7 +257,7 @@ export class AppComponent {
 
 ## See also
 
-- Concept: [The reactive context](../../../concepts/E4-reactive-context.md)
+- Concept: [The reactive context](../../../concepts/reactive-context.md)
 - How-to: [Tune rendering with strategies](../how-to/tune-rendering-with-strategies.md)
 - How-to: [Test scheduled rendering](../how-to/test-scheduled-rendering.md)
 

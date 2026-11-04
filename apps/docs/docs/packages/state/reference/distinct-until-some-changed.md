@@ -1,12 +1,9 @@
 ---
-id: distinct-until-some-changed
 title: 'distinctUntilSomeChanged'
-diataxis_type: reference
 package: state
-legacy_guard: false
 sidebar_label: 'distinctUntilSomeChanged'
+sidebar_position: 9
 tags: [state, api-reference]
-concepts: [E3]
 ---
 
 # `distinctUntilSomeChanged`
@@ -15,7 +12,7 @@ RxJS operator that emits items from the source `Observable` that are distinct by
 
 Pass a `KeyCompareMap` to fine-grain the distinct check for specific keys.
 
-> **Why distinct-checking matters:** see [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md).
+> **Why distinct-checking matters:** see [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md).
 
 ## Signature
 
@@ -71,5 +68,5 @@ Signal graphs are already distinct-by-value: a `computed()` recomputes only when
 
 ## See also
 
-- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md)
+- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md)
 - Reference: [`selectSlice`](./select-slice.md) · [`select`](./select.md) · [`stateful`](./stateful.md)

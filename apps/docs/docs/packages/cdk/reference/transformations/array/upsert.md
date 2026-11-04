@@ -1,9 +1,7 @@
 ---
-id: upsert
 title: upsert
-diataxis_type: reference
+sidebar_position: 6
 package: cdk
-legacy_guard: false
 tags: [cdk, api-reference, state]
 ---
 
@@ -15,7 +13,7 @@ comparison function that returns `true` when items match. If no comparison is
 provided, an equality check is used by default. Returns a new array `T[]` and
 does not mutate the original one.
 
-Immutability is explained in the [immutability & serializable state](../../../../../concepts/E7-immutability-and-serializable-state.md) concept.
+Immutability is explained in the [immutability & serializable state](../../../../../concepts/immutability-and-serializable-state.md) concept.
 
 _Example — upsert (update) with a key_
 

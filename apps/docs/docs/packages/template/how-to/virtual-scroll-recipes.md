@@ -1,12 +1,9 @@
 ---
-id: virtual-scroll-recipes
 title: 'How to build virtual scroll lists with rxVirtualFor'
-diataxis_type: how-to
 package: template
-legacy_guard: false
 sidebar_label: 'Virtual scroll recipes'
+sidebar_position: 3
 tags: [template, guides]
-concepts: [E5]
 ---
 
 # How to build virtual scroll lists with `rxVirtualFor`
@@ -218,4 +215,4 @@ react to what is on screen.
 - Reference: [`RxVirtualScrollViewport`](../reference/rx-virtual-scroll-viewport.md)
 - Reference: [Virtual scroll strategies](../reference/rx-virtual-scroll-strategies.md)
 - How-to: [Tune rendering with strategies](./tune-rendering-with-strategies.md)
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)

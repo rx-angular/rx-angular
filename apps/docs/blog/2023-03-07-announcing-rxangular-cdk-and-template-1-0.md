@@ -124,7 +124,7 @@ The `scheduleCD` method is an imperative option for scheduling change detection 
 
 Try the RxStrategyProvider and see rendering strategies in action in this [stackblitz demo](https://stackblitz.com/edit/angular-ivy-1vfpoe?file=src%2Fapp%2Fapp.component.ts).
 
-#### [Zone configuration](/docs/packages/cdk/legacy/zone-configurations) and [Zone-less utils:](/docs/concepts/E2-zoneless-and-zonejs-change-detection) Reliable Zone.js tuning
+#### [Zone configuration](/docs/packages/cdk/legacy/zone-configurations) and [Zone-less utils:](/docs/concepts/zoneless-and-zonejs-change-detection) Reliable Zone.js tuning
 
 Our CDK provides zone-configuration utils for partially disabling zone.js, reducing the risk of unexpected bugs.
 These utils provide autocompletion, event groups, and assertions to ensure proper usage.

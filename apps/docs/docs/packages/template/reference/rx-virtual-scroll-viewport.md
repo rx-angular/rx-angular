@@ -1,12 +1,9 @@
 ---
-id: rx-virtual-scroll-viewport
 title: 'RxVirtualScrollViewportComponent'
-diataxis_type: reference
 package: template
-legacy_guard: false
 sidebar_label: 'RxVirtualScrollViewport'
+sidebar_position: 5
 tags: [template, api-reference]
-concepts: [E5]
 ---
 
 # RxVirtualScrollViewportComponent
@@ -16,7 +13,7 @@ The viewport container that `*rxVirtualFor` operates inside. It implements the
 [scroll strategy](./rx-virtual-scroll-strategies.md) has room to position items, and
 gathers and forwards scroll events to the consumer.
 
-> **Why this matters:** see [How RxAngular virtual scrolling works](../../../concepts/E10-how-virtual-scrolling-works.md).
+> **Why this matters:** see [How RxAngular virtual scrolling works](../../../concepts/how-virtual-scrolling-works.md).
 
 ## Import
 
@@ -85,4 +82,4 @@ export class ListComponent {
 - Reference: [`RxVirtualFor`](./rx-virtual-for.md)
 - Reference: [Virtual scroll strategies](./rx-virtual-scroll-strategies.md)
 - How-to: [Virtual scroll recipes](../how-to/virtual-scroll-recipes.md)
-- Explanation: [How RxAngular virtual scrolling works](../../../concepts/E10-how-virtual-scrolling-works.md)
+- Explanation: [How RxAngular virtual scrolling works](../../../concepts/how-virtual-scrolling-works.md)

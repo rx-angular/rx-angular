@@ -1,24 +1,21 @@
 ---
-id: no-zone-critical-rxjs-creation-apis
 title: 'no-zone-critical-rxjs-creation-apis'
-diataxis_type: reference
 package: eslint-plugin
-legacy_guard: 'Zone.js only'
 sidebar_label: 'no-zone-critical-rxjs-creation-apis'
+sidebar_position: 7
 tags: [eslint-plugin, api-reference, migration]
-concepts: [E2]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # no-zone-critical-rxjs-creation-apis
 
-<LegacyGuard audience="Zone.js only">
+<LegacyGuard audience="apps still running Zone.js">
 
 This rule only does anything when **Zone.js is present**. Since Angular v21, change
 detection is zoneless by default and Zone.js is dropped from the default bundle, so
 there is nothing to patch and this rule is a no-op. See
-[Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+[Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).
 
 </LegacyGuard>
 
@@ -78,8 +75,8 @@ const subscribe = source.subscribe((val) => console.log(val));
 
 :::warning Do not use `rxjs-zone-less`
 Older guidance suggested importing these creation functions from `rxjs-zone-less`.
-That package is **unmaintained** (RxJS 6/7 only); do not add it or present it as a
-current path. In a zoneless app you need no wrapper at all; in a residual Zone.js
+That package is **unmaintained** (RxJS 6/7 only), so leave it out.
+In a zoneless app you need no wrapper at all; in a residual Zone.js
 app, unpatch the underlying timer via `getZoneUnPatchedApi` from
 `@rx-angular/cdk/internals/core` instead.
 :::
@@ -88,4 +85,4 @@ app, unpatch the underlying timer via `getZoneUnPatchedApi` from
 
 RxJS creation APIs backed by Zone-patched schedulers can trigger unnecessary
 change-detection runs.
-Why &rarr; [Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+Why &rarr; [Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).

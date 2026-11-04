@@ -1,12 +1,9 @@
 ---
-id: rx-virtual-for
 title: 'RxVirtualFor'
-diataxis_type: reference
 package: template
-legacy_guard: false
 sidebar_label: 'RxVirtualFor'
+sidebar_position: 4
 tags: [template, api-reference]
-concepts: [E5]
 ---
 
 # RxVirtualFor
@@ -15,10 +12,10 @@ concepts: [E5]
 visible in a [`RxVirtualScrollViewport`](./rx-virtual-scroll-viewport.md), instead
 of rendering the whole iterable. It implements `RxVirtualViewRepeater` and schedules
 the change detection of each child template through concurrent
-[render strategies](../../../concepts/E5-concurrent-scheduling.md).
+[render strategies](../../../concepts/concurrent-scheduling.md).
 
-> **Why this matters:** see [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
-> and [How RxAngular virtual scrolling works](../../../concepts/E10-how-virtual-scrolling-works.md).
+> **Why this matters:** see [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
+> and [How RxAngular virtual scrolling works](../../../concepts/how-virtual-scrolling-works.md).
 
 ## Import
 
@@ -207,5 +204,5 @@ export class MovieDataSource implements RxVirtualForDataSource<Movie> {
 - Reference: [Virtual scroll strategies](./rx-virtual-scroll-strategies.md)
 - How-to: [Virtual scroll recipes](../how-to/virtual-scroll-recipes.md)
 - How-to: [Tune rendering with strategies](../how-to/tune-rendering-with-strategies.md)
-- Explanation: [How RxAngular virtual scrolling works](../../../concepts/E10-how-virtual-scrolling-works.md)
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Explanation: [How RxAngular virtual scrolling works](../../../concepts/how-virtual-scrolling-works.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)

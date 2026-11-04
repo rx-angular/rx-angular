@@ -1,20 +1,16 @@
 ---
-id: set-up-isr
 title: 'How to set up ISR in an SSR app'
-diataxis_type: how-to
 package: isr
-legacy_guard: false
 sidebar_label: 'Set up ISR'
 sidebar_position: 1
 tags: [isr, guides]
-concepts: [E8]
 ---
 
 # How to set up ISR in an SSR app
 
 ## Goal
 
-Wire `@rx-angular/isr` into an existing Angular SSR application so that routes marked with `revalidate` are cached and served from cache. This recipe assumes you already understand _how ISR works_ (route-data capture → cache decision at render-finish); if you don't, read the [How ISR works](../../../concepts/E8-how-isr-works.md) concept first. This page is the task only; every symbol used here is documented in the [ISR API reference](../reference/api.md) and [`ISRHandlerConfig`](../reference/isr-handler-config.md).
+Wire `@rx-angular/isr` into an existing Angular SSR application so that routes marked with `revalidate` are cached and served from cache. This recipe assumes you already understand _how ISR works_ (route-data capture → cache decision at render-finish); if you don't, read the [How ISR works](../../../concepts/how-isr-works.md) concept first. This page is the task only; every symbol used here is documented in the [ISR API reference](../reference/api.md) and [`ISRHandlerConfig`](../reference/isr-handler-config.md).
 
 ## Steps
 
@@ -159,7 +155,7 @@ Wire `@rx-angular/isr` into an existing Angular SSR application so that routes m
 
    `revalidate` is the number of seconds after which the cached page is regenerated on the next hit. See [`RouteISRConfig`](../reference/isr-handler-config.md#routeisrconfig) for the `null` / `0` / `N` value semantics.
 
-6. **Run it in development.** On Angular v17.1+ (v21 here), `ng serve` runs your `server.ts`, so ISR works under the normal dev-server:
+6. **Run it in development.** On Angular v17.1 and later, `ng serve` runs your `server.ts`, so ISR works under the normal dev-server:
 
    ```shell
    ng serve
@@ -175,4 +171,4 @@ Request a `revalidate`-enabled route twice. The first request server-renders and
 
 - Reference: [`@rx-angular/isr` API](../reference/api.md): `ISRHandler`, `provideISR`, `isrHttpInterceptors`.
 - Reference: [`ISRHandlerConfig`](../reference/isr-handler-config.md): all 18 config fields and the `RouteISRConfig` route data.
-- Concept: [**How ISR works**](../../../concepts/E8-how-isr-works.md) (E8): the route-data capture → cache-decision mechanism this recipe assumes.
+- Concept: [**How ISR works**](../../../concepts/how-isr-works.md) explains the route-data capture → cache-decision mechanism this recipe assumes.

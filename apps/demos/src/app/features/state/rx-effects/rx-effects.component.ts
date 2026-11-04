@@ -47,7 +47,7 @@ const RX_EFFECTS_CODE = `export class RxEffectsComponent {
   imports: [DocsLinkComponent, CodeHighlightComponent],
   template: `
     <rxa-docs-link
-      docs="packages/state/reference/rx-effects-api"
+      docs="packages/state/reference/rx-effects"
       source="apps/demos/src/app/features/state/rx-effects"
     />
 

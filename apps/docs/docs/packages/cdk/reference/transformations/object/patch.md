@@ -1,9 +1,7 @@
 ---
-id: patch
 title: patch
-diataxis_type: reference
+sidebar_position: 3
 package: cdk
-legacy_guard: false
 tags: [cdk, api-reference, state]
 ---
 
@@ -13,7 +11,7 @@ Merges an object of type `T` with updates of type `Partial<T>`. Returns a new
 object where the updates override the original values and does not mutate the
 original one.
 
-Immutability is explained in the [immutability & serializable state](../../../../../concepts/E7-immutability-and-serializable-state.md) concept.
+Immutability is explained in the [immutability & serializable state](../../../../../concepts/immutability-and-serializable-state.md) concept.
 
 _Example_
 

@@ -1,13 +1,9 @@
 ---
-id: refactor-to-rx-effects
 title: 'How to refactor manual subscriptions to rxEffects'
-diataxis_type: how-to
 package: state
-legacy_guard: false
-sidebar_label: 'Case study: refactor to rxEffects'
+sidebar_label: 'Refactor to rxEffects (case study)'
 sidebar_position: 5
 tags: [state, guides]
-concepts: [E3]
 ---
 
 # How to refactor manual subscriptions to rxEffects
@@ -138,6 +134,6 @@ This results in less boilerplate and good guidance toward a resilient, ergonomic
 
 ## See also
 
-- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md)
+- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md)
 
-> When to reach for an `Observable`-triggered `rxEffects` register versus a native signal `effect()` (the underlying reactive-discipline rationale) is covered by the [RxState reactive discipline & effects](../../../concepts/E6-rxstate-discipline-and-effects.md) concept.
+> When to reach for an `Observable`-triggered `rxEffects` register versus a native signal `effect()` (the underlying reactive-discipline rationale) is covered by the [RxState reactive discipline & effects](../../../concepts/rxstate-discipline-and-effects.md) concept.

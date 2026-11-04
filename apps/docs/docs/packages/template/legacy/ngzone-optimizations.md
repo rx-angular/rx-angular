@@ -1,10 +1,8 @@
 ---
-id: ngzone-optimizations
 title: 'How to run rx-template listeners outside NgZone (patchZone)'
-diataxis_type: how-to
 package: template
-legacy_guard: 'Zone.js only'
-sidebar_label: 'NgZone optimizations (legacy)'
+sidebar_label: 'NgZone optimizations'
+sidebar_position: 1
 tags: [template, guides, migration]
 ---
 
@@ -12,7 +10,7 @@ import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # Running listeners outside `NgZone` with `patchZone`
 
-<LegacyGuard audience="Zone.js only">
+<LegacyGuard audience="apps still running Zone.js">
 
 `patchZone` controls whether a `@rx-angular/template` directive processes its
 updates inside `NgZone`. Setting `patchZone: false` only matters when Zone.js is
@@ -95,5 +93,5 @@ For the `patchZone` option alongside the other rendering controls, see
 
 ## See also
 
-- Concept (legacy context): [Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+- Concept (legacy context): [Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)
 - How-to: [Tune rendering with strategies](../how-to/tune-rendering-with-strategies.md)

@@ -1,19 +1,15 @@
 ---
 sidebar_position: 9
-id: manage-entities
-title: 'Manage entities with RxState'
-diataxis_type: how-to
+title: 'How to manage entities with RxState'
 package: state
-legacy_guard: false
 sidebar_label: 'Manage entities with RxState'
 tags: [state, cdk, guides]
-concepts: [E3, E7]
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Manage entities with RxState
+# How to manage entities with RxState
 
 Managing a collection in component state means writing the same add / update / remove
 plumbing over and over: find the item in the array, rebuild the array immutably, put it
@@ -21,7 +17,7 @@ back. RxAngular ships that plumbing as a set of pure, immutable helpers in
 [`@rx-angular/cdk/transformations`](../../cdk/reference/transformations/index.md) —
 `insert`, `update`, `upsert`, `remove`, and the `toDictionary` / `dictionaryToArray`
 pair. Each returns a **new** array (or object) and never mutates its input, so it drops
-straight into an [`rxState`](../reference/rx-state-functional.md) container: the component
+straight into an [`rxState`](../reference/rx-state.md) container: the component
 holds almost no collection code, and you pull in no entity library to get it.
 
 ## Goal / when to use
@@ -184,5 +180,5 @@ component carries no bespoke collection logic and no entity-library dependency �
 
 ## See also
 
-- Reference: [Transformation helpers](../../cdk/reference/transformations/index.md) · [`rxState`](../reference/rx-state-functional.md)
-- Concept: [Immutability & serializable state](../../../concepts/E7-immutability-and-serializable-state.md) · [Reactive state: global vs local](../../../concepts/E3-reactive-state-global-vs-local.md)
+- Reference: [Transformation helpers](../../cdk/reference/transformations/index.md) · [`rxState`](../reference/rx-state.md)
+- Concept: [Immutability & serializable state](../../../concepts/immutability-and-serializable-state.md) · [Reactive state: global vs local](../../../concepts/reactive-state-global-vs-local.md)

@@ -1,12 +1,9 @@
 ---
-id: stateful
 title: 'stateful'
-diataxis_type: reference
 package: state
-legacy_guard: false
 sidebar_label: 'stateful'
+sidebar_position: 12
 tags: [state, api-reference]
-concepts: [E3]
 ---
 
 # `stateful`
@@ -91,9 +88,9 @@ export class ListComponent {
 }
 ```
 
-`stateful` (and the related `select`/`selectSlice` operators) remain the right tool for derivation **inside RxJS pipelines**, for example when composing multiple `Observable` sources before they reach state, or when the derived stream feeds a `connect`. The [RxState reactive discipline & effects](../../../concepts/E6-rxstate-discipline-and-effects.md) concept covers when to keep derivation in the reactive pipeline versus lifting it into signals.
+`stateful` (and the related `select`/`selectSlice` operators) remain the right tool for derivation **inside RxJS pipelines**, for example when composing multiple `Observable` sources before they reach state, or when the derived stream feeds a `connect`. The [RxState reactive discipline & effects](../../../concepts/rxstate-discipline-and-effects.md) concept covers when to keep derivation in the reactive pipeline versus lifting it into signals.
 
 ## See also
 
-- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md)
+- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md)
 - Reference: [`select`](./select.md) · [`selectSlice`](./select-slice.md) · [`distinctUntilSomeChanged`](./distinct-until-some-changed.md)

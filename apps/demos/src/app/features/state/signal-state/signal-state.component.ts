@@ -77,7 +77,7 @@ export class SignalStateComponent {
   imports: [DocsLinkComponent, CodeHighlightComponent],
   template: `
     <rxa-docs-link
-      docs="packages/state/reference/rx-state-functional"
+      docs="packages/state/reference/rx-state"
       source="apps/demos/src/app/features/state/signal-state"
     />
 

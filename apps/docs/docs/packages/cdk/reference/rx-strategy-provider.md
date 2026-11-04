@@ -1,12 +1,9 @@
 ---
-id: rx-strategy-provider
 title: 'RxStrategyProvider'
-diataxis_type: reference
 package: cdk
-legacy_guard: false
 sidebar_label: 'RxStrategyProvider'
+sidebar_position: 6
 tags: [cdk, api-reference]
-concepts: [E5]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
@@ -22,7 +19,7 @@ below.
 
 For the mental model behind concurrent scheduling (frame budget, render
 deadlines, and the RAIL targets these APIs serve), see
-[Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md).
+[Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md).
 
 ## Import path
 
@@ -128,14 +125,14 @@ source$.pipe(strategyProvider.scheduleWith(() => myWork(), { strategy: 'idle', s
 
 ### `scheduleCD` & zone patching
 
-<LegacyGuard audience="Angular <21 / still-zoneful / perf-retrofit">
+<LegacyGuard audience="apps still running Zone.js">
 
 `scheduleCD` schedules an imperative change-detection cycle on a supplied
 `ChangeDetectorRef`, and the `patchZone` option controls whether scheduled work
 re-enters `NgZone`. Both belong to the Zone.js era. Under zoneless change detection
 (default since Angular v21) `patchZone` is a no-op, and the manual-CD need that
 `scheduleCD` served is usually covered by signals and `afterNextRender`. See
-[Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+[Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).
 
 </LegacyGuard>
 
@@ -152,5 +149,5 @@ abort.abort();
 ## See also
 
 - Reference: [Concurrent strategies](./concurrent-strategies.md): names, priorities, render deadlines
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
 - How-to: [Render heavy UI work without blocking the frame](../../template/how-to/concurrent-rendering.md)

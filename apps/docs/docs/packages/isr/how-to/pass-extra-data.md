@@ -1,19 +1,16 @@
 ---
-id: pass-extra-data
-title: 'Pass extra data into the cache'
-diataxis_type: how-to
+title: 'How to pass extra data into the cache'
 package: isr
-legacy_guard: false
 sidebar_label: 'Pass extra data'
 sidebar_position: 7
 tags: [isr, guides]
 ---
 
-# Pass extra data into the cache
+# How to pass extra data into the cache
 
 ISR can store arbitrary extra data alongside a cached page, for example how long the API requests behind that page took, so you can show how much time serving from cache saved. You write to the bag with [`IsrService.addExtra`](../reference/api.md#isrserviceinterface) and read it back with [`getExtra`](../reference/api.md#isrserviceinterface).
 
-> **Why this exists:** see the extra-data rationale in [How ISR works](../../../concepts/E8-how-isr-works.md).
+> **Why this exists:** see the extra-data rationale in [How ISR works](../../../concepts/how-isr-works.md).
 
 ## Preconditions
 

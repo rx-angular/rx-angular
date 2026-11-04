@@ -1,13 +1,9 @@
 ---
-id: testing
 title: 'How to test components and services that use RxState'
-diataxis_type: how-to
 package: state
-legacy_guard: false
 sidebar_label: 'Test RxState'
 sidebar_position: 7
 tags: [state, guides]
-concepts: [E3]
 ---
 
 import Tabs from '@theme/Tabs';
@@ -196,5 +192,5 @@ Both test styles pass without touching RxState internals: the DOM test proves th
 
 ## See also
 
-- Reference: [`RxState` (functional)](../reference/rx-state-functional.md) · [`select`](../reference/select.md)
-- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md)
+- Reference: [`RxState` (functional)](../reference/rx-state.md) · [`select`](../reference/select.md)
+- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md)

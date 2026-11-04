@@ -1,24 +1,21 @@
 ---
-id: no-zone-critical-rxjs-schedulers
 title: 'no-zone-critical-rxjs-schedulers'
-diataxis_type: reference
 package: eslint-plugin
-legacy_guard: 'Zone.js only'
 sidebar_label: 'no-zone-critical-rxjs-schedulers'
+sidebar_position: 9
 tags: [eslint-plugin, api-reference, migration]
-concepts: [E2]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # no-zone-critical-rxjs-schedulers
 
-<LegacyGuard audience="Zone.js only">
+<LegacyGuard audience="apps still running Zone.js">
 
 This rule only does anything when **Zone.js is present**. Since Angular v21, change
 detection is zoneless by default and Zone.js is dropped from the default bundle, so
 there is nothing to patch and this rule is a no-op. See
-[Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+[Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).
 
 </LegacyGuard>
 
@@ -79,7 +76,7 @@ interval(10).pipe(observeOn(asyncScheduler)).subscribe(console.log);
 
 :::warning Do not use `rxjs-zone-less`
 Older guidance imported the scheduler from `rxjs-zone-less`. That package is
-**unmaintained** (RxJS 6/7 only); do not add it or present it as a current path. In
+**unmaintained** (RxJS 6/7 only), so leave it out. In
 a zoneless app you need no wrapper; in a residual Zone.js app, unpatch the underlying
 timer via `getZoneUnPatchedApi` from `@rx-angular/cdk/internals/core`.
 :::
@@ -88,4 +85,4 @@ timer via `getZoneUnPatchedApi` from `@rx-angular/cdk/internals/core`.
 
 RxJS schedulers backed by Zone-patched timers can trigger unnecessary
 change-detection runs.
-Why &rarr; [Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+Why &rarr; [Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).

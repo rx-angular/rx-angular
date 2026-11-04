@@ -1,56 +1,52 @@
-import React from 'react';
+import Link from '@docusaurus/Link';
 import Admonition from '@theme/Admonition';
+import React from 'react';
 import styles from './styles.module.css';
 
 type LegacyGuardProps = {
   /**
-   * The narrow residual audience that may still need this legacy approach.
-   * Sourced verbatim from the page's `legacy_guard` frontmatter string.
+   * Who still needs this page, like "apps still running Zone.js".
    */
   audience: string;
   /**
-   * One clause naming what modern Angular/RxAngular now does natively for this
-   * page's topic. Defaults to the zoneless clause below (the common zone case).
+   * One sentence, without the final period, on what modern Angular or
+   * RxAngular does instead. Defaults to the zoneless sentence below.
    */
   native?: string;
   /**
-   * Slug of the Concept page to link (without the `/concepts/` prefix).
-   * Defaults to the zoneless concept (E2). Non-zone legacy pages (e.g. the
-   * class-based RxState API or the NgRx integrations) pass their own concept —
-   * typically `E3-reactive-state-global-vs-local`.
+   * File name of the concept page to link, without the extension. Defaults to
+   * the zoneless concept.
    */
-  conceptSlug?: string;
+  concept?: string;
   /**
-   * Human-readable label for the linked concept. Defaults to the E2 label.
+   * Link text for the concept. Use the concept's title.
    */
   conceptLabel?: string;
   children?: React.ReactNode;
 };
 
 const DEFAULT_NATIVE =
-  'since Angular v21, change detection is zoneless by default and Zone.js is dropped from the default bundle';
-
-const DEFAULT_CONCEPT_SLUG = 'E2-zoneless-and-zonejs-change-detection';
+  'Angular change detection runs without Zone.js by default';
+const DEFAULT_CONCEPT = 'zoneless-and-zonejs-change-detection';
 const DEFAULT_CONCEPT_LABEL =
   'Zoneless & how Zone.js affected change detection';
 
 export default function LegacyGuard({
   audience,
   native = DEFAULT_NATIVE,
-  conceptSlug = DEFAULT_CONCEPT_SLUG,
+  concept = DEFAULT_CONCEPT,
   conceptLabel = DEFAULT_CONCEPT_LABEL,
   children,
 }: LegacyGuardProps): React.JSX.Element {
-  const href = `/docs/concepts/${conceptSlug}`;
+  const href = `/docs/concepts/${concept}`;
   return (
     <Admonition type="caution" title="Legacy guidance">
       <p className={styles.legacyGuardIntro}>
-        <strong>Legacy guidance — {native}.</strong> This page documents a{' '}
-        <strong>legacy</strong> approach; <strong>{audience}</strong> may still
-        need it. For new work, prefer the modern approach. See{' '}
-        <a href={href}>
+        <strong>{native}.</strong> This page documents a legacy approach for{' '}
+        <strong>{audience}</strong>. For new work, use the modern approach. See{' '}
+        <Link to={href}>
           <strong>{conceptLabel}</strong>
-        </a>{' '}
+        </Link>{' '}
         for the full picture.
       </p>
       {children}

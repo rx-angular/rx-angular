@@ -1,12 +1,9 @@
 ---
-id: tune-rendering-with-strategies
 title: 'How to tune rendering with strategies'
-diataxis_type: how-to
 package: template
-legacy_guard: false
 sidebar_label: 'Tune rendering with strategies'
+sidebar_position: 2
 tags: [template, guides]
-concepts: [E5]
 ---
 
 # How to tune rendering with strategies
@@ -22,7 +19,7 @@ If you only need a plain value binding or a plain toggle, native `@let`, `@if`,
 and `@for` already cover that. Reach for these knobs when you want the directives'
 **concurrent, frame-budgeted scheduling**, the reason to use them over the native
 control flow. For the mental model behind that scheduling, see
-[Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md).
+[Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md).
 
 ## Pick a render strategy (`strategy`)
 
@@ -177,7 +174,7 @@ _view-and-content-queries_ legacy page.
 `patchZone` only affects applications that still run **Zone.js**. Under zoneless
 change detection (the default since Angular v21), Zone.js is not in the bundle and
 `patchZone` has no effect. See
-[Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+[Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)
 for the full picture.
 
 :::
@@ -222,5 +219,5 @@ while a large list or expensive template updates.
 ## See also
 
 - Reference: the per-directive `rxFor`, `rxIf`, `rxLet`, and `rxVirtualFor` pages under `packages/template/reference/` (each documents its full input list, including `strategy`, `renderCallback`, `parent`, and `patchZone`).
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
-- Concept (legacy context): [Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
+- Concept (legacy context): [Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)

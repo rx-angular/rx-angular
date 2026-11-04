@@ -1,9 +1,7 @@
 ---
-id: transformations
-title: 'Transformations'
-diataxis_type: reference
+id: overview
+title: '@rx-angular/cdk/transformations'
 package: cdk
-legacy_guard: false
 sidebar_label: 'Transformations'
 sidebar_position: 1
 hide_title: true
@@ -33,7 +31,7 @@ because they are plain immutable updates they also work directly with an Angular
 `signal`, for example `mySignal.update((s) => patch(s, update))` or
 `myArray.update((a) => insert(a, item))`.
 
-Immutability is explained in the [immutability & serializable state](../../../../concepts/E7-immutability-and-serializable-state.md) concept.
+Immutability is explained in the [immutability & serializable state](../../../../concepts/immutability-and-serializable-state.md) concept.
 
 ## Import path
 
@@ -53,4 +51,4 @@ yarn add @rx-angular/cdk
 
 - Array helpers: [`insert`](./array/insert.md), [`update`](./array/update.md), [`upsert`](./array/upsert.md), [`remove`](./array/remove.md), [`extract`](./array/extract.md), [`toDictionary`](./array/to-dictionary.md)
 - Object helpers: [`patch`](./object/patch.md), [`setProp`](./object/set-prop.md), [`deleteProp`](./object/delete-prop.md), [`slice`](./object/slice.md), [`toggle`](./object/toggle.md), [`dictionaryToArray`](./object/dictionary-to-array.md)
-- [Edge cases overview](./edge-cases.md)
+- Each helper page lists its behaviour for `null`, `undefined` and malformed input under **Edge cases**.

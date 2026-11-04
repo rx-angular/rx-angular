@@ -1,10 +1,8 @@
 ---
-id: coerce-reactive-inputs
 title: 'How to coerce reactive inputs'
-diataxis_type: how-to
 package: cdk
-legacy_guard: false
 sidebar_label: 'Coerce reactive inputs'
+sidebar_position: 1
 tags: [cdk, guides]
 ---
 
