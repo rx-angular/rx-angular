@@ -34,7 +34,7 @@
         "checkDynamicDependenciesExceptions": [],
         "checkNestedExternalImports": true,
         "enforceBuildableLibDependency": true,
-        "allow": [],
+        "allow": ["^(\\.\\./)+tools/vitest/.*$"],
         "depConstraints": [
           {
             "sourceTag": "type:app",
