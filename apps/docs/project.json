@@ -31,29 +31,12 @@
     "check-links": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "find ./apps/docs/docs ./apps/docs/blog ./CONTRIBUTING.md \\( -name \"*.md\" -o -name \"*.mdx\" \\) -not -path \"*/_diataxis-templates/*\" -print0 | xargs -0 -n1 markdown-link-check -q -c markdown-link-check.config.json"
+        "command": "find ./apps/docs/docs ./apps/docs/blog ./CONTRIBUTING.md \\( -name \"*.md\" -o -name \"*.mdx\" \\) -print0 | xargs -0 -n1 markdown-link-check -q -c markdown-link-check.config.json"
       }
     }
   },
   "tags": [],
   "namedInputs": {
-    "projectSpecificFiles": [
-      "{workspaceRoot}/CONTRIBUTING.md",
-      "{workspaceRoot}/libs/cdk/README.md",
-      "{workspaceRoot}/libs/cdk/coalescing/README.md",
-      "{workspaceRoot}/libs/cdk/coercing/README.md",
-      "{workspaceRoot}/libs/cdk/notifications/README.md",
-      "{workspaceRoot}/libs/cdk/render-strategies/README.md",
-      "{workspaceRoot}/libs/cdk/transformations/README.md",
-      "{workspaceRoot}/libs/cdk/zone-configurations/README.md",
-      "{workspaceRoot}/libs/cdk/zone-less/README.md",
-      "{workspaceRoot}/libs/cdk/template/README.md",
-      "{workspaceRoot}/libs/eslint-plugin/README.md",
-      "{workspaceRoot}/libs/state/README.md",
-      "{workspaceRoot}/libs/state/actions/README.md",
-      "{workspaceRoot}/libs/state/effects/README.md",
-      "{workspaceRoot}/libs/state/selections/README.md",
-      "{workspaceRoot}/libs/template/README.md"
-    ]
+    "projectSpecificFiles": ["{workspaceRoot}/CONTRIBUTING.md"]
   }
 }
