@@ -20,7 +20,7 @@ The docs follow [Diátaxis](https://diataxis.fr). Every page is exactly one type
 
 ```text
 docs/
-  start-here/        Orientation for new readers
+  index.md           Start here, served at /docs
   tutorials/         Lessons, for every package
   concepts/          Explanation, for every package
   packages/
@@ -35,42 +35,43 @@ docs/
 - Explanation lives only in `concepts/`. A package has no explanation section of its own. Its landing page links to the concepts it relies on.
 - Tutorials live only in `tutorials/`, even when they teach a single package.
 - `legacy/` is a shelf, not a page type. It holds how-to and reference pages for apps still running Zone.js.
+- Keep only published pages and `_category_.json` files in `docs/`. Each major is built from its own branch, so everything in `docs/` gets published with that version. Start a new page from the matching template in `templates/`.
 
-The packages are `state`, `template`, `cdk`, `isr`, `eslint-plugin` and `rebundle`. Each one appears in the front matter schema, Start here, the navbar Docs menu and the footer.
+The packages are `state`, `template`, `cdk`, `isr`, `eslint-plugin` and `rebundle`. Each one appears in the `package` field below, Start here, the navbar Docs menu and the footer.
 
 ## Naming and addresses
 
 A page's address is its folder plus its file name. `packages/isr/how-to/set-up-isr.md` is served at `/docs/packages/isr/how-to/set-up-isr`.
 
 - Leave out `id` and `slug`. The file name decides the address.
-- Landing pages are the exception. They're named `index.md`, which is served at the folder address, and they set `id: overview`.
+- A folder's `index.md` is the exception. It's served at the folder address and sets `id: overview`. Every package landing page is one.
 - Use kebab case with no codes or numbers. Write `change-detection.md`, not `E1-change-detection.md`.
 
 ### Reference pages
 
-A reference page is named after the main export it documents, in kebab case.
+A reference page documents one of three things. Prefer the first kind that fits.
 
-| Documents                                  | File name                       |
-| ------------------------------------------ | ------------------------------- |
-| `rxActions`                                | `rx-actions.md`                 |
-| `RxVirtualScrollViewportComponent`         | `rx-virtual-scroll-viewport.md` |
-| The `@rx-angular/cdk/coercing` entry point | `coercing.md`                   |
-| `ISRHandlerConfig`                         | `isr-handler-config.md`         |
+| Documents                              | Title                      | File name                  |
+| -------------------------------------- | -------------------------- | -------------------------- |
+| One export                             | `rxActions`                | `rx-actions.md`            |
+| One export                             | `ISRHandlerConfig`         | `isr-handler-config.md`    |
+| An entry point                         | `@rx-angular/cdk/coercing` | `coercing.md`              |
+| A family of related exports or options | Concurrent strategies      | `concurrent-strategies.md` |
 
-- Drop Angular class suffixes like `Component` and `Directive`.
+- The title of an export page is the exact export name. The title of an entry point page is the full entry point.
+- The file name is the title in kebab case. An entry point page takes the entry point's last path segment.
+- Drop Angular class suffixes like `Component` and `Directive`, so `RxVirtualScrollViewportComponent` is `rx-virtual-scroll-viewport.md`.
 - Skip the `-api` suffix and the package name. Keep the package name only when the export itself contains it, as in `isr-handler-config`.
-- A page about a whole entry point takes the entry point's last path segment.
 - When two exports differ only in case, the function takes the plain name and the class adds `-class`. `rxState` is `rx-state.md` and `RxState` is `rx-state-class.md`.
-- The title is the exact export name, like `` `rxActions` ``.
 
 ### How-to pages
 
-A how-to page is named after its task, starting with a verb. Its title starts with "How to".
+A how-to page is named after its task or the feature it covers. Its title starts with "How to", and its `sidebar_label` is the short form.
 
-| File name                | Title                                   |
-| ------------------------ | --------------------------------------- |
-| `set-up-isr.md`          | How to set up ISR in an SSR app         |
-| `derive-a-view-model.md` | How to derive a view model from RxState |
+| File name                 | Title                                                  | Sidebar label        |
+| ------------------------- | ------------------------------------------------------ | -------------------- |
+| `set-up-isr.md`           | How to set up ISR in an SSR app                        | Set up ISR           |
+| `concurrent-rendering.md` | How to render heavy UI work without blocking the frame | Concurrent rendering |
 
 ### Concepts and tutorials
 
@@ -84,13 +85,16 @@ Set `sidebar_position` on every page, unique within its folder, so a rename keep
 
 ## Landing pages
 
-Every package landing page has the same sections in this order.
+Every package landing page uses these sections in this order. Keep the content a package already has and place it in the closest section.
 
-1. A short intro that says what the package is for.
-2. `## What it does` with the main features.
-3. `## Install` with the install command.
+1. The package name as the title, then a short intro that says what the package is, followed by its main features as a list.
+2. `## When to use it` with when to reach for the package or not, and the benefits.
+3. `## Install` with the install command and any setup notes.
 4. `## Entry points`, when the package has more than one.
-5. `## Where to go next` with links into How-to, Reference and the related concepts.
+5. `## Quick look` with a short code sample, when one helps.
+6. `## Where to go next` with links into How-to, Reference and the related concepts.
+
+Notes that fit none of these, like the CDK's Zone.js history, go after Where to go next.
 
 ## Front matter
 
@@ -99,34 +103,27 @@ Every package landing page has the same sections in this order.
 title: 'How to set up ISR in an SSR app'
 sidebar_label: 'Set up ISR'
 sidebar_position: 1
-diataxis_type: how-to
 package: isr
-legacy_guard: false
 tags: [isr, guides]
-concepts: [how-isr-works]
 ---
 ```
 
-| Field              | Required           | Value                                                                                                             |
-| ------------------ | ------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| `title`            | yes                | The page title. On reference pages, the exact export name.                                                        |
-| `sidebar_label`    | no                 | A shorter label for the sidebar.                                                                                  |
-| `sidebar_position` | yes                | The order within the folder. Unique per folder.                                                                   |
-| `diataxis_type`    | yes                | `tutorial`, `how-to`, `reference` or `explanation`. Landing pages use `reference`.                                |
-| `package`          | yes                | `state`, `template`, `cdk`, `isr`, `eslint-plugin` or `rebundle`. Start here, tutorials and concepts use `_site`. |
-| `legacy_guard`     | yes                | `false`, or the audience that still needs the page. See [Legacy pages](#legacy-pages).                            |
-| `tags`             | no                 | Package names plus `guides`, `api-reference`, `examples`, `migration` or `tooling`.                               |
-| `concepts`         | no                 | The file names of the concepts the page relies on, like `[change-detection]`.                                     |
-| `id`               | landing pages only | `overview`                                                                                                        |
+| Field              | Required        | Value                                                                                                             |
+| ------------------ | --------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `title`            | yes             | The page title. On reference pages, the exact export name.                                                        |
+| `sidebar_label`    | no              | A shorter label for the sidebar.                                                                                  |
+| `sidebar_position` | yes             | The order within the folder. Unique per folder.                                                                   |
+| `package`          | yes             | `state`, `template`, `cdk`, `isr`, `eslint-plugin` or `rebundle`. Start here, tutorials and concepts use `_site`. |
+| `tags`             | no              | Package names plus `guides`, `api-reference`, `examples`, `migration` or `tooling`.                               |
+| `id`               | `index.md` only | `overview`                                                                                                        |
 
-The version badge reads `package` to show the right package line.
+The planned version badge will read `package` to show the right package line.
 
 ## Legacy pages
 
 A page for apps still running Zone.js lives in the package's `legacy/` folder.
 
-- Set `legacy_guard` to its audience, like `'apps still running Zone.js'`. Describe the audience without version numbers.
-- Open the page with the `<LegacyGuard>` box, using the same audience.
+- Open the page with the `<LegacyGuard>` box and name its audience, like `audience="apps still running Zone.js"`. Describe the audience without version numbers.
 - Link the Zoneless and Zone.js concept.
 
 ESLint rules stay in `reference/` even when they target Zone.js. The plugin links to their addresses.
@@ -140,12 +137,13 @@ ESLint rules stay in `reference/` even when they target Zone.js. The plugin link
 
 A renamed, moved or removed page keeps its old address working.
 
-1. Add a redirect from the old address to the new page in the redirect list in `docusaurus.config.js`.
-2. Update any redirect that pointed at the old address.
+1. Add a redirect from the old address to the new page in `redirects.js`.
+2. Update any redirect that pointed at the old address, so no redirect leads to another redirect.
 3. Search the package sources and READMEs for links to the old address. Published packages keep their links for good, so the redirect has to stay.
 
 ## Versions
 
-- Site versions are named after the Angular major, like `22.x`. A new site version starts with each Angular major.
-- Every page shows a badge with the line of the package it documents. The ESLint plugin can show `3.x` while the site is on `22.x`.
-- Keep package versions and dates out of page text. The badge shows the version, and a hard-coded number goes stale in every copied version.
+- Site versions are named after the Angular major, like `22.x`. A new site version starts with each Angular major, and older majors are built from their own branch.
+- A planned badge on every page will show the line of the package it documents. The ESLint plugin can show `3.x` while the site is on `22.x`.
+- Keep package versions and dates out of page text, because a hard-coded number goes stale with the next release.
+- Compatibility info is the exception. Angular and peer ranges, like `@angular/core >=22.0.0`, stay correct because each major is built from its own branch. Update them when a new major starts.
