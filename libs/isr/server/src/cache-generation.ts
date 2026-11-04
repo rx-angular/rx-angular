@@ -132,8 +132,12 @@ export class CacheGeneration {
 
       try {
         if (this.isrConfig.nonBlockingRender) {
-          // If enabled, add to cache without waiting (fire-and-forget)
-          addToCache();
+          // If enabled, add to cache without waiting (fire-and-forget).
+          // A rejected write must be handled here; otherwise an invalid cache
+          // key becomes an unhandled rejection.
+          addToCache().catch((error) => {
+            console.error('Error adding to cache:', error);
+          });
         } else {
           // If not enabled, wait for cache addition to complete before proceeding
           await addToCache();
