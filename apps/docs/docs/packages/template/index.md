@@ -1,20 +1,19 @@
 ---
-id: template-overview
+id: overview
 title: '@rx-angular/template'
-diataxis_type: reference
 package: template
-legacy_guard: false
-sidebar_label: '@rx-angular/template'
+sidebar_label: 'Overview'
 sidebar_position: 1
 tags: [template, api-reference]
 ---
 
-# @rx-angular/template
+# `@rx-angular/template`
 
 `@rx-angular/template` is a set of reactive template directives (`*rxLet`,
 `*rxFor`, `*rxIf`, `*rxVirtualFor`, and `*rxVirtualView`) that bind
-`Observable`s and `Signal`s directly in your templates with two things native
-control flow does not give you:
+`Observable`s and `Signal`s directly in your templates.
+
+The directives give you two things native control flow does not:
 
 - **Concurrent, frame-budgeted rendering.** Each directive can schedule its own
   change detection through a prioritized, cancelable scheduler, so a large or
@@ -25,19 +24,24 @@ control flow does not give you:
   and _complete_ states of its bound source and exposes template slots for each:
   loading and error UI without hand-written boilerplate.
 
+## When to use it
+
 For the plain cases (naming a value, a simple toggle, a straightforward list),
 Angular's native `@let`, `@if`, `@for`, and `@switch` already do the job, and you
 should reach for them first. `@rx-angular/template` earns its place when you need
 the scheduling control or the reactive context on top of that.
 
 To understand _why_ fine-grained, scheduled rendering matters, see
-[Understanding change detection in Angular](../../concepts/E1-change-detection.md).
+[Understanding change detection in Angular](../../concepts/change-detection.md).
 
-## Installation
+## Install
 
 ```bash
 npm install @rx-angular/template
 ```
+
+`@rx-angular/template` v22 peers Angular `>=22`. For RxJS, RxAngular follows the same compatibility ranges as the Angular framework
+itself; see the [official Angular versioning guide](https://angular.dev/reference/versions).
 
 ## Entry points
 
@@ -68,12 +72,14 @@ import { RxPush } from '@rx-angular/template/push';
 export class AnyComponent {}
 ```
 
-## Version compatibility
+## Where to go next
 
-`@rx-angular/template` v22 peers Angular `>=22`. For RxJS, RxAngular follows the
-same compatibility ranges as the Angular framework itself; see the
-[official Angular versioning guide](https://angular.dev/reference/versions).
-
-## See also
-
-- Concept: [Understanding change detection in Angular](../../concepts/E1-change-detection.md)
+- **How-to:** [Concurrent rendering](./how-to/concurrent-rendering.md),
+  [tune rendering with strategies](./how-to/tune-rendering-with-strategies.md), and
+  [virtual scroll recipes](./how-to/virtual-scroll-recipes.md).
+- **Reference:** [`RxLet`](./reference/rx-let.md), [`RxFor`](./reference/rx-for.md),
+  [`RxIf`](./reference/rx-if.md), and [`RxVirtualFor`](./reference/rx-virtual-for.md).
+- **Concept:** [Understanding change detection in Angular](../../concepts/change-detection.md).
+  [The reactive context](../../concepts/reactive-context.md) and
+  [concurrent scheduling](../../concepts/concurrent-scheduling.md) cover the two
+  features above.

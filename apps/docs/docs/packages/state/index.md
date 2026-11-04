@@ -1,29 +1,27 @@
 ---
-id: state
+id: overview
 title: '@rx-angular/state'
-diataxis_type: reference
 package: state
-legacy_guard: false
-sidebar_label: '@rx-angular/state'
+sidebar_label: 'Overview'
 sidebar_position: 1
-hide_title: true
 tags: [state, api-reference]
-concepts: [E3]
 ---
 
-import SignalsFirst from '@site/src/components/SignalsFirst';
-
-# @rx-angular/state
-
-<SignalsFirst />
+# `@rx-angular/state`
 
 `@rx-angular/state` (RxState) is a lightweight library for managing **reactive
-component-level state** in Angular: components, services, and directives. It gives
-you a small, strongly-typed API (`set`, `connect`, `select`, `signal`, `computed`)
-with automatic subscription handling, so you can merge multiple asynchronous sources
-into one state container and read it from the template as signals or observables.
+component-level state** in Angular: components, services, and directives.
 
-## Signals first: where RxState fits
+- **A small, strongly-typed API.** `set`, `connect`, `select`, `signal`, and
+  `computed` cover writing, merging, and reading state.
+- **Many async sources, one container.** Merge multiple asynchronous sources into
+  one state container with `connect`.
+- **Signals or observables.** Read the state from the template as signals or as
+  observables.
+- **Automatic subscription handling.** Subscriptions are managed for you and torn
+  down with the host.
+
+## When to use it
 
 Modern Angular ships built-in reactivity: `signal()`, `computed()`,
 `linkedSignal()`, and `toSignal()`. For **local component state, those primitives are
@@ -39,7 +37,7 @@ when state grows past what a handful of signals express cleanly:
 
 For the full mental model of when state is local vs. global and how RxState sits
 alongside signals, see [Reactive state: global vs local, RxState +
-signals](../../concepts/E3-reactive-state-global-vs-local.md).
+signals](../../concepts/reactive-state-global-vs-local.md).
 
 ### When _not_ to reach for RxState
 
@@ -52,6 +50,15 @@ library dependency: use it, and skip RxState.
 ```bash
 npm install @rx-angular/state
 ```
+
+## Entry points
+
+| Entry point                    | Main exports                                                       |
+| ------------------------------ | ------------------------------------------------------------------ |
+| `@rx-angular/state`            | `rxState`, `RxState` and `provideRxStateConfig`                    |
+| `@rx-angular/state/actions`    | `rxActions`                                                        |
+| `@rx-angular/state/effects`    | `rxEffects`                                                        |
+| `@rx-angular/state/selections` | `select`, `selectSlice`, `stateful` and `distinctUntilSomeChanged` |
 
 ## Quick look
 
@@ -86,7 +93,10 @@ export class MovieListComponent {
 
 ## Where to go next
 
-- **Reference: [`rxState`](./reference/rx-state-functional.md)**, the functional API with
+- **How-to:** [Get started with rxState](./how-to/getting-started.md),
+  [manage actions](./how-to/manage-actions.md), and
+  [manage side effects](./how-to/manage-effects.md).
+- **Reference: [`rxState`](./reference/rx-state.md)**, the functional API with
   source-derived signatures.
 - **Reference: [`RxState`](./reference/rx-state-class.md)**, the class-based API
   (legacy surface; prefer `rxState()` for new code).
@@ -95,4 +105,4 @@ export class MovieListComponent {
   [`distinctUntilSomeChanged`](./reference/distinct-until-some-changed.md),
   [`stateful`](./reference/stateful.md).
 - **Concept: [Reactive state: global vs local, RxState +
-  signals](../../concepts/E3-reactive-state-global-vs-local.md).**
+  signals](../../concepts/reactive-state-global-vs-local.md).**

@@ -1,28 +1,34 @@
 ---
-id: cdk-overview
+id: overview
 title: '@rx-angular/cdk'
-diataxis_type: reference
 package: cdk
-legacy_guard: false
-sidebar_label: '@rx-angular/cdk'
+sidebar_label: 'Overview'
 sidebar_position: 0
-hide_title: true
 tags: [cdk, api-reference]
 ---
 
-# @rx-angular/cdk
+# `@rx-angular/cdk`
 
 `@rx-angular/cdk` is a **Component Development Kit**, a helper layer of low-level,
 tree-shakable utilities for building ergonomic, high-performance Angular directives,
-components, services, and large-scale applications. It is not a journey of its own:
-the CDK is the **substrate** the RxAngular directives and state container are built
-on, and most of its value surfaces where you meet it: in the **Template**
-journey (rendering and scheduling) and the **State** journey (immutable state
-transformations).
+components, services, and large-scale applications.
 
-You reach for the CDK directly when you need one of its building blocks: a concurrent,
-priority-based renderer, immutable array/object update helpers, reactive-input coercion,
-stream-level notification materialization, or an app-wide hydration signal.
+The CDK provides the building blocks the rest of RxAngular uses:
+
+- A concurrent, priority-based renderer.
+- Immutable array/object update helpers.
+- Reactive-input coercion.
+- Stream-level notification materialization.
+- An app-wide hydration signal.
+
+## When to use it
+
+The CDK is not a journey of its own. It is the **substrate** the RxAngular
+directives and state container are built on, and most of its value surfaces where
+you meet it: in the **Template** journey (rendering and scheduling) and the
+**State** journey (immutable state transformations).
+
+You reach for the CDK directly when you need one of its building blocks.
 
 ## Install
 
@@ -30,8 +36,8 @@ stream-level notification materialization, or an app-wide hydration signal.
 npm install @rx-angular/cdk
 ```
 
-Requires Angular `>=22.0.0` (RxAngular `^22`). The CDK targets the modern baseline:
-standalone, `inject()`, signals, and native control flow (`@if`/`@for`/`@switch`).
+Requires Angular `>=22.0.0` (RxAngular `^22`). The CDK targets the modern baseline: standalone, `inject()`, signals, and native
+control flow (`@if`/`@for`/`@switch`).
 
 ## Entry points
 
@@ -69,7 +75,7 @@ in only what you use:
 - **Track SSR hydration**:
   [`HydrationTracker` reference](./reference/hydration-tracker.md) ·
   [How to track app hydration](./how-to/track-app-hydration.md).
-- **Concept: [Understanding change detection in Angular](../../concepts/E1-change-detection.md)**,
+- **Concept: [Understanding change detection in Angular](../../concepts/change-detection.md)**,
   the "why" behind render strategies and the scheduling the CDK provides.
 
 :::note Zone.js history
@@ -79,9 +85,9 @@ and coalescing of zone-triggered change detection. Since Angular v21 change
 detection is **zoneless by default** and Zone.js is dropped from the default bundle.
 The zone flag and coalescing guides now live on the **Legacy · Zone.js** shelf for
 apps still running Zone.js. The zone-less utilities have no page of their own. The
-[Zoneless & Zone.js concept](../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+[Zoneless & Zone.js concept](../../concepts/zoneless-and-zonejs-change-detection.md)
 explains how they work. Only the bare `@rx-angular/cdk/zone-less` entry point was
-**dropped** (rx#1355). The `@rx-angular/cdk/zone-less/browser` sub-entry still ships
+**dropped**. The `@rx-angular/cdk/zone-less/browser` sub-entry still ships
 for apps that need zone-unpatched browser globals directly. To reach a
 zone-unpatched API generically, use `getZoneUnPatchedApi` from
 `@rx-angular/cdk/internals/core`.

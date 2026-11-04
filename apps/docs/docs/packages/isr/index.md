@@ -1,9 +1,7 @@
 ---
-id: isr-landing
+id: overview
 title: '@rx-angular/isr'
-diataxis_type: reference
 package: isr
-legacy_guard: false
 sidebar_label: 'Overview'
 sidebar_position: 0
 tags: [isr, api-reference]
@@ -11,14 +9,9 @@ tags: [isr, api-reference]
 
 # `@rx-angular/isr`
 
-Incremental Static Regeneration (ISR) for Angular SSR (`@angular/ssr`). It caches
-server-rendered pages and lets you invalidate that cache on a schedule or on
-demand, with no changes to your build process required.
-
-New to ISR? Start with the [introduction](./introduction.md), then read
-[how ISR works](../../concepts/E8-how-isr-works.md) for the mechanism.
-
-## What it does
+`@rx-angular/isr` brings Incremental Static Regeneration (ISR) to Angular SSR
+(`@angular/ssr`). It caches server-rendered pages and lets you invalidate that
+cache on a schedule or on demand, with no changes to your build process required.
 
 - **Scheduled cache invalidation.** Cache pages and revalidate them on a
   per-route schedule. Requests are not cached by default; you explicitly mark
@@ -35,20 +28,46 @@ New to ISR? Start with the [introduction](./introduction.md), then read
 - **Standalone & NgModule compatible.** Register with `provideISR()` (standalone,
   recommended) or `IsrModule.forRoot()` (legacy NgModule).
 
-## Why use it
+## When to use it
 
-- ✅ Improved TTFB (Time To First Byte)
-- ✅ Less server resource usage: cached pages skip re-rendering
-- ✅ Don't do the same work twice
-- ✅ Extendable APIs
-- ✅ Good developer experience
-- ✅ Open-source (MIT license)
+Angular SSR does not provide an API to pass route data or information directly
+into the server-side rendering pipeline. `@rx-angular/isr` fills that gap so a
+route can declare whether, and for how long, it should be cached.
 
-## Explore
+- Improved TTFB (Time To First Byte)
+- Less server resource usage: cached pages skip re-rendering
+- Don't do the same work twice
+- Extendable APIs
+- Good developer experience
+- Open-source (MIT license)
 
-- **Learn:** [How ISR works](../../concepts/E8-how-isr-works.md): the caching mechanism.
-- **Look up:** [`@rx-angular/isr` API](./reference/api.md),
-  [`ISRHandlerConfig`](./reference/isr-handler-config.md), and
-  [`RenderConfig`](./reference/render-config.md).
+## Install
 
-New to ISR? Start with the [introduction](./introduction.md).
+```bash
+npm install @rx-angular/isr
+```
+
+The package needs an Angular SSR app. [Set up ISR](./how-to/set-up-isr.md)
+walks through the server wiring.
+
+## Entry points
+
+| Entry point               | Contains                                                             |
+| ------------------------- | -------------------------------------------------------------------- |
+| `@rx-angular/isr/server`  | `ISRHandler`, `provideISR`, the cache handlers and `IsrModule`       |
+| `@rx-angular/isr/browser` | `IsrService` for the browser                                         |
+| `@rx-angular/isr/models`  | Shared types like `CacheHandler`, `CacheData` and `ISRHandlerConfig` |
+
+The root `@rx-angular/isr` entry point re-exports all three.
+
+## Where to go next
+
+- **How-to:** [Set up ISR](./how-to/set-up-isr.md) wires ISR into an existing
+  SSR app. Then [invalidate on demand](./how-to/invalidate-on-demand.md) or
+  [write a custom cache handler](./how-to/write-a-custom-cache-handler.md).
+- **Reference:** [`@rx-angular/isr` API](./reference/api.md), the full export
+  surface, [`ISRHandlerConfig`](./reference/isr-handler-config.md), and
+  [`RenderConfig`](./reference/isr-handler-config.md#renderconfig).
+- **Concept:** ISR round-trips each route's `revalidate` value through the
+  rendered HTML to decide what to cache. [How ISR works](../../concepts/how-isr-works.md)
+  explains the caching mechanism.
