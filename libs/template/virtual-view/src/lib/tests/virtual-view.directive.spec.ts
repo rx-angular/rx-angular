@@ -86,7 +86,16 @@ class ResizeObserverMock {
     ResizeObserverMock.cb = cb;
   }
 
-  observe(element: Element, options?: ResizeObserverOptions) {}
+  // A real ResizeObserver always delivers an initial entry for a newly
+  // observed element; deliver it synchronously to match the sync strategies.
+  observe(element: Element, options?: ResizeObserverOptions) {
+    this.cb([
+      {
+        target: element,
+        borderBoxSize: [{ inlineSize: 100, blockSize: 50 }],
+      } as unknown as ResizeObserverEntry,
+    ]);
+  }
 
   unobserve(element: Element) {}
 

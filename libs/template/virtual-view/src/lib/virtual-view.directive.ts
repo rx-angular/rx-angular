@@ -21,8 +21,22 @@ import {
   RxStrategyProvider,
 } from '@rx-angular/cdk/render-strategies';
 import { PLATFORM } from '@rx-angular/cdk/ssr';
-import { finalize, NEVER, Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import {
+  finalize,
+  NEVER,
+  Observable,
+  of,
+  ReplaySubject,
+  Subject,
+  Subscription,
+} from 'rxjs';
+import {
+  distinctUntilChanged,
+  map,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs/operators';
 import {
   _RxVirtualView,
   _RxVirtualViewContent,
@@ -237,6 +251,15 @@ export class RxVirtualView
 
   #contentIsShown = false;
 
+  /** Live host-size subscription, held while the content is mounted. */
+  #sizeSub: Subscription | null = null;
+
+  /** True once the ResizeObserver has delivered at least one entry. */
+  #measured = false;
+
+  /** Emits on every ResizeObserver entry while the content is mounted. */
+  readonly #sizeChanged$ = new Subject<void>();
+
   /**
    * The `_RxVirtualViewContent` directive whose template is currently embedded
    * in the view container. Used to detect runtime content-template swaps (e.g.
@@ -379,14 +402,107 @@ export class RxVirtualView
     this.#contentIsShown = true;
     this.#placeholderVisible.set(false);
     this.#renderedContent = content;
-    const view = content.viewContainerRef.createEmbeddedView(
-      content.templateRef,
-    );
+
+    const viewContainerRef = content.viewContainerRef;
+
+    // Claim ownership of the container instead of appending next to whatever is
+    // already rendered. `startWithPlaceholderAsap` inserts a placeholder before
+    // `#renderedContent` is ever assigned, so a later disabled render would
+    // otherwise leave both views mounted here and the host would measure the
+    // sum of the two.
+    const existing = viewContainerRef.detach();
+    if (existing) {
+      if (this.cacheEnabled()) {
+        this.#viewCache?.storePlaceholder(this, existing);
+      } else {
+        existing.destroy();
+      }
+    }
+
+    const view = viewContainerRef.createEmbeddedView(content.templateRef);
     view.detectChanges();
+    this.#observeSize();
     this.visibilityChanged.emit({ content: true, placeholder: false });
   }
 
+  /**
+   * Measures the host element for as long as the content is mounted.
+   *
+   * Scoped to the content being *mounted* rather than to the element being
+   * *visible*. Content reaches the DOM through three routes — the disabled/SSR
+   * render, the synchronous hydration claim, and `showContent$()` — and only the
+   * last of those runs inside the visibility pipeline. Hanging measurement off
+   * `visible === true` therefore left `size` at `{0, 0}` for the first two, so
+   * `--rx-vw-h` was never published and the first placeholder swap collapsed the
+   * element to whatever hardcoded fallback its template guessed.
+   *
+   * Server-rendered elements *below the fold* are the worst case: they are
+   * reported non-intersecting on the observer's first callback and swap straight
+   * to a placeholder, without ever being reported visible at all.
+   */
+  #observeSize() {
+    // Nothing to measure for while disabled: every layout-affecting binding is
+    // gated on `#enabled()`, so the value could not be published anyway. Content
+    // claimed before the pipeline registered is picked up by
+    // `#registerRenderingBasedOnVisibility()`, which runs exactly when `enabled`
+    // flips true.
+    if (!this.#enabled() || !this.#observer || this.#sizeSub) {
+      return;
+    }
+    // Best-effort: a partially-implemented observer (component test doubles
+    // commonly mock only part of the contract) must not break rendering.
+    const size$ = this.#observer.observeElementSize(
+      this.#elementRef.nativeElement,
+      this.resizeObserverOptions(),
+    );
+    if (!size$) {
+      return;
+    }
+    this.#sizeSub = size$
+      .pipe(map(this.extractSize()), takeUntilDestroyed(this.#destroyRef))
+      .subscribe(({ width, height }) => {
+        this.size.set({ width, height });
+        this.#measured = true;
+        this.#sizeChanged$.next();
+      });
+  }
+
+  /**
+   * Stops measuring the host. Must run *before* a placeholder is inserted: the
+   * ResizeObserver watches the host, so it would otherwise report the
+   * placeholder's own height back into `size` — and with `keepLastKnownSize`
+   * that height is driven by `size`, which feeds back on itself.
+   */
+  #stopObservingSize() {
+    this.#sizeSub?.unsubscribe();
+    this.#sizeSub = null;
+  }
+
+  /**
+   * Resolves once the mounted content has a measurement to reserve.
+   *
+   * Content can be hidden before its first ResizeObserver entry lands (a
+   * non-concurrent placeholder strategy, or `hideAll()` while rows are still
+   * mounting). Rather than forcing a synchronous layout to read the size, hold
+   * the placeholder swap until that entry arrives: ResizeObserver delivers in
+   * the next rendering update, so this costs at most one frame and no reflow.
+   * Already measured, or not measuring at all, resolves synchronously.
+   */
+  #whenMeasured$(): Observable<unknown> {
+    return this.#sizeSub && !this.#measured
+      ? this.#sizeChanged$.pipe(take(1))
+      : of(null);
+  }
+
   #registerRenderingBasedOnVisibility() {
+    // Runs the moment `enabled` becomes true. Content mounted before that — the
+    // disabled/SSR render and any pre-hydration claim — starts being measured
+    // here, ahead of the IntersectionObserver's first (async) callback, so an
+    // element hidden on that first callback already has a height to reserve.
+    if (this.#contentIsShown) {
+      this.#observeSize();
+    }
+
     this.#observer
       ?.observeElementVisibility(this.#elementRef.nativeElement)
       .pipe(takeUntilDestroyed(this.#destroyRef))
@@ -397,22 +513,18 @@ export class RxVirtualView
         distinctUntilChanged(),
         switchMap((visible) => {
           if (visible) {
+            // Content already mounted (the disabled/SSR render or the hydration
+            // claim) is measured by `#observeSize()` from the moment it mounted,
+            // so there is nothing left for this branch to do.
             return this.#contentIsShown
               ? NEVER
-              : this.showContent$().pipe(
-                  switchMap((view) => {
-                    const resize$ = this.#observer!.observeElementSize(
-                      this.#elementRef.nativeElement,
-                      this.resizeObserverOptions(),
-                    );
-                    view.detectChanges();
-                    return resize$;
-                  }),
-                  map(this.extractSize()),
-                  tap(({ width, height }) => this.size.set({ width, height })),
-                );
+              : this.showContent$().pipe(tap((view) => view.detectChanges()));
           }
-          return this.#placeholderVisible() ? NEVER : this.showPlaceholder$();
+          return this.#placeholderVisible()
+            ? NEVER
+            : this.#whenMeasured$().pipe(
+                switchMap(() => this.showPlaceholder$()),
+              );
         }),
         finalize(() => {
           this.#viewCache!.clear(this);
@@ -423,6 +535,7 @@ export class RxVirtualView
   }
 
   ngOnDestroy() {
+    this.#stopObservingSize();
     this.#content.set(null);
     this.#placeholder.set(null);
     this.#renderedContent = null;
@@ -458,6 +571,7 @@ export class RxVirtualView
           this.#content()!.templateRef.createEmbeddedView({});
         this.#content()!.viewContainerRef.insert(contentTpl);
         placeHolder?.detectChanges();
+        this.#observeSize();
         this.visibilityChanged.emit({ content: true, placeholder: false });
         return contentTpl;
       },
@@ -488,6 +602,8 @@ export class RxVirtualView
    * Then insert the placeholder into the view container and trigger a CD.
    */
   private renderPlaceholder() {
+    this.#stopObservingSize();
+
     this.#placeholderVisible.set(true);
     this.#contentIsShown = false;
 
