@@ -198,3 +198,4 @@ To opt out again at some level of the injector tree, use
 - Concept: [Understanding change detection in Angular](../../../concepts/E1-change-detection.md)
 - How-to: [Tune rendering with strategies](../how-to/tune-rendering-with-strategies.md)
 - How-to: [Test scheduled rendering](../how-to/test-scheduled-rendering.md)
+- How-to: [Choose & combine directives](../how-to/choosing-and-combining-directives.md)
