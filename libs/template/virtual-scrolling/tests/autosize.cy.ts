@@ -1528,6 +1528,151 @@ describe('keepScrolledIndexOnPrepend', () => {
         });
     });
   });
+  describe('with prepended items of an unknown size', () => {
+    /** prepended (older) items are much larger than the tombstone estimate */
+    const prependedSize = 173;
+    const size = (item: Item) =>
+      item.id >= 10000 ? prependedSize : 40 + (item.id % 3) * 25;
+    const config: AutoSizeVirtualScrollMountConfig = {
+      items: generateItems(100),
+      trackBy: 'id',
+      keepScrolledIndexOnPrepend: true,
+      dynamicSize: size,
+      tombstoneSize: 50,
+      showItemDescription: false,
+    };
+
+    /** offsets of the rendered items within the viewport, by id */
+    function itemOffsets(): Map<string, number> {
+      const runway = Cypress.$('.rx-virtual-scroll__runway')[0];
+      const top = runway.getBoundingClientRect().top;
+      const offsets = new Map<string, number>();
+      runway.querySelectorAll('[data-cy=item]').forEach((element) => {
+        offsets.set(
+          element.textContent!.trim(),
+          Math.round(element.getBoundingClientRect().top - top),
+        );
+      });
+      return offsets;
+    }
+
+    /** the visible items and their offsets */
+    function visibleItems(containerHeight: number): Map<string, number> {
+      const visible = new Map<string, number>();
+      itemOffsets().forEach((offset, id) => {
+        const height = size({ id: Number(id) } as Item);
+        if (offset + height > 0 && offset < containerHeight) {
+          visible.set(id, offset);
+        }
+      });
+      return visible;
+    }
+
+    /**
+     * records the item offsets of every painted frame: after the layout, before
+     * the paint
+     */
+    function recordFrames() {
+      const frames: Map<string, number>[] = [];
+      let recording = true;
+      const next = () =>
+        requestAnimationFrame(() => {
+          const observer = new ResizeObserver(() => {
+            observer.disconnect();
+            if (recording) {
+              frames.push(itemOffsets());
+              next();
+            }
+          });
+          observer.observe(document.body);
+        });
+      next();
+      return () => {
+        recording = false;
+        return frames;
+      };
+    }
+
+    /**
+     * prepends items of an unknown (estimated) size and expects the visible
+     * items to stay where they are in every painted frame, while the prepended
+     * items get measured
+     */
+    function prependAndExpectInPlace(
+      fixture: {
+        componentRef: any;
+        componentInstance: any;
+        detectChanges(): void;
+      },
+      prepend: (items: Item[]) => Item[],
+    ) {
+      const viewport = getViewportComponent(fixture);
+      const containerHeight = fixture.componentInstance.containerHeight();
+      return waitUntilStable(() => [
+        viewport.getScrollTop(),
+        [...itemOffsets()],
+      ]).then(() => {
+        const visible = visibleItems(containerHeight);
+        expect(visible.size, 'visible items').to.be.greaterThan(1);
+        const next = prepend(fixture.componentInstance.items() as Item[]);
+        // removed items (e.g. a loading row) can't stay in place
+        visible.forEach((_, id) => {
+          if (!next.some((item) => `${item.id}` === id)) {
+            visible.delete(id);
+          }
+        });
+        const stop = recordFrames();
+        fixture.componentRef.setInput('items', next);
+        fixture.detectChanges();
+        return waitUntilStable(() => [
+          viewport.getScrollTop(),
+          [...itemOffsets()],
+        ]).then(() => {
+          const frames = stop();
+          expect(frames.length, 'painted frames').to.be.greaterThan(0);
+          frames.push(itemOffsets());
+          frames.forEach((offsets, frame) => {
+            visible.forEach((offset, id) => {
+              expect(offsets.get(id), `item ${id} in frame ${frame}`).to.eq(
+                offset,
+              );
+            });
+          });
+        });
+      });
+    }
+
+    it('keeps the visible items in place while prepended items get measured', () => {
+      mountAutoSize(config).then(({ fixture }) => {
+        fixture.detectChanges();
+        // not aligned to an item boundary
+        getViewportComponent(fixture).scrollTo(37);
+        prependAndExpectInPlace(fixture, (items) => [
+          ...generateItems(5, 10000),
+          ...items,
+        ]);
+      });
+    });
+
+    it('keeps the visible items in place when a loading row at the top is replaced by older items', () => {
+      // the removed loading row leaves less content above the visible items
+      // than before: the anchor ends up within a prepended (not yet measured)
+      // item, measuring it must not move the visible items
+      const loadingRow = { ...generateItems(1, 9999)[0], id: 9999 };
+      mountAutoSize({
+        ...config,
+        // the loading row is rendered while scrolled to the very top
+        items: [loadingRow, ...generateItems(100)],
+        dynamicSize: (item: Item) => (item.id === 9999 ? 30 : size(item)),
+      }).then(({ fixture }) => {
+        fixture.detectChanges();
+        prependAndExpectInPlace(fixture, (items) => [
+          ...generateItems(4, 10000),
+          ...items.filter((item) => item.id !== 9999),
+        ]);
+      });
+    });
+  });
 });
 
 describe('layout integrity on range shift', () => {

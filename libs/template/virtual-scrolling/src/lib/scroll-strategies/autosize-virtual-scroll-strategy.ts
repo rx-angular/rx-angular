@@ -304,6 +304,12 @@ export class AutoSizeVirtualScrollStrategy<
     index: 0,
     offset: 0,
   };
+  /**
+   * @internal
+   * The item kept in place after a prepend, see `keepInPlace`. Until the user
+   * scrolls, the anchor is derived from it whenever sizes change.
+   */
+  private keptItem: AnchorItem | undefined;
 
   /** @internal */
   private waitForScroll = false;
@@ -424,6 +430,7 @@ export class AutoSizeVirtualScrollStrategy<
     this._virtualItems = [];
     this.sizeTree.reset([]);
     this.itemCache.clear();
+    this.keptItem = undefined;
     this.resizeObserver.destroy();
     this.detached$.next();
   }
@@ -434,6 +441,7 @@ export class AutoSizeVirtualScrollStrategy<
       Math.max(0, this.contentLength - 1),
     );
     if (_index !== this.scrolledIndex) {
+      this.keptItem = undefined;
       const scrollTop = this.calcInitialPosition(_index);
       this._scrollToIndex = _index;
       this.scrollToTrigger$.next({ scrollTop, behavior });
@@ -577,6 +585,9 @@ export class AutoSizeVirtualScrollStrategy<
         this.contentLength = dataLength;
         const previousIds = ids;
         ids = this.keepScrolledIndexOnPrepend ? nextIds : [];
+        if (!keepScrolledIndexOnPrepend) {
+          this.keptItem = undefined;
+        }
         const keptItem = keepScrolledIndexOnPrepend
           ? this.relocateLastScreenItem(previousIds, nextIds, oldVirtualItems)
           : undefined;
@@ -588,6 +599,7 @@ export class AutoSizeVirtualScrollStrategy<
             end: Math.min(this._renderedRange.end, dataLength),
           };
         } else if (dataLength === 0) {
+          this.keptItem = undefined;
           this.anchorItem = {
             index: 0,
             offset: 0,
@@ -599,6 +611,7 @@ export class AutoSizeVirtualScrollStrategy<
           this.scrollTo(0);
           this.scrollTop = this.anchorScrollTop = 0;
         } else if (dataLength < this._renderedRange.end) {
+          this.keptItem = undefined;
           this.anchorItem = this.calculateAnchoredItem(
             {
               index: dataLength,
@@ -690,6 +703,10 @@ export class AutoSizeVirtualScrollStrategy<
         map(() => {
           const range = { start: 0, end: 0 };
           const delta = this.scrollTop - this.anchorScrollTop;
+          // the user scrolled, the kept item is released
+          if (delta !== 0) {
+            this.keptItem = undefined;
+          }
           // a kept anchor (see keepInPlace) isn't aligned with the scroll
           // position yet, without scrolling it stays where it is
           if (this.scrollTop === 0 && delta !== 0) {
@@ -883,6 +900,10 @@ export class AutoSizeVirtualScrollStrategy<
           }),
           coalesceWith(unpatchedMicroTask()),
           tap(() => {
+            // sizes measured in this pass may have moved the kept item
+            if (this.keptItem) {
+              this.calcAnchorScrollTop();
+            }
             this.adjustContentSize(position);
             if (this._scrollToIndex === null) {
               this.maybeAdjustScrollPosition();
@@ -1138,8 +1159,12 @@ export class AutoSizeVirtualScrollStrategy<
       offset += previousSize(index);
     }
     const relocated = relocateItem(previousIds, ids, index);
-    // nothing to keep in place, the anchor still holds
-    if (!relocated || (relocated[0] === index && relocated[1] === index)) {
+    if (!relocated) {
+      this.keptItem = undefined;
+      return undefined;
+    }
+    // nothing to keep in place, the anchor (or a kept item) still holds
+    if (relocated[0] === index && relocated[1] === index) {
       return undefined;
     }
     // removed items hand their place over to the next survivor
@@ -1155,8 +1180,19 @@ export class AutoSizeVirtualScrollStrategy<
    * a data change by deriving the anchor from it. anchorScrollTop is left
    * alone: the next positioning pass calculates the new one and adjusts the
    * scroll position in the same task it moves the views in.
+   * The items above it are mostly not measured yet. The anchor would end up
+   * in one of them, its measured size would move everything below it. Until
+   * the user scrolls, the anchor is derived from the kept item instead, see
+   * `calcAnchorScrollTop`.
    */
   private keepInPlace(item: AnchorItem): void {
+    this.keptItem = item;
+    this.anchorAboveKeptItem(item);
+    this.recalculateRange$.next();
+  }
+
+  /** @internal */
+  private anchorAboveKeptItem(item: AnchorItem): void {
     const visibleSize = calculateVisibleContainerSize(
       this.containerSize,
       this.scrollTopWithOutOffset,
@@ -1170,7 +1206,6 @@ export class AutoSizeVirtualScrollStrategy<
       this.anchorItem,
       visibleSize,
     );
-    this.recalculateRange$.next();
   }
 
   /**
@@ -1263,6 +1298,9 @@ export class AutoSizeVirtualScrollStrategy<
 
   /** @internal */
   private calcAnchorScrollTop(): void {
+    if (this.keptItem) {
+      this.anchorAboveKeptItem(this.keptItem);
+    }
     this.anchorScrollTop =
       this.sizeUpTo(this.anchorItem.index) + this.anchorItem.offset;
   }
