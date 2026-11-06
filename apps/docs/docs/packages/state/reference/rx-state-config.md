@@ -1,20 +1,14 @@
 ---
-id: rx-state-config
 title: 'RxState configuration'
-diataxis_type: reference
 package: state
-legacy_guard: false
 sidebar_label: 'RxState configuration'
 sidebar_position: 5
 tags: [state, api-reference]
-concepts: [E3]
 ---
 
 # RxState configuration
 
 `RxState` instances read two settings from the DI tree: the **scheduler** that drives state computation and the **accumulator** that merges each change into the state. Both are provided with the `provideRxStateConfig` provider function and its configuration features.
-
-Every signature below is source-derived (package `21.1.1`).
 
 **Import**
 
@@ -135,10 +129,10 @@ bootstrapApplication(AppComponent, {
 
 You can supply any custom merge strategy this way, such as a deep-copy algorithm or a fully mutable one.
 
-> The per-instance `setAccumulator` method is **`@deprecated`** in favour of `withAccumulatorFn`. See the [`rxState` handle reference](./rx-state-functional.md).
+> The per-instance `setAccumulator` method is **`@deprecated`** in favour of `withAccumulatorFn`. See the [`rxState` handle reference](./rx-state.md).
 
 ## See also
 
-- Reference: [`rxState` (functional)](./rx-state-functional.md), creating and configuring a state instance.
+- Reference: [`rxState` (functional)](./rx-state.md), creating and configuring a state instance.
 - Reference: [`RxState` (class API)](./rx-state-class.md).
-- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md).
+- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md).

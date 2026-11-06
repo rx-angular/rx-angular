@@ -1,19 +1,16 @@
 ---
-id: render-strategies-overview
 title: 'Render strategies (overview)'
-diataxis_type: reference
 package: cdk
-legacy_guard: 'Angular <21 / still-zoneful / perf-retrofit'
 sidebar_label: 'Render strategies overview'
+sidebar_position: 1
 tags: [cdk, migration]
-concepts: [E1, E2, E5]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # Render strategies (overview)
 
-<LegacyGuard audience="Angular <21 / still-zoneful / perf-retrofit">
+<LegacyGuard audience="apps still running Zone.js">
 
 The render strategies were written to give explicit, fine-grained control over a
 change detection system that ran globally and implicitly through Zone.js. Since
@@ -21,7 +18,7 @@ Angular v21 that premise is largely gone: change detection is **zoneless by
 default**, signals track their own reads, and the framework re-renders only the
 views that changed. Reach for the strategies below only for the audience
 named above; for new applications, prefer the native zoneless path and see
-[Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+[Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).
 
 </LegacyGuard>
 
@@ -54,9 +51,9 @@ zoneless change detection, so the native strategies mostly duplicate what the
 framework already does. The "spread heavy rendering across frames" half has **no**
 native equivalent and survives as the concurrent strategies. For the full mental
 model of why change detection over-rendered, see
-[Understanding change detection in Angular](../../../concepts/E1-change-detection.md);
+[Understanding change detection in Angular](../../../concepts/change-detection.md);
 for the frame-budget model behind the concurrent set, see
-[Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md).
+[Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md).
 
 ## Native strategies
 
@@ -81,13 +78,13 @@ solve a problem Angular still has no native answer for: _how long_ a re-render m
 run before it should yield to user input. They are **not** legacy. See
 [Concurrent strategies](../reference/concurrent-strategies.md) for names,
 priorities, and render deadlines, and
-[Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+[Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
 for the mental model.
 
 ## See also
 
 - Reference: [`RxStrategyProvider`](../reference/rx-strategy-provider.md)
 - Reference: [Concurrent strategies](../reference/concurrent-strategies.md)
-- Concept: [Understanding change detection in Angular](../../../concepts/E1-change-detection.md)
-- Concept: [Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Concept: [Understanding change detection in Angular](../../../concepts/change-detection.md)
+- Concept: [Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)

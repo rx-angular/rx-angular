@@ -1,9 +1,7 @@
 ---
-id: update
 title: update
-diataxis_type: reference
+sidebar_position: 5
 package: cdk
-legacy_guard: false
 tags: [cdk, api-reference, state]
 ---
 
@@ -15,7 +13,7 @@ items match. If no comparison is provided, an equality check is used by default.
 Returns a new array `T[]` with the updated items and does not mutate the original
 array.
 
-Immutability is explained in the [immutability & serializable state](../../../../../concepts/E7-immutability-and-serializable-state.md) concept.
+Immutability is explained in the [immutability & serializable state](../../../../../concepts/immutability-and-serializable-state.md) concept.
 
 _Example — update with a comparison function_
 

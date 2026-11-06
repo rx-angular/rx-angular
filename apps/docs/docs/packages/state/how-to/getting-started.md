@@ -1,24 +1,20 @@
 ---
-id: getting-started
-title: 'Get started with rxState'
-diataxis_type: how-to
+title: 'How to get started with rxState'
 package: state
-legacy_guard: false
 sidebar_label: 'Getting started'
 sidebar_position: 1
 tags: [state, guides]
-concepts: [E3]
 ---
 
 import SignalsFirst from '@site/src/components/SignalsFirst';
 
-# Get started with `rxState`
+# How to get started with `rxState`
 
 <SignalsFirst />
 
 This guide walks you through creating your first `rxState()` instance, seeding initial state, connecting async sources, and binding state into a signals-first template.
 
-> **When do I need a state library at all?** For local component state, Angular's `signal()` / `computed()` are usually enough; `rxState()` earns its place for global/shared state, complex derived state, and async-heavy orchestration. See [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md).
+> **When do I need a state library at all?** For local component state, Angular's `signal()` / `computed()` are usually enough; `rxState()` earns its place for global/shared state, complex derived state, and async-heavy orchestration. See [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md).
 
 ## Create a state instance
 
@@ -185,7 +181,7 @@ export class MovieListComponent {
 Use a projection only when the next value genuinely depends on the previous one:
 accumulating, appending, or toggling. To derive a _view_ of your state, like a
 filtered or sorted list, keep the source untouched and build it with
-[`computed`](../reference/rx-state-functional.md) or
+[`computed`](../reference/rx-state.md) or
 [`select`](../reference/select.md) instead. Connecting a filtered result back
 into the same key overwrites the source, so clearing the filter can no longer
 restore the full list.
@@ -225,6 +221,6 @@ Older code may create state by extending or injecting the class-based `RxState` 
 
 ## See also
 
-- Reference: [`rxState` (functional)](../reference/rx-state-functional.md), the full handle surface (`set`, `connect`, `select`, `signal`, `computed`, `asReadOnly`).
+- Reference: [`rxState` (functional)](../reference/rx-state.md), the full handle surface (`set`, `connect`, `select`, `signal`, `computed`, `asReadOnly`).
 - Reference: [`RxState` configuration](../reference/rx-state-config.md), scheduler and accumulator options.
-- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md).
+- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md).

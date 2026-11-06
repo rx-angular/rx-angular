@@ -1,9 +1,6 @@
 ---
-id: install-and-configure
 title: 'How to install and configure the ESLint plugin'
-diataxis_type: how-to
 package: eslint-plugin
-legacy_guard: false
 sidebar_label: 'Install & configure'
 sidebar_position: 1
 tags: [eslint-plugin, guides, tooling]
@@ -13,7 +10,7 @@ tags: [eslint-plugin, guides, tooling]
 
 ## Goal
 
-Add `@rx-angular/eslint-plugin` to an Angular workspace and turn on its rules: either the whole [recommended or zoneless](#the-two-shipped-presets) preset, or a hand-picked subset. This page covers the task only; for the full rule catalogue see the [rules overview](../reference/rules-overview.md).
+Add `@rx-angular/eslint-plugin` to an Angular workspace and turn on its rules: either the whole [recommended or zoneless](#the-two-shipped-presets) preset, or a hand-picked subset. This page covers the task only; for the full rule catalogue see the [rules overview](../reference/index.md).
 
 ## Steps
 
@@ -98,5 +95,5 @@ npx eslint .
 
 ## See also
 
-- Reference: [Rules overview](../reference/rules-overview.md): all 12 rules, what each flags, and which are zoneless-scoped.
-- Concept: [Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md): why the `zoneless` preset exists.
+- Reference: [Rules overview](../reference/index.md): all 12 rules, what each flags, and which are zoneless-scoped.
+- Concept: [Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md): why the `zoneless` preset exists.

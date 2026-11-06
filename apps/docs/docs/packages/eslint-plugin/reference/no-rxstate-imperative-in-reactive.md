@@ -1,9 +1,7 @@
 ---
-id: no-rxstate-imperative-in-reactive
 title: 'no-rxstate-imperative-in-reactive'
-diataxis_type: reference
+sidebar_position: 3
 package: eslint-plugin
-legacy_guard: false
 tags: [eslint-plugin, api-reference]
 ---
 
@@ -98,4 +96,4 @@ this.state.connect('something', combineLatest([this.service.something$, this.sta
 
 ## Why
 
-The RxState-discipline rationale (keep reactive and imperative RxState usage separate) belongs to the [RxState reactive discipline & effects](../../../concepts/E6-rxstate-discipline-and-effects.md) concept.
+The RxState-discipline rationale (keep reactive and imperative RxState usage separate) belongs to the [RxState reactive discipline & effects](../../../concepts/rxstate-discipline-and-effects.md) concept.

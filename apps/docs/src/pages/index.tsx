@@ -28,7 +28,7 @@ function HomepageHeader(): React.JSX.Element {
           a zoneless app.
         </p>
         <div className={styles.heroCtas}>
-          <Link className={styles.btnPrimary} to="/docs/start-here/">
+          <Link className={styles.btnPrimary} to="/docs">
             Start here
           </Link>
           <Link className={styles.btnGhost} to="/docs/concepts">
@@ -78,7 +78,7 @@ export default function Home(): React.JSX.Element {
               <strong>Tree-shakable,</strong> so you ship only the code you use.
             </li>
             <li className={styles.benefitCard}>
-              <strong>Zoneless-ready,</strong> the way Angular 21 runs by
+              <strong>Zoneless-ready,</strong> the way modern Angular runs by
               default.
             </li>
           </ul>

@@ -1,10 +1,8 @@
 ---
-id: hydration-tracker
 title: 'HydrationTracker'
-diataxis_type: reference
 package: cdk
-legacy_guard: false
 sidebar_label: 'HydrationTracker'
+sidebar_position: 4
 tags: [cdk, api-reference]
 ---
 

@@ -1,12 +1,9 @@
 ---
-id: rx-let
 title: 'RxLet'
 sidebar_label: 'RxLet'
-diataxis_type: reference
+sidebar_position: 2
 package: template
-legacy_guard: false
 tags: [template, api-reference]
-concepts: [E4, E5]
 ---
 
 # RxLet
@@ -17,9 +14,9 @@ exposes a built-in **suspense / error / complete reactive context** alongside
 names a value: `rxLet` tracks the _state_ of an asynchronous source (still loading, failed,
 completed) and renders it through a cancelable, frame-budgeted scheduler.
 
-> **Why this matters:** see [The reactive context](../../../concepts/E4-reactive-context.md)
+> **Why this matters:** see [The reactive context](../../../concepts/reactive-context.md)
 > for the suspense/error/complete model, and
-> [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+> [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
 > for how per-directive scheduling works.
 
 **Import**
@@ -105,7 +102,7 @@ strategy (non-blocking, frame-budgeted) and creates templates lazily. See
 
 ## Context
 
-`RxLet` exposes the [reactive context state](../../../concepts/E4-reactive-context.md) in
+`RxLet` exposes the [reactive context state](../../../concepts/reactive-context.md) in
 the template two ways: **context variables** and **context templates**.
 
 The full reactive context (suspense, error, complete) is only derived from `Observable`
@@ -291,12 +288,12 @@ export class AppComponent {
 - Lazy template creation (via render strategies)
 - Change detection on the `EmbeddedView` level
 - Distinct consecutive equal values are skipped (over-render guard)
-- Concurrent, frame-budgeted rendering (see [concurrent scheduling](../../../concepts/E5-concurrent-scheduling.md))
+- Concurrent, frame-budgeted rendering (see [concurrent scheduling](../../../concepts/concurrent-scheduling.md))
 
 ## See also
 
-- Concept: [The reactive context](../../../concepts/E4-reactive-context.md)
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Concept: [The reactive context](../../../concepts/reactive-context.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
 - How-to: [Tune rendering with strategies](../how-to/tune-rendering-with-strategies.md)
 - How-to: [Test scheduled rendering](../how-to/test-scheduled-rendering.md)
 - Example application: [angular-movies](https://github.com/tastejs/angular-movies)

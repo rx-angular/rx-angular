@@ -1,9 +1,6 @@
 ---
-id: common
 title: 'Common strategy'
-diataxis_type: reference
 package: rebundle
-legacy_guard: false
 sidebar_label: 'Common'
 sidebar_position: 4
 tags: [rebundle, api-reference]

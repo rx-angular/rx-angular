@@ -1,10 +1,8 @@
 ---
-id: unpatch
 title: 'RxUnpatch'
-diataxis_type: reference
 package: template
-legacy_guard: 'Zone.js only'
-sidebar_label: 'RxUnpatch (legacy)'
+sidebar_label: 'RxUnpatch'
+sidebar_position: 3
 tags: [template, api-reference, migration]
 ---
 
@@ -12,7 +10,7 @@ import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # RxUnpatch
 
-<LegacyGuard audience="Zone.js only">
+<LegacyGuard audience="apps still running Zone.js">
 
 `RxUnpatch` re-registers DOM event listeners through the zone-*un*patched
 `addEventListener`, so that high-frequency events do not mark the component tree
@@ -153,4 +151,4 @@ It only has an effect in Zone.js applications.
 
 ## See also
 
-- Concept (legacy context): [Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+- Concept (legacy context): [Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)

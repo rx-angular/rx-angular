@@ -1,10 +1,8 @@
 ---
-id: test-scheduled-rendering
 title: 'How to test components that use scheduled rendering'
-diataxis_type: how-to
 package: template
-legacy_guard: false
 sidebar_label: 'Test scheduled rendering'
+sidebar_position: 5
 tags: [template, guides]
 ---
 
@@ -120,5 +118,5 @@ polling for the async concurrent scheduler.
 - Reference: [`rxIf`](../reference/rx-if.md)
 - Reference: [`rxLet`](../reference/rx-let.md)
 - How-to: [Tune rendering with strategies](./tune-rendering-with-strategies.md)
-- Concept: [Change detection](../../../concepts/E1-change-detection.md)
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Concept: [Change detection](../../../concepts/change-detection.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)

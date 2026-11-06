@@ -1,9 +1,6 @@
 ---
-id: merge-strategies
 title: 'Merge strategies'
-diataxis_type: reference
 package: rebundle
-legacy_guard: false
 sidebar_label: 'Merge strategies'
 sidebar_position: 1
 tags: [rebundle, api-reference]

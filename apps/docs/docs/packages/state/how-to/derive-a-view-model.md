@@ -1,13 +1,9 @@
 ---
-id: derive-a-view-model
 title: 'How to derive a view model from RxState'
-diataxis_type: how-to
 package: state
-legacy_guard: false
 sidebar_label: 'Derive a view model'
 sidebar_position: 4
 tags: [state, guides]
-concepts: [E3]
 ---
 
 # How to derive a view model from RxState
@@ -141,8 +137,8 @@ The template reads a signal view model; derivation is memoized and glitch-free b
 
 ## See also
 
-- Reference: [`RxState` (functional)](../reference/rx-state-functional.md) · [`selectSlice`](../reference/select-slice.md)
+- Reference: [`RxState` (functional)](../reference/rx-state.md) · [`selectSlice`](../reference/select-slice.md)
 - How-to: [Structure a component around RxState](./best-practices.md)
-- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md)
+- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md)
 
-> When to keep derivation in an RxJS pipeline (the `select`/`selectSlice` operators) versus lifting it into a `computed()` is covered by the [RxState reactive discipline & effects](../../../concepts/E6-rxstate-discipline-and-effects.md) concept.
+> When to keep derivation in an RxJS pipeline (the `select`/`selectSlice` operators) versus lifting it into a `computed()` is covered by the [RxState reactive discipline & effects](../../../concepts/rxstate-discipline-and-effects.md) concept.

@@ -1,9 +1,6 @@
 ---
-id: configure-merge-strategies
 title: 'How to configure merge strategies'
-diataxis_type: how-to
 package: rebundle
-legacy_guard: false
 sidebar_label: 'Configure merge strategies'
 sidebar_position: 2
 tags: [rebundle, guides]

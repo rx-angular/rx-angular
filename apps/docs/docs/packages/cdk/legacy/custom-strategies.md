@@ -1,19 +1,16 @@
 ---
-id: custom-strategies
 title: 'Custom render strategies'
-diataxis_type: reference
 package: cdk
-legacy_guard: 'Angular <21 / zoneful'
 sidebar_label: 'Custom strategies'
+sidebar_position: 2
 tags: [cdk, migration]
-concepts: [E1, E2]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # Custom render strategies
 
-<LegacyGuard audience="Angular <21 / zoneful">
+<LegacyGuard audience="apps still running Zone.js">
 
 Authoring a custom render strategy means writing your own change-detection
 render method and scheduling behaviour, a niche that mattered when Angular's
@@ -22,7 +19,7 @@ is zoneless by default and signals re-render only what changed, so hand-rolled
 strategies are rarely needed. For the built-in sets, prefer the
 [native and concurrent strategies](../reference/concurrent-strategies.md); reach
 for a custom strategy only for the audience named above. See
-[Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+[Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).
 
 </LegacyGuard>
 
@@ -30,7 +27,7 @@ A custom strategy is a `RxStrategyCredentials` object registered through
 `provideRxRenderStrategies({ customStrategies })`. It defines a **render method**
 (`work`) and a **scheduling behaviour** (`behavior`). For why the strategy system
 exists at all, and how vanilla change detection over-renders, see
-[Understanding change detection in Angular](../../../concepts/E1-change-detection.md).
+[Understanding change detection in Angular](../../../concepts/change-detection.md).
 
 ## Import path
 
@@ -118,5 +115,5 @@ export const appConfig: ApplicationConfig = {
 
 - Reference: [Concurrent strategies](../reference/concurrent-strategies.md)
 - Reference: [`RxStrategyProvider`](../reference/rx-strategy-provider.md)
-- Concept: [Understanding change detection in Angular](../../../concepts/E1-change-detection.md)
-- Concept: [Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+- Concept: [Understanding change detection in Angular](../../../concepts/change-detection.md)
+- Concept: [Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)

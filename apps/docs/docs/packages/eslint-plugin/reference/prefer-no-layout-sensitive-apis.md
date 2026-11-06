@@ -1,9 +1,7 @@
 ---
-id: prefer-no-layout-sensitive-apis
 title: 'prefer-no-layout-sensitive-apis'
-diataxis_type: reference
+sidebar_position: 11
 package: eslint-plugin
-legacy_guard: false
 tags: [eslint-plugin, api-reference]
 ---
 
@@ -75,4 +73,4 @@ el.addEventListener('click', () => {
 
 ## Why
 
-See [Understanding change detection in Angular](../../../concepts/E1-change-detection.md).
+See [Understanding change detection in Angular](../../../concepts/change-detection.md).

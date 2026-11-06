@@ -1,12 +1,9 @@
 ---
-id: select
 title: 'select'
-diataxis_type: reference
 package: state
-legacy_guard: false
 sidebar_label: 'select'
+sidebar_position: 10
 tags: [state, api-reference]
-concepts: [E3]
 ---
 
 # `select`
@@ -105,5 +102,5 @@ protected readonly bar = this.state.signal('bar');
 
 ## See also
 
-- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md)
+- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md)
 - Reference: [`selectSlice`](./select-slice.md) · [`stateful`](./stateful.md) · [`distinctUntilSomeChanged`](./distinct-until-some-changed.md)

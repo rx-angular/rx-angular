@@ -1,9 +1,6 @@
 ---
-id: manage-actions
 title: 'How to manage actions'
-diataxis_type: how-to
 package: state
-legacy_guard: false
 sidebar_label: 'Manage actions'
 sidebar_position: 2
 tags: [state, guides]
@@ -13,11 +10,11 @@ tags: [state, guides]
 
 ## Goal
 
-Use `@rx-angular/state/actions` to model the events in a component or service (user interactions, external system events, device APIs) as typed channels you can dispatch imperatively and consume reactively. `rxActions` turns an actions interface into a dispatcher (`login(...)`), a stream (`login$`), and a side-effect binder (`onLogin(...)`) per key, with automatic subscription cleanup. It pairs naturally with an [`rxState`](../reference/rx-state-functional.md) container but works standalone.
+Use `@rx-angular/state/actions` to model the events in a component or service (user interactions, external system events, device APIs) as typed channels you can dispatch imperatively and consume reactively. `rxActions` turns an actions interface into a dispatcher (`login(...)`), a stream (`login$`), and a side-effect binder (`onLogin(...)`) per key, with automatic subscription cleanup. It pairs naturally with an [`rxState`](../reference/rx-state.md) container but works standalone.
 
-Every symbol used here is documented in the [`rxActions` reference](../reference/rx-actions-api.md).
+Every symbol used here is documented in the [`rxActions` reference](../reference/rx-actions.md).
 
-> **Why route events through actions rather than raw subjects:** see the [RxState reactive discipline & effects](../../../concepts/E6-rxstate-discipline-and-effects.md) concept. Treat actions as the single place your event channels, their transforms, and their side effects are declared.
+> **Why route events through actions rather than raw subjects:** see the [RxState reactive discipline & effects](../../../concepts/rxstate-discipline-and-effects.md) concept. Treat actions as the single place your event channels, their transforms, and their side effects are declared.
 
 ## Dispatch and subscribe to an action
 
@@ -148,7 +145,7 @@ export class MovieService {
 
 ## Transform inputs at the source
 
-Register a transform to normalize an event before it is emitted, so the template can pass `$event` directly while the stream stays typed. Use a [predefined transform](../reference/rx-actions-api.md#predefined-transforms) or your own function.
+Register a transform to normalize an event before it is emitted, so the template can pass `$event` directly while the stream stays typed. Use a [predefined transform](../reference/rx-actions.md#predefined-transforms) or your own function.
 
 ```typescript title="src/list.component.ts"
 import { Component } from '@angular/core';
@@ -197,5 +194,5 @@ Actions are tested through the component or service that hosts them: dispatch (c
 
 ## See also
 
-- Reference: [`rxActions`](../reference/rx-actions-api.md), covering signatures, the transforms table, and the deprecated `RxActionFactory`.
+- Reference: [`rxActions`](../reference/rx-actions.md), covering signatures, the transforms table, and the deprecated `RxActionFactory`.
 - How-to: [Test RxState building blocks](./testing.md).

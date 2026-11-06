@@ -1,10 +1,8 @@
 ---
-id: coercing
 title: '@rx-angular/cdk/coercing'
-diataxis_type: reference
 package: cdk
-legacy_guard: false
 sidebar_label: 'Coercing'
+sidebar_position: 2
 tags: [cdk, api-reference]
 ---
 

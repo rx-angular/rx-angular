@@ -1,9 +1,7 @@
 ---
-id: extract
 title: extract
-diataxis_type: reference
+sidebar_position: 1
 package: cdk
-legacy_guard: false
 tags: [cdk, api-reference, state]
 ---
 
@@ -13,7 +11,7 @@ Accepts an array of `T extends object` and a single key or an array of keys
 (`K extends keyof T`). Returns a new array of objects constructed from the
 provided key or keys.
 
-Immutability is explained in the [immutability & serializable state](../../../../../concepts/E7-immutability-and-serializable-state.md) concept.
+Immutability is explained in the [immutability & serializable state](../../../../../concepts/immutability-and-serializable-state.md) concept.
 
 _Example_
 

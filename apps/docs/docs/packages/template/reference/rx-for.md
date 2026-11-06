@@ -1,13 +1,9 @@
 ---
-id: rx-for
 title: 'RxFor'
-diataxis_type: reference
 package: template
-legacy_guard: false
 sidebar_label: 'RxFor'
 sidebar_position: 1
 tags: [template, api-reference]
-concepts: [E1, E5]
 ---
 
 # RxFor
@@ -24,8 +20,8 @@ Reach for `RxFor` when a list is large enough that synchronous rendering janks, 
 you need a render hook, or when you want per-directive render scheduling. For small
 static lists, native `@for` is the simpler choice.
 
-- Why scheduling matters: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
-- Why change detection over-renders: [Understanding change detection in Angular](../../../concepts/E1-change-detection.md)
+- Why scheduling matters: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
+- Why change detection over-renders: [Understanding change detection in Angular](../../../concepts/change-detection.md)
 
 **Import**
 
@@ -194,7 +190,7 @@ To opt out again at some level of the injector tree, use
 
 ## See also
 
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
-- Concept: [Understanding change detection in Angular](../../../concepts/E1-change-detection.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
+- Concept: [Understanding change detection in Angular](../../../concepts/change-detection.md)
 - How-to: [Tune rendering with strategies](../how-to/tune-rendering-with-strategies.md)
 - How-to: [Test scheduled rendering](../how-to/test-scheduled-rendering.md)

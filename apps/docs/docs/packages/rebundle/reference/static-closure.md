@@ -1,9 +1,6 @@
 ---
-id: static-closure
 title: 'Static closure strategy'
-diataxis_type: reference
 package: rebundle
-legacy_guard: false
 sidebar_label: 'Static closure'
 sidebar_position: 3
 tags: [rebundle, api-reference]

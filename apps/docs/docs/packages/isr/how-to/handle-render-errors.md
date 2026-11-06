@@ -1,19 +1,16 @@
 ---
-id: handle-render-errors
-title: 'Handle render errors'
-diataxis_type: how-to
+title: 'How to handle render errors'
 package: isr
-legacy_guard: false
 sidebar_label: 'Handle render errors'
 sidebar_position: 4
 tags: [isr, guides]
 ---
 
-# Handle render errors
+# How to handle render errors
 
 By default ISR does not cache a page whose server render produced an HTTP error. It falls back to client-side rendering so an error page never gets cached and served to every visitor. This recipe shows how to change that default and how to flag your own non-HTTP errors.
 
-> **Why the default skips caching:** an error render usually contains messages that should not be frozen into the cache. See [How ISR works](../../../concepts/E8-how-isr-works.md) for where the cache decision happens.
+> **Why the default skips caching:** an error render usually contains messages that should not be frozen into the cache. See [How ISR works](../../../concepts/how-isr-works.md) for where the cache decision happens.
 
 ## Preconditions
 

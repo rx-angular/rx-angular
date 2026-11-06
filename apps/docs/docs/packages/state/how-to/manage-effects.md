@@ -1,20 +1,16 @@
 ---
 sidebar_position: 3
-id: manage-effects
-title: 'Manage side effects with rxEffects'
-diataxis_type: how-to
+title: 'How to manage side effects with rxEffects'
 package: state
-legacy_guard: false
 sidebar_label: 'Manage side effects'
 tags: [state, guides]
-concepts: [E6]
 ---
 
 # How to manage side effects with `rxEffects`
 
 **Goal:** run Observable- or Promise-based side effects in a component without manual `subscribe` / `takeUntil(destroy$)` / `ngOnDestroy` bookkeeping. `rxEffects` owns the subscriptions and cleans them up when the host is destroyed.
 
-> Reach for `rxEffects` when the trigger is an **Observable or Promise**. For side effects that react to a `signal()`, use Angular's native [`effect()`](https://angular.dev/guide/signals#effects) instead; see the boundary table in the [`rxEffects` Reference](../reference/rx-effects-api.md#rxeffects-vs-native-effect).
+> Reach for `rxEffects` when the trigger is an **Observable or Promise**. For side effects that react to a `signal()`, use Angular's native [`effect()`](https://angular.dev/guide/signals#effects) instead; see the boundary table in the [`rxEffects` Reference](../reference/rx-effects.md#rxeffects-vs-native-effect).
 
 ## Register an effect
 
@@ -126,9 +122,9 @@ Side effects run on their triggers and unsubscribe automatically on destroy, wit
 
 ## Testing
 
-You rarely test `rxEffects` directly; test the **trigger** and the **side-effect function** instead (`rxEffects` is only the glue). A component-level testing guide (`how-to/testing`) is authored later in this Phase-C run; until then, click the trigger and assert the side-effect service method was called.
+You rarely test `rxEffects` directly; test the **trigger** and the **side-effect function** instead (`rxEffects` is only the glue). Click the trigger and assert that the side-effect service method was called. [How to test components and services that use RxState](./testing.md) covers component-level tests.
 
 ## See also
 
-- Reference: [`rxEffects`](../reference/rx-effects-api.md)
-- Concept: [RxState reactive discipline & effects](../../../concepts/E6-rxstate-discipline-and-effects.md), covering pure functions, referential transparency, and the anatomy of a side effect.
+- Reference: [`rxEffects`](../reference/rx-effects.md)
+- Concept: [RxState reactive discipline & effects](../../../concepts/rxstate-discipline-and-effects.md), covering pure functions, referential transparency, and the anatomy of a side effect.
