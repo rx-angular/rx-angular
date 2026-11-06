@@ -1,4 +1,5 @@
 import { Component, input, NgIterable, output, Type } from '@angular/core';
+import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RxStrategyNames } from '@rx-angular/cdk/render-strategies';
 import { createOutputSpy, mount } from 'cypress/angular';
@@ -453,6 +454,23 @@ describe('viewport', () => {
   });
 });
 
+/**
+ * expects the rendered items to be stacked from the top. Measured sizes are
+ * applied after the layout (before the paint), so this retries until they are
+ */
+function expectStackedPositions(sizeOf: (index: number) => number) {
+  return cy.get('[data-cy=item]').should((elements) => {
+    let position = 0;
+    elements.each((i, element) => {
+      expect(getComputedStyle(element).position).to.eq('absolute');
+      expect(element.getAttribute('style')).to.contain(
+        `translateY(${position}px)`,
+      );
+      position += sizeOf(i);
+    });
+  });
+}
+
 describe('rendering, scrolling & positioning', () => {
   it('displays nothing', () => {
     mountAutoSize().then(({ fixture }) => {
@@ -478,12 +496,7 @@ describe('rendering, scrolling & positioning', () => {
       };
       const range = expectedRange(rangeConfig, items, 0);
       cy.get('[data-cy=item]').should('have.length', range.end - range.start);
-      let position = 0;
-      cy.get('[data-cy=item]').each((element, i) => {
-        expect(element.css('position')).to.be.eq('absolute');
-        expect(element.attr('style')).to.contain(`translateY(${position}px)`);
-        position += defaultDynamicSize(items[i]);
-      });
+      expectStackedPositions((i) => defaultDynamicSize(items[i]));
       cy.get('@scrolledIndex').should('have.been.calledWith', 0);
       cy.get('@viewRange').should('have.been.calledWith', range);
       cy.get('@renderCallback').should(
@@ -536,12 +549,7 @@ describe('rendering, scrolling & positioning', () => {
       };
       const range = expectedRange(rangeConfig, items, 0);
       cy.get('[data-cy=item]').should('have.length', range.end);
-      let position = 0;
-      cy.get('[data-cy=item]').each((element, i) => {
-        expect(element.css('position')).to.be.eq('absolute');
-        expect(element.attr('style')).to.contain(`translateY(${position}px)`);
-        position += dynamicSize(items[i]);
-      });
+      expectStackedPositions((i) => dynamicSize(items[i]));
       cy.get('@scrolledIndex').should('have.been.calledWith', 0);
       cy.get('@viewRange').should('have.been.calledWith', range);
       cy.get('@renderCallback').should(
@@ -562,12 +570,7 @@ describe('rendering, scrolling & positioning', () => {
       };
       const range = expectedRange(rangeConfig, items, 0);
       cy.get('[data-cy=item]').should('have.length', range.end);
-      let position = 0;
-      cy.get('[data-cy=item]').each((element, i) => {
-        expect(element.css('position')).to.be.eq('absolute');
-        expect(element.attr('style')).to.contain(`translateY(${position}px)`);
-        position += component.dynamicSize()(items[i]);
-      });
+      expectStackedPositions((i) => component.dynamicSize()(items[i]));
       cy.get('@scrolledIndex').should('have.been.calledWith', 0);
       cy.get('@viewRange').should('have.been.calledWith', range);
       cy.get('@renderCallback').should(
@@ -588,14 +591,8 @@ describe('rendering, scrolling & positioning', () => {
       };
       const range = expectedRange(rangeConfig, items, 0);
       cy.get('[data-cy=item]').should('have.length', range.end);
-      let position = 0;
-      cy.get('[data-cy=item]')
-        .each((element, i) => {
-          expect(element.css('position')).to.be.eq('absolute');
-          expect(element.attr('style')).to.contain(`translateY(${position}px)`);
-          position += component.dynamicSize()(items[i]);
-        })
-        .then(() => {
+      expectStackedPositions((i) => component.dynamicSize()(items[i])).then(
+        () => {
           let runwayItems = component.runwayItems();
           let runwayItemsOpposite = component.runwayItemsOpposite();
           // react to runwayItems config changes
@@ -613,15 +610,9 @@ describe('rendering, scrolling & positioning', () => {
             'have.length',
             newRange.end - newRange.start,
           );
-          position = 0;
-          cy.get('[data-cy=item]').each((element, i) => {
-            expect(element.css('position')).to.be.eq('absolute');
-            expect(element.attr('style')).to.contain(
-              `translateY(${position}px)`,
-            );
-            position += component.dynamicSize()(items[i]);
-          });
-        });
+          expectStackedPositions((i) => component.dynamicSize()(items[i]));
+        },
+      );
     });
   });
 
@@ -1599,21 +1590,20 @@ describe('keepScrolledIndexOnPrepend', () => {
      * items get measured
      */
     function prependAndExpectInPlace(
-      fixture: {
-        componentRef: any;
-        componentInstance: any;
-        detectChanges(): void;
-      },
+      fixture: ComponentFixture<any>,
       prepend: (items: Item[]) => Item[],
     ) {
       const viewport = getViewportComponent(fixture);
       const containerHeight = fixture.componentInstance.containerHeight();
+      cy.wrap(null).should(() =>
+        expect(visibleItems(containerHeight).size, 'visible items').gt(1),
+      );
       return waitUntilStable(() => [
         viewport.getScrollTop(),
         [...itemOffsets()],
       ]).then(() => {
         const visible = visibleItems(containerHeight);
-        expect(visible.size, 'visible items').to.be.greaterThan(1);
+        const scrollTopBefore = viewport.getScrollTop();
         const next = prepend(fixture.componentInstance.items() as Item[]);
         // removed items (e.g. a loading row) can't stay in place
         visible.forEach((_, id) => {
@@ -1624,6 +1614,11 @@ describe('keepScrolledIndexOnPrepend', () => {
         const stop = recordFrames();
         fixture.componentRef.setInput('items', next);
         fixture.detectChanges();
+        // a slow machine may not have rendered the update yet, keeping the
+        // items in place moves the scroll position
+        cy.wrap(null).should(() =>
+          expect(viewport.getScrollTop(), 'scrollTop').not.eq(scrollTopBefore),
+        );
         return waitUntilStable(() => [
           viewport.getScrollTop(),
           [...itemOffsets()],
