@@ -55,4 +55,11 @@ export const RX_VIRTUAL_FOR_ROUTES: Routes = [
         (m) => m.VirtualForScrollToDemoComponent,
       ),
   },
+  {
+    path: 'benchmark',
+    loadComponent: () =>
+      import('./virtual-rendering/virtual-for-benchmark.component').then(
+        (m) => m.VirtualForBenchmarkComponent,
+      ),
+  },
 ];
