@@ -35,7 +35,7 @@ docs/
 - Explanation lives only in `concepts/`. A package has no explanation section of its own. Its landing page links to the concepts it relies on.
 - Tutorials live only in `tutorials/`, even when they teach a single package.
 - `legacy/` is a shelf, not a page type. It holds how-to and reference pages for apps still running Zone.js.
-- Keep only published pages and `_category_.json` files in `docs/`. Each major is built from its own branch, so everything in `docs/` gets published with that version. Start a new page from the matching template in `templates/`.
+- Keep only published pages and `_category_.json` files in `docs/`. Everything in it gets published. Start a new page from the matching template in `templates/`.
 
 The packages are `state`, `template`, `cdk`, `isr`, `eslint-plugin` and `rebundle`. Each one appears in the `package` field below, Start here, the navbar Docs menu and the footer.
 
@@ -117,8 +117,6 @@ tags: [isr, guides]
 | `tags`             | no              | Package names plus `guides`, `api-reference`, `examples`, `migration` or `tooling`.                               |
 | `id`               | `index.md` only | `overview`                                                                                                        |
 
-The planned version badge will read `package` to show the right package line.
-
 ## Legacy pages
 
 A page for apps still running Zone.js lives in the package's `legacy/` folder.
@@ -143,7 +141,5 @@ A renamed, moved or removed page keeps its old address working.
 
 ## Versions
 
-- Site versions are named after the Angular major, like `22.x`. A new site version starts with each Angular major, and older majors are built from their own branch.
-- A planned badge on every page will show the line of the package it documents. The ESLint plugin can show `3.x` while the site is on `22.x`.
 - Keep package versions and dates out of page text, because a hard-coded number goes stale with the next release.
-- Compatibility info is the exception. Angular and peer ranges, like `@angular/core >=22.0.0`, stay correct because each major is built from its own branch. Update them when a new major starts.
+- Compatibility info is the exception. Angular and peer ranges, like `@angular/core >=22.0.0`, stay correct because every docs version keeps its own copy of the pages. Update them when a package starts a new release line.
