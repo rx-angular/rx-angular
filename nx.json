@@ -165,8 +165,7 @@
         "options": {
           "config-file": "./cypress.config.ts",
           "browser": "chrome"
-        },
-        "parallelism": false
+        }
       }
     ],
     "component-test": [
@@ -180,8 +179,7 @@
         },
         "options": {
           "browser": "chrome"
-        },
-        "parallelism": false
+        }
       }
     ],
     "build-lib": {
