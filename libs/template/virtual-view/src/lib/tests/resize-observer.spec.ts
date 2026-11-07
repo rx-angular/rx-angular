@@ -140,7 +140,7 @@ describe('RxaResizeObserver', () => {
       service.observeElement(el).subscribe();
 
       const instance = ResizeObserverMock.instances[0];
-      const disconnectSpy = jest.spyOn(instance, 'disconnect');
+      const disconnectSpy = vi.spyOn(instance, 'disconnect');
 
       expect(instance.observed.has(el)).toBe(true);
 

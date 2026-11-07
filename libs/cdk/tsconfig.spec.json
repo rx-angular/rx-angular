@@ -6,12 +6,11 @@
     "allowJs": true,
     "outDir": "../../dist/out-tsc",
     "module": "preserve",
-    "types": ["jest", "node"],
+    "types": ["vitest/globals", "node"],
     "moduleResolution": "bundler",
     "isolatedModules": true
   },
-  "files": ["src/test-setup.ts"],
-  "include": ["**/*.spec.ts", "**/*.test.ts", "**/*.d.ts", "jest.config.ts"],
+  "include": ["**/*.spec.ts", "**/*.test.ts", "**/*.d.ts"],
   "angularCompilerOptions": {
     "strictTemplates": false
   }

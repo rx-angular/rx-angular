@@ -116,7 +116,7 @@ describe('RxVirtualView control-flow interactions (R6)', () => {
     const cache = fixture.debugElement
       .query(By.directive(RxVirtualViewObserver))
       .injector.get(VirtualViewCache);
-    const clearSpy = jest.spyOn(cache, 'clear');
+    const clearSpy = vi.spyOn(cache, 'clear');
 
     // Capture the directive instance for the item we are about to remove so
     // we can assert clear is called with its key.

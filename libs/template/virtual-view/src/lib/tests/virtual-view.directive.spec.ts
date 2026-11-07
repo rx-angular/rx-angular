@@ -167,7 +167,7 @@ describe('RxVirtualView', () => {
     fixture.detectChanges();
     const view = fixture.debugElement.query(By.css('.widget'));
     const directive = view.injector.get(RxVirtualView);
-    const spy = jest.spyOn(directive.visibilityChanged, 'emit');
+    const spy = vi.spyOn(directive.visibilityChanged, 'emit');
 
     IntersectionObserverMock.cb([
       { isIntersecting: true, target: view.nativeElement } as any,
@@ -282,8 +282,8 @@ describe('RxVirtualView', () => {
     fixture.detectChanges();
     const view = fixture.debugElement.query(By.css('.widget'));
     const cache = view.injector.get(VirtualViewCache);
-    const storeContentSpy = jest.spyOn(cache, 'storeContent');
-    const storePlaceholderSpy = jest.spyOn(cache, 'storePlaceholder');
+    const storeContentSpy = vi.spyOn(cache, 'storeContent');
+    const storePlaceholderSpy = vi.spyOn(cache, 'storePlaceholder');
 
     // Content is shown
     IntersectionObserverMock.cb([
@@ -311,8 +311,8 @@ describe('RxVirtualView', () => {
     fixture.detectChanges();
     const view = fixture.debugElement.query(By.css('.widget'));
     const cache = view.injector.get(VirtualViewCache);
-    const storeContentSpy = jest.spyOn(cache, 'storeContent');
-    const storePlaceholderSpy = jest.spyOn(cache, 'storePlaceholder');
+    const storeContentSpy = vi.spyOn(cache, 'storeContent');
+    const storePlaceholderSpy = vi.spyOn(cache, 'storePlaceholder');
 
     // Content is shown
     IntersectionObserverMock.cb([
@@ -376,7 +376,7 @@ describe('RxVirtualView', () => {
     it('should emit visibilityChanged with content true when disabled', () => {
       const view = fixture.debugElement.query(By.css('.widget'));
       const directive = view.injector.get(RxVirtualView);
-      const spy = jest.spyOn(directive.visibilityChanged, 'emit');
+      const spy = vi.spyOn(directive.visibilityChanged, 'emit');
       fixture.detectChanges();
       expect(spy).toHaveBeenCalledWith({ content: true, placeholder: false });
     });
@@ -450,7 +450,7 @@ describe('RxVirtualView', () => {
     fixture.detectChanges();
     const view = fixture.debugElement.query(By.css('.widget'));
     const cache = view.injector.get(VirtualViewCache);
-    const clearSpy = jest.spyOn(cache, 'clear');
+    const clearSpy = vi.spyOn(cache, 'clear');
     const directive = view.injector.get(RxVirtualView);
 
     fixture.destroy();

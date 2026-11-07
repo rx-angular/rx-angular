@@ -16,6 +16,7 @@ import {
 import { Promise as unpatchedPromise } from '@rx-angular/cdk/zone-less/browser';
 import { asapScheduler, EMPTY, NEVER, Observable, of, timer } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import type { MockInstance } from 'vitest';
 import { RxPush } from '../push.pipe';
 
 function wrapWithSpace(str: string): string {
@@ -85,7 +86,7 @@ describe('RxPush', () => {
   };
 
   describe('used in template', () => {
-    beforeEach(setupPushPipeComponent);
+    beforeEach(() => setupPushPipeComponent());
 
     it('should be instantiable', () => {
       expect(TestBed.inject(RxPush)).toBeDefined();
@@ -163,12 +164,12 @@ describe('RxPush', () => {
     });
 
     describe('async values', () => {
-      let cdSpy: jest.SpyInstance;
+      let cdSpy: MockInstance;
 
       beforeEach(() => {
         const strategy = strategyProvider.strategies['custom'];
         pushPipeTestComponent.strategy = 'custom';
-        cdSpy = jest.spyOn(strategy, 'work');
+        cdSpy = vi.spyOn(strategy, 'work');
       });
 
       it('should not detect changes with sync value', () => {

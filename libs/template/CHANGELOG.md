@@ -1,3 +1,43 @@
+# 22.0.0 (2026-11-02)
+
+### 🚀 Features
+
+- **template:** add DataSource support to rxVirtualFor ([#1764](https://github.com/rx-angular/rx-angular/pull/1764), [#1765](https://github.com/rx-angular/rx-angular/issues/1765))
+- **template:** add visibleRange output to rx-virtual-scroll-viewport ([#1940](https://github.com/rx-angular/rx-angular/pull/1940), [#1865](https://github.com/rx-angular/rx-angular/issues/1865))
+- ⚠️  **cdk,state,template,isr:** support angular 22 ([#1905](https://github.com/rx-angular/rx-angular/issues/1905))
+
+### 🩹 Fixes
+
+- **template:** re-derive the autosize anchor after a scroll correction ([#1957](https://github.com/rx-angular/rx-angular/pull/1957), [#1953](https://github.com/rx-angular/rx-angular/issues/1953))
+- **template:** keep scroll offset when using keepScrolledIndexOnPrepend ([#1896](https://github.com/rx-angular/rx-angular/pull/1896), [#1857](https://github.com/rx-angular/rx-angular/issues/1857))
+- **template:** stabilize virtual scrolling rendering and specs under load ([#1954](https://github.com/rx-angular/rx-angular/pull/1954))
+- **template:** recalculate dynamic item sizes when the size function changes ([#1936](https://github.com/rx-angular/rx-angular/pull/1936), [#1891](https://github.com/rx-angular/rx-angular/issues/1891))
+- **template:** truncate DynamicSizeVirtualScrollStrategy virtual items when data shrinks ([#1929](https://github.com/rx-angular/rx-angular/pull/1929), [#1923](https://github.com/rx-angular/rx-angular/issues/1923))
+- **template:** keep virtual scroll state when the viewport is hidden ([#1941](https://github.com/rx-angular/rx-angular/pull/1941), [#1778](https://github.com/rx-angular/rx-angular/issues/1778))
+
+### ⚠️  Breaking Changes
+
+- **cdk,state,template,isr:** support angular 22  ([#1905](https://github.com/rx-angular/rx-angular/issues/1905))
+  @rx-angular/cdk now requires @angular/core >=22.0.0.
+  * feat(state)!: support angular 22
+   BREAKING CHANGE: @rx-angular/state now requires @angular/core >=22.0.0 and @rx-angular/cdk ^22.0.0.
+  * feat(template)!: support angular 22
+   BREAKING CHANGE: @rx-angular/template now requires @angular/core >=22.0.0 and @rx-angular/cdk ^22.0.0.
+  * feat(isr)!: support angular 22
+   BREAKING CHANGE: @rx-angular/isr now requires @angular/common, @angular/core and @angular/ssr >=22.0.0.
+  * feat(eslint-plugin): support typescript-eslint 8
+  * fix(rebundle): allow @nx/devkit 23
+  * docs: update start-here package table for v22
+
+### 🧱 Updated Dependencies
+
+- Updated cdk to 22.0.0
+
+### ❤️ Thank You
+
+- friendlyAce @friendlyAce
+- Julian Jandl @hoebbelsB
+
 ## 21.2.1 (2026-07-21)
 
 ### 🩹 Fixes

@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../.oxlintrc.json"],
+  "plugins": [],
+  "rules": {
+    "@angular-eslint/prefer-standalone": "off",
+    "@angular-eslint/prefer-inject": "off"
+  }
+}

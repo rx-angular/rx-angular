@@ -18,10 +18,5 @@
     "strictTemplates": false
   },
   "include": ["**/*.ts"],
-  "exclude": [
-    "./test-setup.ts",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "jest.config.ts"
-  ]
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

@@ -1,0 +1,121 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript"],
+  "jsPlugins": [
+    "@nx/oxlint/boundaries-plugin",
+    "@angular-eslint/eslint-plugin",
+    "eslint-plugin-simple-import-sort",
+    "eslint-plugin-unused-imports"
+  ],
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "builtin": true,
+    "es2022": true
+  },
+  "ignorePatterns": [
+    "**/node_modules",
+    "**/dist",
+    "**/tmp",
+    "**/coverage",
+    "**/.nx",
+    "**/.angular",
+    "**/.docusaurus",
+    "**/build",
+    ".yarn"
+  ],
+  "rules": {
+    "@nx/enforce-module-boundaries": [
+      "error",
+      {
+        "allowCircularSelfDependency": false,
+        "banTransitiveDependencies": true,
+        "checkDynamicDependenciesExceptions": [],
+        "checkNestedExternalImports": true,
+        "enforceBuildableLibDependency": true,
+        "allow": [],
+        "depConstraints": [
+          {
+            "sourceTag": "type:app",
+            "onlyDependOnLibsWithTags": ["*"]
+          },
+          {
+            "sourceTag": "template",
+            "onlyDependOnLibsWithTags": ["type:test-util", "cdk"]
+          },
+          {
+            "sourceTag": "state",
+            "onlyDependOnLibsWithTags": ["type:test-util", "cdk"]
+          },
+          {
+            "sourceTag": "cdk",
+            "onlyDependOnLibsWithTags": ["type:test-util"]
+          }
+        ]
+      }
+    ],
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [["^\\u0000", "^@?\\w", "^[^.]", "^\\."]]
+      }
+    ],
+    "simple-import-sort/exports": "error",
+    "unused-imports/no-unused-imports": "error",
+    "no-case-declarations": "error",
+    "no-empty": "warn",
+    "no-fallthrough": "error",
+    "no-prototype-builtins": "warn",
+    "no-useless-escape": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-rest-params": "warn",
+    "prefer-spread": "error",
+    "no-unused-vars": "warn",
+    "no-unused-expressions": "error",
+    "no-empty-function": "warn",
+    "no-array-constructor": "error",
+    "typescript/adjacent-overload-signatures": "error",
+    "typescript/ban-ts-comment": "warn",
+    "typescript/no-empty-interface": "warn",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-explicit-any": "warn",
+    "typescript/no-inferrable-types": "warn",
+    "typescript/no-namespace": "error",
+    "typescript/no-non-null-assertion": "warn",
+    "typescript/no-require-imports": "error",
+    "typescript/no-this-alias": "error",
+    "typescript/no-unnecessary-type-constraint": "error",
+    "typescript/no-unsafe-declaration-merging": "error",
+    "typescript/prefer-as-const": "error",
+    "typescript/prefer-namespace-keyword": "error",
+    "typescript/triple-slash-reference": "error",
+    "@angular-eslint/contextual-lifecycle": "error",
+    "@angular-eslint/no-empty-lifecycle-method": "error",
+    "@angular-eslint/no-input-rename": "warn",
+    "@angular-eslint/no-inputs-metadata-property": "error",
+    "@angular-eslint/no-output-native": "error",
+    "@angular-eslint/no-output-on-prefix": "error",
+    "@angular-eslint/no-output-rename": "error",
+    "@angular-eslint/no-outputs-metadata-property": "error",
+    "@angular-eslint/prefer-inject": "warn",
+    "@angular-eslint/prefer-on-push-component-change-detection": "warn",
+    "@angular-eslint/prefer-standalone": "warn",
+    "@angular-eslint/use-pipe-transform-interface": "error",
+    "@angular-eslint/use-lifecycle-interface": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.js", "**/*.jsx", "**/*.cjs", "**/*.mjs"],
+      "env": {
+        "browser": true,
+        "node": true
+      },
+      "rules": {
+        "typescript/no-require-imports": "off",
+        "typescript/no-non-null-assertion": "off"
+      }
+    }
+  ]
+}

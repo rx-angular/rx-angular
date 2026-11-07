@@ -14,6 +14,7 @@
     "build": {
       "executor": "@angular-devkit/build-angular:browser-esbuild",
       "defaultConfiguration": "production",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/demos",
         "index": "apps/demos/src/index.html",
@@ -94,12 +95,12 @@
           "extractLicenses": false,
           "buildOptimizer": false
         }
-      },
-      "outputs": ["{options.outputPath}"]
+      }
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "defaultConfiguration": "development",
+      "continuous": true,
       "options": {
         "port": 4300,
         "buildTarget": "demos:build"
@@ -119,21 +120,15 @@
           "open": true
         }
       },
-      "continuous": true
+      "readyWhen": {
+        "signal": true
+      }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
         "buildTarget": "demos:build"
       }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "apps/demos/jest.config.ts",
-        "tsConfig": "apps/demos/tsconfig.spec.json"
-      },
-      "outputs": ["{workspaceRoot}/coverage/apps/demos"]
     }
   }
 }

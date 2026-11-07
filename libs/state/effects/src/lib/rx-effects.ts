@@ -9,13 +9,15 @@ import {
 import { from, Subscription } from 'rxjs';
 import { SideEffectFnOrObserver, SideEffectObservable } from './types';
 
-interface RxEffects {
+// a type alias (not an interface) so consumers' declaration emit can inline it,
+// see https://github.com/rx-angular/rx-angular/issues/1737
+type RxEffects = {
   register<T>(
     observable: SideEffectObservable<T>,
     sideEffectOrObserver?: SideEffectFnOrObserver<T>,
   ): Fn;
   onDestroy: (fn: Fn) => Fn;
-}
+};
 
 type Fn = () => void;
 

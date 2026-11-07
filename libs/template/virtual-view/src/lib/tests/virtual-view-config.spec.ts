@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { fc, test } from '@fast-check/jest';
+import { fc, test } from '@fast-check/vitest';
 import {
   provideVirtualViewConfig,
   VIRTUAL_VIEW_CONFIG_DEFAULT,

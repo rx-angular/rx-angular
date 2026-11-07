@@ -3,6 +3,6 @@
     "nrwl.angular-console",
     "angular.ng-template",
     "esbenp.prettier-vscode",
-    "firsttris.vscode-jest-runner"
+    "vitest.explorer"
   ]
 }

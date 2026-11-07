@@ -30,17 +30,10 @@
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/cdk"],
+      "executor": "@nx/angular:unit-test",
       "options": {
-        "jestConfig": "libs/cdk/jest.config.ts",
-        "codeCoverage": true,
-        "tsConfig": "libs/cdk/tsconfig.spec.json"
+        "buildTarget": "cdk:build-lib"
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
     }
   }
 }

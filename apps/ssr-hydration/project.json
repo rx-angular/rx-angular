@@ -63,6 +63,12 @@
         "development": {
           "buildTarget": "ssr-hydration:build:development"
         }
+      },
+      "readyWhen": {
+        "signal": true
+      },
+      "options": {
+        "port": 4203
       }
     },
     "extract-i18n": {
@@ -71,12 +77,13 @@
         "buildTarget": "ssr-hydration:build"
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
+      "readyWhen": {
+        "signal": true
+      },
+      "dependsOn": ["build"],
       "options": {
         "buildTarget": "ssr-hydration:build",
         "staticFilePath": "dist/apps/ssr-hydration/browser",

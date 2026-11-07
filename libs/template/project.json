@@ -7,7 +7,7 @@
   "tags": ["type:lib", "template"],
   "targets": {
     "build-lib": {
-      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "executor": "@nx/angular:package",
       "dependsOn": ["^build"],
       "outputs": ["{workspaceRoot}/dist/libs/template"],
       "options": {
@@ -30,18 +30,16 @@
         "parallel": false
       }
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/template"],
+    "component-test": {
       "options": {
-        "jestConfig": "libs/template/jest.config.ts",
-        "codeCoverage": true,
-        "tsConfig": "libs/template/tsconfig.spec.json"
+        "config-file": "./cypress.config.ts"
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+    "test": {
+      "executor": "@nx/angular:unit-test",
+      "options": {
+        "buildTarget": "template:build-lib"
+      }
     }
   }
 }

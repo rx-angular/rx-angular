@@ -46,10 +46,10 @@ export function rxEffects(setupFn: RxEffectsSetupFn, options: RxEffectsOptions):
 ## Returned handle: `RxEffects`
 
 ```ts
-interface RxEffects {
+type RxEffects = {
   register<T>(observable: SideEffectObservable<T>, sideEffectOrObserver?: SideEffectFnOrObserver<T>): () => void;
   onDestroy: (fn: () => void) => () => void;
-}
+};
 ```
 
 | Member      | Kind   | Meaning                                                                                                                                    |

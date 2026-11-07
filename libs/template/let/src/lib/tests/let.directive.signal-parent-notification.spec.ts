@@ -65,46 +65,48 @@ describe('LetDirective signal parent notification', () => {
     ['normal'],
     ['low'],
     ['idle'],
-  ])('Strategy: %p', (strategy) => {
+  ])('Strategy: %s', (strategy) => {
     describe('parent: false', () => {
       beforeEach(() => {
         componentInstance.strategy = strategy;
         componentInstance.value$.next(42);
       });
 
-      it('should update ViewChild', (done) => {
-        const behavior = strategyProvider.strategies[strategy].behavior;
-        componentInstance.rendered$
-          .pipe(
-            behavior({
-              work: () => {},
-            }),
-            delay(0, asapScheduler),
-          )
-          .subscribe(() => {
-            expect(componentInstance.letChild()).toBeDefined();
-            done();
-          });
-        fixture.detectChanges();
-      });
+      it('should update ViewChild', () =>
+        new Promise<void>((done) => {
+          const behavior = strategyProvider.strategies[strategy].behavior;
+          componentInstance.rendered$
+            .pipe(
+              behavior({
+                work: () => {},
+              }),
+              delay(0, asapScheduler),
+            )
+            .subscribe(() => {
+              expect(componentInstance.letChild()).toBeDefined();
+              done();
+            });
+          fixture.detectChanges();
+        }));
 
-      it('should not update parent', (done) => {
-        fixture.detectChanges();
-        const cdRef = (componentInstance.letChildren()[0] as any).cdRef;
-        cdRef.detectChanges = jest.fn();
-        const behavior = strategyProvider.strategies[strategy].behavior;
-        componentInstance.rendered$
-          .pipe(
-            behavior({
-              work: () => {},
-            }),
-            delay(0, asapScheduler),
-          )
-          .subscribe(() => {
-            expect(cdRef.detectChanges).not.toHaveBeenCalled();
-            done();
-          });
-      });
+      it('should not update parent', () =>
+        new Promise<void>((done) => {
+          fixture.detectChanges();
+          const cdRef = (componentInstance.letChildren()[0] as any).cdRef;
+          cdRef.detectChanges = vi.fn();
+          const behavior = strategyProvider.strategies[strategy].behavior;
+          componentInstance.rendered$
+            .pipe(
+              behavior({
+                work: () => {},
+              }),
+              delay(0, asapScheduler),
+            )
+            .subscribe(() => {
+              expect(cdRef.detectChanges).not.toHaveBeenCalled();
+              done();
+            });
+        }));
     });
   });
 });

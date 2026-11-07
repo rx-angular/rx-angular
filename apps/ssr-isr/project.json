@@ -60,6 +60,12 @@
         "development": {
           "buildTarget": "ssr-isr:build:development"
         }
+      },
+      "readyWhen": {
+        "signal": true
+      },
+      "options": {
+        "port": 4202
       }
     },
     "extract-i18n": {
@@ -67,10 +73,6 @@
       "options": {
         "buildTarget": "ssr-isr:build"
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
     }
   }
 }

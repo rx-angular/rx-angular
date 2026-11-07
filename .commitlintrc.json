@@ -1,6 +1,7 @@
 {
   "extends": ["@commitlint/config-angular"],
   "rules": {
+    "subject-exclamation-mark": [0],
     "subject-empty": [2, "never"],
     "scope-enum": [
       2,
@@ -14,7 +15,7 @@
         "demos",
         "schematics",
         "ci",
-        "eslint",
+        "eslint-plugin",
         "isr",
         "release"
       ]

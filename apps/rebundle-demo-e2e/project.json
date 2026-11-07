@@ -8,9 +8,6 @@
   "targets": {
     "e2e": {
       "dependsOn": ["rebundle:build"]
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
     }
   }
 }

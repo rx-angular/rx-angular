@@ -1,7 +1,7 @@
 // https://github.com/facebook/react/blob/master/packages/scheduler/src/__tests__/SchedulerDOM-test.js
 import { ɵglobal } from '@angular/core';
 
-const originalPerformance = ɵglobal.performance,
+const originalPerformanceNow = ɵglobal.performance.now,
   originalSetTimeout = ɵglobal.setTimeout,
   originalClearTimeout = ɵglobal.clearTimeout,
   originalSetImmediate = ɵglobal.setImmediate,
@@ -19,10 +19,9 @@ describe('Scheduler', () => {
   let scheduleCallback: typeof import('./scheduler').scheduleCallback;
   let cancelCallback: typeof import('./scheduler').cancelCallback;
 
-  describe.each([['Browser'], ['Node'], ['NonBrowser']])('%p', (env) => {
-    beforeEach(() => {
-      jest.resetModules();
-      jest.mock('./scheduler', () => jest.requireActual('./scheduler'));
+  describe.each([['Browser'], ['Node'], ['NonBrowser']])('%s', (env) => {
+    beforeEach(async () => {
+      vi.resetModules();
       switch (env) {
         case 'Browser':
           runtime = installMockBrowserRuntime();
@@ -38,8 +37,7 @@ describe('Scheduler', () => {
           break;
       }
       performance = ɵglobal.performance;
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const Scheduler = require('./scheduler');
+      const Scheduler = await import('./scheduler');
       scheduleCallback = Scheduler.scheduleCallback;
       cancelCallback = Scheduler.cancelCallback;
     });
@@ -51,7 +49,7 @@ describe('Scheduler', () => {
     });
 
     afterAll(() => {
-      ɵglobal.performance = originalPerformance;
+      ɵglobal.performance.now = originalPerformanceNow;
       ɵglobal.setTimeout = originalSetTimeout;
       ɵglobal.clearTimeout = originalClearTimeout;
       ɵglobal.setImmediate = originalSetImmediate;
@@ -258,7 +256,7 @@ describe('Scheduler', () => {
 
       it('should execute work that was added by NgZone', () => {
         const ngZone = {
-          run: jest.fn((fn: (...args: any[]) => any) => {
+          run: vi.fn((fn: (...args: any[]) => any) => {
             const result = fn();
             scheduleCallback(NormalPriority, () => {
               runtime.log('B');
@@ -290,7 +288,7 @@ describe('Scheduler', () => {
   }
 
   function getMockNgZone() {
-    const run = jest.fn((fn: (...args: any[]) => any) => {
+    const run = vi.fn((fn: (...args: any[]) => any) => {
       return fn();
     });
     return { run };

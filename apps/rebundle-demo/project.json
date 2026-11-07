@@ -65,14 +65,18 @@
         "development": {
           "buildTarget": "rebundle-demo:build:development"
         }
+      },
+      "readyWhen": {
+        "signal": true
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
     },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
+      "readyWhen": {
+        "signal": true
+      },
+      "dependsOn": ["build"],
       "options": {
         "buildTarget": "rebundle-demo:build",
         "port": 4200,

@@ -10,6 +10,7 @@ export default defineConfig({
       },
       cypressDir: 'cypress',
     }),
-    baseUrl: 'http://localhost:4200',
+    // Own port so it can run next to the other apps' e2e targets on one CI agent.
+    baseUrl: 'http://localhost:4203',
   },
 });

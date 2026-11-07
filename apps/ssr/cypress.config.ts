@@ -10,6 +10,5 @@ export default defineConfig({
       },
       cypressDir: 'cypress',
     }),
-    baseUrl: 'http://localhost:4200',
   },
 });

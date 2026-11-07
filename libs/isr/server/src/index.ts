@@ -1,7 +1,5 @@
-export {
-  FileSystemCacheHandler,
-  FileSystemCacheOptions,
-} from './cache-handlers/filesystem-cache-handler';
+export type { FileSystemCacheOptions } from './cache-handlers/filesystem-cache-handler';
+export { FileSystemCacheHandler } from './cache-handlers/filesystem-cache-handler';
 export { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
 export { IsrModule } from './isr.module';
 export { ISRHandler } from './isr-handler';

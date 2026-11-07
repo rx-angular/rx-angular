@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { fc, test } from '@fast-check/jest';
+import { fc, test } from '@fast-check/vitest';
 import { SizeHost } from './test-utils/host-components';
 import {
   emitIntersection,

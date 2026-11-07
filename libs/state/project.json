@@ -30,15 +30,6 @@
         "parallel": false
       }
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/state"],
-      "options": {
-        "jestConfig": "libs/state/jest.config.ts",
-        "codeCoverage": true,
-        "tsConfig": "libs/state/tsconfig.spec.json"
-      }
-    },
     "perfBuild": {
       "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
@@ -56,9 +47,11 @@
         "buildTarget": "state:perfBuild"
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+    "test": {
+      "executor": "@nx/angular:unit-test",
+      "options": {
+        "buildTarget": "state:build-lib"
+      }
     }
   }
 }

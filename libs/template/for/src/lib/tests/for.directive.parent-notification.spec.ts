@@ -77,7 +77,7 @@ async function rendered(component: TestComponent, behavior: RxRenderBehavior) {
 }
 
 describe('rxFor parent-notifications', () => {
-  describe.each([['legacy'], ['new']])('conciler: %p', (conciler) => {
+  describe.each([['legacy'], ['new']])('conciler: %s', (conciler) => {
     let strategyProvider: RxStrategyProvider;
     let behavior: RxRenderBehavior;
 
@@ -88,7 +88,7 @@ describe('rxFor parent-notifications', () => {
         ['normal'],
         ['low'],
         ['idle'],
-      ])('Strategy: %p', (strategy) => {
+      ])('Strategy: %s', (strategy) => {
         beforeEach(() => {
           behavior = strategyProvider.strategies[strategy].behavior;
         });
@@ -142,7 +142,7 @@ describe('rxFor parent-notifications', () => {
 
           it('should update parent', async () => {
             const cdRef = (component.forChildren.first as any).cdRef;
-            cdRef.detectChanges = jest.fn();
+            cdRef.detectChanges = vi.fn();
             await rendered(component, behavior);
             expect(cdRef.detectChanges).toHaveBeenCalled();
           });
@@ -151,7 +151,7 @@ describe('rxFor parent-notifications', () => {
             const cdRef = (component.forChildren.first as any).cdRef;
             const cdRef2 = (component.forChildren.last as any).cdRef;
             expect(cdRef2).toEqual(cdRef);
-            cdRef.detectChanges = jest.fn();
+            cdRef.detectChanges = vi.fn();
             await rendered(component, behavior);
             expect(cdRef.detectChanges).toHaveBeenCalledTimes(1);
           });
@@ -172,7 +172,7 @@ describe('rxFor parent-notifications', () => {
 
           it('should not update parent', async () => {
             const cdRef = (component.forChildren.first as any).cdRef;
-            cdRef.detectChanges = jest.fn();
+            cdRef.detectChanges = vi.fn();
             const behavior = strategyProvider.strategies[strategy].behavior;
             await rendered(component, behavior);
             expect(cdRef.detectChanges).not.toHaveBeenCalled();
@@ -186,7 +186,7 @@ describe('rxFor parent-notifications', () => {
        ['normal'],
        ['low'],
        ['idle'],
-       ])('Strategy: %p', (strategy) => {
+       ])('Strategy: %s', (strategy) => {
        let behavior: RxRenderBehavior;
 
        beforeEach(() => {
@@ -231,7 +231,7 @@ describe('rxFor parent-notifications', () => {
 
           it('should not update parent', async () => {
             const cdRef = (component.forChildren()[0] as any)?.cdRef;
-            cdRef.detectChanges = jest.fn();
+            cdRef.detectChanges = vi.fn();
             const behavior = strategyProvider.strategies[strategy].behavior;
             await rendered(component, behavior);
             expect(cdRef.detectChanges).not.toHaveBeenCalled();

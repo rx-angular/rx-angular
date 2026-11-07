@@ -325,8 +325,8 @@ describe('zone-config', () => {
       expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(true);
     });
 
-    xit('should assert if used before', () => {
-      const spy = jest.spyOn(console, 'error');
+    it.skip('should assert if used before', () => {
+      const spy = vi.spyOn(console, 'error');
       zoneConfig.runtime.disable.ignoreConsoleErrorUncaughtError();
       try {
         expect(w.__zone_symbol__ignoreConsoleErrorUncaughtError).toBe(true);
@@ -337,7 +337,7 @@ describe('zone-config', () => {
     });
 
     it('should not assert if used after', () => {
-      const spy = jest.spyOn(console, 'error');
+      const spy = vi.spyOn(console, 'error');
       try {
         expect(spy).toHaveBeenCalledTimes(0);
       } finally {
@@ -366,7 +366,7 @@ describe('zone-config', () => {
     });
 
     it('should log zone-flags if called', () => {
-      const spy = jest.spyOn(console, 'log');
+      const spy = vi.spyOn(console, 'log');
       zoneConfig.events.disable.UNPATCHED_EVENTS(['test']);
       zoneConfig.events.disable.PASSIVE_EVENTS(['test']);
       zoneConfig.global.disable.XHR();

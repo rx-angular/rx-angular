@@ -5,7 +5,7 @@ import { provideLegacyRxForReconciliation } from '../provide-legacy-reconciler';
 import { createTestComponent, TestComponent } from './fixtures';
 
 describe('rxFor strategies', () => {
-  describe.each([['legacy'], ['new']])('conciler: %p', (conciler) => {
+  describe.each([['legacy'], ['new']])('conciler: %s', (conciler) => {
     let fixture: ComponentFixture<TestComponent>;
     let nativeElement: HTMLElement;
     let primaryStrategy: string;
@@ -44,26 +44,28 @@ describe('rxFor strategies', () => {
       ['low'],
       ['idle'],
       ['native'],
-    ])('Strategy: %p', (strategy) => {
-      it('should render with given strategy', (done) => {
-        component.strategy = strategy;
-        component.renderedValue$.subscribe((v) => {
-          expect(v).toEqual([1, 2]);
-          expect(nativeElement.textContent).toBe('1;2;');
-          done();
-        });
-        fixture.detectChanges();
-      });
-      it('should not affect primary strategy', (done) => {
-        component.strategy = strategy;
-        component.renderedValue$.subscribe((v) => {
-          expect(v).toEqual([1, 2]);
-          expect(nativeElement.textContent).toBe('1;2;');
-          expect(strategyProvider.primaryStrategy).toBe(primaryStrategy);
-          done();
-        });
-        fixture.detectChanges();
-      });
+    ])('Strategy: %s', (strategy) => {
+      it('should render with given strategy', () =>
+        new Promise<void>((done) => {
+          component.strategy = strategy;
+          component.renderedValue$.subscribe((v) => {
+            expect(v).toEqual([1, 2]);
+            expect(nativeElement.textContent).toBe('1;2;');
+            done();
+          });
+          fixture.detectChanges();
+        }));
+      it('should not affect primary strategy', () =>
+        new Promise<void>((done) => {
+          component.strategy = strategy;
+          component.renderedValue$.subscribe((v) => {
+            expect(v).toEqual([1, 2]);
+            expect(nativeElement.textContent).toBe('1;2;');
+            expect(strategyProvider.primaryStrategy).toBe(primaryStrategy);
+            done();
+          });
+          fixture.detectChanges();
+        }));
     });
   });
 });
