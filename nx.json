@@ -163,14 +163,25 @@
           "plugin": "@nx/cypress/plugin"
         },
         "options": {
-          "config-file": "./cypress.config.ts"
+          "config-file": "./cypress.config.ts",
+          "browser": "chrome"
         }
       }
     ],
-    "component-test": {
-      "inputs": ["cypress", "^production"],
-      "cache": true
-    },
+    "component-test": [
+      {
+        "inputs": ["cypress", "^production"],
+        "cache": true
+      },
+      {
+        "filter": {
+          "plugin": "@nx/cypress/plugin"
+        },
+        "options": {
+          "browser": "chrome"
+        }
+      }
+    ],
     "build-lib": {
       "cache": true
     },
