@@ -13,7 +13,7 @@ import {
 import {
   catchError,
   distinctUntilChanged,
-  mergeAll,
+  mergeMap,
   observeOn,
   publish,
   publishReplay,
@@ -39,7 +39,20 @@ export function createAccumulationObservable<T extends object>(
   const observeStateOn = <R>(): MonoTypeOperatorFunction<R> =>
     scheduler ? observeOn(scheduler) : (o$) => o$;
   const signal$ = merge(
-    stateObservables.pipe(distinctUntilChanged(), mergeAll(), observeStateOn()),
+    stateObservables.pipe(
+      distinctUntilChanged(),
+      // isolate each connected source, so an error only ends that source
+      // and not the whole accumulation
+      mergeMap((stateObservable) =>
+        stateObservable.pipe(
+          catchError((error) => {
+            console.error(error);
+            return EMPTY;
+          }),
+        ),
+      ),
+      observeStateOn(),
+    ),
     stateSlices.pipe(observeStateOn()),
   ).pipe(
     withLatestFrom(accumulatorObservable.pipe(observeStateOn())),

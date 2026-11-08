@@ -3,7 +3,7 @@ import {
   initialPrimitiveState,
   PrimitiveState,
 } from '@test-helpers/rx-angular';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { select } from '../src';
@@ -185,6 +185,26 @@ describe('createAccumulationObservable', () => {
 
       acc.nextSliceObservable(of({ num: 43 }));
       expect(received).toEqual([42, 43]);
+    });
+
+    it('should keep accumulating after a connected source errors', () => {
+      const spy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+      const acc = setupAccumulationObservable<PrimitiveState>({
+        initialState: initialPrimitiveState,
+      });
+      const other$ = new Subject<Partial<PrimitiveState>>();
+      acc.nextSliceObservable(other$);
+
+      acc.nextSliceObservable(throwError(() => new Error('boom')));
+      expect(spy).toHaveBeenCalled();
+
+      acc.nextSlice({ str: 'after error' });
+      expect(acc.state.str).toBe('after error');
+
+      other$.next({ num: 777 });
+      expect(acc.state.num).toBe(777);
     });
   });
 
