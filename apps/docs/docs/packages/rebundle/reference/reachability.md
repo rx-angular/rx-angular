@@ -1,9 +1,6 @@
 ---
-id: reachability
 title: 'Reachability strategy'
-diataxis_type: reference
 package: rebundle
-legacy_guard: false
 sidebar_label: 'Reachability'
 sidebar_position: 2
 tags: [rebundle, api-reference]

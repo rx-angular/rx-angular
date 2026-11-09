@@ -1,19 +1,16 @@
 ---
-id: invalidate-on-demand
-title: 'Invalidate the cache on demand'
-diataxis_type: how-to
+title: 'How to invalidate the cache on demand'
 package: isr
-legacy_guard: false
 sidebar_label: 'Invalidate on demand'
 sidebar_position: 6
 tags: [isr, guides]
 ---
 
-# Invalidate the cache on demand
+# How to invalidate the cache on demand
 
 On-demand revalidation lets you refresh a cached page the moment its data changes (for example after a CMS update) instead of waiting for the scheduled `revalidate` window to expire.
 
-> **When to reach for it:** best paired with a CMS or backend that updates content on a webhook. See [How ISR works](../../../concepts/E8-how-isr-works.md) for how invalidation regenerates and re-caches a page.
+> **When to reach for it:** best paired with a CMS or backend that updates content on a webhook. See [How ISR works](../../../concepts/how-isr-works.md) for how invalidation regenerates and re-caches a page.
 
 ## Preconditions
 

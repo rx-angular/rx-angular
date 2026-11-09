@@ -1,26 +1,23 @@
 ---
-id: setup-zone-flags
 title: 'How to set up zone flags'
-diataxis_type: how-to
 package: cdk
-legacy_guard: 'still-zoneful'
-sidebar_label: 'Set up zone flags (legacy)'
+sidebar_label: 'Set up zone flags'
+sidebar_position: 5
 tags: [cdk, guides, migration]
-concepts: [E2]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # How to set up zone flags
 
-<LegacyGuard audience="still-zoneful">
+<LegacyGuard audience="apps still running Zone.js">
 
 Since **Angular v21, change detection is zoneless by default** and **Zone.js is
-dropped from the default bundle**, a default v21 app has no Zone.js to
+dropped from the default bundle**, a default app has no Zone.js to
 configure, so there are no zone flags to set up. Follow this recipe only if your
-app still runs Zone.js (Angular &lt;21, or v21 with Zone.js opted back in). For
+app still runs Zone.js. For
 new applications, prefer the native zoneless path; see
-[Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+[Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).
 
 </LegacyGuard>
 
@@ -61,8 +58,8 @@ import 'zone.js';
    (window as any).__Zone_disable_XHR = true;
    ```
 
-2. Import `zone-flags.ts` **before** `zone.js`. In a Zone.js v21 app, Zone.js is
-   opted in as a polyfill in the build target rather than through a
+2. Import `zone-flags.ts` **before** `zone.js`. In an app that opts back into Zone.js, it is
+   added as a polyfill in the build target rather than through a
    `polyfills.ts` file; add both imports to the target's `polyfills` array in
    `angular.json`, keeping `zone-flags` ahead of `zone.js`:
 
@@ -134,4 +131,4 @@ console. You can confirm the active flags with the debug helper (see below).
 
 - Reference: [`zoneConfig`](./zone-configurations.md)
 - How-to: [Debug zone flags](./debug-zone-flags.md)
-- Concept (legacy context): [Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+- Concept (legacy context): [Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)

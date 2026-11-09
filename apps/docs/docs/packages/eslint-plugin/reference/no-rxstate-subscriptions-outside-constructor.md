@@ -1,9 +1,7 @@
 ---
-id: no-rxstate-subscriptions-outside-constructor
 title: 'no-rxstate-subscriptions-outside-constructor'
-diataxis_type: reference
+sidebar_position: 4
 package: eslint-plugin
-legacy_guard: false
 tags: [eslint-plugin, api-reference]
 ---
 
@@ -119,4 +117,4 @@ class OkComponent {
 
 ## Why
 
-The RxState-discipline rationale (set subscriptions up once at initialization) belongs to the [RxState reactive discipline & effects](../../../concepts/E6-rxstate-discipline-and-effects.md) concept.
+The RxState-discipline rationale (set subscriptions up once at initialization) belongs to the [RxState reactive discipline & effects](../../../concepts/rxstate-discipline-and-effects.md) concept.

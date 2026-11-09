@@ -1,26 +1,20 @@
 ---
-id: rx-state-class
 title: 'RxState'
-diataxis_type: reference
 package: state
-legacy_guard: 'class-based RxState / DI-style consumers'
 sidebar_label: 'RxState (class)'
 sidebar_position: 2
 tags: [state, api-reference, migration]
-concepts: [E3]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # `RxState`
 
-`RxState` is a light-weight reactive state management service for managing local state in Angular. This page documents the **class-based** API, the legacy surface. For new code, prefer the functional [`rxState()`](./rx-state-functional.md) creator, which wraps this class and binds its lifecycle to the injection context automatically.
+`RxState` is a light-weight reactive state management service for managing local state in Angular. This page documents the **class-based** API, the legacy surface. For new code, prefer the functional [`rxState()`](./rx-state.md) creator, which wraps this class and binds its lifecycle to the injection context automatically.
 
-Every signature below is source-derived (package `21.1.1`).
+<LegacyGuard audience="code that uses the class-based RxState API" native="The functional rxState() creator wraps this class and manages its lifecycle for you" concept="reactive-state-global-vs-local" conceptLabel="Reactive state: global vs local, RxState + signals">
 
-<LegacyGuard audience="class-based RxState / DI-style consumers" native="the functional rxState() creator wraps this class and manages its lifecycle for you" conceptSlug="E3-reactive-state-global-vs-local" conceptLabel="Reactive state: global vs local, RxState + signals">
-
-The class-based `RxState<T>` (via `extends RxState` or constructor DI + `providers: [RxState]`) is the **legacy** way to use RxState. Class-based `RxState<T>` is not formally deprecated, but the functional [`rxState()`](./rx-state-functional.md) is the modern default. Reach for the class API only if you have existing DI-style consumers. For the mental model of when RxState fits at all, see [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md).
+The class-based `RxState<T>` (via `extends RxState` or constructor DI + `providers: [RxState]`) is the **legacy** way to use RxState. Class-based `RxState<T>` is not formally deprecated, but the functional [`rxState()`](./rx-state.md) is the modern default. Reach for the class API only if you have existing DI-style consumers. For the mental model of when RxState fits at all, see [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md).
 
 </LegacyGuard>
 
@@ -184,7 +178,7 @@ Manage a side-effect. Provide an `Observable` side-effect and an optional `sideE
 state.hold(changes$, (changes) => storeChanges(changes));
 ```
 
-> `hold()` exists only on the class. On the functional [`rxState()`](./rx-state-functional.md) handle, use `rxEffects().register(...)` instead.
+> `hold()` exists only on the class. On the functional [`rxState()`](./rx-state.md) handle, use `rxEffects().register(...)` instead.
 
 ### `setAccumulator`
 
@@ -219,6 +213,6 @@ export class StatefulComponent {
 
 ## See also
 
-- Reference: [`rxState` (functional creator)](./rx-state-functional.md), the modern default.
+- Reference: [`rxState` (functional creator)](./rx-state.md), the modern default.
 - Reference: [`CompareFn`](./compare-fn.md) · [`KeyCompareMap`](./key-compare-map.md).
-- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md).
+- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md).

@@ -1,26 +1,23 @@
 ---
-id: debug-zone-flags
 title: 'How to debug zone flags'
-diataxis_type: how-to
 package: cdk
-legacy_guard: 'still-zoneful'
-sidebar_label: 'Debug zone flags (legacy)'
+sidebar_label: 'Debug zone flags'
+sidebar_position: 6
 tags: [cdk, guides, migration]
-concepts: [E2]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # How to debug zone flags
 
-<LegacyGuard audience="still-zoneful">
+<LegacyGuard audience="apps still running Zone.js">
 
 Since **Angular v21, change detection is zoneless by default** and **Zone.js is
-dropped from the default bundle**, a default v21 app has no Zone.js, so there
+dropped from the default bundle**, a default app has no Zone.js, so there
 are no zone flags to debug. This technique applies only to apps still running
-Zone.js (Angular &lt;21, or v21 with Zone.js opted back in). For new
+Zone.js. For new
 applications, prefer the native zoneless path; see
-[Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+[Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).
 
 </LegacyGuard>
 
@@ -123,4 +120,4 @@ timing lane.
 
 - Reference: [`zoneConfig`](./zone-configurations.md)
 - How-to: [Set up zone flags](./setup-zone-flags.md)
-- Concept (legacy context): [Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+- Concept (legacy context): [Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)

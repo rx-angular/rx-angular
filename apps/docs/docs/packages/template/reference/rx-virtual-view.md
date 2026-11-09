@@ -1,12 +1,9 @@
 ---
-id: rx-virtual-view
 title: 'RxVirtualView'
-diataxis_type: reference
 package: template
-legacy_guard: false
 sidebar_label: 'RxVirtualView'
+sidebar_position: 7
 tags: [template, api-reference]
-concepts: [E5]
 ---
 
 # RxVirtualView
@@ -24,7 +21,7 @@ for a lightweight placeholder while it is out of view. Unlike list virtualizatio
 landing pages where the items are heterogeneous. Content and placeholder rendering
 are scheduled through the concurrent render strategies.
 
-> **Why this matters:** see [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md).
+> **Why this matters:** see [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md).
 
 ## Import
 
@@ -60,8 +57,8 @@ is mandatory and must be an ancestor of `rxVirtualView`.
 | `keepLastKnownSize`        | `boolean`                                                           | config `keepLastKnownSize` (`false`)        | Keep the last known size of the host element by setting `min-height`/`min-width` while the placeholder is shown.                               |
 | `useContentVisibility`     | `boolean`                                                           | config `useContentVisibility` (`false`)     | Add `content-visibility: auto` to the host together with `contain-intrinsic-width`/`contain-intrinsic-height`.                                 |
 | `useContainment`           | `boolean`                                                           | config `useContainment` (`true`)            | Add the `contain` CSS property: `size layout paint` when `useContentVisibility` is `true` and the placeholder is visible; `content` otherwise. |
-| `placeholderStrategy`      | `RxStrategyNames<string>`                                           | config `placeholderStrategy` (`'low'`)      | The render strategy used to render the placeholder. See [render strategies](../../../concepts/E5-concurrent-scheduling.md).                    |
-| `contentStrategy`          | `RxStrategyNames<string>`                                           | config `contentStrategy` (`'normal'`)       | The render strategy used to render the content. See [render strategies](../../../concepts/E5-concurrent-scheduling.md).                        |
+| `placeholderStrategy`      | `RxStrategyNames<string>`                                           | config `placeholderStrategy` (`'low'`)      | The render strategy used to render the placeholder. See [render strategies](../../../concepts/concurrent-scheduling.md).                       |
+| `contentStrategy`          | `RxStrategyNames<string>`                                           | config `contentStrategy` (`'normal'`)       | The render strategy used to render the content. See [render strategies](../../../concepts/concurrent-scheduling.md).                           |
 | `extractSize`              | `(entry: ResizeObserverEntry) => { width: number; height: number }` | border-box size                             | Function extracting width & height from a `ResizeObserverEntry`.                                                                               |
 | `resizeObserverOptions`    | `ResizeObserverOptions`                                             | —                                           | Options passed to the underlying `ResizeObserver`.                                                                                             |
 
@@ -183,4 +180,4 @@ measured dimensions, so the placeholder can match its size and avoid layout shif
 ## See also
 
 - How-to: [Use RxVirtualView with hydration (SSR)](../how-to/virtual-view-with-hydration.md)
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)

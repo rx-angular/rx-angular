@@ -1,12 +1,9 @@
 ---
-id: concurrent-rendering
 title: 'How to render heavy UI work without blocking the frame'
-diataxis_type: how-to
 package: template
-legacy_guard: false
 sidebar_label: 'Concurrent rendering'
+sidebar_position: 1
 tags: [template, cdk, guides]
-concepts: [E5]
 ---
 
 # How to render heavy UI work without blocking the frame
@@ -25,7 +22,7 @@ concurrent strategies earn their place only when the rendering is heavy enough t
 drop frames.
 
 For the mental model behind frame budgets, priorities, and render deadlines, read
-[Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+[Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)
 first. For the exact strategy names, priorities, and deadlines, see the
 [concurrent strategies reference](../../cdk/reference/concurrent-strategies.md).
 
@@ -154,4 +151,4 @@ work completes.
 - Reference: [`RxStrategyProvider`](../../cdk/reference/rx-strategy-provider.md): `schedule()` and `scheduleWith()`.
 - Reference: [concurrent strategies](../../cdk/reference/concurrent-strategies.md): the strategy names, priorities, and render deadlines.
 - Reference: [How to tune rendering with strategies](./tune-rendering-with-strategies.md): the `strategy`/`renderCallback`/`parent`/`patchZone` inputs on `*rxFor`, `*rxIf`, `*rxLet`, `*rxVirtualFor`.
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)

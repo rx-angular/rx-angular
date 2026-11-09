@@ -1,12 +1,9 @@
 ---
-id: notifications
 title: '@rx-angular/cdk/notifications'
-diataxis_type: reference
 package: cdk
-legacy_guard: false
 sidebar_label: 'Notifications'
+sidebar_position: 5
 tags: [cdk, api-reference]
-concepts: [E4]
 ---
 
 # @rx-angular/cdk/notifications
@@ -22,7 +19,7 @@ plus signals can branch on the phases of a source you already hold, but they can
 That materialized stream is what powers RxAngular's reactive-context directives.
 
 For the mental model behind these types, see the concept
-[The reactive context](../../../concepts/E4-reactive-context.md); this page also
+[The reactive context](../../../concepts/reactive-context.md); this page also
 contributes to it.
 
 ## Import
@@ -162,4 +159,4 @@ Builds a `complete`-phase notification.
 
 ## See also
 
-- Concept: [The reactive context](../../../concepts/E4-reactive-context.md)
+- Concept: [The reactive context](../../../concepts/reactive-context.md)

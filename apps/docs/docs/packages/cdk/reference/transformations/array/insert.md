@@ -1,9 +1,7 @@
 ---
-id: insert
 title: insert
-diataxis_type: reference
+sidebar_position: 2
 package: cdk
-legacy_guard: false
 tags: [cdk, api-reference, state]
 ---
 
@@ -12,7 +10,7 @@ tags: [cdk, api-reference, state]
 Inserts one or multiple items into an array `T[]`. Returns a new array `T[]` and
 does not mutate the original one.
 
-Immutability is explained in the [immutability & serializable state](../../../../../concepts/E7-immutability-and-serializable-state.md) concept.
+Immutability is explained in the [immutability & serializable state](../../../../../concepts/immutability-and-serializable-state.md) concept.
 
 _Example — inserting a single value_
 

@@ -5,6 +5,6 @@
     "type": "generated-index",
     "title": "Legacy (Zone.js)",
     "slug": "/packages/template/legacy",
-    "description": "Ring-fenced Zone.js-era APIs. These pages are kept for apps still running Zone.js or targeting older Angular; each carries a legacy guard and links to the zoneless change-detection concept for the modern path."
+    "description": "Pages for apps still running Zone.js. Each page opens with a legacy note and links the zoneless change detection concept for the modern approach."
   }
 }

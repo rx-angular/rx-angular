@@ -1,9 +1,6 @@
 ---
-id: isr-api
 title: '@rx-angular/isr API'
-diataxis_type: reference
 package: isr
-legacy_guard: false
 sidebar_label: 'API'
 sidebar_position: 1
 tags: [isr, api-reference]
@@ -11,7 +8,7 @@ tags: [isr, api-reference]
 
 # `@rx-angular/isr` API
 
-Complete export surface of `@rx-angular/isr`, split by entry point: `@rx-angular/isr/server`, `@rx-angular/isr/browser`, and `@rx-angular/isr/models`. Every signature is source-derived (package `21.0.1`).
+This page lists the complete export surface of `@rx-angular/isr`, split by entry point: `@rx-angular/isr/server`, `@rx-angular/isr/browser`, and `@rx-angular/isr/models`.
 
 > **Config types:** `ISRHandlerConfig` and its sub-config interfaces (`InvalidateConfig`, `RenderConfig`, `ServeFromCacheConfig`, `RouteISRConfig`, `CacheKeyGeneratorFn`, `ModifyHtmlCallbackFn`) are documented on their own page; see [ISR Handler Config](./isr-handler-config.md).
 
@@ -410,4 +407,4 @@ interface IsrServiceInterface {
 ## See also
 
 - Config reference: [ISR Handler Config](./isr-handler-config.md)
-- Render config reference: [RenderConfig](./render-config.md)
+- Render config reference: [`RenderConfig`](./isr-handler-config.md#renderconfig)

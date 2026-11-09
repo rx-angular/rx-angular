@@ -1,9 +1,7 @@
 ---
-id: toggle
 title: toggle
-diataxis_type: reference
+sidebar_position: 6
 package: cdk
-legacy_guard: false
 tags: [cdk, api-reference, state]
 ---
 
@@ -13,7 +11,7 @@ Toggles a boolean property in an object. Accepts an object of type `T` and a key
 whose value is a boolean. Returns a new object with the property flipped, without
 mutating the original one.
 
-Immutability is explained in the [immutability & serializable state](../../../../../concepts/E7-immutability-and-serializable-state.md) concept.
+Immutability is explained in the [immutability & serializable state](../../../../../concepts/immutability-and-serializable-state.md) concept.
 
 _Example_
 

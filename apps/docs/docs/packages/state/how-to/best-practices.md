@@ -1,13 +1,9 @@
 ---
-id: best-practices
 title: 'How to structure a component around RxState'
-diataxis_type: how-to
 package: state
-legacy_guard: false
 sidebar_label: 'Best practices'
 sidebar_position: 6
 tags: [state, guides]
-concepts: [E3]
 ---
 
 import SignalsFirst from '@site/src/components/SignalsFirst';
@@ -18,7 +14,7 @@ import SignalsFirst from '@site/src/components/SignalsFirst';
 
 ## Goal
 
-Apply a consistent architecture when a component's state is complex or async-heavy enough to warrant `rxState()`. Treat these as conventions rather than hard rules. For the _why_ behind local-vs-global state, see the [Reactive state: global vs local](../../../concepts/E3-reactive-state-global-vs-local.md) concept.
+Apply a consistent architecture when a component's state is complex or async-heavy enough to warrant `rxState()`. Treat these as conventions rather than hard rules. For the _why_ behind local-vs-global state, see the [Reactive state: global vs local](../../../concepts/reactive-state-global-vs-local.md) concept.
 
 ## The shell
 
@@ -105,8 +101,8 @@ The component reads as: inputs in, one state handle, a signal view out. Change d
 
 ## See also
 
-- Reference: [`RxState` (functional)](../reference/rx-state-functional.md)
+- Reference: [`RxState` (functional)](../reference/rx-state.md)
 - How-to: [Derive a view model](./derive-a-view-model.md)
-- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/E3-reactive-state-global-vs-local.md)
+- Concept: [Reactive state: global vs local, RxState + signals](../../../concepts/reactive-state-global-vs-local.md)
 
-> The "reactive discipline" rationale (why interactions become `Subject`s/actions and side effects go through `rxEffects` rather than ad-hoc subscriptions) is covered in the [RxState reactive discipline & effects](../../../concepts/E6-rxstate-discipline-and-effects.md) concept.
+> The "reactive discipline" rationale (why interactions become `Subject`s/actions and side effects go through `rxEffects` rather than ad-hoc subscriptions) is covered in the [RxState reactive discipline & effects](../../../concepts/rxstate-discipline-and-effects.md) concept.

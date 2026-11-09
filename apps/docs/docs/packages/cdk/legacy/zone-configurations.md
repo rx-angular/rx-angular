@@ -1,27 +1,23 @@
 ---
-id: zone-configurations
 title: 'zoneConfig'
-diataxis_type: reference
 package: cdk
-legacy_guard: 'Angular <21 / still running Zone.js'
-sidebar_label: 'zoneConfig (legacy)'
+sidebar_label: 'zoneConfig'
+sidebar_position: 4
 tags: [cdk, api-reference, migration]
-concepts: [E2]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # `zoneConfig`
 
-<LegacyGuard audience="Angular <21 / still running Zone.js">
+<LegacyGuard audience="apps still running Zone.js">
 
 Since **Angular v21, change detection is zoneless by default** and **Zone.js is
-dropped from the default bundle**, a default v21 app ships no Zone.js, so there
+dropped from the default bundle**, a default app ships no Zone.js, so there
 are no zone flags to tune. `zoneConfig` only does anything when Zone.js is
-present. Use this reference only if you are on Angular &lt;21, or on v21
-with Zone.js opted back in, or migrating a brownfield app that still runs
-Zone.js. For new applications, prefer the native zoneless path; see
-[Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+present. Use this reference only if your app still runs Zone.js, including a brownfield
+app in the middle of migrating. For new applications, prefer the native zoneless path; see
+[Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).
 
 </LegacyGuard>
 
@@ -131,6 +127,6 @@ zoneConfig.unpatchXHR();
 
 ## See also
 
-- Concept (legacy context): [Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+- Concept (legacy context): [Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)
 - How-to: [Set up zone flags](./setup-zone-flags.md)
 - How-to: [Debug zone flags](./debug-zone-flags.md)

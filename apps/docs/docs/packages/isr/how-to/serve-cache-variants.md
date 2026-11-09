@@ -1,19 +1,16 @@
 ---
-id: serve-cache-variants
-title: 'Serve cache variants'
-diataxis_type: how-to
+title: 'How to serve cache variants'
 package: isr
-legacy_guard: false
 sidebar_label: 'Serve cache variants'
 sidebar_position: 3
 tags: [isr, guides]
 ---
 
-# Serve cache variants
+# How to serve cache variants
 
 When a page renders differently depending on request state (for example logged-in vs. anonymous users), a single cached copy would be served to everyone, causing a content shift after hydration. Cache variants let ISR store and serve a distinct cached copy per request state.
 
-> **When to use this:** any time the rendered HTML depends on a request signal (cookie, header) rather than the URL alone. See [How ISR works](../../../concepts/E8-how-isr-works.md) for how variants extend the cache key.
+> **When to use this:** any time the rendered HTML depends on a request signal (cookie, header) rather than the URL alone. See [How ISR works](../../../concepts/how-isr-works.md) for how variants extend the cache key.
 
 ## Preconditions
 

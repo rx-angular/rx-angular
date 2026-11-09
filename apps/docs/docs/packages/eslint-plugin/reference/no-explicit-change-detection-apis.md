@@ -1,9 +1,7 @@
 ---
-id: no-explicit-change-detection-apis
 title: 'no-explicit-change-detection-apis'
-diataxis_type: reference
+sidebar_position: 2
 package: eslint-plugin
-legacy_guard: false
 tags: [eslint-plugin, api-reference]
 ---
 
@@ -119,4 +117,4 @@ The rule still applies under zoneless change detection (default since Angular v2
 
 ## Why
 
-See [Understanding change detection in Angular](../../../concepts/E1-change-detection.md).
+See [Understanding change detection in Angular](../../../concepts/change-detection.md).

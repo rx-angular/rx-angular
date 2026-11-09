@@ -1,9 +1,6 @@
 ---
-id: set-up-rebundle
 title: 'How to set up rebundle'
-diataxis_type: how-to
 package: rebundle
-legacy_guard: false
 sidebar_label: 'Set up rebundle'
 sidebar_position: 1
 tags: [rebundle, guides]

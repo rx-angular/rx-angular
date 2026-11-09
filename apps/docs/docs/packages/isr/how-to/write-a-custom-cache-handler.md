@@ -1,19 +1,16 @@
 ---
-id: write-a-custom-cache-handler
-title: 'Write a custom cache handler'
-diataxis_type: how-to
+title: 'How to write a custom cache handler'
 package: isr
-legacy_guard: false
 sidebar_label: 'Write a custom cache handler'
 sidebar_position: 2
 tags: [isr, guides]
 ---
 
-# Write a custom cache handler
+# How to write a custom cache handler
 
 Cache handling in ISR is pluggable: the default [`InMemoryCacheHandler`](../reference/api.md#inmemorycachehandler) keeps rendered pages in RAM, and the built-in [`FileSystemCacheHandler`](../reference/api.md#filesystemcachehandler) persists them to disk. When you need a different backing store (Redis, a database, an object store), you supply your own handler by extending the [`CacheHandler`](../reference/api.md#cachehandler) abstract class.
 
-> **Why swap the handler?** The in-memory cache is lost on restart and is not shared across serverless instances. See [How ISR works](../../../concepts/E8-how-isr-works.md) for how the cache decision fits into the render pipeline.
+> **Why swap the handler?** The in-memory cache is lost on restart and is not shared across serverless instances. See [How ISR works](../../../concepts/how-isr-works.md) for how the cache decision fits into the render pipeline.
 
 ## Preconditions
 

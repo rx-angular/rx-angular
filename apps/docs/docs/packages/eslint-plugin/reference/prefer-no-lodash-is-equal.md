@@ -1,9 +1,7 @@
 ---
-id: prefer-no-lodash-is-equal
 title: 'prefer-no-lodash-is-equal'
-diataxis_type: reference
+sidebar_position: 13
 package: eslint-plugin
-legacy_guard: false
 tags: [eslint-plugin, api-reference]
 ---
 
@@ -68,4 +66,4 @@ function isEqual<T>(a: T, b: T): boolean {
 
 ## Why
 
-The immutability rationale (comparing serializable state cheaply instead of deep-equality on arbitrary objects) belongs to the [immutability & serializable state](../../../concepts/E7-immutability-and-serializable-state.md) concept.
+The immutability rationale (comparing serializable state cheaply instead of deep-equality on arbitrary objects) belongs to the [immutability & serializable state](../../../concepts/immutability-and-serializable-state.md) concept.

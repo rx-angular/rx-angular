@@ -1,10 +1,8 @@
 ---
-id: track-app-hydration
 title: 'How to run work once the app is fully hydrated'
-diataxis_type: how-to
 package: cdk
-legacy_guard: false
 sidebar_label: 'Track app hydration'
+sidebar_position: 2
 tags: [cdk, guides]
 ---
 

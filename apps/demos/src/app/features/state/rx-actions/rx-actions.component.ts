@@ -65,7 +65,7 @@ interface CounterActions {
   imports: [DocsLinkComponent, CodeHighlightComponent],
   template: `
     <rxa-docs-link
-      docs="packages/state/reference/rx-actions-api"
+      docs="packages/state/reference/rx-actions"
       source="apps/demos/src/app/features/state/rx-actions"
     />
 

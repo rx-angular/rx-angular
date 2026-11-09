@@ -1,12 +1,9 @@
 ---
-id: virtual-view-with-hydration
 title: 'How to use RxVirtualView with hydration (SSR)'
-diataxis_type: how-to
 package: template
-legacy_guard: false
 sidebar_label: 'RxVirtualView with hydration'
+sidebar_position: 4
 tags: [template, guides]
-concepts: [E5]
 ---
 
 # How to use RxVirtualView with hydration (SSR)
@@ -118,4 +115,4 @@ behaves according to `enableAfterHydration`.
 ## See also
 
 - Reference: [`RxVirtualView`](../reference/rx-virtual-view.md)
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)

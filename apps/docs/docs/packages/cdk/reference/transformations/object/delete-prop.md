@@ -1,9 +1,7 @@
 ---
-id: delete-prop
 title: deleteProp
-diataxis_type: reference
+sidebar_position: 1
 package: cdk
-legacy_guard: false
 tags: [cdk, api-reference, state]
 ---
 
@@ -14,7 +12,7 @@ property and returns a new object without the specified property. If the propert
 is not found, returns a copy of the original object. Does not mutate the original
 object.
 
-Immutability is explained in the [immutability & serializable state](../../../../../concepts/E7-immutability-and-serializable-state.md) concept.
+Immutability is explained in the [immutability & serializable state](../../../../../concepts/immutability-and-serializable-state.md) concept.
 
 _Example_
 

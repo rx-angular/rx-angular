@@ -1,24 +1,21 @@
 ---
-id: no-zone-critical-lodash-apis
 title: 'no-zone-critical-lodash-apis'
-diataxis_type: reference
 package: eslint-plugin
-legacy_guard: 'Zone.js only'
 sidebar_label: 'no-zone-critical-lodash-apis'
+sidebar_position: 6
 tags: [eslint-plugin, api-reference, migration]
-concepts: [E2]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
 # no-zone-critical-lodash-apis
 
-<LegacyGuard audience="Zone.js only">
+<LegacyGuard audience="apps still running Zone.js">
 
 This rule only does anything when **Zone.js is present**. Since Angular v21, change
 detection is zoneless by default and Zone.js is dropped from the default bundle, so
 there is nothing to patch and this rule is a no-op. See
-[Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+[Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).
 
 </LegacyGuard>
 
@@ -92,4 +89,4 @@ wrapper.
 
 Lodash helpers that build on Zone-patched schedulers can trigger unnecessary
 change-detection runs.
-Why &rarr; [Zoneless &amp; how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md).
+Why &rarr; [Zoneless &amp; how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md).

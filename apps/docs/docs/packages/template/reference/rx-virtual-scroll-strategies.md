@@ -1,12 +1,9 @@
 ---
-id: rx-virtual-scroll-strategies
 title: 'Virtual scroll strategies'
-diataxis_type: reference
 package: template
-legacy_guard: false
 sidebar_label: 'Scroll strategies'
+sidebar_position: 6
 tags: [template, api-reference]
-concepts: [E5]
 ---
 
 # Virtual scroll strategies
@@ -17,8 +14,8 @@ views absolutely and move them with CSS `transform`s, and share a common set of 
 Exactly one strategy must be applied, via its attribute selector, to the
 `<rx-virtual-scroll-viewport>` element.
 
-> **Why this matters:** see [How RxAngular virtual scrolling works](../../../concepts/E10-how-virtual-scrolling-works.md)
-> and [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md).
+> **Why this matters:** see [How RxAngular virtual scrolling works](../../../concepts/how-virtual-scrolling-works.md)
+> and [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md).
 
 ## Import
 
@@ -267,5 +264,5 @@ complete, production-ready reference, read the source of the simplest shipped st
 - Reference: [`RxVirtualFor`](./rx-virtual-for.md)
 - Reference: [`RxVirtualScrollViewport`](./rx-virtual-scroll-viewport.md)
 - How-to: [Virtual scroll recipes](../how-to/virtual-scroll-recipes.md)
-- Explanation: [How RxAngular virtual scrolling works](../../../concepts/E10-how-virtual-scrolling-works.md)
-- Concept: [Concurrent scheduling & the frame budget](../../../concepts/E5-concurrent-scheduling.md)
+- Explanation: [How RxAngular virtual scrolling works](../../../concepts/how-virtual-scrolling-works.md)
+- Concept: [Concurrent scheduling & the frame budget](../../../concepts/concurrent-scheduling.md)

@@ -1,18 +1,16 @@
 ---
-id: view-and-content-queries
-title: 'Handling view and content queries (parent)'
-diataxis_type: how-to
+title: 'How to handle view and content queries (parent)'
 package: template
-legacy_guard: 'Zone.js / apps still using the deprecated parent flag'
-sidebar_label: 'View & content queries (legacy)'
+sidebar_label: 'View & content queries'
+sidebar_position: 4
 tags: [template, guides, migration]
 ---
 
 import LegacyGuard from '@site/src/components/LegacyGuard';
 
-# Handling view and content queries (`parent`)
+# How to handle view and content queries (`parent`)
 
-<LegacyGuard audience="Zone.js / apps still using the deprecated parent flag" native="since Angular v19, signal-based viewChild()/contentChild() queries update automatically without the parent flag">
+<LegacyGuard audience="apps that still use the deprecated parent flag" native="Signal-based viewChild() and contentChild() queries update automatically without the parent flag">
 
 The `parent` flag existed so that a structural directive could re-run its host
 component's change detection and keep decorator-based `@ViewChild`/`@ContentChild`
@@ -104,7 +102,7 @@ controls, see
 
 ## See also
 
-- Concept (legacy context): [Zoneless & how Zone.js affected change detection](../../../concepts/E2-zoneless-and-zonejs-change-detection.md)
+- Concept (legacy context): [Zoneless & how Zone.js affected change detection](../../../concepts/zoneless-and-zonejs-change-detection.md)
 - Reference: [`RxLet`](../reference/rx-let.md)
 - Reference: [`RxFor`](../reference/rx-for.md)
 - How-to: [Tune rendering with strategies](../how-to/tune-rendering-with-strategies.md)
