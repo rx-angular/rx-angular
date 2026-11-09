@@ -1,4 +1,5 @@
 import {
+  CacheData,
   CacheHandler,
   InvalidateConfig,
   ISRHandlerConfig,
@@ -8,7 +9,7 @@ import {
   VariantRebuildItem,
 } from '@rx-angular/isr/models';
 import { NextFunction, Request, Response } from 'express';
-import { CacheGeneration } from './cache-generation';
+import { CacheGeneration, IGeneratedResult } from './cache-generation';
 import { InMemoryCacheHandler } from './cache-handlers/in-memory-cache-handler';
 import { ISRLogger } from './isr-logger';
 import { getVariant } from './utils/cache-utils';
@@ -176,7 +177,16 @@ export class ISRHandler {
         this.isrConfig.allowedQueryParams,
         variant,
       );
-      const cacheData = await this.cache.get(cacheKey);
+
+      let cacheData: CacheData;
+      try {
+        cacheData = await this.cache.get(cacheKey);
+      } catch {
+        // Cache does not exist. Serve user using SSR
+        next();
+        return;
+      }
+
       const { html, options: cacheConfig, createdAt } = cacheData;
 
       const cacheHasBuildId =
@@ -210,7 +220,14 @@ export class ISRHandler {
           try {
             // regenerate the page without awaiting, so the user gets the cached page immediately
             if (this.isrConfig.backgroundRevalidation) {
-              generate();
+              // the promise is not awaited, so it needs its own error handler,
+              // otherwise a failing render would end up as an unhandled rejection
+              generate().catch((error) => {
+                this.logger.log(
+                  `Error regenerating url in the background: ${cacheKey}`,
+                  error,
+                );
+              });
             } else {
               const result = await generate();
               if (result?.html) {
@@ -218,16 +235,24 @@ export class ISRHandler {
               }
             }
           } catch (error) {
-            console.error('Error generating html', error);
-            next();
+            // the regeneration failed, but we still have a valid (stale) cache entry
+            // in hand, so serve that instead of failing the request
+            this.logger.log(
+              `Error regenerating url: ${cacheKey}, serving stale cache`,
+              error,
+            );
+            return res.send(finalHtml);
           }
         }
       }
 
       return res.send(finalHtml);
     } catch (error) {
-      // Cache does not exist. Serve user using SSR
-      next();
+      if (res.headersSent) {
+        // the response was already sent, there is nothing left to do
+        return;
+      }
+      next(error);
     }
   }
 
@@ -253,21 +278,34 @@ export class ISRHandler {
       this.isrConfig['modifyGeneratedHtml'] = patchedModifyFn;
     }
 
+    let result: IGeneratedResult | void;
+
     try {
-      const result = await this.cacheGeneration.generate(
+      result = await this.cacheGeneration.generate(
         req,
         res,
         config?.providers,
         'generate',
       );
-      if (!result) {
-        throw new Error('Error while generating the page!');
-      } else {
-        return res.send(result.html);
-      }
     } catch (error) {
-      next();
+      // hand the error over to the express error handling middleware instead of
+      // calling `next()`, which would run the very same render again downstream
+      return next(error);
     }
+
+    if (res.headersSent) {
+      // the app answered the request on its own while rendering
+      // (e.g. a component issued a redirect), so there is nothing left to send
+      return;
+    }
+
+    if (!result?.html) {
+      return next(
+        new Error(`Error while generating the page for url: ${req.url}`),
+      );
+    }
+
+    return res.send(result.html);
   }
 }
 
