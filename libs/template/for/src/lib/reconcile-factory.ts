@@ -30,6 +30,8 @@ export type ReconcileFactoryOptions<
   errorHandler: ErrorHandler;
   cdRef: ChangeDetectorRef;
   trackBy: TrackByFunction<T>;
+  /** `trackBy` doesn't depend on the index argument */
+  trackByIsIndexIndependent?: boolean;
   createViewContext: (
     item: T,
     context: RxListViewComputedContext,

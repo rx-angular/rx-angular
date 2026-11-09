@@ -93,6 +93,60 @@ describe('rxFor', () => {
       detectChangesAndExpectText('6;2;7;0;4;8;');
     }));
 
+    it('should reflect changes of duplicated primitives', waitForAsync(() => {
+      fixture = createTestComponent();
+      getComponent().items = [3, 2, 2];
+      detectChangesAndExpectText('3;2;2;');
+      getComponent().items = [3, 3, 1, 1];
+      detectChangesAndExpectText('3;3;1;1;');
+      getComponent().items = [1, 2, 1, 3, 3];
+      detectChangesAndExpectText('1;2;1;3;3;');
+    }));
+
+    it('should reflect removing every other element', waitForAsync(() => {
+      fixture = createTestComponent();
+      getComponent().items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+      detectChangesAndExpectText('0;1;2;3;4;5;6;7;8;9;');
+      getComponent().items = [0, 2, 4, 6, 8];
+      detectChangesAndExpectText('0;2;4;6;8;');
+    }));
+
+    it('should reflect index changes', waitForAsync(() => {
+      fixture = createTestComponent(
+        '<div><span *rxFor="let item of items; let i = index">{{i}}:{{item}};</span></div>',
+      );
+      getComponent().items = [1, 2];
+      detectChangesAndExpectText('0:1;1:2;');
+      getComponent().items = [0, 1, 2];
+      detectChangesAndExpectText('0:0;1:1;2:2;');
+      getComponent().items = [2, 0];
+      detectChangesAndExpectText('0:2;1:0;');
+    }));
+
+    it('should reflect index changes when the index is read later', waitForAsync(() => {
+      fixture = createTestComponent(
+        '<div><span *rxFor="let item of items; let i = index">{{item}}<b *ngIf="value">@{{i}}</b>;</span></div>',
+      );
+      getComponent().items = [1, 2];
+      detectChangesAndExpectText('1;2;');
+      getComponent().items = [0, 1, 2];
+      detectChangesAndExpectText('0;1;2;');
+      getComponent().value = true;
+      detectChangesAndExpectText('0@0;1@1;2@2;');
+    }));
+
+    it('should reflect last and count changes', waitForAsync(() => {
+      fixture = createTestComponent(
+        '<div><span *rxFor="let item of items; let last = last; let c = count">{{item}}/{{c}}{{last ? "!" : ""}};</span></div>',
+      );
+      getComponent().items = [1, 2];
+      detectChangesAndExpectText('1/2;2/2!;');
+      getComponent().items = [1, 2, 3];
+      detectChangesAndExpectText('1/3;2/3;3/3!;');
+      getComponent().items = [1];
+      detectChangesAndExpectText('1/1!;');
+    }));
+
     it('should iterate over an array of objects', waitForAsync(() => {
       const template =
         '<ul><li *rxFor="let item of items">{{item["name"]}};</li></ul>';
@@ -360,7 +414,10 @@ describe('rxFor', () => {
         const template = `<p *rxFor="let item of items; trackBy: trackByContext.bind(this)"></p>`;
         fixture = createTestComponent(template);
 
+        fixture.detectChanges();
         setThis(null);
+        // the initial render creates all views without tracking
+        getComponent().items = [2, 1];
         fixture.detectChanges();
         expect(thisArg).toBe(getComponent());
       }));
