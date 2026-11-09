@@ -7,7 +7,7 @@ tags: [REPLACE, examples]
 ---
 
 <!--
-Tutorial template. Copy it to docs/tutorials/<what-the-reader-builds>.md and
+Tutorial template. Copy it to general/tutorials/<what-the-reader-builds>.md and
 fill it in. See apps/docs/CONTRIBUTING.md for naming, front matter and links.
 
 The reader is a beginner. The lesson takes one path that can't fail, and every
@@ -58,5 +58,5 @@ REPLACE with a short recap.
 
 ## Next steps
 
-- Go deeper: [REPLACE concept title](../concepts/REPLACE.md)
-- Do it for real: [REPLACE how-to](../packages/REPLACE/how-to/REPLACE.md)
+- Go deeper: [REPLACE concept title](/docs/concepts/REPLACE)
+- Do it for real: [REPLACE how-to](/docs/packages/REPLACE/how-to/REPLACE)

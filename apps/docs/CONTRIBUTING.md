@@ -19,29 +19,29 @@ Stop the dev server before you build. Both write to `apps/docs/.docusaurus`.
 The docs follow [Diátaxis](https://diataxis.fr). Every page is exactly one type. That's a tutorial, a how-to guide, reference or explanation.
 
 ```text
-docs/
+general/             Pages for the whole library, not versioned
   index.md           Start here, served at /docs
   tutorials/         Lessons, for every package
   concepts/          Explanation, for every package
-  packages/
-    <package>/
-      index.md       Landing page
-      how-to/        Task guides
-      reference/     API reference
-      legacy/        Zone.js-era pages, only where needed
+packages/            One docs set per package, each with its own versions
+  <package>/
+    index.md         Landing page
+    how-to/          Task guides
+    reference/       API reference
+    legacy/          Zone.js-era pages, only where needed
 ```
 
 - Every package has a landing page, `how-to/` and `reference/`. Add `legacy/` only when the package has Zone.js-era pages.
 - Explanation lives only in `concepts/`. A package has no explanation section of its own. Its landing page links to the concepts it relies on.
 - Tutorials live only in `tutorials/`, even when they teach a single package.
 - `legacy/` is a shelf, not a page type. It holds how-to and reference pages for apps still running Zone.js.
-- Keep only published pages and `_category_.json` files in `docs/`. Everything in it gets published. Start a new page from the matching template in `templates/`.
+- Keep only published pages and `_category_.json` files in `general/` and `packages/`. Freezing a version copies the whole package folder. Start a new page from the matching template in `templates/`.
 
-The packages are `state`, `template`, `cdk`, `isr`, `eslint-plugin` and `rebundle`. Each one appears in the `package` field below, Start here, the navbar Docs menu and the footer.
+The packages are `state`, `template`, `cdk`, `isr`, `eslint-plugin` and `rebundle`. Each one appears in `docs-versions.js`, the `package` field below, Start here, the navbar Docs menu and the footer.
 
 ## Naming and addresses
 
-A page's address is its folder plus its file name. `packages/isr/how-to/set-up-isr.md` is served at `/docs/packages/isr/how-to/set-up-isr`.
+A page's address is its folder plus its file name, under `/docs`. `packages/isr/how-to/set-up-isr.md` is served at `/docs/packages/isr/how-to/set-up-isr`, and `general/concepts/change-detection.md` at `/docs/concepts/change-detection`.
 
 - Leave out `id` and `slug`. The file name decides the address.
 - A folder's `index.md` is the exception. It's served at the folder address and sets `id: overview`. Every package landing page is one.
@@ -128,7 +128,9 @@ ESLint rules stay in `reference/` even when they target Zone.js. The plugin link
 
 ## Links
 
-- Link other pages with relative file links, like `[change detection](../../concepts/change-detection.md)`, not absolute `rx-angular.io` addresses. The build checks relative links and fails on a broken one.
+- Within one package, or within `general/`, link with relative file links, like `[rxState](../reference/rx-state.md)`.
+- Between them, link with the page's address, like `[change detection](/docs/concepts/change-detection)`. Docusaurus resolves file links only inside one docs set.
+- Leave out absolute `rx-angular.io` addresses. The build checks both kinds of links and fails on a broken one.
 - Link a heading by its generated ID, like `#where-to-go-next`. The build fails on a broken heading link too.
 
 ## Changing an address
@@ -141,5 +143,41 @@ A renamed, moved or removed page keeps its old address working.
 
 ## Versions
 
-- Keep package versions and dates out of page text, because a hard-coded number goes stale with the next release.
-- Compatibility info is the exception. Angular and peer ranges, like `@angular/core >=22.0.0`, stay correct because every docs version keeps its own copy of the pages. Update them when a package starts a new release line.
+The docs of each package are versioned by major version, like `N.x`. Readers switch versions in the menu at the right of the navbar. Pages in `general/` aren't versioned and always describe the current packages.
+
+### Version numbers in page text
+
+Keep version numbers and dates out of page text, because they go stale with the next release. Two kinds of numbers are the exception.
+
+- **Compatibility ranges.** Angular and peer ranges, like `@angular/core >=N.0.0`, stay in the text. Every old version keeps its own copy of the pages, so its ranges stay correct.
+- **What a minor release added.** Mark a new export, option or behavior with the `<Since>` marker. Readers on an older minor version then know they need to upgrade.
+
+```md
+## `exampleExport`
+
+<Since version="X.Y" />
+
+- `exampleOption` <Since version="X.Y" /> turns on the new behavior.
+```
+
+- For a section, put the marker on its own line under the heading. Inside the heading it would change the heading's link.
+- For an option or a list item, put it right after the name.
+- Use the version of the page's own package, not the Angular version.
+- Mark only additions. A changed default or a deprecation gets a sentence in the page text.
+- Pages use the marker without an import.
+
+### Start a new major version
+
+Follow these steps when a package starts a new major version, before you change its pages for that version. Below, `<package>` is the package, `N.x` the version it leaves and `M.x` the new one.
+
+1. Freeze the current pages with `yarn workspace docs docusaurus docs:version:<package> N.x`. It copies `packages/<package>/` to `<package>_versioned_docs/version-N.x/` and records the version in `<package>_versioned_sidebars/` and `<package>_versions.json`.
+2. In `docs-versions.js`, set `<package>` to `M.x`.
+3. Update the pages in `packages/<package>/` for `M.x`.
+   - Update the Angular and peer ranges, and the Peers column on Start here in `general/index.md`.
+   - Remove the `<Since>` markers. Every feature is now in the first release, and the frozen copy keeps them.
+   - When a page goes away, redirect its address to the frozen copy in `redirects.js`, like `/docs/packages/<package>/N/how-to/<page>`.
+4. Commit the new `<package>_versioned_*` files and `<package>_versions.json` with the rest of the change.
+
+Once the change is deployed, the old version is served at `/docs/packages/<package>/N/...`. The address leaves out the `.x`, which some static hosts read as a file extension. Its pages show a banner that links to the current version. Search engines skip them, and site search still covers them.
+
+To fix a page in an old version, edit its copy in `<package>_versioned_docs/version-N.x/`.
