@@ -471,6 +471,25 @@ function expectStackedPositions(sizeOf: (index: number) => number) {
   });
 }
 
+/**
+ * expects the rendered items to be stacked after a scroll: the range moved
+ * away from the top and the items follow each other. Retries until the scroll
+ * is rendered and the measured sizes are applied
+ */
+function expectStackedAfterScroll(sizeOf: (id: number) => number) {
+  return cy.get('[data-cy=item]').should((elements) => {
+    const ids = elements.toArray().map((e) => parseInt(e.textContent!.trim()));
+    expect(ids[0], 'first rendered item').to.be.greaterThan(0);
+    let position = extractTranslateYValue(elements[0].getAttribute('style'));
+    elements.each((i, element) => {
+      expect(element.getAttribute('style')).to.contain(
+        `translateY(${position}px)`,
+      );
+      position += sizeOf(ids[i]);
+    });
+  });
+}
+
 describe('rendering, scrolling & positioning', () => {
   it('displays nothing', () => {
     mountAutoSize().then(({ fixture }) => {
@@ -638,23 +657,9 @@ describe('rendering, scrolling & positioning', () => {
             const scrollToSomeWhere =
               (items.length / 2) * component.tombstoneSize();
             viewportComponent.scrollTo(scrollToSomeWhere);
-            cy.wait(200);
-            cy.get('@renderCallback')
-              .should('have.been.called')
-              .then(() => {
-                let position = 0;
-                cy.get('[data-cy=item]').each((element) => {
-                  const id = parseInt(element.text().trim());
-                  if (!position) {
-                    position = extractTranslateYValue(element.attr('style'));
-                  }
-                  const item = items[id];
-                  expect(element.attr('style')).contains(
-                    `translateY(${position}px)`,
-                  );
-                  position += component.dynamicSize()(item);
-                });
-              });
+            expectStackedAfterScroll((id) =>
+              component.dynamicSize()(items[id]),
+            );
           });
       },
     );
@@ -973,12 +978,7 @@ describe('custom scrollable', () => {
         };
         const range = expectedRange(rangeConfig, items, 0);
         cy.get('[data-cy=item]').should('have.length', range.end - range.start);
-        let position = 0;
-        cy.get('[data-cy=item]').each((element, i) => {
-          expect(element.css('position')).to.be.eq('absolute');
-          expect(element.attr('style')).to.contain(`translateY(${position}px)`);
-          position += defaultDynamicSize(items[i]);
-        });
+        expectStackedPositions((i) => defaultDynamicSize(items[i]));
         cy.get('@scrolledIndex').should('have.been.calledWith', 0);
         cy.get('@viewRange').should('have.been.calledWith', range);
         cy.get('@renderCallback').should(
@@ -1010,23 +1010,7 @@ describe('custom scrollable', () => {
           const scrollToSomeWhere =
             (items.length / 2) * component.tombstoneSize();
           viewportComponent.scrollTo(scrollToSomeWhere);
-          cy.wait(200);
-          cy.get('@renderCallback')
-            .should('have.been.called')
-            .then(() => {
-              let position = 0;
-              cy.get('[data-cy=item]').each((element) => {
-                const id = parseInt(element.text().trim());
-                if (!position) {
-                  position = extractTranslateYValue(element.attr('style'));
-                }
-                const item = items[id];
-                expect(element.attr('style')).contains(
-                  `translateY(${position}px)`,
-                );
-                position += component.dynamicSize()(item);
-              });
-            });
+          expectStackedAfterScroll((id) => component.dynamicSize()(items[id]));
         });
     });
   });
@@ -1066,12 +1050,7 @@ describe('window scrolling', () => {
         };
         const range = expectedRange(rangeConfig, items, 0);
         cy.get('[data-cy=item]').should('have.length', range.end - range.start);
-        let position = 0;
-        cy.get('[data-cy=item]').each((element, i) => {
-          expect(element.css('position')).to.be.eq('absolute');
-          expect(element.attr('style')).to.contain(`translateY(${position}px)`);
-          position += defaultDynamicSize(items[i]);
-        });
+        expectStackedPositions((i) => defaultDynamicSize(items[i]));
         cy.get('@scrolledIndex').should('have.been.calledWith', 0);
         cy.get('@viewRange').should('have.been.calledWith', range);
         cy.get('@renderCallback').should(
@@ -1108,23 +1087,7 @@ describe('window scrolling', () => {
           const scrollToSomeWhere =
             (items.length * component.tombstoneSize()) / 2;
           cy.scrollTo(0, scrollToSomeWhere);
-          cy.wait(200);
-          cy.get('@renderCallback')
-            .should('have.been.called')
-            .then(() => {
-              let position = 0;
-              cy.get('[data-cy=item]').each((element) => {
-                const id = parseInt(element.text().trim());
-                if (!position) {
-                  position = extractTranslateYValue(element.attr('style'));
-                }
-                const item = items[id];
-                expect(element.attr('style')).contains(
-                  `translateY(${position}px)`,
-                );
-                position += component.dynamicSize()(item);
-              });
-            });
+          expectStackedAfterScroll((id) => component.dynamicSize()(items[id]));
         });
     });
   });
