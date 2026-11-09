@@ -28,6 +28,13 @@ export const RX_FOR_ROUTES: Routes = [
       ),
   },
   {
+    path: 'benchmark',
+    loadComponent: () =>
+      import('./benchmark/rx-for-benchmark.component').then(
+        (m) => m.RxForBenchmarkComponent,
+      ),
+  },
+  {
     path: 'route-change',
     loadComponent: () =>
       import('./route-change/route-change.component').then(

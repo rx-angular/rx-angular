@@ -15,4 +15,8 @@ export const MENU_ITEMS = [
     label: 'Route Change',
     link: 'route-change',
   },
+  {
+    label: 'Benchmark',
+    link: 'benchmark',
+  },
 ];
