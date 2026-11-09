@@ -27,4 +27,8 @@ export const RX_VIRTUAL_FOR_MENU_ITEMS = [
     label: 'Scroll To',
     link: 'scroll-to',
   },
+  {
+    label: 'Benchmark',
+    link: 'benchmark',
+  },
 ];
