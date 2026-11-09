@@ -213,6 +213,12 @@ export class ISRHandler {
               generate();
             } else {
               const result = await generate();
+              if (result?.redirect) {
+                return res.redirect(
+                  result.redirect.status,
+                  result.redirect.location,
+                );
+              }
               if (result?.html) {
                 finalHtml = result.html;
               }
@@ -262,6 +268,8 @@ export class ISRHandler {
       );
       if (!result) {
         throw new Error('Error while generating the page!');
+      } else if (result.redirect) {
+        return res.redirect(result.redirect.status, result.redirect.location);
       } else {
         return res.send(result.html);
       }
