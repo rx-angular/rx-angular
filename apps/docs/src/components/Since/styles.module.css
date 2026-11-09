@@ -1,0 +1,17 @@
+.since {
+  display: inline-block;
+  padding: 0 0.45em;
+  border-radius: var(--ifm-badge-border-radius);
+  background: var(--ifm-color-primary-contrast-background);
+  color: var(--ifm-color-primary-contrast-foreground);
+  font-size: 0.7rem;
+  font-weight: var(--ifm-font-weight-semibold);
+  line-height: 1.6;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* On its own line under a heading, it spaces like a paragraph. */
+:global(.markdown) > .since {
+  margin-bottom: var(--ifm-paragraph-margin-bottom);
+}
