@@ -498,7 +498,10 @@ describe('rxFor with observables', () => {
         const template = `<p *rxFor="let item of itemsHot$; trackBy: trackByContext.bind(this)"></p>`;
         fixture = createTestComponent(template);
 
+        fixture.detectChanges();
         setThis(null);
+        // the initial render creates all views without tracking
+        getComponent().itemsHot$.next([2, 1]);
         fixture.detectChanges();
         expect(thisArg).toBe(getComponent());
       }));

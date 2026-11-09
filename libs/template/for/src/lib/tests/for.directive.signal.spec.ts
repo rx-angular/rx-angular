@@ -534,7 +534,10 @@ describe('rxFor with signals', () => {
         const template = `<p *rxFor="let item of itemsHotSignal; trackBy: trackByContext.bind(this)"></p>`;
         fixture = createTestComponent(template);
 
+        fixture.detectChanges();
         setThis(null);
+        // the initial render creates all views without tracking
+        getComponent().itemsHotSignal.set([2, 1]);
         fixture.detectChanges();
         expect(thisArg).toBe(getComponent());
       }));

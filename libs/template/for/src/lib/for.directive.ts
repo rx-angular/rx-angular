@@ -364,6 +364,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
           ? (i, a) => a[trackByFnOrKey]
           : trackByFnOrKey;
     }
+    // only a user provided function may depend on the index
+    this._trackByIsIndexIndependent = typeof trackByFnOrKey !== 'function';
   }
 
   /**
@@ -446,6 +448,8 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
 
   /** @internal */
   _trackBy: TrackByFunction<T> = this.defaultTrackBy;
+  /** @internal `_trackBy` doesn't depend on the index */
+  _trackByIsIndexIndependent = true;
   /** @internal */
   _distinctBy = (a: T, b: T) => a === b;
 
@@ -468,6 +472,7 @@ export class RxFor<T, U extends NgIterable<T> = NgIterable<T>>
         errorHandler: this.errorHandler,
         cdRef: this.cdRef,
         trackBy: this._trackBy,
+        trackByIsIndexIndependent: this._trackByIsIndexIndependent,
         createViewContext: this.createViewContext.bind(this),
         updateViewContext: this.updateViewContext.bind(this),
         parent: !!this.renderParent,

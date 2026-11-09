@@ -31,6 +31,7 @@ export function provideExperimentalRxForReconciliation(): Provider {
           updateViewContext,
           cdRef,
           trackBy,
+          trackByIsIndexIndependent,
           parent,
           patchZone,
         } = options;
@@ -58,7 +59,12 @@ export function provideExperimentalRxForReconciliation(): Provider {
               ? strategyName
               : strategyProvider.primaryStrategy;
             liveCollection.reset();
-            reconcile(liveCollection, iterable, trackBy);
+            reconcile(
+              liveCollection,
+              iterable,
+              trackBy,
+              trackByIsIndexIndependent,
+            );
             liveCollection.updateIndexes();
             return <Observable<U>>liveCollection.flushQueue(strategy).pipe(
               (o$) =>

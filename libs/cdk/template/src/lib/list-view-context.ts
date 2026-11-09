@@ -16,6 +16,11 @@ export interface RxListViewContext<
   updateContext(newProps: Partial<U>): void;
 }
 
+/** @internal the template read `index` or a value derived from it */
+export const CONTEXT_READS_INDEX = 1;
+/** @internal the template read `count` or a value derived from it */
+export const CONTEXT_READS_COUNT = 2;
+
 const computeFirst = ({ count, index }) => index === 0;
 const computeLast = ({ count, index }) => index === count - 1;
 const computeEven = ({ count, index }) => index % 2 === 0;
@@ -35,6 +40,12 @@ export class RxDefaultListViewContext<
     index: -1,
     count: -1,
   });
+  /**
+   * @internal
+   * Which computed values the view read (`CONTEXT_READS_*` flags). A view that never read `index`
+   * or `count` doesn't need change detection when only those change.
+   */
+  _reads = 0;
 
   set $implicit($implicit: T) {
     this._$implicit = $implicit;
@@ -58,22 +69,27 @@ export class RxDefaultListViewContext<
   }
 
   get index(): number {
+    this._reads |= CONTEXT_READS_INDEX;
     return this._context$.getValue().index;
   }
 
   get count(): number {
+    this._reads |= CONTEXT_READS_COUNT;
     return this._context$.getValue().count;
   }
 
   get first(): boolean {
+    this._reads |= CONTEXT_READS_INDEX;
     return computeFirst(this._context$.getValue());
   }
 
   get last(): boolean {
+    this._reads |= CONTEXT_READS_INDEX | CONTEXT_READS_COUNT;
     return computeLast(this._context$.getValue());
   }
 
   get even(): boolean {
+    this._reads |= CONTEXT_READS_INDEX;
     return computeEven(this._context$.getValue());
   }
 
@@ -82,6 +98,7 @@ export class RxDefaultListViewContext<
   }
 
   get index$(): Observable<number> {
+    this._reads |= CONTEXT_READS_INDEX;
     return this._context$.pipe(
       map((c) => c.index),
       distinctUntilChanged(),
@@ -89,6 +106,7 @@ export class RxDefaultListViewContext<
   }
 
   get count$(): Observable<number> {
+    this._reads |= CONTEXT_READS_COUNT;
     return this._context$.pipe(
       map((s) => s.count),
       distinctUntilChanged(),
@@ -96,14 +114,17 @@ export class RxDefaultListViewContext<
   }
 
   get first$(): Observable<boolean> {
+    this._reads |= CONTEXT_READS_INDEX;
     return this._context$.pipe(map(computeFirst), distinctUntilChanged());
   }
 
   get last$(): Observable<boolean> {
+    this._reads |= CONTEXT_READS_INDEX | CONTEXT_READS_COUNT;
     return this._context$.pipe(map(computeLast), distinctUntilChanged());
   }
 
   get even$(): Observable<boolean> {
+    this._reads |= CONTEXT_READS_INDEX;
     return this._context$.pipe(map(computeEven), distinctUntilChanged());
   }
 
@@ -116,6 +137,11 @@ export class RxDefaultListViewContext<
     if (customProps) {
       this.updateContext(customProps);
     }
+  }
+
+  /** @internal index and count, without marking them as read */
+  _peek(): RxListViewComputedContext {
+    return this._context$.getValue();
   }
 
   updateContext(newProps: Partial<RxListViewComputedContext>): void {
