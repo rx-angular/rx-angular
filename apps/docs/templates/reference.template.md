@@ -7,7 +7,7 @@ tags: [REPLACE, api-reference]
 ---
 
 <!--
-Reference template. Copy it to docs/packages/<package>/reference/<export-name>.md
+Reference template. Copy it to packages/<package>/reference/<export-name>.md
 and fill it in. Name the file after the main export in kebab case. See
 apps/docs/CONTRIBUTING.md for naming, front matter and links.
 
@@ -34,7 +34,7 @@ defaults like standalone: true.
 
 # `REPLACE`
 
-> **Why it matters:** see [REPLACE concept title](../../../concepts/REPLACE.md).
+> **Why it matters:** see [REPLACE concept title](/docs/concepts/REPLACE).
 
 ## Signature
 
@@ -67,4 +67,4 @@ import { REPLACE } from '@rx-angular/REPLACE';
 ## See also
 
 - How-to: [REPLACE](../how-to/REPLACE.md)
-- Concept: [REPLACE concept title](../../../concepts/REPLACE.md)
+- Concept: [REPLACE concept title](/docs/concepts/REPLACE)

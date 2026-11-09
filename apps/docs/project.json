@@ -31,7 +31,7 @@
     "check-links": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "find ./apps/docs/docs ./apps/docs/blog ./CONTRIBUTING.md \\( -name \"*.md\" -o -name \"*.mdx\" \\) -print0 | xargs -0 -n1 markdown-link-check -q -c markdown-link-check.config.json"
+        "command": "find ./apps/docs/general ./apps/docs/packages ./apps/docs/blog ./CONTRIBUTING.md \\( -name \"*.md\" -o -name \"*.mdx\" \\) -print0 | xargs -0 -n1 markdown-link-check -q -c markdown-link-check.config.json"
       }
     }
   },

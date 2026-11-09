@@ -7,7 +7,7 @@ tags: [REPLACE, guides]
 ---
 
 <!--
-How-to template. Copy it to docs/packages/<package>/how-to/<verb-first-task>.md
+How-to template. Copy it to packages/<package>/how-to/<verb-first-task>.md
 and fill it in. See apps/docs/CONTRIBUTING.md for naming, front matter and links.
 
 The reader is competent and wants the recipe, not a lesson. Keep it minimal and
@@ -35,7 +35,7 @@ example shows state. Leave out defaults like standalone: true.
 ## Goal
 
 REPLACE with what this recipe achieves. It assumes
-[REPLACE concept title](../../../concepts/REPLACE.md).
+[REPLACE concept title](/docs/concepts/REPLACE).
 
 ## Steps
 
@@ -50,4 +50,4 @@ REPLACE with what the reader sees when it works.
 ## See also
 
 - Reference: [`REPLACE`](../reference/REPLACE.md)
-- Concept: [REPLACE concept title](../../../concepts/REPLACE.md)
+- Concept: [REPLACE concept title](/docs/concepts/REPLACE)

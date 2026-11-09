@@ -7,7 +7,7 @@ tags: [REPLACE]
 ---
 
 <!--
-Explanation template for a concept. Copy it to docs/concepts/<idea>.md and fill
+Explanation template for a concept. Copy it to general/concepts/<idea>.md and fill
 it in. A concept about how a package works inside is named how-<package>-works.
 See apps/docs/CONTRIBUTING.md for naming, front matter and links.
 
@@ -45,7 +45,7 @@ REPLACE with when it matters and what it costs.
 ## See also
 
 - [REPLACE related concept](./REPLACE.md)
-- [REPLACE how-to](../packages/REPLACE/how-to/REPLACE.md)
+- [REPLACE how-to](/docs/packages/REPLACE/how-to/REPLACE)
 
 ## Referenced by
 

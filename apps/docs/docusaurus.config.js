@@ -2,6 +2,7 @@
 // Note: type annotations allow type checking and IDEs autocompletion
 
 const { themes } = require('prism-react-renderer');
+const { packageDocs, versionedDocsDirs } = require('./docs-packages');
 const redirects = require('./redirects');
 
 const lightCodeTheme = themes.github;
@@ -16,6 +17,8 @@ const url = 'https://rx-angular.io';
 const logo = 'https://www.rx-angular.io/img/logo.png';
 
 const googleTrackingId = 'UA-180240379-1';
+
+const editUrl = `https://github.com/${organizationName}/${projectName}/edit/main/apps/docs`;
 
 /** @type {import('@docusaurus/types').Config} */
 module.exports = {
@@ -62,6 +65,7 @@ module.exports = {
         },
       };
     },
+    ...packageDocs(editUrl),
     [
       require.resolve('@docusaurus/plugin-client-redirects'),
       {
@@ -75,8 +79,9 @@ module.exports = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          path: 'general',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: `https://github.com/${organizationName}/${projectName}/edit/main/apps/docs`,
+          editUrl,
         },
         blog: {
           blogTitle: 'The RxAngular blog',
@@ -86,7 +91,7 @@ module.exports = {
           // Keep the v2 behavior of rendering full posts on the blog list.
           onUntruncatedBlogPosts: 'ignore',
           showReadingTime: true,
-          editUrl: `https://github.com/${organizationName}/${projectName}/edit/main/apps/docs`,
+          editUrl,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -106,9 +111,13 @@ module.exports = {
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
         hashed: true,
+        // A change in these folders refreshes the search index readers cached.
+        docsDir: ['general', 'packages', ...versionedDocsDirs],
         indexDocs: true,
         indexPages: true,
         language: ['en'],
+        // Frozen versions are hidden from search engines but keep site search.
+        forceIgnoreNoIndex: true,
       },
     ],
   ],
@@ -162,22 +171,40 @@ module.exports = {
             label: 'Docs',
             position: 'left',
             items: [
-              { type: 'doc', docId: 'packages/state/overview', label: 'State' },
               {
                 type: 'doc',
-                docId: 'packages/template/overview',
+                docId: 'overview',
+                docsPluginId: 'state',
+                label: 'State',
+              },
+              {
+                type: 'doc',
+                docId: 'overview',
+                docsPluginId: 'template',
                 label: 'Template',
               },
-              { type: 'doc', docId: 'packages/cdk/overview', label: 'CDK' },
-              { type: 'doc', docId: 'packages/isr/overview', label: 'ISR' },
               {
                 type: 'doc',
-                docId: 'packages/eslint-plugin/overview',
+                docId: 'overview',
+                docsPluginId: 'cdk',
+                label: 'CDK',
+              },
+              {
+                type: 'doc',
+                docId: 'overview',
+                docsPluginId: 'isr',
+                label: 'ISR',
+              },
+              {
+                type: 'doc',
+                docId: 'overview',
+                docsPluginId: 'eslint-plugin',
                 label: 'ESLint plugin',
               },
               {
                 type: 'doc',
-                docId: 'packages/rebundle/overview',
+                docId: 'overview',
+                docsPluginId: 'rebundle',
                 label: 'Rebundle',
               },
             ],
@@ -205,6 +232,11 @@ module.exports = {
             href: 'pathname:///demos/',
             label: 'Demos',
             position: 'left',
+          },
+          {
+            // The versions of the package being read.
+            type: 'custom-packageVersionDropdown',
+            position: 'right',
           },
           {
             href: `https://github.com/${organizationName}/${projectName}`,

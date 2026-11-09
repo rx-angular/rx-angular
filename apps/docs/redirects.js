@@ -61,6 +61,12 @@ const redirects = [
   { from: '/docs/tags/content', to: '/docs/tags' },
   { from: '/docs/tags/structure', to: '/docs/tags' },
 
+  // Every package has its own tag pages, so these tags left /docs/tags.
+  ...['api-reference', 'guides', 'migration', 'tooling'].map((tag) => ({
+    from: `/docs/tags/${tag}`,
+    to: '/docs/tags',
+  })),
+
   // Concepts and tutorials used to carry a code in their address.
   ...CONCEPTS.map((name, i) => ({
     from: `/docs/concepts/E${i + 1}-${name}`,
