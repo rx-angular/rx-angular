@@ -166,10 +166,17 @@ Available on every item template:
 ## Reconciliation
 
 By default `rxFor` uses Angular's `IterableDiffer` to compute list operations. You
-can opt in to the reconciliation algorithm shipped with the native `@for` control
-flow, which diffs move/swap operations with fewer operations and less memory. Under
-concurrent mode it works by detaching and attaching views (rather than moving DOM),
-so a full shuffle can briefly show views detached before re-attach.
+can opt in to a reconciliation algorithm based on the one of the native `@for`
+control flow. It moves the minimum number of views (it keeps the longest increasing
+subsequence of retained views in place), removes views before it creates new ones and
+schedules work only for views that changed. Under concurrent mode it works by
+detaching and attaching views (rather than moving DOM), so a reorder can briefly
+show views detached before re-attach.
+
+Views whose template never read `index`, `count`, `first`, `last`, `even`, `odd`
+(or their `$` observables) don't run change detection when only those values change,
+e.g. for every view after an insert. Their context is still updated, so a template
+part reading them later shows the right value.
 
 ```typescript
 import { provideExperimentalRxForReconciliation } from '@rx-angular/template/for';
