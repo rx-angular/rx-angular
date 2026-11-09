@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { BasicHydrationDemoComponent } from './demos/basic-demo.component';
+import { ClsDemoComponent } from './demos/cls-demo.component';
 import { DeferredContentDemoComponent } from './demos/deferred-content-demo.component';
 import { DisabledDemoComponent } from './demos/disabled-demo.component';
 import { IfElseSwapDemoComponent } from './demos/if-else-swap-demo.component';
@@ -25,5 +26,9 @@ export const routes: Routes = [
   {
     path: 'disabled',
     component: DisabledDemoComponent,
+  },
+  {
+    path: 'cls',
+    component: ClsDemoComponent,
   },
 ];
