@@ -315,7 +315,7 @@ This problem can be solved as the subject is created in with instance constructi
 
 ## Input Binding
 
-**_Send value changes to child compoent input `[state]="state"`_**
+**_Send value changes to child component input `[state]="state"`_**
 
 In the parent component, we can connect component properties to the child
 component inputs over specific template syntax, the square brackets `[state]`.
@@ -865,7 +865,7 @@ Based on the above listing and their needs we suggest a set of Angular extension
 
 An angular pipe similar to the `async` pipe but triggers `detectChanges` instead of `markForCheck`.
 This is required to run zone-less. We render on every pushed message.
-(currently, there is an [isssue](https://github.com/angular/angular/issues/31438) with the `ChangeDetectorRef` in ivy so we have to wait for the fix.
+(currently, there is an [issue](https://github.com/angular/angular/issues/31438) with the `ChangeDetectorRef` in ivy so we have to wait for the fix.
 
 The pipe should work as template binding `{{thing$ | push}}`
 as well as input binding `[color]="thing$ | push"` and trigger the changes of the host component.
@@ -922,7 +922,7 @@ The `*let` directive take over several things and makes it more convenient and s
 
 - binding is always present. (`*ngIf="{}"` normally effects it)
 - it takes away the multiple usages of the `async` pipe
-- propper handling of null and undefined values
+- proper handling of null and undefined values
 - removes state slices if bound observable completes or errors
 - an option to disable scheduling over `AnimationFrameScheduler` (on by default)
 - control change detection and therefore can run zone-less
