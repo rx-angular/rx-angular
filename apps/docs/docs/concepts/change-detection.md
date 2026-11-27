@@ -147,3 +147,7 @@ does Angular over-render" hub:
 - [Reactive state: global vs local, RxState + signals](./reactive-state-global-vs-local.md)
 - [The reactive context (suspense / error / complete)](./reactive-context.md)
 - [Concurrent scheduling & the frame budget](./concurrent-scheduling.md)
+- [OnPush by default: how much real Angular code is ready?](https://frontendatlas.com/research/angular-onpush-readiness):
+  the code patterns that keep real components from running under `OnPush`,
+  measured across open-source Angular apps, with a static checker for your own
+  workspace.
